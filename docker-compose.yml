@@ -16,16 +16,16 @@ services:
     hostname: solr
     container_name: solr
     volumes:
-      - "./ckanext-hdx_search/ckanext/hdx_search/schema.xml:/opt/solr/server/solr/configsets/_default/conf/managed-schema"
+      - "./ckanext-hdx_search/ckanext/hdx_search/hdx-solr/schema.xml:/opt/solr/server/solr/configsets/_default/conf/managed-schema"
 
   db:
     image: postgis/postgis:14-3.4-alpine
     hostname: db
     container_name: db
     environment:
-      PGSQL_DB: '${PGSQL_DB}'
-      PGSQL_USER: '${PGSQL_USER}'
-      PGSQL_PASS: '${PGSQL_PASS}'
+      POSTGRES_PASSWORD: ckan
+      POSTGRES_USER: ckan
+      POSTGRES_DB: ckan
     networks:
       default:
         aliases:
@@ -45,14 +45,14 @@ services:
       HDX_HOURS_MIXPANEL_CACHE: 1
       HDX_CKANDB_ADDR: 'dbckan'
       HDX_CKANDB_PORT: 5432
-      HDX_CKANDB_DB: '${PGSQL_DB}'
-      HDX_CKANDB_USER: '${PGSQL_USER}'
-      HDX_CKANDB_PASS: '${PGSQL_PASS}'
-      HDX_CKANDB_USER_DATASTORE: 'datastore'
-      HDX_CKANDB_DB_DATASTORE: 'datastore'
-      HDX_CKANDB_DB_TEST: '${PGSQL_DB}'
-      HDX_CKANDB_DB_TEST_DATASTORE: 'datastore'
-      HDX_CKANDB_PASS_DATASTORE: 'datastore'
+      HDX_CKANDB_DB: ckan
+      HDX_CKANDB_USER: ckan
+      HDX_CKANDB_PASS: ckan
+      HDX_CKANDB_USER_DATASTORE: datastore
+      HDX_CKANDB_DB_DATASTORE: datastore
+      HDX_CKANDB_DB_TEST: ckan_test
+      HDX_CKANDB_DB_TEST_DATASTORE: datastore
+      HDX_CKANDB_PASS_DATASTORE: datastore
       HDX_DOMAIN: humdata.org
       HDX_FILESTORE: /srv/filestore
       HDX_SOLR_ADDR: solr
