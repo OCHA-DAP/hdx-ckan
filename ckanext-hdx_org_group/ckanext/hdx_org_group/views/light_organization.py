@@ -57,10 +57,10 @@ def _index(template_file, show_switch_to_desktop, show_switch_to_mobile):
     #     context['user_is_admin'] = c.userobj.sysadmin
     #     context['auth_user_obj'] = c.userobj
     try:
-        q = request.params.get('q', '')
-        page = int(request.params.get('page', 1))
-        limit = int(request.params.get('limit', 25))
-        sort_option = request.params.get('sort', 'title asc')
+        q = request.args.get('q', '')
+        page = int(request.args.get('page', 1))
+        limit = int(request.args.get('limit', 25))
+        sort_option = request.args.get('sort', 'title asc')
     except ValueError:
         abort(404, 'Page not found')
         sort_option = ''

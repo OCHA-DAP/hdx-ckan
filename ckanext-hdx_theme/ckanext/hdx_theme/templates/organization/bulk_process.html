@@ -16,7 +16,7 @@
         {% block page_heading %}
         {%- if c.page.item_count -%}
           {{ c.page.item_count }} datasets{{ _(" found for \"{query}\"").format(query=c.q) if c.q }}
-        {%- elif request.params -%}
+        {%- elif request.args -%}
           {{ _('Sorry no datasets found for "{query}"').format(query=c.q) }}
         {%- else -%}
           {{ _('Datasets') }}

@@ -337,7 +337,7 @@ def delete(id):
     """
     Delete package, HDX changed the redirection point
     """
-    if 'cancel' in request.params:
+    if 'cancel' in request.args:
         h.redirect_to(controller='package', action='edit', id=id)
 
     context = {'model': model, 'session': model.Session,
@@ -387,7 +387,7 @@ def package_metadata(id):
         metadata = {field: pkg_dict[field] if field in pkg_dict else None for field, field_data in
                     metadata_fields.items()}
 
-        file_format = request.params.get('format', '')
+        file_format = request.args.get('format', '')
         filename = 'metadata-%s' % metadata.get('name')
 
         # add resources
@@ -463,7 +463,7 @@ def resource_metadata(id, resource_id):
         metadata = {field: resource_dict[field] if field in resource_dict else None for field, field_data in
                     metadata_fields.items()}
 
-        file_format = request.params.get('format', '')
+        file_format = request.args.get('format', '')
         filename = 'metadata-%s' % h.hdx_munge_title(metadata.get('name'))
 
         # process fields
