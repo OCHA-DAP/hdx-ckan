@@ -337,7 +337,7 @@ def delete(id):
     """
     Delete package, HDX changed the redirection point
     """
-    if 'cancel' in request.params:
+    if 'cancel' in request.args:
         h.redirect_to(controller='package', action='edit', id=id)
 
     context = {'model': model, 'session': model.Session,
@@ -387,7 +387,7 @@ def package_metadata(id):
         metadata = {field: pkg_dict[field] if field in pkg_dict else None for field, field_data in
                     metadata_fields.items()}
 
-        file_format = request.params.get('format', '')
+        file_format = request.args.get('format', '')
         filename = 'metadata-%s' % metadata.get('name')
 
         # add resources
@@ -463,7 +463,7 @@ def resource_metadata(id, resource_id):
         metadata = {field: resource_dict[field] if field in resource_dict else None for field, field_data in
                     metadata_fields.items()}
 
-        file_format = request.params.get('format', '')
+        file_format = request.args.get('format', '')
         filename = 'metadata-%s' % h.hdx_munge_title(metadata.get('name'))
 
         # process fields
@@ -783,8 +783,8 @@ class DatasetRequestAccessView(MethodView):
             return redirect(h.url_for('hdx_signin.login', info_message_type='hdx-connect', came_from=came_from))
 
 
-hdx_search.add_url_rule(u'', view_func=search, strict_slashes=False)
-hdx_dataset.add_url_rule(u'', view_func=search, strict_slashes=False)
+hdx_search.add_url_rule(u'/', view_func=search, strict_slashes=False)
+hdx_dataset.add_url_rule(u'/', view_func=search, strict_slashes=False)
 hdx_dataset.add_url_rule(u'/<id>', view_func=read)
 hdx_dataset.add_url_rule(u'/delete/<id>', view_func=delete, methods=[u'GET', u'POST'])
 hdx_dataset.add_url_rule(u'/<id>/contact/',

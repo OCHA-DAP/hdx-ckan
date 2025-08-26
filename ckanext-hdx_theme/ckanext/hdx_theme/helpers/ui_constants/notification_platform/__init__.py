@@ -6,7 +6,7 @@ CONSTANTS = {
 
     'SIGNUP_MODAL_TITLE_DATASET': '''Subscribe to notifications on this dataset''',
     'SIGNUP_MODAL_TITLE_SEARCH_RESULTS': '''Get notified about new datasets on this {0}''',
-    'SIGNUP_MODAL_TEXT_INTRO': '''Would you like to receive email notifications when new datasets are added to this {0}? <a href="https://docs.google.com/document/d/1bdgEtb0cqdfwAl4CFJPrekWwnsOO6sh1XGQZc9Wyjjc" target="_blank">Learn more</a> about notifications.''',
+    'SIGNUP_MODAL_TEXT_INTRO': '''Would you like to receive email notifications when new datasets are added to this {0}? <a href="https://un-ocha-centre-for-humanitarian.gitbook.io/hdx-docs/hdx-notifications-user-guide" target="_blank">Learn more</a> about notifications.''',
     'SIGNUP_MODAL_TEXT_INTRO_DATASET': '''Would you like to receive notifications when resources (files) in this dataset change?''',
     'SIGNUP_MODAL_TEXT_INTRO_SECOND': '''If so, please <a href="{0}" title="login">log in</a> or enter your email address below:''',
     'SIGNUP_MODAL_TEXT_ALREADY_HAVE_ACCOUNT': '''Already have an account? <a href="{0}" title="login">Log in</a>''',

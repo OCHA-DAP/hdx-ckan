@@ -60,7 +60,7 @@ def __should_redirect(path, ua_is_mobile):
     :rtype: bool
     '''
     request_is_on = LIGHT_LAYOUT if path.startswith('/m') else DESKTOP_LAYOUT
-    request_param = request.params.get(FORCE_REDIRECT_URL_PARAM)
+    request_param = request.args.get(FORCE_REDIRECT_URL_PARAM)
     cookie_layout = request.cookies.get(FORCE_REDIRECT_COOKIE)
     ua_layout = LIGHT_LAYOUT if ua_is_mobile else DESKTOP_LAYOUT
     # checking url params
@@ -77,7 +77,7 @@ def __should_redirect(path, ua_is_mobile):
 
 
 def __cookie_value_to_set():
-    new_value = request.params.get(FORCE_REDIRECT_URL_PARAM)
+    new_value = request.args.get(FORCE_REDIRECT_URL_PARAM)
     existing_value = request.cookies.get(FORCE_REDIRECT_COOKIE)
     if new_value in LAYOUTS and new_value != existing_value:
         return new_value
