@@ -199,7 +199,7 @@ class UserOnboardingView(MethodView):
 
         _prepare()
 
-        s_email_address = request.params.get('s_email_address')
+        s_email_address = request.args.get('s_email_address')
         if s_email_address:
             data = data or {}
             data.update({'email': s_email_address, 'email2': s_email_address})

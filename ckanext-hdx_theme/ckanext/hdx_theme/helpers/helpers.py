@@ -674,7 +674,7 @@ def hdx_add_url_param(alternative_url=None, controller=None, action=None,
     instead.
     '''
 
-    params_nopage = [(k, v) for k, v in request.params.items()
+    params_nopage = [(k, v) for k, v in request.args.items()
                      if k != 'page' and k not in unwanted_keys]
     params = set(params_nopage)
     if new_params:
@@ -968,7 +968,7 @@ def hdx_get_request_param(param_name, default_value):
     except Exception as e:
         log.warning('Error when looking into "args" of request. This could be normal in a pylons request: '
                     + text_type(e))
-        value = request.params.get(param_name)
+        value = request.args.get(param_name)
 
     value = default_value if value is None else value
     return value

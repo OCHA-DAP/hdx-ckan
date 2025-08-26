@@ -182,7 +182,7 @@ def _save_or_update(context, package_type=None):
 def validate(package_type=None):
     context = {'model': model, 'session': model.Session,
                'user': g.user or g.author, 'auth_user_obj': g.userobj,
-               'save': 'save' in request.params}
+               'save': 'save' in request.args}
     data_dict = {}
     save_type = request.form.get('save')
     try:
