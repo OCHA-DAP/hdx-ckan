@@ -14,7 +14,8 @@
   
   {# Filter out org/location filters from SEO and limit to max 2 content filters #}
   {% set canonical_params = h.filter_search_seo_category_keys(data.full_facet_info.get('selected_categ_keys')) %}
-  {% snippet "snippets/add_optional_canonical_link.html", params=canonical_params %}
+  {% set canonical_url = "/dataset"  %}
+  {% snippet "snippets/add_optional_canonical_link.html", params=canonical_params, canonical_url=canonical_url %}
 
   {{ super() }}
 {% endblock %}
