@@ -425,3 +425,22 @@ groups:
         default: "[]"
         example: '[{"label": "Home", "url": "/home"}]'
         description: JSON configuration for quick links, defining labels and URLs for navigation shortcuts.
+
+  - annotation: HDX Notifications
+    options:
+      - key: hdx.notifications.enabled_objects_csv
+        default:
+        example: "https://docs.google.com/spreadsheets/d/e/2PACX-123456/pub?gid=1&single=true&output=csv"
+        description: "URL to a CSV file of enabled objects. Must have two columns: object_id and object_type"
+      - key: hdx.notifications.disabled_objects_csv
+        default:
+        example: "https://docs.google.com/spreadsheets/d/e/2PACX-123456/pub?gid=2&single=true&output=csv"
+        description: "URL to a CSV file of disabled objects. Must have two columns: object_id and object_type"
+      - key: hdx.notifications.novu.api_url
+        default:
+        example: "https://api.novu.co/v1"
+        description: "The base URL for the Novu API"
+      - key: hdx.notifications.novu.api_key
+        default:
+        example: "your_api_key_here"
+        description: "The API key for authenticating with the Novu service"
