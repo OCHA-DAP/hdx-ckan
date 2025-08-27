@@ -2,16 +2,14 @@
 import logging as logging
 
 import mock
+import pytest
 from six import text_type
 
 import ckan.model as model
 import ckan.plugins.toolkit as tk
 import ckan.tests.factories as factories
 
-import ckanext.hdx_org_group.tests as org_group_base
-import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
 import ckanext.hdx_theme.util.mail as hdx_mail
-from ckanext.hdx_org_group.helpers.static_lists import ORGANIZATION_TYPE_LIST
 
 log = logging.getLogger(__name__)
 
@@ -27,28 +25,23 @@ def send_mail(recipients, subject, body):
             .format(recipients=', '.join([r['display_name'] + ' - ' + r['email'] for r in recipients]), subject=subject,
                     body=body)
 
+@pytest.fixture(scope='module')
+def keep_db_tables_on_clean():
+    model.repo.tables_created_and_initialised = True
 
-# @pytest.mark.skipif(six.PY3, reason=u'Tests not ready for Python 3')
-class TestHDXReqsOrgController(org_group_base.OrgGroupBaseTest):
+@pytest.fixture()
+def setup_data():
+    factories.User(name='tester', email='test@test.com', sysadmin=False, fullname="tester")
 
-    @classmethod
-    def _load_plugins(cls):
-        hdx_test_base.load_plugin('ytp_request hdx_org_group hdx_theme')
+    global original_send_mail
+    original_send_mail = hdx_mail.send_mail
+    hdx_mail.send_mail = send_mail
 
-    def setup(self):
-        global original_send_mail
-        original_send_mail = hdx_mail.send_mail
-        hdx_mail.send_mail = send_mail
-
-    def teardown(self):
-        global original_send_mail
-        global mail_info
-        hdx_mail.send_mail = original_send_mail
-        mail_info = None
-        original_send_mail = None
+@pytest.mark.usefixtures('keep_db_tables_on_clean', 'hdx_clean_db', 'clean_index', 'setup_data')
+class TestHDXReqsOrgController(object):
 
     @mock.patch('ckanext.hdx_package.actions.get.hdx_mailer.mail_recipient')
-    def test_new_org_req_email_body(self, mocked_mail_recipient):
+    def test_new_org_req_email_body(self, mocked_mail_recipient, app):
         global original_send_mail
         global mail_info
 
@@ -71,7 +64,7 @@ class TestHDXReqsOrgController(org_group_base.OrgGroupBaseTest):
         }
 
         offset = h.url_for('hdx_org_request.new')
-        res_post = self.app.post(offset, params=postparams, headers=auth)
+        res_post = app.post(offset, params=postparams, headers=auth)
         args, kw_args = mocked_mail_recipient.call_args
 
         assert args, 'This needs to contain the email that will be sent'
@@ -88,7 +81,7 @@ class TestHDXReqsOrgController(org_group_base.OrgGroupBaseTest):
         return text_type(text, encoding='utf8', errors='ignore')
 
     @mock.patch('ckanext.hdx_package.actions.get.hdx_mailer.mail_recipient')
-    def test_new_org_req_with_special_chars(self, mocked_mail_recipient):
+    def test_new_org_req_with_special_chars(self, mocked_mail_recipient, app):
         global original_send_mail
         global mail_info
 
@@ -109,7 +102,7 @@ class TestHDXReqsOrgController(org_group_base.OrgGroupBaseTest):
         }
 
         offset = h.url_for('hdx_org_request.new')
-        res_post = self.app.post(offset, params=postparams, headers=auth)
+        res_post = app.post(offset, params=postparams, headers=auth)
         args0, kw_args0 = mocked_mail_recipient.call_args_list[0]
         args1, kw_args1 = mocked_mail_recipient.call_args_list[1]
 
