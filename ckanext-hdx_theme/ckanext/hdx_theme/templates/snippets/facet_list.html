@@ -38,8 +38,8 @@ within_tertiary
 
 #}
 {% set hide_empty = hide_empty or false %}
-{% set name_in_request = request.params.get(name) or request.params.get('_%s_more' % name) %}
-{% set view_more = request.params.get('_%s_more' % name) %}
+{% set name_in_request = request.args.get(name) or request.args.get('_%s_more' % name) %}
+{% set view_more = request.args.get('_%s_more' % name) %}
 {% set _items_dict = h.get_facet_items_dict(name) %}
 {% set _items = _items_dict[0] %}
 {% set total_no_items = _items_dict[1] %}

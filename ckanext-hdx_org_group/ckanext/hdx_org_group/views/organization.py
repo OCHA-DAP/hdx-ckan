@@ -145,7 +145,7 @@ def _generate_template_data_for_custom_org(org_read_logic):
             #     'request_membership': org_read_logic.links.request_membership,
             #     'add_data': org_read_logic.links.add_data
             # },
-            'request_params': request.params,
+            'request_params': request.args,
             'permissions': {
                 'edit': org_read_logic.allow_edit,
                 'add_dataset': org_read_logic.allow_add_dataset,

@@ -38,7 +38,7 @@
             <div class="{% if allow_view_right_side %} col-8 {% else %} col-12 {% endif %}">
 
                 {% set selected_sorting = sort_by_selected or 'title asc' %}
-                {% snippet 'snippets/search_form_new.html', type='members', query=q, sorting=sorting, sorting_selected=selected_sorting, count=members|length, placeholder=search_text, show_empty=request.params %}
+                {% snippet 'snippets/search_form_new.html', type='members', query=q, sorting=sorting, sorting_selected=selected_sorting, count=members|length, placeholder=search_text, show_empty=request.args %}
 
                 {% for role_name, member_list in member_groups.items() %}
                     <div class="role-categ">

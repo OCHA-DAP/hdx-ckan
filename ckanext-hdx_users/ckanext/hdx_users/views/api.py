@@ -15,9 +15,9 @@ hdx_user_autocomplete = Blueprint(u'hdx_user_autocomplete', __name__)
 
 # @jsonp.jsonpify
 def user_autocomplete():
-    q = request.params.get(u'q', u'')
-    org = request.params.get(u'org', None)
-    limit = request.params.get(u'limit', 20)
+    q = request.args.get(u'q', u'')
+    org = request.args.get(u'org', None)
+    limit = request.args.get(u'limit', 20)
     ignore_self = request.args.get(u'ignore_self', False)
     user_list = []
     if q:

@@ -127,6 +127,7 @@ class HDXUsersPlugin(plugins.SingletonPlugin):
             'user_password_validator': security_validators.user_password_validator,
             # 'user_name_validator': hdx_validators.user_name_validator,
             'user_emails_match': hdx_validators.user_emails_match,
+            'hdx_fullname_unicode_validator': hdx_validators.hdx_fullname_unicode_validator
         }
 
     # IBlueprint

@@ -1,5 +1,6 @@
 from typing import Any
-
+import re
+import regex as regex_mod
 from six import string_types
 
 import ckan.plugins.toolkit as tk
@@ -12,7 +13,7 @@ _ = tk._
 Invalid = tk.Invalid
 
 def user_email_validator(key, data, errors, context):
-    '''HDX validator for emails as identifiers.'''
+    """HDX validator for emails as identifiers."""
     model = context['model']
     session = context['session']
 
@@ -92,3 +93,53 @@ def user_emails_match(key: FlattenKey, data: FlattenDataDict,
     else:
         #Set correct email
         data[('email',)] = email
+
+
+def hdx_fullname_unicode_validator(key: FlattenKey, data: FlattenDataDict,
+                                  errors: FlattenErrorDict, context: Context) -> Any:
+    """
+    NAVL validator for the 'fullname' field.
+    Ensures the value:
+      - is not empty
+      - is a Unicode string
+      - contains:
+          * letters (including accented letters from Europe, Nordics, Eastern Europe)
+          * digits
+          * allowed punctuation: space, hyphen, apostrophe, period
+    This validator is easily extendable if new special characters are needed.
+    """
+
+    # Get the current value for this field
+    value = data.get(key)
+
+    # Check if the value is empty or whitespace-only
+    if not value or not value.strip():
+        errors[key].append(_('Full name cannot be empty.'))
+        return
+
+    # Ensure the value is a Unicode string (like 'ensure_str')
+    if not isinstance(value, str):
+        try:
+            if isinstance(value, bytes):
+                value = value.decode('utf-8')
+            else:
+                raise TypeError # decode bytes to str
+        except Exception:
+            errors[key].append(_('Full name must be a valid Unicode string.'))
+            return
+
+    # Allowed punctuation and special characters
+    # Use regex to validate allowed characters: Unicode letters, digits, space, hyphen, apostrophe, period
+    pattern = r"^[\p{L}\p{N} \-'._]+$"
+    try:
+        regex_fullmatch = regex_mod.fullmatch
+        regex_pattern = pattern
+    except ImportError:
+        # Fallback: re does not support \p{L}, so use a best-effort pattern for ASCII/Latin
+        regex_fullmatch = re.fullmatch
+        regex_pattern = r"^[\w \-'._]+$"
+
+    if not regex_fullmatch(regex_pattern, value):
+        errors[key].append(_('Full name contains invalid characters.'))
+    # Strip and update the value in data
+    data[key] = value.strip()

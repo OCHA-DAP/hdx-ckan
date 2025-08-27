@@ -100,7 +100,9 @@ def hdx_shadow_user_create(context: Context, data_dict: DataDict) -> DataDict:
         context['schema'] = onboarding_default_user_schema()
         data_dict['state'] = USER_STATE_SHADOW
         data_dict['password'] = data_dict['password1'] = generate_password(32)
-        data_dict['fullname'] = data_dict['name'] = generate_username(12, 24)
+        data_dict['name'] = generate_username(12, 24)
+        data_dict['fullname'] = data_dict['name'].replace('-', '').replace('_', '')
+
         try:
             user_dict = get_action('user_create')(context, data_dict)
             user_dict['action_performed'] = 'created-shadow-account'
