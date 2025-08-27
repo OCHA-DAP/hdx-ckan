@@ -60,12 +60,3 @@
       {{ data.page.pager(q=data.q) }}
     {% endblock %}
   </div>
-
-{% snippet "notification_platform/modals.html",
-    object_type=object_type,
-    object_id=object_id,
-    object_name=object_name,
-    num_of_datasets=data.full_facet_info.get('num_of_unarchived'),
-    unsubscribe_token=unsubscribe_token, unsubscribe_token_validated=unsubscribe_token_validated,
-    unsubscribe_email=unsubscribe_email, unsubscribe_token_invalidate=unsubscribe_token_invalidate
-%}
