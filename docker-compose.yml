@@ -31,6 +31,11 @@ services:
         aliases:
           - dbckan
 
+  redis:
+    image: valkey/valkey:alpine
+    hostname: redis
+    container_name: redis
+
   ckan:
     build:
       context: ./
@@ -55,6 +60,9 @@ services:
       HDX_CKANDB_PASS_DATASTORE: datastore
       HDX_DOMAIN: humdata.org
       HDX_FILESTORE: /srv/filestore
+      HDX_REDIS_ADDR: redis
+      HDX_REDIS_PORT: 6379
+      HDX_REDIS_DB: 1
       HDX_SOLR_ADDR: solr
       HDX_SOLR_PORT: 8983
       HDX_TYPE: ${HDX_TYPE}
