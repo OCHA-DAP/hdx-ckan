@@ -29,10 +29,7 @@
         {% for section in page.sections %}
           {% if section.type == 'data_list' %}
             <div class="row">
-              {% snippet "light/snippets/package_list.html",
-                  data=section.template_data, object_id=page.id, object_name=page.name, object_type='crisis',
-                  unsubscribe_token=unsubscribe_token, unsubscribe_token_validated=unsubscribe_token_validated,
-                  unsubscribe_email=unsubscribe_email, unsubscribe_token_invalidate=unsubscribe_token_invalidate %}
+              {% snippet "light/snippets/package_list.html", data=section.template_data %}
             </div>
           {% elif section.type == 'description' %}
             {% if section.long_description %}
@@ -88,6 +85,14 @@
     </div>
   </div>
 </div>
+
+{% snippet "notification_platform/modals.html",
+    object_type='crisis',
+    object_id=page.id,
+    object_name=page.name,
+    unsubscribe_token=unsubscribe_token, unsubscribe_token_validated=unsubscribe_token_validated,
+    unsubscribe_email=unsubscribe_email, unsubscribe_token_invalidate=unsubscribe_token_invalidate
+%}
 
 {% endblock %}
 
