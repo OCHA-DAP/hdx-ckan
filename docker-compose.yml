@@ -3,7 +3,7 @@ networks:
 
 services:
   solr:
-    image: solr:9.8.1
+    image: solr:9.9.0
     command:
       - solr-foreground
       - -c
@@ -19,7 +19,7 @@ services:
       - "./ckanext-hdx_search/ckanext/hdx_search/hdx-solr/schema.xml:/opt/solr/server/solr/configsets/_default/conf/managed-schema"
 
   db:
-    image: postgis/postgis:14-3.4-alpine
+    image: postgres:16-alpine
     hostname: db
     container_name: db
     environment:
