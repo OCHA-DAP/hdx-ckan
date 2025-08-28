@@ -8,8 +8,37 @@ on:
     branches: [ dev ]
 
 jobs:
+
+  check_pr:
+    runs-on: ubuntu-latest
+    outputs:
+      proceed: ${{ steps.check.outputs.proceed }}
+    steps:
+      - name: Check if we have a push that is part of a PR
+        id: check
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            echo "Proceeding: Pull request event"
+            echo "proceed=true" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+          PR_COUNT=$(gh api -H "Accept: application/vnd.github+json" \
+            "/repos/${{ github.repository }}/pulls?state=open&head=${{ github.repository_owner }}:${{ github.ref_name }}" \
+            --jq '. | length' 2>/dev/null || echo "0")
+          if [[ $PR_COUNT -gt 0 ]]; then
+            echo "Skipping: Open PR found for branch ${{ github.ref_name }}"
+            echo "proceed=false" >> $GITHUB_OUTPUT
+          else
+            echo "Proceeding: No open PR found for branch ${{ github.ref_name }}"
+            echo "proceed=true" >> $GITHUB_OUTPUT
+          fi
+
   typecheck:
     runs-on: ubuntu-latest
+    needs: check_pr
+    if: needs.check_pr.outputs.proceed == 'true'
 
     steps:
 
