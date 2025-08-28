@@ -8,12 +8,35 @@ on:
     branches: [ dev ]
 
 jobs:
+
+
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+
+      - name: Exit eaarly for a push that is part of a PR
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            echo "Proceeding with pull request event"
+            exit 0
+          fi
+          PR_COUNT=$(gh api -H "Accept: application/vnd.github+json" \
+            "/repos/${{ github.repository }}/pulls?state=open&head=${{ github.repository_owner }}:${{ github.ref_name }}" \
+            --jq '. | length' 2>/dev/null || echo "0")
+          if [[ $PR_COUNT -gt 0 ]]; then
+            echo "Skipping push event: Open PR found for branch ${{ github.ref_name }}"
+            exit 78
+          fi
+          echo "Proceeding with push event: No open PR found for branch ${{ github.ref_name }}"
+
+      - name: Checkout code
+        uses: actions/checkout@v3
+
       - name: Building CKAN docker image
         run: docker compose build ckan
+
       - name: Spinning up docker compose stack
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
