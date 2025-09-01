@@ -336,5 +336,5 @@ hdx.notifications.novu.api_key =
 
 # Ensure that only one of the following lines is enabled at any given time
 # Comment out the line for the unused option in this file as well as in prod.ini.tpl
-hdx.notifications.enabled_objects_csv = https://docs.google.com/spreadsheets/d/e/2PACX-1vSsBSUTM3f9olyhVFDcAh-tXV63wlOtvsXukQIHTLiLCfbGJC8osDDaEqzoUVs2B0kgYMrkyVkihvVm/pub?gid=1577519693&single=true&output=csv
-#hdx.notifications.disabled_objects_csv = https://docs.google.com/spreadsheets/d/e/2PACX-1vSsBSUTM3f9olyhVFDcAh-tXV63wlOtvsXukQIHTLiLCfbGJC8osDDaEqzoUVs2B0kgYMrkyVkihvVm/pub?gid=558881647&single=true&output=csv
+# hdx.notifications.enabled_objects_csv = https://docs.google.com/spreadsheets/d/e/2PACX-1vSsBSUTM3f9olyhVFDcAh-tXV63wlOtvsXukQIHTLiLCfbGJC8osDDaEqzoUVs2B0kgYMrkyVkihvVm/pub?gid=1577519693&single=true&output=csv
+hdx.notifications.disabled_objects_csv = https://docs.google.com/spreadsheets/d/e/2PACX-1vSsBSUTM3f9olyhVFDcAh-tXV63wlOtvsXukQIHTLiLCfbGJC8osDDaEqzoUVs2B0kgYMrkyVkihvVm/pub?gid=558881647&single=true&output=csv
