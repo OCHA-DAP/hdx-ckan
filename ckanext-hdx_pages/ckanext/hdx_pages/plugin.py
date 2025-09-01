@@ -62,6 +62,7 @@ class HdxCustomPagesPlugin(plugins.SingletonPlugin):
         return {
             'hdx_events_list': helper.hdx_events_list,
             'hdx_user_has_page_permission': helper.has_permission,
+            'hdx_is_ongoing_dataset_date': helper.hdx_is_ongoing_dataset_date,
         }
 
     # IConfigurer

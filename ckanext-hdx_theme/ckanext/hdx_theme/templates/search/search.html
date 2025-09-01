@@ -21,7 +21,9 @@
   <link rel="alternate" media="{{ h.HDX_CONST('MOBILE_MEDIA') }}" href="{{ h.hdx_switch_url_path(force=False) }}">
   
   {# Filter out org/location filters from SEO and limit to max 2 content filters #}
-  {% snippet "snippets/add_optional_canonical_link.html", canonical_info=canonical_info %}
+  {% set canonical_params = h.filter_search_seo_category_keys(data.full_facet_info.get('selected_categ_keys')) %}
+  {% set canonical_url = "/dataset"  %}
+  {% snippet "snippets/add_optional_canonical_link.html", canonical_info=canonical_info, params=canonical_params, canonical_url=canonical_url %}
 
   {{ super() }}
 {% endblock %}

@@ -1,0 +1,51 @@
+.notification-platform-wrapper .notification-platform-opt-in-action-menu,
+.notification-platform-wrapper .notification-platform-opt-out-action-menu {
+  margin-top: -25px;
+  margin-bottom: 15px;
+  cursor: pointer;
+  display: inline-block;
+  padding: 4px;
+  border: 1px solid #007CE1;
+  border-radius: 15px;
+}
+.notification-platform-wrapper .notification-platform-opt-in-action-menu .icon,
+.notification-platform-wrapper .notification-platform-opt-out-action-menu .icon {
+  width: 16px;
+  height: 16px;
+  line-height: 16px;
+  text-align: center;
+  font-size: 14px;
+  margin-left: 5px;
+}
+.notification-platform-wrapper .notification-platform-opt-in-action-menu .paragraph,
+.notification-platform-wrapper .notification-platform-opt-out-action-menu .paragraph {
+  padding-left: 10px;
+  line-height: 1.05;
+  font-family: 'Gotham-Bold', sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  padding-right: 10px;
+  text-transform: uppercase;
+  max-width: 240px;
+}
+.notification-platform-wrapper .notification-platform-opt-in-action-menu {
+  background-color: #007CE1;
+}
+.notification-platform-wrapper .notification-platform-opt-in-action-menu .icon {
+  color: #fff;
+}
+.notification-platform-wrapper .notification-platform-opt-in-action-menu .paragraph {
+  color: #fff;
+}
+.notification-platform-wrapper .notification-platform-opt-out-action-menu {
+  background-color: #fff;
+}
+.notification-platform-wrapper .notification-platform-opt-out-action-menu .icon {
+  color: #007CE1;
+}
+.notification-platform-wrapper .notification-platform-opt-out-action-menu .paragraph {
+  color: #007CE1;
+}
+.notification-platform-wrapper .notification-platform-opt-out-action-menu .paragraph a:hover {
+  color: #007CE1;
+}

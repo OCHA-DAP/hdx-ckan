@@ -19,6 +19,8 @@
 {# The lines below are for analytics #}
 {% block analytics_org_name %}{{ data.org_info.name }}{% endblock %}
 {% block analytics_org_id %}{{ data.org_info.id }}{% endblock %}
+{% block analytics_came_from %}{{ analytics.analytics_came_from }}{% endblock %}
+{% block analytics_supports_notifications %}{{ analytics.analytics_supports_notifications }}{% endblock %}
 
 {% block subtitle %}{{ data.org_info.display_name }} Humanitarian Data | {{data.search_template_data.item_count}} Datasets {% endblock %}
 {% block meta %}
@@ -145,11 +147,18 @@
 
     <div class="row paddingRowHack whiteBackground">
         <div class="col-12 paddingLeftHack paddingRightHack">
-            {% snippet 'search/snippets/search_results_wrapper.html',
-                    tracking_enabled=g.tracking_enabled, my_c=data.search_template_data %}
+            {% snippet 'search/snippets/search_results_wrapper.html', tracking_enabled=g.tracking_enabled, my_c=data.search_template_data %}
         </div>
     </div>
 
+  {% snippet "notification_platform/modals.html",
+      object_type='organization',
+      object_id=data.org_info.id,
+      object_name=data.org_info.name,
+      num_of_datasets=data.search_template_data.full_facet_info.get('num_of_unarchived'),
+      unsubscribe_token=unsubscribe_token, unsubscribe_token_validated=unsubscribe_token_validated,
+      unsubscribe_email=unsubscribe_email, unsubscribe_token_invalidate=unsubscribe_token_invalidate
+  %}
 
 {% endblock %}
 

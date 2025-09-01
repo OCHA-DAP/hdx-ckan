@@ -39,7 +39,7 @@ def _find_dataset_filters(url):
 
 def generate_dataset_results(page_id, type, saved_filters):
     params_nopage = {
-        k: v for k, v in request.params.items() if k != 'page'}
+        k: v for k, v in request.args.items() if k != 'page'}
 
     mapping_name = _generate_action_name(type)
 
@@ -97,3 +97,8 @@ def has_permission(username_or_id):
     except ImportError:
         return False
     return result
+
+def hdx_is_ongoing_dataset_date(dataset_dict):
+    if dataset_dict.get('dataset_date') and ' *]' in dataset_dict.get('dataset_date'):
+            return True
+    return False

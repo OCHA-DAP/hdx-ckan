@@ -268,6 +268,7 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
         return {
             'populate_related_items_count': actions.populate_related_items_count,
             'populate_showcase_items_count': actions.populate_showcase_items_count,
+            'hdx_search_by_object': actions.hdx_search_by_object,
         }
 
     # IFacets

@@ -53,6 +53,7 @@ class HDXValidatePlugin(plugins.SingletonPlugin):
             'user_delete': delete.hdx_user_delete,
             'user_update': update.user_update,
             'user_create': create.user_create,
+            'hdx_shadow_user_create': create.hdx_shadow_user_create,
         }
 
     def get_auth_functions(self):
@@ -60,6 +61,7 @@ class HDXValidatePlugin(plugins.SingletonPlugin):
             'user_can_register': authorize.user_can_register,
             'user_can_validate': authorize.user_can_validate,
             'onboarding_user_can_register': authorize.onboarding_user_can_register,
+            'hdx_shadow_user_create': authorize.hdx_shadow_user_create,
         }
 
     # IConfigurable
@@ -98,8 +100,11 @@ class HDXUsersPlugin(plugins.SingletonPlugin):
         return {
             'hdx_user_autocomplete': get.hdx_user_autocomplete,
             'notify_users_about_api_token_expiration': update.notify_users_about_api_token_expiration,
-            'hdx_add_notification_subscription': update.hdx_add_notification_subscription,
-            'hdx_delete_notification_subscription': delete.hdx_delete_notification_subscription,
+            # 'hdx_delete_notification_subscription': delete.hdx_delete_notification_subscription,
+            'hdx_notifications_subscription_create': create.hdx_notifications_subscription_create,
+            'hdx_notifications_subscription_list': get.hdx_notifications_subscription_list,
+            'hdx_notifications_grouped_subscription_list': get.hdx_notifications_grouped_subscription_list,
+            'hdx_notifications_subscription_delete': delete.hdx_notifications_subscription_delete,
         }
 
     def get_auth_functions(self):
@@ -109,8 +114,11 @@ class HDXUsersPlugin(plugins.SingletonPlugin):
             'user_update': auth.user_update,
             'notify_users_about_api_token_expiration': auth.notify_users_about_api_token_expiration,
             'hdx_send_request_data_auto_approval': auth.hdx_send_request_data_auto_approval,
-            'hdx_add_notification_subscription': auth.hdx_add_notification_subscription,
-            'hdx_delete_notification_subscription': auth.hdx_delete_notification_subscription,
+            # 'hdx_delete_notification_subscription': auth.hdx_delete_notification_subscription,
+            'hdx_notifications_subscription_create': auth.hdx_notifications_subscription_create,
+            'hdx_notifications_subscription_list': auth.hdx_notifications_subscription_list,
+            'hdx_notifications_grouped_subscription_list': auth.hdx_notifications_grouped_subscription_list,
+            'hdx_notifications_subscription_delete': auth.hdx_notifications_subscription_delete,
         }
 
     def get_validators(self):
@@ -119,6 +127,7 @@ class HDXUsersPlugin(plugins.SingletonPlugin):
             'user_password_validator': security_validators.user_password_validator,
             # 'user_name_validator': hdx_validators.user_name_validator,
             'user_emails_match': hdx_validators.user_emails_match,
+            'hdx_fullname_unicode_validator': hdx_validators.hdx_fullname_unicode_validator
         }
 
     # IBlueprint

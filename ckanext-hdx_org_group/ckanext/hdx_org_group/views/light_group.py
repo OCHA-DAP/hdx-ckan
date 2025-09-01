@@ -7,11 +7,13 @@ import ckan.common as common
 import ckan.lib.helpers as h
 import ckan.model as model
 import ckan.plugins.toolkit as tk
+import ckanext.hdx_package.helpers.analytics as analytics
 import ckanext.hdx_search.helpers.solr_query_helper as solr_query_helper
 from ckanext.hdx_org_group.controller_logic.group_read_logic import LightGroupReadLogic, get_all_countries_world_first
 from ckanext.hdx_org_group.helpers.eaa_constants import EAA_FACET_NAMING_TO_INFO
 from ckanext.hdx_theme.util.light_redirect import check_redirect_needed, switch_url_path
-
+from ckanext.hdx_users.general_token_model import ObjectType
+from ckanext.hdx_users.helpers.notification_platform import add_unsubscribe_token
 
 lookup_group_plugin = ckan.lib.plugins.lookup_group_plugin
 
@@ -108,8 +110,15 @@ def _read(template_file, id, show_switch_to_desktop, show_switch_to_mobile):
             'grp_dict': group_read_logic.country_dict,
             'page_has_desktop_version': show_switch_to_desktop,
             'page_has_mobile_version': show_switch_to_mobile,
-            'widgets_data': group_read_logic.widgets_data
+            'widgets_data': group_read_logic.widgets_data,
+            'analytics': {
+                'analytics_came_from': analytics.came_from(request.args),
+                'analytics_supports_notifications': analytics.supports_notifications(ObjectType.GROUP,
+                                                                                     group_read_logic.country_dict),
+            }
         }
+        unsubscribe_token = request.args.get('_unsubscribe_token', None)
+        add_unsubscribe_token(unsubscribe_token, ObjectType.GROUP, group_read_logic.country_dict.get('id'), template_data)
         return render(template_file, template_data)
 
 

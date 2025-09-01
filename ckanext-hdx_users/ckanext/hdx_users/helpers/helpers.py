@@ -1,5 +1,6 @@
 import json
-
+import random
+import string
 import requests
 
 import ckan.authz as authz
@@ -124,3 +125,50 @@ def name_validator_with_changed_msg(val, context):
             raise Invalid(_('Username should be lowercase letters and/or numbers and/or these symbols: -_'))
 
         raise invalid
+
+
+# Generate a password
+# generate_password(12)
+def generate_password(length=10):
+    if length < 10:
+        raise ValueError('Password must be at least 10 characters long.')
+
+    # Ensure the password contains at least one character from three of the four groups
+    uppercase = random.choice(string.ascii_uppercase)
+    lowercase = random.choice(string.ascii_lowercase)
+    digit = random.choice(string.digits)
+    special = random.choice(string.punctuation)
+
+    # Choose at least three of the four categories
+    mandatory_chars = [uppercase, lowercase, digit, special]
+    random.shuffle(mandatory_chars)
+    password_list = mandatory_chars[:3]
+
+    # Fill the remaining characters randomly
+    remaining_length = length - len(password_list)
+    all_chars = string.ascii_letters + string.digits + string.punctuation
+    password_list.extend(random.choices(all_chars, k=remaining_length))
+
+    # Shuffle the final password to avoid predictable patterns
+    random.shuffle(password_list)
+    return ''.join(password_list)
+
+# Generate a sample username
+# generate_username(5, 20)
+def generate_username(min_length=2, max_length=100):
+    if min_length < 2 or max_length > 100:
+        raise ValueError('Username length must be between 2 and 100 characters.')
+
+    # Define the allowed characters
+    allowed_chars = string.ascii_lowercase + string.digits + '-_'
+
+    # Generate a random username within the specified length range
+    length = random.randint(min_length, max_length)
+    username = ''.join(random.choices(allowed_chars, k=length))
+
+    # Ensure it doesn't start with a special character
+    while username[0] in '-_':
+        username = ''.join(random.choices(allowed_chars, k=length))
+
+    return username
+

@@ -27,8 +27,9 @@ Example:
       {% snippet 'package/snippets/groupings.html', pkg=pkg %}
       <ul class="{% block resource_list_class %}hdx-bs3 resource-list{% endblock %}">
         {% block resource_list_inner %}
+          {% set supports_notifications = h.hdx_supports_notifications('dataset', pkg.id, pkg) %}
           {% for resource in resources %}
-            {% snippet resource_item_snippet, pkg=pkg, res=resource %}
+            {% snippet resource_item_snippet, pkg=pkg, res=resource, supports_notifications=supports_notifications %}
           {% endfor %}
         {% endblock %}
       </ul>

@@ -266,7 +266,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'hdx_generate_basemap_config_string': hdx_helpers.hdx_generate_basemap_config_string,
             'hdx_location_dict': hdx_helpers.hdx_location_dict,
             'hdx_user_orgs_dict': hdx_helpers.hdx_user_orgs_dict,
-            'hdx_dataset_supports_notifications': hdx_helpers.hdx_dataset_supports_notifications,
+            'hdx_supports_notifications': hdx_helpers.hdx_supports_notifications,
             'HDX_CONST': const,
             'facet_url_extra_args': hdx_helpers.facet_url_extra_args,
             'build_facet_filter_url': hdx_helpers.build_facet_filter_url, 

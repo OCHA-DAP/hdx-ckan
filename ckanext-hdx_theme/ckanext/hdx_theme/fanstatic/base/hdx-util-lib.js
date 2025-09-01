@@ -180,39 +180,42 @@
         localStorage.setItem(NOTIFICATION_MODAL_SHOWN_KEY, JSON.stringify(notificationModalData));
     };
 
-    var NOTIFICATION_SUBSCRIBED_DATASETS_KEY = 'notification_platform_subscribed_datasets';
+    const NOTIFICATION_SUBSCRIBED_KEYS = {
+      dataset: 'notification_platform_subscribed_datasets',
+      organization: 'notification_platform_subscribed_organizations',
+      group: 'notification_platform_subscribed_groups',
+      crisis: 'notification_platform_subscribed_crisis'
+    };
 
-    hdxUtil.net.getNotificationSubscribedDatasets = function () {
-      var subscribedDatasets = localStorage.getItem(NOTIFICATION_SUBSCRIBED_DATASETS_KEY);
-      if (subscribedDatasets) {
-        return JSON.parse(subscribedDatasets);
+    hdxUtil.net.getNotificationSubscribedObjects = function (objectType) {
+      var subscribedObjects = localStorage.getItem(NOTIFICATION_SUBSCRIBED_KEYS[objectType]);
+      if (subscribedObjects) {
+        return JSON.parse(subscribedObjects);
       } else {
         return {};
       }
     };
 
-    hdxUtil.net.addNotificationSubscribedDataset = function (datasetId, unsubscribeToken) {
-      var subscribedDatasets = hdxUtil.net.getNotificationSubscribedDatasets();
-      if (!subscribedDatasets[datasetId]) {
-        subscribedDatasets[datasetId] = unsubscribeToken;
-        localStorage.setItem(NOTIFICATION_SUBSCRIBED_DATASETS_KEY, JSON.stringify(subscribedDatasets));
-      }
+    hdxUtil.net.addNotificationSubscribedTarget = function (object, objectType, unsubscribeToken) {
+      var subscribedObjects = hdxUtil.net.getNotificationSubscribedObjects(objectType);
+      subscribedObjects[object] = unsubscribeToken;
+      localStorage.setItem(NOTIFICATION_SUBSCRIBED_KEYS[objectType], JSON.stringify(subscribedObjects));
     };
 
-    hdxUtil.net.removeNotificationSubscribedDataset = function (datasetId) {
-      var subscribedDatasets = hdxUtil.net.getNotificationSubscribedDatasets();
-      if (subscribedDatasets[datasetId]) {
-        delete subscribedDatasets[datasetId];
-        localStorage.setItem(NOTIFICATION_SUBSCRIBED_DATASETS_KEY, JSON.stringify(subscribedDatasets));
+    hdxUtil.net.removeNotificationSubscribedTarget = function (object, objectType) {
+      var subscribedObjects = hdxUtil.net.getNotificationSubscribedObjects(objectType);
+      if (subscribedObjects[object]) {
+        delete subscribedObjects[object];
+        localStorage.setItem(NOTIFICATION_SUBSCRIBED_KEYS[objectType], JSON.stringify(subscribedObjects));
       }
     };
 
     var NOTIFICATION_OPTIN_KEY = 'notification_optin_location';
     var NOTIFICATION_OPTIN_OPTIONS = ['action_menu']; // ['action_menu', 'floating_button']
 
-    hdxUtil.net.getNotificationOptinLocation = function (datasetId) {
-      var subscribedDatasets = hdxUtil.net.getNotificationSubscribedDatasets();
-      if(subscribedDatasets[datasetId]) {
+    hdxUtil.net.getNotificationOptinLocation = function (object, objectType) {
+      var subscribedObjects = hdxUtil.net.getNotificationSubscribedObjects(objectType);
+      if(subscribedObjects[object]) {
           return false;
       }
 

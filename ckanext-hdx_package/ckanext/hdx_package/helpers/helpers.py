@@ -475,7 +475,7 @@ def hdx_check_add_data():
 
     context = {'model': model, 'session': model.Session,
                    'user': g.user, 'auth_user_obj': g.userobj,
-                   'save': 'save' in request.params}
+                   'save': 'save' in request.args}
     dataset_dict = None
     try:
         _check_access('package_create', context, dataset_dict)

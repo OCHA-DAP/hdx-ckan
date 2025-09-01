@@ -9,8 +9,11 @@ import ckan.plugins.toolkit as tk
 
 
 import ckanext.hdx_org_group.helpers.organization_helper as helper
+import ckanext.hdx_package.helpers.analytics as analytics
 from ckanext.hdx_org_group.controller_logic.organization_read_logic import LightOrgReadLogic
 from ckanext.hdx_theme.util.light_redirect import check_redirect_needed
+from ckanext.hdx_users.general_token_model import ObjectType
+from ckanext.hdx_users.helpers.notification_platform import add_unsubscribe_token
 
 g = common.g
 request = common.request
@@ -54,10 +57,10 @@ def _index(template_file, show_switch_to_desktop, show_switch_to_mobile):
     #     context['user_is_admin'] = c.userobj.sysadmin
     #     context['auth_user_obj'] = c.userobj
     try:
-        q = request.params.get('q', '')
-        page = int(request.params.get('page', 1))
-        limit = int(request.params.get('limit', 25))
-        sort_option = request.params.get('sort', 'title asc')
+        q = request.args.get('q', '')
+        page = int(request.args.get('page', 1))
+        limit = int(request.args.get('limit', 25))
+        sort_option = request.args.get('sort', 'title asc')
     except ValueError:
         abort(404, 'Page not found')
         sort_option = ''
@@ -132,7 +135,13 @@ def _read(template_file, id, show_switch_to_desktop, show_switch_to_mobile):
             'org_dict': org_dict,
             'page_has_desktop_version': show_switch_to_desktop,
             'page_has_mobile_version': show_switch_to_mobile,
+            'analytics': {
+                'analytics_came_from': analytics.came_from(request.args),
+                'analytics_supports_notifications': analytics.supports_notifications(ObjectType.ORGANIZATION, org_dict),
+            }
         }
+        unsubscribe_token = request.args.get('_unsubscribe_token', None)
+        add_unsubscribe_token(unsubscribe_token, ObjectType.ORGANIZATION, org_dict.get('id'), template_data)
         return render(template_file, template_data)
     except NotFound as e:
         abort(404, _('Page not found'))

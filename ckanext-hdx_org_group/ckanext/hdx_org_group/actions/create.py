@@ -1,6 +1,6 @@
-import random
+# import random
 from socket import error as socket_error
-
+from ckanext.hdx_users.helpers.helpers import generate_password, generate_username
 import ckan.lib.dictization.model_dictize as model_dictize
 import ckan.lib.navl.dictization_functions as core_df
 import ckan.logic as logic
@@ -57,20 +57,28 @@ def hdx_user_invite(context, data_dict):
     name = core_create._get_random_username_from_email(data['email'])
     # Choose a password. However it will not be used - the invitee will not be
     # told it - they will need to reset it
+    password = generate_password(32)
     for i in range(24):
-        password = ''.join(random.SystemRandom().choice(
-            string.ascii_lowercase + string.ascii_uppercase + string.digits + string.punctuation)
-                           for _ in range(24))
-        # Occasionally it won't meet the constraints, so check
         errors = {}
         _get_validator('user_password_validator')('password', {'password': password}, errors, None)
         if not errors:
             break
+        password = generate_password(32)
+    # for i in range(24):
+    #     password = ''.join(random.SystemRandom().choice(
+    #         string.ascii_lowercase + string.ascii_uppercase + string.digits + string.punctuation)
+    #                        for _ in range(24))
+    #     # Occasionally it won't meet the constraints, so check
+    #     errors = {}
+    #     _get_validator('user_password_validator')('password', {'password': password}, errors, None)
+    #     if not errors:
+    #         break
 
     data['name'] = name
     data['password'] = password
     # the "Full name" field is now mandatory. since we don't have the name here, we use the username instead
     data['fullname'] = name
+    # data['fullname'] = generate_username(12, 24).replace('-', '').replace('_', '')
     data['state'] = core_model.State.PENDING
     user_dict = _get_action('user_create')(context, data)
     user = core_model.User.get(user_dict['id'])

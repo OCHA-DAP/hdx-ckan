@@ -1,0 +1,96 @@
+{% set object_supports_notifications = h.hdx_supports_notifications(object_type, object_id, object_dict) %}
+{% set ui_object_type = 'location' if object_type == 'group' else object_type %}
+
+{% asset 'hdx_theme/bem-blocks-styles' %}
+{% asset 'hdx_theme/bem-blocks-scripts' %}
+{% asset 'hdx_theme/notification-platform-styles' %}
+{% asset 'hdx_theme/notification-platform-unsubscribe-scripts' %}
+{% asset 'hdx_theme/hdx-form-validator' %}
+
+{% set CONST_NOTIFICATION_PLATFORM = h.HDX_CONST('UI_CONSTANTS')['NOTIFICATION_PLATFORM'] %}
+{% set unsubscribe_token = unsubscribe_token or {} %}
+{% if object_type == 'dataset' %}
+  {% set unsubscribed_modal_text = CONST_NOTIFICATION_PLATFORM.UNSUBSCRIBED_MODAL_TEXT_DATASET %}
+{% else %}
+  {% set unsubscribed_modal_text = CONST_NOTIFICATION_PLATFORM.UNSUBSCRIBED_MODAL_TEXT_SEARCH_RESULTS.format(ui_object_type) %}
+{% endif %}
+
+{% if object_supports_notifications %}
+  {% asset 'hdx_theme/notification-platform-subscribe-scripts' %}
+  {% set logged_in = true if c.userobj else false %}
+
+  {% if object_type == 'dataset' %}
+    {% set submit_btn_title = CONST_NOTIFICATION_PLATFORM.SIGNUP_MODAL_TITLE_DATASET %}
+    {% set confirmation_modal_text = CONST_NOTIFICATION_PLATFORM.UNSUBSCRIBE_CONFIRMATION_MODAL_TEXT_DATASET %}
+  {% else %}
+    {% set submit_btn_title = CONST_NOTIFICATION_PLATFORM.SIGNUP_MODAL_TITLE_SEARCH_RESULTS.format(ui_object_type) %}
+    {% set confirmation_modal_text = CONST_NOTIFICATION_PLATFORM.UNSUBSCRIBE_CONFIRMATION_MODAL_TEXT_SEARCH_RESULTS.format(ui_object_type) %}
+  {% endif %}
+
+  {% if not logged_in %}
+    {% set submit_btn_text = CONST_NOTIFICATION_PLATFORM.SIGNUP_MODAL_TEXT_SUBMIT_BUTTON %}
+  {% else %}
+    {% set submit_btn_text = CONST_NOTIFICATION_PLATFORM.SIGNUP_MODAL_TEXT_SUBMIT_BUTTON_AUTHENTICATED %}
+  {% endif %}
+
+  {% if not logged_in %}
+    {% set verification_modal_title = CONST_NOTIFICATION_PLATFORM.VERIFICATION_MODAL_TITLE %}
+    {% set verification_modal_text = CONST_NOTIFICATION_PLATFORM.VERIFICATION_MODAL_TEXT %}
+  {% else %}
+    {% set verification_modal_title = CONST_NOTIFICATION_PLATFORM.VERIFICATION_MODAL_TITLE_AUTHENTICATED %}
+    {% if object_type == 'dataset' %}
+      {% set verification_modal_text = CONST_NOTIFICATION_PLATFORM.VERIFICATION_MODAL_TEXT_DATASET_AUTHENTICATED %}
+    {% else %}
+      {% set verification_modal_text = CONST_NOTIFICATION_PLATFORM.VERIFICATION_MODAL_TEXT_SEARCH_RESULTS_AUTHENTICATED.format(ui_object_type) %}
+    {% endif %}
+  {% endif %}
+
+  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
+  <span
+    class="d-none"
+    id="notification_platform_data"
+    data-object-id="{{ object_id }}"
+    data-object-name="{{ object_name }}"
+    data-object-type="{{ object_type }}"
+    data-is-authenticated="{{ current_user.is_authenticated }}"
+  ></span>
+
+  {{ h.snippet('bem.blocks/modal.html',
+    id="notificationsSignupBemModal",
+    title=submit_btn_title,
+    content=h.snippet('notification_platform/signup_modal_content.html', update_frequency=update_frequency, object_type=object_type, num_of_datasets=9999),
+    close_btn_text=CONST_NOTIFICATION_PLATFORM.SIGNUP_MODAL_TEXT_CLOSE_BUTTON,
+    submit_btn_id='notificationsSignupButton',
+    submit_btn_text=submit_btn_text) }}
+
+  {{ h.snippet('bem.blocks/modal.html',
+    id="notificationsVerificationBemModal",
+    title=verification_modal_title,
+    text=verification_modal_text,
+    close_btn_text=CONST_NOTIFICATION_PLATFORM.VERIFICATION_MODAL_TEXT_CLOSE_BUTTON) }}
+
+{% endif %}
+
+{% set submit_btn_attrs = {
+  "unsubscribe-token": unsubscribe_token['token'],
+  "unsubscribe-token-validated": unsubscribe_token_validated,
+  "unsubscribe-email": unsubscribe_email,
+  "unsubscribe-token-invalidate": unsubscribe_token_invalidate,
+  "is-authenticated": current_user.is_authenticated,
+  "object-id": object_id, "object-type": object_type, "object-name": object_name
+} %}
+{{ h.snippet('bem.blocks/modal.html',
+  id="notificationsUnsubscribeBemModal",
+  title=CONST_NOTIFICATION_PLATFORM.UNSUBSCRIBE_CONFIRMATION_MODAL_TITLE,
+  text=confirmation_modal_text,
+  close_btn_text=CONST_NOTIFICATION_PLATFORM.UNSUBSCRIBE_CONFIRMATION_MODAL_TEXT_CLOSE_BUTTON,
+  submit_btn_id='notificationsUnsubscribeButton',
+  submit_btn_text=CONST_NOTIFICATION_PLATFORM.UNSUBSCRIBE_CONFIRMATION_MODAL_TEXT_SUBMIT_BUTTON,
+  submit_btn_data_attributes=submit_btn_attrs) }}
+
+{{ h.snippet('bem.blocks/modal.html',
+  id="notificationsUnsubscribedBemModal",
+  title=CONST_NOTIFICATION_PLATFORM.UNSUBSCRIBED_MODAL_TITLE,
+  text=unsubscribed_modal_text,
+  close_btn_text=CONST_NOTIFICATION_PLATFORM.UNSUBSCRIBED_MODAL_TEXT_CLOSE_BUTTON) }}

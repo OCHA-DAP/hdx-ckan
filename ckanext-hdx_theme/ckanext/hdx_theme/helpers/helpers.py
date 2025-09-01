@@ -17,14 +17,16 @@ import ckanext.hdx_theme.version as version
 from urllib.parse import urlencode, quote_plus
 
 from six import text_type
+from typing import Any, Optional, Union
 
 from collections import OrderedDict
 from ckan.lib import munge
 from ckan.plugins import toolkit
-from ckanext.hdx_package.helpers.freshness_calculator import UPDATE_FREQ_INFO
+from ckanext.hdx_package.helpers.caching import cached_objects_with_notifications, cached_objects_without_notifications
+from ckanext.hdx_package.helpers.freshness_calculator import UPDATE_FREQ_INFO, UPDATE_FREQ_NEVER
 from ckanext.hdx_package.helpers.p_code_filters_helper import are_new_p_code_filters_enabled
 from ckanext.hdx_theme.util.light_redirect import switch_url_path
-from ckanext.hdx_users.helpers.notification_platform import check_notifications_enabled_for_dataset
+from ckanext.hdx_users.notifications_subscription_model import ObjectType
 
 _ = toolkit._
 request = toolkit.request
@@ -672,7 +674,7 @@ def hdx_add_url_param(alternative_url=None, controller=None, action=None,
     instead.
     '''
 
-    params_nopage = [(k, v) for k, v in request.params.items()
+    params_nopage = [(k, v) for k, v in request.args.items()
                      if k != 'page' and k not in unwanted_keys]
     params = set(params_nopage)
     if new_params:
@@ -966,7 +968,7 @@ def hdx_get_request_param(param_name, default_value):
     except Exception as e:
         log.warning('Error when looking into "args" of request. This could be normal in a pylons request: '
                     + text_type(e))
-        value = request.params.get(param_name)
+        value = request.args.get(param_name)
 
     value = default_value if value is None else value
     return value
@@ -1098,9 +1100,61 @@ def hdx_generate_basemap_config_string() -> str:
     return json.dumps(conf_dict)
 
 
-def hdx_dataset_supports_notifications(pkg_id: str) -> str:
-    supports_notifications = check_notifications_enabled_for_dataset(pkg_id)
-    return str(supports_notifications).lower()
+def hdx_supports_notifications(object_type: Union[ObjectType, str], object_id: str,
+                               object_dict: Optional[dict[str, Any]] = None) -> bool:
+    supports_notifications = False
+
+    # Convert object_type to ObjectType if it's a string
+    if isinstance(object_type, str):
+        try:
+            object_type = ObjectType(object_type)
+        except ValueError:
+            log.error(f'Invalid string for object_type: {object_type}')
+            return supports_notifications
+
+    log.info(f'Checking if notifications are supported for object_id: {object_id} of type: {object_type}')
+
+    if object_id:
+        if object_type in (ObjectType.DATASET, ObjectType.GROUP, ObjectType.ORGANIZATION, ObjectType.CRISIS):
+            supports_notifications = _check_notifications_enabled_for_object(object_type, object_id, object_dict)
+        else:
+            log.error(f'Invalid object_type: {object_type}')
+    else:
+        log.error(f'Invalid object_id: {object_id}')
+
+    return supports_notifications
+
+
+def _check_notifications_enabled_for_object(object_type: ObjectType, object_id: str,
+                                            object_dict: Optional[dict[str, Any]] = None) -> bool:
+    object_identifier = f"{object_type.value}_{object_id}"
+    log.info(f'Checking notifications for object: {object_identifier}')
+
+    if object_type == ObjectType.DATASET and object_dict:
+        is_hdx_connect = str(object_dict.get('is_requestdata_type', False)).lower() == 'true'
+        is_private = str(object_dict.get('private', False)).lower() == 'true'
+        is_archived = str(object_dict.get('archived', False)).lower() == 'true'
+        is_update_frequency_never = object_dict.get('data_update_frequency', '') == UPDATE_FREQ_NEVER
+
+        log.debug(f'Object properties - is_hdx_connect: {is_hdx_connect}, is_private: {is_private}, '
+                  f'is_archived: {is_archived}, is_update_frequency_never: {is_update_frequency_never}')
+
+        if is_hdx_connect or is_private or is_archived or is_update_frequency_never:
+            log.info(f'Notifications disabled for object: {object_identifier}')
+            return False
+
+    if config.get('hdx.notifications.enabled_objects_csv'):
+        log.info('Using cache for enabled objects for notifications')
+        objects_with_notifications = cached_objects_with_notifications()
+        return object_identifier in objects_with_notifications
+    elif config.get('hdx.notifications.disabled_objects_csv'):
+        log.info('Using cache for disabled objects for notifications')
+        objects_without_notifications = cached_objects_without_notifications()
+        return object_identifier not in objects_without_notifications
+
+    log.info(f'No notifications configuration found for object: {object_identifier}')
+    return False
+
 
 def facet_url_extra_args(facet_list, request_args):
     extra_args = {}

@@ -1,4 +1,17 @@
+import logging
+
+from hashlib import md5
+from typing import Optional
+
+from ckan.common import current_user
 from ckanext.hdx_theme.util.analytics import AbstractAnalyticsSender
+from ckanext.hdx_users.general_token_model import ObjectType
+
+import ckan.plugins.toolkit as tk
+
+log = logging.getLogger(__name__)
+
+get_action = tk.get_action
 
 
 class FirstLoginAnalyticsSender(AbstractAnalyticsSender):
@@ -34,15 +47,53 @@ class FirstLoginAnalyticsSender(AbstractAnalyticsSender):
 
 class EmailValidationAnalyticsSender(AbstractAnalyticsSender):
 
-    def __init__(self, validation_type: str, validation_status: bool, email_hash: str):
+    @classmethod
+    def _get_object_name(cls, object_type: Optional[ObjectType] = None, object_id: Optional[str] = None) -> Optional[str]:
+        object_name = None
+
+        if object_type and object_id:
+            action = None
+            if object_type == ObjectType.DATASET:
+                action = 'package_show'
+            elif object_type == ObjectType.GROUP:
+                action = 'group_show'
+            elif object_type == ObjectType.ORGANIZATION:
+                action = 'organization_show'
+            elif object_type == ObjectType.CRISIS:
+                action = 'page_show'
+            else:
+                log.error(f'Invalid object_type: {object_type} in email validation analytics')
+
+            try:
+                object_obj = get_action(action)({}, {'id': object_id})
+                object_name = object_obj.get('name')
+            except tk.ObjectNotFound:
+                log.error(f'{object_type} {object_id} does not exist in email validation analytics')
+            except Exception as e:
+                log.error(f'Error retrieving object or user: {e} in email validation analytics')
+
+        return object_name
+
+    def __init__(self, validation_type: str, validation_status: bool, email: str,
+                 object_type: Optional[ObjectType] = None, object_id: Optional[str] = None):
         super(EmailValidationAnalyticsSender, self).__init__()
         event_name = 'email validation'
+
+        email = email.strip().lower() if email else ''
+        email_hash = md5(email.encode('utf8')).hexdigest() if email else ''
+        object_name = self._get_object_name(object_type, object_id)
+        authenticated = current_user.is_authenticated
+
         self.analytics_dict = {
             'event_name': event_name,
             'mixpanel_meta': {
                 'type': validation_type,
                 'successful': validation_status,
                 'email hash': email_hash,
+                'object id': object_id,
+                'object name': object_name,
+                'object type': object_type,
+                'authenticated': authenticated,
             },
             'ga_meta': {}
         }
