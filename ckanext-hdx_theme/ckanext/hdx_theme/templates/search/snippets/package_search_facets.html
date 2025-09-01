@@ -11,15 +11,20 @@ Example:
     {% set extra_args = h.facet_url_extra_args(facet_list, request.args) %}
     {% for option in items %}
       <li>
-        <label class="facet">
-          <a class="facet-link" href="{{ h.build_facet_filter_url(option, extra_args.copy()) }}">
+        {% set filter_url = h.build_facet_filter_url(option, extra_args.copy()) %}
+        <label class="facet" {% if not show_url %} onclick="window.location.href='{{ filter_url }}'" {% endif %}>
+          {% if show_url %}
+          <a class="facet-link" href="{{ filter_url }}">
+          {% endif %}
           <input name="{{ option.category_key }}" value="{{ option.name }}" type="checkbox"
                {% if option.selected %}checked="checked"{% endif %}
                {% if option.get('items') %} class="parent-facet" {% endif %}
                {% if option.count == 0 and not option.selected %}disabled="disabled" {% else %} onclick="this.parentElement.click()" {% endif %} />
           {% if option.category_key == 'ext_archived' %}<label class="label label-small label-new-feature">NEW</label>{% endif %}
           {{ option.display_name }}
+          {% if show_url %}
           </a>
+          {% endif %}
           {% if option.explanation %}
             <a class="facet-option-explanation" href="javascript:void(0)" title="{{ option.explanation }}" data-module="bs_tooltip"
                data-bs-toggle="tooltip">[?]</a>

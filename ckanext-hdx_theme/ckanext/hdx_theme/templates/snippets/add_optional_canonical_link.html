@@ -7,7 +7,9 @@
  # - on_mobile_page - if on the mobile page, then we need to remove the prefix "/m/"
  #}
 
-{% set canonical_info = h.generate_canonical_link(request.path, request.args, canonical_url, params, no_params) %}
+{% if not canonical_info %}
+  {% set canonical_info = h.generate_canonical_link(request.path, request.args, canonical_url, params, no_params) %}
+{% endif %}
 
 {% if canonical_info.add_canonical %}
   <link rel="canonical" href="{{ canonical_info.canonical_url }}">

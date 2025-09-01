@@ -9,13 +9,21 @@
 
 {% set page_has_mobile_version = True %}
 
+{% set canonical_params = h.filter_search_seo_category_keys(data.full_facet_info.get('selected_categ_keys')) %}
+{% set canonical_info = h.generate_canonical_link(request.path, request.args, canonical_url, canonical_params, no_params) %}
+{% set add_canonical = canonical_info.add_canonical %}
+{% if add_canonical is none or add_canonical is not defined %}
+  {% set show_url = False %}
+{% else %}
+  {% set show_url = (not add_canonical) %}
+{% endif %}
 {% block links %}
   <link rel="alternate" media="{{ h.HDX_CONST('MOBILE_MEDIA') }}" href="{{ h.hdx_switch_url_path(force=False) }}">
   
   {# Filter out org/location filters from SEO and limit to max 2 content filters #}
   {% set canonical_params = h.filter_search_seo_category_keys(data.full_facet_info.get('selected_categ_keys')) %}
   {% set canonical_url = "/dataset"  %}
-  {% snippet "snippets/add_optional_canonical_link.html", params=canonical_params, canonical_url=canonical_url %}
+  {% snippet "snippets/add_optional_canonical_link.html", canonical_info=canonical_info, params=canonical_params, canonical_url=canonical_url %}
 
   {{ super() }}
 {% endblock %}
@@ -48,7 +56,8 @@
     {% block search_results_wrapper %}
         <div id="search-recs" class="d-none"></div>
         {% snippet 'search/snippets/search_results_wrapper.html',
-                            tracking_enabled=g.tracking_enabled, my_c=data or c, display_min=true %}
+                            tracking_enabled=g.tracking_enabled, my_c=data or c, display_min=true, 
+                            show_url=show_url %}
 
     {% endblock %}
   {% block package_search_results_api %}
