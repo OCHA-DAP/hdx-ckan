@@ -3,13 +3,6 @@
 {% set has_showcase_items = package.showcase_count and package.showcase_count > 0 %}
 {% set has_quality_checked = package.indicator == '1' or package.quality %}
 {% set has_pcodes = h.hdx_dataset_is_p_coded(package.resources) %}
-{% set has_datastore_resources = h.hdx_dataset_has_datastore_resources(package.resources) %}
-
-{% if has_datastore_resources %}
-  <li class="datastore-icon">
-    <span class="label label-small" title="{{ _('Access Data via API') }}" data-module="bs_tooltip" data-module-placement="top" data-bs-toggle="tooltip">API</span>
-  </li>
-{% endif %}
 
 {% if visualization or popular or has_showcase_items or (package.subnational and package.subnational != '0')
         or package.private or has_quality_checked or has_pcodes %}
