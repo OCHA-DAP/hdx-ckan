@@ -3,10 +3,12 @@ networks:
 
 services:
   solr:
-    image: solr:8-slim
+    image: solr:9.9.0
+    command:
+      - solr-foreground
+      - -c
     environment:
       SOLR_OPTS: -Dsolr.jetty.request.header.size=65536 -Dsolr.dns.prevent.reverse.lookup
-      ZK_HOST: zookeeper:2181
     ulimits:
       nofile:
         soft: 65000
@@ -14,29 +16,25 @@ services:
     hostname: solr
     container_name: solr
     volumes:
-      - "./ckanext-hdx_search/ckanext/hdx_search/:/configsets"
-
-  zookeeper:
-    image: zookeeper:3.6
-    hostname: zookeeper
-    container_name: zookeeper
-    environment:
-      ZOO_SERVERS: server.1=zookeeper:2888:3888;2181
-      ZOO_STANDALONE_ENABLED: 'true'
-      ZOO_LOG4J_PROP: 'INFO,ROLLINGFILE'
+      - "./ckanext-hdx_search/ckanext/hdx_search/hdx-solr/schema.xml:/opt/solr/server/solr/configsets/_default/conf/managed-schema"
 
   db:
-    image: unocha/alpine-postgres:201703-PR116
+    image: postgres:16-alpine
     hostname: db
     container_name: db
     environment:
-      PGSQL_DB: '${PGSQL_DB}'
-      PGSQL_USER: '${PGSQL_USER}'
-      PGSQL_PASS: '${PGSQL_PASS}'
+      POSTGRES_PASSWORD: ckan
+      POSTGRES_USER: ckan
+      POSTGRES_DB: ckan
     networks:
       default:
         aliases:
           - dbckan
+
+  redis:
+    image: valkey/valkey:alpine
+    hostname: redis
+    container_name: redis
 
   ckan:
     build:
@@ -52,16 +50,19 @@ services:
       HDX_HOURS_MIXPANEL_CACHE: 1
       HDX_CKANDB_ADDR: 'dbckan'
       HDX_CKANDB_PORT: 5432
-      HDX_CKANDB_DB: '${PGSQL_DB}'
-      HDX_CKANDB_USER: '${PGSQL_USER}'
-      HDX_CKANDB_PASS: '${PGSQL_PASS}'
-      HDX_CKANDB_USER_DATASTORE: 'datastore'
-      HDX_CKANDB_DB_DATASTORE: 'datastore'
-      HDX_CKANDB_DB_TEST: '${PGSQL_DB}'
-      HDX_CKANDB_DB_TEST_DATASTORE: 'datastore'
-      HDX_CKANDB_PASS_DATASTORE: 'datastore'
+      HDX_CKANDB_DB: ckan
+      HDX_CKANDB_USER: ckan
+      HDX_CKANDB_PASS: ckan
+      HDX_CKANDB_USER_DATASTORE: datastore
+      HDX_CKANDB_DB_DATASTORE: datastore
+      HDX_CKANDB_DB_TEST: ckan_test
+      HDX_CKANDB_DB_TEST_DATASTORE: datastore
+      HDX_CKANDB_PASS_DATASTORE: datastore
       HDX_DOMAIN: humdata.org
       HDX_FILESTORE: /srv/filestore
+      HDX_REDIS_ADDR: redis
+      HDX_REDIS_PORT: 6379
+      HDX_REDIS_DB: 1
       HDX_SOLR_ADDR: solr
       HDX_SOLR_PORT: 8983
       HDX_TYPE: ${HDX_TYPE}

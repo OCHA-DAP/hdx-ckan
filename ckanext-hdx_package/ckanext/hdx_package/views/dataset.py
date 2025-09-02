@@ -314,23 +314,24 @@ def _check_resource(resource):
     shape_info = dataset_view_logic.has_shape_info(resource)
     if shape_info:
         return shape_info
-    hxl_preview = _has_hxl_views(resource)
-    if hxl_preview:
-        return hxl_preview
+    # Lightly disable the QC previews only in the dataset view
+    # hxl_preview = _has_hxl_views(resource)
+    # if hxl_preview:
+    #     return hxl_preview
     return None
 
 
-def _has_hxl_views(resource):
-    for view in resource.get("resource_views"):
-        if view.get("view_type") == 'hdx_hxl_preview':
-            return {
-                'type': 'hdx_hxl_preview',
-                "view_url": h.url_for("resource_view", id=view.get('package_id'),
-                                      resource_id=view.get('resource_id'), view_id=view.get('id')),
-                "view": view,
-                "resource": resource
-            }
-    return None
+# def _has_hxl_views(resource):
+#     for view in resource.get("resource_views"):
+#         if view.get("view_type") == 'hdx_hxl_preview':
+#             return {
+#                 'type': 'hdx_hxl_preview',
+#                 "view_url": h.url_for("resource_view", id=view.get('package_id'),
+#                                       resource_id=view.get('resource_id'), view_id=view.get('id')),
+#                 "view": view,
+#                 "resource": resource
+#             }
+#     return None
 
 
 def delete(id):
