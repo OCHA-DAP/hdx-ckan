@@ -12,12 +12,12 @@
       </span>
     </a>
   {% endif %}
-  {% if package.has_quickcharts %}
-    <a href="{% url_for 'hdx_dataset.search', ext_quickcharts=1 %}">
-        <span class="humanitarianicons-Chart" title="{{ _('Dataset Containing Quick Charts') }}" data-module="bs_tooltip"
-              data-module-placement="top" data-bs-toggle="tooltip"></span>
-    </a>
-  {% endif %}
+{#  {% if package.has_quickcharts %}#}
+{#    <a href="{% url_for 'hdx_dataset.search', ext_quickcharts=1 %}">#}
+{#        <span class="humanitarianicons-Chart" title="{{ _('Dataset Containing Quick Charts') }}" data-module="bs_tooltip"#}
+{#              data-module-placement="top" data-bs-toggle="tooltip"></span>#}
+{#    </a>#}
+{#  {% endif %}#}
   {% if popular %}
     <span class="popular humanitarianicons-Trending" title="{{ _('Trending') }}" data-module="bs_tooltip" data-module-placement="top" data-bs-toggle="tooltip" ></span>
   {% endif %}
