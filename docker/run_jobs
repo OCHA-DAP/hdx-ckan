@@ -33,4 +33,5 @@ cd /srv/ckan
 
 ln -sf /etc/ckan/prod.ini ckan.ini
 
-exec ckan -c /etc/ckan/prod.ini jobs worker
+exec ckan -c /etc/ckan/prod.ini jobs worker default unimportant
+
