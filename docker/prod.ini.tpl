@@ -155,6 +155,9 @@ hdx.notifications.novu.api_key = ${HDX_NOVU_API_KEY}
 # hdx.notifications.enabled_objects_csv = ${HDX_ENABLED_OBJECTS_CSV}
 hdx.notifications.disabled_objects_csv = ${HDX_DISABLED_OBJECTS_CSV}
 
+# HDX approved tags
+hdx.approved_tags.csv = ${HDX_APPROVED_TAGS_CSV}
+
 ## Logging configuration
 [loggers]
 keys = root, ckan, ckanext, ckanext.hdx_theme.util.timer

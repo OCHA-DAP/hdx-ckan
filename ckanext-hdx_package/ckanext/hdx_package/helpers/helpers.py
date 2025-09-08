@@ -1,3 +1,4 @@
+import csv
 import datetime
 import json
 import logging
@@ -244,26 +245,36 @@ def hdx_tag_autocomplete_list(context: Context, data_dict: DataDict):
     return matching_tags
 
 
-def hdx_retrieve_approved_tags(context, data_dict):
+def hdx_retrieve_approved_tags(context, data_dict) -> list:
     """
-    Get approved tag names from Google Spreadsheet and return a list.
+    Get approved tag names from a published-to-web CSV version of a Google Spreadsheet and return a list.
     """
-    proxy_data_preview_url = config.get('hdx.hxlproxy.url') + '/api/data-preview.json'
-    params = {
-        'url': 'https://docs.google.com/spreadsheets/d/1fTO8T8ZVXU9eoh3EIrw490Z2pX7E59MhHmCvT_cXmNs/edit#gid=1261258630'
-    }
+    url = config.get('hdx.approved_tags.csv')
 
-    try:
-        response = requests.get(proxy_data_preview_url, params=params)
-        if response.status_code == 200:
-            items = json.loads(response.content)[1:]
-            ordered_items = sorted([item[0].lower() for item in items])
-            return ordered_items
-        else:
-            log.error('Failed to fetch approved tags. Status code: %s', response.status_code)
+    if url:
+        try:
+            response = requests.get(url)
+            response.raise_for_status()
+        except requests.exceptions.RequestException as e:
+            error_msg = str(e)
+            log.error(f"An error occurred: {error_msg}")
             return []
-    except Exception as e:
-        log.error('Failed to fetch approved tags. Exception: %s', e)
+
+        csv_data = response.text
+        csv_reader = csv.reader(csv_data.splitlines())
+
+        # Validate headers and map column names to indices
+        headers = next(csv_reader, None)
+        if headers is None or 'approved tags' not in headers:
+            log.error("CSV file is missing required header: 'approved tags'")
+            return []
+
+        tag_index = headers.index('approved tags')
+
+        approved_tags = sorted({row[tag_index].lower() for row in csv_reader if row})
+        return approved_tags
+    else:
+        log.error("No URL found for approved tags CSV.")
         return []
 
 
