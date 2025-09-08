@@ -106,7 +106,7 @@ def package_patch(
     patched['id'] = package_dict['id']
 
     # slightly modified to call "our" package_update
-    return package_update(context, patched)
+    return _get_action('package_update')(context, patched)
     # END - Original package patch from CKAN
 
 
