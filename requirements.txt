@@ -14,7 +14,7 @@
     # via -r requirements.in
 -e git+https://github.com/OCHA-DAP/ckanext-showcase.git@1.5.5#egg=ckanext-showcase
     # via -r requirements.in
-alembic==1.13.2
+alembic==1.16.5
     # via -r requirements.in
 babel==2.15.0
     # via
