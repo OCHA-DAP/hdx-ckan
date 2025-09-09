@@ -245,7 +245,7 @@ def hdx_tag_autocomplete_list(context: Context, data_dict: DataDict):
     return matching_tags
 
 
-def hdx_retrieve_approved_tags(context, data_dict) -> list:
+def hdx_retrieve_approved_tags(context: Context, data_dict: DataDict) -> list:
     """
     Get approved tag names from a published-to-web CSV version of a Google Spreadsheet and return a list.
     """
