@@ -271,7 +271,11 @@ def hdx_retrieve_approved_tags(context, data_dict) -> list:
 
         tag_index = headers.index('approved tags')
 
-        approved_tags = sorted({row[tag_index].lower() for row in csv_reader if row and len(row) > tag_index})
+        approved_tags = sorted({
+            row[tag_index].lower()
+            for row in csv_reader
+            if row and len(row) > tag_index and row[tag_index] and isinstance(row[tag_index], str)
+        })
         return approved_tags
     else:
         log.error("No URL found for approved tags CSV.")
