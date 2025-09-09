@@ -274,7 +274,7 @@ def hdx_retrieve_approved_tags(context: Context, data_dict: DataDict) -> list:
         approved_tags = sorted({
             row[tag_index].lower()
             for row in csv_reader
-            if row and len(row) > tag_index and row[tag_index] and isinstance(row[tag_index], str)
+            if row and len(row) > tag_index and row[tag_index]
         })
         return approved_tags
     else:
