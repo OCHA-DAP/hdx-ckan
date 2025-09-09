@@ -33,5 +33,19 @@
     "url": "#{hdx_checks.wp_faq_url}",
     "basic_auth": "#{hdx_checks.wp_basic_auth}",
     "included_text": "ufaq-category"
+  },
+  {
+    "name": "Notifications CSV check",
+    "module_name": "ckanext.hdx_service_checker.checks.checks",
+    "class_name": "HttpResponseTextCheck",
+    "url": "#{hdx.notifications.disabled_objects_csv}",
+    "included_text": "object_id,object_type"
+  },
+  {
+    "name": "Approved tags CSV check",
+    "module_name": "ckanext.hdx_service_checker.checks.checks",
+    "class_name": "HttpResponseTextCheck",
+    "url": "#{hdx.approved_tags.csv}",
+    "included_text": "approved tags"
   }
 ]

@@ -444,3 +444,10 @@ groups:
         default:
         example: "your_api_key_here"
         description: "The API key for authenticating with the Novu service"
+
+  - annotation: HDX approved tags
+    options:
+      - key: hdx.approved_tags.csv
+        default:
+        example: "https://docs.google.com/spreadsheets/d/e/2PACX-123456/pub?gid=1&single=true&output=csv"
+        description: "URL to a CSV file of approved tags. Must have one column: 'approved tags'"
