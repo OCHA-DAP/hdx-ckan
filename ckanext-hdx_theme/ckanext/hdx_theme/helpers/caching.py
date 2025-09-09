@@ -154,9 +154,17 @@ def cached_make_rest_api_request(url):
     return response.json()
 
 def cache_only_if_truthy_wrapper(region: CacheRegion, *args, **kwargs):
-    # original_decorator = region.cache_on_arguments(*args, **kwargs)
+    # force dogpile to use the same key namespace
+    def _keygen(namespace, fn):
+        return region.function_key_generator("only_truthy_values", fn)
+
+    original_decorator = region.cache_on_arguments(
+        function_key_generator=_keygen, *args, **kwargs
+    )
 
     def decorator(f):
+        cached_func = original_decorator(f)
+
         @wraps(f)
         def wrapper(*fn_args, **fn_kwargs):
             key_generator = region.function_key_generator('only_truthy_values', f)
@@ -176,6 +184,8 @@ def cache_only_if_truthy_wrapper(region: CacheRegion, *args, **kwargs):
                 log.warning(f'Not caching result for key "{key}" because returned value was: {result}')
 
             return result
+
+        wrapper.invalidate = cached_func.invalidate
 
         return wrapper
 
