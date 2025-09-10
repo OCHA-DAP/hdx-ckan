@@ -47,7 +47,7 @@ Example:
                         <input type="hidden" name="org_id" value="{{org_id}}">
                         <input type="hidden" name="pkg_id" value="{{pkg_id}}">
                     </div>
-                    <select class="required mTop15" id="group-message-topics-selector" name="topic" required="required" onchange="_groupMessageValidator();">
+                    <select class="required mTop15 w-100" id="group-message-topics-selector" name="topic" required="required" onchange="_groupMessageValidator();">
                         <option id="" value="">{{ _("Select recipient group(s)") }}</option>
                         {% for key, value in groups.items() %}
                             <option id="group-message-{{key}}" value="{{key}}">{{value}}</option>
