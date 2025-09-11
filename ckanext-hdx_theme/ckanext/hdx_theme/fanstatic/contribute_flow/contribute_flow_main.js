@@ -522,9 +522,9 @@
             );
 
             // Suggest new tag
-            $('#suggest-new-tag').on('click', function() {
+            $('#suggest-new-tag').on('click', function(event) {
+              event.preventDefault();
               closeCurrentWidget(this);
-              spawnRecaptcha("#requestTagsPopup");
               showTagRequestWidget("#requestTagsPopup");
             });
 
