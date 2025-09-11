@@ -75,6 +75,12 @@ class TestBulkInviteMembersController():
         orgadmin_token = factories.APIToken(user='orgadmin', expires_in=2, unit=60 * 60)['token']
         auth = {'Authorization': orgadmin_token}
 
+        _member_list = _get_action('member_list')(context, {
+            'id': 'hdx-test-org',
+            'object_type': 'user',
+            'user_info': True
+        })
+
         # removing one member from organization
         url = h.url_for('hdx_members.member_delete', id='hdx-test-org')
         result = app.post(url, data={'user': 'johndoe1'}, headers=auth)

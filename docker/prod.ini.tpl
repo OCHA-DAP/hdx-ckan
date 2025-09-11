@@ -150,8 +150,13 @@ hdx.change_detection.layer_url = http://${HDX_GEOPREVIEW_API}/api/create-change-
 hdx.notifications.novu.api_key = ${HDX_NOVU_API_KEY}
 # Ensure that only one of the following lines is enabled at any given time
 # Comment out the line for the unused option in this file as well as in common-config-ini.txt
+# Additionally, update the URL variable in the "Notifications CSV check" service config
+# (hdx_service_checker/config/config.json) to ensure it points to the correct data source
 # hdx.notifications.enabled_objects_csv = ${HDX_ENABLED_OBJECTS_CSV}
 hdx.notifications.disabled_objects_csv = ${HDX_DISABLED_OBJECTS_CSV}
+
+# HDX approved tags
+hdx.approved_tags.csv = ${HDX_APPROVED_TAGS_CSV}
 
 ## Logging configuration
 [loggers]

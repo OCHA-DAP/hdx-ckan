@@ -144,6 +144,9 @@ hdx.wordpress.category.licenses=581
 ckanext.s3filestore.aws_bucket_name = some-bucket-name
 hdx.s3filestore = enabled
 
+# HDX approved tags
+hdx.approved_tags.csv = https://docs.google.com/spreadsheets/d/e/2PACX-1vQJKjr25NZAIQELrFnUhVnL-7SxC8SwW9I6usm5Xvwyw00zRC-DhlLh74EVniX732w_BDFoQLrNDKKL/pub?gid=1261258630&single=true&output=csv
+
 # Logging configuration
 [loggers]
 keys = root, ckan, sqlalchemy
