@@ -30,7 +30,7 @@ page_elnino = {
     'status': 'ongoing',
     'groups': [LOCATION],
     'state': 'active',
-    'sections': '[{"data_url": "https://data.humdata.org/dataset/wfp-and-fao-overview-of-countries-affected-by-the-2015-16-el-nino/resource/de96f6a5-9f1f-4702-842c-4082d807b1c1/view/08f78cd6-89bb-427c-8dce-0f6548d2ab21", "type": "map", "description": null, "max_height": "350px", "section_title": "El Nino Affected Countries"}, {"data_url": "https://data.humdata.org/search?q=el%20nino", "type": "data_list", "description": null, "max_height": null, "section_title": "Data"}]',
+    'sections': '[{"data_url": "https://data.humdata.org/dataset/wfp-and-fao-overview-of-countries-affected-by-the-2015-16-el-nino/resource/de96f6a5-9f1f-4702-842c-4082d807b1c1/view/08f78cd6-89bb-427c-8dce-0f6548d2ab21", "type": "map", "description": null, "max_height": "350px", "section_title": "El Nino Affected Countries"}, {"data_url": "https://data.humdata.org/search?q=el%20nino&sort=last_modified+desc&ext_page_size=25&page=1", "type": "data_list", "description": null, "max_height": null, "section_title": "Data"}]',
 }
 
 page_elpico = {
@@ -188,7 +188,12 @@ class TestHDXControllerPageRead(TestHDXControllerPage):
 
         context['user'] = SYSADMIN
         url = h.url_for(u'hdx_event.read_event', id=elnino.get('id'))
+        elnino_result = self._get_url(app, url)
+        assert '200' in elnino_result.status
 
+        #?page=2#datasets-section
+        context['user'] = SYSADMIN
+        url = h.url_for(u'hdx_event.read_event', id=elnino.get('id'), sort='last_modified desc', ext_page_size='25')
         elnino_result = self._get_url(app, url)
         assert '200' in elnino_result.status
 

@@ -22,7 +22,7 @@ class HdxCustomPagesPlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.ITemplateHelpers)
     plugins.implements(plugins.IConfigurer)
     plugins.implements(plugins.IConfigurable)
-    plugins.implements(plugins.IClick)
+    # plugins.implements(plugins.IClick)
     # plugins.implements(plugins.IRoutes, inherit=True)
 
     # IBlueprint
@@ -81,6 +81,6 @@ class HdxCustomPagesPlugin(plugins.SingletonPlugin):
     def configure(self, config):
         pages_model.setup()
 
-    # IClick
-    def get_commands(self):
-        return [command.initdb, command.cleandb, command.droptabledb]
+    # # IClick
+    # def get_commands(self):
+    #     return [command.initdb, command.cleandb, command.droptabledb]
