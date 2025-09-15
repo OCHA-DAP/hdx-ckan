@@ -4,7 +4,6 @@ import ckan.model as model
 import ckan.lib.base as base
 import ckan.plugins.toolkit as tk
 import ckanext.hdx_org_group.helpers.caching as caching
-# import ckanext.hdx_package.helpers.screenshot as screenshot
 from datetime import datetime
 from ckanext.hdx_org_group.controller_logic.group_search_logic import GroupSearchLogic
 import ckan.lib.helpers as h
@@ -51,20 +50,20 @@ def _sort_datasets_by_is_good(data_completeness):
     return data_completeness
 
 
-def country_topline(id):
-    log.info('The id of the page is: ' + id)
-
-    country_dict = get_country(id)
-    top_line_data_list = caching.cached_topline_numbers(id)
-    template_data = {
-        'data': {
-            'country_dict': country_dict,
-            'widgets': {
-                'top_line_data_list': top_line_data_list
-            }
-        }
-    }
-    return base.render('country/country_topline.html', extra_vars=template_data)
+# def country_topline(id):
+#     log.info('The id of the page is: ' + id)
+#
+#     country_dict = get_country(id)
+#     top_line_data_list = caching.cached_topline_numbers(id)
+#     template_data = {
+#         'data': {
+#             'country_dict': country_dict,
+#             'widgets': {
+#                 'top_line_data_list': top_line_data_list
+#             }
+#         }
+#     }
+#     return base.render('country/country_topline.html', extra_vars=template_data)
 
     # return country_read(id=id, get_only_toplines=True)
 

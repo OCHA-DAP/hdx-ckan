@@ -14,7 +14,7 @@ hdx_org_group_redirect = Blueprint(u'hdx_org_group_redirect', __name__, url_pref
 def redirect_to_org_list(id=None):
     return h.redirect_to('organization.index')
 
-def redirect_to_org_list2():
+def redirect_to_org_list2(id=None):
     return h.redirect_to('organization.index')
 
 

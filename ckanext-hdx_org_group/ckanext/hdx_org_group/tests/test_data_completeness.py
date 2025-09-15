@@ -12,7 +12,7 @@ from ckanext.hdx_org_group.helpers.data_completeness import (
     DataCompleteness,
 )
 from ckanext.hdx_org_group.helpers.static_lists import ORGANIZATION_TYPE_LIST
-
+NotAuthorized = tk.NotAuthorized
 _get_action = tk.get_action
 
 
@@ -153,6 +153,18 @@ class TestDataCompleteness(object):
         assert subcategory2_stats['state'] == 'not_good'
         assert subcategory2_stats['good_datasets_num'] == 0
         assert subcategory2_stats['total_datasets_num'] == 1
+
+        # invalidate_data_completeness_for_location
+        try:
+            context_user = {'model': model, 'session': model.Session, 'user': USER}
+            invalidate_message = _get_action('invalidate_data_completeness_for_location')(context_user, {'name': LOCATION})
+            assert False
+        except NotAuthorized:
+            assert True
+
+        context_sysadmin = {'model': model, 'session': model.Session, 'user': SYSADMIN}
+        invalidate_message = _get_action('invalidate_data_completeness_for_location')(context_sysadmin, {'name': LOCATION})
+        assert 'Successfully invalidated data completeness cache for some_location' in invalidate_message.get('message')
 
     @mock.patch('ckanext.hdx_org_group.helpers.data_completeness.DataCompleteness')
     def test_data_completeness_force_incomplete(self, patched_DataCompleteness):
