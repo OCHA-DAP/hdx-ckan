@@ -1,6 +1,11 @@
 {% extends "page.html" %}
 
-{% set pkg = c.pkg_dict or pkg_dict %}
+{% block scripts %}
+  {{ super() }}
+  {% asset 'hdx_theme/dataset-scripts' %}
+{% endblock %}
+
+{% set pkg = pkg_dict %}
 
 {% block breadcrumb_content_selected %} class="breadcrumb-item active"{% endblock %}
 
