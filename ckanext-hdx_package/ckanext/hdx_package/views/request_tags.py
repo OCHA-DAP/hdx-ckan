@@ -1,14 +1,10 @@
 import json
 import logging
-import requests
-import ckan.lib.captcha as captcha
 import ckan.model as model
 import ckan.plugins.toolkit as tk
-import ckanext.hdx_users.helpers.helpers as usr_h
 
 from flask import Blueprint, make_response
 from six import text_type
-from ckan.common import config
 from ckan.views.api import CONTENT_TYPES
 from ckan.lib.mailer import MailerException
 from ckanext.hdx_theme.util.mail import hdx_validate_email
@@ -16,7 +12,6 @@ from ckanext.hdx_theme.util.mail import hdx_validate_email
 hdx_request_tags = Blueprint(u'hdx_request_tags', __name__, url_prefix=u'/request_tags')
 
 log = logging.getLogger(__name__)
-is_valid_captcha = usr_h.validate_captcha
 get_action = tk.get_action
 check_access = tk.check_access
 request = tk.request
@@ -101,8 +96,6 @@ def request_tags():
     data_dict = {}
 
     try:
-        usr_h.is_valid_captcha(request.form.get('g-recaptcha-response'))
-
         check_access('hdx_send_mail_request_tags', context, data_dict)
 
         data_dict = _process_tags_request()
@@ -121,9 +114,6 @@ def request_tags():
             resp['error']['existing_tags'] = e.error_dict['existing_tags']
             del e.error_dict['existing_tags']
         return _build_json_response(resp)
-    except captcha.CaptchaError:
-        return _build_json_response(
-            {'success': False, 'error': {'message': u'Bad Captcha. Please try again.'}})
     except Exception as e:
         log.error(e)
         return _build_json_response({'success': False, 'error': {'message': str(e)}})
