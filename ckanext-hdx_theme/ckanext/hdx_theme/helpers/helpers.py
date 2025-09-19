@@ -55,17 +55,17 @@ def filter_search_seo_category_keys(all_categ_keys):
     """
     if not all_categ_keys:
         return []
-    
+
     seo_excluded_categories = ['groups', 'organization']
     filtered_categ_keys = [key for key in all_categ_keys if key not in seo_excluded_categories]
-    
+
     return filtered_categ_keys if len(filtered_categ_keys) <= 2 else []
 
 
 def generate_canonical_link(request_path, request_args, canonical_url=None, params=None, no_params=False):
     """
     Generate canonical link information for SEO purposes.
-    
+
     Args:
         request_path: current request path
         request_args: current request args
@@ -75,30 +75,30 @@ def generate_canonical_link(request_path, request_args, canonical_url=None, para
     """
     if not canonical_url:
         canonical_url = request_path
-    
+
     # canonical urls are the desktop pages
     if canonical_url.startswith('/m/'):
         canonical_url = canonical_url.replace('/m/', '/', 1)
-    
+
     if no_params and request_path != canonical_url:
         # where current URL base differs and it's not about the params
         return {'add_canonical': True, 'canonical_url': canonical_url}
-    
+
     if no_params:
         # if we have any params we need to set canonical
         add_canonical = len(request_args) > 0 if request_args else False
         return {'add_canonical': add_canonical, 'canonical_url': canonical_url}
-    
+
     extra_args = dict(request_args) if request_args else {}
     # remove whitelisted params from extra_args
     if params:
         for param in params:
             extra_args.pop(param, None)
-    
+
     # if we have any params beyond the whitelisted ones then we need to set canonical
     # or if we have a different path (on mobile)
     add_canonical = len(extra_args) > 0 or request_path != canonical_url
-    
+
     if add_canonical and params and request_args:
         query_parts = []
         for param in params:
@@ -106,10 +106,10 @@ def generate_canonical_link(request_path, request_args, canonical_url=None, para
             for value in values:
                 if value is not None:
                     query_parts.append(f"{param}={quote_plus(str(value))}")
-        
+
         if query_parts:
             canonical_url = f"{canonical_url}?{'&'.join(query_parts)}"
-    
+
     return {'add_canonical': add_canonical, 'canonical_url': canonical_url}
 
 
@@ -886,16 +886,6 @@ def hdx_is_current_user_a_maintainer(maintainers, pkg):
             return True
 
     return False
-
-
-def hdx_is_sysadmin(user_id):
-    import ckan.authz as authz
-    user_obj = model.User.get(user_id)
-    if not user_obj:
-        return False
-        # raise logic.NotFound
-    user = user_obj.name
-    return authz.is_sysadmin(user)
 
 
 def hdx_organization_list_for_user(user_id):
