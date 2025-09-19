@@ -98,7 +98,6 @@ class TestStatsOrg(object):
         assert 'Monthly dataset download and page view statistics' in result.body
         assert 'If you are an administrator of this organization, you can log in to download monthly statistics going back five years.' not in result.body
 
-
         # download xls access
 
         url = h.url_for('hdx_org.download_organization_stats', id=org_id)

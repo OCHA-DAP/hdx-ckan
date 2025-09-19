@@ -12,7 +12,7 @@ import ckanext.hdx_search.helpers.search_history as search_history
 import ckanext.hdx_search.helpers.solr_query_helper as solr_query_helper
 import ckanext.hdx_search.model as search_model
 # from ckan.lib.helpers import DEFAULT_FACET_NAMES
-from ckanext.hdx_org_group.helpers.eaa_constants import EAA_FACET_NAMING_TO_INFO
+# from ckanext.hdx_org_group.helpers.eaa_constants import EAA_FACET_NAMING_TO_INFO
 from ckanext.hdx_package.helpers.p_code_filters_helper import are_new_p_code_filters_enabled
 from ckanext.hdx_package.helpers.date_helper import DaterangeParser
 from ckanext.hdx_package.helpers.freshness_calculator import get_calculator_instance, \
@@ -176,19 +176,19 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
             search_params['fq'] += ' +metadata_modified:[{} TO {}]'.format(start_metadata_modified,
                                                                            end_metadata_modified)
 
-        self.__process_eaa_link_params(search_params)
+        # self.__process_eaa_link_params(search_params)
         self.__process_freshness_filters(search_params)
 
         return search_params
 
-    def __process_eaa_link_params(self, search_params):
-        for value in EAA_FACET_NAMING_TO_INFO.values():
-            if value.get('url_param_name') in search_params['extras']:
-                search_params['fq'] += ' ' + solr_query_helper.generate_filter_query_from_list(
-                    'vocab_Topics', value.get('tag_list'), negate=value.get('negate')
-                )
-                search_params['fq'] += ' vocab_Topics: education'
-                break
+    # def __process_eaa_link_params(self, search_params):
+    #     for value in EAA_FACET_NAMING_TO_INFO.values():
+    #         if value.get('url_param_name') in search_params['extras']:
+    #             search_params['fq'] += ' ' + solr_query_helper.generate_filter_query_from_list(
+    #                 'vocab_Topics', value.get('tag_list'), negate=value.get('negate')
+    #             )
+    #             search_params['fq'] += ' vocab_Topics: education'
+    #             break
 
     def __process_freshness_filters(self, search_params):
         values = search_params['extras'].get(UPDATE_STATUS_URL_FILTER)

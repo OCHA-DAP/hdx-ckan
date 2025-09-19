@@ -54,26 +54,26 @@ class GroupReadLogic(LightGroupReadLogic):
         super(GroupReadLogic, self).__init__(group_id)
         self.flask_route_name = 'hdx_group.read'
 
-
-class CountryToplineReadLogic(object):
-
-    def __init__(self, country_id):
-        super(CountryToplineReadLogic, self).__init__()
-        self.id = country_id
-        self.template_data = None
-
-    def read(self):
-        country_dict = grp_h.get_country(self.id)
-        top_line_data_list = caching.cached_topline_numbers(self.id)
-        self.template_data = {
-            'data': {
-                'country_dict': country_dict,
-                'widgets': {
-                    'top_line_data_list': top_line_data_list
-                }
-            }
-        }
-        return self
+#
+# class CountryToplineReadLogic(object):
+#
+#     def __init__(self, country_id):
+#         super(CountryToplineReadLogic, self).__init__()
+#         self.id = country_id
+#         self.template_data = None
+#
+#     def read(self):
+#         country_dict = grp_h.get_country(self.id)
+#         top_line_data_list = caching.cached_topline_numbers(self.id)
+#         self.template_data = {
+#             'data': {
+#                 'country_dict': country_dict,
+#                 'widgets': {
+#                     'top_line_data_list': top_line_data_list
+#                 }
+#             }
+#         }
+#         return self
 
 
 class GroupIndexReadLogic(object):

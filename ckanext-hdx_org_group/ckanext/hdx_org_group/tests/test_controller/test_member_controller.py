@@ -66,8 +66,8 @@ def setup_data():
         org_url='https://hdx.hdxtest.org/'
     )
 
-@pytest.mark.usefixtures("hdx_clean_db", "clean_index", "setup_data")
-class TestBulkInviteMembersController():
+@pytest.mark.usefixtures('keep_db_tables_on_clean','hdx_clean_db', 'clean_index', 'setup_data')
+class TestBulkInviteMembersController(object):
 
     @mock.patch('ckanext.hdx_users.helpers.mailer._mail_recipient_html')
     def test_bulk_members_invite(self, _mail_recipient_html, app):
@@ -118,7 +118,7 @@ class TestBulkInviteMembersController():
 
 
 @pytest.mark.usefixtures('keep_db_tables_on_clean', 'hdx_clean_db', 'clean_index', 'setup_user_data')
-class TestMembersController():
+class TestMembersController(object):
 
     def _populate_member_names(self, members, member_with_name_list):
         ret = [next(u[4] for u in member_with_name_list if u[0] == member[0]) for member in members]
@@ -126,10 +126,10 @@ class TestMembersController():
 
     @mock.patch('ckanext.hdx_org_group.views.members.render')
     def test_members(self, render, app):
-        '''
+        """
         NOTE: This test might generate some exceptions in the console as the render() method is mocked
         so the ckanext.hdx_org_group.views.members.members() returns a mock object that flask doesn't like.
-        '''
+        """
         orgadmin = 'orgadmin'
         context: Context = {'model': model, 'session': model.Session, 'user': orgadmin}
         orgadmin_token = factories.APIToken(user='orgadmin', expires_in=2, unit=60 * 60)['token']
@@ -175,7 +175,7 @@ class TestMembersController():
         assert user_list[0] == 'John Doe1'
 
 @pytest.mark.usefixtures('keep_db_tables_on_clean', 'hdx_clean_db', 'clean_index', 'setup_user_data')
-class TestMembersDeleteController():
+class TestMembersDeleteController(object):
 
     def _populate_member_names(self, members, member_with_name_list):
         ret = [next(u[4] for u in member_with_name_list if u[0] == member[0]) for member in members]
@@ -341,3 +341,38 @@ class TestMembersDuplicateController(org_group_base.OrgGroupBaseWithIndsAndOrgsT
         # there should be only 1 member
         assert len(member_list_john) == 1
         assert member_list_john[0][3] == 'admin'
+
+    @mock.patch('ckanext.hdx_users.helpers.mailer._mail_recipient_html')
+    def test_member_new(self, _mail_recipient_html, app):
+        test_sysadmin = 'testsysadmin'
+        test_username = 'johndoe1'
+        test_sysadmin_token = factories.APIToken(user=test_sysadmin, expires_in=2, unit=60 * 60)['token']
+        test_username_token = factories.APIToken(user=test_username, expires_in=2, unit=60 * 60)['token']
+        context = {'model': model, 'session': model.Session, 'user': test_sysadmin}
+
+        initial_member_list = self._get_action('member_list')(
+            context, {'id': 'hdx-test-org', 'object_type': 'user', 'user_info': True}
+        )
+        # bulk adding members
+        url = h.url_for('hdx_members.member_new', id='hdx-test-org')
+        result = self.app.post(
+            url,
+            params={'email': 'johndoe1@hdx.hdxtest.org', 'role': 'editor'},
+            headers={'Authorization': test_sysadmin_token},
+        )
+        result = self.app.post(
+            url,
+            params={'email': 'tester@test-domain.com', 'role': 'admin'},
+            headers={'Authorization': test_sysadmin_token},
+        )
+        result = self.app.post(
+            url,
+            params={'email': 'new_user@user.com', 'role': 'admin'},
+            headers={'Authorization': test_sysadmin_token},
+        )
+
+        member_list = self._get_action('member_list')(
+            context, {'id': 'hdx-test-org', 'object_type': 'user', 'user_info': True}
+        )
+        assert 'testsysadmin' in (m[4] for m in member_list)
+        assert len(member_list) - len(initial_member_list) == 2

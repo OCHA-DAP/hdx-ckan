@@ -8,10 +8,9 @@ import ckan.plugins.toolkit as tk
 
 import ckanext.hdx_package.helpers.analytics as analytics
 
-from ckan.views.group import _get_group_template, CreateGroupView
+from ckan.views.group import CreateGroupView
 
-from ckanext.hdx_org_group.controller_logic.group_read_logic import GroupIndexReadLogic, GroupReadLogic, \
-    CountryToplineReadLogic
+from ckanext.hdx_org_group.controller_logic.group_read_logic import GroupIndexReadLogic, GroupReadLogic
 from ckanext.hdx_theme.util.light_redirect import check_redirect_needed
 from ckanext.hdx_users.general_token_model import ObjectType
 from ckanext.hdx_users.helpers.notification_platform import add_unsubscribe_token
@@ -33,7 +32,7 @@ log = logging.getLogger(__name__)
 GROUP_TYPES = ['group']
 
 hdx_group = Blueprint(u'hdx_group', __name__, url_prefix=u'/group')
-hdx_country_topline = Blueprint(u'hdx_country_topline', __name__, url_prefix=u'/country')
+# hdx_country_topline = Blueprint(u'hdx_country_topline', __name__, url_prefix=u'/country')
 
 
 def index():
@@ -53,12 +52,12 @@ def _index(template_file, show_switch_to_desktop, show_switch_to_mobile):
     return render(template_file, template_data)
 
 
-def country_topline(id):
-    log.info("The id of the page is: " + id)
-
-    topline_read_logic = CountryToplineReadLogic(id).read()
-
-    return render('country/country_topline.html', extra_vars=topline_read_logic.template_data)
+# def country_topline(id):
+#     log.info("The id of the page is: " + id)
+#
+#     topline_read_logic = CountryToplineReadLogic(id).read()
+#
+#     return render('country/country_topline.html', extra_vars=topline_read_logic.template_data)
 
 
 @check_redirect_needed
@@ -103,4 +102,4 @@ hdx_group.add_url_rule(
 )
 hdx_group.add_url_rule(u'/<id>', view_func=read)
 
-hdx_country_topline.add_url_rule(u'/topline/<id>', view_func=country_topline)
+# hdx_country_topline.add_url_rule(u'/topline/<id>', view_func=country_topline)
