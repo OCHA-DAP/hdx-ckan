@@ -1,5 +1,5 @@
 import pytest
-import logging as logging
+import logging
 import ckan.lib.helpers as h
 import mock
 import ckan.model as model
@@ -38,7 +38,7 @@ class TestRequestTags(object):
             'email': 'testsysadmin@hdx.hdxtest.org',
         }
         result = app.post(url, headers=headers, data=data)
-        assert result.json.get('success') == False
+        assert result.json.get('success') is False
 
         data = {
             'fullname': 'Test User',
@@ -48,7 +48,7 @@ class TestRequestTags(object):
             'comment': 'This is a tag for testing',
         }
         result = app.post(url, headers=headers, data=data)
-        assert result.json.get('success') == False
+        assert result.json.get('success') is False
 
 
         data = {
@@ -60,7 +60,7 @@ class TestRequestTags(object):
         }
         result = app.post(url, headers=headers, data=data)
         assert result.status_code == 200
-        assert result.json.get('success') == False
+        assert result.json.get('success') is False
         assert mock_mail_recipient.call_count == 0
 
         data = {
