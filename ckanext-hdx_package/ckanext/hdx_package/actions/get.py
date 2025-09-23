@@ -1141,7 +1141,7 @@ def resource_view_list(up_func, context, data_dict):
 
     if not resource:
         # Remove the auth audit record, since _check_access won't be called
-        if '__auth_audit' in context and context['__auth_audit']:
+        if '__auth_audit' in context and context['__auth_audit'] and context['__auth_audit'][-1][0] == 'resource_view_list':
             context['__auth_audit'].pop()
         raise NotFound
 
