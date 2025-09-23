@@ -1124,6 +1124,8 @@ def hdx_send_mail_request_tags(context, data_dict):
                               sender_email=data_dict.get('email'), snippet='email/content/tag_request.html')
 
     return None
+
+
 @tk.chained_action
 def resource_view_list(up_func, context, data_dict):
     """
