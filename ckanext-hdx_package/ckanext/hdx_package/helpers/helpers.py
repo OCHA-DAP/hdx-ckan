@@ -594,3 +594,8 @@ def end_of_dataset_date(dataset_date):
     else:
         dataset_end_date = None
     return dataset_end_date, is_dataset_date_star
+
+def hdx_is_ongoing_dataset_date(dataset_dict):
+    if dataset_dict.get('dataset_date') and ' *]' in dataset_dict.get('dataset_date'):
+            return True
+    return False

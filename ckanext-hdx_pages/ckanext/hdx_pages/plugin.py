@@ -7,6 +7,8 @@ import ckanext.hdx_pages.actions.update as update
 import ckanext.hdx_pages.actions.get as get
 import ckanext.hdx_pages.actions.auth as auth
 
+import ckanext.hdx_pages.command as command
+
 import ckanext.hdx_pages.helpers.helper as helper
 import ckanext.hdx_pages.model as pages_model
 
@@ -20,6 +22,7 @@ class HdxCustomPagesPlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.ITemplateHelpers)
     plugins.implements(plugins.IConfigurer)
     plugins.implements(plugins.IConfigurable)
+    # plugins.implements(plugins.IClick)
     # plugins.implements(plugins.IRoutes, inherit=True)
 
     # IBlueprint
@@ -62,7 +65,6 @@ class HdxCustomPagesPlugin(plugins.SingletonPlugin):
         return {
             'hdx_events_list': helper.hdx_events_list,
             'hdx_user_has_page_permission': helper.has_permission,
-            'hdx_is_ongoing_dataset_date': helper.hdx_is_ongoing_dataset_date,
         }
 
     # IConfigurer
@@ -78,3 +80,7 @@ class HdxCustomPagesPlugin(plugins.SingletonPlugin):
     # IConfigurable
     def configure(self, config):
         pages_model.setup()
+
+    # # IClick
+    # def get_commands(self):
+    #     return [command.initdb, command.cleandb, command.droptabledb]

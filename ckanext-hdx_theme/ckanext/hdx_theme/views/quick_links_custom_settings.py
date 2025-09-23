@@ -6,7 +6,9 @@ import uuid
 from six import text_type
 
 import ckan.plugins.toolkit as tk
+import ckan.model as model
 
+from ckan.types import Context
 from ckanext.hdx_theme.helpers.uploader import GlobalUpload
 
 abort = tk.abort
@@ -25,9 +27,13 @@ hdx_quick_links = flask.Blueprint(u'hdx_quick_links', __name__, url_prefix=u'/ck
 
 def show():
     context = {u'user': g.user}
-    check_access('hdx_quick_links_update', context, {})
+    try:
+        check_access('hdx_quick_links_update', context, {})
+    except tk.NotAuthorized:
+        return abort(403, _('Not authorized to access this page'))
 
-    setting_value = get_action('hdx_quick_links_settings_show')({}, {})
+    action_context: Context = {'model': model, 'session': model.Session, 'user': g.user}
+    setting_value = get_action('hdx_quick_links_settings_show')(action_context, {})
     template_data = {
         'data': {
             'hdx.quick_links.config': json.dumps(setting_value)
@@ -39,36 +45,39 @@ def show():
 
 def delete(id):
     context = {u'user': g.user}
-    check_access('hdx_quick_links_update', context, {})
-    # delete_id = request.form.get('id')
-    existing_setting_list = get_action('hdx_quick_links_settings_show')({'not_initial': True}, {})
+    try:
+        check_access('hdx_quick_links_update', context, {})
+    except tk.NotAuthorized:
+        return abort(403, _('Not authorized to access this page'))
+
+    action_context: Context = {'model': model, 'session': model.Session, 'user': g.user}
+    existing_setting_list = get_action('hdx_quick_links_settings_show')(action_context, {'not_initial': True})
     remove_index, remove_element = _find_quick_links_item_by_id(existing_setting_list, id)
 
     if remove_index >= 0:
         del existing_setting_list[remove_index]
 
-    # if remove_element:
-    #     self._remove_file_by_path(remove_element.get('graphic'))
-
     data_dict = {
         'hdx.quick_links.config': existing_setting_list
     }
 
-    settings_json = get_action('hdx_quick_links_settings_update')({}, data_dict)
+    settings_json = get_action('hdx_quick_links_settings_update')(action_context, data_dict)
 
-    # response.headers['Content-Type'] = CONTENT_TYPES['json']
     return settings_json
 
 
 def update():
     context = {u'user': g.user}
-    check_access('hdx_quick_links_update', context, {})
+    try:
+        check_access('hdx_quick_links_update', context, {})
+    except tk.NotAuthorized:
+        return abort(403, _('Not authorized to access this page'))
 
     item = _process_request()
 
     if item:
-        existing_setting_list = get_action('hdx_quick_links_settings_show')({'not_initial': True}, {})
-        # self._persist_file(item)
+        action_context: Context = {'model': model, 'session': model.Session, 'user': g.user}
+        existing_setting_list = get_action('hdx_quick_links_settings_show')(action_context, {'not_initial': True})
 
         if item.pop('new'):
             existing_setting_list.append(item)
@@ -80,13 +89,12 @@ def update():
             'hdx.quick_links.config': _sort_quick_links_items(existing_setting_list)
         }
 
-        ret = get_action('hdx_quick_links_settings_update')({}, data_dict)
+        ret = get_action('hdx_quick_links_settings_update')(action_context, data_dict)
     else:
         ret = json.dumps({
             'message': _('Badly formatted data')
         })
 
-    # response.headers['Content-Type'] = CONTENT_TYPES['json']
     return ret
 
 

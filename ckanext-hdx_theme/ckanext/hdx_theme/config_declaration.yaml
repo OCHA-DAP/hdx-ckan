@@ -201,10 +201,10 @@ groups:
         default: https://data.humdata.org/dataset/a0f8e926-9340-4034-a053-6c004c9bdee3/resource/9e90a441-43cc-4c69-b54f-41efabf57fa6/download/worldbank_topline.csv
         example: https://data.humdata.org/dataset/a0f8e926-9340-4034-a053-6c004c9bdee3/resource/9e90a441-43cc-4c69-b54f-41efabf57fa6/download/worldbank_topline.csv
         description: The url containing a hxlated date with country topline numbers
-      - key: hdx.active_locations_reliefweb.resource_id
-        default: 4551480e-448e-4b09-b02f-ed31d42a43d5
-        example: 4551480e-448e-4b09-b02f-ed31d42a43d5
-        description: The resource for topline data for active locations
+#      - key: hdx.active_locations_reliefweb.resource_id
+#        default: 4551480e-448e-4b09-b02f-ed31d42a43d5
+#        example: 4551480e-448e-4b09-b02f-ed31d42a43d5
+#        description: The resource for topline data for active locations
   - annotation: HXL Related
     options:
       - key: hdx.hxl_preview_app.url
