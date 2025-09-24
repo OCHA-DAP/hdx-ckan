@@ -54,7 +54,7 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
     def get_actions(self):
         from ckanext.hdx_org_group.helpers import organization_helper as hdx_org_actions
         return {
-            'hdx_get_group_activity_list': hdx_org_actions.hdx_get_group_activity_list,
+            # 'hdx_get_group_activity_list': hdx_org_actions.hdx_get_group_activity_list,
             'hdx_light_group_show': get_actions.hdx_light_group_show,
             'hdx_topline_num_for_group': get_actions.hdx_topline_num_for_group,
             'hdx_datasets_for_group': get_actions.hdx_datasets_for_group,
@@ -66,7 +66,7 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
             'group_delete': hdx_org_actions.hdx_group_delete,
             'organization_member_delete': hdx_org_actions.organization_member_delete,
             'organization_member_create': hdx_org_actions.organization_member_create,
-            'hdx_trigger_screencap': get_actions.hdx_trigger_screencap,
+            # 'hdx_trigger_screencap': get_actions.hdx_trigger_screencap,
             'hdx_get_locations_info_from_rw': get_actions.hdx_get_locations_info_from_rw,
             'invalidate_data_completeness_for_location': update_actions.invalidate_data_completeness_for_location,
             'hdx_organization_follower_list': get_actions.hdx_organization_follower_list,
@@ -78,7 +78,7 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
 
     def get_auth_functions(self):
         return {
-            'hdx_trigger_screencap': authorize.hdx_trigger_screencap,
+            # 'hdx_trigger_screencap': authorize.hdx_trigger_screencap,
             'member_delete': authorize.member_delete,
             'invalidate_data_completeness_for_location': authorize.invalidate_data_completeness_for_location,
             'hdx_organization_follower_list': authorize.hdx_organization_follower_list,
@@ -357,9 +357,9 @@ class HDXGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultGroupForm):
 
         return [
             group.hdx_group,
-            group.hdx_country_topline,
+            # group.hdx_country_topline,
             light_group.hdx_light_group,
-            light_group.hdx_group_eaa_maps,
+            # light_group.hdx_group_eaa_maps,
             org_join.hdx_org_join,
             org_request.hdx_org_request,
         ]

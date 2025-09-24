@@ -98,7 +98,4 @@ def has_permission(username_or_id):
         return False
     return result
 
-def hdx_is_ongoing_dataset_date(dataset_dict):
-    if dataset_dict.get('dataset_date') and ' *]' in dataset_dict.get('dataset_date'):
-            return True
-    return False
+

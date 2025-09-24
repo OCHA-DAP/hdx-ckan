@@ -7,14 +7,12 @@ import json
 import logging
 
 import ckan.lib.dictization as d
-import ckan.lib.helpers as helpers
 import ckan.lib.navl.dictization_functions
 import ckan.model as model
 import ckan.plugins.toolkit as tk
 import ckanext.hdx_org_group.dao.indicator_access as indicator_access
 import ckanext.hdx_org_group.dao.widget_data_service as widget_data_service
 import ckanext.hdx_org_group.helpers.country_helper as country_helper
-import ckanext.hdx_org_group.helpers.organization_helper as org_helper
 from ckan.common import c
 from ckanext.hdx_theme.helpers.caching import cached_make_rest_api_request as cached_make_rest_api_request
 
@@ -72,8 +70,8 @@ def hdx_datasets_for_group(context, data_dict):
     elif type == 'datasets':
         new_data_dict['ext_indicator'] = u'0'
 
-    search_param_list = [
-        key + ':' + value for key, value in data_dict.iteritems() if key not in skipped_keys]
+    search_param_list = [key + ':' + value for key, value in data_dict.items() if key not in skipped_keys]
+
     search_param_list.append(u'groups:{}'.format(id))
 
     if search_param_list != None:
@@ -121,6 +119,8 @@ def hdx_topline_num_for_group(context, data_dict):
 
     return top_line_items
 
+def get_toplines_for_active_country(group_info, common_format):
+    return __get_toplines_for_active_country(group_info, common_format)
 
 def __get_toplines_for_active_country(group_info, common_format):
     """
@@ -253,25 +253,25 @@ def get_group(id):
     return {'group_info': group_info, 'custom_dict': custom_dict}
 
 
-@side_effect_free
-def hdx_trigger_screencap(context, data_dict):
-    cfg = context['cfg']
-    file_path = context['file_path']
-    # checking if user is sysadmin
-    sysadmin = False
-    if data_dict.get('reset_thumbnails', 'false') == 'true':
-        try:
-            _check_access('hdx_trigger_screencap', context, data_dict)
-            sysadmin = True
-        except:
-            return False
-    if not sysadmin and not context.get('reset', False):
-        return False
-    if not cfg['screen_cap_asset_selector']:  # If there's no selector set just don't bother
-        return False
-
-    return org_helper.hdx_capturejs(config['ckan.site_url'] + helpers.url_for('organization_read', id=cfg['org_name']),
-                                    file_path, cfg['screen_cap_asset_selector'])
+# @side_effect_free
+# def hdx_trigger_screencap(context, data_dict):
+#     cfg = context['cfg']
+#     file_path = context['file_path']
+#     # checking if user is sysadmin
+#     sysadmin = False
+#     if data_dict.get('reset_thumbnails', 'false') == 'true':
+#         try:
+#             _check_access('hdx_trigger_screencap', context, data_dict)
+#             sysadmin = True
+#         except:
+#             return False
+#     if not sysadmin and not context.get('reset', False):
+#         return False
+#     if not cfg['screen_cap_asset_selector']:  # If there's no selector set just don't bother
+#         return False
+#
+#     return org_helper.hdx_capturejs(config['ckan.site_url'] + helpers.url_for('organization_read', id=cfg['org_name']),
+#                                     file_path, cfg['screen_cap_asset_selector'])
 
 
 @side_effect_free

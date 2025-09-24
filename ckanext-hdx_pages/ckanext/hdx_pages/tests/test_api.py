@@ -63,6 +63,19 @@ page_eldeleted = {
     'sections': '[{"data_url": "https://data.humdata.org/dataset/wfp-and-fao-overview-of-countries-affected-by-the-2015-16-el-nino/resource/de96f6a5-9f1f-4702-842c-4082d807b1c1/view/08f78cd6-89bb-427c-8dce-0f6548d2ab21", "type": "map", "description": null, "max_height": "350px", "section_title": "El Nino Affected Countries"}, {"data_url": "https://data.humdata.org/search?q=el%20nino", "type": "data_list", "description": null, "max_height": null, "section_title": "Data"}]',
 }
 
+page_with_tags = {
+    'name': 'eltags',
+    'title': 'El Tags',
+    'groups': [LOCATION],
+    'description': 'El Groupo Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.',
+    'type': 'event',
+    'status': 'ongoing',
+    'state': 'active',
+    'tags': [{'name': 'energy', 'state': 'active'}, {'name': 'funding', 'state': 'active'}],
+    'tags_string':'energy,funding',
+    'sections': '[{"data_url": "https://data.humdata.org/dataset/wfp-and-fao-overview-of-countries-affected-by-the-2015-16-el-nino/resource/de96f6a5-9f1f-4702-842c-4082d807b1c1/view/08f78cd6-89bb-427c-8dce-0f6548d2ab21", "type": "map", "description": null, "max_height": "350px", "section_title": "El Nino Affected Countries"}, {"data_url": "https://data.humdata.org/search?q=el%20nino", "type": "data_list", "description": null, "max_height": null, "section_title": "Data"}]',
+}
+
 
 @pytest.mark.usefixtures('keep_db_tables_on_clean', 'hdx_clean_db', 'clean_index', 'setup_user_data')
 class TestHDXApiPage(object):
@@ -183,6 +196,9 @@ class TestHDXPageWithGroups(object):
         page_group_list = _get_action('page_group_list')(context_sysadmin, {'id': page_dict.get('id')})
         assert page_group_list
 
+        page_list = _get_action('admin_page_list')(context_sysadmin, {})
+        assert page_list
+
         page_list = _get_action('page_list')(context_sysadmin, {})
         assert page_list
 
@@ -250,3 +266,58 @@ class TestHDXPageShow(object):
             assert False
         except logic.ValidationError:
             assert True
+
+
+@pytest.mark.usefixtures('keep_db_tables_on_clean', 'hdx_clean_db', 'clean_index', 'setup_user_data')
+class TestHDXPageWithTags(object):
+
+    def test_page_with_tags(self):
+        context = {'model': model, 'session': model.Session, 'user': USER}
+        context_sysadmin = {'model': model, 'session': model.Session, 'user': SYSADMIN}
+
+        data_dict = {
+            'name': 'Topics',
+            'tags': [
+                {
+                    'name': 'energy'
+                },
+                {
+                    'name': 'health'
+                }
+            ]
+        }
+        _get_action('vocabulary_create')({'ignore_auth': True}, data_dict)
+
+        package = {
+            'package_creator': 'test function',
+            'private': False,
+            'dataset_date': '[1960-01-01 TO 2012-12-31]',
+            'caveats': 'These are the caveats',
+            'license_other': 'TEST OTHER LICENSE',
+            'methodology': 'This is a test methodology',
+            'dataset_source': 'World Bank',
+            'license_id': 'hdx-other',
+            'notes': 'This is a test activity',
+            'groups': [{'name': 'some_location'}],
+            'owner_org': 'some_org_name',
+            'name': 'test_activity_4',
+            'title': 'Test Activity 4',
+            'data_update_frequency': '30',
+            'tags': [{'name': 'energy'}, {'name': 'funding'}],
+            'maintainer': USER,
+        }
+
+        _get_action('package_create')(context_sysadmin, package)
+
+        pkg = _get_action('package_show')(context_sysadmin, {'id': package['name']})
+        assert len(pkg.get('tags')) == 2
+
+        page_dict = _get_action('page_create')(context_sysadmin, page_with_tags)
+
+        page_created_with_tags_dict = _get_action('page_show')(context_sysadmin, {'id': page_dict.get('id') or page_dict.get('name')})
+
+        assert 'tags' in page_created_with_tags_dict
+
+        names = [d['name'] for d in page_created_with_tags_dict.get('tags')]
+        assert 'energy' in names
+        assert 'funding' in names

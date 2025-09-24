@@ -6,7 +6,7 @@ import ckan.common as common
 import ckan.model as model
 import ckan.lib.helpers as h
 import ckan.plugins.toolkit as tk
-
+from ckan.types import Context
 
 import ckanext.hdx_org_group.helpers.organization_helper as helper
 import ckanext.hdx_package.helpers.analytics as analytics
@@ -44,12 +44,7 @@ def light_index():
 
 
 def _index(template_file, show_switch_to_desktop, show_switch_to_mobile):
-    context = {
-        'model': model,
-        'session': model.Session,
-        'for_view': True,
-        'with_private': False
-    }
+    context: Context = {'model': model, 'session': model.Session, 'for_view': True, 'with_private': False}
     # pass user info to context as needed to view private datasets of
     # orgs correctly
     # if c.userobj:
@@ -143,9 +138,9 @@ def _read(template_file, id, show_switch_to_desktop, show_switch_to_mobile):
         unsubscribe_token = request.args.get('_unsubscribe_token', None)
         add_unsubscribe_token(unsubscribe_token, ObjectType.ORGANIZATION, org_dict.get('id'), template_data)
         return render(template_file, template_data)
-    except NotFound as e:
+    except NotFound:
         abort(404, _('Page not found'))
-    except NotAuthorized as e:
+    except NotAuthorized:
         abort(403, _('Not authorized to see this page'))
 
 

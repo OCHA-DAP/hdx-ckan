@@ -204,33 +204,18 @@ def create_table():
             print('page tag association table created')
 
 #
-# def delete_table():
-#     if page_table.exists():
-#         page_table.delete()
-#         log.debug('Page table deleted')
-#
-#
-# def patch_table():
-#     if page_table.exists():
-#         try:
-#             print 'Starting to patch table'
-#             model.Session.connection().execute('''alter table page add column status text''')
-#             model.Session.commit()
-#             print 'Finish to patch table'
-#         except Exception as e:
-#             print "There was an error during patching page table: " + str(e.message)
-#
-#     else:
-#         print 'page table not exist'
-#
-#
-# def drop_table():
-#     '''
-#     Drop page table
-#     '''
-#     if page_table.exists():
-#         page_table.drop()
-#         log.debug('Page table dropped')
+def delete_table():
+    if page_table.exists():
+        page_table.delete()
+        log.debug('Page table deleted')
+
+def drop_table():
+    """
+    Drop page table
+    """
+    if page_table.exists():
+        page_table.drop()
+        log.debug('Page table dropped')
 
 
 def patch_table_add_column(column_name):

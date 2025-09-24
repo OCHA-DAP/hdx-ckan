@@ -248,7 +248,6 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'hdx_is_current_user_a_maintainer': hdx_helpers.hdx_is_current_user_a_maintainer,
             'hdx_dataset_follower_count': hdx_helpers.hdx_dataset_follower_count,
             'hdx_organization_list_for_user': hdx_helpers.hdx_organization_list_for_user,
-            'hdx_is_sysadmin': hdx_helpers.hdx_is_sysadmin,
             'hdx_dataset_preview_values_list': hdx_helpers.hdx_dataset_preview_values_list,
             'hdx_dataset_is_hxl': hdx_helpers.hdx_dataset_is_hxl,
             'hdx_dataset_has_sadd': hdx_helpers.hdx_dataset_has_sadd,
@@ -269,7 +268,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'hdx_supports_notifications': hdx_helpers.hdx_supports_notifications,
             'HDX_CONST': const,
             'facet_url_extra_args': hdx_helpers.facet_url_extra_args,
-            'build_facet_filter_url': hdx_helpers.build_facet_filter_url, 
+            'build_facet_filter_url': hdx_helpers.build_facet_filter_url,
         }
 
     def get_actions(self):

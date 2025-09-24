@@ -143,14 +143,14 @@ def get_viz_title_from_extras(org_dict):
     return None
 
 
-def get_value_dict_from_extras(org_dict, key='visualization_config'):
-    try:
-        for item in org_dict.get('extras'):
-            if item.get('key') == key:
-                return json.loads(item.get('value'))
-    except:
-        return None
-    return None
+# def get_value_dict_from_extras(org_dict, key='visualization_config'):
+#     try:
+#         for item in org_dict.get('extras'):
+#             if item.get('key') == key:
+#                 return json.loads(item.get('value'))
+#     except:
+#         return None
+#     return None
 
 
 def get_featured_org_highlight(context, org_dict, config):
@@ -183,37 +183,37 @@ def get_featured_org_highlight(context, org_dict, config):
 #     return org_items
 
 
-def hdx_get_group_activity_list(context, data_dict):
-    from ckanext.hdx_package.helpers import helpers as hdx_package_helpers
-
-    group_uuid = data_dict.get('group_uuid', None)
-    if group_uuid:
-        check_access('group_show', context, data_dict)
-
-        model = context['model']
-        offset = data_dict.get('offset', 0)
-        limit = int(
-            data_dict.get('limit', config.get('ckan.activity_list_limit', 31)))
-
-        activity_objects = model.activity.group_activity_list(group_uuid,
-                                                              limit=limit, offset=offset)
-        activity_stream = model_dictize.activity_list_dictize(
-            activity_objects, context)
-    else:
-        if 'group_type' in data_dict and data_dict['group_type'] == 'organization':
-            activity_stream = get_action(
-                'organization_activity_list')(context, data_dict)
-        else:
-            activity_stream = get_action(
-                'group_activity_list')(context, data_dict)
-    offset = int(data_dict.get('offset', 0))
-    extra_vars = {
-        'controller': 'group',
-        'action': 'activity',
-        'id': data_dict['id'],
-        'offset': offset,
-    }
-    return hdx_package_helpers._activity_list(context, activity_stream, extra_vars)
+# def hdx_get_group_activity_list(context, data_dict):
+#     from ckanext.hdx_package.helpers import helpers as hdx_package_helpers
+#
+#     group_uuid = data_dict.get('group_uuid', None)
+#     if group_uuid:
+#         check_access('group_show', context, data_dict)
+#
+#         model = context['model']
+#         offset = data_dict.get('offset', 0)
+#         limit = int(
+#             data_dict.get('limit', config.get('ckan.activity_list_limit', 31)))
+#
+#         activity_objects = model.activity.group_activity_list(group_uuid,
+#                                                               limit=limit, offset=offset)
+#         activity_stream = model_dictize.activity_list_dictize(
+#             activity_objects, context)
+#     else:
+#         if 'group_type' in data_dict and data_dict['group_type'] == 'organization':
+#             activity_stream = get_action(
+#                 'organization_activity_list')(context, data_dict)
+#         else:
+#             activity_stream = get_action(
+#                 'group_activity_list')(context, data_dict)
+#     offset = int(data_dict.get('offset', 0))
+#     extra_vars = {
+#         'controller': 'group',
+#         'action': 'activity',
+#         'id': data_dict['id'],
+#         'offset': offset,
+#     }
+#     return hdx_package_helpers._activity_list(context, activity_stream, extra_vars)
 
 
 # def compile_less(result, translate_func=None):
@@ -741,16 +741,16 @@ def hdx_group_or_org_create(context: Context,
 #                                            viewportsize=viewportsize, mogrify=True, resize='40%')
 #     return screenshot_creator.execute()
 
-def notify_admins(data_dict):
-    try:
-        if data_dict.get('admins'):
-            # for admin in data_dict.get('admins'):
-            hdx_mailer.mail_recipient(data_dict.get('admins'), data_dict.get('subject'), data_dict.get('message'))
-    except Exception as e:
-        log.error('Email server error: can not send email to admin users' + e.message)
-        return False
-    log.info('admin users where notified by email')
-    return True
+# def notify_admins(data_dict):
+#     try:
+#         if data_dict.get('admins'):
+#             # for admin in data_dict.get('admins'):
+#             hdx_mailer.mail_recipient(data_dict.get('admins'), data_dict.get('subject'), data_dict.get('message'))
+#     except Exception as e:
+#         log.error('Email server error: can not send email to admin users' + e.message)
+#         return False
+#     log.info('admin users where notified by email')
+#     return True
 
 
 def hdx_user_in_org_or_group(group_id, include_pending=False):

@@ -433,6 +433,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'hdx_render_resource_updated_date': hdx_helpers.hdx_render_resource_updated_date,
             'hdx_compute_analytics': hdx_helpers.hdx_compute_analytics,
             'hdx_end_of_dataset_date': hdx_helpers.end_of_dataset_date,
+            'hdx_is_ongoing_dataset_date': hdx_helpers.hdx_is_ongoing_dataset_date,
         }
 
     def get_actions(self):
@@ -461,6 +462,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'resource_patch': hdx_patch.resource_patch,
             'resource_show': hdx_get.resource_show,
             'resource_delete': hdx_delete.resource_delete,
+            'resource_view_list': hdx_get.resource_view_list,
             'package_search': hdx_get.package_search,
             'package_show': hdx_get.package_show,
             'package_show_edit': hdx_get.package_show_edit,

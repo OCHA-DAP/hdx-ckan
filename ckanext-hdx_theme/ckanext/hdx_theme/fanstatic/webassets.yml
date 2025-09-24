@@ -780,7 +780,6 @@ crisis-ebola-scripts:
     - vendor/leaflet-1.7.1/leaflet.js
     - map_base.js
     - crisis/ebola/crisis-ebola.js
-    - crisis/ebola/ebola_crisis_page_graph.js
     - crisis/ebola/data.js
     - crisis/ebola/medical_centres.js
     - crisis/ebola/regions.js
@@ -792,7 +791,6 @@ crisis-ebola-styles:
     - vendor/leaflet-1.7.1/leaflet.css
     - crisis/topline.css
     - crisis/ebola/crisis-ebola.css
-    - crisis/ebola/ebola_crisis_page_graph.css
 
 shape-view-scripts:
   <<: *common-js

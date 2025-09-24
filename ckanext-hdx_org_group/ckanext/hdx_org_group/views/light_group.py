@@ -1,16 +1,13 @@
-import json
 import logging
 import ckan
 from flask import Blueprint
 
 import ckan.common as common
-import ckan.lib.helpers as h
 import ckan.model as model
 import ckan.plugins.toolkit as tk
 import ckanext.hdx_package.helpers.analytics as analytics
-import ckanext.hdx_search.helpers.solr_query_helper as solr_query_helper
-from ckanext.hdx_org_group.controller_logic.group_read_logic import LightGroupReadLogic, get_all_countries_world_first
-from ckanext.hdx_org_group.helpers.eaa_constants import EAA_FACET_NAMING_TO_INFO
+from ckanext.hdx_org_group.controller_logic.group_read_logic import LightGroupReadLogic
+# from ckanext.hdx_org_group.helpers.eaa_constants import EAA_FACET_NAMING_TO_INFO
 from ckanext.hdx_theme.util.light_redirect import check_redirect_needed, switch_url_path
 from ckanext.hdx_users.general_token_model import ObjectType
 from ckanext.hdx_users.helpers.notification_platform import add_unsubscribe_token
@@ -32,7 +29,7 @@ log = logging.getLogger(__name__)
 
 GROUP_TYPES = ['group']
 
-hdx_group_eaa_maps = Blueprint(u'hdx_group_eaa_maps', __name__, url_prefix=u'/eaa-worldmap')
+# hdx_group_eaa_maps = Blueprint(u'hdx_group_eaa_maps', __name__, url_prefix=u'/eaa-worldmap')
 hdx_light_group = Blueprint(u'hdx_light_group', __name__, url_prefix=u'/m/group')
 
 
@@ -41,47 +38,47 @@ def light_index():
     return redirect(new_url)
 
 
-def group_eaa_worldmap():
-    countries = json.dumps(get_eaa_countries_data())
-    template_data = {
-        'countries': countries,
-    }
-    return render('group/eaa_worldmap.html', template_data)
+# def group_eaa_worldmap():
+#     countries = json.dumps(get_eaa_countries_data())
+#     template_data = {
+#         'countries': countries,
+#     }
+#     return render('group/eaa_worldmap.html', template_data)
 
 
-def get_eaa_countries_data():
-    query_tag = 'eaa'
-    search = {
-        'q': None,
-        'facet.limit': 1000,
-        'fq': 'vocab_Topics:education',
-        'facet.query': [
-            solr_query_helper.generate_facet_query_from_list(k, query_tag, 'vocab_Topics', v.get('tag_list'),
-                                                             negate=v.get('negate'))
-            for k, v in EAA_FACET_NAMING_TO_INFO.items()],
-        'facet.pivot': '{!query=' + query_tag + '}groups',
-        'rows': 1,
-    }
-    result = get_action('package_search')({}, search)
-
-    all_countries_world_1st = get_all_countries_world_first()
-
-    for country in all_countries_world_1st:
-        code = country['name']
-
-        eaa_stats = result.get('facet_pivot', {}).get('groups', {}).get(code)
-        if eaa_stats:
-            for key in eaa_stats.keys():
-                facet_info = EAA_FACET_NAMING_TO_INFO.get(key)
-                if facet_info:
-                    url_dict = {
-                        'groups': code,
-                        facet_info.get('url_param_name'): True
-                    }
-                    eaa_stats[key]['url'] = h.url_for('search', **url_dict)
-        country['eaa_stats'] = eaa_stats
-
-    return all_countries_world_1st
+# def get_eaa_countries_data():
+#     query_tag = 'eaa'
+#     search = {
+#         'q': None,
+#         'facet.limit': 1000,
+#         'fq': 'vocab_Topics:education',
+#         'facet.query': [
+#             solr_query_helper.generate_facet_query_from_list(k, query_tag, 'vocab_Topics', v.get('tag_list'),
+#                                                              negate=v.get('negate'))
+#             for k, v in EAA_FACET_NAMING_TO_INFO.items()],
+#         # 'facet.pivot': '{!query=' + query_tag + '}groups',
+#         'rows': 1,
+#     }
+#     result = get_action('package_search')({}, search)
+#
+#     all_countries_world_1st = get_all_countries_world_first()
+#
+#     for country in all_countries_world_1st:
+#         code = country['name']
+#
+#         eaa_stats = result.get('facet_pivot', {}).get('groups', {}).get(code)
+#         if eaa_stats:
+#             for key in eaa_stats.keys():
+#                 facet_info = EAA_FACET_NAMING_TO_INFO.get(key)
+#                 if facet_info:
+#                     url_dict = {
+#                         'groups': code,
+#                         facet_info.get('url_param_name'): True
+#                     }
+#                     eaa_stats[key]['url'] = h.url_for('search', **url_dict)
+#         country['eaa_stats'] = eaa_stats
+#
+#     return all_countries_world_1st
 
 
 # def light_read(id):
@@ -122,7 +119,7 @@ def _read(template_file, id, show_switch_to_desktop, show_switch_to_mobile):
         return render(template_file, template_data)
 
 
-hdx_group_eaa_maps.add_url_rule(u'/', view_func=group_eaa_worldmap, strict_slashes=False)
+# hdx_group_eaa_maps.add_url_rule(u'/', view_func=group_eaa_worldmap, strict_slashes=False)
 hdx_light_group.add_url_rule(u'/', view_func=light_index, strict_slashes=False)
 hdx_light_group.add_url_rule(u'/<id>', view_func=light_read)
 
