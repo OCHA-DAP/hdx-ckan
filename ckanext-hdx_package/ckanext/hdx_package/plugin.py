@@ -462,6 +462,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'resource_patch': hdx_patch.resource_patch,
             'resource_show': hdx_get.resource_show,
             'resource_delete': hdx_delete.resource_delete,
+            'resource_view_list': hdx_get.resource_view_list,
             'package_search': hdx_get.package_search,
             'package_show': hdx_get.package_show,
             'package_show_edit': hdx_get.package_show_edit,

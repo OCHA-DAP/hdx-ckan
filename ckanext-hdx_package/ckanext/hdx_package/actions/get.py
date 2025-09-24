@@ -1124,3 +1124,26 @@ def hdx_send_mail_request_tags(context, data_dict):
                               sender_email=data_dict.get('email'), snippet='email/content/tag_request.html')
 
     return None
+
+
+@tk.chained_action
+def resource_view_list(up_func, context, data_dict):
+    """
+    Wrapper around core `resource_view_list` that pops __auth_audit
+    if the resource is missing.
+
+    Avoids the "Action function resource_view_list did not call its auth function"
+    exception in activity streams when a resource was deleted.
+    """
+    model = context['model']
+    resource_id = tk.get_or_bust(data_dict, 'id')
+    resource = model.Resource.get(resource_id)
+
+    if not resource:
+        # Remove the auth audit record, since _check_access won't be called
+        if '__auth_audit' in context and context['__auth_audit'] and context['__auth_audit'][-1][0] == 'resource_view_list':
+            context['__auth_audit'].pop()
+        raise NotFound
+
+    result = up_func(context, data_dict)
+    return result
