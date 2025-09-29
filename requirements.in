@@ -36,7 +36,7 @@ typing_extensions==4.12.2
 tzlocal==5.2
 webassets==2.0
 Werkzeug[watchdog]==3.0.6
-zope.interface==6.4post2
+zope.interface==8.0.1
 
 # ADDED FOR HDX
 ipaddress==1.0.23
