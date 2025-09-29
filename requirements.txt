@@ -180,7 +180,7 @@ s3transfer==0.10.4
     # via boto3
 setuptools-scm==8.1.0
     # via -r requirements.in
-simplejson==3.19.2
+simplejson==3.20.2
     # via -r requirements.in
 six==1.16.0
     # via
