@@ -53,19 +53,10 @@ RUN apt-get -qq -y update && \
     # prepare files and folders
     mkdir -p /var/log/ckan /srv/filestore /srv/webassets /etc/services.d/unit /etc/ckan && \
     cd /srv/ckan && \
-    # python -m pip install --upgrade pip && \
-    pip install -r requirement-setuptools.txt && \
-    #pip install --upgrade -r requirements.txt && \
     pip install pip-tools==7.3.0 && \
     pip-sync requirements.txt requirements-hdxckantool.txt  && \
     pip install \
       elastic-apm[flask] && \
-    # install datapusher_plus requirements (TODO: remove them from here)
-    pip install \
-        semver==2.13.0 \
-        datasize==1.0.0 && \
-    # install datapusher_plus from git
-    pip install -e "git+https://github.com/OCHA-DAP/datapusher-plus.git@feature/hdx-changes-over-1_0_4#egg=datapusher-plus" && \
     chmod +x run_pytest_with_coverage.sh && \
     chmod +x setup_py_helper.sh && \
     ./setup_py_helper.sh && \
