@@ -107,6 +107,19 @@ def package_resource_list_save(
         resource.state = 'deleted'
         resource_list.append(resource)
 
+    # changed by HDX - if a resource has been deleted, then delete also the datastore and file remove from s3
+    import ckan.plugins.toolkit as tk
+    from ckanext.hdx_package.helpers.file_removal import file_remove
+    NotFound = tk.ObjectNotFound
+    for resource in (set(deleted_list) | set(old_list)) - set(obj_list):
+        try:
+            file_remove(resource.id, resource.url, resource.url_type)
+            tk.get_action('datastore_delete')(context, {'resource_id': resource.id, 'force': True})
+        except NotFound:
+            log.info('Resource {} not found in datastore while datastore_delete.'.format(resource.id))
+        except Exception as ex:
+            log.info('Exception while trying to delete resource {} from datastore or file: {}'.format(resource.id, str(ex)))
+
 
 def package_extras_save(
         extra_dicts: Optional[list[dict[str, Any]]], pkg: 'model.Package',
