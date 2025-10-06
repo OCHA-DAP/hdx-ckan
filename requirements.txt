@@ -147,7 +147,7 @@ python-dateutil==2.9.0.post0
     #   -r requirements.in
     #   botocore
     #   feedgen
-python-json-logger==2.0.7
+python-json-logger==4.0.0
     # via -r requirements.in
 python-magic==0.4.27
     # via -r requirements.in

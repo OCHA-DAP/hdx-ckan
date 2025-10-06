@@ -88,7 +88,7 @@ dogpile.cache==1.3.0
 pyotp~=2.6.0
 # END ckanext-security
 
-python-json-logger~=2.0.7
+python-json-logger~=4.0.0
 openpyxl==3.1.5
 
 # BY HDX- Adding because of incompatibility between setuptools 44.1.0 and setuptools_scm 8.2.0
