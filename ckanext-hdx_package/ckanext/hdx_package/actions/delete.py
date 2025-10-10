@@ -112,10 +112,6 @@ def resource_delete(context, data_dict):
         log.error('Exception while trying to delete resource:' + str(ex))
         model.Session.rollback()
 
-def _datastore_delete(context, resource_id, datastore_active=False):
-    if resource_id and datastore_active:
-        _get_action('datastore_delete')(context, {'resource_id': resource_id, 'force': True})
-
 def _is_requested_data_type(entity):
     for extra in entity.extras_list:
         if extra.key == 'is_requestdata_type':
