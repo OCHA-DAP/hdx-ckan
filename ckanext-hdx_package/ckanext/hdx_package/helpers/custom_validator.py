@@ -365,7 +365,8 @@ def reset_on_file_upload(key, data, errors, context):
         data.pop(key, None)
 
 
-def hdx_resource_keep_prev_value_if_exist_unless_sysadmin(key, data, errors, context):
+def hdx_resource_keep_prev_value_if_exist_unless_sysadmin(key: FlattenKey, data: FlattenDataDict,
+                                                          errors: FlattenErrorDict, context: Context) -> Any:
     '''
     By default, this should inject the value from the previous version.
     The exception is if the user is a sysadmin, then the new value is used.
@@ -378,7 +379,8 @@ def hdx_resource_keep_prev_value_if_exist_unless_sysadmin(key, data, errors, con
     _restore_previous_value_if_unauthorized(key, data, allowed_to_change, context)
 
 
-def hdx_resource_keep_prev_value_if_exist_unless_allow_sdd_report(key, data, errors, context):
+def hdx_resource_keep_prev_value_if_exist_unless_allow_sdd_report(key: FlattenKey, data: FlattenDataDict,
+                                                                  errors: FlattenErrorDict, context: Context) -> Any:
     """
     By default, this should inject the value from the previous version.
     The exception is if the user is allowed to update the SDD report, then the new value is used.
@@ -389,7 +391,8 @@ def hdx_resource_keep_prev_value_if_exist_unless_allow_sdd_report(key, data, err
     _restore_previous_value_if_unauthorized(key, data, allowed_to_change, context)
 
 
-def _restore_previous_value_if_unauthorized(key, data, allowed_to_change, context):
+def _restore_previous_value_if_unauthorized(key: FlattenKey, data: FlattenDataDict, allowed_to_change: bool,
+                                            context: Context) -> Any:
     """
     Restores the previous resource field value if the user is not authorized to change it.
 
@@ -695,8 +698,10 @@ def __get_previous_package_dict(context, id):
     context_key = 'hdx_prev_package_dict_' + id
     pkg_dict = context.get(context_key)
     if not pkg_dict:
+        initial_ignore_auth = context.get('ignore_auth')
         context['ignore_auth'] = True
         pkg_dict = get_action('package_show')(context, {'id': id})
+        context['ignore_auth'] = initial_ignore_auth
         context[context_key] = pkg_dict
 
     return pkg_dict or {}

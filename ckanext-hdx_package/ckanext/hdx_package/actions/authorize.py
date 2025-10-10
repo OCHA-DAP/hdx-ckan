@@ -187,7 +187,11 @@ def hdx_manage_resource_sdd_report(context: Context, data_dict: DataDict):
     ignore_auth = context.get('ignore_auth')
     username_or_id = context.get('user')
 
-    has_permission = Permissions(username_or_id).has_permission(Permissions.PERMISSION_MANAGE_SDD_REPORT)
-    is_sysadmin = new_authz.is_sysadmin(username_or_id)
+    has_permission = False
+    is_sysadmin = False
+
+    if username_or_id:
+        has_permission = Permissions(username_or_id).has_permission(Permissions.PERMISSION_MANAGE_SDD_REPORT)
+        is_sysadmin = new_authz.is_sysadmin(username_or_id)
 
     return ignore_auth or has_permission or is_sysadmin
