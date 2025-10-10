@@ -67,10 +67,10 @@ class HDXS3TestBase(object):
 
         cls.dataset1_dict = cls._create_package_by_user(cls.dataset1_name, 'testsysadmin')
 
-    def setup(self):
+    def setup_method(self):
         self._change_config(config)
 
-    def teardown(self):
+    def teardown_method(self):
         plugins = config.get('ckan.plugins', [])
         plugins.pop() if len(plugins) > 0 and plugins[-1] == 's3filestore' else None
         config.clear()

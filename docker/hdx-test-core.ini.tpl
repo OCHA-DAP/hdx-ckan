@@ -23,6 +23,8 @@ ckan.datastore.read_url = postgresql://datastore:datastore@${HDX_CKANDB_ADDR}:${
 
 ckan.datapusher.url = http://datapusher.ckan.org/
 
+ckan.redis.url = redis://${HDX_REDIS_ADDR}:${HDX_REDIS_PORT}/5
+
 ## Solr support
 solr_url = http://${HDX_SOLR_ADDR}:${HDX_SOLR_PORT}/solr/ckan
 
