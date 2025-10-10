@@ -34,6 +34,7 @@ import ckanext.hdx_users.helpers.mailer as hdx_mailer
 
 from ckan.lib import uploader
 from ckan.lib.munge import munge_filename
+from ckanext.hdx_package.actions.authorize import hdx_manage_resource_sdd_report
 from ckanext.hdx_package.helpers.extras import get_extra_from_dataset
 from ckanext.hdx_package.helpers.resource_triggers.geopreview import GIS_FORMATS
 from ckanext.hdx_package.helpers.resource_format import resource_format_autocomplete, guess_format_from_extension
@@ -550,6 +551,13 @@ def _additional_hdx_resource_show_processing(context, resource_dict, just_for_re
     #         del resource_dict['apihighways_url']
     if resource_dict.get('url'):
         _process_url(context, resource_dict)
+
+    if not hdx_manage_resource_sdd_report(context, {}):
+        if resource_dict.get('sensitive'):
+            del resource_dict['sensitive']
+        if resource_dict.get('sdd_report'):
+            del resource_dict['sdd_report']
+
     if not just_for_reindexing:
         try:
             _check_access('hdx_qa_hapi_report_view', context, {})

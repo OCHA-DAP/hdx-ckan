@@ -181,3 +181,13 @@ def hdx_request_access(context: Context, data_dict: DataDict):
         return {'success': True}
 
     return {'success': False, 'msg': _('Not authorized to perform this request.')}
+
+
+def hdx_manage_resource_sdd_report(context: Context, data_dict: DataDict):
+    ignore_auth = context.get('ignore_auth')
+    username_or_id = context.get('user')
+
+    has_permission = Permissions(username_or_id).has_permission(Permissions.PERMISSION_MANAGE_SDD_REPORT)
+    is_sysadmin = new_authz.is_sysadmin(username_or_id)
+
+    return ignore_auth or has_permission or is_sysadmin
