@@ -1,6 +1,6 @@
 # The file contains the direct ckan requirements (python3).
 # Use pip-compile to create a requirements.txt file from this
-alembic==1.13.2
+alembic==1.17.0
 Babel==2.15.0
 bleach==6.1.0
 blinker==1.8.2
