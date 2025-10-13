@@ -113,7 +113,7 @@ class TestUserEmailRegistration(hdx_test_base.HdxFunctionalBaseTest):
     def setup_class(cls):
         super(TestUserEmailRegistration, cls).setup_class()
 
-    def setup(self):
+    def setup_method(self):
         test_helpers.reset_db()
         test_helpers.search.clear_all()
 
@@ -144,7 +144,7 @@ class TestEditUserEmail(hdx_test_base.HdxFunctionalBaseTest):
         # umodel.setup()
         # ue_model.create_table()
 
-    def setup(self):
+    def setup_method(self):
         test_helpers.reset_db()
         test_helpers.search.clear_all()
 
@@ -307,7 +307,7 @@ class TestResetPasswordSendingEmail(hdx_test_base.HdxFunctionalBaseTest):
     def setup_class(cls):
         super(TestResetPasswordSendingEmail, cls).setup_class()
 
-    def setup(self):
+    def setup_method(self):
         test_helpers.reset_db()
         test_helpers.search.clear_all()
 
@@ -347,7 +347,7 @@ class TestPasswordReset(hdx_test_base.HdxFunctionalBaseTest):
     def setup_class(cls):
         super(TestPasswordReset, cls).setup_class()
 
-    def setup(self):
+    def setup_method(self):
         test_helpers.reset_db()
         test_helpers.search.clear_all()
 

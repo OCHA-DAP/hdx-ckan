@@ -215,7 +215,7 @@ pytest-freezegun==0.4.2
     # via -r dev-requirements.in
 pytest-rerunfailures==15.0
     # via -r dev-requirements.in
-pytest-retry==1.7.0
+#pytest-retry==1.7.0
     # via -r dev-requirements.in
 pytest-split==0.10.0
     # via -r dev-requirements.in
