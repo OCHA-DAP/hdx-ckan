@@ -294,8 +294,17 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                     tk.get_validator('hdx_resource_keep_prev_value_if_exist_unless_sysadmin'),
                     tk.get_validator('hdx_reset_on_file_upload'),
                     tk.get_validator('ignore_missing'),  # if None, don't save 'None' string
-
-
+                ],
+                'sensitive': [
+                    tk.get_validator('hdx_resource_keep_prev_value_if_exist_unless_allow_sdd_report'),
+                    tk.get_validator('ignore_missing'),
+                    tk.get_validator('boolean_validator'),
+                    tk.get_validator('hdx_reset_on_file_upload'),
+                ],
+                'sdd_report': [
+                    tk.get_validator('hdx_resource_keep_prev_value_if_exist_unless_allow_sdd_report'),
+                    tk.get_validator('ignore_missing'),
+                    tk.get_validator('hdx_reset_on_file_upload'),
                 ],
             }
         )
@@ -508,7 +517,6 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'hdx_boolean_string_converter': vd.hdx_boolean_string_converter,
             'hdx_assume_missing_is_true': vd.hdx_assume_missing_is_true,
             'hdx_isodate_to_string_converter': vd.hdx_isodate_to_string_converter,
-            'hdx_resource_keep_prev_value_unless_sysadmin': vd.hdx_resource_keep_prev_value_unless_sysadmin,
             'hdx_resource_keep_prev_value_if_exist_unless_sysadmin': vd.hdx_resource_keep_prev_value_if_exist_unless_sysadmin,
             'hdx_reset_on_file_upload': vd.reset_on_file_upload,
             'hdx_keep_prev_value_if_empty': vd.hdx_keep_prev_value_if_empty,
@@ -556,6 +564,8 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 vd.hdx_package_keep_prev_value_unless_field_in_context_wrapper(
                 'allow_resource_in_hapi_field', resource_level=True),
             'hdx_comma_separated_validator': vd.hdx_comma_separated_validator,
+            'hdx_resource_keep_prev_value_if_exist_unless_allow_sdd_report':
+                vd.hdx_resource_keep_prev_value_if_exist_unless_allow_sdd_report,
         }
 
     def get_auth_functions(self):

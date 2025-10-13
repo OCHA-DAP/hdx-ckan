@@ -23,6 +23,7 @@ from ckan.types import (
 import ckanext.hdx_package.helpers.caching as caching
 import ckanext.hdx_package.helpers.resource_triggers.geopreview as geopreview
 
+from ckanext.hdx_package.actions.authorize import hdx_manage_resource_sdd_report
 from ckanext.hdx_package.helpers.constants import FILE_WAS_UPLOADED, NO_DATA
 from ckanext.hdx_package.helpers.date_helper import DaterangeParser
 from ckanext.hdx_package.helpers.resource_triggers.fs_check import FS_CHECK_FORMATS
@@ -364,39 +365,8 @@ def reset_on_file_upload(key, data, errors, context):
         data.pop(key, None)
 
 
-def hdx_resource_keep_prev_value_unless_sysadmin(key, data, errors, context):
-    '''
-    By default, this should inject the value from the previous version.
-    The exception is if the user is a sysadmin, then the new value is used.
-    '''
-
-    if data[key] is missing:
-        data.pop(key, None)
-
-    user = context.get('user')
-    ignore_auth = context.get('ignore_auth')
-    allowed_to_change = ignore_auth or (user and authz.is_sysadmin(user))
-
-    if not allowed_to_change:
-        data.pop(key, None)
-        resource_id = data.get(key[:-1] + ('id',))
-        package_id = data.get(('id',))
-        if resource_id:
-            specific_key = key[2]
-            context_key = 'resource_' + resource_id
-            resource_dict = context.get(context_key)
-            if not resource_dict:
-                resource_dict = __get_previous_resource_dict(context, package_id, resource_id)
-                context[context_key] = resource_dict
-            if resource_dict:
-                old_value = resource_dict.get(specific_key)
-                if old_value is not None:
-                    data[key] = old_value
-
-    if key not in data:
-        raise StopOnError
-
-def hdx_resource_keep_prev_value_if_exist_unless_sysadmin(key, data, errors, context):
+def hdx_resource_keep_prev_value_if_exist_unless_sysadmin(key: FlattenKey, data: FlattenDataDict,
+                                                          errors: FlattenErrorDict, context: Context) -> Any:
     '''
     By default, this should inject the value from the previous version.
     The exception is if the user is a sysadmin, then the new value is used.
@@ -406,6 +376,36 @@ def hdx_resource_keep_prev_value_if_exist_unless_sysadmin(key, data, errors, con
     ignore_auth = context.get('ignore_auth')
     allowed_to_change = ignore_auth or (user and authz.is_sysadmin(user))
 
+    _restore_previous_value_if_unauthorized(key, data, allowed_to_change, context)
+
+
+def hdx_resource_keep_prev_value_if_exist_unless_allow_sdd_report(key: FlattenKey, data: FlattenDataDict,
+                                                                  errors: FlattenErrorDict, context: Context) -> Any:
+    """
+    By default, this should inject the value from the previous version.
+    The exception is if the user is allowed to update the SDD report, then the new value is used.
+    """
+
+    allowed_to_change = hdx_manage_resource_sdd_report(context, {})
+
+    _restore_previous_value_if_unauthorized(key, data, allowed_to_change, context)
+
+
+def _restore_previous_value_if_unauthorized(key: FlattenKey, data: FlattenDataDict, allowed_to_change: bool,
+                                            context: Context) -> Any:
+    """
+    Restores the previous resource field value if the user is not authorized to change it.
+
+    This helper checks if the user is allowed to modify the field and whether the field
+    has a new value. If not authorized or if the value is missing, it fetches and restores
+    the previous value from the resource.
+
+    :param key: The key tuple pointing to the field in the data dict
+    :param data: The data dict being validated
+    :param allowed_to_change: Boolean indicating if the user is authorized to change the field
+    :param context: The validation context
+    :return: None (modifies data dict in place)
+    """
     if not allowed_to_change or data[key] is missing:
         data.pop(key, None)
         resource_id = data.get(key[:-1] + ('id',))
@@ -698,7 +698,10 @@ def __get_previous_package_dict(context, id):
     context_key = 'hdx_prev_package_dict_' + id
     pkg_dict = context.get(context_key)
     if not pkg_dict:
+        initial_ignore_auth = context.get('ignore_auth')
+        context['ignore_auth'] = True
         pkg_dict = get_action('package_show')(context, {'id': id})
+        context['ignore_auth'] = initial_ignore_auth
         context[context_key] = pkg_dict
 
     return pkg_dict or {}
