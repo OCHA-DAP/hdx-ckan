@@ -186,13 +186,11 @@ six==1.16.0
     # via
     #   bleach
     #   python-dateutil
-sqlalchemy[mypy]==1.4.52
+sqlalchemy[mypy]==2.0.44
     # via
     #   -r requirements.in
     #   alembic
     #   sqlalchemy
-sqlalchemy2-stubs==0.0.2a37
-    # via sqlalchemy
 sqlparse==0.5.0
     # via -r requirements.in
 stevedore==5.4.1
@@ -206,7 +204,7 @@ typing-extensions==4.12.2
     #   -r requirements.in
     #   alembic
     #   mypy
-    #   sqlalchemy2-stubs
+    #   sqlalchemy
 tzlocal==5.2
     # via -r requirements.in
 ua-parser==0.18.0
