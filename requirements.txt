@@ -199,7 +199,7 @@ stevedore==5.4.1
     # via dogpile-cache
 timeago==1.0.16
     # via -r requirements.in
-tomli==2.2.1
+tomli==2.3.0
     # via -r requirements.in
 typing-extensions==4.12.2
     # via

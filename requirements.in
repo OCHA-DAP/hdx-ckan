@@ -94,4 +94,4 @@ openpyxl==3.1.5
 # BY HDX- Adding because of incompatibility between setuptools 44.1.0 and setuptools_scm 8.2.0
 setuptools_scm==8.1.0
 typing-extensions==4.12.2
-tomli==2.2.1
+tomli==2.3.0
