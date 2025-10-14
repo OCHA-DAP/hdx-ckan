@@ -275,9 +275,9 @@ hdx.search_history.hours_from_actual_search = 1
 hdx.lunr.index_location = ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/search_
 
 # DATA GRID / COMPLETENESS
-hdx.datagrid.config_url_pattern = https://raw.githubusercontent.com/OCHA-DAP/data-grid-recipes/{branch}/data%%20grid%%20recipe%%20-%%20{iso}.yml
+hdx.datagrid.config_url_pattern = https://raw.githubusercontent.com/OCHA-DAP/data-grid-recipes-test/master/data%%20grid%%20recipe%%20-%%20{iso}.yml
 # if true, caching will be enabled and the "master" branch from the github repo will be used
-hdx.datagrid.prod = true
+hdx.datagrid.prod = false
 
 # HDX specific default solr query parameters
 hdx.solr.query.qf = name^4 title^4 vocab_text_Topics^2 notes groups^2 text
