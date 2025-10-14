@@ -97,13 +97,13 @@ class DataCompleteness(object):
     def __restore_complementary_datasets(self):
         for category in self.config.get('categories', []):
             for ds in category.get('data_series', []):
-                if ds.get('datasets_tmp'):
-                    ds['datasets'].extend(ds['datasets_tmp'])
-                    del ds['datasets_tmp']
+                if ds.get('complementary_datasets_tmp'):
+                    ds['datasets'].extend(ds['complementary_datasets_tmp'])
+                    del ds['complementary_datasets_tmp']
 
     def __remove_complementary_datasets(self, ds):
         complementary_names = {d['dataset_name'] for d in ds.get('complementary_datasets', [])}
-        ds['datasets_tmp'] = [d for d in ds['datasets'] if d['name'] in complementary_names]
+        ds['complementary_datasets_tmp'] = [d for d in ds['datasets'] if d['name'] in complementary_names]
         ds['datasets'] = [d for d in ds['datasets'] if d['name'] not in complementary_names]
 
     def __build_query(self, include_rules, exclude_rules):
