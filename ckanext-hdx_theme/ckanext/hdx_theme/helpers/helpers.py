@@ -1134,7 +1134,7 @@ def _check_notifications_enabled_for_object(object_type: ObjectType, object_id: 
             return False
     elif object_type == ObjectType.CRISIS and object_dict:
         is_archived = object_dict.get('status') == 'archived'
-        has_data_list = any(section['type'] == 'data_list' for section in object_dict.get('sections', []))
+        has_data_list = any(section.get('type') == 'data_list' for section in object_dict.get('sections', []))
 
         log.debug(f'Object properties - is_archived: {is_archived}, has_data_list: {has_data_list}')
 
