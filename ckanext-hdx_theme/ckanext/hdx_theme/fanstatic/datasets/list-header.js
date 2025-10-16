@@ -152,7 +152,7 @@ function getFilterUrlNew(resetFilters, sort=null) {
     // Only add values to params2 if they are non default values, otherwise this will redirect to the non-canonical version of the page
     // Might have SEO implications
 
-    var selectorString = "#headerSearch:visible, #headerSearchMobile:visible, .filter-pagination input[name='ext_page_size'], #ext_after_metadata_modified, #ext_batch";
+    var selectorString = "#headerSearch:visible, #headerSearchMobile:visible, .filter-pagination input[name='ext_page_size'], #ext_after_metadata_modified, #ext_batch, #ext_archived";
     if (!sort) {
         selectorString += ", #header-search-sort";
     }
