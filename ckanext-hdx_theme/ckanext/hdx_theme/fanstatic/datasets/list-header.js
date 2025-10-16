@@ -152,10 +152,11 @@ function getFilterUrlNew(resetFilters, sort=null) {
     // Only add values to params2 if they are non default values, otherwise this will redirect to the non-canonical version of the page
     // Might have SEO implications
 
-    var $selectors = $("#headerSearch:visible, #headerSearchMobile:visible, .filter-pagination input[name='ext_page_size'], #ext_after_metadata_modified, #ext_batch");
+    var selectorString = "#headerSearch:visible, #headerSearchMobile:visible, .filter-pagination input[name='ext_page_size'], #ext_after_metadata_modified, #ext_batch";
     if (!sort) {
-      $selectors.append(", #header-search-sort");
+        selectorString += ", #header-search-sort";
     }
+    var $selectors = $(selectorString);
     var params2 = $selectors.serialize();
     params += ((params !== "" && params2 != null) ? "&" : "") + params2;
 
