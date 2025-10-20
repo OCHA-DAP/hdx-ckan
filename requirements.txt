@@ -178,7 +178,7 @@ rq==1.16.2
     # via -r requirements.in
 s3transfer==0.10.4
     # via boto3
-setuptools-scm==8.1.0
+setuptools-scm==9.2.2
     # via -r requirements.in
 simplejson==3.19.2
     # via -r requirements.in
