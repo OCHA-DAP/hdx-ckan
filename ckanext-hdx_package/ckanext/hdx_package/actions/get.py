@@ -14,7 +14,7 @@ import sqlalchemy
 from botocore.exceptions import ClientError
 from ckan.types import ActionResult, Context, DataDict
 from six import text_type
-from typing import Any, cast, Set
+from typing import Any, cast, Dict
 
 import ckan.authz as authz
 import ckan.lib.helpers as h
@@ -34,6 +34,7 @@ import ckanext.hdx_users.helpers.mailer as hdx_mailer
 
 from ckan.lib import uploader
 from ckan.lib.munge import munge_filename
+from ckanext.hdx_package.helpers.analytics import DatastoreApiCallAnalyticsSender
 from ckanext.hdx_package.helpers.caching import cached_objects_allowed_for_datastore
 from ckanext.hdx_package.helpers.extras import get_extra_from_dataset
 from ckanext.hdx_package.helpers.resource_triggers.geopreview import GIS_FORMATS
@@ -1164,3 +1165,64 @@ def hdx_is_package_allowed_for_datastore(context: Context, data_dict: DataDict) 
 
     else:
         return False
+
+@tk.side_effect_free
+@tk.chained_action
+def datastore_search(up_func, context: Context, data_dict: DataDict) -> Dict[str, Any]:
+    """
+    Wrapper around core `datastore_search` that sends analytics to Mixpanel.
+    Tracks information about the user, API token, dataset, and organization.
+    """
+    result = up_func(context, data_dict)
+
+    try:
+        # Get user information
+        user = context.get('user')
+        auth_user_obj = context.get('auth_user_obj')
+
+        # Get API token information from request
+        apitoken_header_name = config.get('apitoken_header_name')
+        api_token_str: str = tk.request.headers.get(apitoken_header_name, '')
+
+
+        resource_id = data_dict.get('resource_id')
+        if resource_id:
+            DatastoreApiCallAnalyticsSender([resource_id], api_token_str, False).send_to_queue()
+        else:
+            log.error('No resource_id found for datastore_search analytics')
+
+    except Exception as e:
+        # Don't fail the request if analytics fails
+        log.warning(f'Failed to send datastore_search analytics: {str(e)}')
+
+    return result
+
+
+@tk.side_effect_free
+@tk.chained_action
+def datastore_search_sql(up_func, context: Context, data_dict: DataDict) -> Dict[str, Any]:
+    """
+    Wrapper around core `datastore_search_sql` that sends analytics to Mixpanel.
+    Tracks information about the user, API token, dataset, and organization.
+    """
+    result = up_func(context, data_dict)
+
+    try:
+        # Get user information
+        username = context.get('user')
+
+        # Get API token information from request
+        apitoken_header_name = config.get('apitoken_header_name')
+        api_token_str: str = tk.request.headers.get(apitoken_header_name, '')
+
+        resource_ids = result.pop('datastore_table_names', None)
+        if resource_ids:
+            DatastoreApiCallAnalyticsSender( username,resource_ids, api_token_str, True).send_to_queue()
+        else:
+            log.error('No resource_ids found for datastore_search_sql analytics')
+
+    except Exception as e:
+        # Don't fail the request if analytics fails
+        log.warning(f'Failed to send datastore_search_sql analytics: {str(e)}')
+
+    return result
