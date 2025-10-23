@@ -30,7 +30,8 @@ import ckan.plugins.toolkit as tk
 import ckanext.resourceproxy.plugin as resourceproxy_plugin
 from ckan.lib import uploader
 from ckan.common import c
-from ckanext.hdx_package.helpers.constants import UNWANTED_DATASET_PROPERTIES, COD_VALUES_MAP, IN_HAPI_FLAG_VALUES
+from ckanext.hdx_package.helpers.constants import UNWANTED_DATASET_PROPERTIES, COD_VALUES_MAP, IN_HAPI_FLAG_VALUES, \
+    SENSITIVE_FLAG_VALUES
 from ckanext.hdx_package.helpers.freshness_calculator import UPDATE_FREQ_INFO
 from ckanext.hdx_users.helpers.permissions import Permissions
 
@@ -298,7 +299,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 'sensitive': [
                     tk.get_validator('hdx_resource_keep_prev_value_if_exist_unless_allow_sdd_report'),
                     tk.get_validator('ignore_missing'),
-                    tk.get_validator('boolean_validator'),
+                    tk.get_validator('hdx_in_sensitive_values'),
                     tk.get_validator('hdx_reset_on_file_upload'),
                 ],
                 'sdd_report': [
@@ -566,6 +567,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'hdx_comma_separated_validator': vd.hdx_comma_separated_validator,
             'hdx_resource_keep_prev_value_if_exist_unless_allow_sdd_report':
                 vd.hdx_resource_keep_prev_value_if_exist_unless_allow_sdd_report,
+            'hdx_in_sensitive_values': vd.hdx_value_in_list_wrapper(SENSITIVE_FLAG_VALUES, False),
         }
 
     def get_auth_functions(self):

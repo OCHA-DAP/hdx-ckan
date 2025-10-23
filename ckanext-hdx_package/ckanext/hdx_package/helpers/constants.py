@@ -130,3 +130,10 @@ RESOURCE_METADATA_FIELDS_MAP = {'created': 'Created', 'description': 'Descriptio
                                 'mimetype': 'MIME Type', 'size': 'Size'}
 
 IN_HAPI_FLAG_VALUES = [NO_DATA, 'yes']
+
+SENSITIVE_FLAG_VALUES = [
+    'sensitive-pii',
+    'sensitive-pii-and-non-pii',
+    'sensitive-non-pii',
+    'not-sensitive',
+]
