@@ -590,7 +590,7 @@ class MetadataDownloadAnalyticsSender(AbstractAnalyticsSender):
 
 
 class DatastoreApiCallAnalyticsSender(AbstractAnalyticsSender):
-    def __init__(self, username, resource_ids: List[str], api_token_str: str, is_datasetore_search_sql: bool):
+    def __init__(self, username, resource_ids: List[str], api_token_str: str, action_name: str):
 
         super().__init__()
 
@@ -611,8 +611,13 @@ class DatastoreApiCallAnalyticsSender(AbstractAnalyticsSender):
             'mixpanel_meta': {
                 'api token name': token_name,
                 'email hash': email_hash,
-                'action name': 'datastore_search_sql' if is_datasetore_search_sql else 'datastore_search',
+                'action name': action_name,
                 'event source': 'api',
+            },
+            'ga_meta': {
+                'ec': 'api',  # event category
+                'ea': action_name,  # event action
+                'el': token_name,  # event label
             },
         }
         self.analytics_dict['mixpanel_meta'].update(additional_mp_data)
@@ -656,11 +661,12 @@ class DatastoreApiCallAnalyticsSender(AbstractAnalyticsSender):
                 log.error('Unexpected error {}'.format(e))
 
         return {
-            'resource names': resource_names,
-            'dataset names': dataset_names,
-            'dataset ids': dataset_ids,
-            'org names': org_names,
-            'org ids': org_ids,
-            'group names': location_names,
-            'group ids': location_ids
+            'resource ids': [item for item in resource_ids],
+            'resource names': [item for item in resource_names],
+            'dataset names': [item for item in dataset_names],
+            'dataset ids': [item for item in dataset_ids],
+            'org names': [item for item in org_names],
+            'org ids': [item for item in org_ids],
+            'group names': [item for item in location_names],
+            'group ids': [item for item in location_ids],
         }
