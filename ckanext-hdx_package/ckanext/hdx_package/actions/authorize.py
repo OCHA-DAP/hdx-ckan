@@ -183,12 +183,21 @@ def hdx_request_access(context: Context, data_dict: DataDict):
     return {'success': False, 'msg': _('Not authorized to perform this request.')}
 
 
+@tk.chained_auth_function
+# @tk.auth_disallow_anonymous_access
+def datastore_info(next_auth: AuthFunction, context: Context, data_dict: DataDict) -> AuthResult:
+    """
+    Override the default authorization for the datastore_info action, so that anonymous users cannot access it.
+    """
+    return _datastore_search_only_for_authenticated_users(
+        'datastore_info', next_auth, context, data_dict)
+
 
 @tk.chained_auth_function
 # @tk.auth_disallow_anonymous_access
 def datastore_search(next_auth: AuthFunction, context: Context, data_dict: DataDict) -> AuthResult:
     """
-    Override the default authorization for the datastore_search_sql action, so that anonymous users cannot access it.
+    Override the default authorization for the datastore_search action, so that anonymous users cannot access it.
     """
     return _datastore_search_only_for_authenticated_users(
         'datastore_search', next_auth, context, data_dict)

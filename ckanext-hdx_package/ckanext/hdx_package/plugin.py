@@ -499,6 +499,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'hdx_dataseries_unlink': hdx_patch.hdx_dataseries_unlink,
             'hdx_p_coded_resource_update': hdx_patch.hdx_p_coded_resource_update,
             'hdx_mark_resource_in_hapi': hdx_patch.hdx_mark_resource_in_hapi,
+            'datastore_info': hdx_get.datastore_info,
             'datastore_search': hdx_get.datastore_search,
             'datastore_search_sql': hdx_get.datastore_search_sql,
             'hdx_is_package_allowed_for_datastore': hdx_get.hdx_is_package_allowed_for_datastore,
@@ -595,6 +596,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'hdx_qa_hapi_report_view': authorize.hdx_qa_hapi_report_view,
             'datastore_search_sql': authorize.datastore_search_sql,
             'datastore_search': authorize.datastore_search,
+            'datastore_info': authorize.datastore_info,
         }
 
     def make_middleware(self, app, config):
