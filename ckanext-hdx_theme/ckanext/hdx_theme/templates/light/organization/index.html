@@ -13,7 +13,7 @@
 {% endblock %}
 
 {% block links %}
-  {% snippet "snippets/add_optional_canonical_link.html", no_params=True %}
+  {% snippet "snippets/add_optional_canonical_link.html", canonical_url=h.url_for('home.index') %}
   {{ super() }}
 {% endblock %}
 

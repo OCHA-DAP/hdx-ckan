@@ -31,6 +31,13 @@ no_canonical_pages = [
     {'url':'hdx_org.read','id': 'hdx-test-org', 'params':{'any_param':'generates_canonical'}, 'canonical': True, 'canonical_url':'hdx_org.read'},
     {'url':'hdx_light_org.light_read','id': 'hdx-test-org', 'params':{'any_param':'generates_canonical'}, 'canonical': True, 'canonical_url':'hdx_org.read'},
 
+    ### Organization index pages
+    {'url':'organization.index', 'canonical': True, 'canonical_url':'home.index'},
+    {'url':'hdx_light_org.index', 'mobile': True, 'canonical': True, 'canonical_url':'home.index'},
+
+    ### Group index pages
+    {'url':'hdx_light_group.index', 'mobile': True, 'canonical': True, 'canonical_url':'home.index'},
+
     ### Search
     {'url':'/dataset', 'canonical': False},
     # any filter that is allowed (see search/search.html) should not generate canonical
