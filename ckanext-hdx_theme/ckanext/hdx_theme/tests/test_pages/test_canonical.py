@@ -32,11 +32,11 @@ no_canonical_pages = [
     {'url':'hdx_light_org.light_read','id': 'hdx-test-org', 'params':{'any_param':'generates_canonical'}, 'canonical': True, 'canonical_url':'hdx_org.read'},
 
     ### Organization index pages
-    {'url':'organization.index', 'canonical': True, 'canonical_url':'home.index'},
-    {'url':'hdx_light_org.index', 'mobile': True, 'canonical': True, 'canonical_url':'home.index'},
+    {'url':'hdx_org,index', 'canonical': True, 'canonical_url':'/'},
+    {'url':'hdx_light_org.light_index', 'mobile': True, 'canonical': True, 'canonical_url':'/'},
 
     ### Group index pages
-    {'url':'hdx_light_group.index', 'mobile': True, 'canonical': True, 'canonical_url':'home.index'},
+    {'url':'hdx_light_group.light_index', 'mobile': True, 'canonical': True, 'canonical_url':'/'},
 
     ### Search
     {'url':'/dataset', 'canonical': False},
@@ -67,6 +67,10 @@ no_canonical_pages = [
 ]
 
 class TestCanonicalLinks(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
+    @classmethod
+    def _load_plugins(cls):
+        hdx_test_base.load_plugin(
+            'hdx_search hdx_org_group hdx_package hdx_users hdx_user_extra hdx_pages hdx_theme')
 
     @pytest.mark.parametrize(
         "item",
