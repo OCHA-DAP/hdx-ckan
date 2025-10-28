@@ -10,7 +10,7 @@
 
 {% block links %}
   <link rel="alternate" media="{{ h.HDX_CONST('MOBILE_MEDIA') }}" href="{{ h.hdx_switch_url_path(force=False) }}">
-  {% snippet "snippets/add_optional_canonical_link.html", canonical_url=h.url_for('home.index') %}
+  {% snippet "snippets/add_optional_canonical_link.html", canonical_url='/' %}
   {{ super() }}
 {% endblock %}
 

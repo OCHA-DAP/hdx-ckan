@@ -25,6 +25,7 @@ no_canonical_pages = [
     {'url':'hdx_group.read','id': 'roger', 'canonical': False},
     {'url':'hdx_group.read','id': 'roger', 'params':{'any_param':'generates_canonical'}, 'canonical': True, 'canonical_url':'hdx_group.read'},
     {'url':'hdx_light_group.light_read','id': 'roger', 'mobile': True,'canonical': True, 'canonical_url':'hdx_group.read'},
+    {'url':'hdx_group.index', 'canonical': True, 'canonical_url':'/'},
 
     ### Organization pages
     {'url':'hdx_org.read','id': 'hdx-test-org', 'canonical': False},
@@ -32,11 +33,8 @@ no_canonical_pages = [
     {'url':'hdx_light_org.light_read','id': 'hdx-test-org', 'params':{'any_param':'generates_canonical'}, 'canonical': True, 'canonical_url':'hdx_org.read'},
 
     ### Organization index pages
-    {'url':'hdx_org,index', 'canonical': True, 'canonical_url':'/'},
+    {'url':'hdx_org.index', 'canonical': True, 'canonical_url':'/'},
     {'url':'hdx_light_org.light_index', 'mobile': True, 'canonical': True, 'canonical_url':'/'},
-
-    ### Group index pages
-    {'url':'hdx_light_group.light_index', 'mobile': True, 'canonical': True, 'canonical_url':'/'},
 
     ### Search
     {'url':'/dataset', 'canonical': False},
