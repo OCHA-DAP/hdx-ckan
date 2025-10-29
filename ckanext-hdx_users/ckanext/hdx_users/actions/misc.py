@@ -1,11 +1,16 @@
 import datetime
 import logging
 
+import ckan.lib.api_token as api_token
 import ckan.lib.helpers as h
 import ckan.plugins.toolkit as tk
 import ckanext.hdx_users.helpers.mailer as hdx_mailer
 import ckanext.hdx_org_group.helpers.analytics as org_analytics
 import ckan.model as model
+
+from ckan.common import request
+from ckan.types import Context, DataDict
+from hashlib import md5
 
 log = logging.getLogger(__name__)
 _check_access = tk.check_access
@@ -101,3 +106,51 @@ def hdx_send_request_data_auto_approval(context, data_dict):
     hdx_mailer.mail_recipient([{'display_name': maintainer_obj.fullname, 'email': maintainer_obj.email}],
                               subject, email_data, footer=maintainer_obj.email,
                               snippet='email/content/request_data_auto_approval_to_admins.html')
+
+@tk.side_effect_free
+def hdx_token_info(context: Context, data_dict: DataDict):
+    """
+    Returns information about the current API token used in the request:
+      - email hash
+      - token name
+    """
+
+    # Get the Authorization header
+    auth_header = request.headers.get('Authorization')
+    if not auth_header:
+        raise tk.ValidationError('Missing Authorization header')
+
+    token_value = auth_header.strip()
+    if not token_value:
+        raise tk.ValidationError('Authorization header is empty')
+
+    # Decode the JWT token
+    try:
+        decoded_token = api_token.decode(token_value)
+    except Exception as e:
+        raise tk.ValidationError(f'Invalid token')  # {e}
+
+    if not isinstance(decoded_token, dict):
+        raise tk.ValidationError('Invalid token')  # failed to decode
+
+    token_id = decoded_token.get('jti')
+    if not token_id:
+        raise tk.ValidationError('Invalid token')  # missing token ID (jti)
+
+    # Fetch the token record from the database
+    token_record = model.Session.query(model.ApiToken).get(token_id)
+    if not token_record:
+        raise tk.ValidationError('Token not found')
+
+    # Fetch the associated user
+    user = model.User.get(token_record.user_id)
+    if not user:
+        raise tk.ValidationError('User not found')
+
+    # Hash the email
+    email_hash = md5(user.email.encode('utf8')).hexdigest() if user.email else ''
+
+    return {
+        'email_hash': email_hash,
+        'token_name': token_record.name
+    }
