@@ -553,9 +553,9 @@ def _additional_hdx_resource_show_processing(context, resource_dict, just_for_re
         _process_url(context, resource_dict)
 
     if not hdx_manage_resource_sdd_report(context, {}):
-        if resource_dict.get('sensitive'):
+        if 'sensitive' in resource_dict:
             del resource_dict['sensitive']
-        if resource_dict.get('sdd_report'):
+        if 'sdd_report' in resource_dict:
             del resource_dict['sdd_report']
 
     if not just_for_reindexing:
