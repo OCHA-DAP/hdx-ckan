@@ -1181,7 +1181,7 @@ def facet_url_extra_args(facet_list, request_args):
             extra_args[categkey_holder['key']] = param_values
 
     # Also include preserved request arguments
-    for key in ['q', 'sort', 'ext_page_size']:
+    for key in ['q', 'sort', 'ext_page_size', 'ext_archived']:
         val = request_args.get(key)
         if val:
             extra_args[key] = [val] if not isinstance(val, list) else val
