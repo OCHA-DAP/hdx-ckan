@@ -116,11 +116,9 @@ def hdx_token_info(context: Context, data_dict: DataDict):
     """
 
     # Get the Authorization header
-    auth_header = request.headers.get('Authorization')
-    if not auth_header:
-        raise tk.ValidationError('Missing Authorization header')
+    apitoken_header_name = config.get('apitoken_header_name')
+    token_value = request.headers.get(apitoken_header_name, '').strip()
 
-    token_value = auth_header.strip()
     if not token_value:
         raise tk.ValidationError('Authorization header is empty')
 
@@ -128,23 +126,27 @@ def hdx_token_info(context: Context, data_dict: DataDict):
     try:
         decoded_token = api_token.decode(token_value)
     except Exception as e:
-        raise tk.ValidationError(f'Invalid token')  # {e}
+        log.warning(f'Failed to decode API token: {e}')
+        raise tk.ValidationError('Invalid token')
 
     if not isinstance(decoded_token, dict):
-        raise tk.ValidationError('Invalid token')  # failed to decode
+        raise tk.ValidationError('Invalid token')
 
     token_id = decoded_token.get('jti')
     if not token_id:
-        raise tk.ValidationError('Invalid token')  # missing token ID (jti)
+        log.warning(f'Decoded token missing "jti" (token ID): {decoded_token}')
+        raise tk.ValidationError('Invalid token')
 
     # Fetch the token record from the database
     token_record = model.Session.query(model.ApiToken).get(token_id)
     if not token_record:
+        log.warning(f'No token record found for token_id: {token_id}')
         raise tk.ValidationError('Token not found')
 
     # Fetch the associated user
     user = model.User.get(token_record.user_id)
     if not user:
+        log.warning(f'User not found for token_id: {token_id}, user_id: {token_record.user_id}')
         raise tk.ValidationError('User not found')
 
     # Hash the email
