@@ -6,6 +6,11 @@
     <meta name="description" content="Explore humanitarian datasets organized by country and region on HDX. Access data for specific locations to support crisis response and decision-making." />
 {% endblock %}
 
+{% block links %}
+  {% snippet "snippets/add_optional_canonical_link.html", canonical_url='/' %}
+  {{ super() }}
+{% endblock %}
+
 {% block breadcrumb_content %}
     <li class="breadcrumb-item active">{% link_for _('Locations'), controller='group', action='index' %}</li>
 {% endblock %}
