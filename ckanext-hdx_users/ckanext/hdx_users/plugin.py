@@ -54,6 +54,7 @@ class HDXValidatePlugin(plugins.SingletonPlugin):
             'user_update': update.user_update,
             'user_create': create.user_create,
             'hdx_shadow_user_create': create.hdx_shadow_user_create,
+            'hdx_token_info': misc.hdx_token_info,
         }
 
     def get_auth_functions(self):
