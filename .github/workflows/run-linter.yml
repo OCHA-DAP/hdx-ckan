@@ -69,10 +69,6 @@ jobs:
         run: ruff check ckanext-hdx_users
         continue-on-error: true
 
-      - name: Run ruff linter for ckanext-sitemap
-        run: ruff check ckanext-sitemap
-        continue-on-error: true
-
       - name: Run ruff linter for ckanext-ytp-request
         run: ruff check ckanext-ytp-request
         continue-on-error: true

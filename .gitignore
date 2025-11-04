@@ -71,3 +71,6 @@ junit
 .gitconfig
 .npm
 .test_durations
+
+#Sitemap
+ckanext-hdx_theme/ckanext/hdx_theme/public/sitemap/*.xml
