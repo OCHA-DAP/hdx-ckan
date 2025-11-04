@@ -123,12 +123,12 @@ ckan.storage_path = /srv/filestore
 
 # Sitemap configuration (Datopian extension)
 ckanext.sitemap.directory = /srv/ckan/ckanext-hdx_theme/ckanext/hdx_theme/public/sitemap
-ckanext.sitemap.max_items = 5000
 ckanext.sitemap.autorenew = true
 ckanext.sitemap.ttl = 28800
 ckanext.sitemap.resources = false
 ckanext.sitemap.groups = true
 ckanext.sitemap.language_alternatives = false
+ckanext.sitemap.custom_uris = /faq /hapi /signals /dataviz-guide/ /faqs/terms /about/hdx-qa-process /faqs/devs /faqs/licenses
 
 # DATA GRID / COMPLETENESS
 hdx.datagrid.config_url_pattern = https://raw.githubusercontent.com/OCHA-DAP/data-grid-recipes/{branch}/data%%20grid%%20recipe%%20-%%20{iso}.yml
