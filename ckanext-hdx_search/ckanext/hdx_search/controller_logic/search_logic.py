@@ -135,6 +135,10 @@ class SearchLogic(object):
 
         # unicode format (decoded from utf8)
         q = self.template_data.q = request.args.get('q', u'')
+
+        # HDX-11198: filter out special chars before searching
+        q = self._remove_special_chars_from_query(q)
+
         self.template_data.query_error = False
 
         page = self._page_number()
@@ -814,6 +818,32 @@ class SearchLogic(object):
             'selected': all((item.get('selected') for item in hpc_items)) if hpc_items else False
         }
         return hpc_category
+
+
+    def _remove_special_chars_from_query(self, query):
+        """
+        Remove special characters from search query to prevent Solr syntax interpretation
+
+        - ':' -> Treated as fielded search trigger (e.g., `field:value`), breaking normal search
+    	- '-' -> Treated as NOT operator, excluding terms. We target ' -' specifically (not '-') to preserve exact matches for dataset names
+        - ',', '.', '/', '\', '_', ';' -> Treated as part of literal search term, preventing matches with indexed data
+
+        :param query: the search query string
+        :type query: string
+        :return: cleaned query string with special chars replaced by spaces
+        :rtype: string
+        """
+        if not query:
+            return query
+
+        chars_to_remove = [':', ',', '.', ' -', '/', '\\', '_', ';']
+        for char in chars_to_remove:
+            query = query.replace(char, ' ')
+
+        while '  ' in query:
+            query = query.replace('  ', ' ')
+
+        return query.strip()
 
 
 class DictProxy(dict):
