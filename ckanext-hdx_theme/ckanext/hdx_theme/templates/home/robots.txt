@@ -1,0 +1,40 @@
+User-agent: *
+{% block all_user_agents -%}
+Disallow: /dataset/rate/
+Disallow: /revision/
+Disallow: /dataset/*/history
+Disallow: /api/
+Disallow: /user/*/api-tokens
+Crawl-Delay: 10
+{%- endblock %}
+
+{% block additional_user_agents -%}
+# Block map tile providers and GIS resources
+Disallow: /gis
+Disallow: /mapbox
+Disallow: /mapbox-base-tiles
+
+# Tabular data files
+Disallow: /*.csv$
+Disallow: /*.xls$
+Disallow: /*.xlsx$
+# Geospatial data files
+Disallow: /*.tif$
+Disallow: /*.tiff$
+Disallow: /*.geotiff$
+Disallow: /*.shp$ 
+Disallow: /*.kml$ 
+Disallow: /*.kmz$ 
+Disallow: /*.geojson$ 
+# Other filetypes to exclude
+Disallow: /*.geojson$
+Disallow: /*.atom$
+Disallow: /*.rss$
+Disallow: /*.xml$ 
+#PDFs are allowed
+
+Disallow: /feeds/
+
+# Sitemap locations (one per row)
+Sitemap: https://data.humdata.org/sitemap.xml
+{%- endblock %}
