@@ -1132,6 +1132,18 @@ def _check_notifications_enabled_for_object(object_type: ObjectType, object_id: 
         if is_hdx_connect or is_private or is_archived or is_update_frequency_never:
             log.info(f'Notifications disabled for object: {object_identifier}')
             return False
+    elif object_type == ObjectType.CRISIS and object_dict:
+        is_archived = object_dict.get('status') == 'archived'
+        sections = object_dict.get('sections', [])
+        if isinstance(sections, str):
+            sections = json.loads(sections)
+        has_data_list = any(section.get('type') == 'data_list' for section in sections)
+
+        log.debug(f'Object properties - is_archived: {is_archived}, has_data_list: {has_data_list}')
+
+        if is_archived or not has_data_list:
+            log.info(f'Notifications disabled for object: {object_identifier}')
+            return False
 
     if config.get('hdx.notifications.enabled_objects_csv'):
         log.info('Using cache for enabled objects for notifications')
@@ -1169,7 +1181,7 @@ def facet_url_extra_args(facet_list, request_args):
             extra_args[categkey_holder['key']] = param_values
 
     # Also include preserved request arguments
-    for key in ['q', 'sort', 'ext_page_size']:
+    for key in ['q', 'sort', 'ext_page_size', 'ext_archived']:
         val = request_args.get(key)
         if val:
             extra_args[key] = [val] if not isinstance(val, list) else val

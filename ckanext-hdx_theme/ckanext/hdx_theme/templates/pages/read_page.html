@@ -45,7 +45,7 @@
                                     <div><span class="label label-small label-default">{{ data.state }}</span></div>
                                 {% endif %}
 {#                                <div class="notes embedded-content">{{ data.description }}</div>#}
-                                {{ h.snippet('notification_platform/buttons.html', object_id=data.id, object_type='crisis' ) }}
+                                {{ h.snippet('notification_platform/buttons.html', object_id=data.id, object_type='crisis', object_dict=data ) }}
                             </div>
                         </div>
                     </div>
@@ -67,6 +67,7 @@
       object_type='crisis',
       object_id=data.id,
       object_name=data.name,
+      object_dict=data,
       unsubscribe_token=unsubscribe_token, unsubscribe_token_validated=unsubscribe_token_validated,
       unsubscribe_email=unsubscribe_email, unsubscribe_token_invalidate=unsubscribe_token_invalidate
   %}

@@ -211,6 +211,8 @@ bem-blocks-scripts:
   output: ckanext-hdx_theme/%(version)s_bem-blocks-scripts.js
   extra:
     preload:
+      - hdx_theme/vendor-vendor
+      - vendor/bootstrap
       - hdx_theme/select2-4-scripts
   contents:
     - hdx-select2-field.js

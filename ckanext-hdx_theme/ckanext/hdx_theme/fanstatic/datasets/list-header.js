@@ -90,7 +90,7 @@ $(document).ready(function() {
 
     $("#headerSearch, .headerSearchBox").on("keydown", function(event){
         if (event.keyCode == '13'){
-            var location = getFilterUrlNew(false);
+            var location = getFilterUrlNew(false, 'score desc');
             console.log("Refresh to: " + location);
             window.location = location;
             event.preventDefault();
@@ -135,7 +135,7 @@ $(document).ready(function() {
 
 });
 
-function getFilterUrlNew(resetFilters) {
+function getFilterUrlNew(resetFilters, sort=null) {
     var params = "";
     if (!resetFilters){
         params = $(".filter-category .categ-items li input").not(".parent-facet").serialize();
@@ -152,8 +152,12 @@ function getFilterUrlNew(resetFilters) {
     // Only add values to params2 if they are non default values, otherwise this will redirect to the non-canonical version of the page
     // Might have SEO implications
 
-    var params2 = $("#headerSearch:visible, #headerSearchMobile:visible, .filter-pagination input[name='ext_page_size'], #header-search-sort, " +
-        "#ext_after_metadata_modified, #ext_batch").serialize();
+    var selectorString = "#headerSearch:visible, #headerSearchMobile:visible, .filter-pagination input[name='ext_page_size'], #ext_after_metadata_modified, #ext_batch, #ext_archived";
+    if (!sort) {
+        selectorString += ", #header-search-sort";
+    }
+    var $selectors = $(selectorString);
+    var params2 = $selectors.serialize();
     params += ((params !== "" && params2 != null) ? "&" : "") + params2;
 
 

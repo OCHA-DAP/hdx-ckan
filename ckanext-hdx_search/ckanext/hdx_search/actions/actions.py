@@ -9,6 +9,7 @@ import ckan.model as model
 import ckan.plugins.toolkit as tk
 
 import ckanext.hdx_pages.helpers.helper as page_h
+from ckanext.hdx_theme.helpers.helpers import hdx_supports_notifications
 
 log = logging.getLogger(__name__)
 _get_or_bust = tk.get_or_bust
@@ -75,7 +76,9 @@ def hdx_search_by_object(context, data_dict):
     # get by object_type
     if object_type == 'dataset':
         object_dict = get_action('package_show')(context, {'id': object_id})
-        dataset_ids_list.append({'id': object_dict.get('id')})
+        notifications_enabled = hdx_supports_notifications(object_type, object_id, object_dict)
+        if notifications_enabled:
+            dataset_ids_list.append({'id': object_dict.get('id')})
     elif object_type == 'organization':
         object_dict = get_action('hdx_light_group_show')(context, {'id': object_id})
         object_name = object_dict.get('name')
@@ -86,13 +89,15 @@ def hdx_search_by_object(context, data_dict):
         fq_filter = f'groups:"{object_name}"'
     elif object_type == 'crisis':
         object_dict = get_action('page_show')(context, {'id': object_id})
-        # object_name = object_dict.get('name')
-        # fq_filter = f'crisis:"{object_name}"'
-        for section in json.loads(object_dict.get('sections', '')):
-            if section.get('type') == 'data_list':
-                saved_filters = page_h._find_dataset_filters(section.get('data_url', ''))
-                fq_filter += page_h.generate_dataset_results(object_dict.get('id'), object_dict.get('type'),
-                                                             saved_filters).get('additional_fq')
+        notifications_enabled = hdx_supports_notifications(object_type, object_id, object_dict)
+        if notifications_enabled:
+            # object_name = object_dict.get('name')
+            # fq_filter = f'crisis:"{object_name}"'
+            for section in json.loads(object_dict.get('sections', '')):
+                if section.get('type') == 'data_list':
+                    saved_filters = page_h._find_dataset_filters(section.get('data_url', ''))
+                    fq_filter += page_h.generate_dataset_results(object_dict.get('id'), object_dict.get('type'),
+                                                                 saved_filters).get('additional_fq')
     else:
         raise ValueError(f'Unsupported object_type: {object_type}')
 
