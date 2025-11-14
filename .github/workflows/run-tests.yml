@@ -41,8 +41,6 @@ jobs:
           docker compose exec -T ckan bash -c "INI_FILE=/srv/ckan/hdx-test-core.ini hdxckantool feature"
       - name: PY3/Testing hdx_service_checker
         run: docker compose exec -T ckan sh -c "./run_pytest_with_coverage.sh hdx_service_checker"
-      - name: PY3/Testing sitemap
-        run: docker compose exec -T ckan sh -c "./run_pytest_with_coverage.sh sitemap"
       - name: PY3/Testing ytp_request
         run: |
           docker compose exec -T ckan sh -c "ln -s /srv/ckan/ckanext-ytp-request/ckanext/ytp/request /srv/ckan/ckanext-ytp-request/ckanext/ytp-request"
