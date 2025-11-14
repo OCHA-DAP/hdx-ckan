@@ -8,6 +8,9 @@ include HDX-specific pages (events, dashboards, and potentially others).
 import logging
 import os
 from datetime import datetime
+from ckanext.sitemap import sitemap as sitemap_module
+from lxml import etree
+import ckan.plugins.toolkit as tk
 
 log = logging.getLogger(__name__)
 
@@ -18,10 +21,6 @@ def patch_sitemap_generation():
     to include HDX event and dashboard pages dynamically.
     """
     try:
-        from ckanext.sitemap import sitemap as sitemap_module
-        from lxml import etree
-        import ckan.plugins.toolkit as tk
-
         # Check if already patched
         if hasattr(sitemap_module, '_hdx_sitemap_patched'):
             log.debug("HDX sitemap patch already installed, skipping")
@@ -85,12 +84,6 @@ def _inject_hdx_pages(urlset_root, site_url):
     :param site_url: Base site URL for constructing full URLs
     """
     try:
-        import ckan.plugins.toolkit as tk
-        from lxml import etree
-
-        # Get XML namespace
-        ns = {'sm': 'http://www.sitemaps.org/schemas/sitemap/0.9'}
-
         # Get all pages using the page_list action
         context = {'ignore_auth': True}
         pages = tk.get_action('page_list')(context, {})
@@ -139,4 +132,4 @@ def _inject_hdx_pages(urlset_root, site_url):
     except Exception as e:
         # Don't let errors here break the entire sitemap generation
         log.warning(f"Error injecting HDX pages into sitemap: {str(e)}", exc_info=True)
-        raise
+        
