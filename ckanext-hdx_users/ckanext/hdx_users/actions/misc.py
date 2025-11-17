@@ -115,6 +115,8 @@ def hdx_token_info(context: Context, data_dict: DataDict):
       - token name
     """
 
+    _check_access('hdx_token_info', context, {})
+
     # Get the Authorization header
     apitoken_header_name = config.get('apitoken_header_name')
     token_value = request.headers.get(apitoken_header_name, '').strip()
