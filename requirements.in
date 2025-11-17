@@ -89,7 +89,7 @@ pyotp~=2.6.0
 # END ckanext-security
 
 # ckanext-sitemap (Datopian version)
--e git+https://github.com/datopian/ckanext-sitemap.git@master#egg=ckanext-sitemap
+-e git+https://github.com/datopian/ckanext-sitemap.git@88fb3b6#egg=ckanext-sitemap
 
 python-json-logger~=2.0.7
 openpyxl==3.1.5
