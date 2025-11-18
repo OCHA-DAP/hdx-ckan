@@ -1,0 +1,5 @@
+# Ignore all generated sitemap XML files
+*.xml
+
+# But keep this directory in git
+!.gitignore
