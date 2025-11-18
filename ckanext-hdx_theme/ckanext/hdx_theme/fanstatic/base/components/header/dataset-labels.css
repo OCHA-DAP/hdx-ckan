@@ -55,11 +55,10 @@
   font-size: 12px;
   white-space: nowrap;
 }
-.datastore-icon span {
+.datastore-icon a {
   margin-left: 10px;
-  cursor: default;
 }
-.datastore-icon span.label {
+.datastore-icon a.label {
   padding: 0 4px;
   background-color: #fff;
   color: #007CE0;
