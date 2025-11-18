@@ -1,13 +1,12 @@
 .filter-title {
   padding: 15px;
-  color: #000;
+  color: #333333;
   font-family: 'Source Sans Pro', sans-serif;
   font-weight: 400;
-  font-size: 14px;
+  font-size: 15px;
 }
 .filter-title .filter-clear {
   color: #007CE0;
-  cursor: pointer;
 }
 .filter-category {
   border: 1px solid #eeeeee;
@@ -18,7 +17,7 @@
   border-bottom: 1px solid #eeeeee;
   font-family: 'Gotham-Bold', sans-serif;
   font-weight: 400;
-  font-size: 12px;
+  font-size: 13.5px;
   text-transform: uppercase;
   color: #888888;
   line-height: 1em;
@@ -48,20 +47,16 @@
 .filter-category .categ-list .categ-items {
   list-style: none;
   margin: 15px;
-  padding: 0;
-  padding-right: 20px;
-  padding-left: 1px;
+  padding: 0 20px 0 1px;
 }
 .filter-category .categ-list .categ-items li {
   line-height: 20px;
-  color: #333333;
 }
 .filter-category .categ-list .categ-items li label.facet {
-  margin-bottom: 0;
+  color: #333333;
   font-family: 'Source Sans Pro', sans-serif;
   font-weight: 400;
-  font-size: 14px;
-  line-height: 20px;
+  font-size: 15px;
 }
 .filter-category .categ-list .categ-items li label.facet .facet-link {
   color: #333333;

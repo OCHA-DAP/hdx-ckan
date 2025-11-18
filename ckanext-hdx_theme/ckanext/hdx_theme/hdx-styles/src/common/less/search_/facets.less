@@ -6,12 +6,11 @@
 
 .filter-title {
     padding: @filterCategPadding;
-    color: @blackColor;
-    .sourceSansProFont(400, 14px);
+    color: @darkGrayColor;
+    .sourceSansProFont(400, 15px);
 
     .filter-clear {
         color: @blueColor;
-        cursor: pointer;
     }
 }
 
@@ -24,7 +23,7 @@
         padding: @filterCategPadding;
         border-bottom: 1px solid @extraLightGrayColor;
 
-        .gothamBoldFont(12px);
+        .gothamBoldFont(13.5px);
         text-transform: uppercase;
         color: @grayColor;
         line-height: 1em;
@@ -60,21 +59,17 @@
         .categ-items {
             list-style: none;
             margin: @filterCategPadding;
-            padding: 0;
-            padding-right: 20px; //scrollbar fix
-            padding-left: 1px; //scrollbar fix
+            padding: 0 20px 0 1px; //scrollbar fix
 
             li {
                 line-height: @filterCategItemLineHeight;
 
-                color: @darkGrayColor;
 
                 label.facet {
+                    color: @darkGrayColor;
                     font-weight: 400;
-                    margin-bottom: 0;
-                    .sourceSansProFont(400, 14px);
-                    line-height: @filterCategItemLineHeight;
-                    
+                    .sourceSansProFont(400, 15px);
+
                     .facet-link {
                       color: @darkGrayColor;
                     }

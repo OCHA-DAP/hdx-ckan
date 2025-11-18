@@ -24,31 +24,31 @@
   font-family: 'Source Sans Pro';
   font-style: normal;
   font-weight: 200;
-  src: url(https://fonts.gstatic.com/s/sourcesanspro/v22/6xKydSBYKcSV-LCoeQqfX1RYOo3i94_wlxdr.ttf) format('truetype');
+  src: url(https://fonts.gstatic.com/s/sourcesanspro/v23/6xKydSBYKcSV-LCoeQqfX1RYOo3i94_wlxdr.ttf) format('truetype');
 }
 @font-face {
   font-family: 'Source Sans Pro';
   font-style: normal;
   font-weight: 300;
-  src: url(https://fonts.gstatic.com/s/sourcesanspro/v22/6xKydSBYKcSV-LCoeQqfX1RYOo3ik4zwlxdr.ttf) format('truetype');
+  src: url(https://fonts.gstatic.com/s/sourcesanspro/v23/6xKydSBYKcSV-LCoeQqfX1RYOo3ik4zwlxdr.ttf) format('truetype');
 }
 @font-face {
   font-family: 'Source Sans Pro';
   font-style: normal;
   font-weight: 400;
-  src: url(https://fonts.gstatic.com/s/sourcesanspro/v22/6xK3dSBYKcSV-LCoeQqfX1RYOo3qOK7g.ttf) format('truetype');
+  src: url(https://fonts.gstatic.com/s/sourcesanspro/v23/6xK3dSBYKcSV-LCoeQqfX1RYOo3qOK7g.ttf) format('truetype');
 }
 @font-face {
   font-family: 'Source Sans Pro';
   font-style: normal;
   font-weight: 600;
-  src: url(https://fonts.gstatic.com/s/sourcesanspro/v22/6xKydSBYKcSV-LCoeQqfX1RYOo3i54rwlxdr.ttf) format('truetype');
+  src: url(https://fonts.gstatic.com/s/sourcesanspro/v23/6xKydSBYKcSV-LCoeQqfX1RYOo3i54rwlxdr.ttf) format('truetype');
 }
 @font-face {
   font-family: 'Source Sans Pro';
   font-style: normal;
   font-weight: 700;
-  src: url(https://fonts.gstatic.com/s/sourcesanspro/v22/6xKydSBYKcSV-LCoeQqfX1RYOo3ig4vwlxdr.ttf) format('truetype');
+  src: url(https://fonts.gstatic.com/s/sourcesanspro/v23/6xKydSBYKcSV-LCoeQqfX1RYOo3ig4vwlxdr.ttf) format('truetype');
 }
 .pagination,
 .module .pagination {
@@ -2443,14 +2443,13 @@ textarea {
 }
 .filter-title {
   padding: 15px;
-  color: #000;
+  color: #333333;
   font-family: 'Source Sans Pro', sans-serif;
   font-weight: 400;
-  font-size: 14px;
+  font-size: 15px;
 }
 .filter-title .filter-clear {
   color: #007CE0;
-  cursor: pointer;
 }
 .filter-category {
   border: 1px solid #eeeeee;
@@ -2461,7 +2460,7 @@ textarea {
   border-bottom: 1px solid #eeeeee;
   font-family: 'Gotham-Bold', sans-serif;
   font-weight: 400;
-  font-size: 12px;
+  font-size: 13.5px;
   text-transform: uppercase;
   color: #888888;
   line-height: 1em;
@@ -2491,20 +2490,16 @@ textarea {
 .filter-category .categ-list .categ-items {
   list-style: none;
   margin: 15px;
-  padding: 0;
-  padding-right: 20px;
-  padding-left: 1px;
+  padding: 0 20px 0 1px;
 }
 .filter-category .categ-list .categ-items li {
   line-height: 20px;
-  color: #333333;
 }
 .filter-category .categ-list .categ-items li label.facet {
-  margin-bottom: 0;
+  color: #333333;
   font-family: 'Source Sans Pro', sans-serif;
   font-weight: 400;
-  font-size: 14px;
-  line-height: 20px;
+  font-size: 15px;
 }
 .filter-category .categ-list .categ-items li label.facet .facet-link {
   color: #333333;
