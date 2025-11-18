@@ -24,31 +24,31 @@
   font-family: 'Source Sans Pro';
   font-style: normal;
   font-weight: 200;
-  src: url(https://fonts.gstatic.com/s/sourcesanspro/v22/6xKydSBYKcSV-LCoeQqfX1RYOo3i94_wlxdr.ttf) format('truetype');
+  src: url(https://fonts.gstatic.com/s/sourcesanspro/v23/6xKydSBYKcSV-LCoeQqfX1RYOo3i94_wlxdr.ttf) format('truetype');
 }
 @font-face {
   font-family: 'Source Sans Pro';
   font-style: normal;
   font-weight: 300;
-  src: url(https://fonts.gstatic.com/s/sourcesanspro/v22/6xKydSBYKcSV-LCoeQqfX1RYOo3ik4zwlxdr.ttf) format('truetype');
+  src: url(https://fonts.gstatic.com/s/sourcesanspro/v23/6xKydSBYKcSV-LCoeQqfX1RYOo3ik4zwlxdr.ttf) format('truetype');
 }
 @font-face {
   font-family: 'Source Sans Pro';
   font-style: normal;
   font-weight: 400;
-  src: url(https://fonts.gstatic.com/s/sourcesanspro/v22/6xK3dSBYKcSV-LCoeQqfX1RYOo3qOK7g.ttf) format('truetype');
+  src: url(https://fonts.gstatic.com/s/sourcesanspro/v23/6xK3dSBYKcSV-LCoeQqfX1RYOo3qOK7g.ttf) format('truetype');
 }
 @font-face {
   font-family: 'Source Sans Pro';
   font-style: normal;
   font-weight: 600;
-  src: url(https://fonts.gstatic.com/s/sourcesanspro/v22/6xKydSBYKcSV-LCoeQqfX1RYOo3i54rwlxdr.ttf) format('truetype');
+  src: url(https://fonts.gstatic.com/s/sourcesanspro/v23/6xKydSBYKcSV-LCoeQqfX1RYOo3i54rwlxdr.ttf) format('truetype');
 }
 @font-face {
   font-family: 'Source Sans Pro';
   font-style: normal;
   font-weight: 700;
-  src: url(https://fonts.gstatic.com/s/sourcesanspro/v22/6xKydSBYKcSV-LCoeQqfX1RYOo3ig4vwlxdr.ttf) format('truetype');
+  src: url(https://fonts.gstatic.com/s/sourcesanspro/v23/6xKydSBYKcSV-LCoeQqfX1RYOo3ig4vwlxdr.ttf) format('truetype');
 }
 /* Default link style */
 a,
@@ -1716,7 +1716,7 @@ hr.dotted {
 }
 @media (min-width: 1260px) {
   body.responsive {
-    background: #1ebfb3;
+    background: #eeeeee;
     max-width: 1260px;
     margin: auto;
   }
@@ -1851,8 +1851,8 @@ hr.dotted {
     padding-top: 150px;
   }
   .homepage-main .carousel-section {
-    margin-top: 150px;
-    margin-bottom: 150px;
+    padding-top: 150px;
+    padding-bottom: 150px;
   }
 }
 @media (max-height: 1024px) {
@@ -1860,8 +1860,8 @@ hr.dotted {
     padding-top: 140px;
   }
   .homepage-main .carousel-section {
-    margin-top: 140px;
-    margin-bottom: 140px;
+    padding-top: 140px;
+    padding-bottom: 140px;
   }
 }
 @media (max-height: 900px) {
@@ -1869,8 +1869,8 @@ hr.dotted {
     padding-top: 100px;
   }
   .homepage-main .carousel-section {
-    margin-top: 100px;
-    margin-bottom: 100px;
+    padding-top: 100px;
+    padding-bottom: 100px;
   }
 }
 @media (max-height: 800px) {
@@ -1878,7 +1878,7 @@ hr.dotted {
     padding-top: 65px;
   }
   .homepage-main .carousel-section {
-    margin-top: 65px;
-    margin-bottom: 65px;
+    padding-top: 65px;
+    padding-bottom: 65px;
   }
 }

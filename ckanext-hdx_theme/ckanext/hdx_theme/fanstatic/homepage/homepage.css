@@ -24,6 +24,7 @@
 }
 /* Homepage */
 .homepage-main {
+  background-color: #1ebfb3;
   background-size: auto 100%;
   background-repeat: no-repeat;
   background-position: center;
@@ -232,8 +233,8 @@
 }
 .homepage-main .carousel-section {
   background-color: #1ebfb3;
-  margin-top: 160px;
-  margin-bottom: 160px;
+  padding-top: 160px;
+  padding-bottom: 160px;
 }
 .homepage-main .carousel-section .carousel-title {
   margin-bottom: 30px;

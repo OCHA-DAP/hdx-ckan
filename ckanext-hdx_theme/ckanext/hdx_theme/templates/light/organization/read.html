@@ -32,7 +32,7 @@
 {% set members = h.get_group_members(org.id) %}
 <div class="dataset-light org-light">
   <div class="container">
-    <div class="row org-details">
+    <div class="row">
       <div class="col-9 col-lg-8 ">
         <h1 class="mTop20">{{ org.title }}</h1>
         {{ h.snippet('notification_platform/buttons.html', object_id=org.id, object_type='organization' ) }}
