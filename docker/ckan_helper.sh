@@ -19,7 +19,7 @@ export HDX_QA_DASHBOARD=${HDX_QA_DASHBOARD:-false}
 #chown www-data:www-data -R /var/log/ckan
 #chown root:root -R /srv/backup
 chown -R www-data:www-data /var/log/ckan
-chown www-data -R /srv/ckan/ckanext-hdx_theme/ckanext/hdx_theme/public/sitemap
+chown -R www-data /srv/ckan/ckanext-hdx_theme/ckanext/hdx_theme/public/sitemap
 
 # make sure we have the feature-index.js file
 lunr_dir=/srv/ckan/ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/search_/lunr
