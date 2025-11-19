@@ -549,21 +549,19 @@ span.icn-txt-cods,
 ul.dataset-resources li.label-icons span.icn-txt-cods {
   font-family: 'Gotham-Bold', sans-serif;
   font-weight: 400;
-  font-size: 10px;
+  font-size: 9px;
   background-color: #888888;
   color: #fff;
   padding: 4px;
   border-radius: 10px;
   line-height: 1;
   display: inline-block;
+  vertical-align: text-bottom;
+  margin-left: 3px;
 }
 span.icn-txt-cods:hover,
 ul.dataset-resources li.label-icons span.icn-txt-cods:hover {
   background-color: #007CE0;
-}
-.dataset-content .icn-txt-cods {
-  margin-right: 5px;
-  display: inline-block;
 }
 span.icn-txt-p-code,
 ul.dataset-resources li.label-icons span.icn-txt-p-code {
