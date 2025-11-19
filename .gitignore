@@ -58,6 +58,21 @@ cypress.env.json
 # travis env
 travis.env
 
+###
+# Arti custom
+ckan.py
+start.py
+src/ckanext*
+src/pip-delete-this-directory.txt
+ckanext-*/build/lib*
+local_run_pytest.sh
+CLAUDE.md
+.claude/
+.env.secrets
+*/.eggs/*
+.vscode
+.serena
+
 .env.secrets
 
 # cypress
@@ -72,5 +87,3 @@ junit
 .npm
 .test_durations
 
-#Sitemap
-ckanext-hdx_theme/ckanext/hdx_theme/public/sitemap/*.xml
