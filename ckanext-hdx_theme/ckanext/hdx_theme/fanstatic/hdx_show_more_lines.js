@@ -70,7 +70,6 @@ ckan.module('hdx_show_more_lines', function ($, _) {
       this.el.find(".read-more-btn").remove();
 
       const $less = $(`<a href="#" class="read-less-btn">${this.options.less_text}</a>`);
-      $less.css({marginLeft: "5px"});
 
       $less.on("click", (e) => {
         e.preventDefault();

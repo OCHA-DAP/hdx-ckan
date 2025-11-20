@@ -343,10 +343,10 @@ def methodology_bk_compat(meth, other, render=True):
 def _hdx_strftime(_date):
     result = None
     try:
-        result = _date.strftime('%B %d, %Y')
+        result = _date.strftime('%d %B %Y')
     except ValueError as e:
         month = datetime.date(1900, _date.month, 1).strftime('%B')
-        result = month + " " + str(_date.day) + ", " + str(_date.year)
+        result = str(_date.day) + " " + month + " " +  str(_date.year)
     return result
 
 
@@ -362,14 +362,14 @@ def render_date_from_concat_str(_str, separator='-'):
                     res_list.append(_hdx_strftime(_date))
                     # _date.strftime('%B %d, %Y'))
                 else:
-                    res_list.append(datetime.datetime.today().strftime('%B %d, %Y'))
-            result = '-'.join(res_list)
+                    res_list.append(datetime.datetime.today().strftime('%d %B %Y'))
+            result = ' - '.join(res_list)
         else:
             strdate_list = _str.split(separator)
             for index, strdate in enumerate(strdate_list):
                 try:
                     date = datetime.datetime.strptime(strdate.strip(), '%m/%d/%Y')
-                    render_strdate = date.strftime('%B %d, %Y')
+                    render_strdate = date.strftime('%d %B %Y')
                     result += render_strdate
                     if index < len(strdate_list) - 1:
                         result += ' - '

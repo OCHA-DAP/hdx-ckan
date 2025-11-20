@@ -39,9 +39,12 @@
           {{ _('Modified') }}:
           {{ h.hdx_render_resource_updated_date(res, pkg) }}
         </div>
+        <div class="resource-id-label">
+          {{ _('Resource ID') }}: {{ res.id }} <i class="fa-solid fa-copy copy-icon ms-1" data-module="copy-into-buffer" data-module-copy-value="{{ res.id }}"></i>
+        </div>
         {% if h.are_new_p_code_filters_enabled() and res.p_coded == True %}
           <div class="pcode-label">
-            {{ _('P-coded') }}: Yes
+            {{ _('P-coded') }}
           </div>
         {% endif %}
         <div class="description">

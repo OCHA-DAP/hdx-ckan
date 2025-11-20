@@ -85,7 +85,7 @@
   }
   .heading {
     color: @darkGrayColor;
-    font-size: 14px;
+    font-size: 15px;
     font-weight: bold;
   }
   .description{
@@ -99,25 +99,28 @@
 .additional-info {
   .additional-info-content {
     .dataset-label {
-      color: @blue-medium-dark-color;
-      font-family: @gothamBoldFont;
-      font-size: 12px;
-      font-weight: 400;
-      line-height: 14.4px;
-      text-transform: uppercase;
+      font-size: 15px;
+      color: @darkGrayColor;
     }
 
     .dataset-details {
-      color: @black-color;
-      font-family: 'Source Sans Pro', sans-serif;
-      font-size: 14px;
-      line-height: 18px;
-      margin-top: .25rem;
+      font-size: 15px;
+      font-weight: 600;
+      color: @darkGrayColor;
+      #show-extra-dates,
+      #hide-extra-dates {
+        font-weight: 400;
+      }
 
       .tag-wrapper {
         float: none;
         display: inline-block;
       }
+    }
+
+    #show-extra-fields,
+    #hide-extra-fields {
+      font-size: 15px;
     }
 
     .quick-edit {
