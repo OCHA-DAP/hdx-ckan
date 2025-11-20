@@ -30,6 +30,8 @@ Disallow: /*.geojson$
 Disallow: /*.geojson$
 Disallow: /*.atom$
 Disallow: /*.rss$
+# Allow sitemaps, but ignore other xmls 
+Allow: /sitemap*.xml$ 
 Disallow: /*.xml$ 
 #PDFs are allowed
 
