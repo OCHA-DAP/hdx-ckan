@@ -7,6 +7,17 @@
 # normalize log bucket env var (remove this after 2021.05.30)
 [ -z "$HDX_ECHO_LOG_BUCKET_NAME" ] && export HDX_ECHO_LOG_BUCKET_NAME=${AWS_BUCKET_NAME}-log
 
+# don't use assumeRole unless explicitly configured
+[ -z "$AWS_USE_ROLE" ] && export AWS_USE_ROLE=false
+# don't use assume role unless the role is defined
+[ -z "$AWS_ASSUME_ROLE" ] && export AWS_ASSUME_ROLE="not-configured" && export AWS_USE_ROLE=false
+# don't use assumeRole unless explicitly configured
+[ -z "$HDX_SMTP_USE_ASSUME_ROLE" ] && export HDX_SMTP_USE_ASSUME_ROLE=false
+# don't use assume role unless the role is defined
+[ -z "$HDX_SMTP_ASSUME_ROLE" ] && export HDX_SMTP_ASSUME_ROLE="not-configured" && export HDX_SMTP_USE_ASSUME_ROLE=false
+# don't take the SMTP DOMAIN env var for granted
+[ -z "$HDX_SMTP_DOMAIN" ] && export HDX_SMTP_DOMAIN=humdata.local
+
 [ -z "$NEW_RELIC_ENABLED"      ] && export NEW_RELIC_ENABLED="false"
 [ -z "$ELASTIC_APM_ENABLED"    ] && export ELASTIC_APM_ENABLED="false"
 
