@@ -1,0 +1,3 @@
+include README.md
+include LICENSE
+recursive-include ckanext/hdx_smtp_assumerole *.yaml
