@@ -63,6 +63,7 @@ class HDXValidatePlugin(plugins.SingletonPlugin):
             'user_can_validate': authorize.user_can_validate,
             'onboarding_user_can_register': authorize.onboarding_user_can_register,
             'hdx_shadow_user_create': authorize.hdx_shadow_user_create,
+            'hdx_token_info': authorize.hdx_token_info,
         }
 
     # IConfigurable

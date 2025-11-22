@@ -31,6 +31,7 @@ import ckan.plugins.toolkit as tk
 from ckanext.security.model import SecurityTOTP
 from ckan.common import session
 from ckanext.hdx_users.helpers.token_creation_notification_helper import send_email_on_token_creation
+from ckanext.hdx_theme.sitemap_hook import patch_sitemap_generation
 
 config = toolkit.config
 log = logging.getLogger(__name__)
@@ -358,6 +359,9 @@ class HDXThemePlugin(plugins.SingletonPlugin):
 
     # IMiddleware
     def make_middleware(self, app, config):
+        # Install HDX sitemap monkey patch
+        patch_sitemap_generation()
+
         cookie_app = CookieMiddleware(app, config)
         # redirection_app = RedirectionMiddleware(cookie_app, config)
         if app.app_name == 'flask_app':

@@ -49,3 +49,10 @@ def onboarding_user_can_register(context, data_dict=None):
 
 def hdx_shadow_user_create(context, data_dict):
     return {'success': False, 'msg': 'Only sysadmins can view user permission page'}
+
+def hdx_token_info(context, data_dict):
+    auth_user_obj = context.get('auth_user_obj', None)
+    if auth_user_obj and auth_user_obj.is_authenticated:
+        return {'success': True}
+    else:
+        return {'success': False, 'msg': 'Invalid token'}
