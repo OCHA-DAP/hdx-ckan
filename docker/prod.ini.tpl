@@ -48,6 +48,20 @@ smtp.user        = ${HDX_SMTP_USER}
 smtp.password    = ${HDX_SMTP_PASS}
 smtp.starttls    = ${HDX_SMTP_TLS}
 
+## SES API AssumeRole Settings (for AWS SES with temporary credentials)
+# When enabled (use_assume_role = true):
+#   - Emails sent via SES API (not SMTP) with temporary credentials
+#   - Supports session tokens from AssumeRole
+#   - Credentials auto-refresh before expiry
+# When disabled (use_assume_role = false - default):
+#   - Emails sent via standard SMTP with static credentials from smtp.user/smtp.password
+#   - Backward compatible with existing configurations
+ckanext.hdx_smtp_assumerole.use_assume_role = ${HDX_SMTP_USE_ASSUME_ROLE}
+ckanext.hdx_smtp_assumerole.role_arn = ${HDX_SMTP_ASSUME_ROLE}
+ckanext.hdx_smtp_assumerole.region = ${REGION_NAME}
+ckanext.hdx_smtp_assumerole.smtp_domain = ${HDX_SMTP_DOMAIN}
+ckanext.hdx_smtp_assumerole.session_name = ckan-ses-session
+
 ## DOWNLOAD WITH CACHE DATASETS
 # accepting comma separated list with no spaces
 hdx.download_with_cache.datasets = repository-for-pdf-files
@@ -123,6 +137,8 @@ hdx.wordpress.auth.basic = ${HDX_WORDPRESS_AUTH_BASIC}
 #hdx.http_headers.mimetypes = application/json,text/html,text/json
 
 # add s3 config
+ckanext.s3filestore.aws_use_assume_role = ${AWS_USE_ROLE}
+ckanext.s3filestore.aws_role_arn = ${AWS_ASSUME_ROLE}
 ckanext.s3filestore.aws_access_key_id = ${AWS_ACCESS_KEY_ID}
 ckanext.s3filestore.aws_secret_access_key = ${AWS_SECRET_ACCESS_KEY}
 ckanext.s3filestore.aws_bucket_name = ${AWS_BUCKET_NAME}
