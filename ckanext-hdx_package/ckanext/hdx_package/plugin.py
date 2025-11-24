@@ -503,6 +503,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'datastore_search': hdx_get.datastore_search,
             'datastore_search_sql': hdx_get.datastore_search_sql,
             'hdx_is_package_allowed_for_datastore': hdx_get.hdx_is_package_allowed_for_datastore,
+            'hdx_push_resource_to_datastore': hdx_update.hdx_push_resource_to_datastore,
         }
 
     # IValidators
@@ -597,6 +598,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'datastore_search_sql': authorize.datastore_search_sql,
             'datastore_search': authorize.datastore_search,
             'datastore_info': authorize.datastore_info,
+            'hdx_push_resource_to_datastore': authorize.hdx_push_resource_to_datastore,
         }
 
     def make_middleware(self, app, config):

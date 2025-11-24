@@ -245,3 +245,7 @@ def hdx_manage_resource_sdd_report(context: Context, data_dict: DataDict):
             pass
 
     return ignore_auth or has_permission or is_sysadmin
+
+
+def hdx_push_resource_to_datastore(context: Context, data_dict: DataDict) -> AuthResult:
+    return {'success': False, 'msg': _('Only sysadmins can directly push resources to datastore')}

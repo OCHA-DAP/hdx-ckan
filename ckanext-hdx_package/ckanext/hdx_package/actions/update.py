@@ -673,3 +673,37 @@ def resource_view_update(context, data_dict):
         resource_view = model.ResourceView.get(data_dict.get('id'))
         data_dict['resource_id'] = resource_view.resource_id
     core_update.resource_view_update(context, data_dict)
+
+
+def hdx_push_resource_to_datastore(context: Context, data_dict: DataDict) -> Dict[str, Any]:
+    _check_access('hdx_push_resource_to_datastore', context, data_dict)
+    resource_id = data_dict.get('resource_id')
+    dataset_id = data_dict.get('dataset_id')
+    if not resource_id and not dataset_id:
+        raise ValidationError({'resource_id': [_('Missing value')], 'dataset_id': [_('Missing value')]})
+
+    datapusher_plugin = next(
+        (item for item in plugins.PluginImplementations(plugins.IResourceController) if item.name == 'datapusher_plus'),
+        None
+    )
+    if not datapusher_plugin:
+        return {'success': False, 'message': 'Datapusher Plus plugin not found'}
+
+    if resource_id:
+        resource_dict = _get_action('resource_show')(context, {'id': resource_id})
+        datapusher_plugin._submit_to_datapusher(resource_dict)
+        return {'success': True, 'message': 'Resource submitted to Datapusher Plus'}
+
+    else:
+        package_dict = _get_action('package_show')(context, {'id': dataset_id})
+        csv_resources = [res for res in package_dict.get('resources', []) if res.get('format', '').lower() == 'csv']
+        for resource_dict in csv_resources:
+            datapusher_plugin._submit_to_datapusher(resource_dict)
+
+        if not csv_resources:
+            return {'success': False, 'message': 'No CSV resources found for dataset'}
+
+        return {
+            'success': True,
+            'message': 'Submitted {} CSV resource(s) to Datapusher Plus'.format(len(csv_resources))
+        }
