@@ -89,7 +89,7 @@ pyotp~=2.6.0
 # END ckanext-security
 
 # ckanext-datapusher-plus
--e git+https://github.com/OCHA-DAP/datapusher-plus.git@feature/hdx-changes-over-1_0_4#egg=datapusher-plus
+-e git+https://github.com/OCHA-DAP/datapusher-plus.git@0.2.104#egg=datapusher-plus
 # END ckanext-datapusher-plus
 
 python-json-logger~=2.0.7

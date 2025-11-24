@@ -14,7 +14,7 @@
     # via -r requirements.in
 -e git+https://github.com/OCHA-DAP/ckanext-showcase.git@1.5.5#egg=ckanext-showcase
     # via -r requirements.in
--e git+https://github.com/OCHA-DAP/datapusher-plus.git@feature/hdx-changes-over-1_0_4#egg=datapusher-plus
+-e git+https://github.com/OCHA-DAP/datapusher-plus.git@0.2.104#egg=datapusher-plus
     # via -r requirements.in
 alembic==1.13.2
     # via -r requirements.in
