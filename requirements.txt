@@ -50,6 +50,8 @@ click==8.1.7
     #   flask
     #   geomet
     #   rq
+croniter==6.0.0
+    # via rq
 decorator==5.2.1
     # via dogpile-cache
 dogpile-cache==1.3.0
@@ -148,6 +150,7 @@ python-dateutil==2.9.0.post0
     # via
     #   -r requirements.in
     #   botocore
+    #   croniter
     #   feedgen
 python-json-logger==2.0.7
     # via -r requirements.in
@@ -156,6 +159,7 @@ python-magic==0.4.27
 pytz==2023.3
     # via
     #   -r requirements.in
+    #   croniter
     #   flask-babel
 pyyaml==6.0.1
     # via -r requirements.in
@@ -176,7 +180,7 @@ requests==2.32.3
     #   -r requirements.in
     #   mailchimp3
     #   pysolr
-rq==1.16.2
+rq==2.6.1
     # via -r requirements.in
 s3transfer==0.10.4
     # via boto3
