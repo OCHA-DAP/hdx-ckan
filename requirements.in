@@ -48,6 +48,9 @@ ua-parser==0.18.0
 user_agents==2.2.0
 rcssmin==1.1.2
 regex==2025.7.34
+# boto3 for AWS SES API (ckanext-hdx_smtp_assumerole)
+boto3>=1.18.0
+botocore>=1.21.0
 
 # We want to use repoze.who.plugins.use_beaker in who.ini with sessions in redis
 # Based on ideas from https://github.com/data-govt-nz/ckanext-security
