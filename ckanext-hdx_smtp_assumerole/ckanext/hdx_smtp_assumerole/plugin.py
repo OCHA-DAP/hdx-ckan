@@ -22,10 +22,10 @@ def _validate_region(region: str) -> None:
     :raises SMTPAssumeRoleException: If region format is invalid
     """
     # Common AWS regions - not exhaustive but covers most cases
-    # Format: service-region-number (e.g., us-east-1, eu-west-2)
-    # Direction part must be at least 4 chars (east, west, north, south, central)
-    # Relaxed pattern: allows for variable-length and hyphenated region names (e.g., us-gov-west-1, ap-northeast-3)
-    valid_region_pattern = r'^[a-z]{2,}-[a-z0-9-]+-\d+$'
+    # Format: prefix-region-number (e.g., us-east-1, eu-west-2)
+    # Supports hyphenated region names (e.g., us-gov-west-1, ap-northeast-3)
+    # Pattern ensures: exactly 2 letter prefix, at least 2 letters between dashes, no consecutive dashes
+    valid_region_pattern = r'^[a-z]{2}-[a-z]{2,}(-[a-z]{2,})*-\d+$'
 
     if not re.match(valid_region_pattern, region):
         raise SMTPAssumeRoleException(
