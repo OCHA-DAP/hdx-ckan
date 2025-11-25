@@ -3,6 +3,7 @@
 {% set has_showcase_items = package.showcase_count and package.showcase_count > 0 %}
 {% set has_quality_checked = package.indicator == '1' or package.quality %}
 {% set has_pcodes = h.hdx_dataset_is_p_coded(package.resources) %}
+
 {% if visualization or popular or has_showcase_items or (package.subnational and package.subnational != '0')
         or package.private or has_quality_checked or has_pcodes %}
   <li class="label-icons">

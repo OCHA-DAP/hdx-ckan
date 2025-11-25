@@ -499,6 +499,11 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'hdx_dataseries_unlink': hdx_patch.hdx_dataseries_unlink,
             'hdx_p_coded_resource_update': hdx_patch.hdx_p_coded_resource_update,
             'hdx_mark_resource_in_hapi': hdx_patch.hdx_mark_resource_in_hapi,
+            'datastore_info': hdx_get.datastore_info,
+            'datastore_search': hdx_get.datastore_search,
+            'datastore_search_sql': hdx_get.datastore_search_sql,
+            'hdx_is_package_allowed_for_datastore': hdx_get.hdx_is_package_allowed_for_datastore,
+            'hdx_push_resource_to_datastore': hdx_update.hdx_push_resource_to_datastore,
         }
 
     # IValidators
@@ -590,6 +595,10 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'hdx_mark_resource_in_hapi': authorize.hdx_mark_resource_in_hapi,
             'hdx_request_access': authorize.hdx_request_access,
             'hdx_qa_hapi_report_view': authorize.hdx_qa_hapi_report_view,
+            'datastore_search_sql': authorize.datastore_search_sql,
+            'datastore_search': authorize.datastore_search,
+            'datastore_info': authorize.datastore_info,
+            'hdx_push_resource_to_datastore': authorize.hdx_push_resource_to_datastore,
         }
 
     def make_middleware(self, app, config):
@@ -616,7 +625,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             allow_skip_for_sysadmin = config.get('hdx.validation.allow_skip_for_sysadmin') or ''
             fields_to_skip = allow_skip_for_sysadmin.split(',')
             if len(fields_to_skip) > 0 and fields_to_skip[0] and \
-                    self._user_allowed_to_skip_validation(c.user) and context.get(hdx_update.SKIP_VALIDATION):
+                    self._user_allowed_to_skip_validation(context.get('user') or c.user) and context.get(hdx_update.SKIP_VALIDATION):
                 self._update_with_skip_validation(schema, fields_to_skip)
 
         if action == 'package_show':
