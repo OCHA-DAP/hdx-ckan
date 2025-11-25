@@ -1,11 +1,10 @@
 # encoding: utf-8
 
 import unittest
-from unittest.mock import Mock, patch, MagicMock
+from unittest.mock import patch
 from datetime import datetime, timedelta, timezone
 
 from ckanext.hdx_smtp_assumerole.helpers.credentials_manager import SMTPCredentialsManager
-from ckanext.hdx_smtp_assumerole.helpers.smtp_assume_role import SMTPAssumeRoleException
 
 
 class TestSMTPCredentialsManager(unittest.TestCase):

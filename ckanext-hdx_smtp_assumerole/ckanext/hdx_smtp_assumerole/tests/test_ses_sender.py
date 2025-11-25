@@ -1,7 +1,7 @@
 # encoding: utf-8
 
 import unittest
-from unittest.mock import Mock, patch, MagicMock
+from unittest.mock import Mock, patch
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.mime.base import MIMEBase
@@ -58,7 +58,7 @@ class TestSendEmailViaSes(unittest.TestCase):
         mock_client.send_raw_email.return_value = {'MessageId': 'test-message-id'}
         mock_boto3.client.return_value = mock_client
 
-        result = send_email_via_ses(
+        send_email_via_ses(
             smtp_from='sender@example.com',
             recipients=['recipient@example.com'],
             subject='Test Subject',
@@ -88,7 +88,7 @@ class TestSendEmailViaSes(unittest.TestCase):
         mock_client.send_raw_email.return_value = {'MessageId': 'test-message-id'}
         mock_boto3.client.return_value = mock_client
 
-        result = send_email_via_ses(
+        send_email_via_ses(
             smtp_from='sender@example.com',
             recipients=['recipient@example.com'],
             subject='Test Subject',
@@ -112,7 +112,7 @@ class TestSendEmailViaSes(unittest.TestCase):
 
         recipients = ['recipient1@example.com', 'recipient2@example.com', 'recipient3@example.com']
 
-        result = send_email_via_ses(
+        send_email_via_ses(
             smtp_from='sender@example.com',
             recipients=recipients,
             subject='Test Subject',
@@ -134,7 +134,7 @@ class TestSendEmailViaSes(unittest.TestCase):
         mock_client.send_raw_email.return_value = {'MessageId': 'test-message-id'}
         mock_boto3.client.return_value = mock_client
 
-        result = send_email_via_ses(
+        send_email_via_ses(
             smtp_from='sender@example.com',
             recipients='recipient@example.com',  # String, not list
             subject='Test Subject',
@@ -161,7 +161,7 @@ class TestSendEmailViaSes(unittest.TestCase):
             'X-Custom-Header': 'custom-value'
         }
 
-        result = send_email_via_ses(
+        send_email_via_ses(
             smtp_from='sender@example.com',
             recipients=['recipient@example.com'],
             subject='Test Subject',
@@ -229,7 +229,7 @@ class TestSendEmailViaSes(unittest.TestCase):
         msg.attach(attachment)
 
         # Send with pre-built MIME message
-        result = send_email_via_ses(
+        send_email_via_ses(
             smtp_from='sender@example.com',
             recipients=['recipient@example.com'],
             subject='Will be ignored',  # MIME message has its own subject

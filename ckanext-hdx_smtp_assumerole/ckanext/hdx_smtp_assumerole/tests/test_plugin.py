@@ -1,7 +1,7 @@
 # encoding: utf-8
 
 import unittest
-from unittest.mock import Mock, patch, MagicMock
+from unittest.mock import Mock, patch
 from datetime import datetime, timedelta, timezone
 
 from ckanext.hdx_smtp_assumerole.plugin import (
