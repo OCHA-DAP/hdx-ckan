@@ -1216,3 +1216,10 @@ def build_facet_filter_url(option, extra_args):
     if query_parts:
         return f"{base_path}?{urlencode(query_parts)}"
     return base_path
+
+
+def hdx_dataset_has_datastore_resources(resource_list: list[Any]) -> bool:
+    for resource in resource_list:
+        if resource.get('datastore_active'):
+            return True
+    return False

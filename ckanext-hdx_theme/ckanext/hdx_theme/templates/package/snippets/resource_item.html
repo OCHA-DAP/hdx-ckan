@@ -52,7 +52,7 @@
 
   {% block resource_item_explore %}
     {# Adding classes ga-download, ga-preview, and ga-share for easy Google Analytics tracking. PLEASE DO NOT REMOVE #}
-    <div class="hdx-btn-group hdx-btn-group-fixed">
+    <div class="hdx-btn-group hdx-btn-group-fixed text-end">
         {% block resource_item_explore_links %}
 
             {# Commented out with the new contribute flow
@@ -63,6 +63,10 @@
                 {% endif %}
              #}
             {% if not in_review and h.check_access('hdx_resource_download', res) %}
+              {% if res.datastore_active %}
+                {% snippet 'package/snippets/data_api_button.html', resource=res %}
+              {% endif %}
+
               {% set btn_dict = {'title':'This will take you outside HDX to access the data', 'value':'Access Data', 'type':'external'} if h.hdx_get_ckan_config('ckan.resource_formats.external_system')==res.format else {'title':'Download', 'value':'Download', 'type':'download'} %}
               <a href="{{ res.hdx_rel_url }}"
                  class="btn btn-empty btn-empty-blue hdx-btn resource-url-analytics ga-download resource-download-button"
@@ -76,11 +80,6 @@
                  data-is-authenticated="{{ current_user.is_authenticated }}"
                  tracking-type="{{res.url_type}}"
               >
-                  {% if btn_dict.type == 'download' %}
-                    <img src="/images/homepage/download.svg" alt="{{ btn_dict.title }}" />
-                    {% else %}
-                    <i class="icon humanitarianicons-Out-of-platform"></i>
-                  {% endif %}
                   {{ btn_dict.value }}
                   <span class="ga-download-resource-title" style="display: none">{{ res.name }}</span>
                   <span class="ga-download-resource-id" style="display: none">{{ res.id }}</span>
@@ -90,7 +89,7 @@
                 {% set metadata_url = h.url_for('hdx_dataset.resource_metadata', id=pkg.id, resource_id=res.id) %}
 
                 <a href="#" class="btn btn-empty btn-empty-blue hdx-btn" data-bs-toggle="dropdown">
-                  {{ _('More') }}
+                  <i class="fa-solid fa-ellipsis"></i>
                 </a>
 
                 <ul class="dropdown-menu crises-menu" role="menu" style="right: 0;">

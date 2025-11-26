@@ -30,6 +30,9 @@ ckan.site_id = default
 solr_url = http://${HDX_SOLR_ADDR}:${HDX_SOLR_PORT}/solr/${HDX_SOLR_CORE}
 #ckan.simple_search = 1
 
+# CKAN JOBS
+ckan.redis.url = redis://${HDX_CKAN_JOBS_REDIS_ADDR}:${HDX_CKAN_JOBS_REDIS_PORT}/${HDX_CKAN_JOBS_REDIS_DB}
+
 ckan.recaptcha.publickey  = 6Lcl60EUAAAAAE46a3XcPM2nPUKI2K4XZbcsorkR
 ckan.recaptcha.privatekey = ${HDX_CKAN_RECAPTCHA_KEY}
 
@@ -158,6 +161,10 @@ ckanext.security.redis.host = ${HDX_SECURITY_REDIS_ADDR}
 ckanext.security.redis.port = ${HDX_SECURITY_REDIS_PORT}
 ckanext.security.redis.db = ${HDX_SECURITY_REDIS_DB}
 hdx.security.site_name = ${HDX_SECURITY_SITENAME}
+
+# Datapusher Plus Config
+ckan.datapusher.callback_url_base = http://${HDX_DATAPUSHER_INTERNAL_CKAN_ADDR}:${HDX_DATAPUSHER_INTERNAL_CKAN_PORT}
+ckanext.datapusher_plus.api_token = ${HDX_DATAPUSHER_CKAN_API_TOKEN}
 
 # Change detection settings
 hdx.change_detection.layer_url = http://${HDX_GEOPREVIEW_API}/api/create-change-events

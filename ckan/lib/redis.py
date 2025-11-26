@@ -50,12 +50,9 @@ def is_redis_available() -> bool:
 
     .. seealso:: :py:func:`connect_to_redis`
     '''
-    # HDX EDIT (?) #
-    # redis_conn = connect_to_redis()
-    # try:
-    #     return redis_conn.ping() is True
-    # except Exception:
-    #     log.exception(u'Redis is not available')
-    #     return False
+    redis_conn = connect_to_redis()
+    try:
+        return redis_conn.ping()
+    except Exception:
+        log.exception(u'Redis is not available')
     return False
-    # END HDX EDIT #
