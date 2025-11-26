@@ -20,8 +20,10 @@ sqlalchemy.url = postgresql://ckan:ckan@${HDX_CKANDB_ADDR}:${HDX_CKANDB_PORT}/ck
 ## Datastore
 ckan.datastore.write_url = postgresql://ckan:ckan@${HDX_CKANDB_ADDR}:${HDX_CKANDB_PORT}/datastore
 ckan.datastore.read_url = postgresql://datastore:datastore@${HDX_CKANDB_ADDR}:${HDX_CKANDB_PORT}/datastore
-
+ckan.datastore.sqlsearch.enabled = true
 ckan.datapusher.url = http://datapusher.ckan.org/
+
+ckan.redis.url = redis://${HDX_REDIS_ADDR}:${HDX_REDIS_PORT}/5
 
 ## Solr support
 solr_url = http://${HDX_SOLR_ADDR}:${HDX_SOLR_PORT}/solr/ckan

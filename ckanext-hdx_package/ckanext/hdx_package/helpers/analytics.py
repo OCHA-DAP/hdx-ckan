@@ -3,14 +3,17 @@ import logging
 import six.moves.urllib.parse as urlparse
 import datetime
 
+from ckan.types import Context
 from ckanext.hdx_package.helpers.constants import COD_ENHANCED, COD_STANDARD
 from ckanext.hdx_theme.helpers.helpers import hdx_supports_notifications
 from ckanext.hdx_theme.util.analytics import AbstractAnalyticsSender
 from ckanext.hdx_users.general_token_model import ObjectType
 
-from typing import Any, Dict, Optional
+from hashlib import md5
+from typing import Any, Dict, Optional, List
 
 import ckan.lib.helpers as h
+import ckan.lib.api_token as api_token
 import ckan.model as model
 import ckan.plugins.toolkit as tk
 
@@ -584,3 +587,86 @@ class MetadataDownloadAnalyticsSender(AbstractAnalyticsSender):
                 abort(403, _('Unauthorized to read resource %s') % resource_id)
             except Exception as e:
                 log.error('Unexpected error {}'.format(e))
+
+
+class DatastoreApiCallAnalyticsSender(AbstractAnalyticsSender):
+    def __init__(self, username, resource_ids: List[str], api_token_str: str, action_name: str):
+
+        super().__init__()
+
+        token_name = None
+        if api_token_str:
+            decoded_token = api_token.decode(api_token_str)
+            token_obj = model.ApiToken.get(decoded_token['jti'])
+            token_name = token_obj.name
+
+        email_hash = ''
+        if username:
+            email_hash = self._generate_email_hash(username)
+
+        additional_mp_data = self._fetch_datasets_info(resource_ids)
+
+        self.analytics_dict = {
+            'event_name': 'datastore api call',
+            'mixpanel_meta': {
+                'api token name': token_name,
+                'email hash': email_hash,
+                'action name': action_name,
+                'event source': 'api',
+            },
+            'ga_meta': {
+                'ec': 'api',  # event category
+                'ea': action_name,  # event action
+                'el': token_name,  # event label
+            },
+        }
+        self.analytics_dict['mixpanel_meta'].update(additional_mp_data)
+
+    def _generate_email_hash(self, username: str) -> str:
+        userobj = model.User.get(username)
+        email = userobj.email if userobj and userobj.email else ''
+        email_hash = md5(email.encode('utf8')).hexdigest() if email else ''
+        return email_hash
+
+    def _fetch_datasets_info(self, resource_ids: List[str]) -> Dict[str, Any]:
+        context: Context = {'model': model, 'session': model.Session, 'user': g.user}
+
+        resource_names = set()
+        dataset_names = set()
+        dataset_ids = set()
+        org_names = set()
+        org_ids = set()
+        location_names = set()
+        location_ids = set()
+
+        for resource_id in resource_ids:
+            try:
+                resource_dict = get_action('resource_show')(context, {'id': resource_id})
+                dataset_dict = get_action('package_show')(context, {'id': resource_dict.get('package_id')})
+
+                resource_names.add(resource_dict.get('name'))
+                dataset_names.add(dataset_dict.get('name'))
+                dataset_ids.add(dataset_dict.get('id'))
+                org_names.add((dataset_dict.get('organization') or {}).get('name'))
+                org_ids.add((dataset_dict.get('organization') or {}).get('id'))
+                loc_names, loc_ids = extract_locations(dataset_dict)
+                location_names.update(loc_names)
+                location_ids.update(loc_ids)
+
+            except NotFound:
+                log.error('Resource not found for id {}'.format(resource_id))
+            except NotAuthorized:
+                log.error('Unauthorized to read resource %s' % resource_id)
+            except Exception as e:
+                log.error('Unexpected error {}'.format(e))
+
+        return {
+            'resource ids': [item for item in resource_ids],
+            'resource names': [item for item in resource_names],
+            'dataset names': [item for item in dataset_names],
+            'dataset ids': [item for item in dataset_ids],
+            'org names': [item for item in org_names],
+            'org ids': [item for item in org_ids],
+            'group names': [item for item in location_names],
+            'group ids': [item for item in location_ids],
+        }

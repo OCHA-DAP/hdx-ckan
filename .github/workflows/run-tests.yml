@@ -36,6 +36,7 @@ jobs:
           docker compose exec -T db psql -U ckan -c "create database datastore owner ckan;"
           docker compose exec -T db psql -U ckan -c "create role datastore with login;"
           docker compose exec -T db psql -U ckan -c "alter role datastore with password 'datastore';"
+          docker compose exec -T ckan hdxckantool db perms
       - name: Building UI search index
         run: |
           docker compose exec -T ckan bash -c "INI_FILE=/srv/ckan/hdx-test-core.ini hdxckantool feature"

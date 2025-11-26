@@ -1829,6 +1829,10 @@ def search_sql(context: Context, data_dict: dict[str, Any]):
             )
         context['check_access'](table_names)
 
+        # Modified by HDX to keep the table names in the context
+        data_dict['datastore_table_names'] = table_names
+        # End - Modified by HDX
+
         for f in function_names:
             for name_variant in [f.lower(), '"{}"'.format(f)]:
                 if name_variant in \

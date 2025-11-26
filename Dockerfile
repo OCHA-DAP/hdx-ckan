@@ -9,7 +9,9 @@ ENV DEBIAN_FRONTEND=noninteractive \
     HDX_CKAN_WORKERS=4 \
     INI_FILE=/etc/ckan/prod.ini \
     HDX_CACHE_DIR=/srv/cache \
-    HDX_LOG_LEVEL=INFO
+    HDX_LOG_LEVEL=INFO \
+    HDX_DATAPUSHER_INTERNAL_CKAN_ADDR=localhost \
+    HDX_DATAPUSHER_INTERNAL_CKAN_PORT=5000
 
 WORKDIR /srv/ckan
 
@@ -28,6 +30,7 @@ RUN apt-get -qq -y update && \
     apt-get -q -y install \
         build-essential \
         curl \
+        file \
         gettext-base \
         git-core \
         gpg \
@@ -40,13 +43,16 @@ RUN apt-get -qq -y update && \
         procps \
         psmisc \
         vim \
-        wget && \
+        wget \
+        uchardet && \
+    # install datapusher+ deps
+    wget -O - https://dathere.github.io/qsv-deb-releases/qsv-deb.gpg | gpg --dearmor -o /usr/share/keyrings/qsv-deb.gpg && \
+    echo "deb [signed-by=/usr/share/keyrings/qsv-deb.gpg] https://dathere.github.io/qsv-deb-releases ./" | tee /etc/apt/sources.list.d/qsv.list && \
+    apt-get -q -y update && \
+    apt-get -q -y install qsv && \
     # prepare files and folders
     mkdir -p /var/log/ckan /srv/filestore /srv/webassets /etc/services.d/unit /etc/ckan && \
     cd /srv/ckan && \
-    # python -m pip install --upgrade pip && \
-    pip install -r requirement-setuptools.txt && \
-    #pip install --upgrade -r requirements.txt && \
     pip install pip-tools==7.3.0 && \
     pip-sync requirements.txt requirements-hdxckantool.txt  && \
     pip install \
