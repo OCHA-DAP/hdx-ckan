@@ -44,7 +44,7 @@ cffi==1.17.1
     # via cryptography
 chardet==4.0.0
     # via binaryornot
-charset-normalizer==2.1.1
+charset-normalizer==3.3.2
     # via
     #   -c requirements.txt
     #   requests
@@ -97,7 +97,7 @@ freezegun==1.5.1
     # via
     #   -r dev-requirements.in
     #   pytest-freezegun
-idna==2.8
+idna==3.7
     # via
     #   -c requirements.txt
     #   requests
@@ -111,7 +111,7 @@ ipdb==0.13.13
     # via -r dev-requirements.in
 ipython==8.8.0
     # via ipdb
-itsdangerous==2.1.2
+itsdangerous==2.2.0
     # via
     #   -c requirements.txt
     #   flask
@@ -132,7 +132,7 @@ jmespath==1.0.1
     #   botocore
 markdown-it-py==2.2.0
     # via rich
-markupsafe==2.1.3
+markupsafe==2.1.5
     # via
     #   -c requirements.txt
     #   jinja2
@@ -145,7 +145,7 @@ mock==2.0.0
     # via -r dev-requirements.in
 moto==5.0.25
     # via -r dev-requirements.in
-mypy==1.7.0
+mypy==1.10.1
     # via
     #   -c requirements.txt
     #   sqlalchemy-stubs
@@ -215,7 +215,7 @@ pytest-freezegun==0.4.2
     # via -r dev-requirements.in
 pytest-rerunfailures==15.0
     # via -r dev-requirements.in
-pytest-retry==1.7.0
+#pytest-retry==1.7.0
     # via -r dev-requirements.in
 pytest-split==0.10.0
     # via -r dev-requirements.in
@@ -313,7 +313,7 @@ typing-extensions==4.12.2
     #   mypy
     #   pytest-factoryboy
     #   sqlalchemy-stubs
-urllib3==1.26.6
+urllib3==2.2.2
     # via
     #   -c requirements.txt
     #   botocore

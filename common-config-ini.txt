@@ -54,6 +54,7 @@ who.secure = True
 
 #ckan.datastore.write_url = postgresql://dsuser:pass@localhost/datastore
 #ckan.datastore.read_url = postgresql://dsuser:pass@localhost/datastore
+ckan.datastore.sqlsearch.enabled = true
 
 
 ## Site Settings
@@ -86,6 +87,9 @@ search.facets = groups res_format organization vocab_Topics dataseries_name
 ckan.site_id = default
 #!solr_url = http://127.0.0.1:8983/solr
 
+# CKAN JOBS
+# ckan.redis.url = redis://gisredis:6379/0
+
 #ckan.simple_search = 1
 
 
@@ -99,7 +103,7 @@ ckan.site_id = default
 #ckan.plugins_deprecated = hdx_orgs register metadata_fields dataset_auth ungroups hdx_theme stats text_preview recline_preview
 #changed with mail validation ckan.plugins = hdx_crisis hdx_search sitemap hdx_org_group hdx_group hdx_package hdx_users hdx_theme stats text_preview recline_preview datastore
 
-ckan.plugins = hdx_dataviz dcat dcat_json_interface structured_data expire_api_token hdx_hxl_preview hdx_office_preview ytp_request hdx_pages hdx_choropleth_map_view hdx_geopreview_view hdx_chart_views hdx_service_checker hdx_analytics hdx_search sitemap hdx_org_group hdx_group hdx_package hdx_user_extra hdx_mail_validate hdx_users hdx_theme security requestdata s3filestore showcase stats resource_proxy text_view datastore activity
+ckan.plugins = hdx_dataviz dcat dcat_json_interface structured_data expire_api_token hdx_hxl_preview hdx_office_preview ytp_request hdx_pages hdx_choropleth_map_view hdx_geopreview_view hdx_chart_views hdx_service_checker hdx_analytics hdx_search sitemap hdx_org_group hdx_group hdx_package hdx_user_extra hdx_mail_validate hdx_users hdx_theme security requestdata s3filestore showcase stats resource_proxy text_view datastore activity datapusher_plus
 ckan.views.default_views = image_view recline_view text_view
 ckan.csrf_protection.ignore_extensions = false
 
@@ -150,7 +154,7 @@ ckan.max_image_size = 2
 
 # Path to resource format mapping file is:
 ckan.resource_formats = %(here)s/ckanext-hdx_package/ckanext/hdx_package/config/resource_formats.json
-ckan.extra_resource_fields = broken_link in_quarantine daterange_for_data pii_is_sensitive p_coded in_hapi
+ckan.extra_resource_fields = broken_link in_quarantine daterange_for_data pii_is_sensitive p_coded in_hapi datastore_active
 ckan.resource_formats.external_system = External System
 
 # Max file size for resource proxide via the internal ckanext.resourceproxy.controller.ProxyController (like json)
@@ -189,6 +193,39 @@ smtp.starttls = False
 #smtp.user = your_username@gmail.com
 #smtp.password = your_password
 #smtp.mail_from =
+
+## Datapusher plus settings
+ckanext.datapusher_plus.copy_readbuffer_size = 1048576
+ckanext.datapusher_plus.max_content_length = 1256000000000
+ckanext.datapusher_plus.ignore_file_hash = true
+ckanext.datapusher_plus.chunk_size = 16384
+ckanext.datapusher_plus.download_timeout = 300
+ckanext.datapusher_plus.ssl_verify = false
+ckanext.datapusher_plus.download_proxy =
+ckanext.datapusher_plus.types = csv xls xlsx tsv application/csv application/vnd.ms-excel application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+ckanext.datapusher_plus.type_mapping = {"String": "text", "Integer": "numeric","Float": "numeric","DateTime": "timestamp","Date": "timestamp","NULL": "text"}
+ckanext.datapusher_plus.pii_screening = false
+ckanext.datapusher_plus.pii_quick_screen = false
+ckanext.datapusher_plus.pii_found_abort = false
+ckanext.datapusher_plus.pii_show_candidates = false
+ckanext.datapusher_plus.pii_regex_resource_id_or_alias =
+# ckanext.datapusher_plus.qsv_bin =  /usr/local/bin/qsvdp
+ckanext.datapusher_plus.qsv_bin =  /usr/local/bin/qsv
+ckanext.datapusher_plus.file_bin = /usr/bin/file
+ckanext.datapusher_plus.prefer_dmy = false
+# ckanext.datapusher_plus.preview_rows = 100
+ckanext.datapusher_plus.auto_index_threshold = 3
+ckanext.datapusher_plus.auto_unique_index = true
+ckanext.datapusher_plus.auto_index_dates = true
+ckanext.datapusher_plus.sort_and_dupe_check = true
+ckanext.datapusher_plus.dedup = false
+ckanext.datapusher_plus.default_excel_sheet = 0
+ckanext.datapusher_plus.add_summary_stats_resource = false
+ckanext.datapusher_plus.summary_stats_options =
+ckanext.datapusher_plus.auto_alias = true
+ckanext.datapusher_plus.auto_alias_unique = false
+ckanext.datapusher_plus.api_token =
+ckan.datapusher.callback_url_base = http://localhost:5000
 
 ## AWS S3 settings
 ckanext.s3filestore.aws_access_key_id = aws_access_key_id
@@ -341,6 +378,11 @@ hdx.notifications.disabled_objects_csv = https://docs.google.com/spreadsheets/d/
 
 hdx.approved_tags.csv = https://docs.google.com/spreadsheets/d/e/2PACX-1vQJKjr25NZAIQELrFnUhVnL-7SxC8SwW9I6usm5Xvwyw00zRC-DhlLh74EVniX732w_BDFoQLrNDKKL/pub?gid=1261258630&single=true&output=csv
 
+
+# Datapusher Plus - HDX specific settings
+hdx.datastore.enabled_objects_csv = https://docs.google.com/spreadsheets/d/e/2PACX-1vRYS8exO-C_8t53bWf8R62ft1hn4yThWnCLGCtvPNbkrmidL8qu0j3sQnMDF8ypzKQ8xV5JhYgijRp7/pub?gid=0&single=true&output=csv
+
+
 # Sitemap configuration (Datopian extension)
 ckanext.sitemap.directory = /srv/ckan/ckanext-hdx_theme/ckanext/hdx_theme/public/sitemap
 ckanext.sitemap.autorenew = true
@@ -348,4 +390,4 @@ ckanext.sitemap.ttl = 28800
 ckanext.sitemap.resources = false
 ckanext.sitemap.groups = true
 ckanext.sitemap.language_alternatives = false
-ckanext.sitemap.custom_uris = /faq /hapi /signals /dataviz-guide/ /faqs/terms /about/hdx-qa-process /faqs/devs /faqs/licenses
+ckanext.sitemap.custom_uris = /faq /hapi /signals /dataviz-guide /faqs/terms /about/hdx-qa-process /faqs/devs /faqs/licenses

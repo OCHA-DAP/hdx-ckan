@@ -71,11 +71,6 @@
                    data-is-authenticated="{{ current_user.is_authenticated }}"
                    tracking-type="{{res.url_type}}"
                 >
-                {% if btn_dict.type == 'download' %}
-                  <img src="/images/homepage/download-white.svg" alt="{{ btn_dict.title }}" />
-                {% else %}
-                  <i class="icon humanitarianicons-Out-of-platform"></i>
-                {% endif %}
                 {{ btn_dict.value }}
                 <span class="ga-download-resource-title" style="display: none">{{ res.name }}</span>
                 <span class="ga-download-resource-id" style="display: none">{{ res.id }}</span>

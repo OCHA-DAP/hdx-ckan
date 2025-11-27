@@ -14,7 +14,7 @@ import sqlalchemy
 from botocore.exceptions import ClientError
 from ckan.types import ActionResult, Context, DataDict
 from six import text_type
-from typing import Any, cast
+from typing import Any, cast, Dict, Tuple
 
 import ckan.authz as authz
 import ckan.lib.helpers as h
@@ -34,6 +34,8 @@ import ckanext.hdx_users.helpers.mailer as hdx_mailer
 
 from ckan.lib import uploader
 from ckan.lib.munge import munge_filename
+from ckanext.hdx_package.helpers.analytics import DatastoreApiCallAnalyticsSender
+from ckanext.hdx_package.helpers.caching import cached_objects_allowed_for_datastore
 from ckanext.hdx_package.actions.authorize import hdx_manage_resource_sdd_report
 from ckanext.hdx_package.helpers.extras import get_extra_from_dataset
 from ckanext.hdx_package.helpers.resource_triggers.geopreview import GIS_FORMATS
@@ -1154,4 +1156,108 @@ def resource_view_list(up_func, context, data_dict):
         raise NotFound
 
     result = up_func(context, data_dict)
+    return result
+
+
+def hdx_is_package_allowed_for_datastore(context: Context, data_dict: DataDict) -> bool:
+    package_id = get_or_bust(data_dict, 'package_id')
+    dataset_dict = get_action('package_show')(context, {'id': package_id})
+
+    if dataset_dict:
+        dataset_key = f'dataset_{dataset_dict["id"]}'
+        organization_key = f'organization_{dataset_dict["owner_org"]}'
+
+        allowed_set = cached_objects_allowed_for_datastore()
+
+        return dataset_key in allowed_set or organization_key in allowed_set
+
+    else:
+        return False
+
+
+def _get_information_needed_for_analytics(context: Context) -> Tuple[str, str]:
+    # Get user information
+    username = context.get('user')
+    # Get API token information from request
+    apitoken_header_name = config.get('apitoken_header_name')
+    api_token_str: str = tk.request.headers.get(apitoken_header_name, '')
+    return username, api_token_str
+
+
+@tk.side_effect_free
+@tk.chained_action
+def datastore_info(up_func, context: Context, data_dict: DataDict) -> Dict[str, Any]:
+    """
+    Wrapper around core `datastore_info` that sends analytics to Mixpanel.
+    Tracks information about the user, API token, dataset, and organization.
+    """
+    result = up_func(context, data_dict)
+    action_name = 'datastore_info'
+
+    try:
+        username, api_token_str = _get_information_needed_for_analytics(context)
+
+        resource_id = data_dict.get('resource_id')
+        if resource_id:
+            DatastoreApiCallAnalyticsSender(username,[resource_id], api_token_str, action_name).send_to_queue()
+        else:
+            log.error(f'No resource_id found for {action_name} analytics')
+
+    except Exception as e:
+        # Don't fail the request if analytics fails
+        log.warning(f'Failed to send {action_name} analytics: {str(e)}')
+
+    return result
+
+
+@tk.side_effect_free
+@tk.chained_action
+def datastore_search(up_func, context: Context, data_dict: DataDict) -> Dict[str, Any]:
+    """
+    Wrapper around core `datastore_search` that sends analytics to Mixpanel.
+    Tracks information about the user, API token, dataset, and organization.
+    """
+    result = up_func(context, data_dict)
+    action_name = 'datastore_search'
+
+    try:
+        username, api_token_str = _get_information_needed_for_analytics(context)
+
+
+        resource_id = data_dict.get('resource_id')
+        if resource_id:
+            DatastoreApiCallAnalyticsSender(username, [resource_id], api_token_str, action_name).send_to_queue()
+        else:
+            log.error(f'No resource_id found for {action_name} analytics')
+
+    except Exception as e:
+        # Don't fail the request if analytics fails
+        log.warning(f'Failed to send {action_name} analytics: {str(e)}')
+
+    return result
+
+
+@tk.side_effect_free
+@tk.chained_action
+def datastore_search_sql(up_func, context: Context, data_dict: DataDict) -> Dict[str, Any]:
+    """
+    Wrapper around core `datastore_search_sql` that sends analytics to Mixpanel.
+    Tracks information about the user, API token, dataset, and organization.
+    """
+    result = up_func(context, data_dict)
+    action_name = 'datastore_search_sql'
+
+    try:
+        username, api_token_str = _get_information_needed_for_analytics(context)
+
+        resource_ids = result.pop('datastore_table_names', None)
+        if resource_ids:
+            DatastoreApiCallAnalyticsSender(username ,resource_ids, api_token_str, action_name).send_to_queue()
+        else:
+            log.error(f'No resource_ids found for {action_name} analytics')
+
+    except Exception as e:
+        # Don't fail the request if analytics fails
+        log.warning(f'Failed to send {action_name} analytics: {str(e)}')
+
     return result

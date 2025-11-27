@@ -29,6 +29,10 @@ def hdx_dataset_purge(context, data_dict):
     if pkg and pkg.resources:
         for r in pkg.resources:
             file_remove(r.id, r.url, r.url_type)
+            try:
+                _get_action('datastore_delete')(context, {'resource_id': r.id, 'force': True})
+            except NotFound:
+                log.info('Resource {} not found in datastore while datastore_delete.'.format(r.id))
 
     return dataset_purge(context, data_dict)
 
@@ -101,12 +105,12 @@ def resource_delete(context, data_dict):
         }
         _get_action('package_revise')(context, data_revise_dict)
         # _resource_purge(context, data_dict)
-        file_remove(resource.id, resource.url, resource.url_type)
+        # file_remove(resource.id, resource.url, resource.url_type)
+        # _datastore_delete(context, resource.id, resource.datastore_active)
         model.repo.commit()
     except Exception as ex:
         log.error('Exception while trying to delete resource:' + str(ex))
         model.Session.rollback()
-
 
 def _is_requested_data_type(entity):
     for extra in entity.extras_list:

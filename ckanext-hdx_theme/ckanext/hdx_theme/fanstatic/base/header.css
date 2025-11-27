@@ -638,7 +638,7 @@ body {
   vertical-align: middle;
 }
 .resource-item .hdx-btn-group.hdx-btn-group-fixed {
-  width: 250px;
+  width: 274px;
 }
 .resource-item .hdx-btn-group.hdx-btn-group-fixed .btn.hdx-btn {
   margin-right: 0;
@@ -773,6 +773,15 @@ body {
 .label-icons span.popular {
   vertical-align: middle;
 }
+.datastore-icon a {
+  margin-left: 10px;
+}
+.datastore-icon a.label {
+  padding: 0 4px;
+  background-color: #fff;
+  color: #007CE0;
+  border: 1px solid #007CE0;
+}
 span.icn-txt-cods,
 ul.dataset-resources li.label-icons span.icn-txt-cods {
   font-family: 'Gotham-Bold', sans-serif;
@@ -839,7 +848,8 @@ ul.dataset-resources li.label-icons a.humanitarianicons-Environment.fresh::befor
 ul.dataset-resources li.label-icons span {
   padding: 0;
 }
-ul.dataset-resources li + li.label-icons {
+ul.dataset-resources li + li.label-icons,
+ul.dataset-resources li + li.datastore-icon {
   border-left: 1px solid #888888;
   margin-left: 10px;
   white-space: nowrap;

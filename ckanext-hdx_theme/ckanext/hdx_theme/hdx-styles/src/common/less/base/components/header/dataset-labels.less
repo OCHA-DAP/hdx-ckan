@@ -97,6 +97,19 @@
   }
 }
 
+.datastore-icon {
+  a {
+    margin-left: 10px;
+
+    &.label {
+      padding: 0 4px;
+      background-color: @whiteColor;
+      color: @blueColor;
+      border: 1px solid @blueColor;
+    }
+  }
+}
+
 span.icn-txt-cods, ul.dataset-resources li.label-icons span.icn-txt-cods{
   .gothamBoldFont(9px);
   background-color: @grayColor;
@@ -159,7 +172,8 @@ ul.dataset-resources {
   }
 }
 
-ul.dataset-resources li + li.label-icons {
+ul.dataset-resources li + li.label-icons,
+ul.dataset-resources li + li.datastore-icon {
   border-left: 1px solid #888888;
   margin-left: 10px;
   white-space: nowrap;

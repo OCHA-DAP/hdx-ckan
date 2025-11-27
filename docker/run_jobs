@@ -1,0 +1,37 @@
+#!/usr/bin/with-contenv sh
+
+# this is hdx-ckan's docker/run_jobs file
+
+[ -z "$HDX_SOLR_ADDR" ] && export HDX_SOLR_ADDR="solr"
+[ -z "$HDX_SOLR_PORT" ] && export HDX_SOLR_PORT="8983"
+[ -z "$HDX_SOLR_CORE" ] && export HDX_SOLR_CORE="ckan"
+
+# normalize log bucket env var (remove this after 2021.05.30)
+[ -z "$HDX_ECHO_LOG_BUCKET_NAME" ] && export HDX_ECHO_LOG_BUCKET_NAME=${AWS_BUCKET_NAME}-log
+
+[ -z "$NEW_RELIC_ENABLED"      ] && export NEW_RELIC_ENABLED="false"
+[ -z "$ELASTIC_APM_ENABLED"    ] && export ELASTIC_APM_ENABLED="false"
+
+[ -z "$HDX_ANALYTICS_TRACK_API" ]                  && export HDX_ANALYTICS_TRACK_API=false
+[ -z "$HDX_ANALYTICS_TRACK_API_EXCLUDE_BROWSERS" ] && export HDX_ANALYTICS_TRACK_API_EXCLUDE_BROWSERS=
+[ -z "$HDX_ANALYTICS_TRACK_API_EXCLUDE_OTHER" ]    && export HDX_ANALYTICS_TRACK_API_EXCLUDE_OTHER=
+
+[ -z "$BEAKER_SECRET" ] && export BEAKER_SECRET="ankhs7PHSoJLZ42Lr2901rlfa"
+
+[ -z "$HDX_ENABLED_DATASETS_CSV" ] && export HDX_ENABLED_DATASETS_CSV="https://docs.google.com/spreadsheets/d/e/2PACX-1vSsBSUTM3f9olyhVFDcAh-tXV63wlOtvsXukQIHTLiLCfbGJC8osDDaEqzoUVs2B0kgYMrkyVkihvVm/pub?gid=0&single=true&output=csv"
+
+# provide mailchimp defaults (mailchimp is enabled in common config)
+export HDX_MAILCHIMP_API_KEY=${HDX_MAILCHIMP_API_KEY:-ccc-fake}
+export HDX_MAILCHIMP_INTEREST_DATA_SERVICES=${HDX_MAILCHIMP_INTEREST_DATA_SERVICES:-90c34fef41}
+export HDX_MAILCHIMP_LIST_NEW_USER=${HDX_MAILCHIMP_LIST_NEW_USER:-564eb8df33}
+export HDX_MAILCHIMP_LIST_NEWSLETTER=${HDX_MAILCHIMP_LIST_NEWSLETTER:-d937b36390}
+
+# preparing to run ckan...
+bash /srv/ckan/docker/ckan_helper.sh
+
+cd /srv/ckan
+
+ln -sf /etc/ckan/prod.ini ckan.ini
+
+exec ckan -c /etc/ckan/prod.ini jobs worker default unimportant
+
