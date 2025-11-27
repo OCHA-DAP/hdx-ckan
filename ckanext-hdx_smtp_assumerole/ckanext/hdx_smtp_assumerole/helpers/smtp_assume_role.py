@@ -95,15 +95,13 @@ def get_account_id_from_sts() -> str:
         raise SMTPAssumeRoleException(msg)
 
 
-def build_role_arn(role_name_or_arn: str, region: Optional[str] = None) -> str:
+def build_role_arn(role_name_or_arn: str) -> str:
     """
     Build full role ARN from role name or return ARN if already provided.
     If only role name is provided, account ID is deduced from STS.
 
     :param role_name_or_arn: Role name (e.g., 'my-role') or full ARN
     :type role_name_or_arn: str
-    :param region: AWS region (optional, for logging)
-    :type region: str
     :return: Full role ARN
     :rtype: str
     """
@@ -153,7 +151,7 @@ def assume_role_for_smtp(role_name_or_arn: str, region: str, session_name: str =
     """
     try:
         # Build role ARN
-        role_arn = build_role_arn(role_name_or_arn, region)
+        role_arn = build_role_arn(role_name_or_arn)
 
         # Create STS client using instance profile only (ignores AWS_ACCESS_KEY_ID from env)
         sts_client = create_sts_client_with_instance_profile()

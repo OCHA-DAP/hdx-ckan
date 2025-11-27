@@ -86,6 +86,12 @@ def send_email_via_ses(
                         del msg[key]
                     msg[key] = value
 
+    # Validate credentials before creating SES client
+    if not access_key or not secret_key or not region:
+        error_msg = 'Missing required AWS credentials: access_key, secret_key, and region are required'
+        log.error(error_msg)
+        raise ValueError(error_msg)
+
     # Create SES client with temporary credentials
     ses_client = boto3.client(
         'ses',

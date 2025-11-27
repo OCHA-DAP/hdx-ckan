@@ -1,9 +1,9 @@
 # encoding: utf-8
 
 import unittest
-from unittest.mock import patch, Mock
 from email.header import Header
 
+import ckanext.hdx_smtp_assumerole.helpers.hdx_users_mailer_patches as patches_module
 from ckanext.hdx_smtp_assumerole.helpers.hdx_users_mailer_patches import (
     _get_decoded_str,
     is_patched,
@@ -48,8 +48,7 @@ class TestPatchFunctions(unittest.TestCase):
 
     def setUp(self):
         """Reset patching state before each test"""
-        # Import the module to reset state
-        import ckanext.hdx_smtp_assumerole.helpers.hdx_users_mailer_patches as patches_module
+        # Reset module state
         patches_module._patches_applied = False
         patches_module._original_mail_recipient_html = None
 
@@ -66,7 +65,6 @@ class TestPatchFunctions(unittest.TestCase):
 
     def test_patch_hdx_users_mailer_idempotent(self):
         """Test that patching multiple times is safe"""
-        import ckanext.hdx_smtp_assumerole.helpers.hdx_users_mailer_patches as patches_module
         patches_module._patches_applied = True
 
         # Second call should return early
@@ -81,7 +79,6 @@ class TestPatchFunctions(unittest.TestCase):
 
     def test_unpatch_no_module(self):
         """Test unpatching when hdx_users module is not available"""
-        import ckanext.hdx_smtp_assumerole.helpers.hdx_users_mailer_patches as patches_module
         patches_module._patches_applied = True
 
         # Should handle ImportError gracefully

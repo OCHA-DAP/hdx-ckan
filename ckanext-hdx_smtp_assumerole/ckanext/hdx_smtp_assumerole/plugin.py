@@ -21,6 +21,10 @@ def _validate_region(region: str) -> None:
     :param region: AWS region string
     :raises SMTPAssumeRoleException: If region format is invalid
     """
+    # Check for empty/whitespace-only string first for clearer error message
+    if not region or not region.strip():
+        raise SMTPAssumeRoleException('AWS region cannot be empty')
+
     # Common AWS regions - not exhaustive but covers most cases
     # Format: prefix-region-number (e.g., us-east-1, eu-west-2)
     # Supports hyphenated region names (e.g., us-gov-west-1, ap-northeast-3)
@@ -41,6 +45,10 @@ def _validate_role_arn(role_arn: str) -> None:
     :param role_arn: Role ARN or role name
     :raises SMTPAssumeRoleException: If format is invalid
     """
+    # Check for empty/whitespace-only string first for clearer error message
+    if not role_arn or not role_arn.strip():
+        raise SMTPAssumeRoleException('IAM role ARN or name cannot be empty')
+
     # If it starts with 'arn:', validate full ARN format
     if role_arn.startswith('arn:'):
         # ARN format: arn:aws:iam::123456789012:role/RoleName or arn:aws:iam::123456789012:role/path/RoleName

@@ -94,12 +94,11 @@ class SMTPCredentialsManager:
             log.warning('SMTPCredentialsManager not initialized, skipping credential check')
             return
 
-        if self._needs_refresh():
-            with self._lock:
-                # Double-check after acquiring lock (another thread might have refreshed)
-                if self._needs_refresh():
-                    log.info('Credentials expiring soon, refreshing...')
-                    self._load_credentials()
+        # Acquire lock once and check inside to avoid race conditions
+        with self._lock:
+            if self._check_needs_refresh_unlocked():
+                log.info('Credentials expiring soon, refreshing...')
+                self._load_credentials()
 
     def _needs_refresh(self) -> bool:
         """
@@ -111,26 +110,36 @@ class SMTPCredentialsManager:
         :rtype: bool
         """
         with self._lock:
-            if self.credentials is None or self.expiration_time is None:
-                log.debug('Credentials not loaded, refresh needed')
-                return True
+            return self._check_needs_refresh_unlocked()
 
-            # Use UTC timezone explicitly to avoid None tzinfo issues
-            now = datetime.now(timezone.utc)
-            # Ensure expiration_time is timezone-aware
-            expiration = self.expiration_time
-            if expiration.tzinfo is None:
-                expiration = expiration.replace(tzinfo=timezone.utc)
+    def _check_needs_refresh_unlocked(self) -> bool:
+        """
+        Check if credentials need to be refreshed (internal, unlocked version).
+        Must be called while holding self._lock.
 
-            time_until_expiry = expiration - now
+        :return: True if refresh is needed
+        :rtype: bool
+        """
+        if self.credentials is None or self.expiration_time is None:
+            log.debug('Credentials not loaded, refresh needed')
+            return True
 
-            # Refresh if less than 5 minutes until expiry
-            if time_until_expiry < timedelta(minutes=5):
-                log.debug(f'Credentials expire in {time_until_expiry}, refresh needed')
-                return True
+        # Use UTC timezone explicitly to avoid None tzinfo issues
+        now = datetime.now(timezone.utc)
+        # Ensure expiration_time is timezone-aware
+        expiration = self.expiration_time
+        if expiration.tzinfo is None:
+            expiration = expiration.replace(tzinfo=timezone.utc)
 
-            log.debug(f'Credentials still valid for {time_until_expiry}, no refresh needed')
-            return False
+        time_until_expiry = expiration - now
+
+        # Refresh if less than 5 minutes until expiry
+        if time_until_expiry < timedelta(minutes=5):
+            log.debug(f'Credentials expire in {time_until_expiry}, refresh needed')
+            return True
+
+        log.debug(f'Credentials still valid for {time_until_expiry}, no refresh needed')
+        return False
 
     def _load_credentials(self) -> None:
         """
