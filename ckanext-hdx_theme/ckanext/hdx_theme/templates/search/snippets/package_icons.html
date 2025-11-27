@@ -1,9 +1,5 @@
 {% extends "search/snippets/package_icons_base.html" %}
 
-{% block leading_icons %}
-  {% snippet 'search/snippets/package_icons_cod.html', package=package %}
-{% endblock %}
-
 {% block other_info %}
   {% if package.is_requestdata_type %}
     <div class="label-icons">
@@ -11,8 +7,10 @@
     </div>
   {% endif %}
 
+  {% snippet 'search/snippets/package_icons_cod.html', package=package, dataset_page=True %}
+
   {% if package.approx_total_downloads %}
-    <div class="label-icons">
+    <div class="label-icons d-inline-block">
       {% set popular = package.pageviews_last_14_days and package.pageviews_last_14_days >= 50 %}
       {% if popular %}
         <span class="popular humanitarianicons-Trending me-1" title="{{ _('Trending') }}" data-module="bs_tooltip" data-module-placement="top" data-bs-toggle="tooltip"></span>

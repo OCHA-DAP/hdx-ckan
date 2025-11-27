@@ -36,15 +36,22 @@
 .resource-item .resource-id-label .copy-icon {
   cursor: pointer;
   background-color: #888888;
+  border: 1px solid #888888;
+  box-sizing: content-box;
   color: #fff;
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
   font-size: 10px;
   text-align: center;
-  line-height: 20px;
+  line-height: 18px;
   border-radius: 3px;
   display: inline-block;
   vertical-align: bottom;
+}
+.resource-item .resource-id-label .copy-icon:active {
+  color: #888888;
+  background-color: #fff;
+  border-color: #888888;
 }
 .resource-item .description {
   color: #333333;

@@ -44,15 +44,22 @@
     .copy-icon {
       cursor: pointer;
       background-color: @grayColor;
+      border: 1px solid @grayColor;
+      box-sizing: content-box;
       color: @whiteColor;
-      width: 20px;
-      height: 20px;
+      width: 18px;
+      height: 18px;
       font-size: 10px;
       text-align: center;
-      line-height: 20px;
+      line-height: 18px;
       border-radius: 3px;
       display: inline-block;
       vertical-align: bottom;
+      &:active {
+        color: @grayColor;
+        background-color: @whiteColor;
+        border-color: @grayColor;
+      }
     }
   }
 

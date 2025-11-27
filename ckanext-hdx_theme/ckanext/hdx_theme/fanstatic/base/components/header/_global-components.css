@@ -456,6 +456,13 @@
   display: inline-block;
   margin-bottom: 3px;
 }
+.label-icons span.icn-txt-cods {
+  margin-left: 0;
+  font-size: 11px;
+}
+.label-icons span.popular {
+  vertical-align: middle;
+}
 span.icn-txt-cods,
 ul.dataset-resources li.label-icons span.icn-txt-cods {
   font-family: 'Gotham-Bold', sans-serif;
