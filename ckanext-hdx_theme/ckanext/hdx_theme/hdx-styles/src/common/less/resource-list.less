@@ -8,9 +8,10 @@
 
 .resource-item {
   .heading {
+    margin-bottom: 3px;
     display: flex;
     .resource-name {
-      max-width: 390px;
+      max-width: 380px;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
@@ -20,7 +21,9 @@
   }
 
   .update-date {
-    margin-bottom: 7px;
+    color: @darkGrayColor;
+    font-size: 15px;
+    margin-bottom: 3px;
 
     .icn-txt-p-code {
       vertical-align: text-bottom;
@@ -29,20 +32,58 @@
   }
 
   .pcode-label {
-    margin-bottom: 7px;
-    margin-top: -7px;
+    color: @darkGrayColor;
+    font-size: 15px;
+    margin-bottom: 3px;
+  }
+
+  .resource-id-label {
+    color: @darkGrayColor;
+    font-size: 15px;
+    margin-bottom: 3px;
+    .copy-icon {
+      cursor: pointer;
+      background-color: @grayColor;
+      border: 1px solid @grayColor;
+      box-sizing: content-box;
+      color: @whiteColor;
+      width: 18px;
+      height: 18px;
+      font-size: 10px;
+      text-align: center;
+      line-height: 18px;
+      border-radius: 3px;
+      display: inline-block;
+      vertical-align: bottom;
+      &:active {
+        color: @grayColor;
+        background-color: @whiteColor;
+        border-color: @grayColor;
+      }
+    }
   }
 
   .description {
+    color: @darkGrayColor;
+    font-size: 15px;
     text-align: justify;
-    max-width: 425px;
+    max-width: 430px;
+    margin-top: 15px;
+
+    .empty {
+      font-size: 15px;
+    }
+
+    p {
+      &:last-of-type {
+        margin-bottom: 0;
+      }
+    }
   }
 }
 
 .format-filesize-label {
-  font-size: 14px;
   font-weight: normal;
-  color: #000;
 }
 
 /* END Style Resources List*/

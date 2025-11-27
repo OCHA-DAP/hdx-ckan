@@ -95,6 +95,7 @@ hdx-show-more:
     - hdx_theme/jquery-extra
   contents:
     - hdx_show_more.js
+    - hdx_show_more_lines.js
 
 page-scripts:
   <<: *common-js

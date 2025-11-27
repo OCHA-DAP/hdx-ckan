@@ -49,9 +49,9 @@ Example:
           </div>
           {% snippet 'search/snippets/package_search_order.html', sort_param = sorting_selected, admin_view=admin_view, used_default_sort_by=c.used_default_sort_by %}
 
-          {% set limits = [25, 50, 100] %}
+          {% set limits = [10, 25, 50, 100] %}
           {% set limit_param = ext_page_size %}
-          {% set limit_selected = limit_param if limit_param else 25 %}
+          {% set limit_selected = limit_param if limit_param else 10 %}
           <div class="list-header-showall filter-pagination control-order-by control-items-per-page">
             <label for="field-order-by" class="uppercase">{{ _('Show') }}</label>
             <div class="dropdown orderDropdown">

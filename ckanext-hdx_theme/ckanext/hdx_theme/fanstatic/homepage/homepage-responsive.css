@@ -3,7 +3,7 @@
 }
 @media (min-width: 1260px) {
   body.responsive {
-    background: #1ebfb3;
+    background: #eeeeee;
     max-width: 1260px;
     margin: auto;
   }
@@ -138,8 +138,8 @@
     padding-top: 150px;
   }
   .homepage-main .carousel-section {
-    margin-top: 150px;
-    margin-bottom: 150px;
+    padding-top: 150px;
+    padding-bottom: 150px;
   }
 }
 @media (max-height: 1024px) {
@@ -147,8 +147,8 @@
     padding-top: 140px;
   }
   .homepage-main .carousel-section {
-    margin-top: 140px;
-    margin-bottom: 140px;
+    padding-top: 140px;
+    padding-bottom: 140px;
   }
 }
 @media (max-height: 900px) {
@@ -156,8 +156,8 @@
     padding-top: 100px;
   }
   .homepage-main .carousel-section {
-    margin-top: 100px;
-    margin-bottom: 100px;
+    padding-top: 100px;
+    padding-bottom: 100px;
   }
 }
 @media (max-height: 800px) {
@@ -165,7 +165,7 @@
     padding-top: 65px;
   }
   .homepage-main .carousel-section {
-    margin-top: 65px;
-    margin-bottom: 65px;
+    padding-top: 65px;
+    padding-bottom: 65px;
   }
 }

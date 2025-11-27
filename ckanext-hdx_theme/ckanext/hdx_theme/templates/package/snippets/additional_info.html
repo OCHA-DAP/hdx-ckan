@@ -11,7 +11,7 @@
         <div class="dataset-label"><span
           title="{{ _('The earliest start date and latest end date across all resources included in the dataset.') }}"
           data-module="bs_tooltip" data-module-placement="top"
-          data-bs-toggle="tooltip">{{ _('Time Period of the Dataset') }} [?]</span></div>
+          data-bs-toggle="tooltip">{{ _('Time period of the dataset') }} [?]</span></div>
         <div class="dataset-details">{{ h.render_date_from_concat_str(pkg_dict.dataset_date) }} <a href="#"
                                                                                                    id="show-extra-dates">... {{ _('More') }}</a>
         </div>
@@ -48,8 +48,13 @@
       </div>
       <div class="mb-3" {% if edit_mode %} data-module="hdx-quick-edit"
            data-module-anchor="field_data_update_frequency" data-module-dataset="{{ pkg_dict.id }}"{% endif %}>
-        <div class="dataset-label">{{ _('Expected Update Frequency') }}</div>
-        <div class="dataset-details">{{ h.hdx_get_frequency_by_value(pkg_dict.data_update_frequency) }}</div>
+        <div class="dataset-label">{{ _('Expected update frequency') }}</div>
+        <div class="dataset-details">
+          {{ h.hdx_get_frequency_by_value(pkg_dict.data_update_frequency) }}
+          {% if pkg_dict.type == 'dataset' and pkg_dict.data_update_frequency and pkg_dict.is_fresh %}
+            <a href="/faq#auto-faq-Metadata_and_Data_Quality-What_does_the_green_leaf_symbol_mean_-a" target="_blank" class="humanitarianicons-Environment fresh ms-1" title="{{ _('This dataset is up to date') }}" data-module="bs_tooltip" data-module-placement="top" data-bs-toggle="tooltip"></a>
+          {% endif %}
+        </div>
       </div>
       <div class="mb-3" {% if edit_mode %} data-module="hdx-quick-edit" data-module-anchor="field_locations"
            data-module-dataset="{{ pkg_dict.id }}"{% endif %}>
@@ -220,7 +225,7 @@
       </div>
 
       <div class="mb-3">
-        <div class="dataset-details">
+        <div class="dataset-label">
           Export metadata for this dataset: <a href="{{ metadata_url }}?format=json">JSON</a> | <a
           href="{{ metadata_url }}?format=csv">CSV</a>
         </div>

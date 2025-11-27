@@ -1,42 +1,69 @@
 {% extends "search/snippets/package_icons_base.html" %}
 
-{% block leading_icons %}
-  {% snippet 'search/snippets/package_icons_cod.html', package=package%}
-{% endblock %}
-
-{% block other_icons %}
-  {% if h.hdx_dataset_is_hxl(package.tags) %}
-    <a href="{% url_for 'hdx_dataset.search', ext_hxl=1 %}">
-      <span class="icon-hxl-tags" title="{{ _('Dataset Containing HXL Tags') }}" data-module="bs_tooltip"
-            data-module-placement="top" data-bs-toggle="tooltip">
-      </span>
-    </a>
-  {% endif %}
-{#  {% if package.has_quickcharts %}#}
-{#    <a href="{% url_for 'hdx_dataset.search', ext_quickcharts=1 %}">#}
-{#        <span class="humanitarianicons-Chart" title="{{ _('Dataset Containing Quick Charts') }}" data-module="bs_tooltip"#}
-{#              data-module-placement="top" data-bs-toggle="tooltip"></span>#}
-{#    </a>#}
-{#  {% endif %}#}
-  {% if popular %}
-    <span class="popular humanitarianicons-Trending" title="{{ _('Trending') }}" data-module="bs_tooltip" data-module-placement="top" data-bs-toggle="tooltip" ></span>
-  {% endif %}
-{% endblock %}
-
-
 {% block other_info %}
-  {% if package.approx_total_downloads  %}
-    <li class="label-icons"><span class="download-counts" title="{{ _('Total number of downloads') }}" data-module="bs_tooltip" data-module-placement="top" data-bs-toggle="tooltip">{{ package.approx_total_downloads }}+ {{ _('Downloads') }} </span></li>
+  {% if package.is_requestdata_type %}
+    <div class="label-icons">
+      <span class="download-counts">{{ _('This data is by request only') }}</span>
+    </div>
   {% endif %}
 
-  {% if package.is_requestdata_type %}
-    <li class="label-icons"><span class="download-counts">{{ _('This data is by request only') }}</span></li>
-  {% elif package.type == 'dataset' and package.data_update_frequency %}
-    <li class="label-icons">
-      <span class="download-counts">{{ _('This dataset updates') }}: {{ h.hdx_get_frequency_by_value(package.data_update_frequency) }}</span>
-      {%  if package.is_fresh %}
-        <a href="/faq#auto-faq-Metadata_and_Data_Quality-What_does_the_green_leaf_symbol_mean_-a" target="_blank" class="humanitarianicons-Environment fresh" title="{{ _('This dataset is up to date') }}" data-module="bs_tooltip" data-module-placement="top" data-bs-toggle="tooltip" ></a>
+  {% snippet 'search/snippets/package_icons_cod.html', package=package, dataset_page=True %}
+
+  {% if package.approx_total_downloads %}
+    <div class="label-icons d-inline-block">
+      {% set popular = package.pageviews_last_14_days and package.pageviews_last_14_days >= 50 %}
+      {% if popular %}
+        <span class="popular humanitarianicons-Trending me-1" title="{{ _('Trending') }}" data-module="bs_tooltip" data-module-placement="top" data-bs-toggle="tooltip"></span>
       {% endif %}
-    </li>
+      <span class="download-counts" title="{{ _('Total number of downloads') }}" data-module="bs_tooltip" data-module-placement="top" data-bs-toggle="tooltip">
+        {{ package.approx_total_downloads }}+ {{ _('Downloads') }}
+      </span>
+    </div>
   {% endif %}
+
+  {% if package.page_list %}
+    <div class="label-icons">
+      <span class="dataset-page-list">
+          Part of
+        {% for page in package.page_list %}
+          <a href="/{{ page.type }}/{{ page.name }}">{{ page.title }}</a>
+        {% endfor %}
+      </span>
+    </div>
+  {% endif %}
+
+  {% if package.links_list %}
+    {% for link in package.links_list %}
+      <div class="label-icons">
+      <span class="dataset-link-list">
+            {% if link.label %}
+              {{ link.label|replace("This dataset is part", "Part") }}
+            {% else %}
+              This dataset can be viewed in the
+            {% endif %}
+        <a href="{{ link.url }}"
+           target="{% if link.newTab == True %}_blank{% else %}_self{% endif %}"> {{ link.title }} </a>
+      </span>
+      </div>
+    {% endfor %}
+  {% endif %}
+
+  {% if package.dataseries_name %}
+
+    <div class="label-icons">
+      <span class="dataseries-info">{{ _('Part of the data series') }} <span class="dataseries-explanation"
+                                                                             title="{{ _('A data series is a collection of datasets that has a shared topic usually provided by a single organization') }}"
+                                                                             data-module="bs_tooltip"
+                                                                             data-bs-toggle="tooltip">[?]</span>: <a
+        href="{% url_for 'search', dataseries_name=package.dataseries_name %}" data-module="hdx_click_stopper"
+        data-module-link_type="dataseries dataset page">{{ package.dataseries_name }}</a></span>
+    </div>
+  {% endif %}
+
+  {% if package.subnational == '1' %}
+    <div class="label-icons">
+      <span class="dataset-subnational">{{ _('Sub-national') }}</span>
+    </div>
+  {% endif %}
+
 {% endblock %}
