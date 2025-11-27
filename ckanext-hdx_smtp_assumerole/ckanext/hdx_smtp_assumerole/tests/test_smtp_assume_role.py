@@ -196,3 +196,35 @@ class TestCreateStsClientWithInstanceProfile(unittest.TestCase):
             create_sts_client_with_instance_profile()
 
         self.assertIn('Failed to create STS client', str(ctx.exception))
+
+    @patch('ckanext.hdx_smtp_assumerole.helpers.smtp_assume_role.InstanceMetadataFetcher')
+    @patch('ckanext.hdx_smtp_assumerole.helpers.smtp_assume_role.InstanceMetadataProvider')
+    def test_create_sts_client_credentials_none(self, mock_provider_class, mock_fetcher_class):
+        """Test error when instance profile returns None credentials"""
+        mock_provider = Mock()
+        mock_provider.load.return_value = None
+        mock_provider_class.return_value = mock_provider
+
+        with self.assertRaises(SMTPAssumeRoleException) as ctx:
+            create_sts_client_with_instance_profile()
+
+        self.assertIn('Failed to load credentials from EC2 instance profile', str(ctx.exception))
+
+
+class TestAssumeRoleEdgeCases(unittest.TestCase):
+    """Additional edge case tests for assume_role_for_smtp"""
+
+    @patch('ckanext.hdx_smtp_assumerole.helpers.smtp_assume_role.build_role_arn')
+    @patch('ckanext.hdx_smtp_assumerole.helpers.smtp_assume_role.create_sts_client_with_instance_profile')
+    def test_assume_role_generic_exception(self, mock_create_client, mock_build_arn):
+        """Test handling of generic exception during assume role"""
+        mock_build_arn.return_value = 'arn:aws:iam::123456789012:role/test-role'
+
+        mock_client = Mock()
+        mock_client.assume_role.side_effect = Exception('Unexpected error')
+        mock_create_client.return_value = mock_client
+
+        with self.assertRaises(SMTPAssumeRoleException) as ctx:
+            assume_role_for_smtp('test-role', 'us-east-1')
+
+        self.assertIn('Unexpected error during SMTP AssumeRole', str(ctx.exception))

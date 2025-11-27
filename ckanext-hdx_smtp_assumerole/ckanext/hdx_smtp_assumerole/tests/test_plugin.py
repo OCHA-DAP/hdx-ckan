@@ -688,3 +688,23 @@ class TestRunOnStartupEdgeCases(unittest.TestCase):
 
         with self.assertRaises(SMTPAssumeRoleException):
             run_on_startup(config)
+
+    @patch('ckanext.hdx_smtp_assumerole.plugin.patch_hdx_users_mailer')
+    @patch('ckanext.hdx_smtp_assumerole.plugin.patch_mailer_functions')
+    @patch('ckanext.hdx_smtp_assumerole.plugin.SMTPCredentialsManager')
+    def test_generic_exception_during_startup(self, mock_manager_class, mock_patch_mailer, mock_patch_hdx):
+        """Test handling of unexpected exceptions during startup"""
+        mock_manager = Mock()
+        mock_manager.initialize.side_effect = Exception('Unexpected error')
+        mock_manager_class.get_instance.return_value = mock_manager
+
+        config = {
+            'ckanext.hdx_smtp_assumerole.use_assume_role': 'true',
+            'ckanext.hdx_smtp_assumerole.role_arn': 'test-role',
+            'ckanext.hdx_smtp_assumerole.region': 'us-east-1'
+        }
+
+        with self.assertRaises(Exception) as ctx:
+            run_on_startup(config)
+
+        self.assertEqual(str(ctx.exception), 'Unexpected error')
