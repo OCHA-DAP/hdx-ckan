@@ -382,6 +382,8 @@ hdx.approved_tags.csv = https://docs.google.com/spreadsheets/d/e/2PACX-1vQJKjr25
 # Datapusher Plus - HDX specific settings
 hdx.datastore.enabled_objects_csv = https://docs.google.com/spreadsheets/d/e/2PACX-1vRYS8exO-C_8t53bWf8R62ft1hn4yThWnCLGCtvPNbkrmidL8qu0j3sQnMDF8ypzKQ8xV5JhYgijRp7/pub?gid=0&single=true&output=csv
 
+# Send emails when API tokens are created
+hdx.api_token.email_notifications.enabled = true
 
 # Sitemap configuration (Datopian extension)
 ckanext.sitemap.directory = /srv/ckan/ckanext-hdx_theme/ckanext/hdx_theme/public/sitemap
