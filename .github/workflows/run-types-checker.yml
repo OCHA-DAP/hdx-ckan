@@ -73,6 +73,10 @@ jobs:
         run: docker compose exec -T ckan pyright /srv/ckan/ckanext-hdx_service_checker
         continue-on-error: true
 
+      - name: Check types for ckanext-hdx_smtp_assumerole
+        run: docker compose exec -T ckan pyright /srv/ckan/ckanext-hdx_smtp_assumerole
+        continue-on-error: true
+
       - name: Check types for ckanext-hdx_theme
         run: docker compose exec -T ckan pyright /srv/ckan/ckanext-hdx_theme
         continue-on-error: true

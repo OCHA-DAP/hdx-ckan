@@ -72,7 +72,7 @@ search_backend = sql
 # only for 2.3
 #ckan.plugins = stats
 # only for 2.6
-ckan.plugins = dcat dcat_json_interface structured_data hdx_dataviz expire_api_token hdx_hxl_preview hdx_office_preview ytp_request hdx_pages hdx_choropleth_map_view hdx_geopreview_view hdx_chart_views hdx_service_checker hdx_analytics hdx_search sitemap hdx_org_group hdx_group hdx_package hdx_user_extra hdx_mail_validate hdx_users hdx_theme security requestdata showcase resource_proxy text_view datastore activity
+ckan.plugins = dcat dcat_json_interface structured_data hdx_dataviz expire_api_token hdx_hxl_preview hdx_office_preview ytp_request hdx_pages hdx_choropleth_map_view hdx_geopreview_view hdx_chart_views hdx_service_checker hdx_analytics hdx_search sitemap hdx_org_group hdx_group hdx_package hdx_user_extra hdx_mail_validate hdx_users hdx_smtp_assumerole hdx_theme security requestdata showcase resource_proxy text_view datastore activity
 # ckan.plugins = ${HDX_ENABLED_PLUGINS}
 ckan.views.default_views = recline_view
 ckan.csrf_protection.ignore_extensions = false
@@ -94,6 +94,9 @@ ckan.template_footer_end = <strong>TEST TEMPLATE_FOOTER_END TEST</strong>
 # mailer
 smtp.test_server = localhost:6675
 smtp.mail_from = hdx@humdata.org
+
+# hdx_smtp_assumerole - disabled in tests (uses mock SMTP server)
+ckanext.hdx_smtp_assumerole.use_assume_role = false
 
 ckan.locale_default = en_AU
 ckan.locale_order = en pt_BR ja it cs_CZ ca es fr el sv sr sr@latin no sk fi ru de pl nl bg ko_KR hu sa sl lv
