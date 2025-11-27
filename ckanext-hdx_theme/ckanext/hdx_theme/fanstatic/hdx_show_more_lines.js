@@ -5,7 +5,7 @@ ckan.module('hdx_show_more_lines', function ($, _) {
     options: {
       lines: 2,
       more_text: "... More",
-      less_text: "Less",
+      less_text: " Less",
       bg_color: "#ffffff"
     },
 
@@ -67,6 +67,7 @@ ckan.module('hdx_show_more_lines', function ($, _) {
 
     expand: function () {
       this.el.attr("style", this.originalStyle); // restore original
+      this.el.css("max-height", '');
       this.el.find(".read-more-btn").remove();
 
       const $less = $(`<a href="#" class="read-less-btn">${this.options.less_text}</a>`);
