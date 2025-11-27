@@ -10,13 +10,13 @@ on:
 
 jobs:
 
-  check_pr:
-    uses: ./.github/workflows/check-pr-status.yml
+#  check_pr:
+#    uses: ./.github/workflows/check-pr-status.yml
 
   build:
     runs-on: ubuntu-latest
-    needs: check_pr
-    if: needs.check_pr.outputs.proceed == 'true'
+#    needs: check_pr
+#    if: needs.check_pr.outputs.proceed == 'true'
     steps:
       - name: Checkout code
         id: checkout
