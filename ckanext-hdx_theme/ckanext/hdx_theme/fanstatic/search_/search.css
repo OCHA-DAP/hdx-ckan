@@ -59,7 +59,7 @@
   /*color: #007ce0;*/
   /*let's try and use default color*/
   letter-spacing: 0.01em;
-  line-height: 1;
+  line-height: normal;
 }
 .search-list .dataset-item .dataset-content .dataset-updated {
   font-family: 'Source Sans Pro', sans-serif;
