@@ -102,6 +102,6 @@ python-json-logger~=2.0.7
 openpyxl==3.1.5
 
 # BY HDX- for datapusher plus
-semver==2.13.0
+semver==3.0.4
 datasize==1.0.0
 
