@@ -60,8 +60,8 @@ class TestPatchFunctions(unittest.TestCase):
     def test_patch_hdx_users_mailer_no_module(self):
         """Test patching when hdx_users module is not available"""
         # Mock the import to raise ImportError
-        import sys
-        original_import = __builtins__.__import__
+        import builtins
+        original_import = builtins.__import__
 
         def mock_import(name, *args, **kwargs):
             if 'ckanext.hdx_users' in name:
