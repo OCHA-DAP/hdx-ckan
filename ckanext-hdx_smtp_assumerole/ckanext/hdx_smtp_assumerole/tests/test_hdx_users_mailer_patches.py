@@ -1,6 +1,7 @@
 # encoding: utf-8
 
 import unittest
+from unittest.mock import patch
 from email.header import Header
 
 import ckanext.hdx_smtp_assumerole.helpers.hdx_users_mailer_patches as patches_module
@@ -58,10 +59,23 @@ class TestPatchFunctions(unittest.TestCase):
 
     def test_patch_hdx_users_mailer_no_module(self):
         """Test patching when hdx_users module is not available"""
-        # This should handle ImportError gracefully
-        patch_hdx_users_mailer()
-        # Should not raise exception, just log warning
-        self.assertFalse(is_patched())
+        # Mock the import to raise ImportError
+        import builtins
+        original_import = builtins.__import__
+
+        def mock_import(name, *args, **kwargs):
+            if 'ckanext.hdx_users' in name:
+                raise ImportError('No module named ckanext.hdx_users')
+            return original_import(name, *args, **kwargs)
+
+        # Reset state to ensure clean test
+        patches_module._patches_applied = False
+
+        with patch('builtins.__import__', side_effect=mock_import):
+            # This should handle ImportError gracefully
+            patch_hdx_users_mailer()
+            # Should not raise exception, just log warning
+            self.assertFalse(is_patched())
 
     def test_patch_hdx_users_mailer_idempotent(self):
         """Test that patching multiple times is safe"""

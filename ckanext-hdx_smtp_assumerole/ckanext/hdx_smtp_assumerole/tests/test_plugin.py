@@ -256,7 +256,7 @@ class TestValidateRegion(unittest.TestCase):
         """Test invalid region: empty string"""
         with self.assertRaises(SMTPAssumeRoleException) as ctx:
             _validate_region('')
-        self.assertIn('Invalid AWS region format', str(ctx.exception))
+        self.assertIn('AWS region cannot be empty', str(ctx.exception))
 
     def test_invalid_region_special_chars(self):
         """Test invalid region: special characters"""
@@ -375,7 +375,7 @@ class TestValidateRoleArn(unittest.TestCase):
         """Test invalid role name: empty string"""
         with self.assertRaises(SMTPAssumeRoleException) as ctx:
             _validate_role_arn('')
-        self.assertIn('Invalid IAM role name', str(ctx.exception))
+        self.assertIn('IAM role ARN or name cannot be empty', str(ctx.exception))
 
 
 class TestRunOnStartupValidation(unittest.TestCase):
