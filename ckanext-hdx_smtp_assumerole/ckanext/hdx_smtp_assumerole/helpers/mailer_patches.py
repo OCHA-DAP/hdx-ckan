@@ -49,7 +49,13 @@ def _build_mime_message_with_attachments(
     :return: MIMEMultipart message object
     """
     msg = MIMEMultipart()
-    msg['From'] = mail_from
+
+    # Build From header with display name
+    # Use same default as hdx_users mailer for consistency
+    sender_name = 'Humanitarian Data Exchange (HDX)'
+    msg['From'] = f'"{sender_name}" <{mail_from}>'
+    msg['Reply-To'] = f'"{sender_name}" <{mail_from}>'
+
     msg['Subject'] = subject
 
     # Add To header with display name
@@ -61,7 +67,7 @@ def _build_mime_message_with_attachments(
     # Add custom headers
     if headers:
         for key, value in headers.items():
-            if key not in ['From', 'To', 'Subject'] and value:
+            if key not in ['From', 'To', 'Subject', 'Reply-To'] and value:
                 msg[key] = value
 
     # Add body
