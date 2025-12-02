@@ -51,10 +51,10 @@ def _build_mime_message_with_attachments(
     msg = MIMEMultipart()
 
     # Build From header with display name
-    # Use ckan.site_title or default to "Humanitarian Data Exchange (HDX)"
-    site_title = tk.config.get('ckan.site_title', 'Humanitarian Data Exchange (HDX)')
-    msg['From'] = f'"{site_title}" <{mail_from}>'
-    msg['Reply-To'] = f'"{site_title}" <{mail_from}>'
+    # Use same default as hdx_users mailer for consistency
+    sender_name = 'Humanitarian Data Exchange (HDX)'
+    msg['From'] = f'"{sender_name}" <{mail_from}>'
+    msg['Reply-To'] = f'"{sender_name}" <{mail_from}>'
 
     msg['Subject'] = subject
 
