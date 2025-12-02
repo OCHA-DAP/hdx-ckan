@@ -120,9 +120,30 @@ def patch_mailer_functions() -> None:
     _original_mail_user = mailer.mail_user
     _original_mail_recipient = mailer.mail_recipient
 
-    # Apply patches
+    # Apply patches to ckan.lib.mailer
     mailer.mail_user = patched_mail_user
     mailer.mail_recipient = patched_mail_recipient
+
+    # Also patch ckan.plugins.toolkit to handle imports like tk.mail_recipient
+    # This is needed for modules that import tk.mail_recipient before patches are applied
+    try:
+        import ckan.plugins.toolkit as tk
+        tk.mail_user = patched_mail_user
+        tk.mail_recipient = patched_mail_recipient
+        log.debug('Successfully patched ckan.plugins.toolkit mail functions')
+    except Exception as e:
+        log.warning(f'Failed to patch ckan.plugins.toolkit: {e}')
+
+    # Patch hdx_users token_creation_notification_helper directly
+    # This module imports _mail_recipient at load time, so we need to patch the module variable
+    try:
+        from ckanext.hdx_users.helpers import token_creation_notification_helper
+        token_creation_notification_helper._mail_recipient = patched_mail_recipient
+        log.debug('Successfully patched token_creation_notification_helper._mail_recipient')
+    except ImportError:
+        log.debug('ckanext.hdx_users.helpers.token_creation_notification_helper not found, skipping')
+    except Exception as e:
+        log.warning(f'Failed to patch token_creation_notification_helper: {e}')
 
     _patches_applied = True
 
@@ -299,11 +320,33 @@ def unpatch_mailer_functions() -> None:
 
     log.info('Removing monkey patches from ckan.lib.mailer')
 
-    # Restore original functions
+    # Restore original functions to ckan.lib.mailer
     if _original_mail_user is not None:
         mailer.mail_user = _original_mail_user
     if _original_mail_recipient is not None:
         mailer.mail_recipient = _original_mail_recipient
+
+    # Also restore toolkit functions
+    try:
+        import ckan.plugins.toolkit as tk
+        if _original_mail_user is not None:
+            tk.mail_user = _original_mail_user
+        if _original_mail_recipient is not None:
+            tk.mail_recipient = _original_mail_recipient
+        log.debug('Successfully restored ckan.plugins.toolkit mail functions')
+    except Exception as e:
+        log.warning(f'Failed to restore ckan.plugins.toolkit: {e}')
+
+    # Restore token_creation_notification_helper function
+    try:
+        from ckanext.hdx_users.helpers import token_creation_notification_helper
+        if _original_mail_recipient is not None:
+            token_creation_notification_helper._mail_recipient = _original_mail_recipient
+        log.debug('Successfully restored token_creation_notification_helper._mail_recipient')
+    except ImportError:
+        log.debug('token_creation_notification_helper not found during unpatch')
+    except Exception as e:
+        log.warning(f'Failed to restore token_creation_notification_helper: {e}')
 
     _patches_applied = False
 
