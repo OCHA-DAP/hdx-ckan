@@ -371,7 +371,9 @@ class TestMailerPatches(unittest.TestCase):
             attachments=None
         )
 
-        self.assertEqual(msg['From'], 'sender@example.com')
+        # From and Reply-To should include display name
+        self.assertEqual(msg['From'], '"Humanitarian Data Exchange (HDX)" <sender@example.com>')
+        self.assertEqual(msg['Reply-To'], '"Humanitarian Data Exchange (HDX)" <sender@example.com>')
         self.assertEqual(msg['Subject'], 'Test Subject')
         self.assertIn('Recipient Name', msg['To'])
         self.assertIn('recipient@example.com', msg['To'])
