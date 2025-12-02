@@ -367,6 +367,17 @@ groups:
         description: The footer text for the email
   - annotation: S3 Filestore
     options:
+      - key: ckanext.s3filestore.aws_use_assume_role
+        default: False
+        type: bool
+        description: Whether to use an assumeRole or not.
+      - key: ckanext.s3filestore.aws_role_arn
+        default:
+        example: arn:aws:iam::123456789012:role/role-name or just role-name
+        description: The name or the arn of the role used to access the S3 bucket where files will be stored.
+      - key: ckanext.s3filestore.aws_role_session_name
+        default: 'ckan-s3filestore-session'
+        description: The session name to use when assuming the role.
       - key: ckanext.s3filestore.aws_bucket_name
         default:
         example: a-bucket-to-store-your-stuff

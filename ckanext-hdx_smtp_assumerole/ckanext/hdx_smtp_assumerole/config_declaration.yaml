@@ -1,0 +1,74 @@
+version: 1
+groups:
+  - annotation: HDX SES API AssumeRole Settings
+    options:
+      - key: ckanext.hdx_smtp_assumerole.use_assume_role
+        type: bool
+        default: false
+        example: true
+        description: |
+          Enable AWS AssumeRole for SES API email sending.
+
+          When ENABLED (true):
+            - Emails sent via SES API (not SMTP)
+            - Uses temporary credentials with session tokens from AssumeRole
+            - Credentials auto-refresh before expiry (< 5 min)
+            - Requires EC2 instance profile
+            - Requires IAM role with SES permissions
+
+          When DISABLED (false - default):
+            - Emails sent via standard SMTP
+            - Uses static credentials from smtp.user/smtp.password config
+            - Backward compatible with existing configurations
+
+          Why SES API instead of SMTP?
+          SES SMTP only supports username/password authentication and cannot
+          use session tokens from temporary credentials (AssumeRole).
+          SES API supports full temporary credentials including session tokens.
+
+      - key: ckanext.hdx_smtp_assumerole.role_arn
+        required: false
+        example: my-ses-role
+        description: |
+          IAM role name or full ARN to assume for SES API access.
+          If only role name is provided, account ID will be deduced from STS.
+          Examples:
+            - Role name: my-ses-role
+            - Full ARN: arn:aws:iam::123456789012:role/my-ses-role
+          Required when use_assume_role is true.
+
+          The IAM role must have permissions to:
+            - ses:SendEmail
+            - ses:SendRawEmail
+          on the appropriate SES domain identity resources.
+
+      - key: ckanext.hdx_smtp_assumerole.region
+        required: false
+        example: us-east-1
+        description: |
+          AWS region for SES API service.
+          Common values: us-east-1, us-west-2, eu-west-1
+          Required when use_assume_role is true.
+
+          Note: SES availability varies by region. Ensure SES is available
+          in your chosen region and that you have verified domain identities.
+
+
+      - key: ckanext.hdx_smtp_assumerole.session_name
+        default: ckan-ses-session
+        example: ckan-ses-session
+        description: |
+          AWS STS session name for AssumeRole.
+          Used for auditing and tracking in CloudTrail.
+          Shows up in AWS CloudTrail logs for AssumeRole calls.
+
+      - key: ckanext.hdx_smtp_assumerole.smtp_domain
+        required: false
+        example: example.com
+        description: |
+          Email domain for default addresses.
+          If set, plugin will configure:
+            - email_to: ckan@{domain}
+            - error_email_from: ckan@{domain}
+            - smtp.mail_from: hdx@{domain}
+          Optional. If not set, existing config values are used.

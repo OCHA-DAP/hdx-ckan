@@ -3,10 +3,11 @@
   list-style: none;
 }
 .resource-item .heading {
+  margin-bottom: 3px;
   display: flex;
 }
 .resource-item .heading .resource-name {
-  max-width: 390px;
+  max-width: 380px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -14,24 +15,59 @@
   margin-right: 5px;
 }
 .resource-item .update-date {
-  margin-bottom: 7px;
+  color: #333333;
+  font-size: 15px;
+  margin-bottom: 3px;
 }
 .resource-item .update-date .icn-txt-p-code {
   vertical-align: text-bottom;
   margin-right: 3px;
 }
 .resource-item .pcode-label {
-  margin-bottom: 7px;
-  margin-top: -7px;
+  color: #333333;
+  font-size: 15px;
+  margin-bottom: 3px;
+}
+.resource-item .resource-id-label {
+  color: #333333;
+  font-size: 15px;
+  margin-bottom: 3px;
+}
+.resource-item .resource-id-label .copy-icon {
+  cursor: pointer;
+  background-color: #888888;
+  border: 1px solid #888888;
+  box-sizing: content-box;
+  color: #fff;
+  width: 18px;
+  height: 18px;
+  font-size: 10px;
+  text-align: center;
+  line-height: 18px;
+  border-radius: 3px;
+  display: inline-block;
+  vertical-align: bottom;
+}
+.resource-item .resource-id-label .copy-icon:active {
+  color: #888888;
+  background-color: #fff;
+  border-color: #888888;
 }
 .resource-item .description {
+  color: #333333;
+  font-size: 15px;
   text-align: justify;
-  max-width: 425px;
+  max-width: 430px;
+  margin-top: 15px;
+}
+.resource-item .description .empty {
+  font-size: 15px;
+}
+.resource-item .description p:last-of-type {
+  margin-bottom: 0;
 }
 .format-filesize-label {
-  font-size: 14px;
   font-weight: normal;
-  color: #000;
 }
 /* END Style Resources List*/
 .data-check-modal.modal.show .modal-dialog {

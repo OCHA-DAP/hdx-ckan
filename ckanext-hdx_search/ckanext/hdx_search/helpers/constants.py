@@ -1,7 +1,7 @@
 from ckanext.hdx_package.helpers.constants import HPC_VALUES_MAP
 
 DEFAULT_SORTING = 'last_modified desc'
-DEFAULT_NUMBER_OF_ITEMS_PER_PAGE = 25
+DEFAULT_NUMBER_OF_ITEMS_PER_PAGE = 10
 
 NEW_DATASETS_FACET_NAME = 'new_datasets'
 UPDATED_DATASETS_FACET_NAME = 'updated_datasets'

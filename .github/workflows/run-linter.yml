@@ -57,6 +57,10 @@ jobs:
         run: ruff check ckanext-hdx_service_checker
         continue-on-error: true
 
+      - name: Run ruff linter for ckanext-hdx_smtp_assumerole
+        run: ruff check ckanext-hdx_smtp_assumerole
+        continue-on-error: true
+
       - name: Run ruff linter for ckanext-hdx_theme
         run: ruff check ckanext-hdx_theme
         continue-on-error: true

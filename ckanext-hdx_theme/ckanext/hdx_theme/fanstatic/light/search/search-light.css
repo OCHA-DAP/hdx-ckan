@@ -1,6 +1,3 @@
-.search-light {
-  background-color: #eeeeee;
-}
 .search-light .show-filters {
   display: flex;
   justify-content: flex-end;
@@ -54,7 +51,6 @@
 }
 .search-list .dataset-list {
   padding: 0;
-  background-color: #eeeeee;
 }
 .search-list .dataset-list .dataset-item {
   border: 1px solid #ddd;
@@ -85,9 +81,6 @@
 }
 .list-header {
   border-bottom: none;
-}
-.dataset-light {
-  background-color: #eeeeee;
 }
 .mobile-facets {
   position: fixed;

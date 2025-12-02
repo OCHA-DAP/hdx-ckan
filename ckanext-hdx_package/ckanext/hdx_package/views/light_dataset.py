@@ -69,7 +69,7 @@ def read(id):
     if dataset_dict.get('type') == 'dataset':
         analytics_dict = _compute_analytics(dataset_dict, tk.request)
         dataset_dict['page_list'] = cp_h.hdx_get_page_list_for_dataset(context, dataset_dict)
-        dataset_dict['link_list'] = get_action('hdx_package_links_by_id_list')(context, {'id': dataset_dict.get('name')})
+        dataset_dict['links_list'] = get_action('hdx_package_links_by_id_list')(context, {'id': dataset_dict.get('name')})
 
         template_data = {
             'dataset_dict': dataset_dict,

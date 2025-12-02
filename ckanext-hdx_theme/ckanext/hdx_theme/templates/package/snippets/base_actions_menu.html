@@ -12,11 +12,6 @@
 {% set is_current_user_a_maintainer = h.hdx_is_current_user_a_maintainer(pkg.maintainer, pkg) if pkg else false %}
 {% set follow_confirm_text = "WARNING: You are maintainer of the dataset which you want to follow. Do you wish to continue?" if is_current_user_a_maintainer else None %}
 
-{% if not hide_membership %}
-    {% set membership_data = membership.data %}
-    {{ h.snippet('widget/membership/group-message.html', id="groupMessagePopup", title=title, groups=group_topics, org_id = org_id, pkg_id = pkg_id, membership_data=membership_data, base_title=base_title, base_type=base_type) }}
-    {{ h.snippet('widget/membership/done.html', id="membershipDonePopup") }}
-{% endif %}
 <span class="{{ classes }}">
     <ul data-module="hdx_click_stopper"
         data-module-link_type="dataset header"
@@ -64,13 +59,12 @@
 
         {% block user_actions %}
         {% endblock %}
-
-        <li>
-            <span>
-                {% snippet 'package/snippets/share_button.html', title=title, panel_title=panel_title,
-                    plain_body=plain_body, direct=true, disable_pull_left=true, icon_font_size=icon_font_size %}
-            </span>
-        </li>
     </ul>
 
 </span>
+
+{% if not hide_membership %}
+    {% set membership_data = membership.data %}
+    {{ h.snippet('widget/membership/group-message.html', id="groupMessagePopup", title=title, groups=group_topics, org_id = org_id, pkg_id = pkg_id, membership_data=membership_data, base_title=base_title, base_type=base_type) }}
+    {{ h.snippet('widget/membership/done.html', id="membershipDonePopup") }}
+{% endif %}

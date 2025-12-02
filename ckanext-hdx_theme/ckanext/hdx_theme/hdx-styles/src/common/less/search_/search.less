@@ -47,12 +47,10 @@
             .stacked-info {
                 background-color: @extraLightBlueColor;
                 color: @blueColor;
-                .sourceSansProFont(600, 13px);
-                text-transform: uppercase;
+                .sourceSansProFont(600, 14px);
                 text-align: center;
                 line-height: 20px;
                 padding: 10px 0;
-                margin-top: 10px;
                 display: block;
             }
         }
@@ -70,7 +68,7 @@
                     .sourceSansProFont(400, 14px);
                     /*color: #007ce0;*/  /*let's try and use default color*/
                     .letter-spacing-1();
-                    line-height: 1;
+                    line-height: normal;
                 }
 
             }
@@ -124,12 +122,14 @@
             }
 
             .dataset-description {
-                .sourceSansProFont(400, 12px);
-                color: @grayColor;
+                margin-top: 18px;
+                .sourceSansProFont(400, 15px);
+                color: @darkGrayColor;
                 .letter-spacing-1();
             }
 
             .dataset-others {
+                margin-top: 18px;
                 .list-items {
                     margin: 0;
                 }
@@ -150,112 +150,81 @@
         .dataset-content2 {
             //Since dataset-content is used in other parts than the dataset search results
             //we're going to override the styles to create the new search results look
-            @datasetTitleFontSize: 14px;
-            @slightlySmallerFontSize: @datasetTitleFontSize - 0.75px;
-            padding: 32px 12px;
+            padding: 0;
+            .dataset-details-wrapper {
+              padding: 34px 35px;
 
-            .dataset-heading {
+              .dataset-heading {
                 line-height: 1;
-                word-wrap: break-word;
 
-                .restricted {
-                  color: @orangeColor;
-                  font-size: 14px;
-                  margin-right: 2px;
-                }
-                .popular {
-                    color: @darkGrayColor;
-                    font-size: 14px;
-                    margin-right: 2px;
+
+                > .icon {
+                  display: inline-block;
+                  vertical-align: middle;
+                  color: @grayColor;
+
+                  &.restricted {
+                    color: @orangeColor;
+                  }
                 }
 
                 > a {
-                    .sourceSansProFont(600, @datasetTitleFontSize);
-                    color: @blueColor;
+                  .sourceSansProFont(600, 20px);
+                  color: @blueColor;
+                  white-space: nowrap;
+                  overflow: hidden;
+                  text-overflow: ellipsis;
+                  display: inline-block;
+                  vertical-align: middle;
+                  width: calc(100% - 50px); // leave space for the archived and/or metadata only
                 }
-            }
-            .dataset-updated {
+              }
+
+              .dataset-updated {
                 line-height: 1;
 
                 .dataset-updated-org {
-                    margin: 8px 0;
-                    font-size: @slightlySmallerFontSize;
+                  margin-top: 5px;
+                  margin-bottom: 20px;
                 }
 
                 .dataset-updated-icons {
-                    margin-bottom: 8px;
-                    font-size: @slightlySmallerFontSize;
-                    display: flex;
-                    align-items: flex-end;
+                  .sourceSansProFont(400, 15px);
+                  color: @darkGrayColor;
+                  margin-bottom: 3px;
 
-                    [class^="icon-"], [class*=" icon-"], [class^="humanitarianicons-"], [class*=" humanitarianicons-"] {
-                        display: inline-block;
-                        vertical-align: middle;
-                        margin-right: 5px;
-                        color: @grayColor;
-                        font-size: 18px;
-
-                        &::before {
-                            color: @grayColor;
-                        }
-                    }
-
-                    .humanitarianicons-Chart:hover::before {
-                        color: @blueColor;
-                    }
-                    .icon-check:hover::before {
-                        color: @greenColor;
-                    }
-                    .icon-hxl-tags:hover::before {
-                        color: @orangeColor;
-                    }
-                    .icn-txt-cods:hover {
-                        background-color: @blueColor;
-                    }
-
-                    .download-counts {
-                        cursor: default;
-                    }
+                  .download-counts {
+                    cursor: default;
+                  }
                 }
-            }
+              }
 
-            .dataset-dates {
-                margin-bottom: 8px;
-                span {
-                  display: inline-block;
-                  width: 155px;
-                }
-                .more-dates {
-                    margin-top: 5px;
-                }
-            }
+              .dataset-dates {
+                .sourceSansProFont(400, 15px);
+                color: @darkGrayColor;
+              }
 
-            .dataset-dataseries {
+              .dataset-dataseries {
                 margin-top: 8px;
+
                 .dataseries-explanation {
                   cursor: default;
                 }
+
                 a {
-                    color: @blueColor;
+                  color: @blueColor;
                 }
-            }
+              }
 
-            .updatedNameColor {
-                .sourceSansProFont(600, @slightlySmallerFontSize);
-                color: @grayColor;
+              .updatedNameColor {
+                .sourceSansProFont(600, 18px);
+                color: @darkGrayColor;
+              }
             }
-
         }
 
         &:last-of-type{
             border-bottom: none;
-        }
-
-
-
-        .hdx-ds-title-icon {
-            font-size: 12px;
-            margin-left: 5px;
         }
     }
 

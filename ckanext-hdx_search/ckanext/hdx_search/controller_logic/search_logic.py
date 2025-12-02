@@ -501,7 +501,7 @@ class SearchLogic(object):
         featured_facet_items = []
         result['facets']['featured'] = {
             'name': 'featured',
-            'display_name': 'Featured',
+            'display_name': 'Advanced Filters',
             'items': featured_facet_items,
             'show_everything': True
         }
@@ -557,6 +557,8 @@ class SearchLogic(object):
                 result['filters_selected'] = result['filters_selected'] or anything_selected
                 result['selected_titles'].extend(selected_titles)
                 result['selected_categ_keys'].extend(selected_categ_keys)
+
+        result['facets'] = self.__move_facet_at_position(result['facets'], 'featured', 4)
 
         self._add_facet_query_item_to_list(featured_facet_items, HDX_HAPI_DATA_FACET_NAME, _('HDX HAPI Data'),
                                            existing_facets, search_extras, hdx_hapi_explanation)
@@ -814,6 +816,20 @@ class SearchLogic(object):
             'selected': all((item.get('selected') for item in hpc_items)) if hpc_items else False
         }
         return hpc_category
+
+    def __move_facet_at_position(self, facets, key_to_move, position):
+        new = OrderedDict()
+        moved = False
+        for i, (k, v) in enumerate(facets.items()):
+            if i == position:
+                new[key_to_move] = facets[key_to_move]
+                moved = True
+            if k == key_to_move:
+                continue
+            new[k] = v
+        if not moved:
+            new[key_to_move] = facets[key_to_move]
+        return new
 
 
 class DictProxy(dict):

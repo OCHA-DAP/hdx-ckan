@@ -854,7 +854,6 @@ body {
 }
 /* Style dataset labels */
 .dataset-resources {
-  margin-top: 8px;
   padding: 0;
 }
 .dataset-resources li {
@@ -878,8 +877,8 @@ body {
 /* Style dataseries label */
 .dataseries-info {
   clear: both;
-  margin-left: 10px;
-  font-size: 12px;
+  font-size: 15px;
+  color: #333333;
 }
 .dataseries-info .dataseries-explanation {
   cursor: default;
@@ -890,13 +889,16 @@ body {
 /* Style dataset icons */
 .label-icons span {
   font-size: 15px;
-  color: #888888;
-  margin-left: 10px;
-  padding-top: 3px;
+  color: #333333;
+  display: inline-block;
+  margin-bottom: 3px;
 }
-.label-icons span.download-counts {
-  font-size: 12px;
-  white-space: nowrap;
+.label-icons span.icn-txt-cods {
+  margin-left: 0;
+  font-size: 11px;
+}
+.label-icons span.popular {
+  vertical-align: middle;
 }
 .datastore-icon a {
   margin-left: 10px;
@@ -911,21 +913,19 @@ span.icn-txt-cods,
 ul.dataset-resources li.label-icons span.icn-txt-cods {
   font-family: 'Gotham-Bold', sans-serif;
   font-weight: 400;
-  font-size: 10px;
+  font-size: 9px;
   background-color: #888888;
   color: #fff;
   padding: 4px;
   border-radius: 10px;
   line-height: 1;
   display: inline-block;
+  vertical-align: text-bottom;
+  margin-left: 3px;
 }
 span.icn-txt-cods:hover,
 ul.dataset-resources li.label-icons span.icn-txt-cods:hover {
   background-color: #007CE0;
-}
-.dataset-content .icn-txt-cods {
-  margin-right: 5px;
-  display: inline-block;
 }
 span.icn-txt-p-code,
 ul.dataset-resources li.label-icons span.icn-txt-p-code {
@@ -1082,12 +1082,12 @@ ul.dataset-resources li + li.datastore-icon {
 /* END Style dataset labels */
 .resource-item {
   position: relative;
-  padding: 10px 10px 10px 60px;
-  margin-bottom: 0px;
+  padding: 15px 10px 15px 60px;
+  margin-bottom: 0;
 }
 .resource-item .format-label {
   position: absolute;
-  top: 10px;
+  top: 15px;
   left: 10px;
 }
 .resource-item .under-review {
@@ -1127,7 +1127,7 @@ ul.dataset-resources li + li.datastore-icon {
   height: 65px;
   background-position: -1720px -220px;
   transform: scale(0.53);
-  margin: -14px 0 0 -14px;
+  margin: -10px 0 0 -14px;
 }
 .format-label[data-format=html],
 .format-label[data-format*=html] {
@@ -1135,7 +1135,7 @@ ul.dataset-resources li + li.datastore-icon {
   height: 65px;
   background-position: -120px -220px;
   transform: scale(0.53);
-  margin: -14px 0 0 -14px;
+  margin: -10px 0 0 -14px;
 }
 .format-label[data-format=json],
 .format-label[data-format*=json] {
@@ -1143,7 +1143,7 @@ ul.dataset-resources li + li.datastore-icon {
   height: 65px;
   background-position: -220px -220px;
   transform: scale(0.53);
-  margin: -14px 0 0 -14px;
+  margin: -10px 0 0 -14px;
 }
 .format-label[data-format=xml],
 .format-label[data-format*=xml] {
@@ -1151,7 +1151,7 @@ ul.dataset-resources li + li.datastore-icon {
   height: 65px;
   background-position: -320px -220px;
   transform: scale(0.53);
-  margin: -14px 0 0 -14px;
+  margin: -10px 0 0 -14px;
 }
 .format-label[data-format=txt],
 .format-label[data-format*=txt] {
@@ -1159,7 +1159,7 @@ ul.dataset-resources li + li.datastore-icon {
   height: 65px;
   background-position: -420px -220px;
   transform: scale(0.53);
-  margin: -14px 0 0 -14px;
+  margin: -10px 0 0 -14px;
 }
 .format-label[data-format=doc],
 .format-label[data-format*=doc],
@@ -1169,7 +1169,7 @@ ul.dataset-resources li + li.datastore-icon {
   height: 65px;
   background-position: -520px -220px;
   transform: scale(0.53);
-  margin: -14px 0 0 -14px;
+  margin: -10px 0 0 -14px;
 }
 .format-label[data-format=odt],
 .format-label[data-format*=odt] {
@@ -1177,7 +1177,7 @@ ul.dataset-resources li + li.datastore-icon {
   height: 65px;
   background-position: -620px -220px;
   transform: scale(0.53);
-  margin: -14px 0 0 -14px;
+  margin: -10px 0 0 -14px;
 }
 .format-label[data-format=csv],
 .format-label[data-format*=csv] {
@@ -1185,7 +1185,7 @@ ul.dataset-resources li + li.datastore-icon {
   height: 65px;
   background-position: -720px -220px;
   transform: scale(0.53);
-  margin: -14px 0 0 -14px;
+  margin: -10px 0 0 -14px;
 }
 .format-label[data-format=xls],
 .format-label[data-format*=xls] {
@@ -1193,7 +1193,7 @@ ul.dataset-resources li + li.datastore-icon {
   height: 65px;
   background-position: -820px -220px;
   transform: scale(0.53);
-  margin: -14px 0 0 -14px;
+  margin: -10px 0 0 -14px;
 }
 .format-label[data-format=zip],
 .format-label[data-format*=zip] {
@@ -1201,7 +1201,7 @@ ul.dataset-resources li + li.datastore-icon {
   height: 65px;
   background-position: -920px -220px;
   transform: scale(0.53);
-  margin: -14px 0 0 -14px;
+  margin: -10px 0 0 -14px;
 }
 .format-label[data-format=api],
 .format-label[data-format*=api] {
@@ -1209,7 +1209,7 @@ ul.dataset-resources li + li.datastore-icon {
   height: 65px;
   background-position: -1020px -220px;
   transform: scale(0.53);
-  margin: -14px 0 0 -14px;
+  margin: -10px 0 0 -14px;
 }
 .format-label[data-format=pdf],
 .format-label[data-format*=pdf] {
@@ -1217,7 +1217,7 @@ ul.dataset-resources li + li.datastore-icon {
   height: 65px;
   background-position: -1120px -220px;
   transform: scale(0.53);
-  margin: -14px 0 0 -14px;
+  margin: -10px 0 0 -14px;
 }
 .format-label[data-format=rdf],
 .format-label[data-format*=rdf] {
@@ -1225,7 +1225,7 @@ ul.dataset-resources li + li.datastore-icon {
   height: 65px;
   background-position: -1220px -220px;
   transform: scale(0.53);
-  margin: -14px 0 0 -14px;
+  margin: -10px 0 0 -14px;
 }
 .format-label[data-format=wms],
 .format-label[data-format*=wms] {
@@ -1233,7 +1233,7 @@ ul.dataset-resources li + li.datastore-icon {
   height: 65px;
   background-position: -1320px -220px;
   transform: scale(0.53);
-  margin: -14px 0 0 -14px;
+  margin: -10px 0 0 -14px;
 }
 .format-label[data-format=png],
 .format-label[data-format*=png] {
@@ -1241,7 +1241,7 @@ ul.dataset-resources li + li.datastore-icon {
   height: 65px;
   background-position: -1420px -220px;
   transform: scale(0.53);
-  margin: -14px 0 0 -14px;
+  margin: -10px 0 0 -14px;
 }
 .format-label[data-format=jpg],
 .format-label[data-format*=jpg],
@@ -1251,7 +1251,7 @@ ul.dataset-resources li + li.datastore-icon {
   height: 65px;
   background-position: -1520px -220px;
   transform: scale(0.53);
-  margin: -14px 0 0 -14px;
+  margin: -10px 0 0 -14px;
 }
 .format-label[data-format=gif],
 .format-label[data-format*=gif] {
@@ -1259,7 +1259,7 @@ ul.dataset-resources li + li.datastore-icon {
   height: 65px;
   background-position: -1620px -220px;
   transform: scale(0.53);
-  margin: -14px 0 0 -14px;
+  margin: -10px 0 0 -14px;
 }
 .format-label[data-format=wfs],
 .format-label[data-format*=wfs] {
@@ -1267,7 +1267,7 @@ ul.dataset-resources li + li.datastore-icon {
   height: 65px;
   background-position: -1820px -220px;
   transform: scale(0.53);
-  margin: -14px 0 0 -14px;
+  margin: -10px 0 0 -14px;
 }
 .format-label[data-format=gml],
 .format-label[data-format*=gml] {
@@ -1275,7 +1275,7 @@ ul.dataset-resources li + li.datastore-icon {
   height: 65px;
   background-position: -1920px -220px;
   transform: scale(0.53);
-  margin: -14px 0 0 -14px;
+  margin: -10px 0 0 -14px;
 }
 .format-label[data-format=wmts],
 .format-label[data-format*=wmts] {
@@ -1283,7 +1283,7 @@ ul.dataset-resources li + li.datastore-icon {
   height: 65px;
   background-position: -2020px -220px;
   transform: scale(0.53);
-  margin: -14px 0 0 -14px;
+  margin: -10px 0 0 -14px;
 }
 .format-label[data-format=kml],
 .format-label[data-format*=kml] {
@@ -1291,7 +1291,7 @@ ul.dataset-resources li + li.datastore-icon {
   height: 65px;
   background-position: -2120px -220px;
   transform: scale(0.53);
-  margin: -14px 0 0 -14px;
+  margin: -10px 0 0 -14px;
 }
 .format-label[data-format=geo],
 .format-label[data-format=shp],
@@ -1301,7 +1301,7 @@ ul.dataset-resources li + li.datastore-icon {
   height: 65px;
   background-position: -2220px -220px;
   transform: scale(0.53);
-  margin: -14px 0 0 -14px;
+  margin: -10px 0 0 -14px;
 }
 .humanitarianicons-Environment.fresh {
   color: #1bb580;
@@ -2276,8 +2276,9 @@ hr.dotted {
 .notes.embedded-content {
   font-family: 'Source Sans Pro', sans-serif;
   font-weight: 400;
-  font-size: 14px;
+  font-size: 15px;
   max-width: 700px;
+  color: #333333;
 }
 .org-nums dl {
   border-bottom: 1px solid #dddddd;
@@ -2580,14 +2581,13 @@ textarea {
 }
 .filter-title {
   padding: 15px;
-  color: #000;
+  color: #333333;
   font-family: 'Source Sans Pro', sans-serif;
   font-weight: 400;
-  font-size: 14px;
+  font-size: 15px;
 }
 .filter-title .filter-clear {
   color: #007CE0;
-  cursor: pointer;
 }
 .filter-category {
   border: 1px solid #eeeeee;
@@ -2598,7 +2598,7 @@ textarea {
   border-bottom: 1px solid #eeeeee;
   font-family: 'Gotham-Bold', sans-serif;
   font-weight: 400;
-  font-size: 12px;
+  font-size: 13.5px;
   text-transform: uppercase;
   color: #888888;
   line-height: 1em;
@@ -2628,20 +2628,16 @@ textarea {
 .filter-category .categ-list .categ-items {
   list-style: none;
   margin: 15px;
-  padding: 0;
-  padding-right: 20px;
-  padding-left: 1px;
+  padding: 0 20px 0 1px;
 }
 .filter-category .categ-list .categ-items li {
   line-height: 20px;
-  color: #333333;
 }
 .filter-category .categ-list .categ-items li label.facet {
-  margin-bottom: 0;
+  color: #333333;
   font-family: 'Source Sans Pro', sans-serif;
   font-weight: 400;
-  font-size: 14px;
-  line-height: 20px;
+  font-size: 15px;
 }
 .filter-category .categ-list .categ-items li label.facet .facet-link {
   color: #333333;

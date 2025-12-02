@@ -43,13 +43,12 @@
   height: @@h;
   background-position: (@@x + -100*@offset) @@y;
   transform: scale(0.53);
-  margin: -14px 0 0 -14px;
+  margin: -10px 0 0 -14px;
 }
 
 
 /* Style dataset labels */
 .dataset-resources {
-    margin-top: 8px;
     padding: 0;
     li {
       display: inline;
@@ -72,8 +71,8 @@
 /* Style dataseries label */
 .dataseries-info {
   clear: both;
-  margin-left: 10px;
-  font-size: 12px;
+  font-size: 15px;
+  color: @darkGrayColor;
 
   .dataseries-explanation {
     cursor: default;
@@ -84,15 +83,17 @@
 }
 
 /* Style dataset icons */
-.label-icons span{
+.label-icons span {
   font-size: 15px;
-  color: @grayColor;
-  margin-left: 10px;
-  padding-top: 3px;
-
-  &.download-counts {
-    font-size: 12px;
-    white-space: nowrap;
+  color: @darkGrayColor;
+  display: inline-block;
+  margin-bottom: 3px;
+  &.icn-txt-cods {
+    margin-left: 0;
+    font-size: 11px;
+  }
+  &.popular {
+    vertical-align: middle;
   }
 }
 
@@ -110,20 +111,18 @@
 }
 
 span.icn-txt-cods, ul.dataset-resources li.label-icons span.icn-txt-cods{
-  .gothamBoldFont(10px);
+  .gothamBoldFont(9px);
   background-color: @grayColor;
   color: @whiteColor;
   padding: 4px;
   border-radius: 10px;
   line-height: 1;
   display: inline-block;
+  vertical-align: text-bottom;
+  margin-left: 3px;
   &:hover {
     background-color: @blueColor;
   }
-}
-.dataset-content .icn-txt-cods {
-  margin-right: 5px;
-  display: inline-block;
 }
 
 
@@ -301,12 +300,12 @@ ul.dataset-resources li + li.datastore-icon {
 
 .resource-item{
   position: relative;
-  padding: 10px 10px 10px 60px;
-  margin-bottom: 0px;
+  padding: 15px 10px 15px 60px;
+  margin-bottom: 0;
 
   .format-label {
       position: absolute;
-      top: 10px;
+      top: 15px;
       left: 10px;
   }
 
