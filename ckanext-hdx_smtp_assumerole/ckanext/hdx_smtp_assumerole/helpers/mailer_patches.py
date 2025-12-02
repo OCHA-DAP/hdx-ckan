@@ -120,9 +120,19 @@ def patch_mailer_functions() -> None:
     _original_mail_user = mailer.mail_user
     _original_mail_recipient = mailer.mail_recipient
 
-    # Apply patches
+    # Apply patches to ckan.lib.mailer
     mailer.mail_user = patched_mail_user
     mailer.mail_recipient = patched_mail_recipient
+
+    # Also patch ckan.plugins.toolkit to handle imports like tk.mail_recipient
+    # This is needed for modules that import tk.mail_recipient before patches are applied
+    try:
+        import ckan.plugins.toolkit as tk
+        tk.mail_user = patched_mail_user
+        tk.mail_recipient = patched_mail_recipient
+        log.debug('Successfully patched ckan.plugins.toolkit mail functions')
+    except Exception as e:
+        log.warning(f'Failed to patch ckan.plugins.toolkit: {e}')
 
     _patches_applied = True
 
@@ -299,11 +309,22 @@ def unpatch_mailer_functions() -> None:
 
     log.info('Removing monkey patches from ckan.lib.mailer')
 
-    # Restore original functions
+    # Restore original functions to ckan.lib.mailer
     if _original_mail_user is not None:
         mailer.mail_user = _original_mail_user
     if _original_mail_recipient is not None:
         mailer.mail_recipient = _original_mail_recipient
+
+    # Also restore toolkit functions
+    try:
+        import ckan.plugins.toolkit as tk
+        if _original_mail_user is not None:
+            tk.mail_user = _original_mail_user
+        if _original_mail_recipient is not None:
+            tk.mail_recipient = _original_mail_recipient
+        log.debug('Successfully restored ckan.plugins.toolkit mail functions')
+    except Exception as e:
+        log.warning(f'Failed to restore ckan.plugins.toolkit: {e}')
 
     _patches_applied = False
 
