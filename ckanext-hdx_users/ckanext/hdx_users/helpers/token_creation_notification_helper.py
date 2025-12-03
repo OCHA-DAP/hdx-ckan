@@ -37,6 +37,18 @@ def send_email_on_token_creation(username, token_name, expiration_in_millis):
         log.warning('API token email notifications are disabled')
         return
 
+    # Check if we have Flask application context (required for template rendering)
+    # CLI commands don't have full Flask context, so skip email notification
+    try:
+        from flask import has_app_context
+        if not has_app_context():
+            log.warning('Skipping API token email notification - no Flask app context (likely CLI command)')
+            return
+    except (ImportError, RuntimeError):
+        # If Flask is not available or context check fails, skip email
+        log.warning('Skipping API token email notification - Flask context not available')
+        return
+
     full_name, email = _get_user_full_name_and_email(username)
 
     isodate = datetime.fromtimestamp(expiration_in_millis).isoformat()
