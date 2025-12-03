@@ -269,7 +269,7 @@ uruguay,уругвай,乌拉圭,أوروغواي,the eastern republic of urugua
 uzbekistan,ouzbékistan,uzbekistán,узбекистан,乌兹别克斯坦,أوزبكستان,the republic of uzbekistan,UZ,UZB=>uzbekistan
 vanuatu,вануату,瓦努阿图,فانواتو,the republic of vanuatu,VU,VUT=>vanuatu
 venezuela\, bolivarian republic of,venezuela (bolivarian republic of),venezuela (république bolivarienne du),venezuela (república bolivariana de),венесуэла (боливарианская республика),委内瑞拉玻利瓦尔共和国,فنزويلا (جمهورية - البوليفارية),the bolivarian republic of venezuela,VE,VEN=>venezuela (bolivarian republic of)
-viet nam,вьетнам,越南,فييت نام,the socialist republic of viet nam,VN,VNM=>viet nam
+vietnam,viet nam,вьетнам,越南,فييت نام,the socialist republic of viet nam,VN,VNM=>viet nam
 virgin islands (british),virgin islands\, british,british virgin islands,îles vierges britanniques,islas vírgenes británicas,британские виргинские острова,英属维尔京群岛,جزر فرجن البريطانية,VG,VGB=>british virgin islands
 wallis and futuna,wallis and futuna (france),wallis and futuna islands,îles wallis-et-futuna,islas wallis y futuna,острова уоллис и футуна,瓦利斯群岛和富图纳群岛,جزر واليس وفوتونا,WF,WLF=>wallis and futuna islands
 western sahara\, non-self-governing territory,western sahara,sahara occidental,sáhara occidental,западная сахара,西撒哈拉,الصحراء الغربية,EH,ESH=>western sahara
