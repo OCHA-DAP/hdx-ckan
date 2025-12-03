@@ -79,7 +79,7 @@ cocos (keeling) islands (the),cocos (keeling) islands (australia),cocos (keeling
 colombia,colombie,колумбия,哥伦比亚,كولومبيا,the republic of colombia,CO,COL=>colombia
 comoros (the),comoros,comores,comoras,коморские острова,科摩罗,جزر القمر,the union of the comoros,KM,COM=>comoros
 congo (the),congo,конго,刚果,الكونغو,the republic of the congo,CG,COG=>congo
-congo (the democratic republic of the),congo\, the democratic republic of the,democratic republic of the congo,république démocratique du congo,república democrática del congo,демократическая республика конго,刚果民主共和国,جمهورية الكونغو الديمقراطية,the democratic republic of the congo,CD,COD=>democratic republic of the congo
+congo (the democratic republic of the),congo\, the democratic republic of the,democratic republic of the congo,république démocratique du congo,república democrática del congo,демократическая республика конго,刚果民主共和国,جمهورية الكونغو الديمقراطية,the democratic republic of the congo,CD=>democratic republic of the congo
 cook islands (the),cook islands,îles cook,islas cook,острова кука,库克群岛,جزر كوك,the cook islands,CK,COK=>cook islands
 costa rica,коста-рика,哥斯达黎加,كوستاريكا,the republic of costa rica,CR,CRI=>costa rica
 côte d'ivoire,côte d’ivoire,кот-д’ивуар,科特迪瓦,كوت ديفوار,the republic of côte d'ivoire,кот-д'ивуар,CI,CIV=>côte d'ivoire
@@ -269,7 +269,7 @@ uruguay,уругвай,乌拉圭,أوروغواي,the eastern republic of urugua
 uzbekistan,ouzbékistan,uzbekistán,узбекистан,乌兹别克斯坦,أوزبكستان,the republic of uzbekistan,UZ,UZB=>uzbekistan
 vanuatu,вануату,瓦努阿图,فانواتو,the republic of vanuatu,VU,VUT=>vanuatu
 venezuela\, bolivarian republic of,venezuela (bolivarian republic of),venezuela (république bolivarienne du),venezuela (república bolivariana de),венесуэла (боливарианская республика),委内瑞拉玻利瓦尔共和国,فنزويلا (جمهورية - البوليفارية),the bolivarian republic of venezuela,VE,VEN=>venezuela (bolivarian republic of)
-vietnam,viet nam,вьетнам,越南,فييت نام,the socialist republic of viet nam,VN,VNM=>viet nam
+vietnam,вьетнам,越南,فييت نام,the socialist republic of viet nam,VN,VNM=>viet nam
 virgin islands (british),virgin islands\, british,british virgin islands,îles vierges britanniques,islas vírgenes británicas,британские виргинские острова,英属维尔京群岛,جزر فرجن البريطانية,VG,VGB=>british virgin islands
 wallis and futuna,wallis and futuna (france),wallis and futuna islands,îles wallis-et-futuna,islas wallis y futuna,острова уоллис и футуна,瓦利斯群岛和富图纳群岛,جزر واليس وفوتونا,WF,WLF=>wallis and futuna islands
 western sahara\, non-self-governing territory,western sahara,sahara occidental,sáhara occidental,западная сахара,西撒哈拉,الصحراء الغربية,EH,ESH=>western sahara
