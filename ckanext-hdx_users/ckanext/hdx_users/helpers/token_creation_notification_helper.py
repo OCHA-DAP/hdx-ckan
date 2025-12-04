@@ -38,48 +38,73 @@ def send_email_on_token_creation(username, token_name, expiration_in_millis):
         return
 
     # Check if we have Flask application context (required for template rendering)
-    # CLI commands don't have full Flask context, so skip email notification
+    # If not (e.g., CLI command), create one temporarily
+    needs_app_context = False
     try:
         from flask import has_app_context
         if not has_app_context():
-            log.warning('Skipping API token email notification - no Flask app context (likely CLI command)')
-            return
+            needs_app_context = True
+            log.debug('No Flask app context detected - creating temporary context for email rendering')
     except (ImportError, RuntimeError):
-        # If Flask is not available or context check fails, skip email
-        log.warning('Skipping API token email notification - Flask context not available')
+        log.error('Flask not available - cannot send email notification')
         return
 
-    full_name, email = _get_user_full_name_and_email(username)
+    # Get Flask app and create context if needed
+    app_context = None
+    request_context = None
+    if needs_app_context:
+        try:
+            import ckan.config.middleware as middleware
+            wsgi_app = middleware.make_app(config)
+            # The actual Flask app is wrapped in middleware, access it via _wsgi_app
+            flask_app = wsgi_app._wsgi_app
+            # Create both app context and request context (needed for session/render)
+            app_context = flask_app.app_context()
+            app_context.push()
+            request_context = flask_app.test_request_context()
+            request_context.push()
+        except Exception as e:
+            log.error(f'Failed to create Flask contexts: {e}')
+            return
 
-    isodate = datetime.fromtimestamp(expiration_in_millis).isoformat()
+    try:
+        full_name, email = _get_user_full_name_and_email(username)
 
-    api_tokens_url = _url_for('user.api_tokens', id=username, qualified=True)
+        isodate = datetime.fromtimestamp(expiration_in_millis).isoformat()
 
-    token_info = {
-        'full_name': full_name,
-        'token_name': token_name,
-        'expires': isodate,
-        'api_tokens_url': api_tokens_url,
-    }
+        api_tokens_url = _url_for('user.api_tokens', id=username, qualified=True)
 
-    rendered_text = MAIL_TEXT_TEMPLATE.format(**token_info)
-
-    html_data_dict = {
-        'data': {
-            'data': token_info,
-            'footer': True,
-            '_snippet': 'email/content/api_tokens/api_token_creation.html',
-            'logo_hdx_email': config.get('ckan.site_url', '#') + '/images/homepage/logo-hdx.png',
+        token_info = {
+            'full_name': full_name,
+            'token_name': token_name,
+            'expires': isodate,
+            'api_tokens_url': api_tokens_url,
         }
-    }
-    rendered_html = _render('email/email.html', html_data_dict)
-    _mail_recipient(
-        full_name,
-        email,
-        'Security Notification: HDX API Token Created',
-        rendered_text,
-        body_html=rendered_html
-    )
+
+        rendered_text = MAIL_TEXT_TEMPLATE.format(**token_info)
+
+        html_data_dict = {
+            'data': {
+                'data': token_info,
+                'footer': True,
+                '_snippet': 'email/content/api_tokens/api_token_creation.html',
+                'logo_hdx_email': config.get('ckan.site_url', '#') + '/images/homepage/logo-hdx.png',
+            }
+        }
+        rendered_html = _render('email/email.html', html_data_dict)
+        _mail_recipient(
+            full_name,
+            email,
+            'Security Notification: HDX API Token Created',
+            rendered_text,
+            body_html=rendered_html
+        )
+    finally:
+        # Clean up contexts if we created them (in reverse order)
+        if request_context:
+            request_context.pop()
+        if app_context:
+            app_context.pop()
 
 
 def _get_user_full_name_and_email(username):
