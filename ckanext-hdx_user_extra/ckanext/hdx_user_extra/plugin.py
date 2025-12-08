@@ -10,6 +10,7 @@ import ckanext.hdx_user_extra.actions.create as create
 import ckanext.hdx_user_extra.actions.get as get
 import ckanext.hdx_user_extra.actions.update as update
 import ckanext.hdx_user_extra.model as user_extra_model
+import ckanext.hdx_user_extra.helpers.helpers as ue_h
 import ckan.plugins.toolkit as tk
 
 @tk.blanket.config_declarations
@@ -18,6 +19,7 @@ class HDX_User_ExtraPlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.IConfigurer)
     plugins.implements(plugins.IActions)
     plugins.implements(plugins.IAuthFunctions)
+    plugins.implements(plugins.ITemplateHelpers)
 
     # IConfigurer
     def update_config(self, config_):
@@ -44,3 +46,10 @@ class HDX_User_ExtraPlugin(plugins.SingletonPlugin):
     # IConfigurable
     def configure(self, config):
         user_extra_model.setup()
+
+    # ITemplateHelpers
+    def get_helpers(self):
+        return {
+            'user_extra_value_by_key': ue_h.user_extra_value_by_key,
+            'is_user_extra_email_updated': ue_h.is_user_extra_email_updated,
+        }

@@ -91,3 +91,34 @@ class TestOnboardingChangeEmail(object):
         }
         response = app.post(url, data=data_dict)
         assert 'The emails you entered do not match' in response.body, 'User should see an error message when emails do not match'
+
+    # @mock.patch('ckanext.hdx_users.helpers.tokens.refresh_token')
+    # @mock.patch('ckanext.hdx_users.helpers.tokens.token_show')
+    # @mock.patch('ckanext.hdx_users.views.onboarding._user_can_change_email')
+    # @mock.patch('ckanext.hdx_users.helpers.tokens.is_user_validated_and_token_disabled', return_value=False)
+    # def test_email_change_one_time_only_post_request(self, mock_is_user_validated, mock_user_can_change_email,mock_token_show, mock_refresh_token, user, app):
+    #     user = model.User.by_name(USER)
+    #     token = factories.APIToken(user=USER, expires_in=2, unit=60 * 60)['token']
+    #     mock_user_can_change_email.return_value = user.id
+    #     mock_token_show.return_value = {'token':'existing_token_value'}
+    #     mock_refresh_token.return_value = {'token': 'new_token_value'}
+    #     # url = h.url_for('hdx_user_onboarding.verify_email', user_id=user.id)
+    #     # result = app.get(url)
+    #     # assert USER_EMAIL not in result.body, 'User email should not be displayed in the body when accessing the ' \
+    #     #                                           'email verification page directly (without coming from the signup ' \
+    #     #                                           'form)'
+    #     context = {
+    #         'model': model,
+    #         'user': USER,
+    #         'keep_email': True,
+    #     }
+    #     updated_user_dict = _get_action('user_show')(context, {'id': user.id})
+    #     url = h.url_for('hdx_user_onboarding.change_email')
+    #     data_dict = {
+    #         'email': USER_NEW_EMAIL,
+    #         'email2': USER_NEW_EMAIL,
+    #     }
+    #     response = app.post(url, data=data_dict, headers={'Authorization': token})
+    #
+    #     updated_user_dict = _get_action('user_show')(context, {'id': user.id})
+    #     assert updated_user_dict.get('email') == USER_NEW_EMAIL, 'User email should be updated'
