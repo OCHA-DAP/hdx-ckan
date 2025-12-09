@@ -81,8 +81,10 @@ def hdx_search_by_object(context, data_dict):
             dataset_ids_list.append({'id': object_dict.get('id')})
     elif object_type == 'organization':
         object_dict = get_action('hdx_light_group_show')(context, {'id': object_id})
-        object_name = object_dict.get('name')
-        fq_filter = f'organization:"{object_name}"'
+        notifications_enabled = hdx_supports_notifications(object_type, object_id, object_dict)
+        if notifications_enabled:
+            object_name = object_dict.get('name')
+            fq_filter = f'organization:"{object_name}"'
     elif object_type == 'group':
         object_dict = get_action('hdx_light_group_show')(context, {'id': object_id})
         object_name = object_dict.get('name')

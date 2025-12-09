@@ -5,7 +5,7 @@
 {% block org_title %}
     <h1 class="itemTitle">
         {{ organization.display_name or organization.title or organization.name }}
-        {{ h.snippet('notification_platform/buttons.html', object_id=organization.id, object_type='organization' ) }}
+        {{ h.snippet('notification_platform/buttons.html', object_id=organization.id, object_type='organization', object_dict=organization ) }}
     </h1>
     {% if organization.state == 'deleted' %}
         <span style="vertical-align: top;" class="label label-danger">{{ _('Deleted') }}</span>
