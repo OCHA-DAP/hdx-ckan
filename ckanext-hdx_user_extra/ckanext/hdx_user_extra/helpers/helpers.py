@@ -13,21 +13,19 @@ def user_extra_value_by_key(key: str, user_id: str):
     """
     Retrieve a user's extra value by key.
 
-    Args:
-        key (str): The key of the extra field to retrieve.
-        user_id (str): The CKAN user id to query.
+    This function queries the CKAN database to retrieve a user's extra field value
+    associated with a specific key. It uses CKAN's action layer with elevated
+    privileges (ignore_auth) for internal operations.
 
-    Returns:
-        Optional[str]: The value associated with `key` for `user_id`, or
-        `None` if the extra does not exist.
+    :param key: The key of the extra field to retrieve.
+    :type key: str
+    :param user_id: The CKAN user id to query.
+    :type user_id: str
 
-    Raises:
-        None: Any NotFound from the action is handled and results in `None`.
+    :returns: The value associated with the key for the user, or None if not found.
+    :rtype: str or None
 
-    Notes:
-        - Uses CKAN's `user_extra_value_by_key_show` action with a context that
-          sets `ignore_auth` to True.
-        - This helper is read-only and does not modify the database.
+    :raises: None - Any NotFound exception is caught and handled internally.
     """
     context: Context = {'session': model.Session, 'model': model, 'ignore_auth': True}
     ue_data_dict = {
@@ -44,22 +42,14 @@ def is_user_extra_email_updated(user_id: str):
     """
     Determine whether the onboarding email for a user was marked as updated.
 
-    Args:
-        user_id (str): The CKAN user id to check.
+    This function checks if a specific user extra flag (ONBOARDING_USER_EMAIL_UPDATED_KEY)
+    exists and has been set to the string value 'true'. It's used to track whether
+    a user has updated their email during the onboarding process.
 
-    Returns:
-        bool: True if the `ONBOARDING_USER_EMAIL_UPDATED_KEY` extra exists and
-        equals the string `'true'`, otherwise False.
+    :param user_id: The CKAN user id to check.
+    :type user_id: str
 
-    Example:
-        >>> is_user_extra_email_updated('1234')
-        False
-
-    Notes:
-        - The function relies on `user_extra_value_by_key` and expects the stored
-          flag to be the literal string `'true'`.
+    :returns: True if the onboarding email flag is set to 'true', False otherwise.
+    :rtype: bool
     """
-    is_updated = user_extra_value_by_key(key=ONBOARDING_USER_EMAIL_UPDATED_KEY, user_id=user_id)
-    if is_updated:
-        return is_updated == 'true'
-    return False
+    return user_extra_value_by_key(key=ONBOARDING_USER_EMAIL_UPDATED_KEY, user_id=user_id) == 'true'
