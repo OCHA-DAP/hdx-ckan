@@ -1,6 +1,5 @@
 # encoding: utf-8
 
-import pytest
 import mock
 from email.header import Header
 
