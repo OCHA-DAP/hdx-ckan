@@ -35,7 +35,7 @@
     <div class="row">
       <div class="col-9 col-lg-8 ">
         <h1 class="mTop20">{{ org.title }}</h1>
-        {{ h.snippet('notification_platform/buttons.html', object_id=org.id, object_type='organization' ) }}
+        {{ h.snippet('notification_platform/buttons.html', object_id=org.id, object_type='organization', object_dict=org ) }}
         <div class="list-items mTop20 mBottom20">
           {% if org.package_count or org.datasets_num %}
               {% if org.package_count is number %}
@@ -86,6 +86,7 @@
     object_type='organization',
     object_id=org.id,
     object_name=org.name,
+    object_dict=org,
     num_of_datasets=org.template_data.full_facet_info.get('num_of_unarchived'),
     unsubscribe_token=unsubscribe_token, unsubscribe_token_validated=unsubscribe_token_validated,
     unsubscribe_email=unsubscribe_email, unsubscribe_token_invalidate=unsubscribe_token_invalidate
