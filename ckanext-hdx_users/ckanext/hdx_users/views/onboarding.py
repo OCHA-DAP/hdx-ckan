@@ -1,5 +1,5 @@
 import logging
-from typing import Any, Optional, Union, cast
+from typing import Any, Optional, Union, cast, Dict
 
 from flask import Blueprint
 from flask.views import MethodView
@@ -11,6 +11,7 @@ import ckan.plugins.toolkit as tk
 import ckanext.hdx_users.helpers.helpers as usr_h
 import ckanext.hdx_users.helpers.user_notifications as user_notif_h
 import ckanext.hdx_users.helpers.tokens as tokens
+import ckanext.hdx_user_extra.helpers.helpers as ue_h
 
 from ckan.common import (
     config, current_user, session
@@ -19,8 +20,12 @@ from ckan.types import Context, Response, DataDict
 from ckanext.hdx_users.controller_logic.onboarding_username_confirmation_logic import \
     send_username_confirmation_email, \
     subscribe_user_to_mailchimp
-from ckanext.hdx_users.helpers.constants import ONBOARDING_CAME_FROM_EXTRAS_KEY, ONBOARDING_CAME_FROM_STATE_EXTRAS_KEY, \
-    ONBOARDING_MAILCHIMP_OPTIN_KEY
+from ckanext.hdx_users.helpers.constants import (
+    ONBOARDING_CAME_FROM_EXTRAS_KEY,
+    ONBOARDING_CAME_FROM_STATE_EXTRAS_KEY,
+    ONBOARDING_MAILCHIMP_OPTIN_KEY,
+    ONBOARDING_USER_EMAIL_UPDATED_KEY,
+)
 from ckanext.hdx_users.views.user_view_helper import CaptchaNotValid, OnbCaptchaErr, error_message
 from ckanext.hdx_users.logic.schema import onboarding_user_new_form_schema, onboarding_user_change_email_form_schema
 
@@ -250,11 +255,12 @@ def verify_email(user_id: str) -> str:
     return abort(404, _(u'Page not found'))
 
 
+
 def change_email() -> str:
     user_id = _user_can_change_email()
-    if user_id:
+    if user_id and not ue_h.is_user_extra_email_updated(user_id):
         try:
-            context = {
+            context: Context = {
                 'model': model,
                 'session': model.Session,
                 'schema': onboarding_user_change_email_form_schema(),
@@ -282,7 +288,8 @@ def change_email() -> str:
                         'email': data_dict.get('email'),
                         'email2': data_dict.get('email2'),
                     })
-
+                    # store in extras that user has updated their email
+                    _update_user_extra_updated_email(updated_user)
                     old_token = tokens.token_show(context, user_dict)
                     new_token = tokens.refresh_token(context, old_token)
                     subject = h.HDX_CONST('UI_CONSTANTS')['ONBOARDING']['EMAIL_SUBJECTS']['EMAIL_CONFIRMATION']
@@ -294,7 +301,6 @@ def change_email() -> str:
                         validation_link=h.url_for('hdx_user_onboarding.validate_account', token=new_token['token'],
                                                   qualified=True)
                     )
-
                     session['user_info_email'] = updated_user.get('email')
                     return redirect('hdx_user_onboarding.verify_email', user_id=user_dict.get('id'))
                 except NotAuthorized:
@@ -326,6 +332,22 @@ def change_email() -> str:
             abort(404, _(u'User not found'))
 
     return abort(404, _(u'Page not found'))
+
+
+def _update_user_extra_updated_email(updated_user: Dict[str, Any]) -> None:
+    context_for_user_extra: Context = {
+        'model': model,
+        'session': model.Session,
+        'user': updated_user.get('name'),
+        'auth_user_obj': model.User.by_name(updated_user.get('name'))
+    }
+    extras = [
+        {
+            'key': ONBOARDING_USER_EMAIL_UPDATED_KEY,
+            'value': 'true'
+        }
+    ]
+    get_action('user_extra_create')(context_for_user_extra, {'user_id': updated_user.get('id'), 'extras': extras})
 
 
 def validate_account(token: str) -> str:
