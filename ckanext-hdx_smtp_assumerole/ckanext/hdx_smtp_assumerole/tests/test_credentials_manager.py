@@ -10,8 +10,7 @@ from ckanext.hdx_smtp_assumerole.helpers.credentials_manager import SMTPCredenti
 class TestSMTPCredentialsManager:
     """Tests for SMTPCredentialsManager"""
 
-    @pytest.fixture(autouse=True)
-    def setup(self):
+    def setup_method(self):
         """Reset singleton before each test"""
         SMTPCredentialsManager._instance = None
 
