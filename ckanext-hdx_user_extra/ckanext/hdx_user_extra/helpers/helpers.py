@@ -1,3 +1,5 @@
+from typing import Optional
+
 import ckan.plugins.toolkit as tk
 import ckan.model as model
 from ckan.types import Context
@@ -9,7 +11,7 @@ from ckanext.hdx_users.helpers.constants import (
 get_action = tk.get_action
 NotFound = tk.ObjectNotFound
 
-def user_extra_value_by_key(key: str, user_id: str):
+def user_extra_value_by_key(key: str, user_id: str) -> Optional[str]:
     """
     Retrieve a user's extra value by key.
 
@@ -38,7 +40,7 @@ def user_extra_value_by_key(key: str, user_id: str):
         return None
     return ue_extra.get(key)
 
-def is_user_extra_email_updated(user_id: str):
+def is_user_extra_email_updated(user_id: str) -> bool:
     """
     Determine whether the onboarding email for a user was marked as updated.
 
