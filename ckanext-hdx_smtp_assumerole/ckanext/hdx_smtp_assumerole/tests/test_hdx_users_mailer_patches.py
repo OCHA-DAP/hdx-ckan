@@ -1,9 +1,8 @@
 # encoding: utf-8
 
+import pytest
 import mock
 from email.header import Header
-
-import pytest
 import ckanext.hdx_smtp_assumerole.helpers.hdx_users_mailer_patches as patches_module
 from ckanext.hdx_smtp_assumerole.helpers.hdx_users_mailer_patches import (
     _get_decoded_str,
