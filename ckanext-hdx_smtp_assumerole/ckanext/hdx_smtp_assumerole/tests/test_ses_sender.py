@@ -1,7 +1,7 @@
 # encoding: utf-8
 
-import unittest
-from unittest.mock import Mock, patch
+import pytest
+import mock
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.mime.base import MIMEBase
@@ -10,13 +10,13 @@ from email import encoders
 from ckanext.hdx_smtp_assumerole.helpers.ses_sender import send_email_via_ses
 
 
-class TestSendEmailViaSes(unittest.TestCase):
+class TestSendEmailViaSes:
     """Tests for send_email_via_ses function"""
 
-    @patch('ckanext.hdx_smtp_assumerole.helpers.ses_sender.boto3')
+    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.ses_sender.boto3')
     def test_send_email_success(self, mock_boto3):
         """Test successful email sending via SES API"""
-        mock_client = Mock()
+        mock_client = mock.Mock()
         mock_client.send_raw_email.return_value = {
             'MessageId': '0100018d1234abcd-12345678-1234-1234-1234-123456789abc-000000'
         }
@@ -45,16 +45,16 @@ class TestSendEmailViaSes(unittest.TestCase):
         # Verify send_raw_email was called
         mock_client.send_raw_email.assert_called_once()
         call_args = mock_client.send_raw_email.call_args[1]
-        self.assertEqual(call_args['Source'], 'sender@example.com')
-        self.assertEqual(call_args['Destinations'], ['recipient@example.com'])
+        assert call_args['Source'] == 'sender@example.com'
+        assert call_args['Destinations'] == ['recipient@example.com']
 
         # Verify result
-        self.assertEqual(result['MessageId'], '0100018d1234abcd-12345678-1234-1234-1234-123456789abc-000000')
+        assert result['MessageId'] == '0100018d1234abcd-12345678-1234-1234-1234-123456789abc-000000'
 
-    @patch('ckanext.hdx_smtp_assumerole.helpers.ses_sender.boto3')
+    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.ses_sender.boto3')
     def test_send_email_with_html(self, mock_boto3):
         """Test sending email with HTML body"""
-        mock_client = Mock()
+        mock_client = mock.Mock()
         mock_client.send_raw_email.return_value = {'MessageId': 'test-message-id'}
         mock_boto3.client.return_value = mock_client
 
@@ -77,14 +77,14 @@ class TestSendEmailViaSes(unittest.TestCase):
         call_args = mock_client.send_raw_email.call_args[1]
         raw_message = call_args['RawMessage']['Data']
         # Content is base64 encoded, so check for MIME multipart/alternative structure
-        self.assertIn('Content-Type: multipart/alternative', raw_message)
-        self.assertIn('Content-Type: text/plain', raw_message)
-        self.assertIn('Content-Type: text/html', raw_message)
+        assert 'Content-Type: multipart/alternative' in raw_message
+        assert 'Content-Type: text/plain' in raw_message
+        assert 'Content-Type: text/html' in raw_message
 
-    @patch('ckanext.hdx_smtp_assumerole.helpers.ses_sender.boto3')
+    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.ses_sender.boto3')
     def test_send_email_html_only(self, mock_boto3):
         """Test sending email with HTML body only (no plain text)"""
-        mock_client = Mock()
+        mock_client = mock.Mock()
         mock_client.send_raw_email.return_value = {'MessageId': 'test-message-id'}
         mock_boto3.client.return_value = mock_client
 
@@ -103,10 +103,10 @@ class TestSendEmailViaSes(unittest.TestCase):
         # Verify send_raw_email was called
         mock_client.send_raw_email.assert_called_once()
 
-    @patch('ckanext.hdx_smtp_assumerole.helpers.ses_sender.boto3')
+    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.ses_sender.boto3')
     def test_send_email_multiple_recipients(self, mock_boto3):
         """Test sending email to multiple recipients"""
-        mock_client = Mock()
+        mock_client = mock.Mock()
         mock_client.send_raw_email.return_value = {'MessageId': 'test-message-id'}
         mock_boto3.client.return_value = mock_client
 
@@ -125,12 +125,12 @@ class TestSendEmailViaSes(unittest.TestCase):
 
         # Verify destinations include all recipients
         call_args = mock_client.send_raw_email.call_args[1]
-        self.assertEqual(call_args['Destinations'], recipients)
+        assert call_args['Destinations'] == recipients
 
-    @patch('ckanext.hdx_smtp_assumerole.helpers.ses_sender.boto3')
+    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.ses_sender.boto3')
     def test_send_email_single_recipient_string(self, mock_boto3):
         """Test sending email to single recipient as string (not list)"""
-        mock_client = Mock()
+        mock_client = mock.Mock()
         mock_client.send_raw_email.return_value = {'MessageId': 'test-message-id'}
         mock_boto3.client.return_value = mock_client
 
@@ -147,12 +147,12 @@ class TestSendEmailViaSes(unittest.TestCase):
 
         # Should convert string to list
         call_args = mock_client.send_raw_email.call_args[1]
-        self.assertEqual(call_args['Destinations'], ['recipient@example.com'])
+        assert call_args['Destinations'] == ['recipient@example.com']
 
-    @patch('ckanext.hdx_smtp_assumerole.helpers.ses_sender.boto3')
+    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.ses_sender.boto3')
     def test_send_email_with_headers(self, mock_boto3):
         """Test sending email with custom headers"""
-        mock_client = Mock()
+        mock_client = mock.Mock()
         mock_client.send_raw_email.return_value = {'MessageId': 'test-message-id'}
         mock_boto3.client.return_value = mock_client
 
@@ -176,22 +176,22 @@ class TestSendEmailViaSes(unittest.TestCase):
         # Verify headers are in the message
         call_args = mock_client.send_raw_email.call_args[1]
         raw_message = call_args['RawMessage']['Data']
-        self.assertIn('Reply-To: noreply@example.com', raw_message)
-        self.assertIn('X-Custom-Header: custom-value', raw_message)
+        assert 'Reply-To: noreply@example.com' in raw_message
+        assert 'X-Custom-Header: custom-value' in raw_message
 
-    @patch('ckanext.hdx_smtp_assumerole.helpers.ses_sender.boto3')
+    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.ses_sender.boto3')
     def test_send_email_ses_error(self, mock_boto3):
         """Test handling of SES API errors"""
         from botocore.exceptions import ClientError
 
-        mock_client = Mock()
+        mock_client = mock.Mock()
         mock_client.send_raw_email.side_effect = ClientError(
             {'Error': {'Code': 'MessageRejected', 'Message': 'Email address not verified'}},
             'SendRawEmail'
         )
         mock_boto3.client.return_value = mock_client
 
-        with self.assertRaises(Exception):
+        with pytest.raises(Exception):
             send_email_via_ses(
                 smtp_from='sender@example.com',
                 recipients=['recipient@example.com'],
@@ -203,10 +203,10 @@ class TestSendEmailViaSes(unittest.TestCase):
                 region='us-east-1'
             )
 
-    @patch('ckanext.hdx_smtp_assumerole.helpers.ses_sender.boto3')
+    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.ses_sender.boto3')
     def test_send_email_with_mime_message(self, mock_boto3):
         """Test sending email with pre-built MIME message (including attachments)"""
-        mock_client = Mock()
+        mock_client = mock.Mock()
         mock_client.send_raw_email.return_value = {'MessageId': 'test-message-id'}
         mock_boto3.client.return_value = mock_client
 
@@ -247,7 +247,7 @@ class TestSendEmailViaSes(unittest.TestCase):
         # Verify the message contains attachment headers and structure
         raw_message = call_args['RawMessage']['Data']
         # Content is base64 encoded, so check for headers and MIME structure
-        self.assertIn('Content-Type: text/html', raw_message)
-        self.assertIn('Content-Disposition: attachment; filename=test.txt', raw_message)
-        self.assertIn('Content-Type: application/octet-stream', raw_message)
-        self.assertIn('Content-Transfer-Encoding: base64', raw_message)
+        assert 'Content-Type: text/html' in raw_message
+        assert 'Content-Disposition: attachment; filename=test.txt' in raw_message
+        assert 'Content-Type: application/octet-stream' in raw_message
+        assert 'Content-Transfer-Encoding: base64' in raw_message

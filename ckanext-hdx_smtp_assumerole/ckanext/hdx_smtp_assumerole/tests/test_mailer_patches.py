@@ -1,7 +1,7 @@
 # encoding: utf-8
 
-import unittest
-from unittest.mock import Mock, patch
+import pytest
+import mock
 from io import BytesIO
 
 from ckanext.hdx_smtp_assumerole.helpers.mailer_patches import (
@@ -14,10 +14,10 @@ from ckanext.hdx_smtp_assumerole.helpers.mailer_patches import (
 )
 
 
-class TestMailerPatches(unittest.TestCase):
+class TestMailerPatches:
     """Tests for mailer_patches module"""
 
-    def tearDown(self):
+    def teardown_method(self):
         """Ensure patches are removed after each test"""
         if is_patched():
             unpatch_mailer_functions()
@@ -26,31 +26,31 @@ class TestMailerPatches(unittest.TestCase):
     def test_patch_mailer_functions_idempotent(self):
         """Test that patching multiple times is safe (idempotent)"""
         patch_mailer_functions()
-        self.assertTrue(is_patched())
+        assert is_patched()
 
         # Patch again - should not cause errors
         patch_mailer_functions()
-        self.assertTrue(is_patched())
+        assert is_patched()
 
     def test_unpatch_mailer_functions(self):
         """Test unpatching restores original functions"""
         patch_mailer_functions()
-        self.assertTrue(is_patched())
+        assert is_patched()
 
         unpatch_mailer_functions()
-        self.assertFalse(is_patched())
+        assert not is_patched()
 
     def test_is_patched_initially_false(self):
         """Test is_patched returns False before patching"""
-        self.assertFalse(is_patched())
+        assert not is_patched()
 
     # patched_mail_user tests
-    @patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.send_email_via_ses')
-    @patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.SMTPCredentialsManager')
+    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.send_email_via_ses')
+    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.SMTPCredentialsManager')
     def test_patched_mail_user_plain_text(self, mock_manager_class, mock_send):
         """Test sending plain text email via patched_mail_user"""
         # Setup mocks
-        mock_manager = Mock()
+        mock_manager = mock.Mock()
         mock_manager.get_ses_credentials.return_value = {
             'access_key': 'AKIATEST',
             'secret_key': 'test-secret',
@@ -79,17 +79,17 @@ class TestMailerPatches(unittest.TestCase):
         # Verify email was sent
         mock_send.assert_called_once()
         call_args = mock_send.call_args[1]
-        self.assertEqual(call_args['recipients'], ['user@example.com'])
-        self.assertEqual(call_args['subject'], 'Test Subject')
-        self.assertEqual(call_args['body'], 'Plain text body')
-        self.assertIn('To', call_args['headers'])
+        assert call_args['recipients'] == ['user@example.com']
+        assert call_args['subject'] == 'Test Subject'
+        assert call_args['body'] == 'Plain text body'
+        assert 'To' in call_args['headers']
 
-    @patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.send_email_via_ses')
-    @patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.SMTPCredentialsManager')
+    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.send_email_via_ses')
+    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.SMTPCredentialsManager')
     def test_patched_mail_user_with_html(self, mock_manager_class, mock_send):
         """Test sending HTML email via patched_mail_user"""
         # Setup mocks
-        mock_manager = Mock()
+        mock_manager = mock.Mock()
         mock_manager.get_ses_credentials.return_value = {
             'access_key': 'AKIATEST',
             'secret_key': 'test-secret',
@@ -98,7 +98,7 @@ class TestMailerPatches(unittest.TestCase):
         }
         mock_manager_class.get_instance.return_value = mock_manager
 
-        user = Mock()
+        user = mock.Mock()
         user.email = 'user@example.com'
         user.display_name = 'Test User'
 
@@ -113,14 +113,14 @@ class TestMailerPatches(unittest.TestCase):
         # Verify MIME message was used (not simple body)
         mock_send.assert_called_once()
         call_args = mock_send.call_args[1]
-        self.assertIn('mime_message', call_args)
-        self.assertIsNotNone(call_args['mime_message'])
+        assert 'mime_message' in call_args
+        assert call_args['mime_message'] is not None
 
-    @patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.send_email_via_ses')
-    @patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.SMTPCredentialsManager')
+    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.send_email_via_ses')
+    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.SMTPCredentialsManager')
     def test_patched_mail_user_html_only(self, mock_manager_class, mock_send):
         """Test sending HTML-only email (no plain text)"""
-        mock_manager = Mock()
+        mock_manager = mock.Mock()
         mock_manager.get_ses_credentials.return_value = {
             'access_key': 'AKIATEST',
             'secret_key': 'test-secret',
@@ -129,7 +129,7 @@ class TestMailerPatches(unittest.TestCase):
         }
         mock_manager_class.get_instance.return_value = mock_manager
 
-        user = Mock()
+        user = mock.Mock()
         user.email = 'user@example.com'
         user.display_name = 'Test User'
 
@@ -142,13 +142,13 @@ class TestMailerPatches(unittest.TestCase):
 
         mock_send.assert_called_once()
         call_args = mock_send.call_args[1]
-        self.assertIn('mime_message', call_args)
+        assert 'mime_message' in call_args
 
-    @patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.send_email_via_ses')
-    @patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.SMTPCredentialsManager')
+    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.send_email_via_ses')
+    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.SMTPCredentialsManager')
     def test_patched_mail_user_with_attachments(self, mock_manager_class, mock_send):
         """Test sending email with attachments"""
-        mock_manager = Mock()
+        mock_manager = mock.Mock()
         mock_manager.get_ses_credentials.return_value = {
             'access_key': 'AKIATEST',
             'secret_key': 'test-secret',
@@ -157,7 +157,7 @@ class TestMailerPatches(unittest.TestCase):
         }
         mock_manager_class.get_instance.return_value = mock_manager
 
-        user = Mock()
+        user = mock.Mock()
         user.email = 'user@example.com'
         user.display_name = 'Test User'
 
@@ -174,16 +174,16 @@ class TestMailerPatches(unittest.TestCase):
 
         mock_send.assert_called_once()
         call_args = mock_send.call_args[1]
-        self.assertIn('mime_message', call_args)
+        assert 'mime_message' in call_args
         # Verify attachment is in MIME message
         mime_msg = call_args['mime_message']
-        self.assertIsNotNone(mime_msg)
+        assert mime_msg is not None
 
-    @patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.send_email_via_ses')
-    @patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.SMTPCredentialsManager')
+    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.send_email_via_ses')
+    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.SMTPCredentialsManager')
     def test_patched_mail_user_with_custom_headers(self, mock_manager_class, mock_send):
         """Test sending email with custom headers"""
-        mock_manager = Mock()
+        mock_manager = mock.Mock()
         mock_manager.get_ses_credentials.return_value = {
             'access_key': 'AKIATEST',
             'secret_key': 'test-secret',
@@ -192,7 +192,7 @@ class TestMailerPatches(unittest.TestCase):
         }
         mock_manager_class.get_instance.return_value = mock_manager
 
-        user = Mock()
+        user = mock.Mock()
         user.email = 'user@example.com'
         user.display_name = 'Test User'
 
@@ -210,13 +210,13 @@ class TestMailerPatches(unittest.TestCase):
 
         mock_send.assert_called_once()
         call_args = mock_send.call_args[1]
-        self.assertIn('To', call_args['headers'])
+        assert 'To' in call_args['headers']
 
-    @patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.send_email_via_ses')
-    @patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.SMTPCredentialsManager')
+    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.send_email_via_ses')
+    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.SMTPCredentialsManager')
     def test_patched_mail_user_recipient_as_dict(self, mock_manager_class, mock_send):
         """Test patched_mail_user with recipient as dict (not User object)"""
-        mock_manager = Mock()
+        mock_manager = mock.Mock()
         mock_manager.get_ses_credentials.return_value = {
             'access_key': 'AKIATEST',
             'secret_key': 'test-secret',
@@ -239,33 +239,33 @@ class TestMailerPatches(unittest.TestCase):
 
         mock_send.assert_called_once()
         call_args = mock_send.call_args[1]
-        self.assertEqual(call_args['recipients'], ['user@example.com'])
+        assert call_args['recipients'] == ['user@example.com']
 
-    @patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.SMTPCredentialsManager')
+    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.SMTPCredentialsManager')
     def test_patched_mail_user_no_credentials_raises(self, mock_manager_class):
         """Test that missing credentials raises exception"""
-        mock_manager = Mock()
+        mock_manager = mock.Mock()
         mock_manager.get_ses_credentials.return_value = None
         mock_manager_class.get_instance.return_value = mock_manager
 
-        user = Mock()
+        user = mock.Mock()
         user.email = 'user@example.com'
 
-        with self.assertRaises(Exception) as context:
+        with pytest.raises(Exception) as exc_info:
             patched_mail_user(
                 recipient=user,
                 subject='Test',
                 body='Body'
             )
 
-        self.assertIn('No SES credentials available', str(context.exception))
+        assert 'No SES credentials available' in str(exc_info.value)
 
     # patched_mail_recipient tests
-    @patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.send_email_via_ses')
-    @patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.SMTPCredentialsManager')
+    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.send_email_via_ses')
+    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.SMTPCredentialsManager')
     def test_patched_mail_recipient_plain_text(self, mock_manager_class, mock_send):
         """Test patched_mail_recipient with plain text"""
-        mock_manager = Mock()
+        mock_manager = mock.Mock()
         mock_manager.get_ses_credentials.return_value = {
             'access_key': 'AKIATEST',
             'secret_key': 'test-secret',
@@ -283,15 +283,15 @@ class TestMailerPatches(unittest.TestCase):
 
         mock_send.assert_called_once()
         call_args = mock_send.call_args[1]
-        self.assertEqual(call_args['recipients'], ['user@example.com'])
-        self.assertEqual(call_args['subject'], 'Test Subject')
-        self.assertEqual(call_args['body'], 'Plain text body')
+        assert call_args['recipients'] == ['user@example.com']
+        assert call_args['subject'] == 'Test Subject'
+        assert call_args['body'] == 'Plain text body'
 
-    @patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.send_email_via_ses')
-    @patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.SMTPCredentialsManager')
+    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.send_email_via_ses')
+    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.SMTPCredentialsManager')
     def test_patched_mail_recipient_with_html(self, mock_manager_class, mock_send):
         """Test patched_mail_recipient with HTML"""
-        mock_manager = Mock()
+        mock_manager = mock.Mock()
         mock_manager.get_ses_credentials.return_value = {
             'access_key': 'AKIATEST',
             'secret_key': 'test-secret',
@@ -310,13 +310,13 @@ class TestMailerPatches(unittest.TestCase):
 
         mock_send.assert_called_once()
         call_args = mock_send.call_args[1]
-        self.assertIn('mime_message', call_args)
+        assert 'mime_message' in call_args
 
-    @patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.send_email_via_ses')
-    @patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.SMTPCredentialsManager')
+    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.send_email_via_ses')
+    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.SMTPCredentialsManager')
     def test_patched_mail_recipient_with_attachments(self, mock_manager_class, mock_send):
         """Test patched_mail_recipient with attachments"""
-        mock_manager = Mock()
+        mock_manager = mock.Mock()
         mock_manager.get_ses_credentials.return_value = {
             'access_key': 'AKIATEST',
             'secret_key': 'test-secret',
@@ -338,16 +338,16 @@ class TestMailerPatches(unittest.TestCase):
 
         mock_send.assert_called_once()
         call_args = mock_send.call_args[1]
-        self.assertIn('mime_message', call_args)
+        assert 'mime_message' in call_args
 
-    @patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.SMTPCredentialsManager')
+    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.SMTPCredentialsManager')
     def test_patched_mail_recipient_no_credentials_raises(self, mock_manager_class):
         """Test that missing credentials raises exception"""
-        mock_manager = Mock()
+        mock_manager = mock.Mock()
         mock_manager.get_ses_credentials.return_value = None
         mock_manager_class.get_instance.return_value = mock_manager
 
-        with self.assertRaises(Exception) as context:
+        with pytest.raises(Exception) as exc_info:
             patched_mail_recipient(
                 recipient_name='Test',
                 recipient_email='user@example.com',
@@ -355,7 +355,7 @@ class TestMailerPatches(unittest.TestCase):
                 body='Body'
             )
 
-        self.assertIn('No SES credentials available', str(context.exception))
+        assert 'No SES credentials available' in str(exc_info.value)
 
     # Helper function tests
     def test_build_mime_message_plain_text(self):
@@ -372,11 +372,11 @@ class TestMailerPatches(unittest.TestCase):
         )
 
         # From and Reply-To should include display name
-        self.assertEqual(msg['From'], '"Humanitarian Data Exchange (HDX)" <sender@example.com>')
-        self.assertEqual(msg['Reply-To'], '"Humanitarian Data Exchange (HDX)" <sender@example.com>')
-        self.assertEqual(msg['Subject'], 'Test Subject')
-        self.assertIn('Recipient Name', msg['To'])
-        self.assertIn('recipient@example.com', msg['To'])
+        assert msg['From'] == '"Humanitarian Data Exchange (HDX)" <sender@example.com>'
+        assert msg['Reply-To'] == '"Humanitarian Data Exchange (HDX)" <sender@example.com>'
+        assert msg['Subject'] == 'Test Subject'
+        assert 'Recipient Name' in msg['To']
+        assert 'recipient@example.com' in msg['To']
 
     def test_build_mime_message_with_html(self):
         """Test _build_mime_message_with_attachments with HTML"""
@@ -392,7 +392,7 @@ class TestMailerPatches(unittest.TestCase):
         )
 
         # Check that message is multipart
-        self.assertTrue(msg.is_multipart())
+        assert msg.is_multipart()
 
     def test_build_mime_message_with_attachment(self):
         """Test _build_mime_message_with_attachments with attachment"""
@@ -411,9 +411,9 @@ class TestMailerPatches(unittest.TestCase):
         )
 
         # Check that attachment was added
-        self.assertTrue(msg.is_multipart())
+        assert msg.is_multipart()
         msg_string = msg.as_string()
-        self.assertIn('test.txt', msg_string)
+        assert 'test.txt' in msg_string
 
     def test_build_mime_message_attachment_auto_detect_media_type(self):
         """Test _build_mime_message_with_attachments auto-detects media type"""
@@ -433,22 +433,22 @@ class TestMailerPatches(unittest.TestCase):
         )
 
         msg_string = msg.as_string()
-        self.assertIn('report.pdf', msg_string)
+        assert 'report.pdf' in msg_string
 
 
-class TestMailerPatchesErrorHandling(unittest.TestCase):
+class TestMailerPatchesErrorHandling:
     """Tests for error handling in mailer_patches"""
 
-    def tearDown(self):
+    def teardown_method(self):
         """Ensure patches are removed after each test"""
         if is_patched():
             unpatch_mailer_functions()
 
-    @patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.send_email_via_ses')
-    @patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.SMTPCredentialsManager')
+    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.send_email_via_ses')
+    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.SMTPCredentialsManager')
     def test_patched_mail_user_missing_email(self, mock_manager_class, mock_send):
         """Test error handling when recipient has no email"""
-        mock_manager = Mock()
+        mock_manager = mock.Mock()
         mock_manager.get_ses_credentials.return_value = {
             'access_key': 'AKIATEST',
             'secret_key': 'test-secret',
@@ -474,13 +474,13 @@ class TestMailerPatchesErrorHandling(unittest.TestCase):
         # Should still call send_email_via_ses with None email
         mock_send.assert_called_once()
         call_args = mock_send.call_args[1]
-        self.assertEqual(call_args['recipients'], [None])
+        assert call_args['recipients'] == [None]
 
-    @patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.send_email_via_ses')
-    @patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.SMTPCredentialsManager')
+    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.send_email_via_ses')
+    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.SMTPCredentialsManager')
     def test_patched_mail_user_ses_error_propagates(self, mock_manager_class, mock_send):
         """Test that SES errors are propagated to caller"""
-        mock_manager = Mock()
+        mock_manager = mock.Mock()
         mock_manager.get_ses_credentials.return_value = {
             'access_key': 'AKIATEST',
             'secret_key': 'test-secret',
@@ -497,20 +497,20 @@ class TestMailerPatchesErrorHandling(unittest.TestCase):
             'display_name': 'Test User'
         }
 
-        with self.assertRaises(Exception) as context:
+        with pytest.raises(Exception) as exc_info:
             patched_mail_user(
                 recipient=user,
                 subject='Test',
                 body='Body'
             )
 
-        self.assertIn('MessageRejected', str(context.exception))
+        assert 'MessageRejected' in str(exc_info.value)
 
-    @patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.send_email_via_ses')
-    @patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.SMTPCredentialsManager')
+    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.send_email_via_ses')
+    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.SMTPCredentialsManager')
     def test_patched_mail_user_credentials_refresh_error(self, mock_manager_class, mock_send):
         """Test error handling when credential refresh fails"""
-        mock_manager = Mock()
+        mock_manager = mock.Mock()
         # Simulate credential refresh failure
         mock_manager.ensure_fresh_credentials.side_effect = Exception('Failed to refresh credentials')
         mock_manager_class.get_instance.return_value = mock_manager
@@ -520,20 +520,20 @@ class TestMailerPatchesErrorHandling(unittest.TestCase):
             'display_name': 'Test User'
         }
 
-        with self.assertRaises(Exception) as context:
+        with pytest.raises(Exception) as exc_info:
             patched_mail_user(
                 recipient=user,
                 subject='Test',
                 body='Body'
             )
 
-        self.assertIn('Failed to refresh credentials', str(context.exception))
+        assert 'Failed to refresh credentials' in str(exc_info.value)
 
-    @patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.send_email_via_ses')
-    @patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.SMTPCredentialsManager')
+    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.send_email_via_ses')
+    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.SMTPCredentialsManager')
     def test_patched_mail_recipient_empty_email(self, mock_manager_class, mock_send):
         """Test error handling with empty email string"""
-        mock_manager = Mock()
+        mock_manager = mock.Mock()
         mock_manager.get_ses_credentials.return_value = {
             'access_key': 'AKIATEST',
             'secret_key': 'test-secret',
@@ -552,13 +552,13 @@ class TestMailerPatchesErrorHandling(unittest.TestCase):
 
         mock_send.assert_called_once()
         call_args = mock_send.call_args[1]
-        self.assertEqual(call_args['recipients'], [''])
+        assert call_args['recipients'] == ['']
 
-    @patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.send_email_via_ses')
-    @patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.SMTPCredentialsManager')
+    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.send_email_via_ses')
+    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.SMTPCredentialsManager')
     def test_patched_mail_user_large_attachment(self, mock_manager_class, mock_send):
         """Test handling of large attachments (edge case)"""
-        mock_manager = Mock()
+        mock_manager = mock.Mock()
         mock_manager.get_ses_credentials.return_value = {
             'access_key': 'AKIATEST',
             'secret_key': 'test-secret',
@@ -586,13 +586,13 @@ class TestMailerPatchesErrorHandling(unittest.TestCase):
 
         mock_send.assert_called_once()
         call_args = mock_send.call_args[1]
-        self.assertIn('mime_message', call_args)
+        assert 'mime_message' in call_args
 
-    @patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.send_email_via_ses')
-    @patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.SMTPCredentialsManager')
+    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.send_email_via_ses')
+    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.SMTPCredentialsManager')
     def test_patched_mail_user_multiple_attachments(self, mock_manager_class, mock_send):
         """Test handling multiple attachments"""
-        mock_manager = Mock()
+        mock_manager = mock.Mock()
         mock_manager.get_ses_credentials.return_value = {
             'access_key': 'AKIATEST',
             'secret_key': 'test-secret',
@@ -626,15 +626,15 @@ class TestMailerPatchesErrorHandling(unittest.TestCase):
         msg_string = mime_msg.as_string()
 
         # Verify all attachments are present
-        self.assertIn('file1.txt', msg_string)
-        self.assertIn('file2.pdf', msg_string)
-        self.assertIn('file3.jpg', msg_string)
+        assert 'file1.txt' in msg_string
+        assert 'file2.pdf' in msg_string
+        assert 'file3.jpg' in msg_string
 
-    @patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.send_email_via_ses')
-    @patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.SMTPCredentialsManager')
+    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.send_email_via_ses')
+    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.SMTPCredentialsManager')
     def test_patched_mail_user_special_chars_in_headers(self, mock_manager_class, mock_send):
         """Test handling of special characters in email headers"""
-        mock_manager = Mock()
+        mock_manager = mock.Mock()
         mock_manager.get_ses_credentials.return_value = {
             'access_key': 'AKIATEST',
             'secret_key': 'test-secret',
@@ -656,11 +656,11 @@ class TestMailerPatchesErrorHandling(unittest.TestCase):
 
         mock_send.assert_called_once()
 
-    @patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.send_email_via_ses')
-    @patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.SMTPCredentialsManager')
+    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.send_email_via_ses')
+    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.SMTPCredentialsManager')
     def test_patched_mail_recipient_none_recipient_name(self, mock_manager_class, mock_send):
         """Test mail_recipient with None as recipient name"""
-        mock_manager = Mock()
+        mock_manager = mock.Mock()
         mock_manager.get_ses_credentials.return_value = {
             'access_key': 'AKIATEST',
             'secret_key': 'test-secret',
@@ -678,8 +678,8 @@ class TestMailerPatchesErrorHandling(unittest.TestCase):
 
         mock_send.assert_called_once()
 
-    @patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.send_email_via_ses')
-    @patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.SMTPCredentialsManager')
+    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.send_email_via_ses')
+    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.SMTPCredentialsManager')
     def test_build_mime_with_attachment_no_media_type(self, mock_manager_class, mock_send):
         """Test MIME building with attachment without explicit media type"""
         # Test the helper function directly
@@ -699,16 +699,16 @@ class TestMailerPatchesErrorHandling(unittest.TestCase):
         )
 
         msg_string = msg.as_string()
-        self.assertIn('unknown.xyz', msg_string)
+        assert 'unknown.xyz' in msg_string
         # Should default to application/octet-stream
-        self.assertIn('application/octet-stream', msg_string)
+        assert 'application/octet-stream' in msg_string
 
-    @patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.send_email_via_ses')
-    @patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.SMTPCredentialsManager')
-    @patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.tk')
+    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.send_email_via_ses')
+    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.SMTPCredentialsManager')
+    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.tk')
     def test_patched_mail_user_missing_mail_from_config(self, mock_tk, mock_manager_class, mock_send):
         """Test behavior when mail_from config is missing"""
-        mock_manager = Mock()
+        mock_manager = mock.Mock()
         mock_manager.get_ses_credentials.return_value = {
             'access_key': 'AKIATEST',
             'secret_key': 'test-secret',
@@ -735,4 +735,4 @@ class TestMailerPatchesErrorHandling(unittest.TestCase):
         mock_send.assert_called_once()
         call_args = mock_send.call_args[1]
         # smtp_from should be None when config is missing
-        self.assertIsNone(call_args['smtp_from'])
+        assert call_args['smtp_from'] is None
