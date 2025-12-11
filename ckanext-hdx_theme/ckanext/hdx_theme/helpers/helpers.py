@@ -1144,6 +1144,13 @@ def _check_notifications_enabled_for_object(object_type: ObjectType, object_id: 
         if is_archived or not has_data_list:
             log.info(f'Notifications disabled for object: {object_identifier}')
             return False
+    elif object_type == ObjectType.ORGANIZATION and object_dict:
+        is_inactive = str(object_dict.get('closed_organization', False)).lower() == 'true'
+        log.debug(f'Object properties - is_inactive: {is_inactive}')
+
+        if is_inactive:
+            log.info(f'Notifications disabled for object: {object_identifier}')
+            return False
 
     if config.get('hdx.notifications.enabled_objects_csv'):
         log.info('Using cache for enabled objects for notifications')

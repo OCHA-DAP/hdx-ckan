@@ -1,7 +1,7 @@
 # encoding: utf-8
 
-import unittest
-from unittest.mock import Mock, patch
+import pytest
+import mock
 from datetime import datetime, timedelta, timezone
 
 from ckanext.hdx_smtp_assumerole.plugin import (
@@ -13,7 +13,7 @@ from ckanext.hdx_smtp_assumerole.plugin import (
 from ckanext.hdx_smtp_assumerole.helpers.smtp_assume_role import SMTPAssumeRoleException
 
 
-class TestRunOnStartup(unittest.TestCase):
+class TestRunOnStartup:
     """Tests for run_on_startup function"""
 
     def test_disabled_exits_early(self):
@@ -32,9 +32,9 @@ class TestRunOnStartup(unittest.TestCase):
         # Should not raise any exceptions, just return early
         run_on_startup(config)
 
-    @patch('ckanext.hdx_smtp_assumerole.plugin.patch_hdx_users_mailer')
-    @patch('ckanext.hdx_smtp_assumerole.plugin.patch_mailer_functions')
-    @patch('ckanext.hdx_smtp_assumerole.plugin.SMTPCredentialsManager')
+    @mock.patch('ckanext.hdx_smtp_assumerole.plugin.patch_hdx_users_mailer')
+    @mock.patch('ckanext.hdx_smtp_assumerole.plugin.patch_mailer_functions')
+    @mock.patch('ckanext.hdx_smtp_assumerole.plugin.SMTPCredentialsManager')
     def test_enabled_missing_role_arn(self, mock_manager_class, mock_patch_mailer, mock_patch_hdx):
         """Test that missing role_arn raises exception"""
         config = {
@@ -43,14 +43,14 @@ class TestRunOnStartup(unittest.TestCase):
             # Missing role_arn
         }
 
-        with self.assertRaises(SMTPAssumeRoleException) as ctx:
+        with pytest.raises(SMTPAssumeRoleException) as exc_info:
             run_on_startup(config)
 
-        self.assertIn('role_arn is required', str(ctx.exception))
+        assert 'role_arn is required' in str(exc_info.value)
 
-    @patch('ckanext.hdx_smtp_assumerole.plugin.patch_hdx_users_mailer')
-    @patch('ckanext.hdx_smtp_assumerole.plugin.patch_mailer_functions')
-    @patch('ckanext.hdx_smtp_assumerole.plugin.SMTPCredentialsManager')
+    @mock.patch('ckanext.hdx_smtp_assumerole.plugin.patch_hdx_users_mailer')
+    @mock.patch('ckanext.hdx_smtp_assumerole.plugin.patch_mailer_functions')
+    @mock.patch('ckanext.hdx_smtp_assumerole.plugin.SMTPCredentialsManager')
     def test_enabled_missing_region(self, mock_manager_class, mock_patch_mailer, mock_patch_hdx):
         """Test that missing region raises exception"""
         config = {
@@ -59,19 +59,19 @@ class TestRunOnStartup(unittest.TestCase):
             # Missing region
         }
 
-        with self.assertRaises(SMTPAssumeRoleException) as ctx:
+        with pytest.raises(SMTPAssumeRoleException) as exc_info:
             run_on_startup(config)
 
-        self.assertIn('region is required', str(ctx.exception))
+        assert 'region is required' in str(exc_info.value)
 
-    @patch('ckanext.hdx_smtp_assumerole.plugin.patch_hdx_users_mailer')
-    @patch('ckanext.hdx_smtp_assumerole.plugin.patch_mailer_functions')
-    @patch('ckanext.hdx_smtp_assumerole.plugin.SMTPCredentialsManager')
+    @mock.patch('ckanext.hdx_smtp_assumerole.plugin.patch_hdx_users_mailer')
+    @mock.patch('ckanext.hdx_smtp_assumerole.plugin.patch_mailer_functions')
+    @mock.patch('ckanext.hdx_smtp_assumerole.plugin.SMTPCredentialsManager')
     def test_enabled_success(self, mock_manager_class, mock_patch_mailer, mock_patch_hdx):
         """Test successful plugin initialization when enabled"""
         expiration = datetime.now(timezone.utc) + timedelta(hours=1)
 
-        mock_manager = Mock()
+        mock_manager = mock.Mock()
         mock_manager.get_credentials_info.return_value = {
             'initialized': True,
             'has_credentials': True,
@@ -96,14 +96,14 @@ class TestRunOnStartup(unittest.TestCase):
         mock_patch_mailer.assert_called_once()
         mock_patch_hdx.assert_called_once()
 
-    @patch('ckanext.hdx_smtp_assumerole.plugin.patch_hdx_users_mailer')
-    @patch('ckanext.hdx_smtp_assumerole.plugin.patch_mailer_functions')
-    @patch('ckanext.hdx_smtp_assumerole.plugin.SMTPCredentialsManager')
+    @mock.patch('ckanext.hdx_smtp_assumerole.plugin.patch_hdx_users_mailer')
+    @mock.patch('ckanext.hdx_smtp_assumerole.plugin.patch_mailer_functions')
+    @mock.patch('ckanext.hdx_smtp_assumerole.plugin.SMTPCredentialsManager')
     def test_enabled_with_smtp_domain(self, mock_manager_class, mock_patch_mailer, mock_patch_hdx):
         """Test that smtp_domain configures email addresses"""
         expiration = datetime.now(timezone.utc) + timedelta(hours=1)
 
-        mock_manager = Mock()
+        mock_manager = mock.Mock()
         mock_manager.get_credentials_info.return_value = {
             'initialized': True,
             'has_credentials': True,
@@ -123,18 +123,18 @@ class TestRunOnStartup(unittest.TestCase):
         run_on_startup(config)
 
         # Verify email addresses were configured
-        self.assertEqual(config['email_to'], 'ckan@example.com')
-        self.assertEqual(config['error_email_from'], 'ckan@example.com')
-        self.assertEqual(config['smtp.mail_from'], 'hdx@example.com')
+        assert config['email_to'] == 'ckan@example.com'
+        assert config['error_email_from'] == 'ckan@example.com'
+        assert config['smtp.mail_from'] == 'hdx@example.com'
 
-    @patch('ckanext.hdx_smtp_assumerole.plugin.patch_hdx_users_mailer')
-    @patch('ckanext.hdx_smtp_assumerole.plugin.patch_mailer_functions')
-    @patch('ckanext.hdx_smtp_assumerole.plugin.SMTPCredentialsManager')
+    @mock.patch('ckanext.hdx_smtp_assumerole.plugin.patch_hdx_users_mailer')
+    @mock.patch('ckanext.hdx_smtp_assumerole.plugin.patch_mailer_functions')
+    @mock.patch('ckanext.hdx_smtp_assumerole.plugin.SMTPCredentialsManager')
     def test_enabled_smtp_domain_no_override(self, mock_manager_class, mock_patch_mailer, mock_patch_hdx):
         """Test that smtp_domain doesn't override existing email addresses"""
         expiration = datetime.now(timezone.utc) + timedelta(hours=1)
 
-        mock_manager = Mock()
+        mock_manager = mock.Mock()
         mock_manager.get_credentials_info.return_value = {
             'initialized': True,
             'has_credentials': True,
@@ -156,13 +156,13 @@ class TestRunOnStartup(unittest.TestCase):
         run_on_startup(config)
 
         # Verify existing values are not overridden
-        self.assertEqual(config['email_to'], 'existing@other.com')
-        self.assertEqual(config['smtp.mail_from'], 'existing@other.com')
+        assert config['email_to'] == 'existing@other.com'
+        assert config['smtp.mail_from'] == 'existing@other.com'
         # But error_email_from should be set since it wasn't present
-        self.assertEqual(config['error_email_from'], 'ckan@example.com')
+        assert config['error_email_from'] == 'ckan@example.com'
 
 
-class TestHDXSMTPAssumeRolePlugin(unittest.TestCase):
+class TestHDXSMTPAssumeRolePlugin:
     """Tests for HDXSMTPAssumeRolePlugin class"""
 
     def test_plugin_implements_interfaces(self):
@@ -173,15 +173,15 @@ class TestHDXSMTPAssumeRolePlugin(unittest.TestCase):
 
         # Check that plugin has the required methods from interfaces
         # IConfigurer requires update_config
-        self.assertTrue(hasattr(plugin, 'update_config'))
-        self.assertTrue(callable(getattr(plugin, 'update_config')))
+        assert hasattr(plugin, 'update_config')
+        assert callable(getattr(plugin, 'update_config'))
 
         # IMiddleware requires make_middleware
-        self.assertTrue(hasattr(plugin, 'make_middleware'))
-        self.assertTrue(callable(getattr(plugin, 'make_middleware')))
+        assert hasattr(plugin, 'make_middleware')
+        assert callable(getattr(plugin, 'make_middleware'))
 
         # Verify plugin class is registered
-        self.assertIsInstance(plugin, p.SingletonPlugin)
+        assert isinstance(plugin, p.SingletonPlugin)
 
     def test_update_config(self):
         """Test update_config method"""
@@ -191,29 +191,29 @@ class TestHDXSMTPAssumeRolePlugin(unittest.TestCase):
         # Should not raise any exceptions
         plugin.update_config(config)
 
-    @patch('ckanext.hdx_smtp_assumerole.plugin.run_on_startup')
+    @mock.patch('ckanext.hdx_smtp_assumerole.plugin.run_on_startup')
     def test_make_middleware_runs_once(self, mock_run_on_startup):
         """Test that make_middleware only runs startup tasks once"""
         HDXSMTPAssumeRolePlugin._HDXSMTPAssumeRolePlugin__startup_tasks_done = False
 
         plugin = HDXSMTPAssumeRolePlugin()
-        app = Mock()
+        app = mock.Mock()
         config = {'test': 'config'}
 
         # First call should run startup
         result1 = plugin.make_middleware(app, config)
-        self.assertEqual(mock_run_on_startup.call_count, 1)
+        assert mock_run_on_startup.call_count == 1
 
         # Second call should not run startup again
         result2 = plugin.make_middleware(app, config)
-        self.assertEqual(mock_run_on_startup.call_count, 1)
+        assert mock_run_on_startup.call_count == 1
 
         # Should return the app unchanged
-        self.assertEqual(result1, app)
-        self.assertEqual(result2, app)
+        assert result1 == app
+        assert result2 == app
 
 
-class TestValidateRegion(unittest.TestCase):
+class TestValidateRegion:
     """Tests for _validate_region function"""
 
     def test_valid_region_us_east_1(self):
@@ -235,43 +235,43 @@ class TestValidateRegion(unittest.TestCase):
 
     def test_invalid_region_no_dashes(self):
         """Test invalid region: no dashes"""
-        with self.assertRaises(SMTPAssumeRoleException) as ctx:
+        with pytest.raises(SMTPAssumeRoleException) as exc_info:
             _validate_region('useast1')
-        self.assertIn('Invalid AWS region format', str(ctx.exception))
-        self.assertIn('us-east-1', str(ctx.exception))
+        assert 'Invalid AWS region format' in str(exc_info.value)
+        assert 'us-east-1' in str(exc_info.value)
 
     def test_invalid_region_uppercase(self):
         """Test invalid region: uppercase letters"""
-        with self.assertRaises(SMTPAssumeRoleException) as ctx:
+        with pytest.raises(SMTPAssumeRoleException) as exc_info:
             _validate_region('US-EAST-1')
-        self.assertIn('Invalid AWS region format', str(ctx.exception))
+        assert 'Invalid AWS region format' in str(exc_info.value)
 
     def test_invalid_region_too_many_parts(self):
         """Test invalid region: too many parts"""
-        with self.assertRaises(SMTPAssumeRoleException) as ctx:
+        with pytest.raises(SMTPAssumeRoleException) as exc_info:
             _validate_region('us-east-1-extra')
-        self.assertIn('Invalid AWS region format', str(ctx.exception))
+        assert 'Invalid AWS region format' in str(exc_info.value)
 
     def test_invalid_region_empty(self):
         """Test invalid region: empty string"""
-        with self.assertRaises(SMTPAssumeRoleException) as ctx:
+        with pytest.raises(SMTPAssumeRoleException) as exc_info:
             _validate_region('')
-        self.assertIn('AWS region cannot be empty', str(ctx.exception))
+        assert 'AWS region cannot be empty' in str(exc_info.value)
 
     def test_invalid_region_special_chars(self):
         """Test invalid region: special characters"""
-        with self.assertRaises(SMTPAssumeRoleException) as ctx:
+        with pytest.raises(SMTPAssumeRoleException) as exc_info:
             _validate_region('us_east_1')
-        self.assertIn('Invalid AWS region format', str(ctx.exception))
+        assert 'Invalid AWS region format' in str(exc_info.value)
 
     def test_invalid_region_no_number(self):
         """Test invalid region: missing number"""
-        with self.assertRaises(SMTPAssumeRoleException) as ctx:
+        with pytest.raises(SMTPAssumeRoleException) as exc_info:
             _validate_region('us-east-')
-        self.assertIn('Invalid AWS region format', str(ctx.exception))
+        assert 'Invalid AWS region format' in str(exc_info.value)
 
 
-class TestValidateRoleArn(unittest.TestCase):
+class TestValidateRoleArn:
     """Tests for _validate_role_arn function"""
 
     # Full ARN format tests
@@ -290,34 +290,34 @@ class TestValidateRoleArn(unittest.TestCase):
 
     def test_invalid_arn_wrong_service(self):
         """Test invalid ARN: wrong service (not iam)"""
-        with self.assertRaises(SMTPAssumeRoleException) as ctx:
+        with pytest.raises(SMTPAssumeRoleException) as exc_info:
             _validate_role_arn('arn:aws:s3::123456789012:role/MyRole')
-        self.assertIn('Invalid IAM role ARN format', str(ctx.exception))
-        self.assertIn('arn:aws:iam::ACCOUNT_ID:role/ROLE_NAME', str(ctx.exception))
+        assert 'Invalid IAM role ARN format' in str(exc_info.value)
+        assert 'arn:aws:iam::ACCOUNT_ID:role/ROLE_NAME' in str(exc_info.value)
 
     def test_invalid_arn_missing_account_id(self):
         """Test invalid ARN: missing account ID"""
-        with self.assertRaises(SMTPAssumeRoleException) as ctx:
+        with pytest.raises(SMTPAssumeRoleException) as exc_info:
             _validate_role_arn('arn:aws:iam:::role/MyRole')
-        self.assertIn('Invalid IAM role ARN format', str(ctx.exception))
+        assert 'Invalid IAM role ARN format' in str(exc_info.value)
 
     def test_invalid_arn_short_account_id(self):
         """Test invalid ARN: account ID too short"""
-        with self.assertRaises(SMTPAssumeRoleException) as ctx:
+        with pytest.raises(SMTPAssumeRoleException) as exc_info:
             _validate_role_arn('arn:aws:iam::12345:role/MyRole')
-        self.assertIn('Invalid IAM role ARN format', str(ctx.exception))
+        assert 'Invalid IAM role ARN format' in str(exc_info.value)
 
     def test_invalid_arn_no_role_name(self):
         """Test invalid ARN: no role name after role/"""
-        with self.assertRaises(SMTPAssumeRoleException) as ctx:
+        with pytest.raises(SMTPAssumeRoleException) as exc_info:
             _validate_role_arn('arn:aws:iam::123456789012:role/')
-        self.assertIn('Invalid IAM role ARN format', str(ctx.exception))
+        assert 'Invalid IAM role ARN format' in str(exc_info.value)
 
     def test_invalid_arn_wrong_resource_type(self):
         """Test invalid ARN: wrong resource type (not role)"""
-        with self.assertRaises(SMTPAssumeRoleException) as ctx:
+        with pytest.raises(SMTPAssumeRoleException) as exc_info:
             _validate_role_arn('arn:aws:iam::123456789012:user/MyUser')
-        self.assertIn('Invalid IAM role ARN format', str(ctx.exception))
+        assert 'Invalid IAM role ARN format' in str(exc_info.value)
 
     # Role name format tests
     def test_valid_role_name_simple(self):
@@ -354,36 +354,36 @@ class TestValidateRoleArn(unittest.TestCase):
 
     def test_invalid_role_name_with_slash(self):
         """Test invalid role name: contains slash (not full ARN)"""
-        with self.assertRaises(SMTPAssumeRoleException) as ctx:
+        with pytest.raises(SMTPAssumeRoleException) as exc_info:
             _validate_role_arn('My/Role')
-        self.assertIn('Invalid IAM role name', str(ctx.exception))
-        self.assertIn('+ = , . @ -', str(ctx.exception))
+        assert 'Invalid IAM role name' in str(exc_info.value)
+        assert '+ = , . @ -' in str(exc_info.value)
 
     def test_invalid_role_name_with_space(self):
         """Test invalid role name: contains space"""
-        with self.assertRaises(SMTPAssumeRoleException) as ctx:
+        with pytest.raises(SMTPAssumeRoleException) as exc_info:
             _validate_role_arn('My Role')
-        self.assertIn('Invalid IAM role name', str(ctx.exception))
+        assert 'Invalid IAM role name' in str(exc_info.value)
 
     def test_invalid_role_name_with_special_char(self):
         """Test invalid role name: contains invalid special character"""
-        with self.assertRaises(SMTPAssumeRoleException) as ctx:
+        with pytest.raises(SMTPAssumeRoleException) as exc_info:
             _validate_role_arn('My#Role')
-        self.assertIn('Invalid IAM role name', str(ctx.exception))
+        assert 'Invalid IAM role name' in str(exc_info.value)
 
     def test_invalid_role_name_empty(self):
         """Test invalid role name: empty string"""
-        with self.assertRaises(SMTPAssumeRoleException) as ctx:
+        with pytest.raises(SMTPAssumeRoleException) as exc_info:
             _validate_role_arn('')
-        self.assertIn('IAM role ARN or name cannot be empty', str(ctx.exception))
+        assert 'IAM role ARN or name cannot be empty' in str(exc_info.value)
 
 
-class TestRunOnStartupValidation(unittest.TestCase):
+class TestRunOnStartupValidation:
     """Tests for validation in run_on_startup function"""
 
-    @patch('ckanext.hdx_smtp_assumerole.plugin.patch_hdx_users_mailer')
-    @patch('ckanext.hdx_smtp_assumerole.plugin.patch_mailer_functions')
-    @patch('ckanext.hdx_smtp_assumerole.plugin.SMTPCredentialsManager')
+    @mock.patch('ckanext.hdx_smtp_assumerole.plugin.patch_hdx_users_mailer')
+    @mock.patch('ckanext.hdx_smtp_assumerole.plugin.patch_mailer_functions')
+    @mock.patch('ckanext.hdx_smtp_assumerole.plugin.SMTPCredentialsManager')
     def test_invalid_region_raises(self, mock_manager_class, mock_patch_mailer, mock_patch_hdx):
         """Test that invalid region format raises exception"""
         config = {
@@ -392,14 +392,14 @@ class TestRunOnStartupValidation(unittest.TestCase):
             'ckanext.hdx_smtp_assumerole.region': 'INVALID_REGION'
         }
 
-        with self.assertRaises(SMTPAssumeRoleException) as ctx:
+        with pytest.raises(SMTPAssumeRoleException) as exc_info:
             run_on_startup(config)
 
-        self.assertIn('Invalid AWS region format', str(ctx.exception))
+        assert 'Invalid AWS region format' in str(exc_info.value)
 
-    @patch('ckanext.hdx_smtp_assumerole.plugin.patch_hdx_users_mailer')
-    @patch('ckanext.hdx_smtp_assumerole.plugin.patch_mailer_functions')
-    @patch('ckanext.hdx_smtp_assumerole.plugin.SMTPCredentialsManager')
+    @mock.patch('ckanext.hdx_smtp_assumerole.plugin.patch_hdx_users_mailer')
+    @mock.patch('ckanext.hdx_smtp_assumerole.plugin.patch_mailer_functions')
+    @mock.patch('ckanext.hdx_smtp_assumerole.plugin.SMTPCredentialsManager')
     def test_invalid_role_arn_raises(self, mock_manager_class, mock_patch_mailer, mock_patch_hdx):
         """Test that invalid role ARN format raises exception"""
         config = {
@@ -408,19 +408,19 @@ class TestRunOnStartupValidation(unittest.TestCase):
             'ckanext.hdx_smtp_assumerole.region': 'us-east-1'
         }
 
-        with self.assertRaises(SMTPAssumeRoleException) as ctx:
+        with pytest.raises(SMTPAssumeRoleException) as exc_info:
             run_on_startup(config)
 
-        self.assertIn('Invalid IAM role name', str(ctx.exception))
+        assert 'Invalid IAM role name' in str(exc_info.value)
 
-    @patch('ckanext.hdx_smtp_assumerole.plugin.patch_hdx_users_mailer')
-    @patch('ckanext.hdx_smtp_assumerole.plugin.patch_mailer_functions')
-    @patch('ckanext.hdx_smtp_assumerole.plugin.SMTPCredentialsManager')
+    @mock.patch('ckanext.hdx_smtp_assumerole.plugin.patch_hdx_users_mailer')
+    @mock.patch('ckanext.hdx_smtp_assumerole.plugin.patch_mailer_functions')
+    @mock.patch('ckanext.hdx_smtp_assumerole.plugin.SMTPCredentialsManager')
     def test_valid_role_name_passes(self, mock_manager_class, mock_patch_mailer, mock_patch_hdx):
         """Test that valid role name passes validation"""
         expiration = datetime.now(timezone.utc) + timedelta(hours=1)
 
-        mock_manager = Mock()
+        mock_manager = mock.Mock()
         mock_manager.get_credentials_info.return_value = {
             'initialized': True,
             'has_credentials': True,
@@ -441,14 +441,14 @@ class TestRunOnStartupValidation(unittest.TestCase):
 
         mock_manager.initialize.assert_called_once_with(config)
 
-    @patch('ckanext.hdx_smtp_assumerole.plugin.patch_hdx_users_mailer')
-    @patch('ckanext.hdx_smtp_assumerole.plugin.patch_mailer_functions')
-    @patch('ckanext.hdx_smtp_assumerole.plugin.SMTPCredentialsManager')
+    @mock.patch('ckanext.hdx_smtp_assumerole.plugin.patch_hdx_users_mailer')
+    @mock.patch('ckanext.hdx_smtp_assumerole.plugin.patch_mailer_functions')
+    @mock.patch('ckanext.hdx_smtp_assumerole.plugin.SMTPCredentialsManager')
     def test_valid_full_arn_passes(self, mock_manager_class, mock_patch_mailer, mock_patch_hdx):
         """Test that valid full ARN passes validation"""
         expiration = datetime.now(timezone.utc) + timedelta(hours=1)
 
-        mock_manager = Mock()
+        mock_manager = mock.Mock()
         mock_manager.get_credentials_info.return_value = {
             'initialized': True,
             'has_credentials': True,
@@ -470,7 +470,7 @@ class TestRunOnStartupValidation(unittest.TestCase):
         mock_manager.initialize.assert_called_once_with(config)
 
 
-class TestValidateRegionEdgeCases(unittest.TestCase):
+class TestValidateRegionEdgeCases:
     """Additional edge case tests for region validation"""
 
     def test_region_with_numbers_only(self):
@@ -499,36 +499,36 @@ class TestValidateRegionEdgeCases(unittest.TestCase):
 
     def test_invalid_region_three_letter_prefix(self):
         """Test invalid region with 3-letter prefix"""
-        with self.assertRaises(SMTPAssumeRoleException):
+        with pytest.raises(SMTPAssumeRoleException):
             _validate_region('usa-east-1')
 
     def test_invalid_region_single_letter_direction(self):
         """Test invalid region with single letter direction"""
-        with self.assertRaises(SMTPAssumeRoleException):
+        with pytest.raises(SMTPAssumeRoleException):
             _validate_region('us-e-1')
 
     def test_invalid_region_no_region_part(self):
         """Test invalid region missing region part"""
-        with self.assertRaises(SMTPAssumeRoleException):
+        with pytest.raises(SMTPAssumeRoleException):
             _validate_region('us-1')
 
     def test_invalid_region_trailing_dash(self):
         """Test invalid region with trailing dash"""
-        with self.assertRaises(SMTPAssumeRoleException):
+        with pytest.raises(SMTPAssumeRoleException):
             _validate_region('us-east-1-')
 
     def test_invalid_region_leading_dash(self):
         """Test invalid region with leading dash"""
-        with self.assertRaises(SMTPAssumeRoleException):
+        with pytest.raises(SMTPAssumeRoleException):
             _validate_region('-us-east-1')
 
     def test_invalid_region_multiple_dashes(self):
         """Test invalid region with multiple consecutive dashes"""
-        with self.assertRaises(SMTPAssumeRoleException):
+        with pytest.raises(SMTPAssumeRoleException):
             _validate_region('us--east-1')
 
 
-class TestValidateRoleArnEdgeCases(unittest.TestCase):
+class TestValidateRoleArnEdgeCases:
     """Additional edge case tests for role ARN validation"""
 
     def test_role_arn_max_length_path(self):
@@ -553,56 +553,56 @@ class TestValidateRoleArnEdgeCases(unittest.TestCase):
 
     def test_invalid_arn_wrong_partition(self):
         """Test invalid ARN with wrong partition"""
-        with self.assertRaises(SMTPAssumeRoleException):
+        with pytest.raises(SMTPAssumeRoleException):
             _validate_role_arn('arn:aws-cn:iam::123456789012:role/MyRole')
 
     def test_invalid_arn_missing_colon(self):
         """Test invalid ARN with missing colon separator"""
-        with self.assertRaises(SMTPAssumeRoleException):
+        with pytest.raises(SMTPAssumeRoleException):
             _validate_role_arn('arnawsiam::123456789012:role/MyRole')
 
     def test_invalid_arn_extra_colon(self):
         """Test invalid ARN with extra colon"""
-        with self.assertRaises(SMTPAssumeRoleException):
+        with pytest.raises(SMTPAssumeRoleException):
             _validate_role_arn('arn:aws:iam:::123456789012:role/MyRole')
 
     def test_invalid_arn_letters_in_account_id(self):
         """Test invalid ARN with letters in account ID"""
-        with self.assertRaises(SMTPAssumeRoleException):
+        with pytest.raises(SMTPAssumeRoleException):
             _validate_role_arn('arn:aws:iam::12345ABC9012:role/MyRole')
 
     def test_invalid_arn_13_digit_account_id(self):
         """Test invalid ARN with 13-digit account ID"""
-        with self.assertRaises(SMTPAssumeRoleException):
+        with pytest.raises(SMTPAssumeRoleException):
             _validate_role_arn('arn:aws:iam::1234567890123:role/MyRole')
 
     def test_invalid_role_name_with_asterisk(self):
         """Test invalid role name with asterisk"""
-        with self.assertRaises(SMTPAssumeRoleException):
+        with pytest.raises(SMTPAssumeRoleException):
             _validate_role_arn('My*Role')
 
     def test_invalid_role_name_with_dollar(self):
         """Test invalid role name with dollar sign"""
-        with self.assertRaises(SMTPAssumeRoleException):
+        with pytest.raises(SMTPAssumeRoleException):
             _validate_role_arn('My$Role')
 
     def test_invalid_role_name_with_percent(self):
         """Test invalid role name with percent sign"""
-        with self.assertRaises(SMTPAssumeRoleException):
+        with pytest.raises(SMTPAssumeRoleException):
             _validate_role_arn('My%Role')
 
 
-class TestRunOnStartupEdgeCases(unittest.TestCase):
+class TestRunOnStartupEdgeCases:
     """Additional edge case tests for run_on_startup"""
 
-    @patch('ckanext.hdx_smtp_assumerole.plugin.patch_hdx_users_mailer')
-    @patch('ckanext.hdx_smtp_assumerole.plugin.patch_mailer_functions')
-    @patch('ckanext.hdx_smtp_assumerole.plugin.SMTPCredentialsManager')
+    @mock.patch('ckanext.hdx_smtp_assumerole.plugin.patch_hdx_users_mailer')
+    @mock.patch('ckanext.hdx_smtp_assumerole.plugin.patch_mailer_functions')
+    @mock.patch('ckanext.hdx_smtp_assumerole.plugin.SMTPCredentialsManager')
     def test_enabled_with_whitespace_in_config(self, mock_manager_class, mock_patch_mailer, mock_patch_hdx):
         """Test that whitespace in config values is handled"""
         expiration = datetime.now(timezone.utc) + timedelta(hours=1)
 
-        mock_manager = Mock()
+        mock_manager = mock.Mock()
         mock_manager.get_credentials_info.return_value = {
             'initialized': True,
             'has_credentials': True,
@@ -619,7 +619,7 @@ class TestRunOnStartupEdgeCases(unittest.TestCase):
         }
 
         # Should handle whitespace - validation will fail on ' us-east-1 '
-        with self.assertRaises(SMTPAssumeRoleException):
+        with pytest.raises(SMTPAssumeRoleException):
             run_on_startup(config)
 
     def test_disabled_with_various_false_values(self):
@@ -633,14 +633,14 @@ class TestRunOnStartupEdgeCases(unittest.TestCase):
             # Should not raise exception
             run_on_startup(config)
 
-    @patch('ckanext.hdx_smtp_assumerole.plugin.patch_hdx_users_mailer')
-    @patch('ckanext.hdx_smtp_assumerole.plugin.patch_mailer_functions')
-    @patch('ckanext.hdx_smtp_assumerole.plugin.SMTPCredentialsManager')
+    @mock.patch('ckanext.hdx_smtp_assumerole.plugin.patch_hdx_users_mailer')
+    @mock.patch('ckanext.hdx_smtp_assumerole.plugin.patch_mailer_functions')
+    @mock.patch('ckanext.hdx_smtp_assumerole.plugin.SMTPCredentialsManager')
     def test_enabled_with_empty_smtp_domain(self, mock_manager_class, mock_patch_mailer, mock_patch_hdx):
         """Test with empty smtp_domain config"""
         expiration = datetime.now(timezone.utc) + timedelta(hours=1)
 
-        mock_manager = Mock()
+        mock_manager = mock.Mock()
         mock_manager.get_credentials_info.return_value = {
             'initialized': True,
             'has_credentials': True,
@@ -660,16 +660,16 @@ class TestRunOnStartupEdgeCases(unittest.TestCase):
         run_on_startup(config)
 
         # Should not set email addresses when smtp_domain is empty
-        self.assertNotIn('email_to', config)
+        assert 'email_to' not in config
 
-    @patch('ckanext.hdx_smtp_assumerole.plugin.patch_hdx_users_mailer')
-    @patch('ckanext.hdx_smtp_assumerole.plugin.patch_mailer_functions')
-    @patch('ckanext.hdx_smtp_assumerole.plugin.SMTPCredentialsManager')
+    @mock.patch('ckanext.hdx_smtp_assumerole.plugin.patch_hdx_users_mailer')
+    @mock.patch('ckanext.hdx_smtp_assumerole.plugin.patch_mailer_functions')
+    @mock.patch('ckanext.hdx_smtp_assumerole.plugin.SMTPCredentialsManager')
     def test_enabled_role_arn_case_sensitivity(self, mock_manager_class, mock_patch_mailer, mock_patch_hdx):
         """Test that role ARN validation is case-sensitive where needed"""
         expiration = datetime.now(timezone.utc) + timedelta(hours=1)
 
-        mock_manager = Mock()
+        mock_manager = mock.Mock()
         mock_manager.get_credentials_info.return_value = {
             'initialized': True,
             'has_credentials': True,
@@ -686,15 +686,15 @@ class TestRunOnStartupEdgeCases(unittest.TestCase):
             'ckanext.hdx_smtp_assumerole.region': 'us-east-1'
         }
 
-        with self.assertRaises(SMTPAssumeRoleException):
+        with pytest.raises(SMTPAssumeRoleException):
             run_on_startup(config)
 
-    @patch('ckanext.hdx_smtp_assumerole.plugin.patch_hdx_users_mailer')
-    @patch('ckanext.hdx_smtp_assumerole.plugin.patch_mailer_functions')
-    @patch('ckanext.hdx_smtp_assumerole.plugin.SMTPCredentialsManager')
+    @mock.patch('ckanext.hdx_smtp_assumerole.plugin.patch_hdx_users_mailer')
+    @mock.patch('ckanext.hdx_smtp_assumerole.plugin.patch_mailer_functions')
+    @mock.patch('ckanext.hdx_smtp_assumerole.plugin.SMTPCredentialsManager')
     def test_generic_exception_during_startup(self, mock_manager_class, mock_patch_mailer, mock_patch_hdx):
         """Test handling of unexpected exceptions during startup"""
-        mock_manager = Mock()
+        mock_manager = mock.Mock()
         mock_manager.initialize.side_effect = Exception('Unexpected error')
         mock_manager_class.get_instance.return_value = mock_manager
 
@@ -704,7 +704,7 @@ class TestRunOnStartupEdgeCases(unittest.TestCase):
             'ckanext.hdx_smtp_assumerole.region': 'us-east-1'
         }
 
-        with self.assertRaises(Exception) as ctx:
+        with pytest.raises(Exception) as exc_info:
             run_on_startup(config)
 
-        self.assertEqual(str(ctx.exception), 'Unexpected error')
+        assert str(exc_info.value) == 'Unexpected error'
