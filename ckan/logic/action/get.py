@@ -1097,7 +1097,9 @@ def resource_show(
             break
     else:
         log.error('Resource %s exists but it is not found in the package it should belong to.', id)
-        log.error(traceback.print_stack())
+        # changed by HDX
+        stack_trace = ''.join(traceback.format_stack())
+        log.error('Stack trace:\n%s', stack_trace)
         raise NotFound(_('Resource was not found.'))
 
     return resource_dict
