@@ -14,9 +14,9 @@
     # via -r requirements.in
 -e git+https://github.com/OCHA-DAP/ckanext-showcase.git@1.5.5#egg=ckanext-showcase
     # via -r requirements.in
--e git+https://github.com/OCHA-DAP/datapusher-plus.git@0.2.104#egg=datapusher-plus
-    # via -r requirements.in
 -e git+https://github.com/datopian/ckanext-sitemap.git@88fb3b6#egg=ckanext-sitemap
+    # via -r requirements.in
+-e git+https://github.com/OCHA-DAP/datapusher-plus.git@0.2.104#egg=datapusher-plus
     # via -r requirements.in
 alembic==1.13.2
     # via -r requirements.in
@@ -31,9 +31,12 @@ blinker==1.8.2
     #   -r requirements.in
     #   flask
 boto3==1.34.77
-    # via ckanext-s3filestore
+    # via
+    #   -r requirements.in
+    #   ckanext-s3filestore
 botocore==1.34.162
     # via
+    #   -r requirements.in
     #   boto3
     #   s3transfer
 cachelib==0.13.0
@@ -190,13 +193,11 @@ six==1.16.0
     # via
     #   bleach
     #   python-dateutil
-sqlalchemy[mypy]==1.4.52
+sqlalchemy[mypy]==2.0.45
     # via
     #   -r requirements.in
     #   alembic
     #   sqlalchemy
-sqlalchemy2-stubs==0.0.2a38
-    # via sqlalchemy
 sqlparse==0.5.0
     # via -r requirements.in
 stevedore==5.4.1
@@ -207,7 +208,7 @@ typing-extensions==4.12.2
     # via
     #   alembic
     #   mypy
-    #   sqlalchemy2-stubs
+    #   sqlalchemy
 tzlocal==5.2
     # via -r requirements.in
 ua-parser==0.18.0
