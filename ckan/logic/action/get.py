@@ -3,6 +3,7 @@
 '''API functions for searching for and getting data from CKAN.'''
 from __future__ import annotations
 
+import traceback
 import uuid
 import logging
 import json
@@ -1096,6 +1097,9 @@ def resource_show(
             break
     else:
         log.error('Resource %s exists but it is not found in the package it should belong to.', id)
+        # changed by HDX
+        stack_trace = ''.join(traceback.format_stack())
+        log.error('Stack trace:\n%s', stack_trace)
         raise NotFound(_('Resource was not found.'))
 
     return resource_dict
