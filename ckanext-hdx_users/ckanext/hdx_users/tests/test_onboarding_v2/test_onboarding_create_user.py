@@ -133,6 +133,8 @@ class TestOnboarding(object):
         assert NEW_USER_EMAIL not in result.body, 'User email should not be displayed in the body when accessing the ' \
                                                   'email verification page directly (without coming from the signup ' \
                                                   'form)'
+        ue_list_by_user = _get_action('user_extra_show')(_sysadmin_context(),{'user_id': user_dict.get('id')})
+        assert ue_list_by_user
 
         ue_user = _get_action('user_extra_value_by_keys_show')(_sysadmin_context(),
                                                                {

@@ -3,3 +3,6 @@ omit =
     */site-packages/*
     */python?.?/*
     ckan/*
+    */ckan/*
+    */ckanext/hdx_hxl_preview/*
+    ckanext/hdx_hxl_preview/*
