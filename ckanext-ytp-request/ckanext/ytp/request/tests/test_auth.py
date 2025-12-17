@@ -1,517 +1,472 @@
-"""
-Tests for YTP Request Tools Module.
-
-This module contains unit tests for database query helper functions used in
-membership request handling.
-"""
-
 import pytest
-from unittest.mock import Mock, MagicMock, patch
-from sqlalchemy.orm import Query
-from flask import Flask
-
-
-@pytest.fixture
-def app() -> Flask:
-    """
-    Create a Flask application for testing.
-
-    :return: Flask application instance
-    """
-    app = Flask(__name__)
-    app.config['TESTING'] = True
-    app.config['SECRET_KEY'] = 'test-secret-key'
-    return app
-
-
-class TestGetUserMember:
-    """Test suite for get_user_member function."""
-
-    @patch('ckanext.ytp.request.tools.model')
-    def test_get_user_member_no_state(self, mock_model: Mock, app: Flask) -> None:
-        """
-        Test getting user member without state filter (active or pending).
-
-        :param mock_model: Mocked CKAN model
-        :param app: Flask application
-        """
-        with app.test_request_context():
-            from flask import g
-            from ckanext.ytp.request.tools import get_user_member
-
-            # Setup
-            mock_user = Mock()
-            mock_user.id = 'user-123'
-            g.userobj = mock_user
-
-            organization_id = 'org-456'
-            mock_member = Mock()
-            mock_member.state = 'active'
-
-            mock_query = MagicMock(spec=Query)
-            mock_model.Session.query.return_value = mock_query
-            mock_query.filter.return_value = mock_query
-            mock_query.first.return_value = mock_member
-
-            # Execute
-            result = get_user_member(organization_id)
-
-            # Assert
-            mock_model.Session.query.assert_called_once_with(mock_model.Member)
-            assert result == mock_member
-            mock_query.first.assert_called_once()
-
-    @patch('ckanext.ytp.request.tools.model')
-    def test_get_user_member_with_state(self, mock_model: Mock, app: Flask) -> None:
-        """
-        Test getting user member with specific state filter.
-
-        :param mock_model: Mocked CKAN model
-        :param app: Flask application
-        """
-        with app.test_request_context():
-            from flask import g
-            from ckanext.ytp.request.tools import get_user_member
-
-            # Setup
-            mock_user = Mock()
-            mock_user.id = 'user-123'
-            g.userobj = mock_user
-
-            organization_id = 'org-456'
-            state = 'pending'
-            mock_member = Mock()
-            mock_member.state = state
-
-            mock_query = MagicMock(spec=Query)
-            mock_model.Session.query.return_value = mock_query
-            mock_query.filter.return_value = mock_query
-            mock_query.first.return_value = mock_member
-
-            # Execute
-            result = get_user_member(organization_id, state=state)
-
-            # Assert
-            mock_model.Session.query.assert_called_once_with(mock_model.Member)
-            assert result == mock_member
-            assert result.state == state
-            mock_query.first.assert_called_once()
-
-    @patch('ckanext.ytp.request.tools.model')
-    def test_get_user_member_not_found(self, mock_model: Mock, app: Flask) -> None:
-        """
-        Test getting user member that doesn't exist.
-
-        :param mock_model: Mocked CKAN model
-        :param app: Flask application
-        """
-        with app.test_request_context():
-            from flask import g
-            from ckanext.ytp.request.tools import get_user_member
-
-            # Setup
-            mock_user = Mock()
-            mock_user.id = 'user-123'
-            g.userobj = mock_user
-
-            organization_id = 'org-456'
-
-            mock_query = MagicMock(spec=Query)
-            mock_model.Session.query.return_value = mock_query
-            mock_query.filter.return_value = mock_query
-            mock_query.first.return_value = None
-
-            # Execute
-            result = get_user_member(organization_id)
-
-            # Assert
-            assert result is None
-            mock_query.first.assert_called_once()
-
-    @patch('ckanext.ytp.request.tools.model')
-    def test_get_user_member_filters_table_name(self, mock_model: Mock, app: Flask) -> None:
-        """
-        Test that get_user_member filters by table_name='user'.
-
-        :param mock_model: Mocked CKAN model
-        :param app: Flask application
-        """
-        with app.test_request_context():
-            from flask import g
-            from ckanext.ytp.request.tools import get_user_member
-
-            # Setup
-            mock_user = Mock()
-            mock_user.id = 'user-123'
-            g.userobj = mock_user
-
-            organization_id = 'org-456'
-
-            mock_query = MagicMock(spec=Query)
-            mock_model.Session.query.return_value = mock_query
-            mock_query.filter.return_value = mock_query
-            mock_query.first.return_value = Mock()
-
-            # Execute
-            get_user_member(organization_id)
-
-            # Assert - verify filter was called multiple times
-            assert mock_query.filter.call_count >= 4
-
-
-class TestGetOrganizationAdmins:
-    """Test suite for get_organization_admins function."""
-
-    @patch('ckanext.ytp.request.tools.model')
-    def test_get_organization_admins_returns_set(self, mock_model: Mock) -> None:
-        """
-        Test that get_organization_admins returns a set of admin users.
-
-        :param mock_model: Mocked CKAN model
-        """
-        from ckanext.ytp.request.tools import get_organization_admins
-
-        # Setup
-        group_id = 'org-123'
-        mock_user1 = Mock()
-        mock_user1.id = 'user-1'
-        mock_user1.name = 'admin1'
-        mock_user2 = Mock()
-        mock_user2.id = 'user-2'
-        mock_user2.name = 'admin2'
-
-        mock_query = MagicMock(spec=Query)
-        mock_model.Session.query.return_value = mock_query
-        mock_query.join.return_value = mock_query
-        mock_query.filter.return_value = mock_query
-        mock_query.__iter__ = Mock(return_value=iter([mock_user1, mock_user2]))
-
-        # Execute
-        result = get_organization_admins(group_id)
-
-        # Assert
-        assert isinstance(result, set)
-        assert len(result) == 2
-        assert mock_user1 in result
-        assert mock_user2 in result
-
-    @patch('ckanext.ytp.request.tools.model')
-    def test_get_organization_admins_filters_admin_capacity(self, mock_model: Mock) -> None:
-        """
-        Test that get_organization_admins filters by capacity='admin'.
-
-        :param mock_model: Mocked CKAN model
-        """
-        from ckanext.ytp.request.tools import get_organization_admins
-
-        # Setup
-        group_id = 'org-123'
-
-        mock_query = MagicMock(spec=Query)
-        mock_model.Session.query.return_value = mock_query
-        mock_query.join.return_value = mock_query
-        mock_query.filter.return_value = mock_query
-        mock_query.__iter__ = Mock(return_value=iter([]))
-
-        # Execute
-        get_organization_admins(group_id)
-
-        # Assert
-        mock_model.Session.query.assert_called_once_with(mock_model.User)
-        mock_query.join.assert_called_once()
-        # Should have multiple filter calls for table_name, group_id, state, capacity
-        assert mock_query.filter.call_count >= 4
-
-    @patch('ckanext.ytp.request.tools.model')
-    def test_get_organization_admins_filters_active_state(self, mock_model: Mock) -> None:
-        """
-        Test that get_organization_admins filters by state='active'.
-
-        :param mock_model: Mocked CKAN model
-        """
-        from ckanext.ytp.request.tools import get_organization_admins
-
-        # Setup
-        group_id = 'org-123'
-
-        mock_query = MagicMock(spec=Query)
-        mock_model.Session.query.return_value = mock_query
-        mock_query.join.return_value = mock_query
-        mock_query.filter.return_value = mock_query
-        mock_query.__iter__ = Mock(return_value=iter([]))
-
-        # Execute
-        get_organization_admins(group_id)
-
-        # Assert - verify multiple filters are applied
-        assert mock_query.filter.call_count >= 4
-
-    @patch('ckanext.ytp.request.tools.model')
-    def test_get_organization_admins_empty_result(self, mock_model: Mock) -> None:
-        """
-        Test that get_organization_admins returns empty set when no admins found.
-
-        :param mock_model: Mocked CKAN model
-        """
-        from ckanext.ytp.request.tools import get_organization_admins
-
-        # Setup
-        group_id = 'org-123'
-
-        mock_query = MagicMock(spec=Query)
-        mock_model.Session.query.return_value = mock_query
-        mock_query.join.return_value = mock_query
-        mock_query.filter.return_value = mock_query
-        mock_query.__iter__ = Mock(return_value=iter([]))
-
-        # Execute
-        result = get_organization_admins(group_id)
-
-        # Assert
-        assert isinstance(result, set)
-        assert len(result) == 0
-
-    @patch('ckanext.ytp.request.tools.model')
-    def test_get_organization_admins_joins_user_and_member(self, mock_model: Mock) -> None:
-        """
-        Test that get_organization_admins joins User and Member tables.
-
-        :param mock_model: Mocked CKAN model
-        """
-        from ckanext.ytp.request.tools import get_organization_admins
-
-        # Setup
-        group_id = 'org-123'
-
-        mock_query = MagicMock(spec=Query)
-        mock_model.Session.query.return_value = mock_query
-        mock_query.join.return_value = mock_query
-        mock_query.filter.return_value = mock_query
-        mock_query.__iter__ = Mock(return_value=iter([]))
-
-        # Execute
-        get_organization_admins(group_id)
-
-        # Assert
-        mock_query.join.assert_called_once()
-
-
-class TestGetCkanAdmins:
-    """Test suite for get_ckan_admins function."""
-
-    @patch('ckanext.ytp.request.tools.model')
-    def test_get_ckan_admins_returns_set(self, mock_model: Mock) -> None:
-        """
-        Test that get_ckan_admins returns a set of sysadmin users.
-
-        :param mock_model: Mocked CKAN model
-        """
-        from ckanext.ytp.request.tools import get_ckan_admins
-
-        # Setup
-        mock_user1 = Mock()
-        mock_user1.id = 'user-1'
-        mock_user1.name = 'sysadmin1'
-        mock_user1.sysadmin = True
-        mock_user2 = Mock()
-        mock_user2.id = 'user-2'
-        mock_user2.name = 'sysadmin2'
-        mock_user2.sysadmin = True
-
-        mock_query = MagicMock(spec=Query)
-        mock_model.Session.query.return_value = mock_query
-        mock_query.filter.return_value = mock_query
-        mock_query.__iter__ = Mock(return_value=iter([mock_user1, mock_user2]))
-
-        # Execute
-        result = get_ckan_admins()
-
-        # Assert
-        assert isinstance(result, set)
-        assert len(result) == 2
-        assert mock_user1 in result
-        assert mock_user2 in result
-
-    @patch('ckanext.ytp.request.tools.model')
-    def test_get_ckan_admins_filters_sysadmin_true(self, mock_model: Mock) -> None:
-        """
-        Test that get_ckan_admins filters by sysadmin=True.
-
-        :param mock_model: Mocked CKAN model
-        """
-        from ckanext.ytp.request.tools import get_ckan_admins
-
-        # Setup
-        mock_query = MagicMock(spec=Query)
-        mock_model.Session.query.return_value = mock_query
-        mock_query.filter.return_value = mock_query
-        mock_query.__iter__ = Mock(return_value=iter([]))
-
-        # Execute
-        get_ckan_admins()
-
-        # Assert
-        mock_model.Session.query.assert_called_once_with(mock_model.User)
-        mock_query.filter.assert_called_once()
-
-    @patch('ckanext.ytp.request.tools.model')
-    def test_get_ckan_admins_empty_result(self, mock_model: Mock) -> None:
-        """
-        Test that get_ckan_admins returns empty set when no sysadmins found.
-
-        :param mock_model: Mocked CKAN model
-        """
-        from ckanext.ytp.request.tools import get_ckan_admins
-
-        # Setup
-        mock_query = MagicMock(spec=Query)
-        mock_model.Session.query.return_value = mock_query
-        mock_query.filter.return_value = mock_query
-        mock_query.__iter__ = Mock(return_value=iter([]))
-
-        # Execute
-        result = get_ckan_admins()
-
-        # Assert
-        assert isinstance(result, set)
-        assert len(result) == 0
-
-    @patch('ckanext.ytp.request.tools.model')
-    def test_get_ckan_admins_multiple_sysadmins(self, mock_model: Mock) -> None:
-        """
-        Test that get_ckan_admins handles multiple sysadmins correctly.
-
-        :param mock_model: Mocked CKAN model
-        """
-        from ckanext.ytp.request.tools import get_ckan_admins
-
-        # Setup
-        sysadmins = []
-        for i in range(5):
-            mock_user = Mock()
-            mock_user.id = f'user-{i}'
-            mock_user.name = f'sysadmin{i}'
-            mock_user.sysadmin = True
-            sysadmins.append(mock_user)
-
-        mock_query = MagicMock(spec=Query)
-        mock_model.Session.query.return_value = mock_query
-        mock_query.filter.return_value = mock_query
-        mock_query.__iter__ = Mock(return_value=iter(sysadmins))
-
-        # Execute
-        result = get_ckan_admins()
-
-        # Assert
-        assert isinstance(result, set)
-        assert len(result) == 5
-        for sysadmin in sysadmins:
-            assert sysadmin in result
-
-
-class TestToolsIntegration:
-    """Integration tests for tools module functions."""
-
-    @patch('ckanext.ytp.request.tools.model')
-    def test_user_member_and_organization_admins_different_queries(self, mock_model: Mock, app: Flask) -> None:
-        """
-        Test that get_user_member and get_organization_admins use different query patterns.
-
-        :param mock_model: Mocked CKAN model
-        :param app: Flask application
-        """
-        with app.test_request_context():
-            from flask import g
-            from ckanext.ytp.request.tools import get_user_member, get_organization_admins
-
-            # Setup
-            mock_user = Mock()
-            mock_user.id = 'user-123'
-            g.userobj = mock_user
-
-            organization_id = 'org-456'
-
-            mock_query = MagicMock(spec=Query)
-            mock_model.Session.query.return_value = mock_query
-            mock_query.filter.return_value = mock_query
-            mock_query.join.return_value = mock_query
-            mock_query.first.return_value = Mock()
-            mock_query.__iter__ = Mock(return_value=iter([]))
-
-            # Execute both functions
-            get_user_member(organization_id)
-            get_organization_admins(organization_id)
-
-            # Assert - both should query but with different patterns
-            assert mock_model.Session.query.call_count == 2
-
-
-class TestAuthorizationFunctions:
-    """Test suite for authorization functions."""
-
-    @patch('ckanext.ytp.request.auth.get_user_member')
-    def test_member_request_create_authorized_admin(self, mock_get_user_member: Mock, app: Flask) -> None:
-        """Test that logged-in users can create member requests."""
-        with app.test_request_context():
-            from ckan.common import c
-            from ckanext.ytp.request.auth import member_request_create
-
-            # Setup mock user for c.userobj
-            mock_user = Mock()
-            mock_user.id = 'user-123'
-            c.userobj = mock_user
-
-            mock_get_user_member.return_value = None
-
-            context = {'user': 'test_user'}
-            data_dict = {'organization_id': 'org-456'}
-
-            result = member_request_create(context, data_dict)
+from unittest.mock import Mock, patch, MagicMock
+from ckan import model
+from ckan.tests import factories
+from ckanext.ytp.request import auth as auth_module
+from ckanext.ytp.request.auth import member_request_create, member_request_cancel, member_request_process
+
+
+class TestMemberRequestMembershipCancel:
+    """Tests for member_request_membership_cancel"""
+
+    def test_membership_cancel_no_user(self):
+        """Test with no user logged in"""
+        mock_c = Mock()
+        mock_c.userobj = None
+
+        with patch.object(auth_module, 'c', mock_c):
+            context = {'user': None, 'model': model}
+            data_dict = {'organization_id': 'test-org'}
+
+            result = auth_module.member_request_membership_cancel(context, data_dict)
+
+            assert result['success'] is False
+
+    def test_membership_cancel_no_active_member(self):
+        """Test when user has no active membership"""
+        user = factories.User()
+
+        mock_c = Mock()
+        mock_c.userobj = Mock(id=user['id'])
+
+        with (
+            patch.object(auth_module, 'c', mock_c),
+            patch.object(auth_module, 'get_user_member') as mock_get_member,
+        ):
+            mock_get_member.return_value = None
+
+            context = {'user': user['name'], 'model': model}
+            data_dict = {'organization_id': 'test-org'}
+
+            result = auth_module.member_request_membership_cancel(context, data_dict)
+
+            assert result['success'] is False
+            mock_get_member.assert_called_once_with('test-org', 'active')
+
+    def test_membership_cancel_wrong_table_name(self):
+        """Test when member has wrong table_name"""
+        user = factories.User()
+
+        mock_member = Mock()
+        mock_member.table_name = 'package'
+        mock_member.table_id = user['id']
+        mock_member.state = 'active'
+
+        mock_c = Mock()
+        mock_c.userobj = Mock(id=user['id'])
+
+        with (
+            patch.object(auth_module, 'c', mock_c),
+            patch.object(auth_module, 'get_user_member') as mock_get_member,
+        ):
+            mock_get_member.return_value = mock_member
+
+            context = {'user': user['name'], 'model': model}
+            data_dict = {'organization_id': 'test-org'}
+
+            result = auth_module.member_request_membership_cancel(context, data_dict)
+
+            assert result['success'] is False
+
+    def test_membership_cancel_wrong_user(self):
+        """Test when member belongs to different user"""
+        user = factories.User()
+        other_user = factories.User()
+
+        mock_member = Mock()
+        mock_member.table_name = 'user'
+        mock_member.table_id = other_user['id']
+        mock_member.state = 'active'
+
+        mock_c = Mock()
+        mock_c.userobj = Mock(id=user['id'])
+
+        with (
+            patch.object(auth_module, 'c', mock_c),
+            patch.object(auth_module, 'get_user_member') as mock_get_member,
+        ):
+            mock_get_member.return_value = mock_member
+
+            context = {'user': user['name'], 'model': model}
+            data_dict = {'organization_id': 'test-org'}
+
+            result = auth_module.member_request_membership_cancel(context, data_dict)
+
+            assert result['success'] is False
+
+    def test_membership_cancel_wrong_state(self):
+        """Test when member is not in active state"""
+        user = factories.User()
+
+        mock_member = Mock()
+        mock_member.table_name = 'user'
+        mock_member.table_id = user['id']
+        mock_member.state = 'pending'
+
+        mock_c = Mock()
+        mock_c.userobj = Mock(id=user['id'])
+
+        with (
+            patch.object(auth_module, 'c', mock_c),
+            patch.object(auth_module, 'get_user_member') as mock_get_member,
+        ):
+            mock_get_member.return_value = mock_member
+
+            context = {'user': user['name'], 'model': model}
+            data_dict = {'organization_id': 'test-org'}
+
+            result = auth_module.member_request_membership_cancel(context, data_dict)
+
+            assert result['success'] is False
+
+    def test_membership_cancel_success(self):
+        """Test successful membership cancellation"""
+        user = factories.User()
+
+        mock_member = Mock()
+        mock_member.table_name = 'user'
+        mock_member.table_id = user['id']
+        mock_member.state = 'active'
+
+        mock_c = Mock()
+        mock_c.userobj = Mock(id=user['id'])
+
+        with (
+            patch.object(auth_module, 'c', mock_c),
+            patch.object(auth_module, 'get_user_member') as mock_get_member,
+        ):
+            mock_get_member.return_value = mock_member
+
+            context = {'user': user['name'], 'model': model}
+            data_dict = {'organization_id': 'test-org'}
+
+            result = auth_module.member_request_membership_cancel(context, data_dict)
 
             assert result['success'] is True
 
-    @patch('ckanext.ytp.request.auth._')
-    @patch('ckanext.ytp.request.auth.authz.auth_is_anon_user')
-    def test_member_request_create_unauthorized(self, mock_is_anon: Mock, mock_translate: Mock, app: Flask) -> None:
-        """Test that anonymous users cannot create member requests."""
-        with app.test_request_context():
-            from ckanext.ytp.request.auth import member_request_create
 
-            mock_is_anon.return_value = True
-            mock_translate.return_value = 'User is not logged in'
+class TestMemberRequestCreate:
+    """Tests for member_request_create authorization function"""
 
-            context = {'user': None}
-            data_dict = {'organization_id': 'org-456'}
+    def test_anonymous_user_denied(self):
+        """Test that anonymous users are denied access"""
+        context = {'user': None}
+        data_dict = {'organization_id': 'test-org'}
 
+        with patch('ckanext.ytp.request.auth.authz.auth_is_anon_user', return_value=True):
             result = member_request_create(context, data_dict)
 
-            assert result['success'] is False
-            assert 'msg' in result
+        assert result['success'] is False
+        assert 'not logged in' in result['msg'].lower()
 
-    @patch('ckanext.ytp.request.auth._')
-    @patch('ckanext.ytp.request.auth.get_user_member')
-    def test_member_request_create_existing_membership(
-        self, mock_get_user_member: Mock, mock_translate: Mock, app: Flask
-    ) -> None:
-        """Test that users with existing membership/request cannot create new requests."""
-        with app.test_request_context():
-            from ckan.common import c
-            from ckanext.ytp.request.auth import member_request_create
+    def test_authenticated_user_no_organization(self):
+        """Test authenticated user without organization_id"""
+        context = {'user': 'test_user'}
+        data_dict = {}
 
-            # Setup mock user
-            mock_user = Mock()
-            mock_user.id = 'user-123'
-            c.userobj = mock_user
-
-            # Mock existing membership
-            mock_member = Mock()
-            mock_get_user_member.return_value = mock_member
-            mock_translate.return_value = 'The user has already a pending request or an active membership'
-
-            context = {'user': 'test_user'}
-            data_dict = {'organization_id': 'org-456'}
-
+        with patch('ckanext.ytp.request.auth.authz.auth_is_anon_user', return_value=False):
             result = member_request_create(context, data_dict)
 
+        assert result['success'] is True
+
+    def test_authenticated_user_with_organization_no_existing_member(self):
+        """Test authenticated user with organization and no existing membership"""
+        context = {'user': 'test_user'}
+        data_dict = {'organization_id': 'test-org'}
+
+        with (
+            patch('ckanext.ytp.request.auth.authz.auth_is_anon_user', return_value=False),
+            patch('ckanext.ytp.request.auth.get_user_member', return_value=None),
+        ):
+            result = member_request_create(context, data_dict)
+
+        assert result['success'] is True
+
+    def test_authenticated_user_with_existing_membership(self):
+        """Test authenticated user with existing membership or pending request"""
+        context = {'user': 'test_user'}
+        data_dict = {'organization_id': 'test-org'}
+
+        mock_member = Mock()
+
+        with (
+            patch('ckanext.ytp.request.auth.authz.auth_is_anon_user', return_value=False),
+            patch('ckanext.ytp.request.auth.get_user_member', return_value=mock_member),
+        ):
+            result = member_request_create(context, data_dict)
+
+        assert result['success'] is False
+        assert 'pending request' in result['msg'].lower() or 'active membership' in result['msg'].lower()
+
+    def test_none_data_dict(self):
+        """Test with None data_dict"""
+        context = {'user': 'test_user'}
+        data_dict = None
+
+        with patch('ckanext.ytp.request.auth.authz.auth_is_anon_user', return_value=False):
+            result = member_request_create(context, data_dict)
+
+        assert result['success'] is True
+
+
+class TestMemberRequestCancel:
+    """Tests for member_request_cancel authorization function"""
+
+    @pytest.fixture
+    def mock_context(self):
+        """Create a mock context with userobj"""
+        context = MagicMock()
+        context.userobj = Mock()
+        context.userobj.id = 'test-user-id'
+        return context
+
+    def test_cancel_no_userobj(self):
+        """Test with no user logged in"""
+        mock_c = Mock()
+        mock_c.userobj = None
+
+        with patch.object(auth_module, 'c', mock_c):
+            context = {}
+            data_dict = {'organization_id': 'test-org'}
+
+            result = member_request_cancel(context, data_dict)
+
             assert result['success'] is False
-            assert 'msg' in result
+
+    def test_cancel_with_member_id_success(self):
+        """Test canceling with valid member ID"""
+        mock_c = Mock()
+        mock_c.userobj = Mock(id='test-user-id')
+
+        mock_member = Mock()
+        mock_member.table_name = 'user'
+        mock_member.table_id = 'test-user-id'
+        mock_member.state = 'pending'
+
+        with (
+            patch.object(auth_module, 'c', mock_c),
+            patch.object(auth_module.model.Member, 'get', return_value=mock_member) as mock_get,
+        ):
+            context = {}
+            data_dict = {'member': 'member-id-123'}
+
+            result = member_request_cancel(context, data_dict)
+
+            assert result['success'] is True
+            mock_get.assert_called_once_with('member-id-123')
+
+    def test_cancel_with_organization_id_success(self):
+        """Test canceling with organization ID"""
+        mock_c = Mock()
+        mock_c.userobj = Mock(id='test-user-id')
+
+        mock_member = Mock()
+        mock_member.table_name = 'user'
+        mock_member.table_id = 'test-user-id'
+        mock_member.state = 'pending'
+
+        with (
+            patch.object(auth_module, 'c', mock_c),
+            patch.object(auth_module, 'get_user_member', return_value=mock_member) as mock_get,
+        ):
+            context = {}
+            data_dict = {'organization_id': 'test-org'}
+
+            result = member_request_cancel(context, data_dict)
+
+            assert result['success'] is True
+            mock_get.assert_called_once_with('test-org', 'pending')
+
+    def test_cancel_member_not_found(self):
+        """Test when member is not found"""
+        mock_c = Mock()
+        mock_c.userobj = Mock(id='test-user-id')
+
+        with (
+            patch.object(auth_module, 'c', mock_c),
+            patch.object(auth_module.model.Member, 'get', return_value=None),
+        ):
+            context = {}
+            data_dict = {'member': 'member-id-123'}
+
+            result = member_request_cancel(context, data_dict)
+
+            assert result['success'] is False
+
+    def test_cancel_wrong_user(self):
+        """Test when member belongs to different user"""
+        mock_c = Mock()
+        mock_c.userobj = Mock(id='test-user-id')
+
+        mock_member = Mock()
+        mock_member.table_name = 'user'
+        mock_member.table_id = 'different-user-id'
+        mock_member.state = 'pending'
+
+        with (
+            patch.object(auth_module, 'c', mock_c),
+            patch.object(auth_module.model.Member, 'get', return_value=mock_member),
+        ):
+            context = {}
+            data_dict = {'member': 'member-id-123'}
+
+            result = member_request_cancel(context, data_dict)
+
+            assert result['success'] is False
+
+    def test_cancel_wrong_state(self):
+        """Test when member is not in pending state"""
+        mock_c = Mock()
+        mock_c.userobj = Mock(id='test-user-id')
+
+        mock_member = Mock()
+        mock_member.table_name = 'user'
+        mock_member.table_id = 'test-user-id'
+        mock_member.state = 'active'
+
+        with (
+            patch.object(auth_module, 'c', mock_c),
+            patch.object(auth_module.model.Member, 'get', return_value=mock_member),
+        ):
+            context = {}
+            data_dict = {'member': 'member-id-123'}
+
+            result = member_request_cancel(context, data_dict)
+
+            assert result['success'] is False
+
+    def test_cancel_wrong_table_name(self):
+        """Test when member table_name is not 'user'"""
+        mock_c = Mock()
+        mock_c.userobj = Mock(id='test-user-id')
+
+        mock_member = Mock()
+        mock_member.table_name = 'group'
+        mock_member.table_id = 'test-user-id'
+        mock_member.state = 'pending'
+
+        with (
+            patch.object(auth_module, 'c', mock_c),
+            patch.object(auth_module.model.Member, 'get', return_value=mock_member),
+        ):
+            context = {}
+            data_dict = {'member': 'member-id-123'}
+
+            result = member_request_cancel(context, data_dict)
+
+            assert result['success'] is False
+
+
+class TestMemberRequestProcess:
+    """Tests for member_request_process authorization function"""
+
+    def test_process_sysadmin_success(self):
+        """Test that sysadmin can process any request"""
+        with patch.object(auth_module.authz, 'is_sysadmin', return_value=True):
+            context = {'user': 'sysadmin-user'}
+            data_dict = {'member': 'member-id-123'}
+
+            result = member_request_process(context, data_dict)
+
+            assert result['success'] is True
+
+    def test_process_user_not_found(self):
+        """Test when user is not found"""
+        with (
+            patch.object(auth_module.authz, 'is_sysadmin', return_value=False),
+            patch.object(auth_module.model.User, 'get', return_value=None),
+        ):
+            context = {'user': 'unknown-user'}
+            data_dict = {'member': 'member-id-123'}
+
+            result = member_request_process(context, data_dict)
+
+            assert result['success'] is False
+
+    def test_process_member_not_found(self):
+        """Test when member is not found"""
+        mock_user = Mock()
+
+        with (
+            patch.object(auth_module.authz, 'is_sysadmin', return_value=False),
+            patch.object(auth_module.model.User, 'get', return_value=mock_user),
+            patch.object(auth_module.model.Member, 'get', return_value=None),
+        ):
+            context = {'user': 'test-user'}
+            data_dict = {'member': 'member-id-123'}
+
+            result = member_request_process(context, data_dict)
+
+            assert result['success'] is False
+
+    def test_process_member_not_user_type(self):
+        """Test when member table_name is not 'user'"""
+        mock_user = Mock()
+        mock_member = Mock()
+        mock_member.table_name = 'group'
+
+        with (
+            patch.object(auth_module.authz, 'is_sysadmin', return_value=False),
+            patch.object(auth_module.model.User, 'get', return_value=mock_user),
+            patch.object(auth_module.model.Member, 'get', return_value=mock_member),
+        ):
+            context = {'user': 'test-user'}
+            data_dict = {'member': 'member-id-123'}
+
+            result = member_request_process(context, data_dict)
+
+            assert result['success'] is False
+
+    def test_process_user_is_admin_success(self):
+        """Test when user is admin of the organization"""
+        mock_user = Mock()
+        mock_user.id = 'test-user-id'
+
+        mock_member = Mock()
+        mock_member.table_name = 'user'
+        mock_member.group_id = 'test-org-id'
+
+        mock_query = Mock()
+        mock_query.count = Mock(return_value=1)
+
+        with (
+            patch.object(auth_module.authz, 'is_sysadmin', return_value=False),
+            patch.object(auth_module.model.User, 'get', return_value=mock_user),
+            patch.object(auth_module.model.Member, 'get', return_value=mock_member),
+            patch.object(auth_module.model, 'Session') as mock_session,
+        ):
+            mock_session.query.return_value.filter.return_value.filter.return_value.filter.return_value.filter.return_value.filter.return_value = mock_query
+
+            context = {'user': 'test-user'}
+            data_dict = {'member': 'member-id-123'}
+
+            result = member_request_process(context, data_dict)
+
+            assert result['success'] is True
+
+    def test_process_user_not_admin_failure(self):
+        """Test when user is not admin of the organization"""
+        mock_user = Mock()
+        mock_user.id = 'test-user-id'
+
+        mock_member = Mock()
+        mock_member.table_name = 'user'
+        mock_member.group_id = 'test-org-id'
+
+        mock_query = Mock()
+        mock_query.count = Mock(return_value=0)
+
+        with (
+            patch.object(auth_module.authz, 'is_sysadmin', return_value=False),
+            patch.object(auth_module.model.User, 'get', return_value=mock_user),
+            patch.object(auth_module.model.Member, 'get', return_value=mock_member),
+            patch.object(auth_module.model, 'Session') as mock_session,
+        ):
+            mock_session.query.return_value.filter.return_value.filter.return_value.filter.return_value.filter.return_value.filter.return_value = mock_query
+
+            context = {'user': 'test-user'}
+            data_dict = {'member': 'member-id-123'}
+
+            result = member_request_process(context, data_dict)
+
+            assert result['success'] is False
