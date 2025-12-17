@@ -134,6 +134,9 @@ class TestOnboarding(object):
                                                   'email verification page directly (without coming from the signup ' \
                                                   'form)'
 
+        ue_list_by_user = _get_action('user_extra_show')(_sysadmin_context(),{'user_id': user_dict.get('id')})
+        assert ue_list_by_user
+
         ue_user = _get_action('user_extra_value_by_keys_show')(_sysadmin_context(),
                                                                {
                                                                    'user_id': user_dict.get('id'),
