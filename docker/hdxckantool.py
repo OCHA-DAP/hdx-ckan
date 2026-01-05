@@ -1163,8 +1163,16 @@ def token_import(ctx, username, jwt_token, name):
         cur.execute(insert_query, (jti, name, user_id, created_at, json.dumps(plugin_extras)))
         con.commit()
 
+        # Truncate token ID for display (show first 3 and last 3 chars)
+        def truncate_token(token_id):
+            if len(token_id) > 6:
+                return f"{token_id[:3]}***{token_id[-3:]}"
+            return token_id
+
+        display_token = truncate_token(jti)
+
         print(f"Successfully imported token for user '{username}':")
-        print(f"  Token ID: {jti}")
+        print(f"  Token ID: {display_token}")
         print(f"  Token Name: {name}")
         print(f"  Created: {created_at}")
         print(f"  Expires: {exp_dt}")
