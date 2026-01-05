@@ -1,9 +1,8 @@
 # encoding: utf-8
 
-import unittest
-from unittest.mock import patch
+import pytest
+import mock
 from email.header import Header
-
 import ckanext.hdx_smtp_assumerole.helpers.hdx_users_mailer_patches as patches_module
 from ckanext.hdx_smtp_assumerole.helpers.hdx_users_mailer_patches import (
     _get_decoded_str,
@@ -13,41 +12,41 @@ from ckanext.hdx_smtp_assumerole.helpers.hdx_users_mailer_patches import (
 )
 
 
-class TestGetDecodedStr(unittest.TestCase):
+class TestGetDecodedStr:
     """Tests for _get_decoded_str helper function"""
 
     def test_decode_simple_string(self):
         """Test decoding a simple ASCII string"""
         result = _get_decoded_str('John Doe')
-        self.assertEqual(result, 'John Doe')
+        assert result == 'John Doe'
 
     def test_decode_empty_string(self):
         """Test decoding an empty string"""
         result = _get_decoded_str('')
-        self.assertEqual(result, '')
+        assert result == ''
 
     def test_decode_none(self):
         """Test decoding None"""
         result = _get_decoded_str(None)
-        self.assertEqual(result, '')
+        assert result == ''
 
     def test_decode_utf8_string(self):
         """Test decoding a UTF-8 string"""
         result = _get_decoded_str('François Müller')
-        self.assertEqual(result, 'François Müller')
+        assert result == 'François Müller'
 
     def test_decode_encoded_header(self):
         """Test decoding an encoded email header"""
         # Create an encoded header
         encoded = str(Header('Test User', 'utf-8'))
         result = _get_decoded_str(encoded)
-        self.assertIn('Test', result)
+        assert 'Test' in result
 
 
-class TestPatchFunctions(unittest.TestCase):
+class TestPatchFunctions:
     """Tests for patch/unpatch functions"""
 
-    def setUp(self):
+    def setup_method(self):
         """Reset patching state before each test"""
         # Reset module state
         patches_module._patches_applied = False
@@ -55,7 +54,7 @@ class TestPatchFunctions(unittest.TestCase):
 
     def test_is_patched_initially_false(self):
         """Test that is_patched returns False initially"""
-        self.assertFalse(is_patched())
+        assert not is_patched()
 
     def test_patch_hdx_users_mailer_no_module(self):
         """Test patching when hdx_users module is not available"""
@@ -71,11 +70,11 @@ class TestPatchFunctions(unittest.TestCase):
         # Reset state to ensure clean test
         patches_module._patches_applied = False
 
-        with patch('builtins.__import__', side_effect=mock_import):
+        with mock.patch('builtins.__import__', side_effect=mock_import):
             # This should handle ImportError gracefully
             patch_hdx_users_mailer()
             # Should not raise exception, just log warning
-            self.assertFalse(is_patched())
+            assert not is_patched()
 
     def test_patch_hdx_users_mailer_idempotent(self):
         """Test that patching multiple times is safe"""
@@ -83,13 +82,13 @@ class TestPatchFunctions(unittest.TestCase):
 
         # Second call should return early
         patch_hdx_users_mailer()
-        self.assertTrue(is_patched())
+        assert is_patched()
 
     def test_unpatch_when_not_patched(self):
         """Test unpatching when patches are not applied"""
         # Should not raise exception
         unpatch_hdx_users_mailer()
-        self.assertFalse(is_patched())
+        assert not is_patched()
 
     def test_unpatch_no_module(self):
         """Test unpatching when hdx_users module is not available"""

@@ -4,6 +4,7 @@ import ckan.model as model
 import ckan.plugins.toolkit as tk
 import ckan.tests.factories as factories
 from collections import OrderedDict
+import ckanext.hdx_user_extra.helpers.helpers as ue_h
 
 _get_action = tk.get_action
 h = tk.h
@@ -91,3 +92,63 @@ class TestOnboardingChangeEmail(object):
         }
         response = app.post(url, data=data_dict)
         assert 'The emails you entered do not match' in response.body, 'User should see an error message when emails do not match'
+
+
+    @mock.patch('ckanext.hdx_users.views.onboarding._user_can_change_email')
+    @mock.patch('ckanext.hdx_users.helpers.tokens.is_user_validated_and_token_disabled', return_value=False)
+    @mock.patch('ckanext.hdx_users.helpers.tokens.token_show', return_value=TOKEN)
+    @mock.patch('ckanext.hdx_users.helpers.tokens.refresh_token', return_value=NEW_TOKEN)
+    @mock.patch('ckanext.hdx_users.helpers.tokens.send_validation_email')
+    def test_email_change_one_time_only_post_request(self, mock_send_validation_email, mock_refresh_token, mock_token_show, mock_is_user_validated, mock_user_can_change_email, app):
+        user = model.User.by_name(USER)
+        mock_user_can_change_email.return_value = user.id
+
+        assert ue_h.is_user_extra_email_updated(user.id) is False
+
+        url = h.url_for('hdx_user_onboarding.change_email')
+        response = app.get(url)
+        assert response.status_code == 200
+
+        url = h.url_for('hdx_user_onboarding.change_email')
+        data_dict = {
+            'email': USER_NEW_EMAIL,
+            'email2': USER_NEW_EMAIL,
+        }
+        app.post(url, data=data_dict)
+
+        url = h.url_for('hdx_user_onboarding.change_email')
+        response = app.get(url)
+        assert response.status_code == 404
+
+        context = {
+            'model': model,
+            'user': USER,
+            'keep_email': True,
+        }
+        updated_user_dict = _get_action('user_show')(context, {'id': user.id})
+        assert updated_user_dict.get('email') == USER_NEW_EMAIL, 'User email should be updated'
+
+        token = mock_send_validation_email.call_args[0][1]['token']
+        assert token == 'new_token', 'New token should be sent in the validation email'
+        assert ue_h.is_user_extra_email_updated(user.id)
+
+        #second email change attempt should fail as email can be changed only one time
+        url = h.url_for('hdx_user_onboarding.change_email')
+        data_dict = {
+            'email': USER_EMAIL,
+            'email2': USER_EMAIL,
+        }
+        app.post(url, data=data_dict)
+
+        url = h.url_for('hdx_user_onboarding.change_email')
+        response = app.get(url)
+        assert response.status_code == 404
+
+        updated_user_dict = _get_action('user_show')(context, {'id': user.id})
+        assert updated_user_dict.get('email') == USER_NEW_EMAIL, 'User email should not be updated'
+
+        token = mock_send_validation_email.call_args[0][1]['token']
+        assert token == 'new_token', 'New token should be sent in the validation email'
+
+        assert ue_h.is_user_extra_email_updated(user.id)
+
