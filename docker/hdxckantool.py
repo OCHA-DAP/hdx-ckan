@@ -1087,7 +1087,6 @@ def token_import(ctx, username, jwt_token, name):
         cur = con.cursor()
         cur.execute(query, (username,))
         rows = cur.fetchall()
-        con.commit()
     except Exception as e:
         raise click.ClickException(f"Failed to query user: {str(e)}")
     finally:
