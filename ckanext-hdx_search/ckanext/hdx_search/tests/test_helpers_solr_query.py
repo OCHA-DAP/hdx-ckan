@@ -73,11 +73,11 @@ class TestGenerateFacetQueryFromList:
 
     def test_facet_query_empty_list(self):
         """Test facet query with empty list"""
-        result = generate_facet_query_from_list('Empty', 'empty_tag', 'field', [])
+        result = self.generate_facet_query_from_list('Empty', 'empty_tag', 'field', [])
         expected = '{!tag=empty_tag key="Empty"}field: ()'
         assert result == expected
 
-    def generate_facet_query_from_list(title, query_tag, doc_property, item_list, boolean_operator='OR', negate=False):
+    def generate_facet_query_from_list(self, title, query_tag, doc_property, item_list, boolean_operator='OR', negate=False):
         filter_query = generate_filter_query_from_list(doc_property, item_list, boolean_operator, negate)
 
         # Escape double quotes in title
