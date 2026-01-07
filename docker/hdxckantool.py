@@ -763,8 +763,9 @@ def sysadmin_list():
 @click.argument('user')
 @click.argument('name')
 @click.argument('expire')
+@click.option('-q', '--quiet', is_flag=True, help='Output only the token, suppress logs')
 @click.pass_context
-def token_add(ctx, user, name, expire):
+def token_add(ctx, user, name, expire, quiet):
     """Add a new token for a user.
 
     USER        Username.
@@ -776,8 +777,35 @@ def token_add(ctx, user, name, expire):
     if int(expire) > 180:
         print('Maximum token validity is 180 days.')
         sys.exit(0)
+
     cmd = ['ckan', '-c', ctx.obj['CONFIG'], 'user', 'token', 'add', user, name, 'expires_in='+str(expire), 'unit=86400']
-    subprocess.call(cmd)
+
+    if quiet:
+        # Capture output and extract only the token
+        try:
+            result = subprocess.run(cmd, capture_output=True, text=True, check=True)
+            # Combine stdout and stderr to find the token
+            output = result.stdout + result.stderr
+
+            # Extract the JWT token (look for the line after "API Token created:")
+            lines = output.split('\n')
+            for i, line in enumerate(lines):
+                if 'API Token created:' in line:
+                    # The token is on the next line
+                    if i + 1 < len(lines):
+                        token = lines[i + 1].strip()
+                        print(token)
+                        return
+
+            # If we didn't find the token in the expected format, print the full output
+            print(output, file=sys.stderr)
+            raise click.ClickException("Could not extract token from output")
+        except subprocess.CalledProcessError as e:
+            print(e.stderr, file=sys.stderr)
+            raise click.ClickException("Failed to create token")
+    else:
+        # Normal mode - show all output
+        subprocess.call(cmd)
 
 
 @token.command(name='list')
@@ -1029,6 +1057,129 @@ def token_revoke(ctx, token_id):
     """
     cmd = ['ckan', '-c', ctx.obj['CONFIG'], 'user', 'token', 'revoke', token_id]
     subprocess.call(cmd)
+
+
+@token.command(name='import')
+@click.argument('username')
+@click.argument('jwt_token')
+@click.option('-n', '--name', default=None, help='Token name (optional)')
+@click.pass_context
+def token_import(ctx, username, jwt_token, name):
+    """Import a JWT token directly into the database.
+
+    USERNAME    The username to associate the token with.
+
+    JWT_TOKEN   The JWT token to import.
+    """
+    import base64
+    import json
+    from datetime import datetime
+
+    # Verify user exists
+    if not user_exists(username):
+        raise click.ClickException(f"User '{username}' does not exist")
+
+    # Get user_id
+    query = "SELECT id FROM public.user WHERE name=%s;"
+    try:
+        con = db_connect_to_postgres(dbname=SQL['DB'])
+        con.set_isolation_level(0)
+        cur = con.cursor()
+        cur.execute(query, (username,))
+        rows = cur.fetchall()
+    except Exception as e:
+        raise click.ClickException(f"Failed to query user: {str(e)}")
+    finally:
+        con.close()
+
+    if len(rows) != 1:
+        raise click.ClickException(f"Unable to find user '{username}'")
+    user_id = rows[0][0]
+
+    # Decode JWT token
+    try:
+        # JWT format: header.payload.signature
+        parts = jwt_token.split('.')
+        if len(parts) != 3:
+            raise click.ClickException("Invalid JWT token format")
+
+        # Decode payload (second part)
+        # Add padding if needed for base64
+        payload_b64 = parts[1]
+        # Add padding
+        padding = 4 - len(payload_b64) % 4
+        if padding != 4:
+            payload_b64 += '=' * padding
+
+        payload_json = base64.urlsafe_b64decode(payload_b64)
+        payload = json.loads(payload_json)
+
+        # Extract required fields
+        jti = payload.get('jti')
+        iat = payload.get('iat')
+        exp = payload.get('exp')
+
+        if not jti or not iat or not exp:
+            raise click.ClickException("JWT token missing required fields (jti, iat, exp)")
+
+    except Exception as e:
+        raise click.ClickException(f"Failed to decode JWT token: {str(e)}")
+
+    # Convert timestamps to datetime
+    created_at = datetime.fromtimestamp(iat)
+    exp_dt = datetime.fromtimestamp(exp)
+
+    # Generate token name if not provided
+    if not name:
+        name = f"Imported {created_at.strftime('%B %Y')}"
+
+    # Prepare plugin_extras JSON
+    plugin_extras = {
+        "expire_api_token": {
+            "exp": exp_dt.isoformat()
+        }
+    }
+
+    # Insert into database
+    try:
+        con = db_connect_to_postgres(dbname=SQL['DB'])
+        con.set_isolation_level(0)
+        cur = con.cursor()
+
+        # Check if token already exists
+        check_query = "SELECT id FROM api_token WHERE id = %s;"
+        cur.execute(check_query, (jti,))
+        existing = cur.fetchall()
+
+        if existing:
+            raise click.ClickException(f"Token with ID '{jti}' already exists in the database")
+
+        # Insert token using parameterized query to prevent SQL injection
+        insert_query = """
+        INSERT INTO api_token (id, name, user_id, created_at, last_access, plugin_extras)
+        VALUES (%s, %s, %s, %s, NULL, %s)
+        """
+        cur.execute(insert_query, (jti, name, user_id, created_at, json.dumps(plugin_extras)))
+        con.commit()
+
+        # Truncate token ID for display (show first 3 and last 3 chars)
+        def truncate_token(token_id):
+            if len(token_id) > 6:
+                return f"{token_id[:3]}***{token_id[-3:]}"
+            return token_id
+
+        display_token = truncate_token(jti)
+
+        print(f"Successfully imported token for user '{username}':")
+        print(f"  Token ID: {display_token}")
+        print(f"  Token Name: {name}")
+        print(f"  Created: {created_at}")
+        print(f"  Expires: {exp_dt}")
+
+    except Exception as e:
+        raise click.ClickException(f"Failed to insert token into database: {str(e)}")
+    finally:
+        con.close()
 
 
 @user.command(name='add')
