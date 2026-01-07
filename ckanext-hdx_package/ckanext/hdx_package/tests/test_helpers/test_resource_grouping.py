@@ -1,5 +1,5 @@
 import pytest
-from unittest.mock import patch, Mock
+from unittest.mock import patch
 
 from ckanext.hdx_package.helpers.resource_grouping import (
     set_show_groupings_flag,

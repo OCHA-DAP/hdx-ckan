@@ -1,5 +1,5 @@
 import pytest
-from unittest.mock import Mock, patch, MagicMock
+from unittest.mock import Mock, patch
 from ckan.tests import factories
 from ckanext.ytp.request.plugin import YtpRequestPlugin
 

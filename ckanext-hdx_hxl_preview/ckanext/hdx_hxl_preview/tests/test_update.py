@@ -1,8 +1,7 @@
 """Test module for hdx_hxl_preview actions/update.py"""
 
 import pytest
-from unittest.mock import Mock, patch, MagicMock, call
-import requests
+from unittest.mock import Mock, patch
 
 
 class TestCheckHasHxlTags:

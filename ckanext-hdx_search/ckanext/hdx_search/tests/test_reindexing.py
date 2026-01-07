@@ -173,7 +173,6 @@ class TestHdxSolrReindexerRebuild:
 
     def test_rebuild_filters_deleted_packages(self, reindexer, mock_dependencies):
         """Test that deleted packages are filtered out"""
-        mock_model_package = Mock()
         mock_query = Mock()
         mock_filter = Mock()
 
