@@ -14,9 +14,9 @@
     # via -r requirements.in
 -e git+https://github.com/OCHA-DAP/ckanext-showcase.git@1.5.5#egg=ckanext-showcase
     # via -r requirements.in
--e git+https://github.com/OCHA-DAP/datapusher-plus.git@0.2.104#egg=datapusher-plus
-    # via -r requirements.in
 -e git+https://github.com/datopian/ckanext-sitemap.git@88fb3b6#egg=ckanext-sitemap
+    # via -r requirements.in
+-e git+https://github.com/OCHA-DAP/datapusher-plus.git@0.2.104#egg=datapusher-plus
     # via -r requirements.in
 alembic==1.13.2
     # via -r requirements.in
@@ -31,9 +31,12 @@ blinker==1.8.2
     #   -r requirements.in
     #   flask
 boto3==1.34.77
-    # via ckanext-s3filestore
+    # via
+    #   -r requirements.in
+    #   ckanext-s3filestore
 botocore==1.34.162
     # via
+    #   -r requirements.in
     #   boto3
     #   s3transfer
 cachelib==0.13.0
@@ -226,7 +229,7 @@ webassets==2.0
     # via -r requirements.in
 webencodings==0.5.1
     # via bleach
-werkzeug[watchdog]==3.0.6
+werkzeug[watchdog]==3.1.5
     # via
     #   -r requirements.in
     #   flask
