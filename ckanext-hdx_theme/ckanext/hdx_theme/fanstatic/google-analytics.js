@@ -85,14 +85,6 @@ $(
                         '1': 'on'
                     }
                 },
-                'ext_quickcharts': {
-                    'name': 'quickcharts filter',
-                    'isList': false,
-                    'mandatory': true,
-                    'valueMap': {
-                        '1': 'on'
-                    }
-                },
                 'ext_geodata': {
                     'name': 'geodata filter',
                     'isList': false,

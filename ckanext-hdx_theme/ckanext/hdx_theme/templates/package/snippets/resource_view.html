@@ -1,4 +1,5 @@
 {% import 'macros/form.html' as form %}
+{% if resource_view.view_type != 'hdx_hxl_preview' %}
 <div id="view-{{ resource_view['id'] }}" class="resource-view" data-id="{{ resource_view['id'] }}" data-title="{{ resource_view['title'] }}" data-description="{{ resource_view['descripion'] }}">
   {# <a class="btn pull-right"
      href="#embed-{{ resource_view['id'] }}"
@@ -74,6 +75,7 @@
       </div>
   </div>
 </div>
+{% endif %}
 
 {#  Moved in main 'ckan' bundle #}
 {#{% resource 'hdx_theme/modules/data-viewer.js' %}#}

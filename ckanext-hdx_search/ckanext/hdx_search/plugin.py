@@ -22,7 +22,7 @@ from ckanext.hdx_search.helpers.constants import NEW_DATASETS_FACET_NAME, UPDATE
     PRIVATE_DATASETS_FACET_NAME, BULK_DATASETS_FACET_NAME, \
     HXLATED_DATASETS_FACET_NAME, HXLATED_DATASETS_FACET_QUERY, \
     COD_DATASETS_FACET_NAME, COD_DATASETS_FACET_QUERY, \
-    SUBNATIONAL_DATASETS_FACET_NAME, QUICKCHARTS_DATASETS_FACET_NAME, GEODATA_DATASETS_FACET_NAME, \
+    SUBNATIONAL_DATASETS_FACET_NAME, GEODATA_DATASETS_FACET_NAME, \
     REQUESTDATA_DATASETS_FACET_NAME, SHOWCASE_DATASETS_FACET_NAME, HDX_HAPI_DATA_FACET_NAME, HDX_HAPI_DATA_FACET_QUERY
 from ckanext.hdx_search.helpers.solr_query_helper import generate_datetime_period_query
 from ckanext.hdx_search.views.qa import hdx_qa
@@ -125,7 +125,6 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
                       ' +{}'.format(COD_DATASETS_FACET_QUERY), ' -{}'.format(COD_DATASETS_FACET_QUERY))
         adapt_solr_fq(HXLATED_DATASETS_FACET_NAME,
                       ' +{}'.format(HXLATED_DATASETS_FACET_QUERY), ' -{}'.format(HXLATED_DATASETS_FACET_QUERY))
-        adapt_solr_fq(QUICKCHARTS_DATASETS_FACET_NAME, ' +has_quickcharts:true', ' -has_quickcharts:true')
         adapt_solr_fq(GEODATA_DATASETS_FACET_NAME, ' +has_geodata:true', ' -has_geodata:true')
         adapt_solr_fq(REQUESTDATA_DATASETS_FACET_NAME,
                       ' +extras_is_requestdata_type:true', ' -extras_is_requestdata_type:true')
@@ -285,7 +284,6 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
 
         # facets_dict['{!ex=batch}indicator'] = _('Indicators')
         facets_dict['{!ex=batch}subnational'] = _('Subnational')
-        facets_dict['{!ex=batch}has_quickcharts'] = _('Quick charts')
         facets_dict['{!ex=batch}has_geodata'] = _('Geodata')
         # facets_dict['{!ex=batch}administrative_divisions'] = _('Administrative Divisions')
         facets_dict['{!ex=batch}extras_is_requestdata_type'] = _('Datasets on request (HDX Connect)')
