@@ -8,7 +8,6 @@
             var sandbox = this.sandbox;
             var dataset_id = this.options.dataset_id;
             var validateUrl = this.options.validate_url;
-            var hxlPreviewApi = this.options.hxl_preview_api;
             var requestUrl = window.location.pathname;
             var isNewDataset = null; // Whether we're editing or creating a new dataset
             // var managePrivateField = this.managePrivateField;
@@ -476,23 +475,10 @@
                  *
                  * @returns {Promise}
                  */
-                'callHxlPreviewGenerator': function(){
-                    // Since this is called after the dataset is saved we surely have a _datasetId
-                    // hxlPreviewApi, [{name: 'id', value: this._datasetId}], null, 'application/json'
-                    return $.ajax({
-                        url: hxlPreviewApi,
-                        type: 'POST',
-                        data: JSON.stringify({'id': this._datasetId}),
-                        contentType: 'application/json',
-                        dataType: 'json',
-                        headers: hdxUtil.net.getCsrfTokenAsObject()
-                    });
-                },
                 'finishContributeFlow': function() {
 
                     if(!this.isRequestedData()){
                       var callback = this.browseToDataset.bind(this);
-                      this.callHxlPreviewGenerator().then(callback, callback);
                     }
                     else{
                       this.browseToDataset();
@@ -605,7 +591,6 @@
         options: {
             form_id: 'create_dataset_form',
             validate_url: '/contribute/validate',
-            hxl_preview_api: '/api/action/package_hxl_update',
             dataset_id: null
         }
 
