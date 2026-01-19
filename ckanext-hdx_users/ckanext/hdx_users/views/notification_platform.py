@@ -81,10 +81,13 @@ def subscribe_to_object() -> Response:
     }
     try:
         tk.get_action('hdx_notifications_subscription_create')(context, data_dict)
-        _h.flash_success(tk._(
-            u'You have successfully set up email notifications. These will be sent to {0} when there '
-            u'is an update.'.format(
-                current_user.email)))
+        if current_user.email:
+            _h.flash_success(tk._(
+                u'You have successfully set up email notifications. These will be sent to {0} when there is an update.'.format(
+                    current_user.email)))
+        else:
+            _h.flash_success(
+                tk._(u'You have successfully set up email notifications. These will be sent when there is an update.'))
     except tk.ValidationError as e:
         msg = e.error_dict.get('message', str(e))
         _h.flash_error(msg)
