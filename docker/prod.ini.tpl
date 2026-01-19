@@ -15,7 +15,7 @@ use = config:/srv/ckan/common-config-ini.txt
 ## Database Settings
 sqlalchemy.url = postgresql://${HDX_CKANDB_USER}:${HDX_CKANDB_PASS}@${HDX_CKANDB_ADDR}:${HDX_CKANDB_PORT}/${HDX_CKANDB_DB}
 ckan.datastore.write_url = postgresql://${HDX_CKANDB_USER}:${HDX_CKANDB_PASS}@${HDX_CKANDB_ADDR}:${HDX_CKANDB_PORT}/${HDX_CKANDB_DB_DATASTORE}
-ckan.datastore.read_url = postgresql://${HDX_CKANDB_USER_DATASTORE}:${HDX_CKANDB_PASS_DATASTORE}@${HDX_CKANDB_ADDR}:${HDX_CKANDB_PORT}/${HDX_CKANDB_DB_DATASTORE}
+ckan.datastore.read_url = postgresql://${HDX_CKANDB_USER_DATASTORE}:${HDX_CKANDB_PASS_DATASTORE}@${HDX_CKANDB_ADDR_DATASTORE}:${HDX_CKANDB_PORT}/${HDX_CKANDB_DB_DATASTORE}
 
 ## Site Settings
 ckan.site_url = https://${HDX_DOMAIN}
