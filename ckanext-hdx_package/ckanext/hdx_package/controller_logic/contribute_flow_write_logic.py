@@ -51,31 +51,31 @@ class ContributeFlowWriteLogic(object):
         else:
             self.dataset_dict['groups'] = []
 
-    def process_resources(self):
-        '''
-        :return: new modified dict containing the resources in the correct format for validating
-        :rtype: dict
-        '''
-        resources_dict = {}
-        new_data_dict = {}
-        for key, value in self.dataset_dict.items():
-            if key.startswith('resources_'):
-                key_parts = key.split('__')
-                if len(key_parts) == 3:  # 'resources', key, resource number
-                    index = int(key_parts[2])
-                    resource_dict = resources_dict.get(index, {})
-                    resources_dict[index] = resources_dict
-                    resource_dict[key_parts] = value
-                else:
-                    raise WrongResourceParamName('Key {} should have 3 parts'.format(key))
-
-            else:
-                new_data_dict[key] = value
-
-        if resources_dict:
-            new_data_dict['resources'] = [v for k, v in sorted(resources_dict.items(), key=lambda x: x[0])]
-
-        return new_data_dict
+    # def process_resources(self):
+    #     '''
+    #     :return: new modified dict containing the resources in the correct format for validating
+    #     :rtype: dict
+    #     '''
+    #     resources_dict = {}
+    #     new_data_dict = {}
+    #     for key, value in self.dataset_dict.items():
+    #         if key.startswith('resources_'):
+    #             key_parts = key.split('__')
+    #             if len(key_parts) == 3:  # 'resources', key, resource number
+    #                 index = int(key_parts[2])
+    #                 resource_dict = resources_dict.get(index, {})
+    #                 resources_dict[index] = resources_dict
+    #                 resource_dict[key_parts] = value
+    #             else:
+    #                 raise WrongResourceParamName('Key {} should have 3 parts'.format(key))
+    #
+    #         else:
+    #             new_data_dict[key] = value
+    #
+    #     if resources_dict:
+    #         new_data_dict['resources'] = [v for k, v in sorted(resources_dict.items(), key=lambda x: x[0])]
+    #
+    #     return new_data_dict
 
     def process_dataset_date(self):
         # if 'dataset_date' in data_dict:
