@@ -95,13 +95,5 @@ def package_hxl_update(context, data_dict):
 
             elif view:
                 _get_action('resource_view_delete')(context, {'id': view.get('id')})
-    vocab = model.Vocabulary.get('Topics')
-    vocabulary_id = None
-    if vocab:
-        vocabulary_id = vocab.id
-    if new_views and 'hxl' not in [tag.get('name', '').lower() for tag in package_dict.get('tags', [])] and vocabulary_id:
-        package_dict['tags'].append({'name': u'hxl', 'vocabulary_id': vocabulary_id})
-        _get_action('package_patch')(context, {'id': package_id, 'tags': package_dict.get('tags')})
 
     return new_views
-
