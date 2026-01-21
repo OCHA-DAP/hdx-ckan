@@ -193,7 +193,6 @@ class HDXThemePlugin(plugins.SingletonPlugin):
         return {
             'is_downloadable': hdx_helpers.is_downloadable,
             'is_not_zipped': hdx_helpers.is_not_zipped,
-            'is_not_hxl_format': hdx_helpers.is_not_hxl_format,
             'get_facet_items_dict': hdx_helpers.get_facet_items_dict,
             'get_last_modifier_user': hdx_helpers.get_last_modifier_user,
             'get_filtered_params_list': hdx_helpers.get_filtered_params_list,
@@ -251,7 +250,6 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'hdx_dataset_follower_count': hdx_helpers.hdx_dataset_follower_count,
             'hdx_organization_list_for_user': hdx_helpers.hdx_organization_list_for_user,
             'hdx_dataset_preview_values_list': hdx_helpers.hdx_dataset_preview_values_list,
-            'hdx_dataset_is_hxl': hdx_helpers.hdx_dataset_is_hxl,
             'hdx_dataset_has_sadd': hdx_helpers.hdx_dataset_has_sadd,
             'hdx_switch_url_path': hdx_helpers.switch_url_path,
             'hdx_munge_title': hdx_helpers.hdx_munge_title,

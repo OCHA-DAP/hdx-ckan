@@ -20,6 +20,5 @@ class TestDatasetPropertiesInSolr(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgs
         assert 'last_modified' in package_dict
         assert 'has_showcases' in package_dict
         assert 'has_geodata' in package_dict
-        assert 'has_quickcharts' in package_dict
         assert 'pageviews_last_14_days' in package_dict
         assert 'total_res_downloads' in package_dict

@@ -96,39 +96,14 @@
                 </a>
 
                 <ul class="dropdown-menu crises-menu" role="menu" style="right: 0;">
-                {% if (res.has_views and is_not_zipped) or (h.hdx_dataset_is_hxl(pkg.tags) and is_not_zipped and not h.is_not_hxl_format(res.format)) %}
+                {% if res.has_views and is_not_zipped %}
                   <li class="crises-group">
-                    On HDX and HDX Tools
                     <ul>
-                      {% if res.has_views and is_not_zipped %}
-
-                        <li>
-                          <a href="{{ url }}" class="ga-preview">
-                            {{ _('Preview on HDX') }}
-                          </a>
-                        </li>
-                      {% endif %}
-                      {% if h.hdx_dataset_is_hxl(pkg.tags)  and is_not_zipped and not h.is_not_hxl_format(res.format) %}
-                        <li>
-                          <a href="#" class="ga-preview" onclick="showDataCheck('{{ res.hdx_rel_url }}');">
-                            {{ _('Validate with Data Check') }}
-                          </a>
-                        </li>
-                      {% endif %}
-                    </ul>
-                  </li>
-                {% endif %}
-                {% if res.apihighways_id %}
-                  <li class="crises-group">
-                    On Our Partner Sites
-                    <ul>
-  {#                    {% if res.apihighways_id %}#}
-                        <li>
-                          <a href="{{ res.apihighways_url }}" target="_blank" data-module="hdx_click_stopper" data-module-link_type="external - api highways">
-                            {{ _('Query on API Highways') }}
-                          </a>
-                        </li>
-  {#                    {% endif %}#}
+                      <li>
+                        <a href="{{ url }}" class="ga-preview">
+                          {{ _('Preview on HDX') }}
+                        </a>
+                      </li>
                     </ul>
                   </li>
                 {% endif %}
