@@ -84,7 +84,7 @@ ckantoolkit==0.0.3
 dogpile.cache==1.3.0
 
 # ckanext-s3filestore
--e git+https://github.com/OCHA-DAP/ckanext-s3filestore.git@hdx-11264-lazy-refresh#egg=ckanext-s3filestore
+-e git+https://github.com/OCHA-DAP/ckanext-s3filestore.git@0.8.1#egg=ckanext-s3filestore
 
 # ckanext-security
 -e git+https://github.com/OCHA-DAP/ckanext-security.git@1.71.1#egg=ckanext-security
