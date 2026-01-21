@@ -475,15 +475,8 @@
                  *
                  * @returns {Promise}
                  */
-                'finishContributeFlow': function() {
-
-                    if(!this.isRequestedData()){
-                      var callback = this.browseToDataset.bind(this);
-                    }
-                    else{
-                      this.browseToDataset();
-                    }
-
+                'finishContributeFlow': function () {
+                  this.browseToDataset();
                 },
                 'recoverFromServerError': function() {
                     contributeGlobal.controlUserWaitingWidget(false);
