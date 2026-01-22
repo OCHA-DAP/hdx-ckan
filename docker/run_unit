@@ -11,6 +11,8 @@
 [ -z "$AWS_USE_ROLE" ] && export AWS_USE_ROLE=false
 # don't use assume role unless the role is defined
 [ -z "$AWS_ASSUME_ROLE" ] && export AWS_ASSUME_ROLE="not-configured" && export AWS_USE_ROLE=false
+# set a default aws session name for s3 filestore plugin
+[ -z "$AWS_SESSION_NAME" ] && export AWS_SESSION_NAME="ckan-s3filestore-session"
 # don't use assumeRole unless explicitly configured
 [ -z "$HDX_SMTP_USE_ASSUME_ROLE" ] && export HDX_SMTP_USE_ASSUME_ROLE=false
 # don't use assume role unless the role is defined
