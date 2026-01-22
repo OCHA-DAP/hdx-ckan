@@ -32,9 +32,7 @@ role_name_or_arn = config.get('ckanext.hdx_smtp_assumerole.role_arn')
 region = config.get('ckanext.hdx_smtp_assumerole.region')
 session_name = config.get('ckanext.hdx_smtp_assumerole.session_name', 'ckan-ses-session')
 
-# Debug logging
-log.info('SES Caching Config - role_arn: {0}, region: {1}, session_name: {2}'.format(
-    role_name_or_arn, region, session_name))
+log.info(f'SES Caching Config - role_arn: {role_name_or_arn}, region: {region}, session_name: {session_name}')
 
 
 class SESAssumeRoleException(Exception):
@@ -43,7 +41,7 @@ class SESAssumeRoleException(Exception):
 
 
 @dogpile_ses_region.cache_on_arguments()
-def cached_load_ses_credentials():
+def get_ses_credentials():
     """
     Load fresh SES credentials via AssumeRole using EC2 instance metadata.
     Cached in Redis via dogpile - automatically reuses credentials if valid.
@@ -63,7 +61,7 @@ def cached_load_ses_credentials():
         if not region:
             raise SESAssumeRoleException('Missing required config: ckanext.hdx_smtp_assumerole.region')
 
-        log.info('Loading fresh SES credentials via AssumeRole for role: {0}'.format(role_name_or_arn))
+        log.info(f'Loading fresh SES credentials via AssumeRole for role: {role_name_or_arn}')
 
         # Create base session with explicit instance metadata provider
         fetcher = InstanceMetadataFetcher(timeout=1, num_attempts=2)
@@ -89,11 +87,11 @@ def cached_load_ses_credentials():
             full_role_arn = role_name_or_arn
         else:
             account_id = sts_client.get_caller_identity()['Account']
-            full_role_arn = 'arn:aws:iam::{0}:role/{1}'.format(account_id, role_name_or_arn)
+            full_role_arn = f'arn:aws:iam::{account_id}:role/{role_name_or_arn}'
 
-        log.info('Assuming role with ARN: {0}'.format(full_role_arn))
-        log.info('Using session name: {0}'.format(session_name))
-        log.info('Using region: {0}'.format(region))
+        log.info(f'Assuming role with ARN: {full_role_arn}')
+        log.info(f'Using session name: {session_name}')
+        log.info(f'Using region: {region}')
 
         # Assume role with 1 hour duration (credentials valid for 60 minutes)
         # Cache TTL is 55 minutes, so cached credentials are only used for 55 minutes
@@ -122,9 +120,8 @@ def cached_load_ses_credentials():
         time_until_expiry = credentials['expiration'] - now
         minutes_until_expiry = int(time_until_expiry.total_seconds() / 60)
 
-        log.info('Successfully loaded SES credentials, expire at: {0} (in {1} minutes)'.format(
-            credentials['expiration'].strftime('%Y-%m-%d %H:%M:%S UTC'),
-            minutes_until_expiry))
+        expiration_str = credentials['expiration'].strftime('%Y-%m-%d %H:%M:%S UTC')
+        log.info(f'Successfully loaded SES credentials, expire at: {expiration_str} (in {minutes_until_expiry} minutes)')
 
         return credentials
 
@@ -133,12 +130,50 @@ def cached_load_ses_credentials():
     except ClientError as e:
         error_code = e.response.get('Error', {}).get('Code', 'Unknown')
         error_msg = e.response.get('Error', {}).get('Message', str(e))
-        log.error('AWS API error during AssumeRole: {0} - {1}'.format(error_code, error_msg))
-        raise SESAssumeRoleException('AWS API error: {0} - {1}'.format(error_code, error_msg))
+        log.error(f'AWS API error during AssumeRole: {error_code} - {error_msg}')
+        raise SESAssumeRoleException(f'AWS API error: {error_code} - {error_msg}')
     except BotoCoreError as e:
-        log.error('Boto core error loading credentials: {0}'.format(str(e)))
-        raise SESAssumeRoleException('Boto error: {0}'.format(str(e)))
+        log.error(f'Boto core error loading credentials: {e}')
+        raise SESAssumeRoleException(f'Boto error: {e}')
     except Exception as e:
         # Catch-all for unexpected errors (e.g., network issues, serialization problems)
-        log.error('Unexpected error loading SES credentials: {0}'.format(str(e)), exc_info=True)
-        raise SESAssumeRoleException('Unexpected error: {0}'.format(str(e)))
+        log.error(f'Unexpected error loading SES credentials: {e}', exc_info=True)
+        raise SESAssumeRoleException(f'Unexpected error: {e}')
+
+
+def get_credentials_info():
+    """
+    Get information about current credentials (for debugging/monitoring).
+
+    :return: Dict with credentials info
+    :rtype: dict
+    """
+    try:
+        credentials = get_ses_credentials()
+
+        now = datetime.now(timezone.utc)
+        expiration = credentials['expiration']
+        if expiration.tzinfo is None:
+            expiration = expiration.replace(tzinfo=timezone.utc)
+
+        time_until_expiry = expiration - now
+
+        # Mask access key for security
+        access_key = credentials.get('access_key', 'N/A')
+        if len(access_key) > 8:
+            masked_key = f"{access_key[:4]}***{access_key[-4:]}"
+        else:
+            masked_key = access_key
+
+        return {
+            'has_credentials': True,
+            'expiration_time': str(expiration),
+            'time_until_expiry': str(time_until_expiry),
+            'region': credentials.get('region'),
+            'access_key': masked_key
+        }
+    except SESAssumeRoleException as e:
+        return {
+            'has_credentials': False,
+            'error': str(e)
+        }
