@@ -93,9 +93,9 @@ def get_ses_credentials():
         log.info(f'Using session name: {session_name}')
         log.info(f'Using region: {region}')
 
-        # Assume role with 1 hour duration (credentials valid for 60 minutes)
-        # Cache TTL is 55 minutes, so cached credentials are only used for 55 minutes
-        # and are refreshed 5 minutes before they actually expire
+        # Credentials are valid for 60 minutes (DurationSeconds=3600).
+        # Dogpile expires the cached value after 55 minutes, so the next request
+        # triggers regeneration with at least 5 minutes of validity remaining.
         assumed_role = sts_client.assume_role(
             RoleArn=full_role_arn,
             RoleSessionName=session_name,
