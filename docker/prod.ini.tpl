@@ -63,7 +63,7 @@ ckanext.hdx_smtp_assumerole.use_assume_role = ${HDX_SMTP_USE_ASSUME_ROLE}
 ckanext.hdx_smtp_assumerole.role_arn = ${HDX_SMTP_ASSUME_ROLE}
 ckanext.hdx_smtp_assumerole.region = ${REGION_NAME}
 ckanext.hdx_smtp_assumerole.smtp_domain = ${HDX_SMTP_DOMAIN}
-ckanext.hdx_smtp_assumerole.session_name = ckan-ses-session
+ckanext.hdx_smtp_assumerole.session_name = ${AWS_SES_SESSION_NAME}
 
 ## DOWNLOAD WITH CACHE DATASETS
 # accepting comma separated list with no spaces
