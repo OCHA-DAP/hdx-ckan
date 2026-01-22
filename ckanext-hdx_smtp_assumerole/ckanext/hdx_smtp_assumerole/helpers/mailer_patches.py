@@ -176,11 +176,8 @@ def patched_mail_user(
     :raises Exception: If SES credentials are not available or email sending fails
     """
     try:
-        # Get credentials manager and ensure fresh credentials
+        # Get SES credentials (dogpile cache handles credential refresh automatically)
         manager = SMTPCredentialsManager.get_instance()
-        manager.ensure_fresh_credentials()
-
-        # Get SES credentials
         ses_creds = manager.get_ses_credentials()
         if not ses_creds:
             error_msg = 'No SES credentials available - cannot send email'
@@ -263,11 +260,8 @@ def patched_mail_recipient(
     :raises Exception: If SES credentials are not available or email sending fails
     """
     try:
-        # Get credentials manager and ensure fresh credentials
+        # Get SES credentials (dogpile cache handles credential refresh automatically)
         manager = SMTPCredentialsManager.get_instance()
-        manager.ensure_fresh_credentials()
-
-        # Get SES credentials
         ses_creds = manager.get_ses_credentials()
         if not ses_creds:
             error_msg = 'No SES credentials available - cannot send email'

@@ -73,9 +73,6 @@ class TestMailerPatches:
             body='Plain text body'
         )
 
-        # Verify credentials were refreshed
-        mock_manager.ensure_fresh_credentials.assert_called_once()
-
         # Verify email was sent
         mock_send.assert_called_once()
         call_args = mock_send.call_args[1]
@@ -505,29 +502,6 @@ class TestMailerPatchesErrorHandling:
             )
 
         assert 'MessageRejected' in str(exc_info.value)
-
-    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.send_email_via_ses')
-    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.SMTPCredentialsManager')
-    def test_patched_mail_user_credentials_refresh_error(self, mock_manager_class, mock_send):
-        """Test error handling when credential refresh fails"""
-        mock_manager = mock.Mock()
-        # Simulate credential refresh failure
-        mock_manager.ensure_fresh_credentials.side_effect = Exception('Failed to refresh credentials')
-        mock_manager_class.get_instance.return_value = mock_manager
-
-        user = {
-            'email': 'user@example.com',
-            'display_name': 'Test User'
-        }
-
-        with pytest.raises(Exception) as exc_info:
-            patched_mail_user(
-                recipient=user,
-                subject='Test',
-                body='Body'
-            )
-
-        assert 'Failed to refresh credentials' in str(exc_info.value)
 
     @mock.patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.send_email_via_ses')
     @mock.patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.SMTPCredentialsManager')
