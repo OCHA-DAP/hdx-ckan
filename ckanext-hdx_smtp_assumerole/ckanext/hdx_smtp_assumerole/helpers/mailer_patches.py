@@ -12,7 +12,7 @@ import ckan.lib.mailer as mailer
 from ckan import model
 import ckan.plugins.toolkit as tk
 
-from ckanext.hdx_smtp_assumerole.helpers.caching import get_ses_credentials, SESAssumeRoleException
+from ckanext.hdx_smtp_assumerole.helpers.caching import get_ses_credentials
 from ckanext.hdx_smtp_assumerole.helpers.ses_sender import send_email_via_ses
 
 log = logging.getLogger(__name__)

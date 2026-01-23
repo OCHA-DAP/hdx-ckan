@@ -570,8 +570,8 @@ class TestMailerPatchesErrorHandling:
 
         patched_mail_user(
             recipient=user,
-            subject='Subject with émojis and special chars',
-            body='Body with special chars: ñ, ü, é'
+            subject='Subject with 🎉 émojis and special chars',
+            body='Body with special chars: ñ, ü, é, 🌍'
         )
 
         mock_send.assert_called_once()
