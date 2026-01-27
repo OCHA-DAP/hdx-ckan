@@ -312,39 +312,39 @@ def hdx_fs_check_package_reset(context, data_dict):
     raise NotFound("package doesn't contain resources or not found")
 
 
-def hdx_dataseries_link(context, data_dict):
-    _check_access('hdx_dataseries_update', context, data_dict)
-    name_or_id = _get_or_bust(data_dict, 'id')
-    dataseries_name = _get_or_bust(data_dict, 'dataseries_name')
-    return _manage_dataseries_link(context, name_or_id, dataseries_name)
+# def hdx_dataseries_link(context, data_dict):
+#     _check_access('hdx_dataseries_update', context, data_dict)
+#     name_or_id = _get_or_bust(data_dict, 'id')
+#     dataseries_name = _get_or_bust(data_dict, 'dataseries_name')
+#     return _manage_dataseries_link(context, name_or_id, dataseries_name)
+#
+#
+# def hdx_dataseries_unlink(context, data_dict):
+#     _check_access('hdx_dataseries_update', context, data_dict)
+#     name_or_id = _get_or_bust(data_dict, 'id')
+#     return _manage_dataseries_link(context, name_or_id, dataseries_name=None)
 
 
-def hdx_dataseries_unlink(context, data_dict):
-    _check_access('hdx_dataseries_update', context, data_dict)
-    name_or_id = _get_or_bust(data_dict, 'id')
-    return _manage_dataseries_link(context, name_or_id, dataseries_name=None)
-
-
-def _manage_dataseries_link(context, dataset_name_or_id, dataseries_name=None):
-    context['ignore_auth'] = True
-    context[SKIP_VALIDATION] = True
-
-    model = context['model']
-    pkg = model.Package.get(dataset_name_or_id)
-
-    if not pkg:
-        raise NotFound('Dataset {} was not found'.format(dataset_name_or_id))
-
-    data_revise_dict = {
-        'match': {
-            'id': pkg.id
-        },
-        'update': {
-            'dataseries_name': dataseries_name if dataseries_name else NO_DATA
-        }
-    }
-    result = _get_action('package_revise')(context, data_revise_dict)
-    return result['package']
+# def _manage_dataseries_link(context, dataset_name_or_id, dataseries_name=None):
+#     context['ignore_auth'] = True
+#     context[SKIP_VALIDATION] = True
+#
+#     model = context['model']
+#     pkg = model.Package.get(dataset_name_or_id)
+#
+#     if not pkg:
+#         raise NotFound('Dataset {} was not found'.format(dataset_name_or_id))
+#
+#     data_revise_dict = {
+#         'match': {
+#             'id': pkg.id
+#         },
+#         'update': {
+#             'dataseries_name': dataseries_name if dataseries_name else NO_DATA
+#         }
+#     }
+#     result = _get_action('package_revise')(context, data_revise_dict)
+#     return result['package']
 
 
 def hdx_p_coded_resource_update(context, data_dict):

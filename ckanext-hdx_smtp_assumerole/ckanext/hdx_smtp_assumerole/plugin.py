@@ -7,7 +7,11 @@ import ckan.plugins as plugins
 import ckan.plugins.toolkit as tk
 
 from ckanext.hdx_smtp_assumerole.helpers.smtp_assume_role import SMTPAssumeRoleException
-from ckanext.hdx_smtp_assumerole.helpers.credentials_manager import SMTPCredentialsManager
+from ckanext.hdx_smtp_assumerole.helpers.caching import (
+    get_ses_credentials,
+    get_credentials_info,
+    SESAssumeRoleException
+)
 from ckanext.hdx_smtp_assumerole.helpers.mailer_patches import patch_mailer_functions
 from ckanext.hdx_smtp_assumerole.helpers.hdx_users_mailer_patches import patch_hdx_users_mailer
 
@@ -114,9 +118,8 @@ def run_on_startup(config: Dict[str, Any]) -> None:
         _validate_role_arn(role_name_or_arn)
         _validate_region(region)
 
-        # Initialize credentials manager (loads initial credentials)
-        manager = SMTPCredentialsManager.get_instance()
-        manager.initialize(config)
+        # Warm up the credentials cache (loads initial credentials)
+        get_ses_credentials()
 
         # Apply monkey patches to replace SMTP with SES API
         log.debug('Applying patches to replace SMTP with SES API')
@@ -134,12 +137,12 @@ def run_on_startup(config: Dict[str, Any]) -> None:
                 config['smtp.mail_from'] = f'hdx@{smtp_domain}'
 
         # Get credentials info for logging
-        creds_info = manager.get_credentials_info()
+        creds_info = get_credentials_info()
 
         # Single concise success message
         log.info(f'SES API with AssumeRole enabled: region={region}, role={role_name_or_arn}, expires={creds_info.get("expiration_time")}')
 
-    except SMTPAssumeRoleException as e:
+    except (SMTPAssumeRoleException, SESAssumeRoleException) as e:
         log.error(f'SES AssumeRole configuration failed: {str(e)}')
         log.error('Email functionality will NOT work with AssumeRole.')
         log.error('To use static SMTP credentials, set: ckanext.hdx_smtp_assumerole.use_assume_role = false')

@@ -48,6 +48,7 @@
     {% endfor %}
   {% endif %}
 
+  {#
   {% if package.dataseries_name %}
 
     <div class="label-icons">
@@ -58,7 +59,8 @@
         href="{% url_for 'search', dataseries_name=package.dataseries_name %}" data-module="hdx_click_stopper"
         data-module-link_type="dataseries dataset page">{{ package.dataseries_name }}</a></span>
     </div>
-  {% endif %}
+   {% endif %}
+  #}
 
   {% if package.subnational == '1' %}
     <div class="label-icons">

@@ -15,7 +15,7 @@ use = config:/srv/ckan/common-config-ini.txt
 ## Database Settings
 sqlalchemy.url = postgresql://${HDX_CKANDB_USER}:${HDX_CKANDB_PASS}@${HDX_CKANDB_ADDR}:${HDX_CKANDB_PORT}/${HDX_CKANDB_DB}
 ckan.datastore.write_url = postgresql://${HDX_CKANDB_USER}:${HDX_CKANDB_PASS}@${HDX_CKANDB_ADDR}:${HDX_CKANDB_PORT}/${HDX_CKANDB_DB_DATASTORE}
-ckan.datastore.read_url = postgresql://${HDX_CKANDB_USER_DATASTORE}:${HDX_CKANDB_PASS_DATASTORE}@${HDX_CKANDB_ADDR}:${HDX_CKANDB_PORT}/${HDX_CKANDB_DB_DATASTORE}
+ckan.datastore.read_url = postgresql://${HDX_CKANDB_USER_DATASTORE}:${HDX_CKANDB_PASS_DATASTORE}@${HDX_CKANDB_ADDR_DATASTORE}:${HDX_CKANDB_PORT}/${HDX_CKANDB_DB_DATASTORE}
 
 ## Site Settings
 ckan.site_url = https://${HDX_DOMAIN}
@@ -63,7 +63,7 @@ ckanext.hdx_smtp_assumerole.use_assume_role = ${HDX_SMTP_USE_ASSUME_ROLE}
 ckanext.hdx_smtp_assumerole.role_arn = ${HDX_SMTP_ASSUME_ROLE}
 ckanext.hdx_smtp_assumerole.region = ${REGION_NAME}
 ckanext.hdx_smtp_assumerole.smtp_domain = ${HDX_SMTP_DOMAIN}
-ckanext.hdx_smtp_assumerole.session_name = ckan-ses-session
+ckanext.hdx_smtp_assumerole.session_name = ${AWS_SES_SESSION_NAME}
 
 ## DOWNLOAD WITH CACHE DATASETS
 # accepting comma separated list with no spaces
@@ -149,6 +149,7 @@ ckanext.s3filestore.host_name = https://s3.${REGION_NAME}.amazonaws.com
 ckanext.s3filestore.region_name= ${REGION_NAME}
 ckanext.s3filestore.signature_version = s3v4
 ckanext.s3filestore.check_access_on_startup = true
+ckanext.s3filestore.aws_role_session_name = ${AWS_SESSION_NAME}
 ckan.storage_path = ${HDX_FILESTORE}
 
 # jwt

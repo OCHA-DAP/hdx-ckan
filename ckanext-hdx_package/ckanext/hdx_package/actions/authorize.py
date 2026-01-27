@@ -134,8 +134,8 @@ def hdx_cod_update(context, data_dict):
     return _check_hdx_user_permission(context, Permissions.PERMISSION_MANAGE_COD)
 
 
-def hdx_dataseries_update(context, data_dict):
-    return _check_hdx_user_permission(context, Permissions.PERMISSION_MANAGE_DATASERIES)
+# def hdx_dataseries_update(context, data_dict):
+#     return _check_hdx_user_permission(context, Permissions.PERMISSION_MANAGE_DATASERIES)
 
 
 def _check_hdx_user_permission(context, permission):
