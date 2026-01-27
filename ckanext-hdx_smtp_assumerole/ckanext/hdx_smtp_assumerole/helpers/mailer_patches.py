@@ -12,7 +12,7 @@ import ckan.lib.mailer as mailer
 from ckan import model
 import ckan.plugins.toolkit as tk
 
-from ckanext.hdx_smtp_assumerole.helpers.credentials_manager import SMTPCredentialsManager
+from ckanext.hdx_smtp_assumerole.helpers.caching import get_ses_credentials
 from ckanext.hdx_smtp_assumerole.helpers.ses_sender import send_email_via_ses
 
 log = logging.getLogger(__name__)
@@ -176,16 +176,9 @@ def patched_mail_user(
     :raises Exception: If SES credentials are not available or email sending fails
     """
     try:
-        # Get credentials manager and ensure fresh credentials
-        manager = SMTPCredentialsManager.get_instance()
-        manager.ensure_fresh_credentials()
-
-        # Get SES credentials
-        ses_creds = manager.get_ses_credentials()
-        if not ses_creds:
-            error_msg = 'No SES credentials available - cannot send email'
-            log.error(error_msg)
-            raise Exception(error_msg)
+        # Get SES credentials (dogpile cache handles credential refresh automatically)
+        # Raises SESAssumeRoleException if credentials cannot be loaded
+        ses_creds = get_ses_credentials()
 
         # Extract recipient email and name
         if isinstance(recipient, model.User):
@@ -263,16 +256,9 @@ def patched_mail_recipient(
     :raises Exception: If SES credentials are not available or email sending fails
     """
     try:
-        # Get credentials manager and ensure fresh credentials
-        manager = SMTPCredentialsManager.get_instance()
-        manager.ensure_fresh_credentials()
-
-        # Get SES credentials
-        ses_creds = manager.get_ses_credentials()
-        if not ses_creds:
-            error_msg = 'No SES credentials available - cannot send email'
-            log.error(error_msg)
-            raise Exception(error_msg)
+        # Get SES credentials (dogpile cache handles credential refresh automatically)
+        # Raises SESAssumeRoleException if credentials cannot be loaded
+        ses_creds = get_ses_credentials()
 
         # Get mail_from config
         config = tk.config

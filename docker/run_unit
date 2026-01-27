@@ -17,6 +17,8 @@
 [ -z "$HDX_SMTP_USE_ASSUME_ROLE" ] && export HDX_SMTP_USE_ASSUME_ROLE=false
 # don't use assume role unless the role is defined
 [ -z "$HDX_SMTP_ASSUME_ROLE" ] && export HDX_SMTP_ASSUME_ROLE="not-configured" && export HDX_SMTP_USE_ASSUME_ROLE=false
+# set a default aws ses session name for smtp assume role plugin
+[ -z "$AWS_SES_SESSION_NAME" ] && export AWS_SES_SESSION_NAME="ckan-ses-session"
 # don't take the SMTP DOMAIN env var for granted
 [ -z "$HDX_SMTP_DOMAIN" ] && export HDX_SMTP_DOMAIN=humdata.local
 

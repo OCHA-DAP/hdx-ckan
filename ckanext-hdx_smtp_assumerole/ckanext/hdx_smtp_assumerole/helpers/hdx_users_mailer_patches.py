@@ -16,7 +16,7 @@ from email import encoders
 import ckan
 import ckan.plugins.toolkit as tk
 
-from ckanext.hdx_smtp_assumerole.helpers.credentials_manager import SMTPCredentialsManager
+from ckanext.hdx_smtp_assumerole.helpers.caching import get_ses_credentials
 from ckanext.hdx_smtp_assumerole.helpers.ses_sender import send_email_via_ses
 
 log = logging.getLogger(__name__)
@@ -84,16 +84,9 @@ def patched_mail_recipient_html(
     :raises Exception: If SES credentials are not available or email sending fails
     """
     try:
-        # Get credentials manager and ensure fresh credentials
-        manager = SMTPCredentialsManager.get_instance()
-        manager.ensure_fresh_credentials()
-
-        # Get SES credentials
-        ses_creds = manager.get_ses_credentials()
-        if not ses_creds:
-            error_msg = 'No SES credentials available - cannot send email'
-            log.error(error_msg)
-            raise Exception(error_msg)
+        # Get SES credentials (dogpile cache handles credential refresh automatically)
+        # Raises SESAssumeRoleException if credentials cannot be loaded
+        ses_creds = get_ses_credentials()
 
         # Build email message (similar to original code)
         config = tk.config
@@ -116,10 +109,7 @@ def patched_mail_recipient_html(
 
         subject_header = Header(subject.encode(CHARSET), CHARSET)
         msg['Subject'] = subject_header
-        msg['From'] = u'"{display_name}" <{email}>'.format(
-            display_name=sender_name,
-            email=mail_from
-        )
+        msg['From'] = f'"{sender_name}" <{mail_from}>'
 
         recipient_email_list = []
         recipients = None
@@ -130,12 +120,10 @@ def patched_mail_recipient_html(
                 recipient_email_list.append(email)
                 display_name = r.get('display_name')
                 if display_name:
-                    recipient = u'"{display_name}" <{email}>'.format(
-                        display_name=_get_decoded_str(display_name),
-                        email=email
-                    )
+                    decoded_name = _get_decoded_str(display_name)
+                    recipient = f'"{decoded_name}" <{email}>'
                 else:
-                    recipient = u'{email}'.format(email=email)
+                    recipient = email
                 recipients = u', '.join([recipients, recipient]) if recipients else recipient
 
         msg['To'] = recipients if PY3 else Header(recipients, CHARSET)
@@ -148,10 +136,9 @@ def patched_mail_recipient_html(
         if cc_recipients_list:
             for r in cc_recipients_list:
                 recipient_email_list.append(r.get('email'))
-                cc_recipient = u'"{display_name}" <{email}>'.format(
-                    display_name=_get_decoded_str(r.get('display_name')),
-                    email=r.get('email')
-                )
+                cc_display_name = _get_decoded_str(r.get('display_name'))
+                cc_email = r.get('email')
+                cc_recipient = f'"{cc_display_name}" <{cc_email}>'
                 cc_recipients = u', '.join([cc_recipients, cc_recipient]) if cc_recipients else cc_recipient
             if cc_recipients:
                 msg['Cc'] = cc_recipients if PY3 else Header(cc_recipients, CHARSET)
@@ -161,10 +148,8 @@ def patched_mail_recipient_html(
         msg['Date'] = utils.formatdate(time())
         msg['X-Mailer'] = "CKAN %s" % ckan.__version__
 
-        reply_to = u'"{display_name}" <{email}>'.format(
-            display_name=_get_decoded_str(sender_name),
-            email=sender_email
-        )
+        reply_to_name = _get_decoded_str(sender_name)
+        reply_to = f'"{reply_to_name}" <{sender_email}>'
         msg['Reply-To'] = reply_to if PY3 else Header(reply_to, CHARSET)
 
         part = MIMEText(body_html, 'html', CHARSET)
@@ -175,7 +160,7 @@ def patched_mail_recipient_html(
             _part.set_payload(file.file.read())
             encoders.encode_base64(_part)
             extension = file.filename.split('.')[-1]
-            header_value = 'attachment; filename=attachment.{0}'.format(extension)
+            header_value = f'attachment; filename=attachment.{extension}'
             _part.add_header('Content-Disposition', header_value)
             msg.attach(_part)
 

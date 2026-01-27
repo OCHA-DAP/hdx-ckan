@@ -8,8 +8,10 @@ from ckanext.hdx_smtp_assumerole.helpers.hdx_users_mailer_patches import (
     _get_decoded_str,
     is_patched,
     patch_hdx_users_mailer,
-    unpatch_hdx_users_mailer
+    unpatch_hdx_users_mailer,
+    patched_mail_recipient_html
 )
+from ckanext.hdx_smtp_assumerole.helpers.caching import SESAssumeRoleException
 
 
 class TestGetDecodedStr:
@@ -96,3 +98,191 @@ class TestPatchFunctions:
 
         # Should handle ImportError gracefully
         unpatch_hdx_users_mailer()
+
+
+class TestPatchedMailRecipientHtml:
+    """Tests for patched_mail_recipient_html function"""
+
+    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.hdx_users_mailer_patches.send_email_via_ses')
+    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.hdx_users_mailer_patches.tk')
+    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.hdx_users_mailer_patches.get_ses_credentials')
+    def test_basic_send(self, mock_get_creds, mock_tk, mock_send):
+        """Test basic email sending with recipients"""
+        mock_get_creds.return_value = {
+            'access_key': 'AKIATEST',
+            'secret_key': 'test-secret',
+            'session_token': 'test-token',
+            'region': 'us-east-1'
+        }
+        mock_tk.config = {'smtp.mail_from': 'hdx@example.com', 'ckan.site_url': 'https://data.example.com'}
+        mock_tk.render.return_value = '<html><body>Email body</body></html>'
+
+        patched_mail_recipient_html(
+            sender_name='Test Sender',
+            sender_email='sender@example.com',
+            recipients_list=[{'email': 'user@example.com', 'display_name': 'Test User'}],
+            subject='Test Subject',
+            content_dict={'message': 'Hello'}
+        )
+
+        mock_send.assert_called_once()
+        call_args = mock_send.call_args[1]
+        assert call_args['smtp_from'] == 'hdx@example.com'
+        assert call_args['recipients'] == ['user@example.com']
+        assert call_args['subject'] == 'Test Subject'
+        assert call_args['access_key'] == 'AKIATEST'
+
+    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.hdx_users_mailer_patches.send_email_via_ses')
+    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.hdx_users_mailer_patches.tk')
+    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.hdx_users_mailer_patches.get_ses_credentials')
+    def test_with_cc_and_bcc(self, mock_get_creds, mock_tk, mock_send):
+        """Test email sending with CC and BCC recipients"""
+        mock_get_creds.return_value = {
+            'access_key': 'AKIATEST',
+            'secret_key': 'test-secret',
+            'session_token': 'test-token',
+            'region': 'us-east-1'
+        }
+        mock_tk.config = {'smtp.mail_from': 'hdx@example.com', 'ckan.site_url': 'https://data.example.com'}
+        mock_tk.render.return_value = '<html><body>Email</body></html>'
+
+        patched_mail_recipient_html(
+            recipients_list=[{'email': 'to@example.com', 'display_name': 'To User'}],
+            subject='Test CC/BCC',
+            content_dict={'message': 'Hello'},
+            cc_recipients_list=[{'email': 'cc@example.com', 'display_name': 'CC User'}],
+            bcc_recipients_list=[{'email': 'bcc@example.com', 'display_name': 'BCC User'}]
+        )
+
+        mock_send.assert_called_once()
+        call_args = mock_send.call_args[1]
+        assert 'to@example.com' in call_args['recipients']
+        assert 'cc@example.com' in call_args['recipients']
+        assert 'bcc@example.com' in call_args['recipients']
+
+    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.hdx_users_mailer_patches.send_email_via_ses')
+    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.hdx_users_mailer_patches.tk')
+    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.hdx_users_mailer_patches.get_ses_credentials')
+    def test_with_multiple_recipients(self, mock_get_creds, mock_tk, mock_send):
+        """Test email sending with multiple To recipients"""
+        mock_get_creds.return_value = {
+            'access_key': 'AKIATEST',
+            'secret_key': 'test-secret',
+            'session_token': 'test-token',
+            'region': 'us-east-1'
+        }
+        mock_tk.config = {'smtp.mail_from': 'hdx@example.com', 'ckan.site_url': 'https://data.example.com'}
+        mock_tk.render.return_value = '<html><body>Email</body></html>'
+
+        patched_mail_recipient_html(
+            recipients_list=[
+                {'email': 'user1@example.com', 'display_name': 'User One'},
+                {'email': 'user2@example.com'}
+            ],
+            subject='Multi Recipients',
+            content_dict={'message': 'Hello all'}
+        )
+
+        mock_send.assert_called_once()
+        call_args = mock_send.call_args[1]
+        assert 'user1@example.com' in call_args['recipients']
+        assert 'user2@example.com' in call_args['recipients']
+
+    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.hdx_users_mailer_patches.send_email_via_ses')
+    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.hdx_users_mailer_patches.tk')
+    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.hdx_users_mailer_patches.get_ses_credentials')
+    def test_with_file_attachment(self, mock_get_creds, mock_tk, mock_send):
+        """Test email sending with file attachment (cgi.FieldStorage)"""
+        import io
+        mock_get_creds.return_value = {
+            'access_key': 'AKIATEST',
+            'secret_key': 'test-secret',
+            'session_token': 'test-token',
+            'region': 'us-east-1'
+        }
+        mock_tk.config = {'smtp.mail_from': 'hdx@example.com', 'ckan.site_url': 'https://data.example.com'}
+        mock_tk.render.return_value = '<html><body>Email</body></html>'
+
+        # Mock a cgi.FieldStorage object
+        import cgi
+        mock_file = mock.Mock(spec=cgi.FieldStorage)
+        mock_file.file = io.BytesIO(b'file content')
+        mock_file.filename = 'report.csv'
+
+        patched_mail_recipient_html(
+            recipients_list=[{'email': 'user@example.com', 'display_name': 'User'}],
+            subject='With Attachment',
+            content_dict={'message': 'See attached'},
+            file=mock_file
+        )
+
+        mock_send.assert_called_once()
+        call_args = mock_send.call_args[1]
+        assert call_args['mime_message'] is not None
+        msg_string = call_args['mime_message'].as_string()
+        assert 'attachment' in msg_string
+        assert 'csv' in msg_string
+
+    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.hdx_users_mailer_patches.get_ses_credentials')
+    def test_credential_failure_raises(self, mock_get_creds):
+        """Test that credential loading failure raises exception"""
+        mock_get_creds.side_effect = SESAssumeRoleException('Cannot assume role')
+
+        with pytest.raises(SESAssumeRoleException) as exc_info:
+            patched_mail_recipient_html(
+                recipients_list=[{'email': 'user@example.com'}],
+                subject='Test',
+                content_dict={'message': 'Hello'}
+            )
+
+        assert 'Cannot assume role' in str(exc_info.value)
+
+    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.hdx_users_mailer_patches.send_email_via_ses')
+    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.hdx_users_mailer_patches.tk')
+    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.hdx_users_mailer_patches.get_ses_credentials')
+    def test_ses_send_failure_raises(self, mock_get_creds, mock_tk, mock_send):
+        """Test that SES send failure propagates exception"""
+        mock_get_creds.return_value = {
+            'access_key': 'AKIATEST',
+            'secret_key': 'test-secret',
+            'session_token': 'test-token',
+            'region': 'us-east-1'
+        }
+        mock_tk.config = {'smtp.mail_from': 'hdx@example.com', 'ckan.site_url': 'https://data.example.com'}
+        mock_tk.render.return_value = '<html><body>Email</body></html>'
+        mock_send.side_effect = Exception('SES API Error')
+
+        with pytest.raises(Exception) as exc_info:
+            patched_mail_recipient_html(
+                recipients_list=[{'email': 'user@example.com'}],
+                subject='Test',
+                content_dict={'message': 'Hello'}
+            )
+
+        assert 'SES API Error' in str(exc_info.value)
+
+    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.hdx_users_mailer_patches.send_email_via_ses')
+    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.hdx_users_mailer_patches.tk')
+    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.hdx_users_mailer_patches.get_ses_credentials')
+    def test_custom_headers(self, mock_get_creds, mock_tk, mock_send):
+        """Test email sending with custom headers"""
+        mock_get_creds.return_value = {
+            'access_key': 'AKIATEST',
+            'secret_key': 'test-secret',
+            'session_token': 'test-token',
+            'region': 'us-east-1'
+        }
+        mock_tk.config = {'smtp.mail_from': 'hdx@example.com', 'ckan.site_url': 'https://data.example.com'}
+        mock_tk.render.return_value = '<html><body>Email</body></html>'
+
+        patched_mail_recipient_html(
+            recipients_list=[{'email': 'user@example.com', 'display_name': 'User'}],
+            subject='Test Headers',
+            content_dict={'message': 'Hello'},
+            headers={'X-Custom': 'custom-value'}
+        )
+
+        mock_send.assert_called_once()
+        call_args = mock_send.call_args[1]
+        msg = call_args['mime_message']
+        assert msg['X-Custom'] == 'custom-value'
