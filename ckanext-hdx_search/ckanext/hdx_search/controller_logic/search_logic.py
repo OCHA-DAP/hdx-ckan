@@ -62,7 +62,7 @@ config = tk.config
 
 def get_default_facet_titles():
     return {
-        'dataseries_name': _('Data series'),
+        # 'dataseries_name': _('Data series'),
         'organization': _('Organizations'),
         'groups': _('Groups'),
         # 'tags': _('Tags'),
@@ -549,9 +549,9 @@ class SearchLogic(object):
                 num_of_unarchived = sum(
                     (item.get('count', 0) for item in item_list if item.get('name', '') != 'true'), 0)
             else:
-                if category_key == 'dataseries_name':
-                    category_tooltip = 'A data series is a collection of datasets that has a shared topic usually ' \
-                                       'provided by a single organization'
+                # if category_key == 'dataseries_name':
+                #     category_tooltip = 'A data series is a collection of datasets that has a shared topic usually ' \
+                #                        'provided by a single organization'
 
                 standard_facet_category, anything_selected, selected_titles, selected_categ_keys = \
                     self._create_standard_facet_category(category_key, category_title, category_tooltip, item_list,

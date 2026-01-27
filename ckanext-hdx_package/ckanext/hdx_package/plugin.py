@@ -194,14 +194,14 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 tk.get_converter('hdx_convert_to_json_string'),
                 tk.get_converter('convert_to_extras')
             ],
-            'dataseries_name': [
-                tk.get_validator('hdx_delete_unless_authorized_to_update_dataseries'),
-                tk.get_validator('hdx_keep_prev_value_if_empty'),
-                tk.get_validator('hdx_delete_if_marked_with_no_data'),
-                tk.get_validator('ignore_missing'),
-                tk.get_validator('hdx_dataseries_title_validator'),
-                tk.get_converter('convert_to_extras')
-            ],
+            # 'dataseries_name': [
+            #     tk.get_validator('hdx_delete_unless_authorized_to_update_dataseries'),
+            #     tk.get_validator('hdx_keep_prev_value_if_empty'),
+            #     tk.get_validator('hdx_delete_if_marked_with_no_data'),
+            #     tk.get_validator('ignore_missing'),
+            #     tk.get_validator('hdx_dataseries_title_validator'),
+            #     tk.get_converter('convert_to_extras')
+            # ],
             'tag_string': [
                 tk.get_validator('hdx_keep_crisis_tag_string_if_not_sysadmin'),
                 tk.get_validator('ignore_missing'),
@@ -408,7 +408,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                                tk.get_validator('ignore_missing')],
             'archived': [tk.get_converter('convert_from_extras'), tk.get_validator('boolean_validator')],
             # 'review_date': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
-            'dataseries_name': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
+            'dataseries_name': [tk.get_converter('convert_from_extras'), tk.get_converter('ignore')],
             'has_showcases': [tk.get_validator('ignore_missing')],
             'last_modified': [tk.get_validator('ignore_missing')],
             # 'due_daterange': [tk.get_validator('ignore_missing')],
@@ -495,8 +495,8 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'hdx_fs_check_package_reset': hdx_patch.hdx_fs_check_package_reset,
             'hdx_send_mail_request_tags': hdx_get.hdx_send_mail_request_tags,
             'hdx_qa_package_revise_resource': hdx_patch.hdx_qa_package_revise_resource,
-            'hdx_dataseries_link': hdx_patch.hdx_dataseries_link,
-            'hdx_dataseries_unlink': hdx_patch.hdx_dataseries_unlink,
+            # 'hdx_dataseries_link': hdx_patch.hdx_dataseries_link,
+            # 'hdx_dataseries_unlink': hdx_patch.hdx_dataseries_unlink,
             'hdx_p_coded_resource_update': hdx_patch.hdx_p_coded_resource_update,
             'hdx_mark_resource_in_hapi': hdx_patch.hdx_mark_resource_in_hapi,
             'datastore_info': hdx_get.datastore_info,
@@ -534,8 +534,8 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'hdx_keep_unless_allow_fs_check_field':
                 vd.hdx_package_keep_prev_value_unless_field_in_context_wrapper('allow_fs_check_field',
                                                                                resource_level=True),
-            'hdx_delete_unless_authorized_to_update_dataseries':
-                vd.hdx_delete_unless_authorized_wrapper('hdx_dataseries_update'),
+            # 'hdx_delete_unless_authorized_to_update_dataseries':
+            #     vd.hdx_delete_unless_authorized_wrapper('hdx_dataseries_update'),
             'hdx_delete_unless_authorized_to_update_cod':
                 vd.hdx_delete_unless_authorized_wrapper('hdx_cod_update'),
             'hdx_delete_if_marked_with_no_data': vd.hdx_delete_if_marked_with_no_data,
@@ -590,7 +590,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'hdx_fs_check_resource_revise': authorize.hdx_fs_check_resource_revise,
             'hdx_cod_update': authorize.hdx_cod_update,
             'hdx_send_mail_request_tags': authorize.hdx_send_mail_request_tags,
-            'hdx_dataseries_update': authorize.hdx_dataseries_update,
+            # 'hdx_dataseries_update': authorize.hdx_dataseries_update,
             'hdx_p_coded_resource_update': authorize.hdx_p_coded_resource_update,
             'hdx_mark_resource_in_hapi': authorize.hdx_mark_resource_in_hapi,
             'hdx_request_access': authorize.hdx_request_access,
