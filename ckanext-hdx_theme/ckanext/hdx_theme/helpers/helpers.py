@@ -128,12 +128,6 @@ def _any(item, ext_list=NOT_HXL_FORMAT_LIST):
     return any(i in item for i in ext_list)
 
 
-def is_not_hxl_format(res_format):
-    if not res_format:
-        return False
-    return _any([res_format.lower()], NOT_HXL_FORMAT_LIST)
-
-
 def get_facet_items_dict(facet, limit=1000, exclude_active=False):
     facets = h.get_facet_items_dict(
         facet, limit=limit, exclude_active=exclude_active)
@@ -902,13 +896,6 @@ def hdx_organization_list_for_user(user_id):
         # return tk.get_action('organization_list_for_user')(context, {'id': user_id})
         return tk.get_action('hdx_organization_list_for_user')(_get_context(), {'id': user_id})
     return orgs
-
-
-def hdx_dataset_is_hxl(tag_list):
-    for tag in tag_list:
-        if tag.get('name') == 'hxl' and tag.get('display_name') == 'hxl':
-            return True
-    return False
 
 
 def hdx_dataset_has_sadd(tag_list):

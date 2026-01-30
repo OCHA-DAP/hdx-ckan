@@ -70,17 +70,3 @@
   font-weight: normal;
 }
 /* END Style Resources List*/
-.data-check-modal.modal.show .modal-dialog {
-  width: 1260px;
-  max-width: none;
-}
-.data-check-modal.modal.show .modal-dialog .modal-content {
-  height: 90vh;
-}
-.data-check-modal.modal.show .modal-dialog .modal-content .modal-body {
-  padding: 0;
-}
-.data-check-modal.modal.show .modal-dialog .modal-content .modal-body iframe {
-  width: 100%;
-  height: 80vh;
-}

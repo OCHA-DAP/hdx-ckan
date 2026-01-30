@@ -20,7 +20,7 @@ from ckanext.hdx_search.helpers.constants import \
     DEFAULT_SORTING, DEFAULT_NUMBER_OF_ITEMS_PER_PAGE, \
     HXLATED_DATASETS_FACET_NAME, HXLATED_DATASETS_FACET_QUERY, \
     COD_DATASETS_FACET_NAME, COD_DATASETS_FACET_QUERY, \
-    SUBNATIONAL_DATASETS_FACET_NAME, QUICKCHARTS_DATASETS_FACET_NAME, GEODATA_DATASETS_FACET_NAME, \
+    SUBNATIONAL_DATASETS_FACET_NAME, GEODATA_DATASETS_FACET_NAME, \
     REQUESTDATA_DATASETS_FACET_NAME, SHOWCASE_DATASETS_FACET_NAME, ARCHIVED_DATASETS_FACET_NAME, \
     P_CODED_DATASET_FACET_NAME, HDX_HAPI_DATA_FACET_NAME, HDX_HAPI_DATA_FACET_QUERY, \
     HPC_DATASETS_FACET_NAME, HPC_DATASETS_FACET_QUERY
@@ -32,7 +32,7 @@ from ckanext.hdx_package.helpers.constants import COD_VALUES_MAP, COD_GROUP_EXPL
     HPC_GROUP_EXPLANATION_LINK
 
 FEATURED_FACETS = [
-    COD_DATASETS_FACET_NAME, SUBNATIONAL_DATASETS_FACET_NAME, QUICKCHARTS_DATASETS_FACET_NAME,
+    COD_DATASETS_FACET_NAME, SUBNATIONAL_DATASETS_FACET_NAME,
     GEODATA_DATASETS_FACET_NAME, REQUESTDATA_DATASETS_FACET_NAME, HXLATED_DATASETS_FACET_NAME,
     SHOWCASE_DATASETS_FACET_NAME, ARCHIVED_DATASETS_FACET_NAME,
     P_CODED_DATASET_FACET_NAME, HDX_HAPI_DATA_FACET_NAME
@@ -485,7 +485,6 @@ class SearchLogic(object):
         # num_of_indicators = 0
         # num_of_cods = 0
         num_of_subnational = 0
-        num_of_quickcharts = 0
         num_of_geodata = 0
         num_of_p_coded = 0
         # num_of_sadd = 0
@@ -524,10 +523,6 @@ class SearchLogic(object):
             if category_key == SUBNATIONAL_DATASETS_FACET_NAME:
                 num_of_subnational = next((item.get('count', 0) for item in item_list if item.get('name', '') == '1'),
                                           0)
-            elif category_key == 'has_quickcharts':
-                # has_quickcharts is a solr boolean that is transformed to the string 'true'
-                num_of_quickcharts = next(
-                    (item.get('count', 0) for item in item_list if item.get('name', '') == 'true'), 0)
             elif category_key == 'has_geodata':
                 # has_geodata is a solr boolean that is transformed to the string 'true'
                 num_of_geodata = next((item.get('count', 0) for item in item_list if item.get('name', '') == 'true'), 0)
@@ -594,8 +589,6 @@ class SearchLogic(object):
         #                                    _('Administrative Divisions'), existing_facets, search_extras)
         # self._add_facet_item_to_list(featured_facet_items, REQUESTDATA_DATASETS_FACET_NAME,
         #                              'Datasets on request (HDX Connect)', num_of_requestdata, search_extras)
-        # self._add_facet_item_to_list(featured_facet_items, QUICKCHARTS_DATASETS_FACET_NAME,
-        #                              'Datasets with Quick Charts', num_of_quickcharts, search_extras)
         # self._add_facet_item_to_list(featured_facet_items, SHOWCASE_DATASETS_FACET_NAME, 'Datasets with Showcase',
         #                              num_of_showcases, search_extras)
         # self._add_item_to_featured_facets(featured_facet_items, 'ext_hxl', 'Datasets with HXL tags',
@@ -622,7 +615,6 @@ class SearchLogic(object):
         # result['num_of_indicators'] = num_of_indicators
         # result['num_of_cods'] = num_of_cods
         result['num_of_subnational'] = num_of_subnational
-        result['num_of_quickcharts'] = num_of_quickcharts
         result['num_of_geodata'] = num_of_geodata
         # result['num_of_hxl'] = num_of_hxl
         # result['num_of_sadd'] = num_of_sadd
