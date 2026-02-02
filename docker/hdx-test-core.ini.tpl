@@ -80,8 +80,8 @@ ckan.csrf_protection.ignore_extensions = false
 ckan.use_pylons_response_cleanup_middleware = False
 
 hdx.file_structure.check_url = http://${HDX_ANALYTICS_API}/api/file-structure-check/dataset/{dataset_id}/resource/{resource_id}
-hdx.hxlproxy.url = https://proxy.hxlstandard.org
-hdx.hxlproxy.source_info_url = ${HDX_HXLPROXY}/api/source-info?url={url}
+hdx.hxlproxy.url = http://hxl:5000
+hdx.hxlproxy.source_info_url = http://hxl:5000/api/source-info?url={url}
 
 hdx.onboarding.send_confirmation_email = true
 
