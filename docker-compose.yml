@@ -78,3 +78,12 @@ services:
       AWS_BUCKET_NAME: RANDOM_BUCKET
       REGION_NAME: eu-central-1
       HDX_ENABLED_PLUGINS: dcat dcat_json_interface structured_data hdx_dataviz expire_api_token hdx_hxl_preview ytp_request hdx_pages hdx_choropleth_map_view hdx_geopreview_view hdx_chart_views hdx_service_checker hdx_analytics hdx_search sitemap hdx_org_group hdx_group hdx_package hdx_user_extra hdx_mail_validate hdx_users hdx_theme security requestdata showcase resource_proxy text_view recline_view datastore
+
+  hxl:
+    image: public.ecr.aws/unocha/hxl-proxy:2.2.5
+    environment:
+      DEBUG: ${DEBUG:-False}
+      HXL_WORKERS: ${HXL_WORKERS:-1}
+      CACHE_TYPE: ${CACHE_TYPE:-filesystem}
+      LOGGING_LEVEL: ${LOGGING_LEVEL:-ERROR}
+      REQUEST_CACHE_BACKEND: ${REQUEST_CACHE_BACKEND:-memory}
