@@ -102,7 +102,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
         config['hdx_checks.spatial_checks_url'] = spatial_check_url
 
     def __add_hxl_proxy_url_for_checks(self, config):
-        hxl_proxy_url = (config.get('hdx.hxlproxy.url') or '') + '/hxlproxy/data.json?url=sample.test'
+        hxl_proxy_url = (config.get('hdx.hxlproxy.url') or '') + '/data.json?url=sample.test'
         hxl_proxy_url = self._create_full_URL(hxl_proxy_url)
         config['hdx_checks.hxl_proxy_url'] = hxl_proxy_url
 
