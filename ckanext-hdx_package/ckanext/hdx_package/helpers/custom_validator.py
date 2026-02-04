@@ -491,7 +491,7 @@ def hdx_add_update_fs_check_info(key, data, errors, context):
                         old_value.append(fs_check_value)
                     else:
                         old_value = [fs_check_value]
-                    data[key] = old_value[-10:]
+                    data[key] = old_value[-20:]
 
                 # resource create
                 else:
