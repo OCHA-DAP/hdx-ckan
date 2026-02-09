@@ -23,7 +23,8 @@ from ckanext.hdx_search.helpers.constants import NEW_DATASETS_FACET_NAME, UPDATE
     HXLATED_DATASETS_FACET_NAME, HXLATED_DATASETS_FACET_QUERY, \
     COD_DATASETS_FACET_NAME, COD_DATASETS_FACET_QUERY, \
     SUBNATIONAL_DATASETS_FACET_NAME, GEODATA_DATASETS_FACET_NAME, \
-    REQUESTDATA_DATASETS_FACET_NAME, SHOWCASE_DATASETS_FACET_NAME, HDX_HAPI_DATA_FACET_NAME, HDX_HAPI_DATA_FACET_QUERY
+    REQUESTDATA_DATASETS_FACET_NAME, SHOWCASE_DATASETS_FACET_NAME, HDX_HAPI_DATA_FACET_NAME, HDX_HAPI_DATA_FACET_QUERY, \
+    TABULAR_DATA_DATASETS_FACET_NAME, TABULAR_DATA_DATASETS_FACET_QUERY
 from ckanext.hdx_search.helpers.solr_query_helper import generate_datetime_period_query
 from ckanext.hdx_search.views.qa import hdx_qa
 from ckanext.hdx_search.cli.click_feature_search_command import hdx_feature_search
@@ -133,7 +134,8 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
         # adapt_solr_fq(ADMIN_DIVISIONS_DATASETS_FACET_NAME, ' +{}'.format(ADMIN_DIVISIONS_DATASETS_FACET_QUERY),
         #               ' -{}'.format(ADMIN_DIVISIONS_DATASETS_FACET_QUERY))
 
-        adapt_solr_fq('tabular_data', ' +res_extras_datastore_active:true', ' -res_extras_datastore_active:true')
+        adapt_solr_fq(TABULAR_DATA_DATASETS_FACET_NAME, ' +{}'.format(TABULAR_DATA_DATASETS_FACET_QUERY),
+                      ' -{}'.format(TABULAR_DATA_DATASETS_FACET_QUERY))
         adapt_solr_fq('qa_completed', ' +extras_qa_completed:true', ' -extras_qa_completed:true')
         adapt_solr_fq('p_coded', ' +res_extras_p_coded:true', ' -res_extras_p_coded:true')
         adapt_solr_fq('broken_link', ' +res_extras_broken_link:true', ' -res_extras_broken_link:true')

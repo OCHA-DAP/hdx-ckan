@@ -26,7 +26,9 @@ HPC_QUOTED_TAGS = (f'"{item}"' for item in HPC_VALUES_MAP.keys())
 HPC_DATASETS_FACET_NAME = 'hpc'
 HPC_DATASETS_FACET_QUERY = f'vocab_Topics:({" OR ".join(HPC_QUOTED_TAGS)})'
 
-TABULAR_DATA_DATASET_FACET_NAME = 'tabular_data'
+TABULAR_DATA_DATASETS_FACET_NAME = 'tabular_data'
+TABULAR_DATA_DATASETS_FACET_QUERY = 'res_extras_datastore_active:true'
+
 P_CODED_DATASET_FACET_NAME = 'p_coded'
 SUBNATIONAL_DATASETS_FACET_NAME = 'subnational'
 GEODATA_DATASETS_FACET_NAME = 'geodata'
