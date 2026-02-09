@@ -453,6 +453,12 @@ h1.country-title {
   font-weight: 300;
   font-size: 12px;
 }
+.data-completeness .data-item .data-item-details .sub-category .dataset.dataset-complementary {
+  padding-left: 33px;
+}
+.data-completeness .data-item .data-item-details .sub-category .dataset.dataset-complementary .data-completeness {
+  left: 17px;
+}
 .data-completeness .completeness-header-actions {
   color: #333333;
 }

@@ -61,7 +61,7 @@
               {% for dataset in subcateg.datasets %}
                 {% set dataset_hover_title = dataset.title + "<br/><b>Limitations</b>: " + dataset.general_comment if dataset.general_comment else dataset.title %}
                 {% set dataset_hover_title = '<div class="tooltip-content">' + dataset_hover_title + '</div>' %}
-              <div class="dataset" data-module="bs_tooltip" data-module-placement="top" data-bs-toggle="tooltip"
+              <div class="dataset{% if dataset.is_complementary %} dataset-complementary{% endif %}" data-module="bs_tooltip" data-module-placement="top" data-bs-toggle="tooltip"
                     data-bs-original-title="{{ dataset_hover_title }}" data-bs-container-="body" data-bs-html="true"
                     data-module-inner_class="tooltip-column">
                 <span class="data-completeness {% if dataset.is_good %}blue{% else %}striped{% endif %}"></span>
