@@ -80,6 +80,7 @@ class DataCompleteness(object):
                         search_result = logic.get_action('package_search')({}, query_params)
                         ds['datasets'] = search_result.get('results', [])
                         for dataset in ds['datasets']:
+                            dataset.setdefault('is_complementary', False)
                             self.__replace_org_name_with_title(dataset)
                             self.__compute_goodness_flag(dataset, overrides_map)
                             self.__add_general_comments(dataset, overrides_map)
@@ -105,10 +106,14 @@ class DataCompleteness(object):
     def __remove_complementary_datasets(self, ds):
         """Temporarily remove complementary datasets to exclude them from stats calculations."""
         complementary_names = {d['dataset_name'] for d in ds.get('complementary_datasets', [])}
-        complementary_datasets_tmp = [d for d in ds.get('datasets', []) if d['name'] in complementary_names]
+        complementary_datasets_tmp = []
+        for d in ds.get('datasets', []):
+            if d.get('name') in complementary_names:
+                d['is_complementary'] = True
+                complementary_datasets_tmp.append(d)
         if complementary_datasets_tmp:
             ds['complementary_datasets_tmp'] = complementary_datasets_tmp
-        ds['datasets'] = [d for d in ds.get('datasets', []) if d['name'] not in complementary_names]
+        ds['datasets'] = [d for d in ds.get('datasets', []) if d.get('name') not in complementary_names]
 
     def __build_query(self, include_rules, exclude_rules):
         query_string = ''
