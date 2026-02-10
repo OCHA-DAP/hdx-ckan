@@ -402,16 +402,6 @@ groups:
         default:
         example: host-to-S3-cloud-storage
         description: The endpoint URL for the S3 service, usually in the format of 's3.amazonaws.com' or a regional endpoint.
-  - annotation: DCAT Configuration
-    options:
-      - key: ckanext.dcat.base_uri
-        default:
-        example: "http://example.com/data"
-        description: The base URI for the DCAT dataset. This should be a valid URI that serves as the root for all dataset links.
-      - key: ckanext.dcat.catalog_endpoint
-        default:
-        example: "/dcat/catalog/{_format}"
-        description: The endpoint for accessing the DCAT catalog. This can be customized to define how datasets are accessed in different formats (e.g., JSON, XML).
   - annotation: HDX Generic
     options:
       - key: hdx.qadashboard.enabled
