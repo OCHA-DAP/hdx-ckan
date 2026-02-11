@@ -35,6 +35,8 @@
 [ -z "$HDX_DISABLED_OBJECTS_CSV" ] && export HDX_DISABLED_OBJECTS_CSV="https://docs.google.com/spreadsheets/d/e/2PACX-1vSsBSUTM3f9olyhVFDcAh-tXV63wlOtvsXukQIHTLiLCfbGJC8osDDaEqzoUVs2B0kgYMrkyVkihvVm/pub?gid=558881647&single=true&output=csv"
 [ -z "$HDX_APPROVED_TAGS_CSV" ] && export HDX_APPROVED_TAGS_CSV="https://docs.google.com/spreadsheets/d/e/2PACX-1vQJKjr25NZAIQELrFnUhVnL-7SxC8SwW9I6usm5Xvwyw00zRC-DhlLh74EVniX732w_BDFoQLrNDKKL/pub?gid=1261258630&single=true&output=csv"
 
+[ -z "$HDX_DATAPUSHER_ENABLED_OBJECTS_CSV" ] && export HDX_DATAPUSHER_ENABLED_OBJECTS_CSV="https://docs.google.com/spreadsheets/d/e/2PACX-1vStS317Pew-MCRc-6qYJN6nMEGGO2-XvLd7ihvVbXUZX-Nj_0k7HTIekCQicrXI_NUqMTLvf3fGSv8s/pub?gid=0&single=true&output=csv"
+
 # provide mailchimp defaults (mailchimp is enabled in common config)
 export HDX_MAILCHIMP_API_KEY=${HDX_MAILCHIMP_API_KEY:-ccc-fake}
 export HDX_MAILCHIMP_INTEREST_DATA_SERVICES=${HDX_MAILCHIMP_INTEREST_DATA_SERVICES:-90c34fef41}
