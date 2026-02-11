@@ -1155,8 +1155,8 @@ def hdx_is_package_allowed_for_datastore(context: Context, data_dict: DataDict) 
     dataset_dict = get_action('package_show')(context, {'id': package_id})
 
     if dataset_dict:
-        dataset_key = f'dataset_{dataset_dict["id"]}'
-        organization_key = f'organization_{dataset_dict["owner_org"]}'
+        dataset_key = f'dataset_{dataset_dict.get("id")}'
+        organization_key = f'organization_{dataset_dict.get("owner_org")}'
 
         allowed_set = cached_objects_allowed_for_datastore()
 
