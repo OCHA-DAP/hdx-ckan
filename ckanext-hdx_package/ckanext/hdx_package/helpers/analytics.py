@@ -88,6 +88,13 @@ def supports_notifications(object_type: ObjectType, object_dict: dict[str, Any])
     return str(object_supports_notifications).lower()
 
 
+def supports_tabular_data_endpoints(dataset_dict: dict[str, Any]) -> str:
+    dataset_supports_tabular_data = get_action('hdx_is_package_allowed_for_datastore')({}, {
+        'package_id': dataset_dict['id']})
+
+    return str(dataset_supports_tabular_data).lower()
+
+
 def extract_locations(pkg_dict):
     locations = pkg_dict.get('groups', [])
     location_names = []
@@ -148,6 +155,7 @@ def generate_analytics_data(dataset_dict):
         analytics_dict['datasetAvailability'] = dataset_availability(dataset_dict)
         analytics_dict['cameFrom'] = ''
         analytics_dict['supportsNotifications'] = supports_notifications(ObjectType.DATASET, dataset_dict)
+        analytics_dict['supportsTabularDataEndpoints'] = supports_tabular_data_endpoints(dataset_dict)
     else:
         analytics_dict['datasetId'] = ''
         analytics_dict['datasetName'] = ''
@@ -161,6 +169,7 @@ def generate_analytics_data(dataset_dict):
         analytics_dict['datasetAvailability'] = None
         analytics_dict['cameFrom'] = ''
         analytics_dict['supportsNotifications'] = 'false'
+        analytics_dict['supportsTabularDataEndpoints'] = 'false'
     return analytics_dict
 
 
