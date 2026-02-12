@@ -61,7 +61,8 @@ class HDXSchemaOrgProfile(SchemaOrgProfile):
 
     # Extension so we can add additional fields to the inline schema
     def additional_fields(self, dataset_ref, dataset_dict):
-        self.g.add((dataset_ref, SCHEMA.isAccessibleForFree, Literal(True)))
+        is_private = dataset_dict.get('private', False)
+        self.g.add((dataset_ref, SCHEMA.isAccessibleForFree, Literal(not is_private)))
 
     # identifier: use the HDX canonical URL as the dataset identifier
     def _basic_fields_graph(self, dataset_ref, dataset_dict):
