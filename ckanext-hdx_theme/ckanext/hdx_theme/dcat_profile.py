@@ -4,6 +4,7 @@ import re
 from rdflib import Literal
 
 from ckan.plugins import toolkit
+from ckantoolkit import url_for
 from ckanext.dcat.profiles import SCHEMA
 from ckanext.dcat.profiles.schemaorg import SchemaOrgProfile
 
@@ -62,6 +63,12 @@ class HDXSchemaOrgProfile(SchemaOrgProfile):
     def additional_fields(self, dataset_ref, dataset_dict):
         self.g.add((dataset_ref, SCHEMA.isAccessibleForFree, Literal(True)))
 
+    # identifier: use the HDX canonical URL as the dataset identifier
+    def _basic_fields_graph(self, dataset_ref, dataset_dict):
+        super()._basic_fields_graph(dataset_ref, dataset_dict)
+        dataset_url = url_for('dataset.read', id=dataset_dict['name'], _external=True)
+        self.g.add((dataset_ref, SCHEMA.identifier, Literal(dataset_url)))
+
     # ContactPoint: resolve maintainer UUID to display name
     # Example output: 
     # {
@@ -87,6 +94,30 @@ class HDXSchemaOrgProfile(SchemaOrgProfile):
         finally:
             # Restore so we don't mutate the dict for other consumers
             dataset_dict['maintainer'] = original_maintainer
+
+        # sameAs on publisher Organization for entity disambiguation
+        if schema_property_prefix == 'publisher':
+            org = dataset_dict.get('organization')
+            if org:
+                org_url = self._get_org_url(org)
+                if org_url:
+                    for org_node in self.g.objects(dataset_ref, agent_type):
+                        self.g.add((org_node, SCHEMA.sameAs, Literal(org_url)))
+                        break
+
+    def _get_org_url(self, org_dict):
+        """Look up the org_url extra for an organization."""
+        org_id = org_dict.get('id') or org_dict.get('name')
+        if not org_id:
+            return None
+        try:
+            full_org = toolkit.get_action('organization_show')(
+                {'ignore_auth': True},
+                {'id': org_id, 'include_datasets': False},
+            )
+            return full_org.get('org_url')
+        except Exception:
+            return None
 
     # spatialCoverage from HDX locations
     # Google accepts a simple text value, eg: "spatialCoverage": "Afghanistan"
