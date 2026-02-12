@@ -1,6 +1,4 @@
 from flask import Blueprint
-from rdflib import Graph, Literal, BNode, RDF
-from rdflib.namespace import Namespace
 
 import ckan.plugins.toolkit as tk
 import ckanext.hdx_package.helpers.analytics as analytics
@@ -24,48 +22,58 @@ ValidationError = tk.ValidationError
 hdx_splash = Blueprint(u'hdx_splash', __name__)
 
 
-def google_searchbox_data():
-    # SCHEMA = Namespace('http://schema.org/')
+def homepage_structured_data():
     ckan_url = config.get('ckan.site_url', 'https://data.humdata.org').replace('http://', 'https://') + '/'
     search_action_url = ckan_url + 'search?q={search_term_string}'
-    #
-    # website_node = BNode()
-    # g = Graph()
-    # g.bind('schema', SCHEMA)
-    # g.add((website_node, RDF.type, SCHEMA.WebSite))
-    # g.add((website_node, SCHEMA.url, Literal(ckan_url)))
-    # search_action = BNode()
-    #
-    # g.add((website_node, SCHEMA.potentialAction, search_action))
-    # g.add((search_action, RDF.type, SCHEMA.SearchAction))
-    # # g.add((search_action, SCHEMA.target, Literal(search_action_url)))
-    # g.add((search_action, SCHEMA['query-input'], Literal('required name=search_term_string')))
-    #
-    # entry_point = BNode()
-    # g.add((search_action, SCHEMA.target, entry_point))
-    # g.add((entry_point, RDF.type, SCHEMA.EntryPoint))
-    # g.add((entry_point, SCHEMA.urlTemplate, Literal(search_action_url)))
-    #
-    # return g.serialize(format='json-ld', auto_compact=True).decode('UTF-8')
-    data = '''
-    {{
-      "@context": "https://schema.org",
-      "@type": "WebSite",
-      "url": "{ckan_url}",
-      "potentialAction": {{
-        "@type": "SearchAction",
-        "target": {{
-          "@type": "EntryPoint",
-          "urlTemplate": "{search_url_template}"
-        }},
-        "query-input": "required name=search_term_string"
-      }}
-    }}
-    '''.format(ckan_url=ckan_url, search_url_template=search_action_url)
-    return data
+    site_title = config.get('ckan.site_title', 'Humanitarian Data Exchange')
+    site_description = config.get('ckan.site_description', '')
+    logo_url = ckan_url + 'images/homepage/logo.jpg'
 
+    organization = {
+        '@type': 'Organization',
+        'name': 'Humanitarian Data Exchange (HDX)',
+        'url': ckan_url,
+        'logo': logo_url,
+        'parentOrganization': {
+            '@type': 'Organization',
+            'name': 'United Nations Office for the Coordination of Humanitarian Affairs (OCHA)',
+            'url': 'https://www.unocha.org'
+        }
+    }
+    if site_description:
+        organization['description'] = site_description
 
-structured_data = google_searchbox_data()
+    data = {
+        '@context': 'https://schema.org',
+        '@graph': [
+            {
+                '@type': 'WebSite',
+                'url': ckan_url,
+                'potentialAction': {
+                    '@type': 'SearchAction',
+                    'target': {
+                        '@type': 'EntryPoint',
+                        'urlTemplate': search_action_url
+                    },
+                    'query-input': 'required name=search_term_string'
+                }
+            },
+            organization,
+            {
+                '@type': 'DataCatalog',
+                'name': site_title,
+                'url': ckan_url,
+                'description': site_description,
+                'provider': {
+                    '@type': 'Organization',
+                    'name': 'Humanitarian Data Exchange (HDX)',
+                    'url': ckan_url
+                }
+            }
+        ]
+    }
+
+    return json.dumps(data, indent=2)
 
 
 def index():
@@ -97,7 +105,7 @@ def index():
     locations = json.loads(count.country())
     sources = json.loads(count.source())
     template_data = {
-        'structured_data': structured_data,
+        'structured_data': homepage_structured_data(),
         'alert_bar': {
             'title': config.get('hdx.alert_bar_title'),
             'url': config.get('hdx.alert_bar_url'),
