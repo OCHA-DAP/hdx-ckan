@@ -76,6 +76,8 @@ ckan.plugins = dcat dcat_json_interface structured_data hdx_dataviz expire_api_t
 
 # DCAT profile - pin to v2 (v3 requires ckanext-scheming)
 ckanext.dcat.rdf.profiles = euro_dcat_ap_2
+# Use HDX custom schema.org profile for inline structured data (adds isAccessibleForFree)
+ckanext.dcat.structured_data.profiles = hdx_schemaorg
 # ckan.plugins = ${HDX_ENABLED_PLUGINS}
 ckan.views.default_views = recline_view
 ckan.csrf_protection.ignore_extensions = false

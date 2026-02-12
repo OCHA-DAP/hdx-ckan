@@ -220,6 +220,6 @@
   {% asset 'hdx_theme/hdx-autocomplete' %}
 {#  {% resource 'hdx_theme/confirm-ajax.js' %}#}
   <script type="application/ld+json">
-    {{ h.structured_data(pkg)|safe }}
+    {{ h.structured_data(pkg, ['hdx_schemaorg'])|safe }}
   </script>
 {% endblock %}
