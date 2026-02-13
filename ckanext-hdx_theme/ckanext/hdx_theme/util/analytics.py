@@ -24,6 +24,15 @@ class AbstractAnalyticsSender(object):
         self.analytics_dict = None
         self.response = None
 
+        self.user_addr = None
+        self.user_agent = None
+        self.is_api_call = False
+        self.referer_url = None
+        self.ua_os = None
+        self.ua_browser = None
+        self.ua_browser_version = None
+        self.request_url = None
+
         self.pushed_successfully = False
 
         try:
@@ -36,7 +45,6 @@ class AbstractAnalyticsSender(object):
             self.user_agent = ua if isinstance(ua, six.string_types) else ua.string
             ua_dict = useragent.Parse(self.user_agent)
 
-            self.is_api_call = False
             rq_headers = request.headers if request.headers else request._headers
             if rq_headers and rq_headers.environ:
                 self.is_api_call = self.is_ckan_api_call(rq_headers.environ)
