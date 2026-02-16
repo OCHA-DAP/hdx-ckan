@@ -14,11 +14,11 @@
     # via -r requirements.in
 -e git+https://github.com/OCHA-DAP/ckanext-showcase.git@1.5.5#egg=ckanext-showcase
     # via -r requirements.in
--e git+https://github.com/OCHA-DAP/datapusher-plus.git@0.2.104#egg=datapusher-plus
-    # via -r requirements.in
 -e git+https://github.com/datopian/ckanext-sitemap.git@88fb3b6#egg=ckanext-sitemap
     # via -r requirements.in
-alembic==1.13.2
+-e git+https://github.com/OCHA-DAP/datapusher-plus.git@0.2.104#egg=datapusher-plus
+    # via -r requirements.in
+alembic==1.18.4
     # via -r requirements.in
 babel==2.15.0
     # via
@@ -31,9 +31,12 @@ blinker==1.8.2
     #   -r requirements.in
     #   flask
 boto3==1.34.77
-    # via ckanext-s3filestore
+    # via
+    #   -r requirements.in
+    #   ckanext-s3filestore
 botocore==1.34.162
     # via
+    #   -r requirements.in
     #   boto3
     #   s3transfer
 cachelib==0.13.0
@@ -173,7 +176,7 @@ redis==5.0.7
     # via rq
 regex==2025.7.34
     # via -r requirements.in
-requests==2.32.3
+requests==2.32.4
     # via
     #   -r requirements.in
     #   mailchimp3
