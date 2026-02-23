@@ -70,33 +70,10 @@ class HDXSchemaOrgProfile(SchemaOrgProfile):
         dataset_url = url_for('dataset.read', id=dataset_dict['name'], _external=True)
         self.g.add((dataset_ref, SCHEMA.identifier, Literal(dataset_url)))
 
-    # ContactPoint: resolve maintainer UUID to display name
-    # Example output: 
-    # {
-    #     "@id": "_:Ne6330a3db1c447919333218bcaf48c7c",
-    #     "@type": "schema:ContactPoint",
-    #     "schema:contactType": "customer service",
-    #     "schema:name": "hdx",
-    #     "schema:url": "https://data.humdata.local"
-    # }
+    # sameAs on publisher Organization for entity disambiguation
     def _agent_graph(self, dataset_ref, dataset_dict, agent_type, schema_property_prefix):
-        """Override to resolve the maintainer UUID before the base class
-        serialises it as the ContactPoint name."""
+        super()._agent_graph(dataset_ref, dataset_dict, agent_type, schema_property_prefix)
 
-        maintainer = dataset_dict.get('maintainer')
-        original_maintainer = maintainer
-        if maintainer and _UUID_RE.match(maintainer):
-            resolved = _resolve_maintainer_name(maintainer)
-            if resolved:
-                dataset_dict['maintainer'] = resolved
-
-        try:
-            super()._agent_graph(dataset_ref, dataset_dict, agent_type, schema_property_prefix)
-        finally:
-            # Restore so we don't mutate the dict for other consumers
-            dataset_dict['maintainer'] = original_maintainer
-
-        # sameAs on publisher Organization for entity disambiguation
         if schema_property_prefix == 'publisher':
             org = dataset_dict.get('organization')
             if org:
