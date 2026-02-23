@@ -85,6 +85,14 @@ $(
                         '1': 'on'
                     }
                 },
+                'ext_tabular_data': {
+                    'name': 'tabular data endpoints filter',
+                    'isList': false,
+                    'mandatory': true,
+                    'valueMap': {
+                        '1': 'on'
+                    }
+                },
                 'ext_geodata': {
                     'name': 'geodata filter',
                     'isList': false,
@@ -280,6 +288,7 @@ $(
                 "authenticated": analyticsInfo.authenticated,
                 "came from": analyticsInfo.cameFrom, // notification platform email
                 "supports notifications": analyticsInfo.supportsNotifications, // true / false
+                "supports tabular data endpoints": analyticsInfo.supportsTabularDataEndpoints, // true / false
             });
         });
 

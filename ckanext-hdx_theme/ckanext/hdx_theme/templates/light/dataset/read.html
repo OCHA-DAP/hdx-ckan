@@ -13,6 +13,7 @@
 {% block analytics_dataset_availability %}{{ analytics.analytics_dataset_availability }}{% endblock %}
 {% block analytics_came_from %}{{ analytics.analytics_came_from }}{% endblock %}
 {% block analytics_supports_notifications %}{{ analytics.analytics_supports_notifications }}{% endblock %}
+{% block analytics_supports_tabular_data_endpoints %}{{ analytics.analytics_supports_tabular_data_endpoints }}{% endblock %}
 
 {% block links %}
   {% set canonical_url = h.url_for('hdx_dataset.read', id=pkg.name) %}

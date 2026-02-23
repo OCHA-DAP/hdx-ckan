@@ -13,6 +13,8 @@ BATCH_MODE_KEEP_OLD = 'KEEP_OLD'
 
 UNWANTED_DATASET_PROPERTIES = ['author_email', 'author', 'dataseries_name']
 
+TABULAR_DATA_EXPLANATION_LINK = 'https://un-ocha-centre-for-humanitarian.gitbook.io/hdx-docs/build-with-hdx/build-with-hdx/hdx-api/tabular-data-endpoints'
+
 COD_ENHANCED = 'cod-enhanced'
 COD_STANDARD = 'cod-standard'
 COD_CANDIDATE = 'cod-candidate'

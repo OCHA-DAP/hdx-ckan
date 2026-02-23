@@ -4,6 +4,7 @@ from hashlib import md5
 from typing import Optional
 
 from ckan.common import current_user
+from ckan.types import Context, Request
 from ckanext.hdx_theme.util.analytics import AbstractAnalyticsSender
 from ckanext.hdx_users.general_token_model import ObjectType
 
@@ -94,6 +95,56 @@ class EmailValidationAnalyticsSender(AbstractAnalyticsSender):
                 'object name': object_name,
                 'object type': object_type,
                 'authenticated': authenticated,
+            },
+            'ga_meta': {}
+        }
+
+
+class APITokenCreationAnalyticsSender(AbstractAnalyticsSender):
+
+    @classmethod
+    def _get_user_email_from_username(cls, username: str) -> Optional[str]:
+        try:
+            context: Context = {'keep_email': True, 'ignore_auth': True}
+            user_dict = tk.get_action('user_show')(context, {'id': username})
+            return user_dict.get('email', '').strip().lower()
+        except Exception as e:
+            log.error(f"Error retrieving email for user {username}: {e}")
+            return None
+
+    @classmethod
+    def _get_api_creation_source(cls, username: str, request: Request) -> Optional[str]:
+        if not request:
+            return None
+
+        request_path = request.path.strip('/')
+        if not request_path:
+            return None
+
+        api_paths = {'api/action/api_token_create', 'api/3/action/api_token_create'}
+        ui_paths = {f'user/{username}/api-tokens'}
+
+        if request_path in api_paths:
+            return 'api'
+        elif request_path in ui_paths:
+            return 'ui'
+
+        return None
+
+    def __init__(self, token_name: str, username: str, request: Request = None):
+        super(APITokenCreationAnalyticsSender, self).__init__()
+        event_name = 'api token creation'
+
+        source = self._get_api_creation_source(username, request)
+        email = self._get_user_email_from_username(username)
+        email_hash = md5(email.encode('utf8')).hexdigest() if email else ''
+
+        self.analytics_dict = {
+            'event_name': event_name,
+            'mixpanel_meta': {
+                'token name': token_name,
+                'source': source,
+                'email hash': email_hash,
             },
             'ga_meta': {}
         }
