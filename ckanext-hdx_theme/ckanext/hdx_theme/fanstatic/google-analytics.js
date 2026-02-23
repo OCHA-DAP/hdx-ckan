@@ -85,6 +85,14 @@ $(
                         '1': 'on'
                     }
                 },
+                'ext_tabular_data': {
+                    'name': 'tabular data endpoints filter',
+                    'isList': false,
+                    'mandatory': true,
+                    'valueMap': {
+                        '1': 'on'
+                    }
+                },
                 'ext_geodata': {
                     'name': 'geodata filter',
                     'isList': false,

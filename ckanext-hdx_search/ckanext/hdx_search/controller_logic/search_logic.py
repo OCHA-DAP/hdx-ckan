@@ -23,19 +23,20 @@ from ckanext.hdx_search.helpers.constants import \
     SUBNATIONAL_DATASETS_FACET_NAME, GEODATA_DATASETS_FACET_NAME, \
     REQUESTDATA_DATASETS_FACET_NAME, SHOWCASE_DATASETS_FACET_NAME, ARCHIVED_DATASETS_FACET_NAME, \
     P_CODED_DATASET_FACET_NAME, HDX_HAPI_DATA_FACET_NAME, HDX_HAPI_DATA_FACET_QUERY, \
-    HPC_DATASETS_FACET_NAME, HPC_DATASETS_FACET_QUERY
+    HPC_DATASETS_FACET_NAME, HPC_DATASETS_FACET_QUERY, TABULAR_DATA_DATASETS_FACET_NAME, \
+    TABULAR_DATA_DATASETS_FACET_QUERY
 from ckanext.hdx_package.helpers.util import find_approx_download
 from ckanext.hdx_package.helpers.analytics import generate_analytics_data
 from ckanext.hdx_package.helpers.p_code_filters_helper import are_new_p_code_filters_enabled
 from ckanext.hdx_package.helpers.freshness_calculator import UPDATE_STATUS_URL_FILTER
 from ckanext.hdx_package.helpers.constants import COD_VALUES_MAP, COD_GROUP_EXPLANATION_LINK, HPC_VALUES_MAP, \
-    HPC_GROUP_EXPLANATION_LINK
+    HPC_GROUP_EXPLANATION_LINK, TABULAR_DATA_EXPLANATION_LINK
 
 FEATURED_FACETS = [
     COD_DATASETS_FACET_NAME, SUBNATIONAL_DATASETS_FACET_NAME,
     GEODATA_DATASETS_FACET_NAME, REQUESTDATA_DATASETS_FACET_NAME, HXLATED_DATASETS_FACET_NAME,
     SHOWCASE_DATASETS_FACET_NAME, ARCHIVED_DATASETS_FACET_NAME,
-    P_CODED_DATASET_FACET_NAME, HDX_HAPI_DATA_FACET_NAME
+    P_CODED_DATASET_FACET_NAME, HDX_HAPI_DATA_FACET_NAME, TABULAR_DATA_DATASETS_FACET_NAME
 ]
 FEATURED_FACET_PARAMS = ['ext_' + item for item in FEATURED_FACETS]
 
@@ -302,6 +303,7 @@ class SearchLogic(object):
             'f.extras_archived.facet.missing': 'true',
             'facet.field': facet_keys,
             'facet.query': [
+                '{{!key={} ex=batch}} {}'.format(TABULAR_DATA_DATASETS_FACET_NAME, TABULAR_DATA_DATASETS_FACET_QUERY),
                 '{{!key={} ex=batch}} {}'.format(HXLATED_DATASETS_FACET_NAME, HXLATED_DATASETS_FACET_QUERY),
                 # '{{!key={} ex=batch}} {}'.format(SADD_DATASETS_FACET_NAME, SADD_DATASETS_FACET_QUERY),
                 '{{!key={} ex=batch}} {}'.format(HDX_HAPI_DATA_FACET_NAME, HDX_HAPI_DATA_FACET_QUERY),
@@ -559,6 +561,11 @@ class SearchLogic(object):
 
         result['facets'] = self.__move_facet_at_position(result['facets'], 'featured', 4)
 
+        tabular_data_item = self._add_facet_query_item_to_list(featured_facet_items, TABULAR_DATA_DATASETS_FACET_NAME,
+                                                               _('Tabular Data Endpoints'), existing_facets,
+                                                               search_extras,
+                                                               explanation_link=TABULAR_DATA_EXPLANATION_LINK)
+
         self._add_facet_query_item_to_list(featured_facet_items, HDX_HAPI_DATA_FACET_NAME, _('HDX HAPI Data'),
                                            existing_facets, search_extras, hdx_hapi_explanation)
         cod_category = result['facets'].pop('cod_level', None)
@@ -615,6 +622,7 @@ class SearchLogic(object):
         # result['num_of_indicators'] = num_of_indicators
         # result['num_of_cods'] = num_of_cods
         result['num_of_subnational'] = num_of_subnational
+        result['num_of_tabular_data'] = tabular_data_item.get('count', 0)
         result['num_of_geodata'] = num_of_geodata
         # result['num_of_hxl'] = num_of_hxl
         # result['num_of_sadd'] = num_of_sadd
@@ -697,12 +705,13 @@ class SearchLogic(object):
         return facets
 
     def _add_facet_item_to_list(self, item_list, item_name, item_display_name, count, search_extras,
-                                explanation=None):
+                                explanation=None, explanation_link=None):
         new_facet_item = self._create_facet_item(item_name, item_display_name, count, search_extras=search_extras,
-                                                 explanation=explanation)
+                                                 explanation=explanation, explanation_link=explanation_link)
         item_list.append(new_facet_item)
 
-    def _add_facet_query_item_to_list(self, item_list, item_name, item_display_name, existing_facets, search_extras, explanation=None):
+    def _add_facet_query_item_to_list(self, item_list, item_name, item_display_name, existing_facets, search_extras,
+                                      explanation=None, explanation_link=None):
         """
         :param item_list: the list where the new facet item should be added
         :type item_list: list
@@ -722,13 +731,14 @@ class SearchLogic(object):
             (i for i in existing_facets.get('queries', []) if i.get('name') == item_name), None)
         if item:
             new_facet_item = self._create_facet_item(item_name, item_display_name, item['count'],
-                                                     search_extras=search_extras, explanation=explanation)
+                                                     search_extras=search_extras, explanation=explanation,
+                                                     explanation_link=explanation_link)
             item_list.append(new_facet_item)
             return new_facet_item
         return {}
 
     def _create_facet_item(self, item_name, display_name, count, search_extras=None,
-                           search_extras_value=None, force_selected=None, explanation=None, value=None):
+                           search_extras_value=None, force_selected=None, explanation=None, value=None, explanation_link=None):
         key = 'ext_' + item_name
         value = '1' if value is None else value
         selected = force_selected
@@ -741,7 +751,8 @@ class SearchLogic(object):
             'name': value,  # this gets displayed as value in HTML <input>
             'display_name': display_name,
             'selected': selected,
-            'explanation': explanation
+            'explanation': explanation,
+            'explanation_link': explanation_link,
         }
 
     def _process_complex_facet_data(self, existing_facets, title_translations, result_facets, search_extras):
