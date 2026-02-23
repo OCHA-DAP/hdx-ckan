@@ -288,6 +288,7 @@ $(
                 "authenticated": analyticsInfo.authenticated,
                 "came from": analyticsInfo.cameFrom, // notification platform email
                 "supports notifications": analyticsInfo.supportsNotifications, // true / false
+                "supports tabular data endpoints": analyticsInfo.supportsTabularDataEndpoints, // true / false
             });
         });
 

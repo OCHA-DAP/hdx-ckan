@@ -32,6 +32,7 @@
           'datasetAvailability': '{% block analytics_dataset_availability %}None{% endblock %}',
           'cameFrom': '{% block analytics_came_from %}{% endblock %}',
           'supportsNotifications': '{% block analytics_supports_notifications %}{% endblock %}',
+          'supportsTabularDataEndpoints': '{% block analytics_supports_tabular_data_endpoints %}{% endblock %}',
           'authenticated': '{{ "true" if c.userobj else "false" }}',
           'accountType': '{% block analytics_account_type %}{% endblock %}',
       };

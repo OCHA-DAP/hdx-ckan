@@ -31,6 +31,7 @@ from ckanext.hdx_theme.views.splash_page import hdx_splash
 import ckan.plugins.toolkit as tk
 from ckanext.security.model import SecurityTOTP
 from ckan.common import session
+from ckanext.hdx_users.helpers.analytics import APITokenCreationAnalyticsSender
 from ckanext.hdx_users.helpers.token_creation_notification_helper import send_email_on_token_creation
 from ckanext.hdx_theme.sitemap_hook import patch_sitemap_generation
 
@@ -395,6 +396,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
     # IApiToken
     def postprocess_api_token(self, data, jti, data_dict):
         send_email_on_token_creation(data_dict.get('user'), data_dict.get('name'), data.get('exp'))
+        APITokenCreationAnalyticsSender(data_dict.get('name'), data_dict.get('user'), request).send_to_queue()
         return data
 
     # IBlueprint

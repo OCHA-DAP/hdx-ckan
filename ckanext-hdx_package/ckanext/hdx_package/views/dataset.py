@@ -139,6 +139,7 @@ def read(id):
     analytics_dataset_availability = analytics.dataset_availability(pkg_dict)
     analytics_came_from = analytics.came_from(request.args)
     analytics_supports_notifications = analytics.supports_notifications(ObjectType.DATASET, pkg_dict)
+    analytics_supports_tabular_data_endpoints = analytics.supports_tabular_data_endpoints(pkg_dict)
 
     # changes done for indicator
     # act_data_dict = {'id': pkg_dict['id'], 'limit': 7}
@@ -202,6 +203,7 @@ def read(id):
         'analytics_dataset_availability': analytics_dataset_availability,
         'analytics_came_from': analytics_came_from,
         'analytics_supports_notifications': analytics_supports_notifications,
+        'analytics_supports_tabular_data_endpoints': analytics_supports_tabular_data_endpoints,
         'stats_downloads_last_weeks': stats_downloads_last_weeks,
         'user_survey_url': user_survey_url,
         'logo_config': logo_config,
