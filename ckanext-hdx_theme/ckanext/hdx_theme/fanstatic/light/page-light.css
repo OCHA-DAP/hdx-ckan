@@ -265,7 +265,8 @@ h1 {
 .toolbarRow .toolbar .breadcrumb > li.active:after {
   content: "";
 }
-.toolbarRow .toolbar .breadcrumb > li.active a {
+.toolbarRow .toolbar .breadcrumb > li.active a,
+.toolbarRow .toolbar .breadcrumb > li.active span {
   color: #333333;
   font-weight: bold;
 }
@@ -1954,7 +1955,7 @@ body {
 }
 [role=main] .secondary {
   margin: 0;
-  padding-right: 15px;
+  padding-right: 30px/2;
   /* mimic the left 45 padding */
   width: 100%;
   color: #ffffff;
@@ -3055,7 +3056,7 @@ textarea {
 .hdx-form .form-horizontal .control-label {
   float: left;
   text-align: left;
-  padding-top: 15px;
+  padding-top: 30px/2;
   width: 160px;
   letter-spacing: -0.05rem;
 }
@@ -3667,7 +3668,7 @@ ul.list-horizontal li:first-child:before {
 .new-header .global-header .global-header-content .ocha-services-menu:before {
   content: " ";
   position: absolute;
-  top: -5px;
+  top: -10px/2;
   left: 110px;
   height: 10px;
   width: 10px;

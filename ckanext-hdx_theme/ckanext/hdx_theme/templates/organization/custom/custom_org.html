@@ -30,7 +30,7 @@
 
 {% block breadcrumb_content %}
   {% snippet "snippets/other_breadcrumb_item.html", title=_('Organizations'), controller='organization', action='index', position=2 %}
-  <li class="breadcrumb-item active"><a>{{data.org_info.name}}</a></li>
+  {% snippet "snippets/active_breadcrumb_item.html", title=data.org_info.name, position=3 %}
 {% endblock %}
 
 {% block primary_content %}

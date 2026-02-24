@@ -1,0 +1,9 @@
+{# Last breadcrumb item (active/current page) with schema.org RDFa markup.
+   Parameters:
+     title    - display text
+     position - numeric position in breadcrumb (1-based)
+#}
+<li class="breadcrumb-item active" property="itemListElement" typeof="ListItem">
+  <span property="name">{{ title }}</span>
+  <meta property="position" content="{{ position }}">
+</li>

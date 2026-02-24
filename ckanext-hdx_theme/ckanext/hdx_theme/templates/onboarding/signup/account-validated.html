@@ -9,7 +9,7 @@
 {% block subtitle %}{{ _('Account validated') }}{% endblock %}
 
 {% block breadcrumb_content %}
-  <li class="breadcrumb-item active">Sign up</li>
+  {% snippet "snippets/active_breadcrumb_item.html", title=_('Sign up'), position=2 %}
 {% endblock %}
 
 {% block content %}

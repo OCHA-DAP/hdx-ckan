@@ -618,7 +618,8 @@ body {
 .toolbarRow .toolbar .breadcrumb > li.active:after {
   content: "";
 }
-.toolbarRow .toolbar .breadcrumb > li.active a {
+.toolbarRow .toolbar .breadcrumb > li.active a,
+.toolbarRow .toolbar .breadcrumb > li.active span {
   color: #333333;
   font-weight: bold;
 }

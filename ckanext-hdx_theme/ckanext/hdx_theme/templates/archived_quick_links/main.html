@@ -3,7 +3,7 @@
 {% block subtitle %}{{ _("Archived Dataviz") }}{% endblock %}
 
 {% block breadcrumb_content %}
-  <li class="breadcrumb-item active">{{ h.nav_link(_('Archived Dataviz'), 'hdx_archived_quick_links.show') }}</li>
+  {% snippet "snippets/active_breadcrumb_item.html", title=_('Archived Dataviz'), position=2 %}
 {% endblock %}
 
 {% block pre_primary %}

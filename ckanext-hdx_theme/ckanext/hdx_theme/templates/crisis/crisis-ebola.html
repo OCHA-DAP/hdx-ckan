@@ -4,7 +4,7 @@
 {% block subtitle %}{{ _("Ebola crisis page") }}{% endblock %}
 {% block crisis_title %} {{ _("West Africa Ebola Outbreak 2014") }} {% endblock %}
 {% block breadcrumb_content %}
-  <li class="breadcrumb-item active">{{ h.nav_link(_('Ebola'), named_route='hdx_ebola.read') }}</li>
+  {% snippet "snippets/active_breadcrumb_item.html", title=_('Ebola'), position=2 %}
 {% endblock %}
 
 {% block links %}

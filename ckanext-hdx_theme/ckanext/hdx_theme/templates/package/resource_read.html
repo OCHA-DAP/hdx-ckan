@@ -34,7 +34,7 @@
 {% block breadcrumb_content %}
   {% snippet "snippets/other_breadcrumb_item.html", title=_('Datasets'), named_route='hdx_dataset.search', position=2 %}
   {% snippet "snippets/other_breadcrumb_item.html", title=pkg.title|truncate(30), named_route='hdx_dataset.read', id=pkg.name, position=3 %}
-  <li class="breadcrumb-item active"><a href="">{{ h.resource_display_name(res)|truncate(30) }}</a></li>
+  {% snippet "snippets/active_breadcrumb_item.html", title=h.resource_display_name(res)|truncate(30), position=4 %}
 {% endblock %}
 
 {% block pre_primary %}
