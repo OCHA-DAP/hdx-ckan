@@ -215,6 +215,13 @@
 
 {% endblock %}
 
+{% block head_extras %}
+  {{ super() }}
+  <script type="application/ld+json">
+    {{ h.structured_data(pkg, ['hdx_schemaorg'])|safe }}
+  </script>
+{% endblock %}
+
 {% block scripts %}
   {{ super() }}
 {#  {{ h.snippet('widget/onboarding/data-use-survey.html', id="dataUseSurveyPopup", pkg=pkg) }}#}
@@ -223,7 +230,4 @@
   {% asset 'hdx_theme/dataset-quick-edit-scripts' %}
   {% asset 'hdx_theme/hdx-autocomplete' %}
 {#  {% resource 'hdx_theme/confirm-ajax.js' %}#}
-  <script type="application/ld+json">
-    {{ h.structured_data(pkg, ['hdx_schemaorg'])|safe }}
-  </script>
 {% endblock %}

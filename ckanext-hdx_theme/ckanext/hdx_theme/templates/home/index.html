@@ -221,14 +221,18 @@
   </form>
 {% endblock %}
 
+{% block head_extras %}
+  {{ super() }}
+  {% if structured_data %}
+    <script type="application/ld+json">
+      {{ structured_data | safe }}
+    </script>
+  {% endif %}
+{% endblock %}
+
 {% block scripts %}
    {{ super() }}
    {% asset 'hdx_theme/homepage-scripts' %}
-  {% if structured_data %}
-     <script type="application/ld+json">
-      {{ structured_data | safe }}
-     </script>
-  {% endif %}
 {% endblock %}
 
 {# Remove the toolbar. #}

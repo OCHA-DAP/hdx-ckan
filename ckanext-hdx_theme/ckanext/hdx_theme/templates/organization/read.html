@@ -107,7 +107,7 @@
 
 {% block secondary %}{% endblock %}
 
-{% block scripts %}
+{% block head_extras %}
   {{ super() }}
   {% snippet 'organization/snippets/org_structured_data.html', org_dict=org_dict %}
 {% endblock %}
