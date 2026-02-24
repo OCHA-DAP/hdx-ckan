@@ -400,6 +400,95 @@ class TestMailerPatches:
         assert 'report.pdf' in msg_string
 
 
+class TestTokenExpirationHelperPatch:
+    """
+    Tests that patch/unpatch_mailer_functions correctly patch token_expiration_helper._mail_recipient.
+
+    token_expiration_helper captures tk.mail_recipient at module load time:
+        _mail_recipient = tk.mail_recipient
+    so it must be explicitly patched by name after the module is imported, otherwise
+    the cron job that sends expiration warning emails will use the original SMTP path
+    instead of SES, causing failures when SMTP credentials (from AssumeRole) have expired.
+    """
+
+    def setup_method(self):
+        """Reset patching state before each test"""
+        import ckanext.hdx_smtp_assumerole.helpers.mailer_patches as pm
+        pm._patches_applied = False
+        pm._original_mail_user = None
+        pm._original_mail_recipient = None
+
+    def teardown_method(self):
+        """Ensure patches are removed after each test"""
+        if is_patched():
+            unpatch_mailer_functions()
+
+    def test_patch_replaces_token_expiration_helper_mail_recipient(self):
+        """After patch_mailer_functions(), token_expiration_helper._mail_recipient must use SES"""
+        from ckanext.hdx_users.helpers import token_expiration_helper
+
+        patch_mailer_functions()
+
+        assert token_expiration_helper._mail_recipient is patched_mail_recipient
+
+    def test_unpatch_restores_token_expiration_helper_mail_recipient(self):
+        """After unpatch_mailer_functions(), token_expiration_helper._mail_recipient must be restored"""
+        from ckanext.hdx_users.helpers import token_expiration_helper
+        original_ref = token_expiration_helper._mail_recipient
+
+        patch_mailer_functions()
+        unpatch_mailer_functions()
+
+        assert token_expiration_helper._mail_recipient is original_ref
+
+    def test_patch_handles_import_error_gracefully(self):
+        """patch_mailer_functions() must complete successfully even if token_expiration_helper is absent"""
+        import sys
+        import ckanext.hdx_users.helpers as helpers_pkg
+
+        key = 'ckanext.hdx_users.helpers.token_expiration_helper'
+        saved_module = sys.modules.pop(key, None)
+        saved_attr = getattr(helpers_pkg, 'token_expiration_helper', None)
+        if saved_attr is not None:
+            delattr(helpers_pkg, 'token_expiration_helper')
+        # Setting to None blocks 'from package import module' with ImportError
+        sys.modules[key] = None
+
+        try:
+            patch_mailer_functions()  # Must not raise
+            assert is_patched()
+        finally:
+            del sys.modules[key]
+            if saved_module is not None:
+                sys.modules[key] = saved_module
+            if saved_attr is not None:
+                helpers_pkg.token_expiration_helper = saved_attr
+
+    def test_unpatch_handles_import_error_gracefully(self):
+        """unpatch_mailer_functions() must complete successfully even if token_expiration_helper is absent"""
+        import sys
+        import ckanext.hdx_users.helpers as helpers_pkg
+
+        patch_mailer_functions()
+
+        key = 'ckanext.hdx_users.helpers.token_expiration_helper'
+        saved_module = sys.modules.pop(key, None)
+        saved_attr = getattr(helpers_pkg, 'token_expiration_helper', None)
+        if saved_attr is not None:
+            delattr(helpers_pkg, 'token_expiration_helper')
+        sys.modules[key] = None
+
+        try:
+            unpatch_mailer_functions()  # Must not raise
+            assert not is_patched()
+        finally:
+            del sys.modules[key]
+            if saved_module is not None:
+                sys.modules[key] = saved_module
+            if saved_attr is not None:
+                helpers_pkg.token_expiration_helper = saved_attr
+
+
 class TestMailerPatchesErrorHandling:
     """Tests for error handling in mailer_patches"""
 
