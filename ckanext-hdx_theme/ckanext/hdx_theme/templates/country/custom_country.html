@@ -26,9 +26,7 @@
 
 {% block breadcrumb_content %}
   {% snippet "snippets/other_breadcrumb_item.html", title=_('Groups'), controller='group', action='index', position=2 %}
-  <li class="breadcrumb-item active">{{ h.nav_link(data.country_title,
-    controller='ckanext.hdx_crisis.controllers.custom_location_controller:CustomLocationController',
-    action='read', id=data.country_name) }}</li>
+  {% snippet "snippets/active_breadcrumb_item.html", title=data.country_title, position=3 %}
 {% endblock %}
 
 {% block crisis_map %}

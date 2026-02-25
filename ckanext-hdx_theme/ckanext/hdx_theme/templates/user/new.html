@@ -3,7 +3,7 @@
 {% block subtitle %}{{ _('Register') }}{% endblock %}
 
 {% block breadcrumb_content %}
-  <li class="breadcrumb-item active">{{ h.nav_link(_('Registration'), controller='user', action='register') }}</li>
+  {% snippet "snippets/active_breadcrumb_item.html", title=_('Registration'), position=2 %}
 {% endblock %}
 
 {% block primary_content %}

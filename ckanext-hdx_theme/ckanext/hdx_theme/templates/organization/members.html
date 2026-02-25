@@ -16,7 +16,7 @@
 {% block breadcrumb_content %}
   {% snippet "snippets/other_breadcrumb_item.html", title=_('Organisations'), controller='organization', action='index', position=2 %}
   {% snippet "snippets/other_breadcrumb_item.html", title=group_dict.display_name|truncate(35), controller='organization', action='read',id=group_dict.name, position=3 %}
-  <li class="breadcrumb-item active">{% link_for _('Members'), controller='organization', action='members', id=group_dict.name %}</li>
+  {% snippet "snippets/active_breadcrumb_item.html", title=_('Members'), position=4 %}
 {% endblock %}
 
 {% block subtitle_suffix %}{{ _('Members') }}{% endblock %}

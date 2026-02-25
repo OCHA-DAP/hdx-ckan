@@ -7,11 +7,15 @@
   {% asset 'hdx_theme/dataset-read-styles' %}
   {% asset 'hdx_theme/dataset-quick-edit-styles' %}
   {% if h.dcat_endpoints_enabled() %}
-      {% with endpoint=h.dcat_get_endpoint('dataset')  %}
-          <link rel="alternate" type="application/ld+json" href="{{ h.url_for('dcat.read_dataset_jsonld', _id=pkg.id, profiles='schemaorg', qualified=True) }}"/>
-          <link rel="alternate" type="text/n3" href="{{ h.url_for('dcat.read_dataset_n3', _id=pkg.id, qualified=True) }}"/>
-          <link rel="alternate" type="text/turtle" href="{{ h.url_for('dcat.read_dataset_ttl', _id=pkg.id, qualified=True) }}"/>
-          <link rel="alternate" type="application/rdf+xml" href="{{ h.url_for('dcat.read_dataset_xml', _id=pkg.id, qualified=True) }}"/>
+      {% with endpoint=h.dcat_get_endpoint('dataset') %}
+          {#<!--
+            As we have an inline script that is generating ld+json, we'll comment this link alternate
+          <link rel="alternate" type="application/ld+json" href="{{ h.url_for(endpoint, _id=pkg.id, _format='jsonld', profiles='schemaorg', _external=True) }}"/>
+          -->#}
+          <link rel="alternate" type="text/n3" href="{{ h.url_for(endpoint, _id=pkg.id, _format='n3', _external=True) }}"/>
+          <link rel="alternate" type="text/turtle" href="{{ h.url_for(endpoint, _id=pkg.id, _format='ttl', _external=True) }}"/>
+          <link rel="alternate" type="application/rdf+xml" href="{{ h.url_for(endpoint, _id=pkg.id, _format='xml', _external=True) }}"/>
+          <link rel="alternate" type="application/ld+json" href="{{ h.url_for(endpoint, _id=pkg.id, _format='jsonld', profiles='croissant', _external=True) }}" title="Croissant ML"/>
       {% endwith %}
   {% endif %}
 {% endblock %}
@@ -61,7 +65,7 @@
 	{% block breadcrum_parent_item %}
     {% snippet "snippets/other_breadcrumb_item.html", title=_('Datasets'), named_route='hdx_dataset.search', position=2 %}
 	{% endblock %}
-  <li class="breadcrumb-item active">{{ h.nav_link( pkg.title|truncate(120), named_route='hdx_dataset.read', id=pkg.name) }}</li>
+  {% snippet "snippets/active_breadcrumb_item.html", title=pkg.title|truncate(120), position=3 %}
 
 {% endblock %}
 
@@ -212,6 +216,13 @@
 
 {% endblock %}
 
+{% block head_extras %}
+  {{ super() }}
+  <script type="application/ld+json">
+    {{ h.structured_data(pkg, ['hdx_schemaorg'])|safe }}
+  </script>
+{% endblock %}
+
 {% block scripts %}
   {{ super() }}
 {#  {{ h.snippet('widget/onboarding/data-use-survey.html', id="dataUseSurveyPopup", pkg=pkg) }}#}
@@ -220,7 +231,4 @@
   {% asset 'hdx_theme/dataset-quick-edit-scripts' %}
   {% asset 'hdx_theme/hdx-autocomplete' %}
 {#  {% resource 'hdx_theme/confirm-ajax.js' %}#}
-  <script type="application/ld+json">
-    {{ h.structured_data(pkg.id, ['schemaorg'])|safe }}
-  </script>
 {% endblock %}

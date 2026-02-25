@@ -11,8 +11,7 @@
 {% block subtitle %}{{ _("QA Dashboard") }}{% endblock %}
 
 {% block breadcrumb_content %}
-  <li class="breadcrumb-item active">{{ h.nav_link(_('Datasets'),
-  	named_route='hdx_qa.dashboard') }}</li>
+  {% snippet "snippets/active_breadcrumb_item.html", title=_('Datasets'), position=2 %}
 {% endblock %}
 
 {% block primary_content %}

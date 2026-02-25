@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block breadcrumb_content %}
-  <li class="breadcrumb-item active"><a href="{{ h.url_for('hdx_user_dashboard.datasets') }}">{{ _('Dashboard') }}</a></li>
+  {% snippet "snippets/active_breadcrumb_item.html", title=_('Dashboard'), position=2 %}
 {% endblock %}
 
 {% block secondary %}{% endblock %}

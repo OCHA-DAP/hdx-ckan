@@ -73,6 +73,11 @@ search_backend = sql
 #ckan.plugins = stats
 # only for 2.6
 ckan.plugins = dcat dcat_json_interface structured_data hdx_dataviz expire_api_token hdx_hxl_preview hdx_office_preview ytp_request hdx_pages hdx_choropleth_map_view hdx_geopreview_view hdx_chart_views hdx_service_checker hdx_analytics hdx_search sitemap hdx_org_group hdx_group hdx_package hdx_user_extra hdx_mail_validate hdx_users hdx_smtp_assumerole hdx_theme security requestdata showcase resource_proxy text_view datastore activity
+
+# DCAT profile - pin to v2 (v3 requires ckanext-scheming)
+ckanext.dcat.rdf.profiles = euro_dcat_ap_2
+# Use HDX custom schema.org profile for inline structured data (adds isAccessibleForFree)
+ckanext.dcat.structured_data.profiles = hdx_schemaorg
 # ckan.plugins = ${HDX_ENABLED_PLUGINS}
 ckan.views.default_views = recline_view
 ckan.csrf_protection.ignore_extensions = false

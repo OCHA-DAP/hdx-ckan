@@ -20,11 +20,14 @@
 {% endblock %}
 
 {% block breadcrumb_content %}
-    <li class="breadcrumb-item"><a>{{ data.type }}</a></li>
+    <li class="breadcrumb-item" property="itemListElement" typeof="ListItem">
+      <span property="name">{{ data.type }}</span>
+      <meta property="position" content="2">
+    </li>
     {% if data.type == 'event' %}
-        <li class="breadcrumb-item active">{{ h.nav_link(data.title or data.name, 'hdx_event.read_event', id=data.name) }}</li>
+        {% snippet "snippets/active_breadcrumb_item.html", title=data.title or data.name, position=3 %}
     {% elif data.type == 'dashboards' %}
-        <li class="breadcrumb-item active">{{ h.nav_link(data.title or data.name,  'hdx_dashboard.read_dashboard', id=data.name) }}</li>
+        {% snippet "snippets/active_breadcrumb_item.html", title=data.title or data.name, position=3 %}
     {% endif %}
 {% endblock %}
 {% block secondary %}{% endblock %}

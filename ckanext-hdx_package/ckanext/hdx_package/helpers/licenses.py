@@ -64,6 +64,7 @@ class LicenseHdxOther(DefaultLicense):
 class LicenseHdxOpenDatabaseLicense(DefaultLicense):
 #     domain_content = True
     id = "hdx-odc-odbl"
+    url = "https://opendatacommons.org/licenses/odbl/1-0/"
 #     is_generic = True
 #     is_okd_compliant = True
 
@@ -74,6 +75,7 @@ class LicenseHdxOpenDatabaseLicense(DefaultLicense):
 class LicenseHdxOpenDataCommonsAttributionLicense(DefaultLicense):
 #     domain_content = True
     id = "hdx-odc-by"
+    url = "https://opendatacommons.org/licenses/by/1-0/"
 #     is_generic = True
 #     is_okd_compliant = True
 
@@ -84,6 +86,7 @@ class LicenseHdxOpenDataCommonsAttributionLicense(DefaultLicense):
 class LicenseHdxOpenDataCommonsPublicdomainDedicationAndLicense(DefaultLicense):
 #     domain_content = True
     id = "hdx-pddl"
+    url = "https://opendatacommons.org/licenses/pddl/1-0/"
 #     is_generic = True
 #     is_okd_compliant = True
 

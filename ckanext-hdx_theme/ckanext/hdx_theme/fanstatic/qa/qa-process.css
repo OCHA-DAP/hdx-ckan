@@ -287,7 +287,7 @@
   background-color: #fff;
   max-width: 400px;
   width: 100%;
-  min-height: 400px;
+  min-height: min(calc(100vw - 2*15px), 400px);
   padding: 32px;
   margin: 0 0 65px;
 }

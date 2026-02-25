@@ -12,11 +12,12 @@
 
 {% block breadcrumb_content %}
 	{% block breadcrum_parent_item %}
-{#    {% snippet "snippets/other_breadcrumb_item.html", title=page.type, 'hdx_' + page.type + '.read_' + page.type, id=page.name, position=2 %}#}
-    <li class="breadcrumb-item" property="itemListElement" typeof="ListItem">{{ _('Event') }}
+    <li class="breadcrumb-item" property="itemListElement" typeof="ListItem">
+      <span property="name">{{ _('Event') }}</span>
+      <meta property="position" content="2">
     </li>
 	{% endblock %}
-  <li class="breadcrumb-item active">{{ h.nav_link( page.title|truncate(120), 'hdx_' + page.type + '.read_' + page.type, id=page.name) }}</li>
+  {% snippet "snippets/active_breadcrumb_item.html", title=page.title|truncate(120), position=3 %}
 {% endblock %}
 
 {% block content %}

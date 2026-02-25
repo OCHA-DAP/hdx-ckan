@@ -3,7 +3,7 @@
 {% block subtitle %}{{ _("HAPI Terms of Service") }}{% endblock %}
 
 {% block breadcrumb_content %}
-  <li class="breadcrumb-item active">{{ h.nav_link(_('HAPI TERMS OF SERVICE'), named_route='hdx_faqs.read', category='hapi-terms') }}</li>
+  {% snippet "snippets/active_breadcrumb_item.html", title=_('HAPI TERMS OF SERVICE'), position=2 %}
 {% endblock %}
 
 {% block pre_primary %}

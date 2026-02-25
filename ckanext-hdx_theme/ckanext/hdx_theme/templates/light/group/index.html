@@ -12,7 +12,7 @@
 {% endblock %}
 
 {% block breadcrumb_content %}
-    <li class="breadcrumb-item active">{% link_for _('Locations'), controller='group', action='index' %}</li>
+    {% snippet "snippets/active_breadcrumb_item.html", title=_('Locations'), position=2 %}
 {% endblock %}
 
 {% block content %}

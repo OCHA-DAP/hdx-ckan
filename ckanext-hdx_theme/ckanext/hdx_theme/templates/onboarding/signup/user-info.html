@@ -12,7 +12,7 @@
 {% block subtitle %}{{ _('User info') }}{% endblock %}
 
 {% block breadcrumb_content %}
-  <li class="breadcrumb-item active">{{ h.nav_link(_('Sign up'), named_route='hdx_user_onboarding.user-info') }}</li>
+  {% snippet "snippets/active_breadcrumb_item.html", title=_('Sign up'), position=2 %}
 {% endblock %}
 
 {% block content %}

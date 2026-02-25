@@ -10,11 +10,8 @@
 {% block subtitle %}{{ CONST.PAGE_TITLE }}{% endblock %}
 
 {% block breadcrumb_content %}
-  <li
-    class="breadcrumb-item">{{ h.nav_link( pkg_dict.title|truncate(120), named_route='hdx_dataset.read', id=pkg_dict.name) }}</li>
-  <li class="breadcrumb-item active"><a
-    href="{{ h.url_for('hdx_dataset.request_access', id=pkg_dict.name or pkg_dict.id) }}">{{ CONST.PAGE_TITLE }}</a>
-  </li>
+  {% snippet "snippets/other_breadcrumb_item.html", title=pkg_dict.title|truncate(120), named_route='hdx_dataset.read', id=pkg_dict.name, position=2 %}
+  {% snippet "snippets/active_breadcrumb_item.html", title=CONST.PAGE_TITLE, position=3 %}
 {% endblock %}
 
 {% block content %}

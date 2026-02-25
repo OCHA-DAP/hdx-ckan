@@ -26,6 +26,8 @@ setup(
     """
         [ckan.plugins]
     hdx_theme=ckanext.hdx_theme.plugin:HDXThemePlugin
+    [ckan.rdf.profiles]
+    hdx_schemaorg=ckanext.hdx_theme.dcat_profile:HDXSchemaOrgProfile
     [paste.paster_command]
     analytics-changes-reindex = ckanext.hdx_theme.cli.cli:AnalyticsChangesReindex
     """,

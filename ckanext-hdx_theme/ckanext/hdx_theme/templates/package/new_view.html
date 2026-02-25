@@ -5,7 +5,7 @@
 
 {% block breadcrumb_content %}
   {{ super() }}
-  <li class="breadcrumb-item active"><a href="#">{{ _('Add view') }}</a></li>
+  {% snippet "snippets/active_breadcrumb_item.html", title=_('Add view'), position=6 if c.pkg_dict and c.pkg_dict.organization else 5 %}
 {% endblock %}
 
 {% block content_primary_nav %}

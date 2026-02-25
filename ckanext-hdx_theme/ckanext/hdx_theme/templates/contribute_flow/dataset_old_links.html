@@ -2,7 +2,7 @@
 
 {% block subtitle %}{{ _("Please use the new contribute flow") }}{% endblock %}
 {% block breadcrumb_content %}
-  <li class="breadcrumb-item active">{{ _('Notice') }}</li>
+  {% snippet "snippets/active_breadcrumb_item.html", title=_('Notice'), position=2 %}
 {% endblock %}
 
 

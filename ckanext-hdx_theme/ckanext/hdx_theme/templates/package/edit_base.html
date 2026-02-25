@@ -8,7 +8,7 @@
 {% block breadcrumb_content %}
   {{ super() }}
   {% if pkg %}
-    <li class="breadcrumb-item active">{% link_for _('Edit'), controller='package', action='edit', id=pkg.name %}</li>
+    {% snippet "snippets/active_breadcrumb_item.html", title=_('Edit'), position=5 if pkg.organization else 4 %}
   {% endif %}
 {% endblock %}
 
