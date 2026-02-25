@@ -7,6 +7,7 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.mime.base import MIMEBase
 from email import encoders
+from email.utils import formataddr
 
 import ckan.lib.mailer as mailer
 from ckan import model
@@ -60,7 +61,8 @@ def _build_mime_message_with_attachments(
 
     # Add To header with display name
     if recipient_name:
-        msg['To'] = f'"{recipient_name}" <{recipient_email}>'
+        # msg['To'] = f'"{recipient_name}" <{recipient_email}>'
+        msg['To'] = formataddr((recipient_name, recipient_email))
     else:
         msg['To'] = recipient_email
 
