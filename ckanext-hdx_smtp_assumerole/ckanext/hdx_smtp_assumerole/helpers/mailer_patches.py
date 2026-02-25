@@ -151,6 +151,17 @@ def patch_mailer_functions() -> None:
     except Exception as e:
         log.warning(f'Failed to patch token_creation_notification_helper: {e}')
 
+    # Patch hdx_users token_expiration_helper directly
+    # This module also imports _mail_recipient at load time (tk.mail_recipient captured at module level)
+    try:
+        from ckanext.hdx_users.helpers import token_expiration_helper
+        token_expiration_helper._mail_recipient = patched_mail_recipient
+        log.debug('Successfully patched token_expiration_helper._mail_recipient')
+    except ImportError:
+        log.debug('ckanext.hdx_users.helpers.token_expiration_helper not found, skipping')
+    except Exception as e:
+        log.warning(f'Failed to patch token_expiration_helper: {e}')
+
     _patches_applied = True
 
     log.debug('Successfully patched ckan.lib.mailer to use SES API')
@@ -339,6 +350,17 @@ def unpatch_mailer_functions() -> None:
         log.debug('token_creation_notification_helper not found during unpatch')
     except Exception as e:
         log.warning(f'Failed to restore token_creation_notification_helper: {e}')
+
+    # Restore token_expiration_helper function
+    try:
+        from ckanext.hdx_users.helpers import token_expiration_helper
+        if _original_mail_recipient is not None:
+            token_expiration_helper._mail_recipient = _original_mail_recipient
+        log.debug('Successfully restored token_expiration_helper._mail_recipient')
+    except ImportError:
+        log.debug('token_expiration_helper not found during unpatch')
+    except Exception as e:
+        log.warning(f'Failed to restore token_expiration_helper: {e}')
 
     _patches_applied = False
 
