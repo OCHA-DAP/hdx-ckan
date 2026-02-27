@@ -89,10 +89,11 @@ def supports_notifications(object_type: ObjectType, object_dict: dict[str, Any])
 
 
 def supports_tabular_data_endpoints(dataset_dict: dict[str, Any]) -> str:
-    dataset_supports_tabular_data = get_action('hdx_is_package_allowed_for_datastore')({}, {
-        'package_id': dataset_dict['id']})
+    for resource in dataset_dict.get('resources', []):
+        if resource.get('datastore_active'):
+            return 'true'
 
-    return str(dataset_supports_tabular_data).lower()
+    return 'false'
 
 
 def extract_locations(pkg_dict):
