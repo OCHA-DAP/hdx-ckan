@@ -42,7 +42,7 @@ zope.interface==6.4post2
 ipaddress==1.0.23
 # validate_email==1.2
 # pyDNS==2.3.6
-ijson==3.2.3
+ijson==3.5.0
 mailchimp3==3.0.21
 ua-parser==0.18.0
 user_agents==2.2.0
