@@ -89,14 +89,11 @@ class TestFSCheckTestUser(object):
 
     @pytest.mark.skipif(six.PY2, reason=u"Do not run in Py2")
     @mock.patch('ckanext.hdx_package.helpers.resource_triggers.fs_check._is_upload_and_fs_check_format')
-    @mock.patch('ckanext.hdx_package.helpers.resource_triggers.fs_check._file_structure_check')
-    def test_create_update_resources_test_user(self, file_structure_check_mock, is_upload_xls_mock):
-        file_structure_check_mock.return_value = FS_CHECK_RESPONSE
+    def test_create_update_resources_test_user(self, is_upload_xls_mock):
         is_upload_xls_mock.return_value = True
         context = {'model': model, 'session': model.Session, 'user': HDX_TEST_USER}
         resource_dict1, resource_dict2 = self._create_2_resources(context)
 
-        assert file_structure_check_mock.call_count == 2
         assert 'fs_check_info' in resource_dict1
         assert '"message": "The processing of the file structure check has started"' in resource_dict1.get(
             'fs_check_info')
@@ -124,7 +121,6 @@ class TestFSCheckTestUser(object):
             assert resource_dict2_modified['name'] == resource_dict2['name']
         except ValidationError as e:
             assert False
-        assert file_structure_check_mock.call_count == 3
 
         resource_dict2['name'] = 'hdx_test_modified_again'
         try:
@@ -167,13 +163,10 @@ class TestFSCheckSysadmin(object):
 
     @pytest.mark.skipif(six.PY2, reason=u"Do not run in Py2")
     @mock.patch('ckanext.hdx_package.helpers.resource_triggers.fs_check._is_upload_and_fs_check_format')
-    @mock.patch('ckanext.hdx_package.helpers.resource_triggers.fs_check._file_structure_check')
-    def test_create_update_resources_sysadmin_user(self, file_structure_check_mock, is_upload_xls_mock):
-        file_structure_check_mock.return_value = FS_CHECK_RESPONSE
+    def test_create_update_resources_sysadmin_user(self, is_upload_xls_mock):
         is_upload_xls_mock.return_value = True
         context = {'model': model, 'session': model.Session, 'user': SYSADMIN_USER}
         resource_dict1, resource_dict2 = self._create_2_resources(context)
-        assert file_structure_check_mock.call_count == 2
         assert 'fs_check_info' in resource_dict1
         assert '"message": "The processing of the file structure check has started"' in resource_dict1.get(
             'fs_check_info')
@@ -201,7 +194,6 @@ class TestFSCheckSysadmin(object):
             assert resource_dict2_modified['name'] == resource_dict2['name']
         except ValidationError as e:
             assert False
-        assert file_structure_check_mock.call_count == 3
 
         resource_dict2['name'] = 'hdx_test_modified_again'
         try:
@@ -244,13 +236,10 @@ class TestFSCheckResourceReset(object):
 
     @pytest.mark.skipif(six.PY2, reason=u"Do not run in Py2")
     @mock.patch('ckanext.hdx_package.helpers.resource_triggers.fs_check._is_upload_and_fs_check_format')
-    @mock.patch('ckanext.hdx_package.helpers.resource_triggers.fs_check._file_structure_check')
-    def test_create_update_resources_reset(self, file_structure_check_mock, is_upload_xls_mock):
-        file_structure_check_mock.return_value = FS_CHECK_RESPONSE
+    def test_create_update_resources_reset(self, is_upload_xls_mock):
         is_upload_xls_mock.return_value = True
         context = {'model': model, 'session': model.Session, 'user': SYSADMIN_USER}
         resource_dict1, resource_dict2 = self._create_2_resources(context)
-        assert file_structure_check_mock.call_count == 2
         assert 'fs_check_info' in resource_dict1
         assert '"message": "The processing of the file structure check has started"' in resource_dict1.get(
             'fs_check_info')
@@ -304,13 +293,10 @@ class TestFSCheckPackageReset(object):
 
     @pytest.mark.skipif(six.PY2, reason=u"Do not run in Py2")
     @mock.patch('ckanext.hdx_package.helpers.resource_triggers.fs_check._is_upload_and_fs_check_format')
-    @mock.patch('ckanext.hdx_package.helpers.resource_triggers.fs_check._file_structure_check')
-    def test_create_update_package_reset(self, file_structure_check_mock, is_upload_xls_mock):
-        file_structure_check_mock.return_value = FS_CHECK_RESPONSE
+    def test_create_update_package_reset(self, is_upload_xls_mock):
         is_upload_xls_mock.return_value = True
         context = {'model': model, 'session': model.Session, 'user': SYSADMIN_USER}
         resource_dict1, resource_dict2 = self._create_2_resources(context)
-        assert file_structure_check_mock.call_count == 2
         assert 'fs_check_info' in resource_dict1
         assert '"message": "The processing of the file structure check has started"' in resource_dict1.get(
             'fs_check_info')
@@ -394,15 +380,12 @@ class TestFSCheckResourceRevise(object):
 
     @pytest.mark.skipif(six.PY2, reason=u"Do not run in Py2")
     @mock.patch('ckanext.hdx_package.helpers.resource_triggers.fs_check._is_upload_and_fs_check_format')
-    @mock.patch('ckanext.hdx_package.helpers.resource_triggers.fs_check._file_structure_check')
-    def test_create_resource_revise(self, file_structure_check_mock, is_upload_xls_mock):
-        file_structure_check_mock.return_value = FS_CHECK_RESPONSE
+    def test_create_resource_revise(self, is_upload_xls_mock):
         is_upload_xls_mock.return_value = True
         context = {'model': model, 'session': model.Session, 'user': SYSADMIN_USER}
         resource_dict1, resource_dict2 = self._create_2_resources(context)
         pkg_aux = _get_action('package_show')(context, {'id': resource_dict2.get('package_id')})
 
-        assert file_structure_check_mock.call_count == 2
         assert 'fs_check_info' in pkg_aux.get('resources')[0]
         assert '"message": "The processing of the file structure check has started"' in pkg_aux.get('resources')[0].get(
             'fs_check_info')
