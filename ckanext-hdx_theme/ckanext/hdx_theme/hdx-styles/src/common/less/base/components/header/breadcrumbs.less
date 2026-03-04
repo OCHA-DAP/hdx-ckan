@@ -24,7 +24,7 @@
       padding: 0;
       .sourceSansProFont(400, 12px);
       line-height: @toolbarHeight;
-      .uppercase;
+      .uppercase();
       > li {
         text-shadow: none;
         white-space: nowrap;
@@ -36,7 +36,7 @@
           &:after{
             content: "";
           }
-          a {
+          a, span {
             color: @darkGrayColor;
             font-weight: bold;
           }

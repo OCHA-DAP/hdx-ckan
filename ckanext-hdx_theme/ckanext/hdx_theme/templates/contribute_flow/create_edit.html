@@ -31,7 +31,7 @@
 {% block contribute_widget %}{% endblock %}
 
 {% block breadcrumb_content %}
-  <li class="breadcrumb-item active"><a href="#">{{ page_title }}</a></li>
+  {% snippet "snippets/active_breadcrumb_item.html", title=page_title, position=2 %}
 {% endblock %}
 
 {% block content %}

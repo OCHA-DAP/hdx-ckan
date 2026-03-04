@@ -3,9 +3,9 @@
 {% block actions_content %}{% endblock %}
 
 {% block breadcrumb_content %}
-  <li class="breadcrumb-item"><a href="{{ h.url_for('user.index') }}">{{ _('Users') }}</a></li>
-  <li class="breadcrumb-item"><a href="{{ h.url_for('user.read', id=user_dict.name) }}">{{ user_dict.display_name }}</a></li>
-  <li class="breadcrumb-item active"><a href="#">{{ _('Manage') }}</a></li>
+  {% snippet "snippets/other_breadcrumb_item.html", title=_('Users'), named_route='user.index', position=2 %}
+  {% snippet "snippets/other_breadcrumb_item.html", title=user_dict.display_name, named_route='user.read', id=user_dict.name, position=3 %}
+  {% snippet "snippets/active_breadcrumb_item.html", title=_('Manage'), position=4 %}
 {% endblock %}
 
 {% block primary_content_inner %}

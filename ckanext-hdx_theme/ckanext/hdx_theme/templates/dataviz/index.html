@@ -3,7 +3,7 @@
 {% block subtitle %}{{ _("Dataviz Gallery") }}{% endblock %}
 
 {% block breadcrumb_content %}
-  <li class="breadcrumb-item active">{{ h.nav_link(_('Dataviz Gallery'), 'hdx_dataviz_gallery.index') }}</li>
+  {% snippet "snippets/active_breadcrumb_item.html", title=_('Dataviz Gallery'), position=2 %}
 {% endblock %}
 
 {% block meta %}

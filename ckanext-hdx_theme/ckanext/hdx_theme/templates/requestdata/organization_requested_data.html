@@ -5,13 +5,10 @@
 {% endblock %}
 
 {% block breadcrumb_content %}
-  <li class="breadcrumb-item">{% link_for _('Organizations'), named_route='organization.index' %}</li>
+  {% snippet "snippets/other_breadcrumb_item.html", title=_('Organizations'), named_route='organization.index', position=2 %}
   {% block breadcrumb_content_inner %}
-    <li class="breadcrumb-item">{% link_for org_meta.org_dict.display_name|truncate(35), controller='organization', action='read', id=org_name %}</li>
-    <li class="breadcrumb-item active">
-      {% set requested_data_url = h.url_for('requestdata_organization_requests.requested_data', id=org_name) %}
-      <a href="{{ requested_data_url }}">Dataset Requests</a>
-    </li>
+    {% snippet "snippets/other_breadcrumb_item.html", title=org_meta.org_dict.display_name|truncate(35), controller='organization', action='read', id=org_name, position=3 %}
+    {% snippet "snippets/active_breadcrumb_item.html", title=_('Dataset Requests'), position=4 %}
   {% endblock %}
 {% endblock %}
 

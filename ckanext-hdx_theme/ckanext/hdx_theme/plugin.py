@@ -7,6 +7,8 @@ from six.moves.urllib.parse import urlparse, urlunparse
 
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as toolkit
+from ckanext.dcat.interfaces import IDCATURIGenerator
+from ckanext.dcat.utils import catalog_uri as dcat_catalog_uri
 import ckanext.hdx_theme.helpers.auth as auth
 import ckanext.hdx_theme.helpers.custom_validator as custom_validator
 import ckanext.hdx_theme.helpers.http_headers as http_headers
@@ -53,6 +55,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.IValidators, inherit=True)
     plugins.implements(plugins.IBlueprint)
     plugins.implements(plugins.IClick)
+    plugins.implements(IDCATURIGenerator)
 
     def _add_resource(cls, path, name):
         '''OVERRIDE toolkit.add_resource in order to allow adding a resource library
@@ -408,3 +411,22 @@ class HDXThemePlugin(plugins.SingletonPlugin):
     # IClick
     def get_commands(self):
         return [custom_less_compile, analytics_changes_reindex]
+
+    # IDCATURIGenerator
+    def catalog_uri(self, default_uri):
+        return default_uri
+
+    def dataset_uri(self, dataset_dict, default_uri):
+        name = dataset_dict.get('name')
+        if name:
+            return '{}/dataset/{}'.format(dcat_catalog_uri().rstrip('/'), name)
+        return default_uri
+
+    def resource_uri(self, resource_dict, default_uri):
+        return default_uri
+
+    def publisher_uri(self, dataset_dict, default_uri):
+        org = dataset_dict.get('organization')
+        if org and org.get('name'):
+            return '{}/organization/{}'.format(dcat_catalog_uri().rstrip('/'), org['name'])
+        return default_uri

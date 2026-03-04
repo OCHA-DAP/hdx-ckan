@@ -6,7 +6,7 @@
 {% endblock %}
 
 {% block breadcrumb_content %}
-  <li class="breadcrumb-item active">{{ h.nav_link(_('DATA LICENSES'), named_route='hdx_faqs.read', category='licenses') }}</li>
+  {% snippet "snippets/active_breadcrumb_item.html", title=_('DATA LICENSES'), position=2 %}
 {% endblock %}
 
 {% block pre_primary %}

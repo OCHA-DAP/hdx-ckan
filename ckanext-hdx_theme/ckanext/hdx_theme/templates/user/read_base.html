@@ -4,8 +4,8 @@
 {% block subtitle %}{{ user.display_name }}{% endblock %}
 
 {% block breadcrumb_content %}
-  <li class="breadcrumb-item"><a href="{{ h.url_for('user.index') }}">{{ _('Users') }}</a></li>
-  <li class="breadcrumb-item"><a href="{{ h.url_for('user.read', id=user.name) }}">{{ user.display_name|truncate(35) }}</a></li>
+  {% snippet "snippets/other_breadcrumb_item.html", title=_('Users'), named_route='user.index', position=2 %}
+  {% snippet "snippets/active_breadcrumb_item.html", title=user.display_name|truncate(35), position=3 %}
 {% endblock %}
 
 {% block item_title_contrib %}

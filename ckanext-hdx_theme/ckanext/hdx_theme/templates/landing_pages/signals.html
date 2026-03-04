@@ -15,7 +15,7 @@
 {% block subtitle %}{{ _('HDX Signals') }}{% endblock %}
 
 {% block breadcrumb_content %}
-  <li class="breadcrumb-item active">{% link_for _('Signals'), controller='hdx_landing_pages', action='signals' %}</li>
+  {% snippet "snippets/active_breadcrumb_item.html", title=_('Signals'), position=2 %}
 {% endblock %}
 
 {% block content %}

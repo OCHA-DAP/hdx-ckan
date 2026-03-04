@@ -10,7 +10,7 @@
 {% block subtitle %}{{ _('HDX HAPI Beta') }}{% endblock %}
 
 {% block breadcrumb_content %}
-  <li class="breadcrumb-item active">{% link_for _('HDX HAPI'), controller='hdx_landing_pages', action='hapi' %}</li>
+  {% snippet "snippets/active_breadcrumb_item.html", title=_('HDX HAPI'), position=2 %}
 {% endblock %}
 
 {% block content %}

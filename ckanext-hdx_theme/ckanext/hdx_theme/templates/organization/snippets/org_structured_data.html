@@ -1,0 +1,25 @@
+{#
+  Organization structured data (JSON-LD) for schema.org.
+  Parameters:
+    org_dict - the full organization dict (with extras processed as a dict)
+#}
+{% set org_extras = org_dict.extras if org_dict.extras is mapping else {} %}
+{% set external_url = org_extras.get('org_url', '') %}
+{% set hdx_org_url = h.url_for('hdx_org.read', id=org_dict.name, _external=True) %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": {{ org_dict.display_name | tojson }},
+  {% if external_url %}
+  "url": {{ external_url | tojson }},
+  "sameAs": {{ hdx_org_url | tojson }},
+  {% else %}
+  "url": {{ hdx_org_url | tojson }},
+  {% endif %}
+  {% if org_dict.image_url %}
+  "logo": {{ org_dict.image_url | tojson }},
+  {% endif %}
+  "description": {{ (org_dict.description or '') | striptags | truncate(300) | tojson }}
+}
+</script>

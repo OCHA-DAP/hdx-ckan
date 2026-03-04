@@ -30,7 +30,7 @@
 
 {% block breadcrumb_content %}
   {% snippet "snippets/other_breadcrumb_item.html", title=_('Organizations'), controller='organization', action='index', position=2 %}
-  <li class="breadcrumb-item active"><a>{{data.org_info.name}}</a></li>
+  {% snippet "snippets/active_breadcrumb_item.html", title=data.org_info.name, position=3 %}
 {% endblock %}
 
 {% block primary_content %}
@@ -166,6 +166,11 @@
 {% block secondary %}
 {% endblock %}
 
+{% block head_extras %}
+  {{ super() }}
+  {% snippet 'organization/snippets/org_structured_data.html', org_dict=data.org_meta.org_dict %}
+{% endblock %}
+
 {% block scripts2 %}
   {{ super() }}
 {#  {% resource 'hdx_theme/activity-stream' %}#}
@@ -180,6 +185,4 @@
   {% asset 'hdx_theme/search-scripts' %}
   {% asset 'hdx_theme/custom-org-scripts' %}
   {% asset 'hdx_theme/popup-embed-scripts' %}
-
-
 {% endblock %}
