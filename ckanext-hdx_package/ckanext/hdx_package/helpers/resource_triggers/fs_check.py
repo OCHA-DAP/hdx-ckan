@@ -39,18 +39,19 @@ def _before_ckan_action(context, resource_dict):
     :param resource_dict:
     :type resource_dict dict
     '''
-    context.get('fs_check_is_upload_xls', True)
-    is_upload_and_fs_check_format = context.get('fs_check_is_upload_xls', True) and _is_upload_and_fs_check_format(
-        resource_dict)
-    if is_upload_and_fs_check_format:
-        context['allow_fs_check_field'] = True
-        resource_dict['fs_check_info'] = {
-            'state': PROCESSING,
-            'message': 'The processing of the file structure check has started',
-            'timestamp': datetime.datetime.now().isoformat()
-        }
-    else:
-        context['allow_fs_check_field'] = False
+    # context.get('fs_check_is_upload_xls', True)
+    # is_upload_and_fs_check_format = context.get('fs_check_is_upload_xls', True) and _is_upload_and_fs_check_format(
+    #     resource_dict)
+    # if is_upload_and_fs_check_format:
+    #     context['allow_fs_check_field'] = True
+    #     resource_dict['fs_check_info'] = {
+    #         'state': PROCESSING,
+    #         'message': 'The processing of the file structure check has started',
+    #         'timestamp': datetime.datetime.now().isoformat()
+    #     }
+    # else:
+    #     context['allow_fs_check_field'] = False
+    pass
 
 
 def _after_ckan_action(context, resource_dict):
