@@ -19,6 +19,6 @@ $(document).on('click', '.parent-facet', function (e) {
   e.preventDefault();
   e.stopPropagation();
 
-  var url = $(this).closest('label.facet[data-filter-url]').data('filter-url');
+  var url = $(this).closest('.facet[data-filter-url]').data('filter-url');
   if (url) window.location.href = url;
 });
