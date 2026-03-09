@@ -86,9 +86,11 @@ class TestMailerPatches:
             'region': 'us-east-1'
         }
 
-        user = mock.Mock()
-        user.email = 'user@example.com'
-        user.display_name = 'Test User'
+        user = {
+            'email': 'user@example.com',
+            'display_name': 'Test User',
+            'name': 'testuser',
+        }
 
         patched_mail_user(
             recipient=user,
@@ -113,9 +115,11 @@ class TestMailerPatches:
             'region': 'us-east-1'
         }
 
-        user = mock.Mock()
-        user.email = 'user@example.com'
-        user.display_name = 'Test User'
+        user = {
+            'email': 'user@example.com',
+            'display_name': 'Test User',
+            'name': 'testuser',
+        }
 
         patched_mail_user(
             recipient=user,
@@ -139,9 +143,11 @@ class TestMailerPatches:
             'region': 'us-east-1'
         }
 
-        user = mock.Mock()
-        user.email = 'user@example.com'
-        user.display_name = 'Test User'
+        user = {
+            'email': 'user@example.com',
+            'display_name': 'Test User',
+            'name': 'testuser',
+        }
 
         file_obj = BytesIO(b'Test file content')
         attachments = [('test.txt', file_obj, 'text/plain')]
@@ -170,9 +176,11 @@ class TestMailerPatches:
             'region': 'us-east-1'
         }
 
-        user = mock.Mock()
-        user.email = 'user@example.com'
-        user.display_name = 'Test User'
+        user = {
+            'email': 'user@example.com',
+            'display_name': 'Test User',
+            'name': 'testuser',
+        }
 
         custom_headers = {
             'Reply-To': 'noreply@example.com',
@@ -223,8 +231,11 @@ class TestMailerPatches:
         from ckanext.hdx_smtp_assumerole.helpers.caching import SESAssumeRoleException
         mock_get_creds.side_effect = SESAssumeRoleException('Failed to load credentials')
 
-        user = mock.Mock()
-        user.email = 'user@example.com'
+        user = {
+            'email': 'user@example.com',
+            'display_name': 'Test User',
+            'name': 'testuser',
+        }
 
         with pytest.raises(SESAssumeRoleException) as exc_info:
             patched_mail_user(
