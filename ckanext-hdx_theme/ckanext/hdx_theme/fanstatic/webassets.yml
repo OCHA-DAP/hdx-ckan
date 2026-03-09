@@ -652,6 +652,12 @@ dataset-search-scripts:
     - vendor/multiple-select-1.1.0/jquery.multiple.select.js
     - datasets/list-header.js
 
+dataset-search-facets-scripts:
+  <<: *common-js
+  output: ckanext-hdx_theme/%(version)s_dataset-search-facets-scripts.js
+  contents:
+    - datasets/search-facets.js
+
 dataset-search-styles:
   output: ckanext-hdx_theme/%(version)s_dataset-search-styles.css
   <<: *common-css
