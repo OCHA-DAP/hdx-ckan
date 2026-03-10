@@ -271,8 +271,8 @@ class ResourceDownloadAnalyticsSender(AbstractAnalyticsSender):
             dataset_is_archived = is_archived(dataset_dict) == 'true'
             authenticated = True if g.userobj else False
 
-            dataset_supports_notifications = supports_notifications(ObjectType.DATASET, dataset_dict)
-            dataset_supports_tabular_data_endpoints = supports_tabular_data_endpoints(dataset_dict)
+            dataset_supports_notifications = supports_notifications(ObjectType.DATASET, dataset_dict) == 'true'
+            dataset_supports_tabular_data_endpoints = supports_tabular_data_endpoints(dataset_dict) == 'true'
 
             self.analytics_dict = {
                 'event_name': 'resource download',
