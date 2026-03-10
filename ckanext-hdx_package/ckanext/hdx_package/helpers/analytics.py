@@ -271,6 +271,9 @@ class ResourceDownloadAnalyticsSender(AbstractAnalyticsSender):
             dataset_is_archived = is_archived(dataset_dict) == 'true'
             authenticated = True if g.userobj else False
 
+            dataset_supports_notifications = supports_notifications(ObjectType.DATASET, dataset_dict)
+            dataset_supports_tabular_data_endpoints = supports_tabular_data_endpoints(dataset_dict)
+
             self.analytics_dict = {
                 'event_name': 'resource download',
                 'mixpanel_meta': {
@@ -286,6 +289,8 @@ class ResourceDownloadAnalyticsSender(AbstractAnalyticsSender):
                     "is indicator": dataset_is_indicator,
                     "is archived": dataset_is_archived,
                     "authenticated": authenticated,
+                    "supports notifications": dataset_supports_notifications,
+                    "supports tabular data endpoints": dataset_supports_tabular_data_endpoints,
                     'event source': 'direct'
                 },
                 'ga_meta': {
