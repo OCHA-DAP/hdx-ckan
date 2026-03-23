@@ -8,7 +8,7 @@ HDX_GISWORKER_URL=https://gallery.ecr.aws/unocha/hdx-gisworker/
 HDX_GISWORKER_TAG=0.9.7
 
 HDX_QAINGEST_URL=https://gallery.ecr.aws/unocha/hdx-jp-sw-qa-ingest/
-HDX_QAINGEST_TAG=0.1.4
+HDX_QAINGEST_TAG=0.1.5
 
 HDX_NOTIFICATION_URL=https://gallery.ecr.aws/unocha/hdx-jp-sw-notification-platform
 HDX_NOTIFICATION_TAG=0.2.4
@@ -24,4 +24,4 @@ HDX_SDD_TAG=main
 # HDX_N8N_IMAGE_TAG=1.31.3
 
 HDX_N8N_WORKFLOW_URL=https://github.com/OCHA-DAP/hdx-n8n-qa-workflow
-HDX_N8N_WORKFLOW_TAG=0.8.3
+HDX_N8N_WORKFLOW_TAG=0.8.7
