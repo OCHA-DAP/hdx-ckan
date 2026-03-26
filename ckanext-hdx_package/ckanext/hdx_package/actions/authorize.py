@@ -231,10 +231,13 @@ def _datastore_search_only_for_authenticated_users(
 
 def hdx_manage_resource_sdd_report(context: Context, data_dict: DataDict):
     ignore_auth = context.get('ignore_auth', False)
+    # we need to allow the `for_update`/`for_edit` context flag so that package_show and resource_show can keep the
+    # "sensitive" and "sdd_report" fields when resource data is needed for updates
+    for_update = context.get('for_update', False) or context.get('for_edit', False)
 
     username_or_id = context.get('user')
     if not username_or_id:
-        return ignore_auth
+        return ignore_auth or for_update
 
     has_permission = False
     is_sysadmin = new_authz.is_sysadmin(username_or_id)
@@ -244,7 +247,7 @@ def hdx_manage_resource_sdd_report(context: Context, data_dict: DataDict):
         except Exception:
             pass
 
-    return ignore_auth or has_permission or is_sysadmin
+    return ignore_auth or for_update or has_permission or is_sysadmin
 
 
 def hdx_push_resource_to_datastore(context: Context, data_dict: DataDict) -> AuthResult:
