@@ -556,7 +556,10 @@ def fetch_previous_package_dict_with_context(context, id):
         context_key = _create_prev_package_context_key(id)
         pkg_dict = context.get(context_key)
         if not pkg_dict:
+            initial_ignore_auth = context.get('ignore_auth')
+            context['ignore_auth'] = True
             pkg_dict = get_action('package_show')(context, {'id': id})
+            context['ignore_auth'] = initial_ignore_auth
             context[context_key] = pkg_dict
 
         return pkg_dict or {}
