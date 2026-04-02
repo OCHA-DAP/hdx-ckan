@@ -39,6 +39,7 @@ def resource_patch(context, data_dict):
     _check_access('resource_patch', context, data_dict)
 
     context['no_compute_extra_hdx_show_properties'] = True
+    context['for_update'] = True
     process_batch_mode(context, data_dict)
     process_skip_validation(context, data_dict)
 
@@ -47,6 +48,7 @@ def resource_patch(context, data_dict):
         'session': context['session'],
         'user': context['user'],
         'auth_user_obj': context['auth_user_obj'],
+        'for_update': context['for_update'],
         'no_compute_extra_hdx_show_properties': context.get('no_compute_extra_hdx_show_properties')
     }
 
