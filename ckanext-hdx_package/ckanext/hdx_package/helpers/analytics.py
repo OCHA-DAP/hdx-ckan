@@ -415,8 +415,12 @@ class QACompletedAnalyticsSender(AbstractAnalyticsSender):
         }
 
         if mark_as_set:
-            if g.userobj.sysadmin:
-                self.analytics_dict['mixpanel_meta']['user id'] = g.userobj.id
+            try:
+                userobj = getattr(g, 'userobj', None)
+            except RuntimeError:
+                userobj = None  # Outside of application context (e.g. background task or test)
+            if userobj and getattr(userobj, 'sysadmin', False):
+                self.analytics_dict['mixpanel_meta']['user id'] = userobj.id
 
             time_difference = datetime.datetime.utcnow() - metadata_modified
             self.analytics_dict['mixpanel_meta']['minutes since modified'] = int(time_difference.total_seconds()) / 60
