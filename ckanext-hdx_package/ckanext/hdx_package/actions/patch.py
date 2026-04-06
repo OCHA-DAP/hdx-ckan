@@ -47,6 +47,7 @@ def resource_patch(context, data_dict):
         'session': context['session'],
         'user': context['user'],
         'auth_user_obj': context['auth_user_obj'],
+        'for_update': True,
         'no_compute_extra_hdx_show_properties': context.get('no_compute_extra_hdx_show_properties')
     }
 
