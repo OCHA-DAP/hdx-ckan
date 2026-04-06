@@ -44,7 +44,7 @@ ipaddress==1.0.23
 # pyDNS==2.3.6
 ijson==3.2.3
 mailchimp3==3.0.21
-ua-parser==0.18.0
+ua-parser==1.0.2
 user_agents==2.2.0
 rcssmin==1.1.2
 regex==2025.7.34

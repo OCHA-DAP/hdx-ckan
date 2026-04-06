@@ -226,10 +226,12 @@ typing-extensions==4.12.2
     #   sqlalchemy2-stubs
 tzlocal==5.2
     # via -r requirements.in
-ua-parser==0.18.0
+ua-parser==1.0.2
     # via
     #   -r requirements.in
     #   user-agents
+ua-parser-builtins==202603
+    # via ua-parser
 urllib3==2.2.2
     # via
     #   botocore
