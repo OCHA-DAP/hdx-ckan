@@ -79,3 +79,4 @@ class TestWidgetDataService(object):
 
             top_line_data = top_line_dao.fetch_indicator_data_for_country()
             assert len(top_line_data) > 0
+
