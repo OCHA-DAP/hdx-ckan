@@ -66,8 +66,6 @@ src/ckanext*
 src/pip-delete-this-directory.txt
 ckanext-*/build/lib*
 local_run_pytest.sh
-CLAUDE.md
-.claude/
 .env.secrets
 */.eggs/*
 .vscode
