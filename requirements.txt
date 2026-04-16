@@ -119,7 +119,7 @@ lxml==5.2.2
     #   pyld
 mailchimp3==3.0.21
     # via -r requirements.in
-mako==1.3.5
+mako==1.3.11
     # via alembic
 markdown==3.6
     # via -r requirements.in
