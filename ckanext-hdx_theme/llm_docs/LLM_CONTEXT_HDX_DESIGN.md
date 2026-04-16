@@ -6,7 +6,6 @@ Purpose: This file gives LLMs a quick map of how HDX (CKAN-based) pages are stru
 
 - Core CKAN templates: `ckan/templates/`
 - HDX theme templates (overrides + new pages): `ckanext-hdx_theme/ckanext/hdx_theme/templates/`
-- HDX legacy templates: `ckanext-hdx_theme/ckanext/hdx_theme/templates_legacy/`
 - BEM component templates: `ckanext-hdx_theme/ckanext/hdx_theme/templates/bem.blocks/`
 
 HDX overrides CKAN by adding its template directories in `ckanext-hdx_theme/ckanext/hdx_theme/plugin.py` via `toolkit.add_template_directory(...)`. When a template name matches a core CKAN template, the HDX one takes precedence.
