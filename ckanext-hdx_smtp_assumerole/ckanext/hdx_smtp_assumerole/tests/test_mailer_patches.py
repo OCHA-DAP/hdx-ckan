@@ -200,6 +200,48 @@ class TestMailerPatches:
 
     @mock.patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.send_email_via_ses')
     @mock.patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.get_cached_ses_credentials')
+    def test_patched_mail_user_recipient_as_model_user(self, mock_get_creds, mock_send):
+        """Test patched_mail_user with a model.User object (exercises the isinstance branch)."""
+        mock_get_creds.return_value = {
+            'access_key': 'AKIATEST', 'secret_key': 'test-secret',
+            'session_token': 'test-token', 'region': 'us-east-1'
+        }
+
+        class FakeUser:
+            email = 'modeluser@example.com'
+            display_name = 'Model User'
+            name = 'modeluser'
+
+        fake_user = FakeUser()
+
+        import ckanext.hdx_smtp_assumerole.helpers.mailer_patches as mp
+        with mock.patch.object(mp, 'model') as mock_model:
+            mock_model.User = FakeUser
+            patched_mail_user(recipient=fake_user, subject='Test', body='Body')
+
+        mock_send.assert_called_once()
+        call_args = mock_send.call_args[1]
+        assert call_args['recipients'] == ['modeluser@example.com']
+
+    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.send_email_via_ses')
+    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.get_cached_ses_credentials')
+    def test_patched_mail_user_recipient_no_display_name(self, mock_get_creds, mock_send):
+        """Test patched_mail_user when recipient has no display_name or name (plain To header)."""
+        mock_get_creds.return_value = {
+            'access_key': 'AKIATEST', 'secret_key': 'test-secret',
+            'session_token': 'test-token', 'region': 'us-east-1'
+        }
+
+        recipient = {'email': 'bare@example.com'}  # no display_name, no name
+
+        patched_mail_user(recipient=recipient, subject='Test', body='Body')
+
+        mock_send.assert_called_once()
+        call_args = mock_send.call_args[1]
+        assert call_args['headers']['To'] == 'bare@example.com'
+
+    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.send_email_via_ses')
+    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.get_cached_ses_credentials')
     def test_patched_mail_user_recipient_as_dict(self, mock_get_creds, mock_send):
         """Test patched_mail_user with recipient as dict (not User object)"""
         mock_get_creds.return_value = {

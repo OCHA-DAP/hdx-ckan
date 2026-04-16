@@ -201,6 +201,16 @@ def test_missing_region_raises_before_aws_call():
         get_cached_aws_credentials(_FULL_ARN, '', _SESSION)
 
 
+def test_missing_session_name_raises_before_aws_call():
+    with pytest.raises(AwsAssumeRoleException, match='session_name'):
+        get_cached_aws_credentials(_FULL_ARN, _REGION, '')
+
+
+def test_whitespace_session_name_raises_before_aws_call():
+    with pytest.raises(AwsAssumeRoleException, match='session_name'):
+        get_cached_aws_credentials(_FULL_ARN, _REGION, '   ')
+
+
 # ---------------------------------------------------------------------------
 # get_cached_aws_credentials – caching behaviour (dogpile cache backends)
 # ---------------------------------------------------------------------------
