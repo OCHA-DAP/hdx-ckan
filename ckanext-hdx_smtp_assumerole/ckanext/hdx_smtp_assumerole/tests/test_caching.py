@@ -75,6 +75,11 @@ def test_ses_exception_is_alias_for_aws_exception():
     assert SESAssumeRoleException is AwsAssumeRoleException
 
 
+def test_smtp_assume_role_shim_exception_is_alias_for_aws_exception():
+    from ckanext.hdx_smtp_assumerole.helpers.smtp_assume_role import SMTPAssumeRoleException
+    assert SMTPAssumeRoleException is AwsAssumeRoleException
+
+
 # ---------------------------------------------------------------------------
 # get_credentials_info
 # ---------------------------------------------------------------------------
