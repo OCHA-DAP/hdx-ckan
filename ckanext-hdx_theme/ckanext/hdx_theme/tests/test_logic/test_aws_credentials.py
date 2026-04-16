@@ -202,7 +202,7 @@ def test_missing_region_raises_before_aws_call():
 
 
 # ---------------------------------------------------------------------------
-# get_cached_aws_credentials – caching behaviour (Redis required)
+# get_cached_aws_credentials – caching behaviour (dogpile cache backends)
 # ---------------------------------------------------------------------------
 
 
