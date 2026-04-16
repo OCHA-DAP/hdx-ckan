@@ -233,7 +233,10 @@ def get_cached_aws_credentials(
         raise AwsAssumeRoleException('role_name_or_arn is required')
     if not region:
         raise AwsAssumeRoleException('region is required')
+    if not session_name or not session_name.strip():
+        raise AwsAssumeRoleException('session_name is required')
 
+    session_name = session_name.strip()
     return _get_cached_aws_credentials_impl(role_name_or_arn, region, session_name)
 
 
