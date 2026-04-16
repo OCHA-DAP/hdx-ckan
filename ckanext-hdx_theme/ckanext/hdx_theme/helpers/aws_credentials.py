@@ -48,7 +48,11 @@ from botocore.credentials import InstanceMetadataFetcher, InstanceMetadataProvid
 from botocore.exceptions import BotoCoreError, ClientError
 
 from dogpile.cache import make_region
-from ckanext.hdx_theme.helpers.caching import dogpile_config_filter, dogpile_standard_config
+from ckanext.hdx_theme.helpers.caching import (
+    dogpile_config_filter,
+    dogpile_standard_config,
+    HDXRedisInvalidationStrategy,
+)
 
 log = logging.getLogger(__name__)
 
@@ -70,6 +74,9 @@ _dogpile_aws_config = {
 
 _dogpile_aws_region = make_region(key_mangler=lambda key: 'aws-creds-' + key)
 _dogpile_aws_region.configure_from_config(_dogpile_aws_config, dogpile_config_filter)
+
+if dogpile_config_filter == 'cache.redis.':
+    _dogpile_aws_region.region_invalidator = HDXRedisInvalidationStrategy(_dogpile_aws_region)
 
 
 # ---------------------------------------------------------------------------
