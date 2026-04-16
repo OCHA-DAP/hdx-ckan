@@ -13,7 +13,7 @@ import ckan.lib.mailer as mailer
 from ckan import model
 import ckan.plugins.toolkit as tk
 
-from ckanext.hdx_smtp_assumerole.helpers.caching import get_ses_credentials
+from ckanext.hdx_smtp_assumerole.helpers.caching import get_cached_ses_credentials
 from ckanext.hdx_smtp_assumerole.helpers.ses_sender import send_email_via_ses
 
 log = logging.getLogger(__name__)
@@ -191,7 +191,7 @@ def patched_mail_user(
     try:
         # Get SES credentials (dogpile cache handles credential refresh automatically)
         # Raises SESAssumeRoleException if credentials cannot be loaded
-        ses_creds = get_ses_credentials()
+        ses_creds = get_cached_ses_credentials()
 
         # Extract recipient email and name
         if isinstance(recipient, model.User):
@@ -271,7 +271,7 @@ def patched_mail_recipient(
     try:
         # Get SES credentials (dogpile cache handles credential refresh automatically)
         # Raises SESAssumeRoleException if credentials cannot be loaded
-        ses_creds = get_ses_credentials()
+        ses_creds = get_cached_ses_credentials()
 
         # Get mail_from config
         config = tk.config

@@ -46,7 +46,7 @@ class TestMailerPatches:
 
     # patched_mail_user tests
     @mock.patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.send_email_via_ses')
-    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.get_ses_credentials')
+    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.get_cached_ses_credentials')
     def test_patched_mail_user_plain_text(self, mock_get_creds, mock_send):
         """Test sending plain text email via patched_mail_user"""
         mock_get_creds.return_value = {
@@ -76,7 +76,7 @@ class TestMailerPatches:
         assert 'To' in call_args['headers']
 
     @mock.patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.send_email_via_ses')
-    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.get_ses_credentials')
+    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.get_cached_ses_credentials')
     def test_patched_mail_user_with_html(self, mock_get_creds, mock_send):
         """Test sending HTML email via patched_mail_user"""
         mock_get_creds.return_value = {
@@ -105,7 +105,7 @@ class TestMailerPatches:
         assert call_args['mime_message'] is not None
 
     @mock.patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.send_email_via_ses')
-    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.get_ses_credentials')
+    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.get_cached_ses_credentials')
     def test_patched_mail_user_html_only(self, mock_get_creds, mock_send):
         """Test sending HTML-only email (no plain text)"""
         mock_get_creds.return_value = {
@@ -133,7 +133,7 @@ class TestMailerPatches:
         assert 'mime_message' in call_args
 
     @mock.patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.send_email_via_ses')
-    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.get_ses_credentials')
+    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.get_cached_ses_credentials')
     def test_patched_mail_user_with_attachments(self, mock_get_creds, mock_send):
         """Test sending email with attachments"""
         mock_get_creds.return_value = {
@@ -166,7 +166,7 @@ class TestMailerPatches:
         assert mime_msg is not None
 
     @mock.patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.send_email_via_ses')
-    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.get_ses_credentials')
+    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.get_cached_ses_credentials')
     def test_patched_mail_user_with_custom_headers(self, mock_get_creds, mock_send):
         """Test sending email with custom headers"""
         mock_get_creds.return_value = {
@@ -199,7 +199,7 @@ class TestMailerPatches:
         assert 'To' in call_args['headers']
 
     @mock.patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.send_email_via_ses')
-    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.get_ses_credentials')
+    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.get_cached_ses_credentials')
     def test_patched_mail_user_recipient_as_dict(self, mock_get_creds, mock_send):
         """Test patched_mail_user with recipient as dict (not User object)"""
         mock_get_creds.return_value = {
@@ -225,7 +225,7 @@ class TestMailerPatches:
         call_args = mock_send.call_args[1]
         assert call_args['recipients'] == ['user@example.com']
 
-    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.get_ses_credentials')
+    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.get_cached_ses_credentials')
     def test_patched_mail_user_no_credentials_raises(self, mock_get_creds):
         """Test that credential loading failure raises exception"""
         from ckanext.hdx_smtp_assumerole.helpers.caching import SESAssumeRoleException
@@ -248,7 +248,7 @@ class TestMailerPatches:
 
     # patched_mail_recipient tests
     @mock.patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.send_email_via_ses')
-    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.get_ses_credentials')
+    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.get_cached_ses_credentials')
     def test_patched_mail_recipient_plain_text(self, mock_get_creds, mock_send):
         """Test patched_mail_recipient with plain text"""
         mock_get_creds.return_value = {
@@ -272,7 +272,7 @@ class TestMailerPatches:
         assert call_args['body'] == 'Plain text body'
 
     @mock.patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.send_email_via_ses')
-    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.get_ses_credentials')
+    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.get_cached_ses_credentials')
     def test_patched_mail_recipient_with_html(self, mock_get_creds, mock_send):
         """Test patched_mail_recipient with HTML"""
         mock_get_creds.return_value = {
@@ -295,7 +295,7 @@ class TestMailerPatches:
         assert 'mime_message' in call_args
 
     @mock.patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.send_email_via_ses')
-    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.get_ses_credentials')
+    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.get_cached_ses_credentials')
     def test_patched_mail_recipient_with_attachments(self, mock_get_creds, mock_send):
         """Test patched_mail_recipient with attachments"""
         mock_get_creds.return_value = {
@@ -320,7 +320,7 @@ class TestMailerPatches:
         call_args = mock_send.call_args[1]
         assert 'mime_message' in call_args
 
-    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.get_ses_credentials')
+    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.get_cached_ses_credentials')
     def test_patched_mail_recipient_no_credentials_raises(self, mock_get_creds):
         """Test that credential loading failure raises exception"""
         from ckanext.hdx_smtp_assumerole.helpers.caching import SESAssumeRoleException
@@ -587,7 +587,7 @@ class TestMailerPatchesErrorHandling:
             unpatch_mailer_functions()
 
     @mock.patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.send_email_via_ses')
-    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.get_ses_credentials')
+    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.get_cached_ses_credentials')
     def test_patched_mail_user_missing_email(self, mock_get_creds, mock_send):
         """Test error handling when recipient has no email"""
         mock_get_creds.return_value = {
@@ -613,7 +613,7 @@ class TestMailerPatchesErrorHandling:
         assert call_args['recipients'] == [None]
 
     @mock.patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.send_email_via_ses')
-    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.get_ses_credentials')
+    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.get_cached_ses_credentials')
     def test_patched_mail_user_ses_error_propagates(self, mock_get_creds, mock_send):
         """Test that SES errors are propagated to caller"""
         mock_get_creds.return_value = {
@@ -640,7 +640,7 @@ class TestMailerPatchesErrorHandling:
         assert 'MessageRejected' in str(exc_info.value)
 
     @mock.patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.send_email_via_ses')
-    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.get_ses_credentials')
+    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.get_cached_ses_credentials')
     def test_patched_mail_recipient_empty_email(self, mock_get_creds, mock_send):
         """Test error handling with empty email string"""
         mock_get_creds.return_value = {
@@ -662,7 +662,7 @@ class TestMailerPatchesErrorHandling:
         assert call_args['recipients'] == ['']
 
     @mock.patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.send_email_via_ses')
-    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.get_ses_credentials')
+    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.get_cached_ses_credentials')
     def test_patched_mail_user_large_attachment(self, mock_get_creds, mock_send):
         """Test handling of large attachments (edge case)"""
         mock_get_creds.return_value = {
@@ -693,7 +693,7 @@ class TestMailerPatchesErrorHandling:
         assert 'mime_message' in call_args
 
     @mock.patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.send_email_via_ses')
-    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.get_ses_credentials')
+    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.get_cached_ses_credentials')
     def test_patched_mail_user_multiple_attachments(self, mock_get_creds, mock_send):
         """Test handling multiple attachments"""
         mock_get_creds.return_value = {
@@ -731,7 +731,7 @@ class TestMailerPatchesErrorHandling:
         assert 'file3.jpg' in msg_string
 
     @mock.patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.send_email_via_ses')
-    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.get_ses_credentials')
+    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.get_cached_ses_credentials')
     def test_patched_mail_user_special_chars_in_headers(self, mock_get_creds, mock_send):
         """Test handling of special characters in email headers"""
         mock_get_creds.return_value = {
@@ -755,7 +755,7 @@ class TestMailerPatchesErrorHandling:
         mock_send.assert_called_once()
 
     @mock.patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.send_email_via_ses')
-    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.get_ses_credentials')
+    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.get_cached_ses_credentials')
     def test_patched_mail_recipient_none_recipient_name(self, mock_get_creds, mock_send):
         """Test mail_recipient with None as recipient name"""
         mock_get_creds.return_value = {
@@ -795,7 +795,7 @@ class TestMailerPatchesErrorHandling:
         assert 'application/octet-stream' in msg_string
 
     @mock.patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.send_email_via_ses')
-    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.get_ses_credentials')
+    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.get_cached_ses_credentials')
     @mock.patch('ckanext.hdx_smtp_assumerole.helpers.mailer_patches.tk')
     def test_patched_mail_user_missing_mail_from_config(self, mock_tk, mock_get_creds, mock_send):
         """Test behavior when mail_from config is missing"""
