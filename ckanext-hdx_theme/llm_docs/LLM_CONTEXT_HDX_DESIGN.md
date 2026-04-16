@@ -142,28 +142,28 @@ There are **two versions** of this page that share some assets but use different
 ### Signals page (`/signals`)
 
 - **Template**: `ckanext-hdx_theme/ckanext/hdx_theme/templates/landing_pages/signals.html`
-  - Extends `landing_pages/page.html`, which itself extends `page_light.html`.
-  - `landing_pages/page.html` loads `hdx_theme/page-extra-light-styles`, `hdx_theme/bem-blocks-styles`, and `hdx_theme/bem-blocks-scripts`.
+  - Extends `page_v2.html`, which itself extends `page_light.html`.
+  - `page_v2.html` loads `hdx_theme/page-extra-light-styles`, `hdx_theme/bem-blocks-styles`, and `hdx_theme/bem-blocks-scripts`.
   - Uses BEM blocks heavily: `bem.blocks/hero.html`, `bem.blocks/card.html`, `bem.blocks/paragraph.html`.
   - UI copy comes from `h.HDX_CONST('UI_CONSTANTS')['LANDING_PAGES']['SIGNALS_LANDING_PAGE']`.
 - **Core assets**:
   - `hdx_theme/hdx-signals-scripts` — signals-specific JS (`landing_pages/hdx_signals.js`).
   - `hdx_theme/hdx-signals-styles` — signals-specific CSS (`landing_pages/hdx_signals.css`).
-  - `hdx_theme/bem-blocks-styles` and `hdx_theme/bem-blocks-scripts` — shared BEM component styles and JS (from `landing_pages/page.html`).
+  - `hdx_theme/bem-blocks-styles` and `hdx_theme/bem-blocks-scripts` — shared BEM component styles and JS (from `page_v2.html`).
 
 ---
 
 ### HAPI page (`/hapi`)
 
 - **Template**: `ckanext-hdx_theme/ckanext/hdx_theme/templates/landing_pages/hapi.html`
-  - Extends `landing_pages/page.html` (same landing-page layout as Signals above).
+  - Extends `page_v2.html` (same landing-page layout as Signals above).
   - Uses BEM blocks: `bem.blocks/hero.html`, `bem.blocks/card.html`.
   - Embeds an iframe (`/visualization/hapi-availability/`) for data-availability visualisation.
   - UI copy comes from `h.HDX_CONST('UI_CONSTANTS')['LANDING_PAGES']['HAPI_LANDING_PAGE']`.
   - No dedicated styles bundle — relies entirely on the inherited `bem-blocks-styles` and `page-extra-light-styles`.
 - **Core assets**:
   - `hdx_theme/hdx-hapi-scripts` — HAPI-specific JS (`landing_pages/hdx_hapi.js`).
-  - `hdx_theme/bem-blocks-styles` and `hdx_theme/bem-blocks-scripts` — shared BEM component styles and JS (from `landing_pages/page.html`).
+  - `hdx_theme/bem-blocks-styles` and `hdx_theme/bem-blocks-scripts` — shared BEM component styles and JS (from `page_v2.html`).
 
 ---
 
