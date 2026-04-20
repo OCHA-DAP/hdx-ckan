@@ -6,11 +6,10 @@ from typing import Dict, Any
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as tk
 
-from ckanext.hdx_smtp_assumerole.helpers.smtp_assume_role import SMTPAssumeRoleException
+from ckanext.hdx_theme.helpers.aws_credentials import AwsAssumeRoleException
 from ckanext.hdx_smtp_assumerole.helpers.caching import (
-    get_ses_credentials,
+    get_cached_ses_credentials,
     get_credentials_info,
-    SESAssumeRoleException
 )
 from ckanext.hdx_smtp_assumerole.helpers.mailer_patches import patch_mailer_functions
 from ckanext.hdx_smtp_assumerole.helpers.hdx_users_mailer_patches import patch_hdx_users_mailer
@@ -23,11 +22,11 @@ def _validate_region(region: str) -> None:
     Validate AWS region format.
 
     :param region: AWS region string
-    :raises SMTPAssumeRoleException: If region format is invalid
+    :raises AwsAssumeRoleException: If region format is invalid
     """
     # Check for empty/whitespace-only string first for clearer error message
     if not region or not region.strip():
-        raise SMTPAssumeRoleException('AWS region cannot be empty')
+        raise AwsAssumeRoleException('AWS region cannot be empty')
 
     # Common AWS regions - not exhaustive but covers most cases
     # Format: prefix-region-number (e.g., us-east-1, eu-west-2)
@@ -36,7 +35,7 @@ def _validate_region(region: str) -> None:
     valid_region_pattern = r'^[a-z]{2}-[a-z]{2,}(-[a-z]{2,})*-\d+$'
 
     if not re.match(valid_region_pattern, region):
-        raise SMTPAssumeRoleException(
+        raise AwsAssumeRoleException(
             f'Invalid AWS region format: {region}. '
             f'Expected format like "us-east-1" or "eu-west-2"'
         )
@@ -47,18 +46,18 @@ def _validate_role_arn(role_arn: str) -> None:
     Validate IAM role ARN or role name format.
 
     :param role_arn: Role ARN or role name
-    :raises SMTPAssumeRoleException: If format is invalid
+    :raises AwsAssumeRoleException: If format is invalid
     """
     # Check for empty/whitespace-only string first for clearer error message
     if not role_arn or not role_arn.strip():
-        raise SMTPAssumeRoleException('IAM role ARN or name cannot be empty')
+        raise AwsAssumeRoleException('IAM role ARN or name cannot be empty')
 
     # If it starts with 'arn:', validate full ARN format
     if role_arn.startswith('arn:'):
         # ARN format: arn:aws:iam::123456789012:role/RoleName or arn:aws:iam::123456789012:role/path/RoleName
         arn_pattern = r'^arn:aws:iam::\d{12}:role/[\w+=,.@/-]+$'
         if not re.match(arn_pattern, role_arn):
-            raise SMTPAssumeRoleException(
+            raise AwsAssumeRoleException(
                 f'Invalid IAM role ARN format: {role_arn}. '
                 f'Expected format: arn:aws:iam::ACCOUNT_ID:role/ROLE_NAME or arn:aws:iam::ACCOUNT_ID:role/path/ROLE_NAME'
             )
@@ -66,7 +65,7 @@ def _validate_role_arn(role_arn: str) -> None:
         # Validate role name format (alphanumeric + special chars allowed by IAM)
         role_name_pattern = r'^[\w+=,.@-]+$'
         if not re.match(role_name_pattern, role_arn):
-            raise SMTPAssumeRoleException(
+            raise AwsAssumeRoleException(
                 f'Invalid IAM role name: {role_arn}. '
                 f'Role names can contain alphanumeric characters and: + = , . @ -'
             )
@@ -105,12 +104,12 @@ def run_on_startup(config: Dict[str, Any]) -> None:
         region = config.get('ckanext.hdx_smtp_assumerole.region')
 
         if not role_name_or_arn:
-            raise SMTPAssumeRoleException(
+            raise AwsAssumeRoleException(
                 'ckanext.hdx_smtp_assumerole.role_arn is required when use_assume_role is enabled'
             )
 
         if not region:
-            raise SMTPAssumeRoleException(
+            raise AwsAssumeRoleException(
                 'ckanext.hdx_smtp_assumerole.region is required when use_assume_role is enabled'
             )
 
@@ -119,7 +118,7 @@ def run_on_startup(config: Dict[str, Any]) -> None:
         _validate_region(region)
 
         # Warm up the credentials cache (loads initial credentials)
-        get_ses_credentials()
+        get_cached_ses_credentials()
 
         # Apply monkey patches to replace SMTP with SES API
         log.debug('Applying patches to replace SMTP with SES API')
@@ -142,7 +141,7 @@ def run_on_startup(config: Dict[str, Any]) -> None:
         # Single concise success message
         log.info(f'SES API with AssumeRole enabled: region={region}, role={role_name_or_arn}, expires={creds_info.get("expiration_time")}')
 
-    except (SMTPAssumeRoleException, SESAssumeRoleException) as e:
+    except AwsAssumeRoleException as e:
         log.error(f'SES AssumeRole configuration failed: {str(e)}')
         log.error('Email functionality will NOT work with AssumeRole.')
         log.error('To use static SMTP credentials, set: ckanext.hdx_smtp_assumerole.use_assume_role = false')
