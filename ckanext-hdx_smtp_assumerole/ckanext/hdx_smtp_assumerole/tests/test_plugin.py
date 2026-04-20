@@ -10,7 +10,7 @@ from ckanext.hdx_smtp_assumerole.plugin import (
     _validate_region,
     _validate_role_arn
 )
-from ckanext.hdx_smtp_assumerole.helpers.smtp_assume_role import SMTPAssumeRoleException
+from ckanext.hdx_theme.helpers.aws_credentials import AwsAssumeRoleException as SMTPAssumeRoleException
 
 
 class TestRunOnStartup:
@@ -34,7 +34,7 @@ class TestRunOnStartup:
 
     @mock.patch('ckanext.hdx_smtp_assumerole.plugin.patch_hdx_users_mailer')
     @mock.patch('ckanext.hdx_smtp_assumerole.plugin.patch_mailer_functions')
-    @mock.patch('ckanext.hdx_smtp_assumerole.plugin.get_ses_credentials')
+    @mock.patch('ckanext.hdx_smtp_assumerole.plugin.get_cached_ses_credentials')
     def test_enabled_missing_role_arn(self, mock_cached_load, mock_patch_mailer, mock_patch_hdx):
         """Test that missing role_arn raises exception"""
         config = {
@@ -50,7 +50,7 @@ class TestRunOnStartup:
 
     @mock.patch('ckanext.hdx_smtp_assumerole.plugin.patch_hdx_users_mailer')
     @mock.patch('ckanext.hdx_smtp_assumerole.plugin.patch_mailer_functions')
-    @mock.patch('ckanext.hdx_smtp_assumerole.plugin.get_ses_credentials')
+    @mock.patch('ckanext.hdx_smtp_assumerole.plugin.get_cached_ses_credentials')
     def test_enabled_missing_region(self, mock_cached_load, mock_patch_mailer, mock_patch_hdx):
         """Test that missing region raises exception"""
         config = {
@@ -67,7 +67,7 @@ class TestRunOnStartup:
     @mock.patch('ckanext.hdx_smtp_assumerole.plugin.patch_hdx_users_mailer')
     @mock.patch('ckanext.hdx_smtp_assumerole.plugin.patch_mailer_functions')
     @mock.patch('ckanext.hdx_smtp_assumerole.plugin.get_credentials_info')
-    @mock.patch('ckanext.hdx_smtp_assumerole.plugin.get_ses_credentials')
+    @mock.patch('ckanext.hdx_smtp_assumerole.plugin.get_cached_ses_credentials')
     def test_enabled_success(self, mock_cached_load, mock_get_info, mock_patch_mailer, mock_patch_hdx):
         """Test successful plugin initialization when enabled"""
         expiration = datetime.now(timezone.utc) + timedelta(hours=1)
@@ -104,7 +104,7 @@ class TestRunOnStartup:
     @mock.patch('ckanext.hdx_smtp_assumerole.plugin.patch_hdx_users_mailer')
     @mock.patch('ckanext.hdx_smtp_assumerole.plugin.patch_mailer_functions')
     @mock.patch('ckanext.hdx_smtp_assumerole.plugin.get_credentials_info')
-    @mock.patch('ckanext.hdx_smtp_assumerole.plugin.get_ses_credentials')
+    @mock.patch('ckanext.hdx_smtp_assumerole.plugin.get_cached_ses_credentials')
     def test_enabled_with_smtp_domain(self, mock_cached_load, mock_get_info, mock_patch_mailer, mock_patch_hdx):
         """Test that smtp_domain configures email addresses"""
         expiration = datetime.now(timezone.utc) + timedelta(hours=1)
@@ -140,7 +140,7 @@ class TestRunOnStartup:
     @mock.patch('ckanext.hdx_smtp_assumerole.plugin.patch_hdx_users_mailer')
     @mock.patch('ckanext.hdx_smtp_assumerole.plugin.patch_mailer_functions')
     @mock.patch('ckanext.hdx_smtp_assumerole.plugin.get_credentials_info')
-    @mock.patch('ckanext.hdx_smtp_assumerole.plugin.get_ses_credentials')
+    @mock.patch('ckanext.hdx_smtp_assumerole.plugin.get_cached_ses_credentials')
     def test_enabled_smtp_domain_no_override(self, mock_cached_load, mock_get_info, mock_patch_mailer, mock_patch_hdx):
         """Test that smtp_domain doesn't override existing email addresses"""
         expiration = datetime.now(timezone.utc) + timedelta(hours=1)
@@ -309,7 +309,7 @@ class TestRunOnStartupValidation:
 
     @mock.patch('ckanext.hdx_smtp_assumerole.plugin.patch_hdx_users_mailer')
     @mock.patch('ckanext.hdx_smtp_assumerole.plugin.patch_mailer_functions')
-    @mock.patch('ckanext.hdx_smtp_assumerole.plugin.get_ses_credentials')
+    @mock.patch('ckanext.hdx_smtp_assumerole.plugin.get_cached_ses_credentials')
     def test_invalid_region_raises(self, mock_cached_load, mock_patch_mailer, mock_patch_hdx):
         """Test that invalid region format raises exception"""
         config = {
@@ -325,7 +325,7 @@ class TestRunOnStartupValidation:
 
     @mock.patch('ckanext.hdx_smtp_assumerole.plugin.patch_hdx_users_mailer')
     @mock.patch('ckanext.hdx_smtp_assumerole.plugin.patch_mailer_functions')
-    @mock.patch('ckanext.hdx_smtp_assumerole.plugin.get_ses_credentials')
+    @mock.patch('ckanext.hdx_smtp_assumerole.plugin.get_cached_ses_credentials')
     def test_invalid_role_arn_raises(self, mock_cached_load, mock_patch_mailer, mock_patch_hdx):
         """Test that invalid role ARN format raises exception"""
         config = {
@@ -342,7 +342,7 @@ class TestRunOnStartupValidation:
     @mock.patch('ckanext.hdx_smtp_assumerole.plugin.patch_hdx_users_mailer')
     @mock.patch('ckanext.hdx_smtp_assumerole.plugin.patch_mailer_functions')
     @mock.patch('ckanext.hdx_smtp_assumerole.plugin.get_credentials_info')
-    @mock.patch('ckanext.hdx_smtp_assumerole.plugin.get_ses_credentials')
+    @mock.patch('ckanext.hdx_smtp_assumerole.plugin.get_cached_ses_credentials')
     def test_valid_role_name_passes(self, mock_cached_load, mock_get_info, mock_patch_mailer, mock_patch_hdx):
         """Test that valid role name passes validation"""
         expiration = datetime.now(timezone.utc) + timedelta(hours=1)
@@ -385,7 +385,7 @@ class TestRunOnStartupEdgeCases:
     @mock.patch('ckanext.hdx_smtp_assumerole.plugin.patch_hdx_users_mailer')
     @mock.patch('ckanext.hdx_smtp_assumerole.plugin.patch_mailer_functions')
     @mock.patch('ckanext.hdx_smtp_assumerole.plugin.get_credentials_info')
-    @mock.patch('ckanext.hdx_smtp_assumerole.plugin.get_ses_credentials')
+    @mock.patch('ckanext.hdx_smtp_assumerole.plugin.get_cached_ses_credentials')
     def test_enabled_with_empty_smtp_domain(self, mock_cached_load, mock_get_info, mock_patch_mailer, mock_patch_hdx):
         """Test with empty smtp_domain config"""
         expiration = datetime.now(timezone.utc) + timedelta(hours=1)
@@ -416,7 +416,7 @@ class TestRunOnStartupEdgeCases:
 
     @mock.patch('ckanext.hdx_smtp_assumerole.plugin.patch_hdx_users_mailer')
     @mock.patch('ckanext.hdx_smtp_assumerole.plugin.patch_mailer_functions')
-    @mock.patch('ckanext.hdx_smtp_assumerole.plugin.get_ses_credentials')
+    @mock.patch('ckanext.hdx_smtp_assumerole.plugin.get_cached_ses_credentials')
     def test_generic_exception_during_startup(self, mock_cached_load, mock_patch_mailer, mock_patch_hdx):
         """Test handling of unexpected exceptions during startup"""
         mock_cached_load.side_effect = Exception('Unexpected error')
