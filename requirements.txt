@@ -113,7 +113,7 @@ jmespath==1.0.1
     # via
     #   boto3
     #   botocore
-lxml==5.2.2
+lxml==6.1.0
     # via
     #   feedgen
     #   pyld
