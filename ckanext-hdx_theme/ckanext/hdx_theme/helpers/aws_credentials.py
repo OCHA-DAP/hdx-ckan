@@ -236,20 +236,43 @@ def get_cached_aws_credentials(
     :raises AwsAssumeRoleException: If arguments are missing or credential
         loading fails.
     """
-    if not role_name_or_arn:
+    if not role_name_or_arn or not role_name_or_arn.strip():
         raise AwsAssumeRoleException('role_name_or_arn is required')
-    if not region:
+    if not region or not region.strip():
         raise AwsAssumeRoleException('region is required')
     if not session_name or not session_name.strip():
         raise AwsAssumeRoleException('session_name is required')
 
+    role_name_or_arn = role_name_or_arn.strip()
+    region = region.strip()
     session_name = session_name.strip()
     return _get_cached_aws_credentials_impl(role_name_or_arn, region, session_name)
 
 
-# Proxy invalidate so callers can use get_cached_aws_credentials.invalidate(...)
-# without needing to know about the internal impl function.
-get_cached_aws_credentials.invalidate = _get_cached_aws_credentials_impl.invalidate
+def _invalidate_cached_aws_credentials(
+    role_name_or_arn: str,
+    region: str,
+    session_name: str,
+) -> None:
+    """
+    Invalidate a cached entry applying the same normalization as
+    ``get_cached_aws_credentials`` so callers can pass raw config values
+    without worrying about mismatched cache keys.
+    """
+    if role_name_or_arn:
+        role_name_or_arn = role_name_or_arn.strip()
+    if region:
+        region = region.strip()
+    if session_name:
+        session_name = session_name.strip()
+    _get_cached_aws_credentials_impl.invalidate(role_name_or_arn, region, session_name)
+
+
+# Expose invalidate as an attribute so callers can use
+# get_cached_aws_credentials.invalidate(...) without knowing about the
+# internal impl function. The wrapper mirrors the main function's
+# normalization to keep get/invalidate cache keys consistent.
+get_cached_aws_credentials.invalidate = _invalidate_cached_aws_credentials
 
 
 # ---------------------------------------------------------------------------
