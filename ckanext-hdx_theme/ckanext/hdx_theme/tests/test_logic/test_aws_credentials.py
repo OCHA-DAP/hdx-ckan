@@ -211,6 +211,16 @@ def test_whitespace_session_name_raises_before_aws_call():
         get_cached_aws_credentials(_FULL_ARN, _REGION, '   ')
 
 
+def test_whitespace_role_raises_before_aws_call():
+    with pytest.raises(AwsAssumeRoleException, match='role_name_or_arn'):
+        get_cached_aws_credentials('   ', _REGION, _SESSION)
+
+
+def test_whitespace_region_raises_before_aws_call():
+    with pytest.raises(AwsAssumeRoleException, match='region'):
+        get_cached_aws_credentials(_FULL_ARN, '   ', _SESSION)
+
+
 # ---------------------------------------------------------------------------
 # get_cached_aws_credentials – caching behaviour (dogpile cache backends)
 # ---------------------------------------------------------------------------
@@ -303,3 +313,51 @@ def test_different_args_produce_independent_cache_entries(mock_assume):
     get_cached_aws_credentials(_FULL_ARN, _REGION, 'ckan-ses-session')
 
     assert mock_assume.call_count == 2  # each unique tuple hit AWS once
+
+
+@mock.patch('ckanext.hdx_theme.helpers.aws_credentials.assume_role_with_instance_profile')
+def test_whitespace_args_produce_same_cache_entry(mock_assume):
+    """
+    Callers passing padded and unpadded variants of the same (role, region,
+    session) tuple should hit the same cache entry. Validates that the
+    normalization in get_cached_aws_credentials is applied consistently.
+    """
+    get_cached_aws_credentials.invalidate(_FULL_ARN, _REGION, _SESSION)
+
+    expiration = datetime.now(timezone.utc) + timedelta(hours=1)
+    mock_assume.return_value = {
+        'access_key': 'KEY', 'secret_key': 'SECRET', 'session_token': 'TOKEN',
+        'expiration': expiration, 'region': _REGION,
+    }
+
+    get_cached_aws_credentials(_FULL_ARN, _REGION, _SESSION)
+    get_cached_aws_credentials(f'  {_FULL_ARN}  ', f'  {_REGION}  ', f'  {_SESSION}  ')
+
+    assert mock_assume.call_count == 1  # padded variant hit the same cache entry
+
+
+@mock.patch('ckanext.hdx_theme.helpers.aws_credentials.assume_role_with_instance_profile')
+def test_invalidate_normalizes_args(mock_assume):
+    """
+    invalidate() must apply the same normalization as get_cached_aws_credentials,
+    otherwise callers passing unstripped values would silently miss the cache
+    entry they intended to remove.
+    """
+    expiration = datetime.now(timezone.utc) + timedelta(hours=1)
+    mock_assume.return_value = {
+        'access_key': 'KEY', 'secret_key': 'SECRET', 'session_token': 'TOKEN',
+        'expiration': expiration, 'region': _REGION,
+    }
+
+    # Populate cache with canonical args
+    get_cached_aws_credentials(_FULL_ARN, _REGION, _SESSION)
+    assert mock_assume.call_count == 1
+
+    # Invalidate using padded args – must still hit the canonical entry
+    get_cached_aws_credentials.invalidate(
+        f'  {_FULL_ARN}  ', f'  {_REGION}  ', f'  {_SESSION}  '
+    )
+
+    # Next call should regenerate the credentials (cache was really invalidated)
+    get_cached_aws_credentials(_FULL_ARN, _REGION, _SESSION)
+    assert mock_assume.call_count == 2
