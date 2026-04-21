@@ -7,7 +7,7 @@ import logging
 from contextlib import contextmanager
 from typing import Generic, Iterator, TypeVar
 from typing_extensions import TypeGuard
-from pkg_resources import iter_entry_points
+from importlib.metadata import entry_points as _entry_points
 
 
 from ckan.common import config, aslist
@@ -49,6 +49,26 @@ GROUPS = [
     SYSTEM_PLUGINS_ENTRY_POINT_GROUP,
     TEST_PLUGINS_ENTRY_POINT_GROUP,
 ]
+
+
+def iter_entry_points(group, name=None):
+    '''Yield entry points from ``group`` (optionally filtered by ``name``)
+    using ``importlib.metadata``.
+
+    Wrapper that works on Python 3.9 (where ``entry_points()`` returns a dict
+    and does not accept ``group=``/``name=`` kwargs) and Python 3.10+ (where
+    those kwargs are supported).
+    '''
+    try:
+        eps = _entry_points(group=group)
+    except TypeError:
+        # Python 3.9: entry_points() returns a SelectableGroups / dict
+        eps = _entry_points().get(group, [])
+    if name is not None:
+        eps = [ep for ep in eps if ep.name == name]
+    return eps
+
+
 # These lists are used to ensure that the correct extensions are enabled.
 _PLUGINS: list[str] = []
 

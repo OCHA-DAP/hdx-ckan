@@ -4,7 +4,7 @@ from __future__ import annotations
 import logging
 from collections import defaultdict
 from typing import Optional
-from pkg_resources import iter_entry_points
+from ckan.plugins.core import iter_entry_points
 
 import click
 import sys
