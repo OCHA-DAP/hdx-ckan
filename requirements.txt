@@ -143,7 +143,7 @@ packaging==24.1
     # via -r requirements.in
 passlib==1.7.4
     # via -r requirements.in
-pbr==6.1.1
+pbr==7.0.3
     # via stevedore
 polib==1.2.0
     # via -r requirements.in

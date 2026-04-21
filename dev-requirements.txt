@@ -163,7 +163,7 @@ packaging==24.1
     #   sphinx
 parso==0.8.3
     # via jedi
-pbr==6.1.1
+pbr==7.0.3
     # via
     #   -c requirements.txt
     #   mock
