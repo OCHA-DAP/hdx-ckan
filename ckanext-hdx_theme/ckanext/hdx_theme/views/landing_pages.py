@@ -62,6 +62,13 @@ def signals():
     return render('landing_pages/signals.html', extra_vars=template_data)
 
 
+# TODO: remove this once finished
+def components():
+    # showcase page for redesigned components (v2)
+    return render('v2/components.html', extra_vars={})
+
+
 hdx_landing_pages.add_url_rule(u'/hapi/', view_func=hapi, strict_slashes=False)
 hdx_landing_pages.add_url_rule(u'/hapi/terms/', view_func=hapi_terms, strict_slashes=False)
 hdx_landing_pages.add_url_rule(u'/signals/', view_func=signals, strict_slashes=False)
+hdx_landing_pages.add_url_rule(u'/components/', view_func=components, strict_slashes=False)
