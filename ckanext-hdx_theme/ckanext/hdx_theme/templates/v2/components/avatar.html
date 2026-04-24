@@ -1,0 +1,73 @@
+{#
+  Snippet: avatar.html
+  Path:    templates/snippets/components/avatar/avatar.html
+
+  Parameters
+  ─────────────────────────────────────────────────
+  size        {string}  'l' | 'md' | 'sm' | 'xs'
+                        default: 'md'
+
+  initials    {string}  1–2 letter display inside the circle.
+                        default: 'A'
+
+  image_src   {string}  Optional path to user image (h.url_for_static()).
+                        If empty, initials are shown instead.
+                        default: ''
+
+  state       {string}  'enabled' | 'hovered' | 'active'
+                        default: 'enabled'
+
+  badge       {bool}    Whether to show the status dot badge.
+                        default: False
+
+  aria_label  {string}  Accessible label, e.g. "Jane Doe's avatar".
+                        default: ''
+
+  extra_classes {string}  Additional classes.
+                        default: ''
+
+  ─────────────────────────────────────────────────
+  Examples
+
+  {% snippet 'snippets/components/avatar/avatar.html',
+      size='md', initials='JD' %}
+
+  {% snippet 'snippets/components/avatar/avatar.html',
+      size='l', image_src='images/users/jane.jpg',
+      badge=True, aria_label="Jane's avatar" %}
+#}
+
+{% set size          = size          if size          is defined else 'md' %}
+{% set initials      = initials      if initials      is defined else 'A' %}
+{% set image_src     = image_src     if image_src     is defined else '' %}
+{% set state         = state         if state         is defined else 'enabled' %}
+{% set badge         = badge         if badge         is defined else False %}
+{% set aria_label    = aria_label    if aria_label    is defined else '' %}
+{% set extra_classes = extra_classes if extra_classes is defined else '' %}
+
+{% set classes = [
+    'c-avatar',
+    'c-avatar--size-' ~ size,
+    'c-avatar--' ~ state,
+] %}
+{% if extra_classes %}
+  {% set classes = classes + [extra_classes] %}
+{% endif %}
+
+<div class="{{ classes | join(' ') }}"
+     role="img"
+     {% if aria_label %}aria-label="{{ aria_label }}"{% endif %}>
+
+  {% if image_src %}
+    <img class="c-avatar__image"
+         src="{{ h.url_for_static(image_src) }}"
+         alt="{{ aria_label }}">
+  {% else %}
+    <span class="c-avatar__initials" aria-hidden="true">{{ initials | upper }}</span>
+  {% endif %}
+
+  {% if badge %}
+    <span class="c-avatar__badge" aria-label="Online"></span>
+  {% endif %}
+
+</div>

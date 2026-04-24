@@ -1,0 +1,332 @@
+@import "../foundation.less";
+
+// ============================================================
+// c-nav-item       — top-bar navigation item with active underline
+// c-anchor-links   — sidebar vertical anchor link list
+// c-letter-anchor  — alphabet letter anchor button
+// c-pagination     — numbered page control bar
+// c-breadcrumb     — horizontal breadcrumb trail
+// c-divider        — horizontal rule
+// ============================================================
+// Figma source: "Navigation and Pagination"
+// ============================================================
+
+// ── Local tokens ────────────────────────────────────────────
+@c-nav-height:          4rem;          // 64 px — fixed nav item height
+@c-nav-active-border:   4px solid @hdx-primary-5;   // royalblue underline
+@c-nav-disabled-border: 4px solid @hdx-neutral-3;   // #c4d0d1 lightgray
+@c-nav-color:           @hdx-neutral-8;              // #3f4748
+@c-nav-color-active:    @hdx-neutral-95;             // #101212
+@c-nav-color-disabled:  @hdx-neutral-7;              // #9db1b3
+
+@c-anchor-border-w:     0.25rem;   // 4 px left border
+@c-anchor-active-color: @hdx-primary-5;
+@c-anchor-color:        @hdx-neutral-8;
+
+@c-pager-border:        1px solid @hdx-neutral-2;   // #d8e0e1
+@c-pager-active-bg:     @hdx-neutral-95;            // #101212
+@c-pager-active-color:  @hdx-neutral-0;
+
+@c-letter-active-color: @hdx-primary-5;
+@c-letter-hover-color:  @hdx-primary-5;
+@c-letter-color:        @hdx-neutral-8;             // #3f4748
+@c-letter-disabled-color: @hdx-neutral-3;           // #c4d0d1
+
+
+// ────────────────────────────────────────────────────────────
+// 1. c-nav-item
+// ────────────────────────────────────────────────────────────
+
+.c-nav-item {
+    display:         inline-flex;
+    align-items:     center;
+    justify-content: center;
+    height:          @c-nav-height;
+    padding:         0 @hdx-space-2;   // 0 8
+    box-sizing:      border-box;
+    border-bottom:   4px solid transparent;   // always take up space
+    cursor:          pointer;
+    font-family:     @hdx-font-body;
+    font-size:       @hdx-fs-s;               // 14 px
+    font-weight:     @hdx-fw-medium;
+    color:           @c-nav-color;
+    text-decoration: none;
+    transition:      color 0.15s ease, border-color 0.15s ease;
+    gap:             @hdx-space-1;            // 4 px (label + chevron)
+
+    &__label { position: relative; line-height: 130%; }
+    &__chevron { width: 1.5rem; flex-shrink: 0; }
+
+    // ── States ──────────────────────────────────────────────
+
+    &--active {
+        border-bottom: @c-nav-active-border;
+        color:         @c-nav-color-active;
+    }
+
+    &--active-dropdown {
+        border-bottom: @c-nav-active-border;
+        color:         @c-nav-color-active;
+    }
+
+    &:hover:not(&--disabled) {
+        color: @c-nav-color-active;
+    }
+
+    &--disabled {
+        border-bottom: @c-nav-disabled-border;
+        color:         @c-nav-color-disabled;
+        cursor:        not-allowed;
+        pointer-events: none;
+    }
+}
+
+
+// ────────────────────────────────────────────────────────────
+// 2. c-anchor-links — vertical sidebar list
+// ────────────────────────────────────────────────────────────
+
+.c-anchor-links {
+    display:        flex;
+    flex-direction: column;
+
+    // Single anchor link
+    &__item {
+        display:         flex;
+        align-items:     center;
+        justify-content: flex-end;
+        cursor:          pointer;
+        text-decoration: none;
+    }
+
+    &__border {
+        align-self:       stretch;
+        width:            @c-anchor-border-w;
+        background-color: transparent;
+        flex-shrink:      0;
+        transition:       background-color 0.15s ease;
+    }
+
+    &__content {
+        flex:    1;
+        display: flex;
+        align-items: center;
+        padding: @hdx-space-3;  // 12 px
+    }
+
+    &__label {
+        flex:        1;
+        position:    relative;
+        line-height: 130%;
+        font-family: @hdx-font-body;
+        font-size:   @hdx-fs-m;   // 16 px
+        color:       @hdx-neutral-95;
+    }
+
+    // ── States ──────────────────────────────────────────────
+
+    &__item--active &__border  { background-color: @c-anchor-active-color; }
+    &__item--active &__label   { font-weight: @hdx-fw-medium; color: @hdx-neutral-95; }
+
+    &__item--inactive &__border { background-color: transparent; }
+    &__item--inactive &__label  { font-weight: @hdx-fw-regular; color: @hdx-neutral-8; }
+
+    &__item:hover:not(&__item--active) &__border { background-color: @hdx-neutral-2; }
+    &__item:hover:not(&__item--active) &__label  { color: @hdx-neutral-95; }
+}
+
+
+// ────────────────────────────────────────────────────────────
+// 3. c-letter-anchor — alphabet letter link button
+// ────────────────────────────────────────────────────────────
+
+.c-letter-anchor {
+    display:         inline-flex;
+    align-items:     center;
+    justify-content: center;
+    border-radius:   @hdx-radius-sm;
+    cursor:          pointer;
+    font-family:     @hdx-font-body;
+    font-weight:     @hdx-fw-medium;
+    text-decoration: none;
+    transition:      color 0.15s ease;
+    color:           @c-letter-color;
+    overflow:        hidden;
+    text-overflow:   ellipsis;
+    white-space:     nowrap;
+
+    // Large
+    &--size-lg {
+        width:     2.3125rem;
+        padding:   @hdx-space-2 @hdx-space-3;   // 8 12
+        font-size: @hdx-fs-m;                    // 16 px
+    }
+
+    // Small
+    &--size-sm {
+        width:     1.5rem;
+        padding:   @hdx-space-1 @hdx-space-2;   // 4 8
+        font-size: @hdx-fs-xs;                   // 12 px
+    }
+
+    &--active  { color: @c-letter-active-color;   font-weight: @hdx-fw-semibold; }
+    &:hover    { color: @c-letter-hover-color; }
+    &--disabled { color: @c-letter-disabled-color; pointer-events: none; }
+}
+
+
+// ────────────────────────────────────────────────────────────
+// 4. c-pagination
+// ────────────────────────────────────────────────────────────
+
+.c-pagination {
+    display:     inline-flex;
+    align-items: flex-start;
+    border:      @c-pager-border;
+    overflow:    hidden;
+    border-radius: @hdx-radius-sm;
+
+    &__item {
+        background-color: @hdx-neutral-0;
+        border:           @c-pager-border;
+        box-sizing:       border-box;
+        display:          flex;
+        align-items:      center;
+        justify-content:  center;
+        cursor:           pointer;
+        font-family:      @hdx-font-body;
+        font-weight:      @hdx-fw-medium;
+        line-height:      130%;
+        color:            @hdx-neutral-8;
+        text-decoration:  none;
+        transition:       background-color 0.15s ease, color 0.15s ease;
+        // Collapse borders
+        margin-left:      -1px;
+        position:         relative;
+
+        &:first-child { margin-left: 0; }
+
+        &:hover { background-color: @hdx-neutral-01; color: @hdx-neutral-95; }
+
+        &--active {
+            background-color: @c-pager-active-bg;
+            color:            @c-pager-active-color;
+            z-index:          1;
+
+            &:hover {
+                background-color: @c-pager-active-bg;
+                color:            @c-pager-active-color;
+            }
+        }
+
+        // Prev / next arrows
+        &--prev,
+        &--next {
+            color:     @hdx-neutral-95;
+            font-size: @hdx-fs-m;   // 16 px — Switzer-like arrow glyphs
+        }
+
+        &--ellipsis {
+            cursor: default;
+            &:hover { background-color: @hdx-neutral-0; }
+        }
+    }
+
+    // ── Size: MD (38 px cells) ───────────────────────────────
+    &--size-md &__item {
+        width:     2.375rem;  // 38 px
+        font-size: @hdx-fs-s; // 14 px
+
+        &--prev,
+        &--next { padding: @hdx-space-1 @hdx-space-13; }   // 4 6
+
+        &--page,
+        &--active,
+        &--ellipsis { padding: @hdx-space-1 @hdx-space-3; } // 4 12
+    }
+
+    // ── Size: SM (28 px cells) ───────────────────────────────
+    &--size-sm &__item {
+        width:     1.75rem;   // 28 px
+        font-size: @hdx-fs-xs; // 12 px
+
+        &--prev,
+        &--next { padding: @hdx-space-15 @hdx-space-13; }   // 2 6
+
+        &--page,
+        &--active,
+        &--ellipsis { padding: @hdx-space-15 @hdx-space-3; } // 2 12
+    }
+
+    // Chevron icon inside prev/next
+    &--size-md &__item img { width: 1.5rem; }
+    &--size-sm &__item img { width: 1rem; }
+}
+
+
+// ────────────────────────────────────────────────────────────
+// 5. c-breadcrumb — inline crumb trail
+// ────────────────────────────────────────────────────────────
+
+.c-breadcrumb {
+    display:     flex;
+    align-items: center;
+    flex-wrap:   wrap;
+    gap:         @hdx-space-2;   // 8 px
+    padding:     @hdx-space-2 0;
+    font-family: @hdx-font-body;
+    font-size:   @hdx-fs-xs;    // 12 px
+
+    &__item {
+        display:     flex;
+        align-items: center;
+    }
+
+    // Link crumb
+    &__link {
+        text-decoration: underline;
+        line-height:     130%;
+        font-weight:     @hdx-fw-medium;
+        color:           @hdx-neutral-8;
+        overflow:        hidden;
+        text-overflow:   ellipsis;
+        white-space:     nowrap;
+        max-width:       21.875rem;
+        transition:      color 0.15s ease;
+
+        &:hover { color: @hdx-primary-5; }
+    }
+
+    // Separator (›)
+    &__separator {
+        color:       @hdx-neutral-7;
+        font-size:   @hdx-fs-s;
+        line-height: 130%;
+        margin:      0 @hdx-space-1;  // 0 4
+    }
+
+    // Current (non-linked) crumb
+    &__current {
+        color:       @hdx-neutral-7;
+        line-height: 130%;
+        overflow:    hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        max-width:   21.875rem;
+    }
+}
+
+
+// ────────────────────────────────────────────────────────────
+// 6. c-divider — horizontal line
+// ────────────────────────────────────────────────────────────
+
+.c-divider {
+    display:     block;
+    width:       100%;
+    height:      1px;
+    background-color: @hdx-neutral-2;   // #d8e0e1
+    border:      none;
+    margin:      0;
+    flex-shrink: 0;
+}

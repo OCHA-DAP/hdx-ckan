@@ -1,0 +1,333 @@
+@import "../foundation.less";
+
+// ============================================================
+// c-selection-item  — filter tag / chip with optional close
+// c-radio           — radio input (native-style)
+// c-toggle          — boolean toggle switch
+// c-graph-point     — chart data-point dot with focus ring
+// ============================================================
+// Figma source: "Selection items / Radio / Toggle / Graph point"
+// ============================================================
+
+// ── Palette ──────────────────────────────────────────────────
+@c-sel-light-bg:     @hdx-neutral-0;       // #fff
+@c-sel-light-border: @hdx-neutral-2;       // #d8e0e1
+@c-sel-cyan-bg:      #d4eae4;              // lightcyan
+@c-sel-cyan-border:  #a8d5c9;             // powderblue
+
+@c-sel-hover-bg:         @hdx-neutral-01;  // #fafbfb
+@c-sel-hover-border:     @hdx-neutral-8;   // #3f4748 1.5px
+@c-sel-active-border:    @hdx-neutral-95;  // #101212 1px
+@c-sel-active-hover-border: @hdx-neutral-95; // 1.5px on hover while active
+
+// Radio
+@c-radio-dim:           1rem;              // 16 px
+@c-radio-inner-dim:     0.5rem;            // 8 px
+@c-radio-checked-color: @hdx-primary-5;   // royalblue
+@c-radio-border:        @hdx-neutral-2;   // #d8e0e1
+@c-radio-disabled-inner: @hdx-neutral-2;  // gainsboro
+
+// Toggle
+@c-toggle-w:       2rem;       // 32 px
+@c-toggle-h:       1rem;       // 16 px
+@c-toggle-thumb:   0.75rem;    // 12 px
+@c-toggle-off-bg:  @hdx-neutral-2;        // #d8e0e1
+@c-toggle-on-bg:   @hdx-primary-5;        // royalblue
+@c-toggle-thumb-bg: @hdx-neutral-0;       // white
+
+// Graph point
+@c-gp-dim:         0.5rem;     //  8 px
+@c-gp-focus-dim:   1.5rem;     // 24 px
+
+
+// ────────────────────────────────────────────────────────────
+// 1. c-selection-item — filter chip / tag
+// ────────────────────────────────────────────────────────────
+
+.c-selection-item {
+    display:          inline-flex;
+    align-items:      center;
+    justify-content:  center;
+    border-radius:    @hdx-radius-sm;
+    box-shadow:       @hdx-shadow-sm;
+    background-color: @c-sel-light-bg;
+    border:           1px solid @c-sel-light-border;
+    box-sizing:       border-box;
+    cursor:           pointer;
+    font-family:      @hdx-font-body;
+    font-weight:      @hdx-fw-medium;
+    color:            @hdx-neutral-8;
+    transition:       background-color 0.15s ease, border 0.15s ease, color 0.15s ease;
+
+    &__icon {
+        flex-shrink: 0;
+        display:     none;   // hidden unless .c-selection-item--has-icon
+    }
+
+    &__label {
+        overflow:      hidden;
+        text-overflow: ellipsis;
+        white-space:   nowrap;
+    }
+
+    &__count {
+        font-size: @hdx-fs-xs;
+        color:     @hdx-neutral-8;
+        display:   none;   // shown via --has-count modifier
+    }
+
+    &__close {
+        flex-shrink: 0;
+        display:     none;   // shown in active state
+    }
+
+    // ── Colour variants ──────────────────────────────────────
+
+    &--light {
+        background-color: @c-sel-light-bg;
+        border-color:     @c-sel-light-border;
+    }
+
+    &--cyan {
+        background-color: @c-sel-cyan-bg;
+        border-color:     @c-sel-cyan-border;
+    }
+
+    // ── State modifiers ──────────────────────────────────────
+
+    &:hover,
+    &--hovered {
+        background-color: @c-sel-hover-bg;
+        border:           1.5px solid @c-sel-hover-border;
+        box-shadow:       @hdx-shadow-sm;
+
+        &.c-selection-item--cyan {
+            background-color: @c-sel-cyan-bg;
+        }
+    }
+
+    // Active (selected — close icon visible, border near-black)
+    &--active {
+        border:     1px solid @c-sel-active-border;
+        color:      @hdx-neutral-95;
+        box-shadow: none;
+
+        .c-selection-item__close { display: block; }
+
+        &:hover {
+            border: 1.5px solid @c-sel-active-hover-border;
+        }
+
+        &.c-selection-item--cyan {
+            background-color: @c-sel-cyan-bg;
+        }
+    }
+
+    &--has-icon  .c-selection-item__icon  { display: block; }
+    &--has-count .c-selection-item__count { display: block; }
+
+    // ── Size modifiers ───────────────────────────────────────
+
+    // Large
+    &--size-l {
+        padding:   @hdx-space-2 @hdx-space-3;  // 8 12
+        gap:       @hdx-space-13;              //  6 px
+        font-size: @hdx-fs-m;                  // 16 px
+        max-width: 18.75rem;
+
+        .c-selection-item__icon  { width: 1rem; }
+        .c-selection-item__close { width: 1.25rem; }
+    }
+
+    // Medium
+    &--size-m {
+        padding:   @hdx-space-2;               // 8 px
+        gap:       @hdx-space-1;               // 4 px
+        font-size: @hdx-fs-s;                  // 14 px
+        max-width: 15.625rem;
+
+        .c-selection-item__icon  { width: 0.875rem; }
+        .c-selection-item__close { width: 1.25rem; }
+    }
+
+    // Small
+    &--size-s {
+        padding:   @hdx-space-13;             //  6 px
+        gap:       @hdx-space-1;              //  4 px
+        font-size: @hdx-fs-xs;               // 12 px
+        max-width: 12.5rem;
+
+        .c-selection-item__icon  { width: 0.75rem; }
+        .c-selection-item__close { width: 0.875rem; }
+    }
+}
+
+
+// ────────────────────────────────────────────────────────────
+// 2. c-radio — styled radio input wrapper
+// ────────────────────────────────────────────────────────────
+
+.c-radio {
+    display:     inline-flex;
+    align-items: center;
+    gap:         @hdx-space-2;   // 8 px
+    cursor:      pointer;
+    font-family: @hdx-font-body;
+    font-size:   @hdx-fs-s;
+    line-height: 130%;
+    color:       @hdx-neutral-8;
+
+    &__input {
+        width:        @c-radio-dim;
+        height:       @c-radio-dim;
+        position:     relative;
+        flex-shrink:  0;
+    }
+
+    // Outer ring
+    &__ring {
+        position:      absolute;
+        inset:         0;
+        border-radius: 100%;
+        border:        1px solid @c-radio-border;
+        box-sizing:    border-box;
+        background:    @hdx-neutral-0;
+        transition:    border-color 0.15s ease;
+    }
+
+    // Inner dot (checked)
+    &__dot {
+        position:         absolute;
+        top:              50%;
+        left:             50%;
+        transform:        translate(-50%, -50%);
+        width:            @c-radio-inner-dim;
+        height:           @c-radio-inner-dim;
+        border-radius:    100%;
+        background-color: transparent;
+        transition:       background-color 0.15s ease;
+    }
+
+    &__label { position: relative; line-height: 130%; }
+    &__hint  { width: 1rem; flex-shrink: 0; }
+
+    // ── States ──────────────────────────────────────────────
+
+    &--checked &__ring {
+        border: 1px solid @c-radio-checked-color;
+        background: transparent;
+    }
+
+    &--checked &__dot {
+        background-color: @c-radio-checked-color;
+    }
+
+    // Focus (keyboard nav) — shown as themed ring
+    &--checked.c-radio--focused &__ring {
+        background-color: transparent;
+        border-color:     @hdx-primary-7;  // darkslateblue
+    }
+
+    &--disabled {
+        cursor:         not-allowed;
+        pointer-events: none;
+        color:          @hdx-neutral-7;  // #9db1b3
+    }
+
+    &--disabled &__ring {
+        border-color: #ebeff0;  // whitesmoke
+    }
+
+    &--disabled&--checked &__dot {
+        background-color: @hdx-neutral-2;  // gainsboro
+    }
+}
+
+
+// ────────────────────────────────────────────────────────────
+// 3. c-toggle — boolean on/off switch
+// ────────────────────────────────────────────────────────────
+
+.c-toggle {
+    display:         inline-block;
+    position:        relative;
+    width:           @c-toggle-w;
+    height:          @c-toggle-h;
+    border-radius:   0.5rem;    // 8 px
+    background-color: @c-toggle-off-bg;
+    overflow:        hidden;
+    cursor:          pointer;
+    padding:         0.125rem;  // 2 px inner inset
+    box-sizing:      border-box;
+    transition:      background-color 0.2s ease;
+    flex-shrink:     0;
+
+    &__thumb {
+        width:         @c-toggle-thumb;
+        height:        @c-toggle-thumb;
+        border-radius: 66.67px;
+        background-color: @c-toggle-thumb-bg;
+        position:      relative;
+        transition:    transform 0.2s ease;
+        overflow:      hidden;
+        flex-shrink:   0;
+    }
+
+    // ── States ──────────────────────────────────────────────
+
+    &--on {
+        background-color: @c-toggle-on-bg;
+        display:          flex;
+        align-items:      flex-start;
+        justify-content:  flex-end;
+    }
+
+    &--off {
+        background-color: @c-toggle-off-bg;
+        display:          flex;
+        align-items:      flex-start;
+        justify-content:  flex-start;
+    }
+}
+
+
+// ────────────────────────────────────────────────────────────
+// 4. c-graph-point — chart data point
+// ────────────────────────────────────────────────────────────
+
+.c-graph-point {
+    position: relative;
+    display:  inline-flex;
+    align-items:     center;
+    justify-content: center;
+
+    // Focus halo ring (visible on hover/focus only)
+    &__halo {
+        position:         absolute;
+        width:            @c-gp-focus-dim;
+        height:           @c-gp-focus-dim;
+        border-radius:    50%;
+        background-color: @hdx-primary-5;
+        opacity:          0;
+        transition:       opacity 0.15s ease;
+        z-index:          0;
+    }
+
+    // Core dot
+    &__dot {
+        position:         relative;
+        width:            @c-gp-dim;
+        height:           @c-gp-dim;
+        border-radius:    50%;
+        background-color: @hdx-primary-5;
+        z-index:          1;
+    }
+
+    // ── States ──────────────────────────────────────────────
+
+    &--focused &__halo,
+    &:hover   &__halo,
+    &:focus   &__halo {
+        opacity: 0.2;
+    }
+}

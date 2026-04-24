@@ -1,0 +1,114 @@
+{#
+  Snippet: autocomplete.html
+  Path:    templates/snippets/components/input-field/autocomplete.html
+
+  Renders a c-autocomplete wrapper: a search input above a
+  suggestion panel. Panel visibility is controlled by JS.
+
+  Parameters
+  ─────────────────────────────────────────────────
+  placeholder     {string}  Input placeholder.  default: 'Search'
+  value           {string}  Current typed value.  default: ''
+  state           {string}  'enabled' | 'active' | 'filled'
+                            default: 'enabled'
+  name            {string}  input name.  default: 'q'
+  icon_src        {string}  Search icon.  default: 'images/icons/search.svg'
+
+  show_panel      {bool}    Whether to render the suggestion panel.
+                            default: False
+
+  trending_label  {string}  Section heading.  default: 'Trending'
+  chips           {list}    List of chip strings (location / tag suggestions).
+                            default: []
+  location_label  {string}  Optional second section label.  default: ''
+
+  results_label   {string}  Results section heading.  default: 'Search results'
+  results         {list}    List of dicts: {label, url, count, type}.
+                            default: []
+
+  confirm_label   {string}  "Search all" button label.  default: 'Search all'
+  extra_classes   {string}  default: ''
+  ─────────────────────────────────────────────────
+  Example
+
+  {% snippet 'snippets/components/input-field/autocomplete.html',
+      placeholder='Search datasets…',
+      show_panel=True,
+      chips=['Locations', 'West Africa', 'Sudan'],
+      results=[
+        {'label': 'Sudan humanitarian response', 'url': '/dataset/abc', 'count': 'Dataset'},
+      ],
+      confirm_label='Search all datasets' %}
+#}
+
+{% set placeholder    = placeholder    if placeholder    is defined else 'Search' %}
+{% set value          = value          if value          is defined else '' %}
+{% set state          = state          if state          is defined else 'enabled' %}
+{% set name           = name           if name           is defined else 'q' %}
+{% set icon_src       = icon_src       if icon_src       is defined else 'icons/search.svg' %}
+{% set show_panel     = show_panel     if show_panel     is defined else False %}
+{% set trending_label = trending_label if trending_label is defined else 'Trending' %}
+{% set chips          = chips          if chips          is defined else [] %}
+{% set location_label = location_label if location_label is defined else '' %}
+{% set results_label  = results_label  if results_label  is defined else 'Search results' %}
+{% set results        = results        if results        is defined else [] %}
+{% set confirm_label  = confirm_label  if confirm_label  is defined else 'Search all' %}
+{% set extra_classes  = extra_classes  if extra_classes  is defined else '' %}
+
+{% set input_state = 'active' if state == 'active' else ('filled' if state == 'filled' else 'enabled') %}
+
+<div class="c-autocomplete{{ ' ' ~ extra_classes if extra_classes }}"
+     role="combobox"
+     aria-haspopup="listbox"
+     aria-expanded="{{ 'true' if show_panel else 'false' }}">
+
+  {% snippet 'v2/components/search-input.html',
+      size='l', placeholder=placeholder, value=value,
+      state=input_state, name=name, icon_src=icon_src %}
+
+  {% if show_panel %}
+  <div class="c-autocomplete__panel" role="listbox">
+
+    {# ─ Trending chips ──────────────────────────── #}
+    {% if chips %}
+      <span class="c-autocomplete__section-title">{{ trending_label }}</span>
+
+      <div class="c-autocomplete__chips">
+        {% if location_label %}
+          <span class="c-autocomplete__section-title">{{ location_label }}</span>
+        {% endif %}
+        {% for chip in chips %}
+          <button type="button" class="c-autocomplete__chip">{{ chip }}</button>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    {# ─ Results list ─────────────────────────────── #}
+    {% if results %}
+      <div class="c-autocomplete__results">
+        <span class="c-autocomplete__section-title"
+              style="font-size:0.875rem;color:#2f3536;">{{ results_label }}</span>
+
+        {% for result in results %}
+          <div class="c-autocomplete__result-row">
+            <div class="c-autocomplete__result-link">
+              <a class="c-autocomplete__result-label"
+                 href="{{ result.url }}">{{ result.label }}</a>
+            </div>
+            {% if result.count is defined %}
+              <span class="c-autocomplete__result-count">{{ result.count }}</span>
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    {# ─ Confirm button ────────────────────────────── #}
+    <button type="submit" class="c-autocomplete__confirm-btn">
+      {{ confirm_label }}
+    </button>
+
+  </div>
+  {% endif %}
+
+</div>

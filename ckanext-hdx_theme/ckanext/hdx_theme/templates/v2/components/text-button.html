@@ -1,0 +1,134 @@
+{#
+  Snippet: text-button.html
+  Path:    templates/snippets/components/buttons/text-button.html
+
+  Renders a .c-text-button component — underline text with optional icon,
+  no background or border. Used for inline actions and navigation links.
+
+  Parameters
+  ──────────────────────────────────────────────────────
+  style         {string}  'primary'   — blue (#1862d8)
+                          'secondary' — near-black (#101212)
+                          'tertiary'  — neutral grey (#3f4748)
+                          default: 'primary'
+
+  size          {string}  'l' | 'm' | 's'
+                          default: 'm'
+
+  label         {string}  Visible text label (always required).
+                          default: ''
+
+  icon          {bool}    Whether to render an icon.
+                          default: False
+
+  icon_src      {string}  Path to the SVG icon, resolved via h.url_for_static().
+                          default: 'images/icons/placeholder.svg'
+
+  icon_position {string}  'left' | 'right'
+                          default: 'left'
+
+  state         {string}  'enabled' | 'disabled'
+                          default: 'enabled'
+
+  tag           {string}  'button' | 'a'
+                          default: 'a'
+
+  href          {string}  URL — used when tag='a'.
+                          default: '#'
+
+  button_type   {string}  'button' | 'submit' | 'reset'
+                          Only used when tag='button'.
+                          default: 'button'
+
+  extra_classes {string}  Additional CSS classes.
+                          default: ''
+
+  attrs         {dict}    Extra HTML attributes.
+                          default: {}
+
+  ──────────────────────────────────────────────────────
+  Examples
+
+  {% snippet 'snippets/components/buttons/text-button.html',
+      style='primary', size='m', label='Read more' %}
+
+  {% snippet 'snippets/components/buttons/text-button.html',
+      style='secondary', size='l', label='Download',
+      icon=True, icon_position='left' %}
+
+  {% snippet 'snippets/components/buttons/text-button.html',
+      style='tertiary', size='s', label='See all',
+      icon=True, icon_position='right', state='disabled' %}
+#}
+
+{# ── Defaults ────────────────────────────────────────────── #}
+{% set style         = style         if style         is defined else 'primary' %}
+{% set size          = size          if size          is defined else 'm' %}
+{% set label         = label         if label         is defined else '' %}
+{% set icon          = icon          if icon          is defined else False %}
+{% set icon_src      = icon_src      if icon_src      is defined else 'icons/placeholder.svg' %}
+{% set icon_position = icon_position if icon_position is defined else 'left' %}
+{% set state         = state         if state         is defined else 'enabled' %}
+{% set tag           = tag           if tag           is defined else 'a' %}
+{% set href          = href          if href          is defined else '#' %}
+{% set button_type   = button_type   if button_type   is defined else 'button' %}
+{% set extra_classes = extra_classes if extra_classes is defined else '' %}
+{% set attrs         = attrs         if attrs         is defined else {} %}
+
+{# ── Computed values ─────────────────────────────────────── #}
+{% set is_disabled = (state == 'disabled') %}
+
+{# ── BEM class list ──────────────────────────────────────── #}
+{% set classes = [
+    'c-text-button',
+    'c-text-button--' ~ style,
+    'c-text-button--size-' ~ size,
+] %}
+{% if is_disabled %}
+  {% set classes = classes + ['is-disabled'] %}
+{% endif %}
+{% if extra_classes %}
+  {% set classes = classes + [extra_classes] %}
+{% endif %}
+
+{# ── Icon markup ──────────────────────────────────────────── #}
+{% set icon_markup %}
+  <img class="c-text-button__icon"
+       src="{{ h.url_for_static(icon_src) }}"
+       alt=""
+       aria-hidden="true"
+       width="auto">
+{% endset %}
+
+{# ── Render ───────────────────────────────────────────────── #}
+{% if tag == 'a' %}
+<a
+  class="{{ classes | join(' ') }}"
+  href="{{ href }}"
+  {% if is_disabled %}aria-disabled="true" tabindex="-1"{% endif %}
+  {% for key, val in attrs.items() %}{{ key }}="{{ val }}"{% endfor %}
+>
+{% else %}
+<button
+  type="{{ button_type }}"
+  class="{{ classes | join(' ') }}"
+  {% if is_disabled %}disabled aria-disabled="true"{% endif %}
+  {% for key, val in attrs.items() %}{{ key }}="{{ val }}"{% endfor %}
+>
+{% endif %}
+
+  {% if icon and icon_position == 'left' %}
+    {{ icon_markup }}
+  {% endif %}
+
+  <span class="c-text-button__label">{{ label }}</span>
+
+  {% if icon and icon_position == 'right' %}
+    {{ icon_markup }}
+  {% endif %}
+
+{% if tag == 'a' %}
+</a>
+{% else %}
+</button>
+{% endif %}

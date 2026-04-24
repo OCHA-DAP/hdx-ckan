@@ -1,0 +1,56 @@
+{#
+  Snippet: search-input.html
+  Path:    templates/snippets/components/input-field/search-input.html
+
+  Renders a c-search-input — a standalone search/text input bar.
+
+  Parameters
+  ─────────────────────────────────────────────────
+  size          {string}  'l' | 'm'    default: 'l'
+  placeholder   {string}  Input placeholder text.  default: 'Value'
+  value         {string}  Pre-filled value.  default: ''
+  state         {string}  'enabled' | 'hover' | 'active' | 'filled'
+                          default: 'enabled'
+  name          {string}  input name attr.  default: 'q'
+  id            {string}  input id attr.   default: ''
+  icon_src      {string}  Right icon path. default: 'images/icons/search.svg'
+  extra_classes {string}  default: ''
+  attrs         {dict}    Extra HTML attrs on the wrapper div.  default: {}
+  ─────────────────────────────────────────────────
+  Example
+
+  {% snippet 'snippets/components/input-field/search-input.html',
+      size='l', placeholder='Search datasets…', name='q' %}
+#}
+
+{% set size          = size          if size          is defined else 'l' %}
+{% set placeholder   = placeholder   if placeholder   is defined else 'Value' %}
+{% set value         = value         if value         is defined else '' %}
+{% set state         = state         if state         is defined else 'enabled' %}
+{% set name          = name          if name          is defined else 'q' %}
+{% set id            = id            if id            is defined else '' %}
+{% set icon_src      = icon_src      if icon_src      is defined else 'icons/search.svg' %}
+{% set extra_classes = extra_classes if extra_classes is defined else '' %}
+{% set attrs         = attrs         if attrs         is defined else {} %}
+
+{% set classes = ['c-search-input', 'c-search-input--size-' ~ size] %}
+{% if state == 'hover'  %}{% set classes = classes + ['c-search-input--hovered'] %}{% endif %}
+{% if state == 'active' %}{% set classes = classes + ['c-search-input--active']  %}{% endif %}
+{% if state == 'filled' %}{% set classes = classes + ['c-search-input--filled']  %}{% endif %}
+{% if extra_classes     %}{% set classes = classes + [extra_classes]              %}{% endif %}
+
+<div class="{{ classes | join(' ') }}"
+     {% for key, val in attrs.items() %}{{ key }}="{{ val }}"{% endfor %}>
+
+  <input type="search"
+         name="{{ name }}"
+         {% if id %}id="{{ id }}"{% endif %}
+         placeholder="{{ placeholder }}"
+         value="{{ value }}"
+         autocomplete="off">
+
+  <img class="c-search-input__icon"
+       src="{{ h.url_for_static(icon_src) }}"
+       alt="" aria-hidden="true">
+
+</div>

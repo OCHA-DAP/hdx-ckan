@@ -1,0 +1,74 @@
+{#
+  Snippet: radio.html
+  Path:    templates/snippets/components/selection/radio.html
+
+  Renders a c-radio styled radio input with an optional label.
+  Wraps a real <input type="radio"> for native accessibility.
+
+  Parameters
+  ─────────────────────────────────────────────────
+  name          {string}  Radio group name attr.  default: 'radio-group'
+  value         {string}  Input value attr.  default: ''
+  label         {string}  Visible label text.  default: ''
+  checked       {bool}    Whether checked.  default: False
+  state         {string}  'enabled' | 'disabled'  default: 'enabled'
+  hint          {bool}    Show a hint/info icon.  default: False
+  hint_src      {string}  Hint icon path.  default: 'images/icons/info.svg'
+  id            {string}  Input id (generated from name+value if omitted).
+                          default: ''
+  extra_classes {string}  default: ''
+  ─────────────────────────────────────────────────
+  Examples
+
+  {% snippet 'snippets/components/selection/radio.html',
+      name='format', value='csv', label='CSV', checked=True %}
+
+  {% snippet 'snippets/components/selection/radio.html',
+      name='format', value='xlsx', label='Excel', state='disabled' %}
+#}
+
+{% set name          = name          if name          is defined else 'radio-group' %}
+{% set value         = value         if value         is defined else '' %}
+{% set label         = label         if label         is defined else '' %}
+{% set checked       = checked       if checked       is defined else False %}
+{% set state         = state         if state         is defined else 'enabled' %}
+{% set hint          = hint          if hint          is defined else False %}
+{% set hint_src      = hint_src      if hint_src      is defined else 'icons/info.svg' %}
+{% set id            = id            if id            is defined else (name ~ '-' ~ value) %}
+{% set extra_classes = extra_classes if extra_classes is defined else '' %}
+
+{% set is_disabled = (state == 'disabled') %}
+
+{% set classes = ['c-radio'] %}
+{% if checked     %}{% set classes = classes + ['c-radio--checked']  %}{% endif %}
+{% if is_disabled %}{% set classes = classes + ['c-radio--disabled'] %}{% endif %}
+{% if extra_classes %}{% set classes = classes + [extra_classes]     %}{% endif %}
+
+<label class="{{ classes | join(' ') }}" for="{{ id }}">
+
+  {# Visually hidden native input — drives form submission + accessibility #}
+  <input type="radio"
+         id="{{ id }}"
+         name="{{ name }}"
+         value="{{ value }}"
+         {% if checked     %}checked{% endif %}
+         {% if is_disabled %}disabled{% endif %}
+         style="position:absolute;opacity:0;width:0;height:0;pointer-events:none;">
+
+  {# Visual radio circle #}
+  <span class="c-radio__input" aria-hidden="true">
+    <span class="c-radio__ring"></span>
+    <span class="c-radio__dot"></span>
+  </span>
+
+  {% if label %}
+    <span class="c-radio__label">{{ label }}</span>
+  {% endif %}
+
+  {% if hint %}
+    <img class="c-radio__hint"
+         src="{{ h.url_for_static(hint_src) }}"
+         alt="More information" aria-label="More information about {{ label }}">
+  {% endif %}
+
+</label>

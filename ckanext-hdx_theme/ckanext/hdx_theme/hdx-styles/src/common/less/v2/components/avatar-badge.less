@@ -1,0 +1,152 @@
+@import "../foundation.less";
+
+// ============================================================
+// c-avatar — user avatar circle with optional status badge
+// c-badge  — standalone status dot (used inside avatar)
+// ============================================================
+// Figma source: "Avatars and Badge"
+// Tokens from: design-foundations.less
+// ============================================================
+
+// ── Local tokens ────────────────────────────────────────────
+// Avatar background colours
+@c-avatar-bg-default:  #bee0d6;   // powderblue — enabled / hovered
+@c-avatar-bg-active:   @hdx-neutral-0;  // #fff — active/selected state
+
+// Avatar text (initials)
+@c-avatar-color:       #18614c;   // teal — darkest contrast on powderblue bg
+@c-avatar-color-active: @hdx-neutral-8; // #3f4748 — on white bg
+
+// Badge (status dot)
+@c-badge-color:        #c44536;   // firebrick — online / active status
+@c-badge-ring:         @hdx-neutral-0;  // white isolation ring
+@c-badge-size:         0.375rem;  //  6 px
+
+// Sizing map
+@c-avatar-l-dim:   3rem;       // 48 px
+@c-avatar-l-fs:    @hdx-fs-m;  // 16 px (using 20px via lh-28 in Figma → medium token)
+@c-avatar-md-dim:  2.5rem;     // 40 px
+@c-avatar-md-fs:   @hdx-fs-m;  // 16 px
+@c-avatar-sm-dim:  2rem;       // 32 px
+@c-avatar-sm-fs:   @hdx-fs-s;  // 14 px
+@c-avatar-xs-dim:  1.5rem;     // 24 px
+@c-avatar-xs-fs:   @hdx-fs-xs; // 12 px
+
+
+// ────────────────────────────────────────────────────────────
+// 1. c-avatar
+// ────────────────────────────────────────────────────────────
+
+.c-avatar {
+    position:        relative;
+    display:         inline-flex;
+    align-items:     center;
+    justify-content: center;
+    border-radius:   100%;
+    background-color: @c-avatar-bg-default;
+    font-family:     @hdx-font-body;
+    font-weight:     @hdx-fw-medium;
+    color:           @c-avatar-color;
+    user-select:     none;
+    flex-shrink:     0;
+    transition:      background-color 0.15s ease, box-shadow 0.15s ease;
+
+    // ── Elements ────────────────────────────────────────────
+
+    &__initials {
+        position:  relative;
+        z-index:   1;
+        line-height: 1;
+        text-transform: uppercase;
+    }
+
+    &__image {
+        width:         100%;
+        height:        100%;
+        border-radius: 100%;
+        object-fit:    cover;
+        position:      absolute;
+        inset:         0;
+    }
+
+    // Status badge — rendered as a child element
+    &__badge {
+        position:         absolute;
+        top:              0;
+        right:            0;
+        transform:        translate(25%, -25%);
+        width:            @c-badge-size;
+        height:           @c-badge-size;
+        border-radius:    100%;
+        background-color: @c-badge-color;
+        box-shadow:       0 0 0 1px @c-badge-ring;
+        z-index:          2;
+        flex-shrink:      0;
+    }
+
+
+    // ── Size modifiers ───────────────────────────────────────
+
+    &--size-l {
+        width:     @c-avatar-l-dim;
+        height:    @c-avatar-l-dim;
+        font-size: @c-avatar-l-fs;
+    }
+
+    &--size-md {
+        width:     @c-avatar-md-dim;
+        height:    @c-avatar-md-dim;
+        font-size: @c-avatar-md-fs;
+    }
+
+    &--size-sm {
+        width:     @c-avatar-sm-dim;
+        height:    @c-avatar-sm-dim;
+        font-size: @c-avatar-sm-fs;
+    }
+
+    &--size-xs {
+        width:     @c-avatar-xs-dim;
+        height:    @c-avatar-xs-dim;
+        font-size: @c-avatar-xs-fs;
+    }
+
+
+    // ── State modifiers ──────────────────────────────────────
+
+    &--enabled {
+        background-color: @c-avatar-bg-default;
+        color:            @c-avatar-color;
+    }
+
+    // Hovered: same bg as enabled — visual cue via ring
+    &:hover,
+    &--hovered {
+        background-color: @c-avatar-bg-default;
+        box-shadow:       0 0 0 2px @hdx-primary-5;   // royalblue focus ring
+        color:            @c-avatar-color;
+    }
+
+    // Active / selected: white background
+    &:active,
+    &--active {
+        background-color: @c-avatar-bg-active;
+        box-shadow:       0 0 0 2px @hdx-primary-5;
+        color:            @c-avatar-color-active;
+    }
+}
+
+
+// ────────────────────────────────────────────────────────────
+// 2. c-badge — standalone status dot (used outside avatar too)
+// ────────────────────────────────────────────────────────────
+
+.c-badge {
+    display:          inline-block;
+    width:            @c-badge-size;
+    height:           @c-badge-size;
+    border-radius:    100%;
+    background-color: @c-badge-color;
+    box-shadow:       0 0 0 1px @c-badge-ring;
+    flex-shrink:      0;
+}

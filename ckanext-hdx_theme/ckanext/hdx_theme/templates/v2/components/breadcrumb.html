@@ -1,0 +1,48 @@
+{#
+  Snippet: breadcrumb.html
+  Path:    templates/snippets/components/navigation/breadcrumb.html
+
+  Renders a c-breadcrumb horizontal trail.
+
+  Parameters
+  ─────────────────────────────────────────────────
+  items         {list}    Ordered list of dicts: {label, href}.
+                          The LAST item is rendered as the current (non-linked) crumb.
+                          All previous items are rendered as links.
+                          default: []
+  separator     {string}  Separator character between crumbs.  default: '›'
+  extra_classes {string}  default: ''
+  ─────────────────────────────────────────────────
+  Example
+
+  {% snippet 'snippets/components/navigation/breadcrumb.html',
+      items=[
+        {'label': 'Datasets',          'href': '/dataset'},
+        {'label': 'Sudan',             'href': '/dataset?location=sd'},
+        {'label': 'Humanitarian data', 'href': ''},
+      ] %}
+#}
+
+{% set items         = items         if items         is defined else [] %}
+{% set separator     = separator     if separator     is defined else '›' %}
+{% set extra_classes = extra_classes if extra_classes is defined else '' %}
+
+<nav class="c-breadcrumb{{ ' ' ~ extra_classes if extra_classes }}"
+     aria-label="Breadcrumb">
+
+  {% for item in items %}
+    {% set is_last = loop.last %}
+
+    <span class="c-breadcrumb__item">
+
+      {% if not is_last %}
+        <a class="c-breadcrumb__link" href="{{ item.href }}">{{ item.label }}</a>
+        <span class="c-breadcrumb__separator" aria-hidden="true">{{ separator }}</span>
+      {% else %}
+        <span class="c-breadcrumb__current" aria-current="page">{{ item.label }}</span>
+      {% endif %}
+
+    </span>
+  {% endfor %}
+
+</nav>

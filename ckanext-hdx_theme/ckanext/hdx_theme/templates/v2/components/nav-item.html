@@ -1,0 +1,48 @@
+{#
+  Snippet: nav-item.html
+  Path:    templates/snippets/components/navigation/nav-item.html
+
+  Parameters
+  ─────────────────────────────────────────────────
+  label         {string}  Nav item text.  default: 'Item'
+  href          {string}  URL.  default: '#'
+  status        {string}  'default' | 'active' | 'active-dropdown' | 'disabled'
+                          default: 'default'
+  chevron       {bool}    Show chevron-down icon (for dropdown parents).
+                          default: False
+  chevron_src   {string}  default: 'images/icons/chevron-down.svg'
+  extra_classes {string}  default: ''
+  attrs         {dict}    default: {}
+  ─────────────────────────────────────────────────
+#}
+
+{% set label         = label         if label         is defined else 'Item' %}
+{% set href          = href          if href          is defined else '#' %}
+{% set status        = status        if status        is defined else 'default' %}
+{% set chevron       = chevron       if chevron       is defined else False %}
+{% set chevron_src   = chevron_src   if chevron_src   is defined else 'icons/chevron-down.svg' %}
+{% set extra_classes = extra_classes if extra_classes is defined else '' %}
+{% set attrs         = attrs         if attrs         is defined else {} %}
+
+{% set is_disabled = (status == 'disabled') %}
+
+{% set classes = ['c-nav-item'] %}
+{% if status == 'active'           %}{% set classes = classes + ['c-nav-item--active']            %}{% endif %}
+{% if status == 'active-dropdown'  %}{% set classes = classes + ['c-nav-item--active-dropdown']   %}{% endif %}
+{% if is_disabled                  %}{% set classes = classes + ['c-nav-item--disabled']          %}{% endif %}
+{% if extra_classes                %}{% set classes = classes + [extra_classes]                   %}{% endif %}
+
+<a class="{{ classes | join(' ') }}"
+   href="{{ href }}"
+   {% if is_disabled %}aria-disabled="true" tabindex="-1"{% endif %}
+   {% for key, val in attrs.items() %}{{ key }}="{{ val }}"{% endfor %}>
+
+  <span class="c-nav-item__label">{{ label }}</span>
+
+  {% if chevron %}
+    <img class="c-nav-item__chevron"
+         src="{{ h.url_for_static(chevron_src) }}"
+         alt="" aria-hidden="true">
+  {% endif %}
+
+</a>

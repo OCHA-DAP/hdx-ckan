@@ -1,0 +1,113 @@
+{#
+  Snippet: tooltip.html
+  Path:    templates/snippets/components/label/tooltip.html
+
+  Renders a c-tooltip component.
+
+  variant      {string}   'dark'  — simple text tooltip with dark bg
+                          'light' — rich card (dataset title, flag, subtitle)
+                          'graph' — legend rows (colour swatch + key + value)
+                          default: 'dark'
+
+  ── Dark (variant='dark') ──────────────────────────────────
+  text         {string}   Tooltip body copy.  default: ''
+  arrow        {string}   'above' | 'below' | ''  (no arrow)  default: 'below'
+  arrow_src    {string}   SVG arrow icon path.  default: 'images/icons/chevron-down.svg'
+
+  ── Light / map card (variant='light') ─────────────────────
+  title        {string}   Dataset title (max 2 lines).  default: ''
+  subtitle     {string}   Small metadata text below title.  default: ''
+  flag_src     {string}   Flag image path.  default: ''
+  action_label {string}   Optional button label.  default: ''
+
+  ── Graph (variant='graph') ─────────────────────────────────
+  graph_title  {string}   Title row.  default: ''
+  legend_items {list}     List of {color, label, value} dicts.  default: []
+
+  ── Shared ──────────────────────────────────────────────────
+  extra_classes {string}  default: ''
+#}
+
+{% set variant       = variant       if variant       is defined else 'dark' %}
+{% set text          = text          if text          is defined else '' %}
+{% set arrow         = arrow         if arrow         is defined else 'below' %}
+{% set arrow_src     = arrow_src     if arrow_src     is defined else 'icons/chevron-down.svg' %}
+{% set title         = title         if title         is defined else '' %}
+{% set subtitle      = subtitle      if subtitle      is defined else '' %}
+{% set flag_src      = flag_src      if flag_src      is defined else '' %}
+{% set action_label  = action_label  if action_label  is defined else '' %}
+{% set graph_title   = graph_title   if graph_title   is defined else '' %}
+{% set legend_items  = legend_items  if legend_items  is defined else [] %}
+{% set extra_classes = extra_classes if extra_classes is defined else '' %}
+
+{% set classes = ['c-tooltip', 'c-tooltip--' ~ variant] %}
+{% if extra_classes %}{% set classes = classes + [extra_classes] %}{% endif %}
+
+<div class="{{ classes | join(' ') }}" role="tooltip">
+
+  {# ── Dark tooltip ─────────────────────────────────── #}
+  {% if variant == 'dark' %}
+
+    <span class="c-tooltip__text">{{ text }}</span>
+
+    {% if arrow %}
+      <img class="c-tooltip__arrow c-tooltip__arrow--{{ arrow }}"
+           src="{{ h.url_for_static(arrow_src) }}"
+           alt="" aria-hidden="true">
+    {% endif %}
+
+  {# ── Light / map card ────────────────────────────── #}
+  {% elif variant == 'light' %}
+
+    <div class="c-tooltip__body">
+      {% if flag_src %}
+        <img class="c-tooltip__flag"
+             src="{{ h.url_for_static(flag_src) }}"
+             alt="" aria-hidden="true">
+      {% endif %}
+
+      <div class="c-tooltip__content">
+        {% if title %}
+          <span class="c-tooltip__title">{{ title }}</span>
+        {% endif %}
+        {% if subtitle %}
+          <span class="c-tooltip__subtitle">{{ subtitle }}</span>
+        {% endif %}
+      </div>
+    </div>
+
+    {% if action_label %}
+      <div class="c-tooltip__body" style="align-self:stretch;justify-content:center;">
+        {% snippet 'v2/components/text-link.html',
+            style='primary', size='s', label=action_label %}
+      </div>
+    {% endif %}
+
+  {# ── Graph / chart tooltip ───────────────────────── #}
+  {% elif variant == 'graph' %}
+
+    {% if graph_title %}
+      <span class="c-tooltip__text"
+            style="font-size:0.875rem;color:#3f4748;z-index:1;align-self:stretch;">
+        {{ graph_title }}
+      </span>
+    {% endif %}
+
+    {% if legend_items %}
+      <div class="c-tooltip__legend">
+        {% for item in legend_items %}
+          <div class="c-tooltip__legend-row">
+            <div class="c-tooltip__legend-key">
+              <span class="c-tooltip__legend-swatch"
+                    style="background-color:{{ item.color }};"></span>
+              <span class="c-tooltip__legend-label">{{ item.label }}</span>
+            </div>
+            <span class="c-tooltip__legend-value">{{ item.value }}</span>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+  {% endif %}
+
+</div>
