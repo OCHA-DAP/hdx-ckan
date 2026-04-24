@@ -1,0 +1,277 @@
+@import url('https://fonts.googleapis.com/css2?family=Merriweather:ital,opsz,wght@0,18..144,300..900;1,18..144,300..900&display=swap');
+// Roboto is already loaded via bem.blocks/bem_fonts.less
+
+// ============================================================
+// HDX Design Foundations — Typography Tokens
+// Source: Figma "Visual Redesign / Foundations / Typography"
+//
+// Structure
+//   1. Font families
+//   2. Font size scale
+//   3. Font weights
+//   4. Line heights
+//   5. Named type-style mixins
+//      .hdx-display-*()   Merriweather bold — page/section titles
+//      .hdx-heading-*()   Roboto — component headings (h1–h4)
+//      .hdx-lead()        Roboto regular — introductory paragraphs
+//      .hdx-body-*()      Roboto — body copy (L / M / S / XS × regular / medium / semibold)
+//      .hdx-link-*()      Roboto medium, underlined, primary blue
+// ============================================================
+
+
+// ------------------------------------------------------------------
+// 1. Font families
+// ------------------------------------------------------------------
+
+@hdx-font-display:  'Merriweather', serif;   // Display headings
+@hdx-font-body:     'Roboto', sans-serif;     // All other text
+
+
+// ------------------------------------------------------------------
+// 2. Font size scale
+// ------------------------------------------------------------------
+
+@hdx-fs-xs:   0.75rem;   // 12px — Body XS, Link XS
+@hdx-fs-s:    0.875rem;  // 14px — Body S, Link S
+@hdx-fs-m:    1rem;      // 16px — Body M, Link M, h4
+@hdx-fs-l:    1.125rem;  // 18px — Body L, Link L, h3
+@hdx-fs-xl:   1.25rem;   // 20px — Link XL, Display XS, h2
+@hdx-fs-2xl:  1.5rem;    // 24px — Lead text, Display S, h1
+@hdx-fs-3xl:  1.75rem;   // 28px — Display M
+@hdx-fs-4xl:  2rem;      // 32px — Display L
+@hdx-fs-5xl:  3rem;      // 48px — Display XL
+
+
+// ------------------------------------------------------------------
+// 3. Font weights
+// ------------------------------------------------------------------
+
+@hdx-fw-regular:   400;
+@hdx-fw-medium:    500;
+@hdx-fw-semibold:  600;
+@hdx-fw-bold:      700;
+
+
+// ------------------------------------------------------------------
+// 4. Line heights
+// ------------------------------------------------------------------
+
+@hdx-lh-tight:   1.2;   // 120% — Link XL only
+@hdx-lh-normal:  1.3;   // 130% — all other styles
+
+
+// ------------------------------------------------------------------
+// 5. Named type-style mixins
+// ------------------------------------------------------------------
+
+// --- Display  (Merriweather bold, 130% line-height) ---
+
+.hdx-display-xl() {
+  font-family: @hdx-font-display;
+  font-size:   @hdx-fs-5xl;   // 48px
+  font-weight: @hdx-fw-bold;
+  line-height: @hdx-lh-normal;
+}
+
+.hdx-display-l() {
+  font-family: @hdx-font-display;
+  font-size:   @hdx-fs-4xl;   // 32px
+  font-weight: @hdx-fw-bold;
+  line-height: @hdx-lh-normal;
+}
+
+.hdx-display-m() {
+  font-family: @hdx-font-display;
+  font-size:   @hdx-fs-3xl;   // 28px
+  font-weight: @hdx-fw-bold;
+  line-height: @hdx-lh-normal;
+}
+
+.hdx-display-s() {
+  font-family: @hdx-font-display;
+  font-size:   @hdx-fs-2xl;   // 24px
+  font-weight: @hdx-fw-bold;
+  line-height: @hdx-lh-normal;
+}
+
+.hdx-display-xs() {
+  font-family: @hdx-font-display;
+  font-size:   @hdx-fs-xl;    // 20px
+  font-weight: @hdx-fw-bold;
+  line-height: @hdx-lh-normal;
+}
+
+
+// --- Heading  (Roboto, 130% line-height) ---
+
+.hdx-heading-h1() {
+  font-family: @hdx-font-body;
+  font-size:   @hdx-fs-2xl;   // 24px
+  font-weight: @hdx-fw-medium;
+  line-height: @hdx-lh-normal;
+}
+
+.hdx-heading-h2() {
+  font-family: @hdx-font-body;
+  font-size:   @hdx-fs-xl;    // 20px
+  font-weight: @hdx-fw-semibold;
+  line-height: @hdx-lh-normal;
+}
+
+.hdx-heading-h3() {
+  font-family: @hdx-font-body;
+  font-size:   @hdx-fs-l;     // 18px
+  font-weight: @hdx-fw-semibold;
+  line-height: @hdx-lh-normal;
+}
+
+.hdx-heading-h4() {
+  font-family: @hdx-font-body;
+  font-size:   @hdx-fs-m;     // 16px
+  font-weight: @hdx-fw-semibold;
+  line-height: @hdx-lh-normal;
+}
+
+
+// --- Lead text  (Roboto regular, 130% line-height) ---
+
+.hdx-lead() {
+  font-family: @hdx-font-body;
+  font-size:   @hdx-fs-2xl;   // 24px
+  font-weight: @hdx-fw-regular;
+  line-height: @hdx-lh-normal;
+}
+
+
+// --- Body  (Roboto, 130% line-height) ---
+//   Sizes: L (18px) / M (16px) / S (14px) / XS (12px)
+//   Weights per size: semibold (600) / medium (500) / regular (400)
+
+.hdx-body-l-semibold() {
+  font-family: @hdx-font-body;
+  font-size:   @hdx-fs-l;     // 18px
+  font-weight: @hdx-fw-semibold;
+  line-height: @hdx-lh-normal;
+}
+
+.hdx-body-l-medium() {
+  font-family: @hdx-font-body;
+  font-size:   @hdx-fs-l;     // 18px
+  font-weight: @hdx-fw-medium;
+  line-height: @hdx-lh-normal;
+}
+
+.hdx-body-l() {
+  font-family: @hdx-font-body;
+  font-size:   @hdx-fs-l;     // 18px
+  font-weight: @hdx-fw-regular;
+  line-height: @hdx-lh-normal;
+}
+
+.hdx-body-m-semibold() {
+  font-family: @hdx-font-body;
+  font-size:   @hdx-fs-m;     // 16px
+  font-weight: @hdx-fw-semibold;
+  line-height: @hdx-lh-normal;
+}
+
+.hdx-body-m-medium() {
+  font-family: @hdx-font-body;
+  font-size:   @hdx-fs-m;     // 16px
+  font-weight: @hdx-fw-medium;
+  line-height: @hdx-lh-normal;
+}
+
+.hdx-body-m() {
+  font-family: @hdx-font-body;
+  font-size:   @hdx-fs-m;     // 16px
+  font-weight: @hdx-fw-regular;
+  line-height: @hdx-lh-normal;
+}
+
+.hdx-body-s-semibold() {
+  font-family: @hdx-font-body;
+  font-size:   @hdx-fs-s;     // 14px
+  font-weight: @hdx-fw-semibold;
+  line-height: @hdx-lh-normal;
+}
+
+.hdx-body-s-medium() {
+  font-family: @hdx-font-body;
+  font-size:   @hdx-fs-s;     // 14px
+  font-weight: @hdx-fw-medium;
+  line-height: @hdx-lh-normal;
+}
+
+.hdx-body-s() {
+  font-family: @hdx-font-body;
+  font-size:   @hdx-fs-s;     // 14px
+  font-weight: @hdx-fw-regular;
+  line-height: @hdx-lh-normal;
+}
+
+.hdx-body-xs-semibold() {
+  font-family: @hdx-font-body;
+  font-size:   @hdx-fs-xs;    // 12px
+  font-weight: @hdx-fw-semibold;
+  line-height: @hdx-lh-normal;
+}
+
+.hdx-body-xs-medium() {
+  font-family: @hdx-font-body;
+  font-size:   @hdx-fs-xs;    // 12px
+  font-weight: @hdx-fw-medium;
+  line-height: @hdx-lh-normal;
+}
+
+.hdx-body-xs() {
+  font-family: @hdx-font-body;
+  font-size:   @hdx-fs-xs;    // 12px
+  font-weight: @hdx-fw-regular;
+  line-height: @hdx-lh-normal;
+}
+
+
+// --- Link text  (Roboto medium, underlined, primary blue) ---
+//   Use @hdx-primary-5 (#1862d8) for color.
+//   XL uses 120% line-height; L–XS use 130%.
+
+.hdx-link-xl() {
+  font-family:     @hdx-font-body;
+  font-size:       @hdx-fs-xl;    // 20px
+  font-weight:     @hdx-fw-medium;
+  line-height:     @hdx-lh-tight; // 120%
+  text-decoration: underline;
+}
+
+.hdx-link-l() {
+  font-family:     @hdx-font-body;
+  font-size:       @hdx-fs-l;     // 18px
+  font-weight:     @hdx-fw-medium;
+  line-height:     @hdx-lh-normal;
+  text-decoration: underline;
+}
+
+.hdx-link-m() {
+  font-family:     @hdx-font-body;
+  font-size:       @hdx-fs-m;     // 16px
+  font-weight:     @hdx-fw-medium;
+  line-height:     @hdx-lh-normal;
+  text-decoration: underline;
+}
+
+.hdx-link-s() {
+  font-family:     @hdx-font-body;
+  font-size:       @hdx-fs-s;     // 14px
+  font-weight:     @hdx-fw-medium;
+  line-height:     @hdx-lh-normal;
+  text-decoration: underline;
+}
+
+.hdx-link-xs() {
+  font-family:     @hdx-font-body;
+  font-size:       @hdx-fs-xs;    // 12px
+  font-weight:     @hdx-fw-medium;
+  line-height:     @hdx-lh-normal;
+  text-decoration: underline;
+}
