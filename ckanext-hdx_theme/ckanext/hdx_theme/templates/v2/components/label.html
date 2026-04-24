@@ -1,0 +1,70 @@
+{#
+  Snippet: label.html
+  Path:    templates/snippets/components/label/label.html
+
+  Renders a c-label inline chip/tag.
+
+  Parameters
+  ─────────────────────────────────────────────────
+  text          {string}  Label text.  default: 'Label'
+  color         {string}  'light' | 'grey' | 'dark' | 'cyan' | 'yellow' | 'blue'
+                          default: 'light'
+  size          {string}  'm' | 's' | 'xs'   default: 'm'
+  icon          {bool}    Show leading icon.  default: False
+  icon_src      {string}  Icon path.  default: 'images/icons/placeholder.svg'
+  icon_only     {bool}    No text — square icon-only badge.  default: False
+  tag           {string}  'span' | 'a' | 'button'  default: 'span'
+  href          {string}  URL when tag='a'.  default: '#'
+  extra_classes {string}  default: ''
+  attrs         {dict}    default: {}
+  ─────────────────────────────────────────────────
+  Examples
+
+  {% snippet 'snippets/components/label/label.html',
+      text='HDX', color='cyan', size='m', icon=True %}
+
+  {% snippet 'snippets/components/label/label.html',
+      color='blue', size='s', icon=True, icon_only=True %}
+#}
+
+{% set text          = text          if text          is defined else 'Label' %}
+{% set color         = color         if color         is defined else 'light' %}
+{% set size          = size          if size          is defined else 'm' %}
+{% set icon          = icon          if icon          is defined else False %}
+{% set icon_src      = icon_src      if icon_src      is defined else 'icons/placeholder.svg' %}
+{% set icon_only     = icon_only     if icon_only     is defined else False %}
+{% set tag           = tag           if tag           is defined else 'span' %}
+{% set href          = href          if href          is defined else '#' %}
+{% set extra_classes = extra_classes if extra_classes is defined else '' %}
+{% set attrs         = attrs         if attrs         is defined else {} %}
+
+{% set classes = ['c-label', 'c-label--' ~ color, 'c-label--size-' ~ size] %}
+{% if icon_only %}{% set classes = classes + ['c-label--icon-only'] %}{% endif %}
+{% if extra_classes %}{% set classes = classes + [extra_classes] %}{% endif %}
+
+{% if tag == 'a' %}
+<a class="{{ classes | join(' ') }}"
+   href="{{ href }}"
+   {% for key, val in attrs.items() %}{{ key }}="{{ val }}"{% endfor %}>
+{% elif tag == 'button' %}
+<button type="button"
+        class="{{ classes | join(' ') }}"
+        {% for key, val in attrs.items() %}{{ key }}="{{ val }}"{% endfor %}>
+{% else %}
+<span class="{{ classes | join(' ') }}"
+      {% for key, val in attrs.items() %}{{ key }}="{{ val }}"{% endfor %}>
+{% endif %}
+
+  {% if icon or icon_only %}
+    <img class="c-label__icon"
+         src="{{ h.url_for_static(icon_src) }}"
+         alt="" aria-hidden="true">
+  {% endif %}
+
+  {% if not icon_only %}
+    <span class="c-label__text">{{ text }}</span>
+  {% endif %}
+
+{% if tag == 'a' %}</a>
+{% elif tag == 'button' %}</button>
+{% else %}</span>{% endif %}

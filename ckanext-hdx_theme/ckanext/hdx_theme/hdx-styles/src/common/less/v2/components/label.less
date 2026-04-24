@@ -1,0 +1,345 @@
+@import "../foundation.less";
+
+// ============================================================
+// c-label       — inline tag/chip (text + optional icon)
+// c-file-type   — square file-format icon badge
+// c-tooltip     — text tooltip (dark) and rich tooltip (light)
+// ============================================================
+// Figma source: "Label and Filetype and Tooltip"
+// ============================================================
+
+// ── Local colour palette (label colours) ────────────────────
+// Each colour maps to: background, text-colour
+@c-label-light-bg:    #f5f7f7;   // whitesmoke-100  → @hdx-neutral-05
+@c-label-light-color: @hdx-neutral-95;   // #101212
+
+@c-label-grey-bg:     #ebeff0;   // whitesmoke-200
+@c-label-grey-color:  @hdx-neutral-95;
+
+@c-label-dark-bg:     @hdx-neutral-2;    // gainsboro #d8e0e1
+@c-label-dark-color:  @hdx-neutral-95;
+
+@c-label-cyan-bg:     #d4eae4;   // lightcyan
+@c-label-cyan-color:  #0b2d24;   // darkslategray-300
+
+@c-label-yellow-bg:   #f6e9d4;   // antiquewhite
+@c-label-yellow-color: #553911;  // saddlebrown
+
+@c-label-blue-bg:     #d1e0f7;   // lavender
+@c-label-blue-color:  #05142b;   // @hdx-primary-9
+
+// ── Sizing ───────────────────────────────────────────────────
+// M — 29 px (text+icon) or pill
+@c-label-m-fs:   @hdx-fs-m;      // 16 px
+@c-label-m-pad:  @hdx-space-1 @hdx-space-2; // 4 8
+@c-label-m-gap:  @hdx-space-13;  //  6 px
+@c-label-m-icon: 1rem;           // 16 px
+
+// S
+@c-label-s-fs:   @hdx-fs-s;      // 14 px
+@c-label-s-pad:  @hdx-space-15 @hdx-space-13; // 2 6
+@c-label-s-gap:  @hdx-space-1;   //  4 px
+@c-label-s-icon: 0.875rem;       // 14 px
+
+// XS
+@c-label-xs-fs:   @hdx-fs-xs;    // 12 px
+@c-label-xs-pad:  @hdx-space-15 @hdx-space-1; // 2 4
+@c-label-xs-gap:  @hdx-space-1;  //  4 px
+@c-label-xs-icon: 0.75rem;       // 12 px
+@c-label-xs-min-h: 1.25rem;      // 20 px min-height
+
+// Icon-only square sizes
+@c-label-icon-m-dim: 1.8125rem;  // 29 px
+@c-label-icon-s-dim: 1.5rem;     // 24 px
+@c-label-icon-xs-dim: 1.25rem;   // 20 px
+
+
+// ────────────────────────────────────────────────────────────
+// 1. c-label — tag / chip
+// ────────────────────────────────────────────────────────────
+
+.c-label {
+    display:         inline-flex;
+    align-items:     center;
+    justify-content: center;
+    border-radius:   @hdx-radius-md;  // 4 px
+    font-family:     @hdx-font-body;
+    font-weight:     @hdx-fw-regular;
+    line-height:     130%;
+    white-space:     nowrap;
+    box-sizing:      border-box;
+
+    &__icon {
+        flex-shrink: 0;
+        display:     block;
+    }
+
+    &__text {
+        position: relative;
+    }
+
+    // ── Size modifiers ───────────────────────────────────────
+
+    &--size-m {
+        padding:   @c-label-m-pad;
+        gap:       @c-label-m-gap;
+        font-size: @c-label-m-fs;
+        .c-label__icon { width: @c-label-m-icon; }
+    }
+
+    &--size-s {
+        padding:   @c-label-s-pad;
+        gap:       @c-label-s-gap;
+        font-size: @c-label-s-fs;
+        .c-label__icon { width: @c-label-s-icon; }
+    }
+
+    &--size-xs {
+        padding:    @c-label-xs-pad;
+        gap:        @c-label-xs-gap;
+        font-size:  @c-label-xs-fs;
+        min-height: @c-label-xs-min-h;
+        .c-label__icon { width: @c-label-xs-icon; }
+    }
+
+    // Icon-only square — no text, fixed dimensions
+    &--icon-only {
+        padding: 0;
+
+        &.c-label--size-m  { width: @c-label-icon-m-dim;  height: @c-label-icon-m-dim;  }
+        &.c-label--size-s  { width: @c-label-icon-s-dim;  height: @c-label-icon-s-dim;  border-radius: @hdx-radius-sm; }
+        &.c-label--size-xs { width: @c-label-icon-xs-dim; height: @c-label-icon-xs-dim; border-radius: @hdx-radius-sm; min-width: @c-label-icon-xs-dim; }
+    }
+
+    // ── Colour modifiers ─────────────────────────────────────
+
+    &--light  { background-color: @c-label-light-bg;  color: @c-label-light-color;  }
+    &--grey   { background-color: @c-label-grey-bg;   color: @c-label-grey-color;   }
+    &--dark   { background-color: @c-label-dark-bg;   color: @c-label-dark-color;   }
+    &--cyan   { background-color: @c-label-cyan-bg;   color: @c-label-cyan-color;   }
+    &--yellow { background-color: @c-label-yellow-bg; color: @c-label-yellow-color; }
+    &--blue   { background-color: @c-label-blue-bg;   color: @c-label-blue-color;   }
+}
+
+
+// ────────────────────────────────────────────────────────────
+// 2. c-file-type — square file-format icon badge
+// ────────────────────────────────────────────────────────────
+
+// Format → background colour
+@c-ft-neutral-bg:  #ebeff0;   // whitesmoke-200
+@c-ft-geo-bg:      #f6e9d4;   // antiquewhite
+@c-ft-tabular-bg:  #d4eae4;   // lightcyan
+@c-ft-document-bg: #d1e0f7;   // lavender
+@c-ft-web-bg:      #f3dad7;   // mistyrose
+
+.c-file-type {
+    display:         inline-flex;
+    align-items:     center;
+    justify-content: center;
+    flex-shrink:     0;
+    box-sizing:      border-box;
+
+    &__icon {
+        display:    block;
+        width:      1.5rem;  // default M; overridden per size
+        max-height: 100%;
+    }
+
+    // ── Sizes ────────────────────────────────────────────────
+
+    &--size-m {
+        width:         2.5rem;   // 40 px
+        height:        2.5rem;
+        border-radius: @hdx-radius-md;  // 4 px
+        padding:       @hdx-space-2;
+
+        .c-file-type__icon { width: 1.5rem; }
+    }
+
+    &--size-s {
+        width:         2rem;     // 32 px
+        height:        2rem;
+        border-radius: @hdx-radius-sm;  // 2 px
+        padding:       @hdx-space-2;
+
+        .c-file-type__icon { width: 1rem; }
+    }
+
+    &--size-xs {
+        width:         1.5rem;   // 24 px
+        height:        1.5rem;
+        border-radius: @hdx-radius-sm;
+        padding:       @hdx-space-1;
+
+        .c-file-type__icon { width: 1rem; }
+    }
+
+    // ── Format colours ───────────────────────────────────────
+
+    &--neutral  { background-color: @c-ft-neutral-bg;  }
+    &--geo      { background-color: @c-ft-geo-bg;      }
+    &--tabular  { background-color: @c-ft-tabular-bg;  }
+    &--document { background-color: @c-ft-document-bg; }
+    &--web      { background-color: @c-ft-web-bg;      }
+}
+
+
+// ────────────────────────────────────────────────────────────
+// 3. c-tooltip — dark (text) and light (rich) variants
+// ────────────────────────────────────────────────────────────
+
+@c-tooltip-dark-bg:    #0b2d24;   // darkslategray-300
+@c-tooltip-dark-color: @hdx-neutral-0;
+@c-tooltip-dark-shadow: 0px 8px 35px rgba(0, 0, 0, 0.16);
+
+@c-tooltip-light-bg:     @hdx-neutral-0;  // #fff
+@c-tooltip-light-color:  @hdx-neutral-95; // #101212
+@c-tooltip-light-shadow: 0px 8px 35px rgba(0, 0, 0, 0.16);
+
+@c-tooltip-max-w: 18.75rem;   // 300 px
+@c-tooltip-arrow-h: 0.5rem;   //  8 px
+
+.c-tooltip {
+    border-radius:  @hdx-radius-sm;  // 2 px
+    box-shadow:     @c-tooltip-dark-shadow;
+    display:        inline-flex;
+    flex-direction: column;
+    align-items:    flex-start;
+    padding:        @hdx-space-2 @hdx-space-3;  // 8 12
+    max-width:      @c-tooltip-max-w;
+    isolation:      isolate;
+    position:       relative;
+    font-family:    @hdx-font-body;
+
+    // Arrow pointer (SVG img)
+    &__arrow {
+        width:      1rem;  // 16 px
+        height:     @c-tooltip-arrow-h;
+        position:   absolute;
+        object-fit: contain;
+        z-index:    0;
+        flex-shrink: 0;
+
+        // Position variants
+        &--below { bottom: -@c-tooltip-arrow-h; left: 50%; transform: translateX(-50%); }
+        &--above { top:    -@c-tooltip-arrow-h; left: 50%; transform: translateX(-50%) rotate(180deg); }
+    }
+
+    &__text {
+        position:    relative;
+        line-height: 130%;
+        z-index:     1;
+        flex-shrink: 0;
+    }
+
+    // ── Dark variant (text tooltip) ───────────────────────────
+
+    &--dark {
+        background-color: @c-tooltip-dark-bg;
+        color:            @c-tooltip-dark-color;
+        font-size:        @hdx-fs-s;  // 14 px
+
+        .c-tooltip__text { align-self: stretch; }
+    }
+
+    // ── Light variant (rich map / graph tooltip) ──────────────
+
+    &--light {
+        background-color: @c-tooltip-light-bg;
+        color:            @c-tooltip-light-color;
+        padding:          @hdx-space-2;   // 8 px
+        gap:              @hdx-space-13;  // 6 px
+        font-size:        @hdx-fs-s;
+
+        .c-tooltip__body {
+            align-self: stretch;
+            display:    flex;
+            align-items: flex-start;
+            gap:        @hdx-space-13;  // 6 px
+            z-index:    1;
+            flex-shrink: 0;
+        }
+
+        .c-tooltip__flag {
+            width: 1.25rem;
+        }
+
+        .c-tooltip__content {
+            flex:           1;
+            display:        flex;
+            flex-direction: column;
+            align-items:    flex-start;
+            gap:            @hdx-space-1;  // 4 px
+        }
+
+        .c-tooltip__title {
+            align-self:           stretch;
+            font-weight:          @hdx-fw-medium;
+            line-height:          130%;
+            display:              -webkit-inline-box;
+            overflow:             hidden;
+            text-overflow:        ellipsis;
+            -webkit-line-clamp:   2;
+            -webkit-box-orient:   vertical;
+            max-height:           3.25rem;
+        }
+
+        .c-tooltip__subtitle {
+            align-self:  stretch;
+            font-size:   @hdx-fs-xs;   // 12 px
+            line-height: 130%;
+            color:       #2f3536;   // darkslategray-200
+        }
+    }
+
+    // ── Graph tooltip variant ─────────────────────────────────
+
+    &--graph {
+        background-color: @c-tooltip-light-bg;
+        color:            @hdx-neutral-8;
+        padding:          @hdx-space-2;
+        gap:              @hdx-space-13;
+        font-size:        @hdx-fs-s;
+
+        .c-tooltip__legend {
+            align-self:     stretch;
+            display:        flex;
+            flex-direction: column;
+            align-items:    flex-start;
+            gap:            @hdx-space-1;
+        }
+
+        .c-tooltip__legend-row {
+            align-self:      stretch;
+            display:         flex;
+            align-items:     center;
+            justify-content: space-between;
+            gap:             1.25rem;
+        }
+
+        .c-tooltip__legend-key {
+            display:     flex;
+            align-items: center;
+            gap:         @hdx-space-2;  // 8 px
+        }
+
+        .c-tooltip__legend-swatch {
+            width:         0.625rem;  // 10 px
+            height:        0.625rem;
+            border-radius: @hdx-radius-sm;
+            flex-shrink:   0;
+        }
+
+        .c-tooltip__legend-label {
+            font-weight: @hdx-fw-medium;
+            line-height: 130%;
+        }
+
+        .c-tooltip__legend-value {
+            font-weight: @hdx-fw-medium;
+            line-height: 130%;
+            color:       @hdx-neutral-8;
+        }
+    }
+}

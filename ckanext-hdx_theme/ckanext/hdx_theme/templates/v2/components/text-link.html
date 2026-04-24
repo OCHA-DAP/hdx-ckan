@@ -1,0 +1,58 @@
+{#
+  Snippet: text-link.html
+  Path:    templates/snippets/components/text-link/text-link.html
+
+  Renders an inline c-text-link — typographic hyperlink with underline.
+  No icon, no padding, no background. Purely inline text.
+
+  Parameters
+  ─────────────────────────────────────────────────
+  label         {string}  Link text.  default: 'Link'
+  href          {string}  URL.  default: '#'
+  style         {string}  'primary' | 'secondary' | 'tertiary'
+                          default: 'primary'
+  size          {string}  'xl' | 'l' | 'm' | 's' | 'xs'
+                          xl=20px  l=18px  m=16px  s=14px  xs=12px
+                          default: 'm'
+  state         {string}  'enabled' | 'disabled'   default: 'enabled'
+  target        {string}  Link target attr, e.g. '_blank'.  default: ''
+  extra_classes {string}  default: ''
+  attrs         {dict}    Extra HTML attrs.  default: {}
+  ─────────────────────────────────────────────────
+  Examples
+
+  {% snippet 'snippets/components/text-link/text-link.html',
+      label='Read more', href='/dataset/abc', style='primary', size='m' %}
+
+  {% snippet 'snippets/components/text-link/text-link.html',
+      label='Terms & conditions', href='/terms',
+      style='tertiary', size='s' %}
+#}
+
+{% set label         = label         if label         is defined else 'Link' %}
+{% set href          = href          if href          is defined else '#' %}
+{% set style         = style         if style         is defined else 'primary' %}
+{% set size          = size          if size          is defined else 'm' %}
+{% set state         = state         if state         is defined else 'enabled' %}
+{% set target        = target        if target        is defined else '' %}
+{% set extra_classes = extra_classes if extra_classes is defined else '' %}
+{% set attrs         = attrs         if attrs         is defined else {} %}
+
+{% set is_disabled = (state == 'disabled') %}
+
+{% set classes = [
+    'c-text-link',
+    'c-text-link--' ~ style,
+    'c-text-link--size-' ~ size,
+] %}
+{% if is_disabled  %}{% set classes = classes + ['is-disabled'] %}{% endif %}
+{% if extra_classes %}{% set classes = classes + [extra_classes] %}{% endif %}
+
+<a class="{{ classes | join(' ') }}"
+   href="{{ href }}"
+   {% if target      %}target="{{ target }}"{% endif %}
+   {% if target == '_blank' %}rel="noopener noreferrer"{% endif %}
+   {% if is_disabled %}aria-disabled="true" tabindex="-1"{% endif %}
+   {% for key, val in attrs.items() %}{{ key }}="{{ val }}"{% endfor %}>
+  {{ label }}
+</a>

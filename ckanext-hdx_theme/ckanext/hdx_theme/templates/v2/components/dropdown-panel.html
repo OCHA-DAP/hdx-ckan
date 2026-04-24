@@ -1,0 +1,98 @@
+{#
+  Snippet: dropdown-panel.html
+  Path:    templates/snippets/components/dropdown/dropdown-panel.html
+
+  Renders the PANEL OVERLAY of a dropdown (search, list, footer).
+  Shown/hidden by JS; must be positioned relative to its trigger.
+
+  Parameters
+  ─────────────────────────────────────────────────
+  panel_id      {string}  HTML id for aria-controls linkage.  default: ''
+  search        {bool}    Show a search field.  default: True
+  search_placeholder {string}  default: 'Search'
+  search_icon   {string}  Path to search icon.  default: 'images/icons/search.svg'
+  items         {list}    List of dicts: {value, label, count, checked}.
+                          default: []
+  confirm_label {string}  Text for confirm button, e.g. 'Confirm (3)'.  default: 'Confirm'
+  clear_label   {string}  Clear link label.  default: 'Clear selection'
+  type          {string}  'list' | 'calendar'  default: 'list'
+  extra_classes {string}  default: ''
+  ─────────────────────────────────────────────────
+  Example
+
+  {% snippet 'snippets/components/dropdown/dropdown-panel.html',
+      panel_id='dd-country',
+      items=[
+        {'value': 'af', 'label': 'Afghanistan', 'count': '(309)', 'checked': True},
+        {'value': 'al', 'label': 'Albania',     'count': '(97)',  'checked': False},
+      ] %}
+#}
+
+{% set panel_id           = panel_id           if panel_id           is defined else '' %}
+{% set search             = search             if search             is defined else True %}
+{% set search_placeholder = search_placeholder if search_placeholder is defined else 'Search' %}
+{% set search_icon        = search_icon        if search_icon        is defined else 'icons/search.svg' %}
+{% set items              = items              if items              is defined else [] %}
+{% set confirm_label      = confirm_label      if confirm_label      is defined else 'Confirm' %}
+{% set clear_label        = clear_label        if clear_label        is defined else 'Clear selection' %}
+{% set type               = type               if type               is defined else 'list' %}
+{% set extra_classes      = extra_classes      if extra_classes      is defined else '' %}
+
+<div class="c-dropdown__panel{{ ' ' ~ extra_classes if extra_classes }}"
+     {% if panel_id %}id="{{ panel_id }}"{% endif %}
+     role="listbox" aria-multiselectable="true">
+
+  {% if type == 'list' %}
+
+    {% if search %}
+      <div class="c-dropdown__search">
+        <input type="text"
+               placeholder="{{ search_placeholder }}"
+               aria-label="{{ search_placeholder }}">
+        <img src="{{ h.url_for_static(search_icon) }}"
+             alt="" aria-hidden="true">
+      </div>
+    {% endif %}
+
+    <div class="c-dropdown__list-wrap">
+      <ul class="c-dropdown__list" role="group">
+        {% for item in items %}
+          <li class="c-dropdown-item{{ ' c-dropdown-item--checked' if item.checked }}"
+              role="option"
+              aria-selected="{{ 'true' if item.checked else 'false' }}"
+              data-value="{{ item.value }}">
+
+            <span class="c-dropdown-item__checkbox" aria-hidden="true">
+              <span class="c-dropdown-item__checkbox-bg"></span>
+              <img class="c-dropdown-item__checkbox-check"
+                   src="{{ h.url_for_static('icons/check-circle.svg') }}"
+                   alt="">
+            </span>
+
+            <span class="c-dropdown-item__body">
+              <span class="c-dropdown-item__label">{{ item.label }}</span>
+              {% if item.count %}
+                <span class="c-dropdown-item__count">{{ item.count }}</span>
+              {% endif %}
+            </span>
+
+          </li>
+        {% endfor %}
+      </ul>
+
+      <div class="c-dropdown__scrollbar" aria-hidden="true">
+        <div class="c-dropdown__scrollbar-thumb"></div>
+      </div>
+    </div>
+
+    <div class="c-dropdown__footer">
+      {% snippet 'v2/components/button.html',
+          style='secondary', size='m', label=confirm_label %}
+
+      {% snippet 'v2/components/text-link.html',
+          style='tertiary', size='s', label=clear_label %}
+    </div>
+
+  {% endif %}
+
+</div>

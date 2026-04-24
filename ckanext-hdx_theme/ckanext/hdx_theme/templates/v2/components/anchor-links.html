@@ -1,0 +1,44 @@
+{#
+  Snippet: anchor-links.html
+  Path:    templates/snippets/components/navigation/anchor-links.html
+
+  Renders a c-anchor-links vertical sidebar list.
+
+  Parameters
+  ─────────────────────────────────────────────────
+  items         {list}    List of dicts: {label, href, active (bool)}.
+                          default: []
+  extra_classes {string}  default: ''
+  ─────────────────────────────────────────────────
+  Example
+
+  {% snippet 'snippets/components/navigation/anchor-links.html',
+      items=[
+        {'label': 'Overview',    'href': '#overview',    'active': True},
+        {'label': 'Data',        'href': '#data',        'active': False},
+        {'label': 'Geography',   'href': '#geography',   'active': False},
+      ] %}
+#}
+
+{% set items         = items         if items         is defined else [] %}
+{% set extra_classes = extra_classes if extra_classes is defined else '' %}
+
+<nav class="c-anchor-links{{ ' ' ~ extra_classes if extra_classes }}"
+     aria-label="Page sections">
+
+  {% for item in items %}
+    {% set item_class = 'c-anchor-links__item c-anchor-links__item--' ~ ('active' if item.active else 'inactive') %}
+
+    <a class="{{ item_class }}"
+       href="{{ item.href }}"
+       {% if item.active %}aria-current="true"{% endif %}>
+
+      <div class="c-anchor-links__content">
+        <span class="c-anchor-links__label">{{ item.label }}</span>
+      </div>
+      <span class="c-anchor-links__border" aria-hidden="true"></span>
+
+    </a>
+  {% endfor %}
+
+</nav>

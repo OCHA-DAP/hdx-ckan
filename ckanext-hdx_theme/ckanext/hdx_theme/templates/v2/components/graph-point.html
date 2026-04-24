@@ -1,0 +1,34 @@
+{#
+  Snippet: graph-point.html
+  Path:    templates/snippets/components/selection/graph-point.html
+
+  Renders a c-graph-point — a chart data point dot.
+  Used inline inside SVG-overlay or positioned chart components.
+
+  Parameters
+  ─────────────────────────────────────────────────
+  state         {string}  'enabled' | 'focused'   default: 'enabled'
+  aria_label    {string}  Accessible description of the data point.
+                          default: ''
+  extra_classes {string}  default: ''
+  ─────────────────────────────────────────────────
+  Example
+
+  {% snippet 'snippets/components/selection/graph-point.html',
+      state='focused', aria_label='Somalia: 2.3M affected' %}
+#}
+
+{% set state         = state         if state         is defined else 'enabled' %}
+{% set aria_label    = aria_label    if aria_label    is defined else '' %}
+{% set extra_classes = extra_classes if extra_classes is defined else '' %}
+
+{% set classes = ['c-graph-point'] %}
+{% if state == 'focused' %}{% set classes = classes + ['c-graph-point--focused'] %}{% endif %}
+{% if extra_classes      %}{% set classes = classes + [extra_classes]            %}{% endif %}
+
+<span class="{{ classes | join(' ') }}"
+      role="img"
+      {% if aria_label %}aria-label="{{ aria_label }}"{% endif %}>
+  <span class="c-graph-point__halo" aria-hidden="true"></span>
+  <span class="c-graph-point__dot"  aria-hidden="true"></span>
+</span>

@@ -1,0 +1,105 @@
+{#
+  Snippet: selection-item.html
+  Path:    templates/snippets/components/selection/selection-item.html
+
+  Renders a c-selection-item filter chip.
+
+  Parameters
+  ─────────────────────────────────────────────────
+  label         {string}  Chip text.  default: 'Label'
+  size          {string}  'l' | 'm' | 's'   default: 'm'
+  color         {string}  'light' | 'cyan'  default: 'light'
+  state         {string}  'enabled' | 'hover' | 'active'
+                          default: 'enabled'
+
+  icon          {bool}    Show leading icon.  default: False
+  icon_src      {string}  Leading icon path.  default: 'images/icons/placeholder.svg'
+
+  count         {string}  Optional count string, e.g. '(3)'.  default: ''
+
+  close_src     {string}  Close/remove icon path (shown when state='active').
+                          default: 'images/icons/close.svg'
+
+  tag           {string}  'button' | 'a' | 'span'  default: 'button'
+  href          {string}  URL when tag='a'.  default: '#'
+  extra_classes {string}  default: ''
+  attrs         {dict}    default: {}
+  ─────────────────────────────────────────────────
+  Examples
+
+  {% snippet 'snippets/components/selection/selection-item.html',
+      label='Sudan', size='m', state='active' %}
+
+  {% snippet 'snippets/components/selection/selection-item.html',
+      label='CAP', size='l', color='cyan', icon=True, count='(5)' %}
+#}
+
+{% set label         = label         if label         is defined else 'Label' %}
+{% set size          = size          if size          is defined else 'm' %}
+{% set color         = color         if color         is defined else 'light' %}
+{% set state         = state         if state         is defined else 'enabled' %}
+{% set icon          = icon          if icon          is defined else False %}
+{% set icon_src      = icon_src      if icon_src      is defined else 'icons/placeholder.svg' %}
+{% set count         = count         if count         is defined else '' %}
+{% set close_src     = close_src     if close_src     is defined else 'icons/close.svg' %}
+{% set tag           = tag           if tag           is defined else 'button' %}
+{% set href          = href          if href          is defined else '#' %}
+{% set extra_classes = extra_classes if extra_classes is defined else '' %}
+{% set attrs         = attrs         if attrs         is defined else {} %}
+
+{% set classes = [
+    'c-selection-item',
+    'c-selection-item--size-' ~ size,
+    'c-selection-item--' ~ color,
+] %}
+{% if state == 'hover'  %}{% set classes = classes + ['c-selection-item--hovered'] %}{% endif %}
+{% if state == 'active' %}{% set classes = classes + ['c-selection-item--active']  %}{% endif %}
+{% if icon              %}{% set classes = classes + ['c-selection-item--has-icon'] %}{% endif %}
+{% if count             %}{% set classes = classes + ['c-selection-item--has-count'] %}{% endif %}
+{% if extra_classes     %}{% set classes = classes + [extra_classes] %}{% endif %}
+
+{% set tag_open %}
+  {% if tag == 'a' %}
+    <a class="{{ classes | join(' ') }}" href="{{ href }}"
+       {% for key, val in attrs.items() %}{{ key }}="{{ val }}"{% endfor %}>
+  {% elif tag == 'button' %}
+    <button type="button" class="{{ classes | join(' ') }}"
+            {% for key, val in attrs.items() %}{{ key }}="{{ val }}"{% endfor %}>
+  {% else %}
+    <span class="{{ classes | join(' ') }}"
+          {% for key, val in attrs.items() %}{{ key }}="{{ val }}"{% endfor %}>
+  {% endif %}
+{% endset %}
+
+{% if tag == 'a' %}
+<a class="{{ classes | join(' ') }}" href="{{ href }}"
+   {% for key, val in attrs.items() %}{{ key }}="{{ val }}"{% endfor %}>
+{% elif tag == 'button' %}
+<button type="button" class="{{ classes | join(' ') }}"
+        {% for key, val in attrs.items() %}{{ key }}="{{ val }}"{% endfor %}>
+{% else %}
+<span class="{{ classes | join(' ') }}"
+      {% for key, val in attrs.items() %}{{ key }}="{{ val }}"{% endfor %}>
+{% endif %}
+
+  {% if icon %}
+    <img class="c-selection-item__icon"
+         src="{{ h.url_for_static(icon_src) }}"
+         alt="" aria-hidden="true">
+  {% endif %}
+
+  <span class="c-selection-item__label">{{ label }}</span>
+
+  {% if count %}
+    <span class="c-selection-item__count">{{ count }}</span>
+  {% endif %}
+
+  {% if state == 'active' %}
+    <img class="c-selection-item__close"
+         src="{{ h.url_for_static(close_src) }}"
+         alt="Remove" aria-label="Remove {{ label }}">
+  {% endif %}
+
+{% if tag == 'a' %}</a>
+{% elif tag == 'button' %}</button>
+{% else %}</span>{% endif %}
