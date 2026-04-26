@@ -1,5 +1,3 @@
-@import "../foundation.less";
-
 // ============================================================
 // c-selection-item  — filter tag / chip with optional close
 // c-radio           — radio input (native-style)
@@ -10,30 +8,30 @@
 // ============================================================
 
 // ── Palette ──────────────────────────────────────────────────
-@c-sel-light-bg:     @hdx-neutral-0;       // #fff
-@c-sel-light-border: @hdx-neutral-2;       // #d8e0e1
+@c-sel-light-bg:     var(--hdx-neutral-0);       // #fff
+@c-sel-light-border: var(--hdx-neutral-2);       // #d8e0e1
 @c-sel-cyan-bg:      #d4eae4;              // lightcyan
 @c-sel-cyan-border:  #a8d5c9;             // powderblue
 
-@c-sel-hover-bg:         @hdx-neutral-01;  // #fafbfb
-@c-sel-hover-border:     @hdx-neutral-8;   // #3f4748 1.5px
-@c-sel-active-border:    @hdx-neutral-95;  // #101212 1px
-@c-sel-active-hover-border: @hdx-neutral-95; // 1.5px on hover while active
+@c-sel-hover-bg:         var(--hdx-neutral-01);  // #fafbfb
+@c-sel-hover-border:     var(--hdx-neutral-8);   // #3f4748 1.5px
+@c-sel-active-border:    var(--hdx-neutral-95);  // #101212 1px
+@c-sel-active-hover-border: var(--hdx-neutral-95); // 1.5px on hover while active
 
 // Radio
 @c-radio-dim:           1rem;              // 16 px
 @c-radio-inner-dim:     0.5rem;            // 8 px
-@c-radio-checked-color: @hdx-primary-5;   // royalblue
-@c-radio-border:        @hdx-neutral-2;   // #d8e0e1
-@c-radio-disabled-inner: @hdx-neutral-2;  // gainsboro
+@c-radio-checked-color: var(--hdx-primary-5);   // royalblue
+@c-radio-border:        var(--hdx-neutral-2);   // #d8e0e1
+@c-radio-disabled-inner: var(--hdx-neutral-2);  // gainsboro
 
 // Toggle
 @c-toggle-w:       2rem;       // 32 px
 @c-toggle-h:       1rem;       // 16 px
 @c-toggle-thumb:   0.75rem;    // 12 px
-@c-toggle-off-bg:  @hdx-neutral-2;        // #d8e0e1
-@c-toggle-on-bg:   @hdx-primary-5;        // royalblue
-@c-toggle-thumb-bg: @hdx-neutral-0;       // white
+@c-toggle-off-bg:  var(--hdx-neutral-2);        // #d8e0e1
+@c-toggle-on-bg:   var(--hdx-primary-5);        // royalblue
+@c-toggle-thumb-bg: var(--hdx-neutral-0);       // white
 
 // Graph point
 @c-gp-dim:         0.5rem;     //  8 px
@@ -48,15 +46,15 @@
     display:          inline-flex;
     align-items:      center;
     justify-content:  center;
-    border-radius:    @hdx-radius-sm;
-    box-shadow:       @hdx-shadow-sm;
+    border-radius:    var(--hdx-radius-sm);
+    box-shadow:       var(--hdx-shadow-sm);
     background-color: @c-sel-light-bg;
     border:           1px solid @c-sel-light-border;
     box-sizing:       border-box;
     cursor:           pointer;
-    font-family:      @hdx-font-body;
-    font-weight:      @hdx-fw-medium;
-    color:            @hdx-neutral-8;
+    font-family:      var(--hdx-font-body);
+    font-weight:      var(--hdx-fw-medium);
+    color:            var(--hdx-neutral-8);
     transition:       background-color 0.15s ease, border 0.15s ease, color 0.15s ease;
 
     &__icon {
@@ -71,8 +69,8 @@
     }
 
     &__count {
-        font-size: @hdx-fs-xs;
-        color:     @hdx-neutral-8;
+        font-size: var(--hdx-fs-xs);
+        color:     var(--hdx-neutral-8);
         display:   none;   // shown via --has-count modifier
     }
 
@@ -99,7 +97,7 @@
     &--hovered {
         background-color: @c-sel-hover-bg;
         border:           1.5px solid @c-sel-hover-border;
-        box-shadow:       @hdx-shadow-sm;
+        box-shadow:       var(--hdx-shadow-sm);
 
         &.c-selection-item--cyan {
             background-color: @c-sel-cyan-bg;
@@ -109,7 +107,7 @@
     // Active (selected — close icon visible, border near-black)
     &--active {
         border:     1px solid @c-sel-active-border;
-        color:      @hdx-neutral-95;
+        color:      var(--hdx-neutral-95);
         box-shadow: none;
 
         .c-selection-item__close { display: block; }
@@ -130,9 +128,9 @@
 
     // Large
     &--size-l {
-        padding:   @hdx-space-2 @hdx-space-3;  // 8 12
-        gap:       @hdx-space-13;              //  6 px
-        font-size: @hdx-fs-m;                  // 16 px
+        padding:   var(--hdx-space-2) var(--hdx-space-3);  // 8 12
+        gap:       var(--hdx-space-13);              //  6 px
+        font-size: var(--hdx-fs-m);                  // 16 px
         max-width: 18.75rem;
 
         .c-selection-item__icon  { width: 1rem; }
@@ -141,9 +139,9 @@
 
     // Medium
     &--size-m {
-        padding:   @hdx-space-2;               // 8 px
-        gap:       @hdx-space-1;               // 4 px
-        font-size: @hdx-fs-s;                  // 14 px
+        padding:   var(--hdx-space-2);               // 8 px
+        gap:       var(--hdx-space-1);               // 4 px
+        font-size: var(--hdx-fs-s);                  // 14 px
         max-width: 15.625rem;
 
         .c-selection-item__icon  { width: 0.875rem; }
@@ -152,9 +150,9 @@
 
     // Small
     &--size-s {
-        padding:   @hdx-space-13;             //  6 px
-        gap:       @hdx-space-1;              //  4 px
-        font-size: @hdx-fs-xs;               // 12 px
+        padding:   var(--hdx-space-13);             //  6 px
+        gap:       var(--hdx-space-1);              //  4 px
+        font-size: var(--hdx-fs-xs);               // 12 px
         max-width: 12.5rem;
 
         .c-selection-item__icon  { width: 0.75rem; }
@@ -170,12 +168,12 @@
 .c-radio {
     display:     inline-flex;
     align-items: center;
-    gap:         @hdx-space-2;   // 8 px
+    gap:         var(--hdx-space-2);   // 8 px
     cursor:      pointer;
-    font-family: @hdx-font-body;
-    font-size:   @hdx-fs-s;
+    font-family: var(--hdx-font-body);
+    font-size:   var(--hdx-fs-s);
     line-height: 130%;
-    color:       @hdx-neutral-8;
+    color:       var(--hdx-neutral-8);
 
     &__input {
         width:        @c-radio-dim;
@@ -191,7 +189,7 @@
         border-radius: 100%;
         border:        1px solid @c-radio-border;
         box-sizing:    border-box;
-        background:    @hdx-neutral-0;
+        background:    var(--hdx-neutral-0);
         transition:    border-color 0.15s ease;
     }
 
@@ -225,13 +223,13 @@
     // Focus (keyboard nav) — shown as themed ring
     &--checked.c-radio--focused &__ring {
         background-color: transparent;
-        border-color:     @hdx-primary-7;  // darkslateblue
+        border-color:     var(--hdx-primary-7);  // darkslateblue
     }
 
     &--disabled {
         cursor:         not-allowed;
         pointer-events: none;
-        color:          @hdx-neutral-7;  // #9db1b3
+        color:          var(--hdx-neutral-7);  // #9db1b3
     }
 
     &--disabled &__ring {
@@ -239,7 +237,7 @@
     }
 
     &--disabled&--checked &__dot {
-        background-color: @hdx-neutral-2;  // gainsboro
+        background-color: var(--hdx-neutral-2);  // gainsboro
     }
 }
 
@@ -307,7 +305,7 @@
         width:            @c-gp-focus-dim;
         height:           @c-gp-focus-dim;
         border-radius:    50%;
-        background-color: @hdx-primary-5;
+        background-color: var(--hdx-primary-5);
         opacity:          0;
         transition:       opacity 0.15s ease;
         z-index:          0;
@@ -319,7 +317,7 @@
         width:            @c-gp-dim;
         height:           @c-gp-dim;
         border-radius:    50%;
-        background-color: @hdx-primary-5;
+        background-color: var(--hdx-primary-5);
         z-index:          1;
     }
 

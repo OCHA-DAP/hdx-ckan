@@ -224,6 +224,7 @@ v2-components-styles:
   output: ckanext-hdx_theme/%(version)s_components-styles.css
   <<: *common-css
   contents:
+    - v2/foundation.css
     - v2/components/avatar-badge.css
     - v2/components/buttons.css
     - v2/components/dropdown.css
