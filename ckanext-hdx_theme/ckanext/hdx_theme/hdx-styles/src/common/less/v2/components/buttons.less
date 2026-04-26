@@ -1,5 +1,3 @@
-@import "../foundation.less";
-
 // ============================================================
 // c-button — BEM component
 // Implements: Buttons + Text Buttons
@@ -18,29 +16,29 @@
 // Sizing — L (40 px)
 @c-button-l-dim:       2.5rem;    // 40 px — height + icon-only width
 @c-button-l-icon:      1.25rem;   // 20 px
-@c-button-l-pad-v:     @hdx-space-2;   //  8 px
-@c-button-l-pad-h:     @hdx-space-3;   // 12 px
-@c-button-l-gap:       @hdx-space-2;   //  8 px
-@c-button-l-fs:        @hdx-fs-m;      // 16 px
+@c-button-l-pad-v:     var(--hdx-space-2);   //  8 px
+@c-button-l-pad-h:     var(--hdx-space-3);   // 12 px
+@c-button-l-gap:       var(--hdx-space-2);   //  8 px
+@c-button-l-fs:        var(--hdx-fs-m);      // 16 px
 
 // Sizing — M (34 px)
 @c-button-m-dim:       2.125rem;  // 34 px
 @c-button-m-icon:      1rem;      // 16 px
-@c-button-m-pad-v:     @hdx-space-2;   //  8 px
-@c-button-m-pad-h:     @hdx-space-2;   //  8 px
-@c-button-m-gap:       @hdx-space-13;  //  6 px
-@c-button-m-fs:        @hdx-fs-s;      // 14 px
+@c-button-m-pad-v:     var(--hdx-space-2);   //  8 px
+@c-button-m-pad-h:     var(--hdx-space-2);   //  8 px
+@c-button-m-gap:       var(--hdx-space-13);  //  6 px
+@c-button-m-fs:        var(--hdx-fs-s);      // 14 px
 
 // Sizing — S (24 px)
 @c-button-s-dim:       1.5rem;    // 24 px
 @c-button-s-icon:      0.875rem;  // 14 px
-@c-button-s-pad-v:     @hdx-space-1;   //  4 px
-@c-button-s-pad-h:     @hdx-space-2;   //  8 px
-@c-button-s-gap:       @hdx-space-13;  //  6 px
-@c-button-s-fs:        @hdx-fs-xs;     // 12 px
+@c-button-s-pad-v:     var(--hdx-space-1);   //  4 px
+@c-button-s-pad-h:     var(--hdx-space-2);   //  8 px
+@c-button-s-gap:       var(--hdx-space-13);  //  6 px
+@c-button-s-fs:        var(--hdx-fs-xs);     // 12 px
 
 // Shared
-@c-button-radius:      @hdx-radius-sm; //  2 px
+@c-button-radius:      var(--hdx-radius-sm); //  2 px
 @c-button-transition:  background-color 0.15s ease, border-color 0.15s ease,
                        color 0.15s ease, box-shadow 0.15s ease;
 
@@ -50,8 +48,8 @@
 @c-text-button-s-icon: @c-button-s-icon;   // 14 px
 
 // Text-button gap per size
-@c-text-button-l-gap:  @hdx-space-2;       //  8 px
-@c-text-button-m-gap:  @hdx-space-1;       //  4 px
+@c-text-button-l-gap:  var(--hdx-space-2);       //  8 px
+@c-text-button-m-gap:  var(--hdx-space-1);       //  4 px
 @c-text-button-s-gap:  0.125rem;           //  2 px
 
 
@@ -66,9 +64,9 @@
     justify-content:  center;
     border-radius:    @c-button-radius;
     cursor:           pointer;
-    font-family:      @hdx-font-body;
-    font-weight:      @hdx-fw-medium;
-    line-height:      @hdx-lh-normal;
+    font-family:      var(--hdx-font-body);
+    font-weight:      var(--hdx-fw-medium);
+    line-height:      var(--hdx-lh-normal);
     text-decoration:  none;
     white-space:      nowrap;
     box-sizing:       border-box;
@@ -83,7 +81,7 @@
     margin:             0;
 
     &:focus-visible {
-        outline:        2px solid @hdx-primary-5;
+        outline:        2px solid var(--hdx-primary-5);
         outline-offset: 2px;
     }
 
@@ -159,23 +157,23 @@
     // ── Style: primary ───────────────────────────────────────
 
     &--primary {
-        background-color: @hdx-primary-5;   // #1862d8
-        color:            @hdx-neutral-0;   // #fff
+        background-color: var(--hdx-primary-5);   // #1862d8
+        color:            var(--hdx-neutral-0);   // #fff
 
         &:hover {
-            background-color: @hdx-primary-9;   // #05142b  — very dark navy
-            color:            @hdx-neutral-0;
+            background-color: var(--hdx-primary-9);   // #05142b  — very dark navy
+            color:            var(--hdx-neutral-0);
         }
 
         &:active {
-            background-color: @hdx-primary-5;
-            color:            @hdx-neutral-0;
+            background-color: var(--hdx-primary-5);
+            color:            var(--hdx-neutral-0);
         }
 
         &[disabled],
         &.is-disabled {
-            background-color: @hdx-neutral-05;  // #f5f7f7
-            color:            @hdx-neutral-3;   // #c4d0d1
+            background-color: var(--hdx-neutral-05);  // #f5f7f7
+            color:            var(--hdx-neutral-3);   // #c4d0d1
             cursor:           not-allowed;
             pointer-events:   none;
         }
@@ -186,29 +184,29 @@
 
     // Text type — white bg, royalblue border
     &--secondary {
-        background-color: @hdx-neutral-0;   // #fff
-        color:            @hdx-primary-7;   // #0e3b82 darkslateblue
-        border:           1px solid @hdx-primary-5;   // #1862d8
-        box-shadow:       @hdx-shadow-sm;
+        background-color: var(--hdx-neutral-0);   // #fff
+        color:            var(--hdx-primary-7);   // #0e3b82 darkslateblue
+        border:           1px solid var(--hdx-primary-5);   // #1862d8
+        box-shadow:       var(--hdx-shadow-sm);
 
         &:hover {
-            background-color: @hdx-primary-7;   // #0e3b82 — fill
-            color:            @hdx-neutral-0;
-            border:           1.5px solid @hdx-primary-7;
+            background-color: var(--hdx-primary-7);   // #0e3b82 — fill
+            color:            var(--hdx-neutral-0);
+            border:           1.5px solid var(--hdx-primary-7);
             box-shadow:       none;
         }
 
         &:active {
-            background-color: @hdx-neutral-0;
-            color:            @hdx-primary-7;
-            border:           1px solid @hdx-primary-7;
+            background-color: var(--hdx-neutral-0);
+            color:            var(--hdx-primary-7);
+            border:           1px solid var(--hdx-primary-7);
             box-shadow:       none;
         }
 
         &[disabled],
         &.is-disabled {
-            background-color: @hdx-neutral-05;
-            color:            @hdx-neutral-3;
+            background-color: var(--hdx-neutral-05);
+            color:            var(--hdx-neutral-3);
             border:           none;
             box-shadow:       none;
             cursor:           not-allowed;
@@ -220,23 +218,23 @@
             background-color: transparent;
             border:           none;
             box-shadow:       none;
-            color:            @hdx-primary-7;
+            color:            var(--hdx-primary-7);
 
             &:hover {
-                background-color: @hdx-primary-7;
-                color:            @hdx-neutral-0;
+                background-color: var(--hdx-primary-7);
+                color:            var(--hdx-neutral-0);
                 border:           none;
             }
 
             &:active {
-                background-color: @hdx-primary-5;
-                color:            @hdx-neutral-0;
+                background-color: var(--hdx-primary-5);
+                color:            var(--hdx-neutral-0);
                 border:           none;
             }
 
             &[disabled],
             &.is-disabled {
-                background-color: @hdx-neutral-05;
+                background-color: var(--hdx-neutral-05);
                 border:           none;
             }
         }
@@ -246,27 +244,27 @@
     // ── Style: tertiary ──────────────────────────────────────
 
     &--tertiary {
-        background-color: @hdx-neutral-0;   // #fff
-        color:            @hdx-neutral-8;   // #3f4748
-        border:           1px solid @hdx-neutral-2;   // #d8e0e1
-        box-shadow:       @hdx-shadow-sm;
+        background-color: var(--hdx-neutral-0);   // #fff
+        color:            var(--hdx-neutral-8);   // #3f4748
+        border:           1px solid var(--hdx-neutral-2);   // #d8e0e1
+        box-shadow:       var(--hdx-shadow-sm);
 
         &:hover {
-            background-color: @hdx-neutral-01;   // #fafbfb
-            color:            @hdx-neutral-8;
-            border:           1.5px solid @hdx-neutral-8;   // #3f4748
+            background-color: var(--hdx-neutral-01);   // #fafbfb
+            color:            var(--hdx-neutral-8);
+            border:           1.5px solid var(--hdx-neutral-8);   // #3f4748
         }
 
         &:active {
-            background-color: @hdx-neutral-01;
-            color:            @hdx-neutral-8;
-            border:           1px solid @hdx-neutral-95;    // #101212
+            background-color: var(--hdx-neutral-01);
+            color:            var(--hdx-neutral-8);
+            border:           1px solid var(--hdx-neutral-95);    // #101212
         }
 
         &[disabled],
         &.is-disabled {
-            background-color: @hdx-neutral-05;
-            color:            @hdx-neutral-3;
+            background-color: var(--hdx-neutral-05);
+            color:            var(--hdx-neutral-3);
             border:           none;
             box-shadow:       none;
             cursor:           not-allowed;
@@ -279,20 +277,20 @@
             // bg and shadow stay as text variant by default
 
             &:hover {
-                background-color: @hdx-neutral-01;
+                background-color: var(--hdx-neutral-01);
                 border:           none;
                 box-shadow:       none;
             }
 
             &:active {
-                background-color: @hdx-neutral-01;
+                background-color: var(--hdx-neutral-01);
                 border:           none;
                 box-shadow:       none;
             }
 
             &[disabled],
             &.is-disabled {
-                background-color: @hdx-neutral-05;
+                background-color: var(--hdx-neutral-05);
                 border:           none;
                 box-shadow:       none;
             }
@@ -309,9 +307,9 @@
     display:          inline-flex;
     align-items:      center;
     cursor:           pointer;
-    font-family:      @hdx-font-body;
-    font-weight:      @hdx-fw-medium;
-    line-height:      @hdx-lh-normal;
+    font-family:      var(--hdx-font-body);
+    font-weight:      var(--hdx-fw-medium);
+    line-height:      var(--hdx-lh-normal);
     text-decoration:  none;      // outer element; underline applied to __label only
     border:           none;
     background:       none;
@@ -325,7 +323,7 @@
     appearance:         none;
 
     &:focus-visible {
-        outline:        2px solid @hdx-primary-5;
+        outline:        2px solid var(--hdx-primary-5);
         outline-offset: 2px;
     }
 
@@ -370,14 +368,14 @@
     // ── Style: primary ───────────────────────────────────────
 
     &--primary {
-        color: @hdx-primary-5;   // #1862d8
+        color: var(--hdx-primary-5);   // #1862d8
 
-        &:hover  { color: @hdx-neutral-95; }   // #101212 — darken
-        &:active { color: @hdx-primary-5; }
+        &:hover  { color: var(--hdx-neutral-95); }   // #101212 — darken
+        &:active { color: var(--hdx-primary-5); }
 
         &[disabled],
         &.is-disabled {
-            color:          @hdx-neutral-3;   // #c4d0d1
+            color:          var(--hdx-neutral-3);   // #c4d0d1
             cursor:         not-allowed;
             pointer-events: none;
         }
@@ -387,14 +385,14 @@
     // ── Style: secondary ─────────────────────────────────────
 
     &--secondary {
-        color: @hdx-neutral-95;   // #101212 — near-black
+        color: var(--hdx-neutral-95);   // #101212 — near-black
 
-        &:hover  { color: @hdx-primary-5; }    // turns blue
-        &:active { color: @hdx-primary-5; }
+        &:hover  { color: var(--hdx-primary-5); }    // turns blue
+        &:active { color: var(--hdx-primary-5); }
 
         &[disabled],
         &.is-disabled {
-            color:          @hdx-neutral-3;
+            color:          var(--hdx-neutral-3);
             cursor:         not-allowed;
             pointer-events: none;
         }
@@ -404,14 +402,14 @@
     // ── Style: tertiary ──────────────────────────────────────
 
     &--tertiary {
-        color: @hdx-neutral-8;   // #3f4748
+        color: var(--hdx-neutral-8);   // #3f4748
 
-        &:hover  { color: @hdx-primary-5; }    // turns blue
-        &:active { color: @hdx-primary-5; }
+        &:hover  { color: var(--hdx-primary-5); }    // turns blue
+        &:active { color: var(--hdx-primary-5); }
 
         &[disabled],
         &.is-disabled {
-            color:          @hdx-neutral-3;
+            color:          var(--hdx-neutral-3);
             cursor:         not-allowed;
             pointer-events: none;
         }

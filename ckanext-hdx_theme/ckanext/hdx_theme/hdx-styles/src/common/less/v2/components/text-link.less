@@ -1,5 +1,3 @@
-@import "../foundation.less";
-
 // ============================================================
 // c-text-link — inline typographic hyperlink
 // ============================================================
@@ -15,17 +13,17 @@
 // Secondary: near-black → royalblue on hover/active
 // Tertiary: darkslategray → royalblue on hover/active
 
-@c-text-link-primary-color:        @hdx-primary-5;   // #1862d8
-@c-text-link-primary-hover-color:  @hdx-neutral-95;  // #101212
-@c-text-link-primary-active-color: @hdx-primary-5;   // back to blue on active
+@c-text-link-primary-color:        var(--hdx-primary-5);   // #1862d8
+@c-text-link-primary-hover-color:  var(--hdx-neutral-95);  // #101212
+@c-text-link-primary-active-color: var(--hdx-primary-5);   // back to blue on active
 
-@c-text-link-secondary-color:        @hdx-neutral-95; // #101212
-@c-text-link-secondary-hover-color:  @hdx-primary-5;  // #1862d8
-@c-text-link-secondary-active-color: @hdx-primary-5;
+@c-text-link-secondary-color:        var(--hdx-neutral-95); // #101212
+@c-text-link-secondary-hover-color:  var(--hdx-primary-5);  // #1862d8
+@c-text-link-secondary-active-color: var(--hdx-primary-5);
 
-@c-text-link-tertiary-color:        @hdx-neutral-8;   // #3f4748
-@c-text-link-tertiary-hover-color:  @hdx-primary-5;
-@c-text-link-tertiary-active-color: @hdx-primary-5;
+@c-text-link-tertiary-color:        var(--hdx-neutral-8);   // #3f4748
+@c-text-link-tertiary-hover-color:  var(--hdx-primary-5);
+@c-text-link-tertiary-active-color: var(--hdx-primary-5);
 
 
 // ────────────────────────────────────────────────────────────
@@ -34,8 +32,8 @@
 
 .c-text-link {
     display:         inline;
-    font-family:     @hdx-font-body;
-    font-weight:     @hdx-fw-medium;
+    font-family:     var(--hdx-font-body);
+    font-weight:     var(--hdx-fw-medium);
     text-decoration: underline;
     cursor:          pointer;
     line-height:     130%;
@@ -45,7 +43,7 @@
     padding:         0;
 
     &:focus-visible {
-        outline:        2px solid @hdx-primary-5;
+        outline:        2px solid var(--hdx-primary-5);
         outline-offset: 2px;
         border-radius:  1px;
     }
@@ -55,9 +53,9 @@
 
     &--size-xl  { font-size: 1.25rem;  }  // 20 px
     &--size-l   { font-size: 1.125rem; }  // 18 px
-    &--size-m   { font-size: @hdx-fs-m;  }  // 16 px
-    &--size-s   { font-size: @hdx-fs-s;  }  // 14 px
-    &--size-xs  { font-size: @hdx-fs-xs; }  // 12 px
+    &--size-m   { font-size: var(--hdx-fs-m);  }  // 16 px
+    &--size-s   { font-size: var(--hdx-fs-s);  }  // 14 px
+    &--size-xs  { font-size: var(--hdx-fs-xs); }  // 12 px
 
 
     // ── Style: primary ───────────────────────────────────────
@@ -70,7 +68,7 @@
 
         &[disabled],
         &.is-disabled {
-            color:          @hdx-neutral-7;   // #9db1b3
+            color:          var(--hdx-neutral-7);   // #9db1b3
             cursor:         not-allowed;
             pointer-events: none;
         }
@@ -87,7 +85,7 @@
 
         &[disabled],
         &.is-disabled {
-            color:          @hdx-neutral-7;
+            color:          var(--hdx-neutral-7);
             cursor:         not-allowed;
             pointer-events: none;
         }
@@ -104,7 +102,7 @@
 
         &[disabled],
         &.is-disabled {
-            color:          @hdx-neutral-7;
+            color:          var(--hdx-neutral-7);
             cursor:         not-allowed;
             pointer-events: none;
         }

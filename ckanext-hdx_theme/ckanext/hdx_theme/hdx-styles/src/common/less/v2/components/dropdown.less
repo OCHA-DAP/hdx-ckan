@@ -1,5 +1,3 @@
-@import "../foundation.less";
-
 // ============================================================
 // c-dropdown — select trigger + panel overlay
 // c-dropdown-item — individual list row (checkbox + label + count)
@@ -9,35 +7,35 @@
 // ============================================================
 
 // ── Local tokens ────────────────────────────────────────────
-@c-dropdown-bg:            @hdx-neutral-0;        // #fff
-@c-dropdown-bg-hover:      @hdx-neutral-01;       // #fafbfb
-@c-dropdown-bg-active:     @hdx-neutral-01;       // #fafbfb
+@c-dropdown-bg:            var(--hdx-neutral-0);        // #fff
+@c-dropdown-bg-hover:      var(--hdx-neutral-01);       // #fafbfb
+@c-dropdown-bg-active:     var(--hdx-neutral-01);       // #fafbfb
 
-@c-dropdown-border:        1px solid @hdx-neutral-2;             // #d8e0e1
-@c-dropdown-border-hover:  1.5px solid @hdx-neutral-8;           // #3f4748
-@c-dropdown-border-active: 1.5px solid @hdx-primary-5;           // #1862d8
-@c-dropdown-border-filter: 1px solid @hdx-neutral-95;            // #101212
+@c-dropdown-border:        1px solid var(--hdx-neutral-2);             // #d8e0e1
+@c-dropdown-border-hover:  1.5px solid var(--hdx-neutral-8);           // #3f4748
+@c-dropdown-border-active: 1.5px solid var(--hdx-primary-5);           // #1862d8
+@c-dropdown-border-filter: 1px solid var(--hdx-neutral-95);            // #101212
 
-@c-dropdown-text:          @hdx-neutral-8;        // #3f4748
-@c-dropdown-text-disabled: @hdx-neutral-7;        // #9db1b3
+@c-dropdown-text:          var(--hdx-neutral-8);        // #3f4748
+@c-dropdown-text-disabled: var(--hdx-neutral-7);        // #9db1b3
 @c-dropdown-border-disabled: 1px solid #ebeff0;  // whitesmoke
 
 @c-dropdown-panel-border:  0.8px solid #ebeff0;  // whitesmoke
-@c-dropdown-panel-shadow:  @hdx-shadow-sm;
+@c-dropdown-panel-shadow:  var(--hdx-shadow-sm);
 
 @c-dropdown-cb-dim:        1rem;                  // 16 px checkbox
-@c-dropdown-cb-checked-bg: @hdx-primary-5;        // royalblue
-@c-dropdown-cb-radius:     @hdx-radius-sm;        //  2 px
+@c-dropdown-cb-checked-bg: var(--hdx-primary-5);        // royalblue
+@c-dropdown-cb-radius:     var(--hdx-radius-sm);        //  2 px
 
 // Size M
-@c-dropdown-m-fs:   @hdx-fs-s;    // 14 px
-@c-dropdown-m-pad:  @hdx-space-2 @hdx-space-2 @hdx-space-2 @hdx-space-14; // 8 8 8 10
-@c-dropdown-m-gap:  @hdx-space-1; //  4 px
+@c-dropdown-m-fs:   var(--hdx-fs-s);    // 14 px
+@c-dropdown-m-pad:  var(--hdx-space-2) var(--hdx-space-2) var(--hdx-space-2) var(--hdx-space-14); // 8 8 8 10
+@c-dropdown-m-gap:  var(--hdx-space-1); //  4 px
 
 // Size S
-@c-dropdown-s-fs:   @hdx-fs-xs;   // 12 px
-@c-dropdown-s-pad:  @hdx-space-13 @hdx-space-2 @hdx-space-13 @hdx-space-14; // 6 8 6 10
-@c-dropdown-s-gap:  @hdx-space-1; //  4 px
+@c-dropdown-s-fs:   var(--hdx-fs-xs);   // 12 px
+@c-dropdown-s-pad:  var(--hdx-space-13) var(--hdx-space-2) var(--hdx-space-13) var(--hdx-space-14); // 6 8 6 10
+@c-dropdown-s-gap:  var(--hdx-space-1); //  4 px
 
 
 // ────────────────────────────────────────────────────────────
@@ -54,11 +52,11 @@
     // ── Label ───────────────────────────────────────────────
     &__label {
         align-self:  stretch;
-        font-family: @hdx-font-body;
-        font-weight: @hdx-fw-regular;
-        color:       @hdx-neutral-8;
+        font-family: var(--hdx-font-body);
+        font-weight: var(--hdx-fw-regular);
+        color:       var(--hdx-neutral-8);
         line-height: 130%;
-        margin-bottom: @hdx-space-2; // 8 px gap between label and trigger
+        margin-bottom: var(--hdx-space-2); // 8 px gap between label and trigger
     }
 
     // ── Trigger (the select box) ─────────────────────────────
@@ -66,7 +64,7 @@
         align-self:       stretch;
         display:          flex;
         align-items:      center;
-        border-radius:    @hdx-radius-sm;
+        border-radius:    var(--hdx-radius-sm);
         background-color: @c-dropdown-bg;
         border:           @c-dropdown-border;
         box-shadow:       @c-dropdown-panel-shadow;
@@ -81,7 +79,7 @@
         }
 
         &:focus-visible {
-            outline:        2px solid @hdx-primary-5;
+            outline:        2px solid var(--hdx-primary-5);
             outline-offset: 2px;
         }
     }
@@ -96,7 +94,7 @@
     // Trigger text value
     &__trigger-value {
         flex:        1;
-        font-weight: @hdx-fw-medium;
+        font-weight: var(--hdx-fw-medium);
         line-height: 130%;
         overflow:    hidden;
         text-overflow: ellipsis;
@@ -105,9 +103,9 @@
 
     // Active count chip (e.g. "Afghanistan (3)")
     &__trigger-count {
-        font-size:   @hdx-fs-xs;
-        color:       @hdx-primary-5;
-        font-weight: @hdx-fw-medium;
+        font-size:   var(--hdx-fs-xs);
+        color:       var(--hdx-primary-5);
+        font-weight: var(--hdx-fw-medium);
         white-space: nowrap;
         overflow:    hidden;
         text-overflow: ellipsis;
@@ -152,13 +150,13 @@
     }
 
     &--filter &__trigger-count {
-        color: @hdx-primary-5;
+        color: var(--hdx-primary-5);
     }
 
     // ── Size modifiers ───────────────────────────────────────
 
     &--size-m {
-        gap: @hdx-space-2;   // 8 px between label and trigger
+        gap: var(--hdx-space-2);   // 8 px between label and trigger
 
         .c-dropdown__label      { font-size: @c-dropdown-m-fs; }
         .c-dropdown__trigger    { padding: @c-dropdown-m-pad; gap: @c-dropdown-m-gap; font-size: @c-dropdown-m-fs; }
@@ -166,7 +164,7 @@
     }
 
     &--size-s {
-        gap: @hdx-space-1;   // 4 px between label and trigger
+        gap: var(--hdx-space-1);   // 4 px between label and trigger
 
         .c-dropdown__label      { font-size: @c-dropdown-s-fs; }
         .c-dropdown__trigger    { padding: @c-dropdown-s-pad; gap: @c-dropdown-s-gap; font-size: @c-dropdown-s-fs; }
@@ -179,21 +177,21 @@
 
     &__panel {
         position:         absolute;
-        top:              calc(100% + @hdx-space-1); // 4 px below trigger
+        top:              calc(100% + var(--hdx-space-1)); // 4 px below trigger
         left:             0;
         right:            0;
         z-index:          200;
         background-color: @c-dropdown-bg;
         border:           @c-dropdown-panel-border;
-        border-radius:    @hdx-radius-sm;
+        border-radius:    var(--hdx-radius-sm);
         box-shadow:       @c-dropdown-panel-shadow;
         display:          flex;
         flex-direction:   column;
         align-items:      center;
-        padding:          @hdx-space-2 @hdx-space-14; // 8 10
-        gap:              @hdx-space-3;               // 12 px
+        padding:          var(--hdx-space-2) var(--hdx-space-14); // 8 10
+        gap:              var(--hdx-space-3);               // 12 px
         font-size:        @c-dropdown-m-fs;
-        color:            @hdx-neutral-8;
+        color:            var(--hdx-neutral-8);
     }
 
     // Search field inside panel
@@ -201,11 +199,11 @@
         align-self:       stretch;
         display:          flex;
         align-items:      center;
-        border-radius:    @hdx-radius-sm;
+        border-radius:    var(--hdx-radius-sm);
         background-color: @c-dropdown-bg;
         border:           @c-dropdown-border;
-        padding:          @hdx-space-2 @hdx-space-3; // 8 12
-        gap:              @hdx-space-2;               // 8 px
+        padding:          var(--hdx-space-2) var(--hdx-space-3); // 8 12
+        gap:              var(--hdx-space-2);               // 8 px
         min-width:        7.5rem;
         overflow:         hidden;
 
@@ -213,13 +211,13 @@
             flex:         1;
             border:       none;
             background:   transparent;
-            font-family:  @hdx-font-body;
+            font-family:  var(--hdx-font-body);
             font-size:    @c-dropdown-m-fs;
-            color:        @hdx-neutral-8;
+            color:        var(--hdx-neutral-8);
             line-height:  130%;
             outline:      none;
 
-            &::placeholder { color: @hdx-neutral-7; }
+            &::placeholder { color: var(--hdx-neutral-7); }
         }
 
         img { width: 1rem; flex-shrink: 0; }
@@ -230,8 +228,8 @@
         align-self:    stretch;
         display:       flex;
         align-items:   flex-start;
-        gap:           @hdx-space-1; // 4 px (between list and scrollbar)
-        color:         @hdx-neutral-95;
+        gap:           var(--hdx-space-1); // 4 px (between list and scrollbar)
+        color:         var(--hdx-neutral-95);
         max-height:    12.5rem;
         overflow:      hidden;
     }
@@ -241,7 +239,7 @@
         display:       flex;
         flex-direction: column;
         align-items:   flex-start;
-        gap:           @hdx-space-13; // 6 px
+        gap:           var(--hdx-space-13); // 6 px
         overflow-y:    auto;
     }
 
@@ -251,7 +249,7 @@
         align-self:       stretch;
         position:         relative;
         flex-shrink:      0;
-        border-radius:    @hdx-radius-sm;
+        border-radius:    var(--hdx-radius-sm);
         background-color: #ebeff0;  // whitesmoke
     }
 
@@ -260,8 +258,8 @@
         top:              0;
         left:             0;
         right:            0;
-        border-radius:    @hdx-radius-sm;
-        background-color: @hdx-primary-5;
+        border-radius:    var(--hdx-radius-sm);
+        background-color: var(--hdx-primary-5);
         // height controlled via inline style from JS
         height:           20%;
     }
@@ -272,9 +270,9 @@
         display:         flex;
         flex-direction:  column;
         align-items:     center;
-        gap:             @hdx-space-2; // 8 px
+        gap:             var(--hdx-space-2); // 8 px
         text-align:      center;
-        color:           @hdx-primary-7; // darkslateblue
+        color:           var(--hdx-primary-7); // darkslateblue
     }
 }
 
@@ -287,19 +285,19 @@
     align-self:  stretch;
     display:     flex;
     align-items: flex-start;
-    padding:     @hdx-space-15 0;  // 2 px top/bottom
-    gap:         @hdx-space-13;    // 6 px
+    padding:     var(--hdx-space-15) 0;  // 2 px top/bottom
+    gap:         var(--hdx-space-13);    // 6 px
     cursor:      pointer;
-    font-size:   @hdx-fs-s;        // 14 px
+    font-size:   var(--hdx-fs-s);        // 14 px
     line-height: 130%;
-    color:       @hdx-neutral-95;  // #101212
+    color:       var(--hdx-neutral-95);  // #101212
 
     &:hover {
-        color: @hdx-primary-5;
+        color: var(--hdx-primary-5);
     }
 
-    &--hovered { color: @hdx-primary-5; }
-    &--checked { color: @hdx-primary-5; }
+    &--hovered { color: var(--hdx-primary-5); }
+    &--checked { color: var(--hdx-primary-5); }
 
     // Checkbox box
     &__checkbox {
@@ -344,7 +342,7 @@
         flex:        1;
         display:     flex;
         align-items: center;
-        gap:         @hdx-space-1; // 4 px
+        gap:         var(--hdx-space-1); // 4 px
     }
 
     &__label {
@@ -353,8 +351,8 @@
     }
 
     &__count {
-        font-size: @hdx-fs-xs; // 12 px
-        color:     @hdx-neutral-8;
+        font-size: var(--hdx-fs-xs); // 12 px
+        color:     var(--hdx-neutral-8);
     }
 }
 
@@ -366,32 +364,32 @@
 .c-dropdown-calendar {
     background-color: @c-dropdown-bg;
     border:           @c-dropdown-panel-border;
-    border-radius:    @hdx-radius-sm;
+    border-radius:    var(--hdx-radius-sm);
     box-shadow:       @c-dropdown-panel-shadow;
     display:          flex;
     flex-direction:   column;
     align-items:      flex-start;
-    padding:          @hdx-space-2 @hdx-space-14 @hdx-space-3; // 8 10 12
-    font-size:        @hdx-fs-s;
-    color:            @hdx-neutral-8;
+    padding:          var(--hdx-space-2) var(--hdx-space-14) var(--hdx-space-3); // 8 10 12
+    font-size:        var(--hdx-fs-s);
+    color:            var(--hdx-neutral-8);
 
     &__header {
         align-self:      stretch;
         display:         flex;
         align-items:     center;
         justify-content: space-between;
-        margin-bottom:   @hdx-space-2; // 8 px
+        margin-bottom:   var(--hdx-space-2); // 8 px
     }
 
     &__year {
-        font-weight: @hdx-fw-medium;
+        font-weight: var(--hdx-fw-medium);
         line-height: 130%;
     }
 
     &__nav-btn {
         width:            2.125rem;
         height:           2.125rem;
-        border-radius:    @hdx-radius-sm;
+        border-radius:    var(--hdx-radius-sm);
         border:           none;
         background:       transparent;
         display:          flex;
@@ -401,29 +399,29 @@
 
         img { width: 1.25rem; }
 
-        &:hover { background-color: @hdx-neutral-01; }
+        &:hover { background-color: var(--hdx-neutral-01); }
     }
 
     &__grid {
         align-self:            stretch;
         display:               grid;
         grid-template-columns: repeat(3, 1fr);
-        gap:                   @hdx-space-3; // 12 px
+        gap:                   var(--hdx-space-3); // 12 px
     }
 
     &__month-btn {
         display:          flex;
         align-items:      center;
         justify-content:  center;
-        padding:          @hdx-space-2;   // 8 px
-        border-radius:    @hdx-radius-sm;
+        padding:          var(--hdx-space-2);   // 8 px
+        border-radius:    var(--hdx-radius-sm);
         background-color: @c-dropdown-bg;
         border:           @c-dropdown-border;
         box-shadow:       @c-dropdown-panel-shadow;
         cursor:           pointer;
-        font-family:      @hdx-font-body;
-        font-size:        @hdx-fs-s;
-        font-weight:      @hdx-fw-medium;
+        font-family:      var(--hdx-font-body);
+        font-size:        var(--hdx-fs-s);
+        font-weight:      var(--hdx-fw-medium);
         line-height:      130%;
         overflow:         hidden;
         text-overflow:    ellipsis;
@@ -431,14 +429,14 @@
         transition:       background-color 0.15s ease, border 0.15s ease;
 
         &:hover {
-            background-color: @hdx-neutral-01;
+            background-color: var(--hdx-neutral-01);
             border:           @c-dropdown-border-hover;
         }
 
         &.is-active {
-            background-color: @hdx-primary-5;
-            border-color:     @hdx-primary-5;
-            color:            @hdx-neutral-0;
+            background-color: var(--hdx-primary-5);
+            border-color:     var(--hdx-primary-5);
+            color:            var(--hdx-neutral-0);
         }
     }
 }
