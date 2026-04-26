@@ -2,11 +2,48 @@
 
 Purpose: This file gives LLMs a quick map of how HDX (CKAN-based) pages are structured and where the current HTML, CSS, and JS live, so future tasks can recreate or refactor existing designs safely.
 
+## ⚡ NEW: Design V2 Migration
+
+HDX is undergoing a progressive redesign using a Figma-driven, responsive component system. For detailed progress, architecture, and implementation status, see [**redesign/PROGRESS.md**](redesign/PROGRESS.md).
+
+### V2 Foundation & Current Status
+
+- **Design tokens**: `less/v2/foundation.less`, `less/v2/colors.less`, `less/v2/spacing.less`, `less/v2/radius.less`, `less/v2/elevation.less`, `less/v2/typography.less` ✅ Complete
+  - All color palettes, spacing, corner radius, elevation, typography, and token mixins are implemented in `ckanext-hdx_theme/ckanext/hdx_theme/less/v2/`.
+- **V2 page scaffold**: `templates/v2/page.html` ⚠️ Placeholder
+  - Currently extends `page_light.html` and loads `hdx_theme/page-extra-light-styles` plus `hdx_theme/bem-blocks-styles`.
+- **Component library**: `templates/v2/components/` ✅ In Progress
+  - Implemented components include `button`, `label`, `avatar`, `dropdown`, `input-field`, `navigation`, `selection`, and `text-link`.
+  - Demo page: `templates/v2/components.html`.
+- **SVG icons**: `public/icons/` ✅
+  - Includes exported icon sets `locations-flags/` and `humanitarian-data-grids/`.
+
+---
+
+### Figma extraction process
+
+- Foundations and reusable components were extracted from Figma by selecting the layer containing the source data:
+  - Foundations: color, typography, spacing, radius, elevation layers.
+  - Components: e.g. `Components > Buttons > "buttons"` layer.
+- Exported using **Locofy Lightning - Figma to Code in a flash** with:
+  - `Units: rem`
+  - `Styling: CSS`
+  - `File naming: Pascal Case`
+  - `CSS Variables: ON`
+- The plugin produced one HTML file plus `global.css` and `index.css`.
+- Those outputs were merged into a single reference HTML file with the `global.css` content first, then `index.css`, all inside a single `<style>` block.
+- The merged file was then used as input to Claude with the prompt in [**redesign/COMPONENT_IMPLEMENTATION_PROMPT.md**](redesign/COMPONENT_IMPLEMENTATION_PROMPT.md).
+
+---
+
 ## Template roots and overrides
 
 - Core CKAN templates: `ckan/templates/`
 - HDX theme templates (overrides + new pages): `ckanext-hdx_theme/ckanext/hdx_theme/templates/`
-- BEM component templates: `ckanext-hdx_theme/ckanext/hdx_theme/templates/bem.blocks/`
+- BEM component templates (legacy): `ckanext-hdx_theme/ckanext/hdx_theme/templates/bem.blocks/`
+- V2 component templates: `ckanext-hdx_theme/ckanext/hdx_theme/templates/v2/components/`
+- V2 component styles: `ckanext-hdx_theme/ckanext/hdx_theme/less/v2/components/`
+- Compiled V2 CSS: `ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/v2/components/`
 
 HDX overrides CKAN by adding its template directories in `ckanext-hdx_theme/ckanext/hdx_theme/plugin.py` via `toolkit.add_template_directory(...)`. When a template name matches a core CKAN template, the HDX one takes precedence.
 
@@ -142,40 +179,87 @@ There are **two versions** of this page that share some assets but use different
 ### Signals page (`/signals`)
 
 - **Template**: `ckanext-hdx_theme/ckanext/hdx_theme/templates/landing_pages/signals.html`
-  - Extends `page_v2.html`, which itself extends `page_light.html`.
-  - `page_v2.html` loads `hdx_theme/page-extra-light-styles`, `hdx_theme/bem-blocks-styles`, and `hdx_theme/bem-blocks-scripts`.
+  - Extends `templates/v2/page.html` via the current v2 scaffold.
+  - `templates/v2/page.html` currently extends `page_light.html` and loads `hdx_theme/page-extra-light-styles`, `hdx_theme/bem-blocks-styles`, and `hdx_theme/bem-blocks-scripts`.
   - Uses BEM blocks heavily: `bem.blocks/hero.html`, `bem.blocks/card.html`, `bem.blocks/paragraph.html`.
   - UI copy comes from `h.HDX_CONST('UI_CONSTANTS')['LANDING_PAGES']['SIGNALS_LANDING_PAGE']`.
 - **Core assets**:
   - `hdx_theme/hdx-signals-scripts` — signals-specific JS (`landing_pages/hdx_signals.js`).
   - `hdx_theme/hdx-signals-styles` — signals-specific CSS (`landing_pages/hdx_signals.css`).
-  - `hdx_theme/bem-blocks-styles` and `hdx_theme/bem-blocks-scripts` — shared BEM component styles and JS (from `page_v2.html`).
+  - `hdx_theme/bem-blocks-styles` and `hdx_theme/bem-blocks-scripts` — shared BEM component styles and JS (currently loaded by `templates/v2/page.html`).
 
 ---
 
 ### HAPI page (`/hapi`)
 
 - **Template**: `ckanext-hdx_theme/ckanext/hdx_theme/templates/landing_pages/hapi.html`
-  - Extends `page_v2.html` (same landing-page layout as Signals above).
+  - Extends `templates/v2/page.html` (same landing-page layout as Signals above).
   - Uses BEM blocks: `bem.blocks/hero.html`, `bem.blocks/card.html`.
   - Embeds an iframe (`/visualization/hapi-availability/`) for data-availability visualisation.
   - UI copy comes from `h.HDX_CONST('UI_CONSTANTS')['LANDING_PAGES']['HAPI_LANDING_PAGE']`.
   - No dedicated styles bundle — relies entirely on the inherited `bem-blocks-styles` and `page-extra-light-styles`.
 - **Core assets**:
   - `hdx_theme/hdx-hapi-scripts` — HAPI-specific JS (`landing_pages/hdx_hapi.js`).
-  - `hdx_theme/bem-blocks-styles` and `hdx_theme/bem-blocks-scripts` — shared BEM component styles and JS (from `page_v2.html`).
+  - `hdx_theme/bem-blocks-styles` and `hdx_theme/bem-blocks-scripts` — shared BEM component styles and JS (currently loaded by `templates/v2/page.html`).
 
 ---
 
 ## Quick path index
 
 - HDX templates: `ckanext-hdx_theme/ckanext/hdx_theme/templates/`
-- HDX BEM HTML: `ckanext-hdx_theme/ckanext/hdx_theme/templates/bem.blocks/`
-- HDX LESS: `ckanext-hdx_theme/ckanext/hdx_theme/less/`
-- HDX BEM LESS: `ckanext-hdx_theme/ckanext/hdx_theme/less/bem.blocks/`
+- HDX BEM HTML (legacy): `ckanext-hdx_theme/ckanext/hdx_theme/templates/bem.blocks/`
+- HDX V2 component templates: `ckanext-hdx_theme/ckanext/hdx_theme/templates/v2/components/`
+- HDX LESS (legacy): `ckanext-hdx_theme/ckanext/hdx_theme/less/`
+- HDX V2 component styles: `ckanext-hdx_theme/ckanext/hdx_theme/less/v2/components/`
+- HDX design tokens (v2): `ckanext-hdx_theme/ckanext/hdx_theme/less/v2/foundation.less`
+- HDX V2 compiled CSS: `ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/v2/components/`
 - HDX fanstatic (CSS/JS sources): `ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/`
 - HDX webassets bundles: `ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/webassets.yml`
 - CKAN core templates: `ckan/templates/`
 - CKAN core JS bundles: `ckan/public/base/javascript/webassets.yml`
 - CKAN core vendor bundles: `ckan/public/base/vendor/webassets.yml`
+
+---
+
+---
+
+### Placeholder Page (`/placeholder`)
+
+- **Template**: `ckanext-hdx_theme/ckanext/hdx_theme/templates/landing_pages/placeholder.html`
+  - Extends `templates/v2/page.html` (V2 layout scaffold for testing new components).
+  - **Purpose**: Demo page showing all v2 components in action.
+  - Displays: Labels (all sizes and colors), badges, and other v2 components as they're added.
+- **Core assets**:
+  - `hdx_theme/page-extra-light-styles` — lightweight page styles (from `templates/v2/page.html`).
+  - `hdx_theme/v2-components-styles` — all v2 component styles.
+  - `hdx_theme/hdx-hapi-scripts` — inherited from landing page structure.
+
+---
+
+## Guidance for V2 Development
+
+When working on the v2 redesign:
+
+1. **Reference the design tokens** — Always use variables from [`less/v2/foundation.less`](../ckanext-hdx_theme/ckanext/hdx_theme/less/v2/foundation.less) for colors, spacing, typography, and shadows. Never hardcode values.
+
+2. **Use BEM naming** — v2 components follow BEM (Block-Element-Modifier) naming:
+   - Block: `.component` (the main building block)
+   - Element: `.component__item` (part of a component)
+   - Modifier: `.component--active` (variant or state)
+
+3. **Build components in pairs**:
+   - HTML snippet: `templates/v2/components/component-name.html` — reusable Jinja template
+   - LESS styles: `less/v2/components/component-name.less` — component styles referencing `foundation.less`
+
+4. **Page migrations**:
+   - Start simple (landing pages, signup, contact page)
+   - Change `{% extends "page.html" %}` to `{% extends "templates/v2/page.html" %}`
+   - Replace old BEM snippets (`bem.blocks/`) with v2 equivalents (`templates/v2/components/`)
+   - Register new asset bundles in `webassets.yml` if needed
+
+5. **Keep old stack untouched** — Unmigrated pages should never break. Old templates and assets remain in place until all pages are migrated.
+
+6. **Update LLM docs** — When architecture changes, update [**redesign/PROGRESS.md**](redesign/PROGRESS.md) so future work stays synchronized with actual state.
+
+For detailed progress tracking and implementation status, always consult **[**redesign/PROGRESS.md**](redesign/PROGRESS.md)**.
 
