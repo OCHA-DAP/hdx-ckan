@@ -13,6 +13,7 @@ Crawl-Delay: 10
 Disallow: /gis
 Disallow: /mapbox
 Disallow: /mapbox-base-tiles
+Disallow: /mapbox-base-tiles-v2
 
 # Tabular data files
 Disallow: /*.csv$
@@ -22,17 +23,17 @@ Disallow: /*.xlsx$
 Disallow: /*.tif$
 Disallow: /*.tiff$
 Disallow: /*.geotiff$
-Disallow: /*.shp$ 
-Disallow: /*.kml$ 
-Disallow: /*.kmz$ 
-Disallow: /*.geojson$ 
+Disallow: /*.shp$
+Disallow: /*.kml$
+Disallow: /*.kmz$
+Disallow: /*.geojson$
 # Other filetypes to exclude
 Disallow: /*.geojson$
 Disallow: /*.atom$
 Disallow: /*.rss$
-# Allow sitemaps, but ignore other xmls 
+# Allow sitemaps, but ignore other xmls
 Allow: /sitemap*.xml$
-Disallow: /*.xml$ 
+Disallow: /*.xml$
 #PDFs are allowed
 
 Disallow: /feeds/
