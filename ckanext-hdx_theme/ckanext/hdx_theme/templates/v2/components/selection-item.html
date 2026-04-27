@@ -9,16 +9,16 @@
   label         {string}  Chip text.  default: 'Label'
   size          {string}  'l' | 'm' | 's'   default: 'm'
   color         {string}  'light' | 'cyan'  default: 'light'
-  state         {string}  'enabled' | 'hover' | 'active'
+  state         {string}  'enabled' | 'hover' | 'active' | 'active-hovered'
                           default: 'enabled'
 
   icon          {bool}    Show leading icon.  default: False
-  icon_src      {string}  Leading icon path.  default: 'images/icons/placeholder.svg'
+  icon_src      {string}  Leading icon path.  default: 'v2/icons/placeholder.svg'
 
   count         {string}  Optional count string, e.g. '(3)'.  default: ''
 
-  close_src     {string}  Close/remove icon path (shown when state='active').
-                          default: 'images/icons/close.svg'
+  close_src     {string}  Close/remove icon path (shown when state='active' or state='active-hovered').
+                          default: 'v2/icons/close.svg'
 
   tag           {string}  'button' | 'a' | 'span'  default: 'button'
   href          {string}  URL when tag='a'.  default: '#'
@@ -39,9 +39,9 @@
 {% set color         = color         if color         is defined else 'light' %}
 {% set state         = state         if state         is defined else 'enabled' %}
 {% set icon          = icon          if icon          is defined else False %}
-{% set icon_src      = icon_src      if icon_src      is defined else 'icons/placeholder.svg' %}
+{% set icon_src      = icon_src      if icon_src      is defined else 'v2/icons/placeholder.svg' %}
 {% set count         = count         if count         is defined else '' %}
-{% set close_src     = close_src     if close_src     is defined else 'icons/close.svg' %}
+{% set close_src     = close_src     if close_src     is defined else 'v2/icons/close.svg' %}
 {% set tag           = tag           if tag           is defined else 'button' %}
 {% set href          = href          if href          is defined else '#' %}
 {% set extra_classes = extra_classes if extra_classes is defined else '' %}
@@ -52,11 +52,12 @@
     'c-selection-item--size-' ~ size,
     'c-selection-item--' ~ color,
 ] %}
-{% if state == 'hover'  %}{% set classes = classes + ['c-selection-item--hovered'] %}{% endif %}
-{% if state == 'active' %}{% set classes = classes + ['c-selection-item--active']  %}{% endif %}
-{% if icon              %}{% set classes = classes + ['c-selection-item--has-icon'] %}{% endif %}
-{% if count             %}{% set classes = classes + ['c-selection-item--has-count'] %}{% endif %}
-{% if extra_classes     %}{% set classes = classes + [extra_classes] %}{% endif %}
+{% if state == 'hover'          %}{% set classes = classes + ['c-selection-item--hovered'] %}{% endif %}
+{% if state == 'active'         %}{% set classes = classes + ['c-selection-item--active']  %}{% endif %}
+{% if state == 'active-hovered' %}{% set classes = classes + ['c-selection-item--active-hovered']  %}{% endif %}
+{% if icon                      %}{% set classes = classes + ['c-selection-item--has-icon'] %}{% endif %}
+{% if count                     %}{% set classes = classes + ['c-selection-item--has-count'] %}{% endif %}
+{% if extra_classes             %}{% set classes = classes + [extra_classes] %}{% endif %}
 
 {% set tag_open %}
   {% if tag == 'a' %}
@@ -83,9 +84,7 @@
 {% endif %}
 
   {% if icon %}
-    <img class="c-selection-item__icon"
-         src="{{ h.url_for_static(icon_src) }}"
-         alt="" aria-hidden="true">
+    <span class="c-selection-item__icon">{% include h.url_for_static(icon_src) %}</span>
   {% endif %}
 
   <span class="c-selection-item__label">{{ label }}</span>
@@ -94,10 +93,8 @@
     <span class="c-selection-item__count">{{ count }}</span>
   {% endif %}
 
-  {% if state == 'active' %}
-    <img class="c-selection-item__close"
-         src="{{ h.url_for_static(close_src) }}"
-         alt="Remove" aria-label="Remove {{ label }}">
+  {% if state == 'active' or state == 'active-hovered' %}
+    <span class="c-selection-item__close">{% include h.url_for_static(close_src) %}</span>
   {% endif %}
 
 {% if tag == 'a' %}</a>

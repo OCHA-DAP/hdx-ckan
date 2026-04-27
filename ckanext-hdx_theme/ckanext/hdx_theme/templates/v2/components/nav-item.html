@@ -8,9 +8,9 @@
   href          {string}  URL.  default: '#'
   status        {string}  'default' | 'active' | 'active-dropdown' | 'disabled'
                           default: 'default'
-  chevron       {bool}    Show chevron-down icon (for dropdown parents).
+  chevron       {bool}    Show chevron icon (for dropdown parents).
                           default: False
-  chevron_src   {string}  default: 'images/icons/chevron-down.svg'
+  chevron_src   {string}  Icon source path.  default: 'v2/icons/chevron-down.svg'
   extra_classes {string}  default: ''
   attrs         {dict}    default: {}
   ─────────────────────────────────────────────────
@@ -20,9 +20,14 @@
 {% set href          = href          if href          is defined else '#' %}
 {% set status        = status        if status        is defined else 'default' %}
 {% set chevron       = chevron       if chevron       is defined else False %}
-{% set chevron_src   = chevron_src   if chevron_src   is defined else 'icons/chevron-down.svg' %}
+{% set chevron_src   = chevron_src   if chevron_src   is defined else 'v2/icons/chevron-down.svg' %}
 {% set extra_classes = extra_classes if extra_classes is defined else '' %}
 {% set attrs         = attrs         if attrs         is defined else {} %}
+
+{# Auto-switch chevron direction for active dropdown (only if default is used) #}
+{% if status == 'active-dropdown' and chevron_src == 'v2/icons/chevron-down.svg' %}
+  {% set chevron_src = 'v2/icons/chevron-up.svg' %}
+{% endif %}
 
 {% set is_disabled = (status == 'disabled') %}
 
@@ -40,9 +45,7 @@
   <span class="c-nav-item__label">{{ label }}</span>
 
   {% if chevron %}
-    <img class="c-nav-item__chevron"
-         src="{{ h.url_for_static(chevron_src) }}"
-         alt="" aria-hidden="true">
+    <span class="c-nav-item__chevron">{% include h.url_for_static(chevron_src) %}</span>
   {% endif %}
 
 </a>

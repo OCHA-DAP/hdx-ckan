@@ -50,7 +50,7 @@
 // Text-button gap per size
 @c-text-button-l-gap:  var(--hdx-space-2);       //  8 px
 @c-text-button-m-gap:  var(--hdx-space-1);       //  4 px
-@c-text-button-s-gap:  0.125rem;           //  2 px
+@c-text-button-s-gap:  var(--hdx-space-15);      //  2 px
 
 
 // ────────────────────────────────────────────────────────────
@@ -89,6 +89,7 @@
     // ── Elements ────────────────────────────────────────────
 
     &__icon {
+        line-height: 0;
         flex-shrink: 0;
         display:     block;
         // width is set per size modifier; height is auto (aspect-ratio preserved)
@@ -190,9 +191,9 @@
         box-shadow:       var(--hdx-shadow-sm);
 
         &:hover {
-            background-color: var(--hdx-primary-7);   // #0e3b82 — fill
-            color:            var(--hdx-neutral-0);
-            border:           1.5px solid var(--hdx-primary-7);
+            //background-color: var(--hdx-primary-7);   // #0e3b82 — fill
+            //color:            var(--hdx-neutral-0);
+            //border:           1.5px solid var(--hdx-primary-7);
             box-shadow:       none;
         }
 
@@ -218,17 +219,17 @@
             background-color: transparent;
             border:           none;
             box-shadow:       none;
-            color:            var(--hdx-primary-7);
+            color:            var(--hdx-neutral-3);
 
             &:hover {
                 background-color: var(--hdx-primary-7);
-                color:            var(--hdx-neutral-0);
+                color:            var(--hdx-neutral-3);
                 border:           none;
             }
 
             &:active {
                 background-color: var(--hdx-primary-5);
-                color:            var(--hdx-neutral-0);
+                color:            var(--hdx-neutral-3);
                 border:           none;
             }
 
@@ -274,16 +275,19 @@
         // Icon-only variant: white bg + shadow, no border (Figma)
         &.c-button--icon-only {
             border:  none;
+            color:   var(--hdx-primary-7);
             // bg and shadow stay as text variant by default
 
             &:hover {
                 background-color: var(--hdx-neutral-01);
+                color:            var(--hdx-neutral-8);
                 border:           none;
                 box-shadow:       none;
             }
 
             &:active {
                 background-color: var(--hdx-neutral-01);
+                color:            var(--hdx-neutral-8);
                 border:           none;
                 box-shadow:       none;
             }
@@ -291,6 +295,7 @@
             &[disabled],
             &.is-disabled {
                 background-color: var(--hdx-neutral-05);
+                color:            var(--hdx-neutral-3);
                 border:           none;
                 box-shadow:       none;
             }
@@ -331,6 +336,7 @@
     // ── Elements ────────────────────────────────────────────
 
     &__icon {
+        line-height: 0;
         flex-shrink: 0;
         display:     block;
     }

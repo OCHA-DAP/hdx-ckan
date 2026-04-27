@@ -13,7 +13,7 @@
                           default: 'enabled'
   name          {string}  input name attr.  default: 'q'
   id            {string}  input id attr.   default: ''
-  icon_src      {string}  Right icon path. default: 'images/icons/search.svg'
+  icon_src      {string}  Right icon path. default: 'v2/icons/search.svg'
   extra_classes {string}  default: ''
   attrs         {dict}    Extra HTML attrs on the wrapper div.  default: {}
   ─────────────────────────────────────────────────
@@ -29,7 +29,7 @@
 {% set state         = state         if state         is defined else 'enabled' %}
 {% set name          = name          if name          is defined else 'q' %}
 {% set id            = id            if id            is defined else '' %}
-{% set icon_src      = icon_src      if icon_src      is defined else 'icons/search.svg' %}
+{% set icon_src      = icon_src      if icon_src      is defined else 'v2/icons/search.svg' %}
 {% set extra_classes = extra_classes if extra_classes is defined else '' %}
 {% set attrs         = attrs         if attrs         is defined else {} %}
 
@@ -49,8 +49,6 @@
          value="{{ value }}"
          autocomplete="off">
 
-  <img class="c-search-input__icon"
-       src="{{ h.url_for_static(icon_src) }}"
-       alt="" aria-hidden="true">
+  <span class="c-search-input__icon">{% include h.url_for_static(icon_src) %}</span>
 
 </div>

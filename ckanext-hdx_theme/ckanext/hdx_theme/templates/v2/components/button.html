@@ -25,7 +25,7 @@
                           default: False
 
   icon_src      {string}  Path to the SVG icon, resolved via h.url_for_static().
-                          default: 'images/icons/placeholder.svg'
+                          default: 'v2/icons/placeholder.svg'
 
   icon_position {string}  'left' | 'right'  — only used when type='text'.
                           default: 'left'
@@ -77,7 +77,7 @@
 {% set type          = type          if type          is defined else 'text' %}
 {% set label         = label         if label         is defined else '' %}
 {% set icon          = icon          if icon          is defined else False %}
-{% set icon_src      = icon_src      if icon_src      is defined else 'icons/placeholder.svg' %}
+{% set icon_src      = icon_src      if icon_src      is defined else 'v2/icons/placeholder.svg' %}
 {% set icon_position = icon_position if icon_position is defined else 'left' %}
 {% set count         = count         if count         is defined else '' %}
 {% set state         = state         if state         is defined else 'enabled' %}
@@ -113,11 +113,7 @@
 
 {# ── Icon markup (shared sub-template) ───────────────────── #}
 {% set icon_markup %}
-  <img class="c-button__icon"
-       src="{{ h.url_for_static(icon_src) }}"
-       alt=""
-       aria-hidden="true"
-       width="auto">
+  <span class="c-button__icon">{% include h.url_for_static(icon_src) %}</span>
 {% endset %}
 
 {# ── Render ───────────────────────────────────────────────── #}

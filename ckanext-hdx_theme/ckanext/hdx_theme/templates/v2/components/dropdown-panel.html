@@ -10,7 +10,7 @@
   panel_id      {string}  HTML id for aria-controls linkage.  default: ''
   search        {bool}    Show a search field.  default: True
   search_placeholder {string}  default: 'Search'
-  search_icon   {string}  Path to search icon.  default: 'images/icons/search.svg'
+  search_icon   {string}  Path to search icon.  default: 'v2/icons/search.svg'
   items         {list}    List of dicts: {value, label, count, checked}.
                           default: []
   confirm_label {string}  Text for confirm button, e.g. 'Confirm (3)'.  default: 'Confirm'
@@ -31,7 +31,7 @@
 {% set panel_id           = panel_id           if panel_id           is defined else '' %}
 {% set search             = search             if search             is defined else True %}
 {% set search_placeholder = search_placeholder if search_placeholder is defined else 'Search' %}
-{% set search_icon        = search_icon        if search_icon        is defined else 'icons/search.svg' %}
+{% set search_icon        = search_icon        if search_icon        is defined else 'v2/icons/search.svg' %}
 {% set items              = items              if items              is defined else [] %}
 {% set confirm_label      = confirm_label      if confirm_label      is defined else 'Confirm' %}
 {% set clear_label        = clear_label        if clear_label        is defined else 'Clear selection' %}
@@ -49,8 +49,7 @@
         <input type="text"
                placeholder="{{ search_placeholder }}"
                aria-label="{{ search_placeholder }}">
-        <img src="{{ h.url_for_static(search_icon) }}"
-             alt="" aria-hidden="true">
+        {% include h.url_for_static(search_icon) %}
       </div>
     {% endif %}
 
@@ -64,9 +63,7 @@
 
             <span class="c-dropdown-item__checkbox" aria-hidden="true">
               <span class="c-dropdown-item__checkbox-bg"></span>
-              <img class="c-dropdown-item__checkbox-check"
-                   src="{{ h.url_for_static('icons/check-circle.svg') }}"
-                   alt="">
+              <span class="c-dropdown-item__checkbox-check">{% include h.url_for_static('v2/icons/check-circle.svg') %}</span>
             </span>
 
             <span class="c-dropdown-item__body">

@@ -63,7 +63,10 @@
     &--primary {
         color: @c-text-link-primary-color;
 
-        &:hover  { color: @c-text-link-primary-hover-color; }
+        &:hover  {
+          color: @c-text-link-primary-hover-color;
+          text-decoration: underline;  // overwrite page-extra-light-styles
+        }
         &:active { color: @c-text-link-primary-active-color; }
 
         &[disabled],
@@ -80,7 +83,10 @@
     &--secondary {
         color: @c-text-link-secondary-color;
 
-        &:hover  { color: @c-text-link-secondary-hover-color; }
+        &:hover  {
+          color: @c-text-link-secondary-hover-color;
+          text-decoration: underline;  // overwrite page-extra-light-styles
+        }
         &:active { color: @c-text-link-secondary-active-color; }
 
         &[disabled],
@@ -97,7 +103,10 @@
     &--tertiary {
         color: @c-text-link-tertiary-color;
 
-        &:hover  { color: @c-text-link-tertiary-hover-color; }
+        &:hover  {
+          color: @c-text-link-tertiary-hover-color;
+          text-decoration: underline;  // overwrite page-extra-light-styles
+        }
         &:active { color: @c-text-link-tertiary-active-color; }
 
         &[disabled],

@@ -89,19 +89,10 @@
     gap: 1rem;
   }
 
-  .demo-hint {
-    font-size: 0.75rem;
-    color: #9db1b3;
-  }
-
   .demo-divider {
     border: none;
-    border-top: 1px dashed #d8e0e1;
+    border-top: 5px solid teal;
     margin: 2rem 0;
-  }
-
-  .demo-divider-small {
-    margin: 0.5rem 0;
   }
 
   .demo-dropdown-panel {
@@ -112,7 +103,6 @@
 
   .demo-anchor-links-sidebar {
     width: 15rem;
-    border: 1px dashed #ebeff0;
   }
 
   .demo-max-width-l {
@@ -126,26 +116,17 @@
   .demo-max-width-xl {
     max-width: 37.5rem;
   }
-
-  /* Component-specific safe styling */
-  .c-badge {
-    display: inline-block;
-    width: 0.75rem;
-    height: 0.75rem;
-    border-radius: 50%;
-  }
 </style>
-
-
 
 <div class="demo-page">
 
-  {# ══════════════════════════════════════════════════════════
-     SECTION 1 — BUTTONS (filled / outlined)
-  ═══════════════════════════════════════════════════════════ #}
+  {# ══════════════════════════════════════════════════════
+     1. BUTTONS (filled / outlined)
+  ══════════════════════════════════════════════════════ #}
   <section class="demo-section">
     <h1 class="demo-section__title">Buttons</h1>
     <p class="demo-section__subtitle">style × size × state — type: text (with icon)</p>
+    <p class="demo-section__subtitle">Use browser DevTools to force :hover state on the buttons.</p>
 
     {# ── Size L ──────────────────────────────────────── #}
     <h2 class="demo-subsection__heading">Size L</h2>
@@ -162,13 +143,6 @@
         {% snippet 'v2/components/button.html',
             style='tertiary', size='l', label='Tertiary button',
             icon=True, icon_position='left' %}
-      </div>
-    </div>
-
-    <div class="demo-row">
-      <span class="demo-row__label">Hover*</span>
-      <div class="demo-row__items demo-hint">
-        Use browser DevTools to force :hover state on the buttons above.
       </div>
     </div>
 
@@ -346,10 +320,12 @@
     </div>
   </section>
 
+  <hr class="demo-divider">
 
-  {# ══════════════════════════════════════════════════════════
-     SECTION 2 — TEXT BUTTONS
-  ═══════════════════════════════════════════════════════════ #}
+  {# ══════════════════════════════════════════════════════
+     2. TEXT BUTTONS
+  ══════════════════════════════════════════════════════ #}
+
   <section class="demo-section">
     <h1 class="demo-section__title">Text Buttons</h1>
     <p class="demo-section__subtitle">style × size × state × icon position</p>
@@ -489,407 +465,407 @@
 
   </section>
 
-<hr class="demo-divider">
+  <hr class="demo-divider">
 
-<div class="demo-page">
+  {# ══════════════════════════════════════════════════════
+     3. TEXT LINK
+  ══════════════════════════════════════════════════════ #}
+  <section class="demo-section">
+    <h1 class="demo-section__title">Text Link</h1>
+    <p class="demo-section__subtitle">style × size × state — inline typographic hyperlink</p>
 
-{# ══════════════════════════════════════════════════════
-   1. AVATARS & BADGE
-══════════════════════════════════════════════════════ #}
-<section class="demo-section">
-  <h1 class="demo-section__title">Avatars &amp; Badge</h1>
-  <p class="demo-section__subtitle">size × state × badge</p>
-
-  <h2 class="dl-h2">Sizes — enabled</h2>
-  <div class="dl-row">
-    {% snippet 'v2/components/avatar.html', size='l',  initials='AB', state='enabled' %}
-    {% snippet 'v2/components/avatar.html', size='md', initials='JD', state='enabled' %}
-    {% snippet 'v2/components/avatar.html', size='sm', initials='KC', state='enabled' %}
-    {% snippet 'v2/components/avatar.html', size='xs', initials='Z',  state='enabled' %}
-  </div>
-
-  <h2 class="demo-subsection__heading">With badge</h2>
-  <div class="demo-row">
-    {% snippet 'v2/components/avatar.html', size='l',  initials='AB', badge=True %}
-    {% snippet 'v2/components/avatar.html', size='md', initials='JD', badge=True %}
-    {% snippet 'v2/components/avatar.html', size='sm', initials='KC', badge=True %}
-    {% snippet 'v2/components/avatar.html', size='xs', initials='Z',  badge=True %}
-  </div>
-
-  <h2 class="demo-subsection__heading">States — MD</h2>
-  <div class="demo-row">
-    {% snippet 'v2/components/avatar.html', size='md', initials='EN', state='enabled' %}
-    {% snippet 'v2/components/avatar.html', size='md', initials='HV', state='hovered' %}
-    {% snippet 'v2/components/avatar.html', size='md', initials='AC', state='active' %}
-  </div>
-
-  <h2 class="demo-subsection__heading">Standalone badge dot</h2>
-  <div class="demo-row">
-    <span class="c-badge"></span>
-  </div>
-</section>
-
-<hr class="demo-divider">
-
-{# ══════════════════════════════════════════════════════
-   2. DROPDOWN
-══════════════════════════════════════════════════════ #}
-<section class="demo-section">
-  <h1 class="demo-section__title">Dropdown</h1>
-  <p class="demo-section__subtitle">size × state — trigger only (panel positioned by JS)</p>
-
-  <h2 class="demo-subsection__heading">Size M — all states</h2>
-  <div class="demo-row demo-row--flex-start">
-    {% snippet 'v2/components/dropdown.html',
-        size='m', label='Label', placeholder='Dropdown', state='enabled' %}
-    {% snippet 'v2/components/dropdown.html',
-        size='m', label='Label', placeholder='Dropdown', state='hover' %}
-    {% snippet 'v2/components/dropdown.html',
-        size='m', label='Label', placeholder='Dropdown', state='active' %}
-    {% snippet 'v2/components/dropdown.html',
-        size='m', label='Label', placeholder='Dropdown', state='disabled' %}
-    {% snippet 'v2/components/dropdown.html',
-        size='m', label='Label', selected='Afghanistan', count='(3)', state='filter' %}
-  </div>
-
-  <h2 class="demo-subsection__heading">Size S</h2>
-  <div class="demo-row demo-row--flex-start">
-    {% snippet 'v2/components/dropdown.html',
-        size='s', label='Label', placeholder='Dropdown', state='enabled' %}
-    {% snippet 'v2/components/dropdown.html',
-        size='s', label='Label', placeholder='Dropdown', state='active' %}
-    {% snippet 'v2/components/dropdown.html',
-        size='s', label='Label', placeholder='Dropdown', state='disabled' %}
-  </div>
-
-  <h2 class="demo-subsection__heading">Panel overlay (static preview)</h2>
-  <div class="demo-row demo-row--flex-start demo-row--relative">
-    <div class="demo-dropdown-panel">
-      {% snippet 'v2/components/dropdown-panel.html',
-          panel_id='demo-panel',
-          items=[
-            {'value': 'af', 'label': 'Afghanistan', 'count': '(309)', 'checked': True},
-            {'value': 'al', 'label': 'Albania',     'count': '(97)',  'checked': False},
-            {'value': 'dz', 'label': 'Algeria',     'count': '(21)',  'checked': False},
-            {'value': 'ao', 'label': 'Angola',      'count': '(57)',  'checked': True},
-          ],
-          confirm_label='Confirm (2)', clear_label='Clear selection' %}
+    <h2 class="demo-subsection__heading">All styles — Size M (enabled)</h2>
+    <div class="demo-row">
+      {% snippet 'v2/components/text-link.html',
+          label='Primary link', style='primary', size='m' %}
+      {% snippet 'v2/components/text-link.html',
+          label='Secondary link', style='secondary', size='m' %}
+      {% snippet 'v2/components/text-link.html',
+          label='Tertiary link', style='tertiary', size='m' %}
     </div>
-  </div>
-</section>
 
-<hr class="demo-divider">
+    <h2 class="demo-subsection__heading">Primary — all sizes</h2>
+    <div class="demo-row">
+      {% snippet 'v2/components/text-link.html',
+          label='XL (20px)', style='primary', size='xl' %}
+      {% snippet 'v2/components/text-link.html',
+          label='L (18px)', style='primary', size='l' %}
+      {% snippet 'v2/components/text-link.html',
+          label='M (16px)', style='primary', size='m' %}
+      {% snippet 'v2/components/text-link.html',
+          label='S (14px)', style='primary', size='s' %}
+      {% snippet 'v2/components/text-link.html',
+          label='XS (12px)', style='primary', size='xs' %}
+    </div>
 
-{# ══════════════════════════════════════════════════════
-   3. INPUT FIELD / SEARCH / AUTOCOMPLETE
-══════════════════════════════════════════════════════ #}
-<section class="demo-section">
-  <h1 class="demo-section__title">Input Field / Search / Autocomplete</h1>
-  <p class="demo-section__subtitle">size × state</p>
+    <h2 class="demo-subsection__heading">Secondary &amp; tertiary — all sizes</h2>
+    <div class="demo-row">
+      {% snippet 'v2/components/text-link.html',
+          label='Secondary XL', style='secondary', size='xl' %}
+      {% snippet 'v2/components/text-link.html',
+          label='Secondary M',  style='secondary', size='m' %}
+      {% snippet 'v2/components/text-link.html',
+          label='Secondary XS', style='secondary', size='xs' %}
+    </div>
+    <div class="demo-row">
+      {% snippet 'v2/components/text-link.html',
+          label='Tertiary XL', style='tertiary', size='xl' %}
+      {% snippet 'v2/components/text-link.html',
+          label='Tertiary M',  style='tertiary', size='m' %}
+      {% snippet 'v2/components/text-link.html',
+          label='Tertiary XS', style='tertiary', size='xs' %}
+    </div>
 
-  <h2 class="demo-subsection__heading">Search input — Size L</h2>
-  <div class="demo-row--column demo-max-width-l">
-    {% snippet 'v2/components/search-input.html',
-        size='l', placeholder='Value', state='enabled' %}
-    {% snippet 'v2/components/search-input.html',
-        size='l', placeholder='Value', state='hover' %}
-    {% snippet 'v2/components/search-input.html',
-        size='l', placeholder='Value', state='active' %}
-    {% snippet 'v2/components/search-input.html',
-        size='l', value='Search term', state='filled' %}
-  </div>
+    <h2 class="demo-subsection__heading">Disabled state</h2>
+    <div class="demo-row">
+      {% snippet 'v2/components/text-link.html',
+          label='Primary disabled', style='primary', size='m', state='disabled' %}
+      {% snippet 'v2/components/text-link.html',
+          label='Secondary disabled', style='secondary', size='m', state='disabled' %}
+      {% snippet 'v2/components/text-link.html',
+          label='Tertiary disabled', style='tertiary', size='m', state='disabled' %}
+    </div>
+  </section>
 
-  <h2 class="demo-subsection__heading">Search input — Size M</h2>
-  <div class="demo-row--column demo-max-width-m">
-    {% snippet 'v2/components/search-input.html',
-        size='m', placeholder='Value', state='enabled' %}
-    {% snippet 'v2/components/search-input.html',
-        size='m', placeholder='Value', state='active' %}
-    {% snippet 'v2/components/search-input.html',
-        size='m', value='Sudan', state='filled' %}
-  </div>
+  <hr class="demo-divider">
 
-  <h2 class="demo-subsection__heading">Autocomplete (panel open — static preview)</h2>
-  <div class="demo-max-width-xl">
-    {% snippet 'v2/components/autocomplete.html',
-        placeholder='Search datasets, locations, tags…',
-        state='active',
-        show_panel=True,
-        trending_label='Trending',
-        chips=['Locations', 'West Africa', 'Sudan', 'Ukraine'],
-        results=[
-          {'label': 'Sudan humanitarian response plan 2024', 'url': '#', 'count': 'Dataset'},
-          {'label': 'West Africa food security data',        'url': '#', 'count': 'Dataset'},
-          {'label': 'Global displacement report',           'url': '#', 'count': 'Dataset'},
-        ],
-        confirm_label='Search all datasets' %}
-  </div>
-</section>
+  {# ══════════════════════════════════════════════════════
+     4. AVATARS & BADGE
+  ══════════════════════════════════════════════════════ #}
+  <section class="demo-section">
+    <h1 class="demo-section__title">Avatars &amp; Badge</h1>
+    <p class="demo-section__subtitle">size × state × badge</p>
 
-<hr class="demo-divider">
+    <h2 class="dl-h2">Sizes — enabled</h2>
+    <div class="dl-row">
+      {% snippet 'v2/components/avatar.html', size='l',  initials='AB', state='enabled' %}
+      {% snippet 'v2/components/avatar.html', size='md', initials='JD', state='enabled' %}
+      {% snippet 'v2/components/avatar.html', size='sm', initials='KC', state='enabled' %}
+      {% snippet 'v2/components/avatar.html', size='xs', initials='Z',  state='enabled' %}
+    </div>
 
-{# ══════════════════════════════════════════════════════
-   4. LABEL / FILE-TYPE / TOOLTIP
-══════════════════════════════════════════════════════ #}
-<section class="demo-section">
-  <h1 class="demo-section__title">Label / File-type / Tooltip</h1>
-  <p class="demo-section__subtitle">colour × size — text, icon+text, icon-only</p>
+    <h2 class="demo-subsection__heading">With badge</h2>
+    <div class="demo-row">
+      {% snippet 'v2/components/avatar.html', size='l',  initials='AB', badge=True %}
+      {% snippet 'v2/components/avatar.html', size='md', initials='JD', badge=True %}
+      {% snippet 'v2/components/avatar.html', size='sm', initials='KC', badge=True %}
+      {% snippet 'v2/components/avatar.html', size='xs', initials='Z',  badge=True %}
+    </div>
 
-  <h2 class="demo-subsection__heading">Label — Size M (all colours)</h2>
-  <div class="demo-row">
-    {% snippet 'v2/components/label.html', text='Light',  color='light',  size='m' %}
-    {% snippet 'v2/components/label.html', text='Grey',   color='grey',   size='m' %}
-    {% snippet 'v2/components/label.html', text='Dark',   color='dark',   size='m' %}
-    {% snippet 'v2/components/label.html', text='Cyan',   color='cyan',   size='m' %}
-    {% snippet 'v2/components/label.html', text='Yellow', color='yellow', size='m' %}
-    {% snippet 'v2/components/label.html', text='Blue',   color='blue',   size='m' %}
-  </div>
+    <h2 class="demo-subsection__heading">States — MD</h2>
+    <div class="demo-row">
+      {% snippet 'v2/components/avatar.html', size='md', initials='EN', state='enabled' %}
+      {% snippet 'v2/components/avatar.html', size='md', initials='HV', state='hovered' %}
+      {% snippet 'v2/components/avatar.html', size='md', initials='AC', state='active' %}
+    </div>
 
-  <h2 class="demo-subsection__heading">Label — Size S &amp; XS</h2>
-  <div class="demo-row">
-    {% snippet 'v2/components/label.html', text='Cyan S',  color='cyan', size='s',  icon=True %}
-    {% snippet 'v2/components/label.html', text='Blue XS', color='blue', size='xs', icon=True %}
-    {% snippet 'v2/components/label.html', text='Dark XS', color='dark', size='xs' %}
-  </div>
+    <h2 class="demo-subsection__heading">Standalone badge dot</h2>
+    <div class="demo-row">
+      <span class="c-badge"></span>
+    </div>
+  </section>
 
-  <h2 class="demo-subsection__heading">Label — icon-only</h2>
-  <div class="demo-row">
-    {% snippet 'v2/components/label.html', color='cyan',   size='m',  icon=True, icon_only=True %}
-    {% snippet 'v2/components/label.html', color='yellow', size='s',  icon=True, icon_only=True %}
-    {% snippet 'v2/components/label.html', color='blue',   size='xs', icon=True, icon_only=True %}
-  </div>
+  <hr class="demo-divider">
 
-  <h2 class="demo-subsection__heading">File-type icon badges</h2>
-  <div class="demo-row">
-    {% snippet 'v2/components/file-type-icon.html', format='neutral',  size='m', aria_label='Generic file' %}
-    {% snippet 'v2/components/file-type-icon.html', format='geo',      size='m', aria_label='GeoJSON' %}
-    {% snippet 'v2/components/file-type-icon.html', format='tabular',  size='m', aria_label='Excel' %}
-    {% snippet 'v2/components/file-type-icon.html', format='document', size='m', aria_label='PDF' %}
-    {% snippet 'v2/components/file-type-icon.html', format='web',      size='m', aria_label='Web resource' %}
-  </div>
-  <div class="demo-row">
-    {% snippet 'v2/components/file-type-icon.html', format='tabular', size='s',  aria_label='Excel S' %}
-    {% snippet 'v2/components/file-type-icon.html', format='geo',     size='xs', aria_label='Geo XS' %}
-  </div>
+  {# ══════════════════════════════════════════════════════
+     5. DROPDOWN
+  ══════════════════════════════════════════════════════ #}
+  <section class="demo-section">
+    <h1 class="demo-section__title">Dropdown</h1>
+    <p class="demo-section__subtitle">size × state — trigger only (panel positioned by JS)</p>
 
-  <h2 class="demo-subsection__heading">Tooltips</h2>
-  <div class="demo-row demo-row--flex-start">
+    <h2 class="demo-subsection__heading">Size M — all states</h2>
+    <div class="demo-row demo-row--flex-start">
+      {% snippet 'v2/components/dropdown.html',
+          size='m', label='Label', placeholder='Dropdown', state='enabled' %}
+      {% snippet 'v2/components/dropdown.html',
+          size='m', label='Label', placeholder='Dropdown', state='hover' %}
+      {% snippet 'v2/components/dropdown.html',
+          size='m', label='Label', placeholder='Dropdown', state='active' %}
+      {% snippet 'v2/components/dropdown.html',
+          size='m', label='Label', placeholder='Dropdown', state='disabled' %}
+      {% snippet 'v2/components/dropdown.html',
+          size='m', label='Label', selected='Afghanistan', count='(3)', state='filter' %}
+    </div>
 
-    {# Dark text tooltip #}
-    {% snippet 'v2/components/tooltip.html',
-        variant='dark',
-        text='This is a short tooltip description that helps explain the element above it.',
-        arrow='below' %}
+    <h2 class="demo-subsection__heading">Size S</h2>
+    <div class="demo-row demo-row--flex-start">
+      {% snippet 'v2/components/dropdown.html',
+          size='s', label='Label', placeholder='Dropdown', state='enabled' %}
+      {% snippet 'v2/components/dropdown.html',
+          size='s', label='Label', placeholder='Dropdown', state='active' %}
+      {% snippet 'v2/components/dropdown.html',
+          size='s', label='Label', placeholder='Dropdown', state='disabled' %}
+    </div>
 
-    {# Light / map card #}
-    {% snippet 'v2/components/tooltip.html',
-        variant='light',
-        title='Sudan: Humanitarian Needs Overview 2024',
-        subtitle='OCHA · Updated Jan 2024' %}
+    <h2 class="demo-subsection__heading">Panel overlay (static preview)</h2>
+    <div class="demo-row demo-row--flex-start demo-row--relative">
+      <div class="demo-dropdown-panel">
+        {% snippet 'v2/components/dropdown-panel.html',
+            panel_id='demo-panel',
+            items=[
+              {'value': 'af', 'label': 'Afghanistan', 'count': '(309)', 'checked': True},
+              {'value': 'al', 'label': 'Albania',     'count': '(97)',  'checked': False},
+              {'value': 'dz', 'label': 'Algeria',     'count': '(21)',  'checked': False},
+              {'value': 'ao', 'label': 'Angola',      'count': '(57)',  'checked': True},
+            ],
+            confirm_label='Confirm (2)', clear_label='Clear selection' %}
+      </div>
+    </div>
+  </section>
 
-    {# Graph legend tooltip #}
-    {% snippet 'v2/components/tooltip.html',
-        variant='graph',
-        graph_title='2023',
-        legend_items=[
-          {'color': '#1862d8', 'label': 'IDP',      'value': '3.2M'},
-          {'color': '#18614c', 'label': 'Refugee',   'value': '1.1M'},
-          {'color': '#c44536', 'label': 'Returnee',  'value': '0.4M'},
-        ] %}
+  <hr class="demo-divider">
 
-  </div>
-</section>
+  {# ══════════════════════════════════════════════════════
+     6. INPUT FIELD / SEARCH / AUTOCOMPLETE
+  ══════════════════════════════════════════════════════ #}
+  <section class="demo-section">
+    <h1 class="demo-section__title">Input Field / Search / Autocomplete</h1>
+    <p class="demo-section__subtitle">size × state</p>
 
-<hr class="demo-divider">
+    <h2 class="demo-subsection__heading">Search input — Size L</h2>
+    <div class="demo-row--column demo-max-width-l">
+      {% snippet 'v2/components/search-input.html',
+          size='l', placeholder='Value', state='enabled' %}
+      {% snippet 'v2/components/search-input.html',
+          size='l', placeholder='Value', state='hover' %}
+      {% snippet 'v2/components/search-input.html',
+          size='l', placeholder='Value', state='active' %}
+      {% snippet 'v2/components/search-input.html',
+          size='l', value='Search term', state='filled' %}
+    </div>
 
-{# ══════════════════════════════════════════════════════
-   5. NAVIGATION & PAGINATION
-══════════════════════════════════════════════════════ #}
-<section class="demo-section">
-  <h1 class="demo-section__title">Navigation &amp; Pagination</h1>
-  <p class="demo-section__subtitle">nav items · anchor links · letter anchors · pagination · breadcrumb</p>
+    <h2 class="demo-subsection__heading">Search input — Size M</h2>
+    <div class="demo-row--column demo-max-width-m">
+      {% snippet 'v2/components/search-input.html',
+          size='m', placeholder='Value', state='enabled' %}
+      {% snippet 'v2/components/search-input.html',
+          size='m', placeholder='Value', state='active' %}
+      {% snippet 'v2/components/search-input.html',
+          size='m', value='Sudan', state='filled' %}
+    </div>
 
-  <h2 class="demo-subsection__heading">Nav items</h2>
-  <div class="demo-row">
-    {% snippet 'v2/components/nav-item.html',
-        label='Datasets', href='#', status='default' %}
-    {% snippet 'v2/components/nav-item.html',
-        label='Locations', href='#', status='active' %}
-    {% snippet 'v2/components/nav-item.html',
-        label='Organisations', href='#', status='default', chevron=True %}
-    {% snippet 'v2/components/nav-item.html',
-        label='About', href='#', status='active-dropdown', chevron=True %}
-    {% snippet 'v2/components/nav-item.html',
-        label='Disabled', href='#', status='disabled' %}
-  </div>
+    <h2 class="demo-subsection__heading">Autocomplete (panel open — static preview)</h2>
+    <div class="demo-max-width-xl">
+      {% snippet 'v2/components/autocomplete.html',
+          placeholder='Search datasets, locations, tags…',
+          state='active',
+          show_panel=True,
+          trending_label='Trending',
+          chips=['Locations', 'West Africa', 'Sudan', 'Ukraine'],
+          results=[
+            {'label': 'Sudan humanitarian response plan 2024', 'url': '#', 'count': 'Dataset'},
+            {'label': 'West Africa food security data',        'url': '#', 'count': 'Dataset'},
+            {'label': 'Global displacement report',           'url': '#', 'count': 'Dataset'},
+          ],
+          confirm_label='Search all datasets' %}
+    </div>
+  </section>
 
-  <h2 class="demo-subsection__heading">Anchor links (sidebar)</h2>
-  <div class="demo-row demo-row--flex-start">
-    <div class="demo-anchor-links-sidebar">
-      {% snippet 'v2/components/anchor-links.html',
+  <hr class="demo-divider">
+
+  {# ══════════════════════════════════════════════════════
+     7. LABEL / FILE-TYPE / TOOLTIP
+  ══════════════════════════════════════════════════════ #}
+  <section class="demo-section">
+    <h1 class="demo-section__title">Label / File-type / Tooltip</h1>
+    <p class="demo-section__subtitle">colour × size — text, icon+text, icon-only</p>
+
+    <h2 class="demo-subsection__heading">Label — Size M (all colours)</h2>
+    <div class="demo-row">
+      {% snippet 'v2/components/label.html', text='Light',  color='light',  size='m' %}
+      {% snippet 'v2/components/label.html', text='Grey',   color='grey',   size='m' %}
+      {% snippet 'v2/components/label.html', text='Dark',   color='dark',   size='m' %}
+      {% snippet 'v2/components/label.html', text='Cyan',   color='cyan',   size='m' %}
+      {% snippet 'v2/components/label.html', text='Yellow', color='yellow', size='m' %}
+      {% snippet 'v2/components/label.html', text='Blue',   color='blue',   size='m' %}
+    </div>
+
+    <h2 class="demo-subsection__heading">Label — Size S &amp; XS</h2>
+    <div class="demo-row">
+      {% snippet 'v2/components/label.html', text='Cyan S',  color='cyan', size='s',  icon=True %}
+      {% snippet 'v2/components/label.html', text='Blue XS', color='blue', size='xs', icon=True %}
+      {% snippet 'v2/components/label.html', text='Dark XS', color='dark', size='xs' %}
+    </div>
+
+    <h2 class="demo-subsection__heading">Label — icon-only</h2>
+    <div class="demo-row">
+      {% snippet 'v2/components/label.html', color='cyan',   size='m',  icon=True, icon_only=True %}
+      {% snippet 'v2/components/label.html', color='yellow', size='s',  icon=True, icon_only=True %}
+      {% snippet 'v2/components/label.html', color='blue',   size='xs', icon=True, icon_only=True %}
+    </div>
+
+    <h2 class="demo-subsection__heading">File-type icon badges</h2>
+    <div class="demo-row">
+      {% snippet 'v2/components/file-type-icon.html', format='neutral',  size='m', aria_label='Generic file' %}
+      {% snippet 'v2/components/file-type-icon.html', format='geo',      size='m', aria_label='GeoJSON' %}
+      {% snippet 'v2/components/file-type-icon.html', format='tabular',  size='m', aria_label='Excel' %}
+      {% snippet 'v2/components/file-type-icon.html', format='document', size='m', aria_label='PDF' %}
+      {% snippet 'v2/components/file-type-icon.html', format='web',      size='m', aria_label='Web resource' %}
+    </div>
+    <div class="demo-row">
+      {% snippet 'v2/components/file-type-icon.html', format='tabular', size='s',  aria_label='Excel S' %}
+      {% snippet 'v2/components/file-type-icon.html', format='geo',     size='xs', aria_label='Geo XS' %}
+    </div>
+
+    <h2 class="demo-subsection__heading">Tooltips</h2>
+    <div class="demo-row demo-row--flex-start">
+
+      {# Dark text tooltip #}
+      {% snippet 'v2/components/tooltip.html',
+          variant='dark',
+          text='This is a short tooltip description that helps explain the element above it.',
+          arrow='below' %}
+
+      {# Light / map card #}
+      {% snippet 'v2/components/tooltip.html',
+          variant='light',
+          title='Sudan: Humanitarian Needs Overview 2024',
+          subtitle='OCHA · Updated Jan 2024' %}
+
+      {# Graph legend tooltip #}
+      {% snippet 'v2/components/tooltip.html',
+          variant='graph',
+          graph_title='2023',
+          legend_items=[
+            {'color': '#1862d8', 'label': 'IDP',      'value': '3.2M'},
+            {'color': '#18614c', 'label': 'Refugee',   'value': '1.1M'},
+            {'color': '#c44536', 'label': 'Returnee',  'value': '0.4M'},
+          ] %}
+
+    </div>
+  </section>
+
+  <hr class="demo-divider">
+
+  {# ══════════════════════════════════════════════════════
+     8. NAVIGATION & PAGINATION
+  ══════════════════════════════════════════════════════ #}
+  <section class="demo-section">
+    <h1 class="demo-section__title">Navigation &amp; Pagination</h1>
+    <p class="demo-section__subtitle">nav items · anchor links · letter anchors · pagination · breadcrumb</p>
+
+    <h2 class="demo-subsection__heading">Nav items</h2>
+    <div class="demo-row">
+      {% snippet 'v2/components/nav-item.html',
+          label='Datasets', href='#', status='default' %}
+      {% snippet 'v2/components/nav-item.html',
+          label='Locations', href='#', status='active' %}
+      {% snippet 'v2/components/nav-item.html',
+          label='Organisations', href='#', status='default', chevron=True %}
+      {% snippet 'v2/components/nav-item.html',
+          label='About', href='#', status='active-dropdown', chevron=True %}
+      {% snippet 'v2/components/nav-item.html',
+          label='Disabled', href='#', status='disabled' %}
+    </div>
+
+    <h2 class="demo-subsection__heading">Anchor links (sidebar)</h2>
+    <div class="demo-row demo-row--flex-start">
+      <div class="demo-anchor-links-sidebar">
+        {% snippet 'v2/components/anchor-links.html',
+            items=[
+              {'label': 'Overview',      'href': '#overview',   'active': True},
+              {'label': 'Methodology',   'href': '#method',     'active': False},
+              {'label': 'Data & Files',  'href': '#data',       'active': False},
+              {'label': 'Geography',     'href': '#geo',        'active': False},
+            ] %}
+      </div>
+    </div>
+
+    <h2 class="demo-subsection__heading">Letter anchors</h2>
+    <div class="demo-row">
+      {% for letter in ['A','B','C','D','E','F'] %}
+        {% snippet 'v2/components/nav-item.html',
+            label=letter, href='#letter-' ~ letter,
+            status=('active' if loop.first else 'default') %}
+      {% endfor %}
+    </div>
+
+    <h2 class="demo-subsection__heading">Pagination — MD (page 3 of 12)</h2>
+    <div class="demo-row">
+      {% snippet 'v2/components/pagination.html',
+          size='md', current_page=3, total_pages=12, base_url='?page=' %}
+    </div>
+
+    <h2 class="demo-subsection__heading">Pagination — SM (page 1 of 5)</h2>
+    <div class="demo-row">
+      {% snippet 'v2/components/pagination.html',
+          size='sm', current_page=1, total_pages=5, base_url='?page=' %}
+    </div>
+
+    <h2 class="demo-subsection__heading">Breadcrumb</h2>
+    <div class="demo-row">
+      {% snippet 'v2/components/breadcrumb.html',
           items=[
-            {'label': 'Overview',      'href': '#overview',   'active': True},
-            {'label': 'Methodology',   'href': '#method',     'active': False},
-            {'label': 'Data & Files',  'href': '#data',       'active': False},
-            {'label': 'Geography',     'href': '#geo',        'active': False},
+            {'label': 'Home',        'href': '/'},
+            {'label': 'Datasets',    'href': '/dataset'},
+            {'label': 'Sudan crisis data 2024', 'href': ''},
           ] %}
     </div>
-  </div>
 
-  <h2 class="demo-subsection__heading">Letter anchors</h2>
-  <div class="demo-row">
-    {% for letter in ['A','B','C','D','E','F'] %}
-      {% snippet 'v2/components/nav-item.html',
-          label=letter, href='#letter-' ~ letter,
-          status=('active' if loop.first else 'default') %}
-    {% endfor %}
-  </div>
+    <h2 class="demo-subsection__heading">Divider</h2>
+    <hr class="c-divider">
+  </section>
 
-  <h2 class="demo-subsection__heading">Pagination — MD (page 3 of 12)</h2>
-  <div class="demo-row">
-    {% snippet 'v2/components/pagination.html',
-        size='md', current_page=3, total_pages=12, base_url='?page=' %}
-  </div>
+  <hr class="demo-divider">
 
-  <h2 class="demo-subsection__heading">Pagination — SM (page 1 of 5)</h2>
-  <div class="demo-row">
-    {% snippet 'v2/components/pagination.html',
-        size='sm', current_page=1, total_pages=5, base_url='?page=' %}
-  </div>
+  {# ══════════════════════════════════════════════════════
+     9. SELECTION ITEMS / RADIO / TOGGLE / GRAPH POINT
+  ══════════════════════════════════════════════════════ #}
+  <section class="demo-section">
+    <h1 class="demo-section__title">Selection Items / Radio / Toggle / Graph Point</h1>
+    <p class="demo-section__subtitle">filter chips · radio inputs · toggles · chart points</p>
 
-  <h2 class="demo-subsection__heading">Breadcrumb</h2>
-  <div class="demo-row">
-    {% snippet 'v2/components/breadcrumb.html',
-        items=[
-          {'label': 'Home',        'href': '/'},
-          {'label': 'Datasets',    'href': '/dataset'},
-          {'label': 'Sudan crisis data 2024', 'href': ''},
-        ] %}
-  </div>
+    <h2 class="demo-subsection__heading">Selection items — Size L</h2>
+    <div class="demo-row">
+      {% snippet 'v2/components/selection-item.html',
+          label='Afghanistan', size='l', color='light', state='enabled' %}
+      {% snippet 'v2/components/selection-item.html',
+          label='Afghanistan', size='l', color='light', state='hover' %}
+      {% snippet 'v2/components/selection-item.html',
+          label='Afghanistan', size='l', color='light', state='active' %}
+      {% snippet 'v2/components/selection-item.html',
+          label='Afghanistan', size='l', color='light', state='active-hovered' %}
+    </div>
 
-  <h2 class="demo-subsection__heading">Divider</h2>
-  <hr class="c-divider demo-divider-small">
-</section>
+    <h2 class="demo-subsection__heading">Selection items — with icon &amp; count</h2>
+    <div class="demo-row">
+      {% snippet 'v2/components/selection-item.html',
+          label='HDX', size='l', color='cyan', icon=True, count='(5)' %}
+      {% snippet 'v2/components/selection-item.html',
+          label='OCHA', size='m', color='light', icon=True %}
+      {% snippet 'v2/components/selection-item.html',
+          label='CSV', size='s', color='light' %}
+    </div>
 
-<hr class="demo-divider">
+    <h2 class="demo-subsection__heading">Radio inputs</h2>
+    <div class="demo-row--column">
+      {% snippet 'v2/components/radio.html',
+          name='demo', value='a', label='Unchecked radio', checked=False %}
+      {% snippet 'v2/components/radio.html',
+          name='demo', value='b', label='Checked radio',   checked=True %}
+      {% snippet 'v2/components/radio.html',
+          name='demo', value='c', label='Disabled unchecked', state='disabled' %}
+      {% snippet 'v2/components/radio.html',
+          name='demo', value='d', label='Disabled checked', checked=True, state='disabled' %}
+    </div>
 
-{# ══════════════════════════════════════════════════════
-   6. SELECTION ITEMS / RADIO / TOGGLE / GRAPH POINT
-══════════════════════════════════════════════════════ #}
-<section class="demo-section">
-  <h1 class="demo-section__title">Selection Items / Radio / Toggle / Graph Point</h1>
-  <p class="demo-section__subtitle">filter chips · radio inputs · toggles · chart points</p>
+    <h2 class="demo-subsection__heading">Toggles</h2>
+    <div class="demo-row">
+      {% snippet 'v2/components/toggle.html',
+          name='t1', label='Off', checked=False %}
+      {% snippet 'v2/components/toggle.html',
+          name='t2', label='On',  checked=True %}
+    </div>
 
-  <h2 class="demo-subsection__heading">Selection items — Size L</h2>
-  <div class="demo-row">
-    {% snippet 'v2/components/selection-item.html',
-        label='Afghanistan', size='l', color='light', state='enabled' %}
-    {% snippet 'v2/components/selection-item.html',
-        label='Afghanistan', size='l', color='light', state='hover' %}
-    {% snippet 'v2/components/selection-item.html',
-        label='Afghanistan', size='l', color='light', state='active' %}
-  </div>
-
-  <h2 class="demo-subsection__heading">Selection items — with icon &amp; count</h2>
-  <div class="demo-row">
-    {% snippet 'v2/components/selection-item.html',
-        label='HDX', size='l', color='cyan', icon=True, count='(5)' %}
-    {% snippet 'v2/components/selection-item.html',
-        label='OCHA', size='m', color='light', icon=True %}
-    {% snippet 'v2/components/selection-item.html',
-        label='CSV', size='s', color='light' %}
-  </div>
-
-  <h2 class="demo-subsection__heading">Radio inputs</h2>
-  <div class="demo-row--column">
-    {% snippet 'v2/components/radio.html',
-        name='demo', value='a', label='Unchecked radio', checked=False %}
-    {% snippet 'v2/components/radio.html',
-        name='demo', value='b', label='Checked radio',   checked=True %}
-    {% snippet 'v2/components/radio.html',
-        name='demo', value='c', label='Disabled unchecked', state='disabled' %}
-    {% snippet 'v2/components/radio.html',
-        name='demo', value='d', label='Disabled checked', checked=True, state='disabled' %}
-  </div>
-
-  <h2 class="demo-subsection__heading">Toggles</h2>
-  <div class="demo-row">
-    {% snippet 'v2/components/toggle.html',
-        name='t1', label='Off', checked=False %}
-    {% snippet 'v2/components/toggle.html',
-        name='t2', label='On',  checked=True %}
-  </div>
-
-  <h2 class="demo-subsection__heading">Graph points</h2>
-  <div class="demo-row demo-row--highlight">
-    {% snippet 'v2/components/graph-point.html',
-        state='enabled', aria_label='Data point A' %}
-    {% snippet 'v2/components/graph-point.html',
-        state='focused', aria_label='Data point B (focused)' %}
-  </div>
-</section>
-
-<hr class="demo-divider">
-
-{# ══════════════════════════════════════════════════════
-   7. TEXT LINK
-══════════════════════════════════════════════════════ #}
-<section class="demo-section">
-  <h1 class="demo-section__title">Text Link</h1>
-  <p class="demo-section__subtitle">style × size × state — inline typographic hyperlink</p>
-
-  <h2 class="demo-subsection__heading">All styles — Size M (enabled)</h2>
-  <div class="demo-row">
-    {% snippet 'v2/components/text-link.html',
-        label='Primary link', style='primary', size='m' %}
-    {% snippet 'v2/components/text-link.html',
-        label='Secondary link', style='secondary', size='m' %}
-    {% snippet 'v2/components/text-link.html',
-        label='Tertiary link', style='tertiary', size='m' %}
-  </div>
-
-  <h2 class="demo-subsection__heading">Primary — all sizes</h2>
-  <div class="demo-row">
-    {% snippet 'v2/components/text-link.html',
-        label='XL (20px)', style='primary', size='xl' %}
-    {% snippet 'v2/components/text-link.html',
-        label='L (18px)', style='primary', size='l' %}
-    {% snippet 'v2/components/text-link.html',
-        label='M (16px)', style='primary', size='m' %}
-    {% snippet 'v2/components/text-link.html',
-        label='S (14px)', style='primary', size='s' %}
-    {% snippet 'v2/components/text-link.html',
-        label='XS (12px)', style='primary', size='xs' %}
-  </div>
-
-  <h2 class="demo-subsection__heading">Secondary &amp; tertiary — all sizes</h2>
-  <div class="demo-row">
-    {% snippet 'v2/components/text-link.html',
-        label='Secondary XL', style='secondary', size='xl' %}
-    {% snippet 'v2/components/text-link.html',
-        label='Secondary M',  style='secondary', size='m' %}
-    {% snippet 'v2/components/text-link.html',
-        label='Secondary XS', style='secondary', size='xs' %}
-  </div>
-  <div class="demo-row">
-    {% snippet 'v2/components/text-link.html',
-        label='Tertiary XL', style='tertiary', size='xl' %}
-    {% snippet 'v2/components/text-link.html',
-        label='Tertiary M',  style='tertiary', size='m' %}
-    {% snippet 'v2/components/text-link.html',
-        label='Tertiary XS', style='tertiary', size='xs' %}
-  </div>
-
-  <h2 class="demo-subsection__heading">Disabled state</h2>
-  <div class="demo-row">
-    {% snippet 'v2/components/text-link.html',
-        label='Primary disabled', style='primary', size='m', state='disabled' %}
-    {% snippet 'v2/components/text-link.html',
-        label='Secondary disabled', style='secondary', size='m', state='disabled' %}
-    {% snippet 'v2/components/text-link.html',
-        label='Tertiary disabled', style='tertiary', size='m', state='disabled' %}
-  </div>
-</section>
+    <h2 class="demo-subsection__heading">Graph points</h2>
+    <div class="demo-row demo-row--highlight">
+      {% snippet 'v2/components/graph-point.html',
+          state='enabled', aria_label='Data point A' %}
+      {% snippet 'v2/components/graph-point.html',
+          state='focused', aria_label='Data point B (focused)' %}
+    </div>
+  </section>
 
 </div>{# /demo-page #}
 

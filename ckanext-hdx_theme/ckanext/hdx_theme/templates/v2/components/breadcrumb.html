@@ -10,7 +10,7 @@
                           The LAST item is rendered as the current (non-linked) crumb.
                           All previous items are rendered as links.
                           default: []
-  separator     {string}  Separator character between crumbs.  default: '›'
+  separator     {string}  Separator character between crumbs.  default: '/'
   extra_classes {string}  default: ''
   ─────────────────────────────────────────────────
   Example
@@ -24,7 +24,7 @@
 #}
 
 {% set items         = items         if items         is defined else [] %}
-{% set separator     = separator     if separator     is defined else '›' %}
+{% set separator     = separator     if separator     is defined else '/' %}
 {% set extra_classes = extra_classes if extra_classes is defined else '' %}
 
 <nav class="c-breadcrumb{{ ' ' ~ extra_classes if extra_classes }}"

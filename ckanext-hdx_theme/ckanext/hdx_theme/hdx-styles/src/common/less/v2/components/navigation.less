@@ -15,15 +15,15 @@
 @c-nav-disabled-border: 4px solid var(--hdx-neutral-3);   // #c4d0d1 lightgray
 @c-nav-color:           var(--hdx-neutral-8);              // #3f4748
 @c-nav-color-active:    var(--hdx-neutral-95);             // #101212
-@c-nav-color-disabled:  var(--hdx-neutral-7);              // #9db1b3
+@c-nav-color-disabled:  var(--hdx-neutral-5);              // #9db1b3
 
 @c-anchor-border-w:     0.25rem;   // 4 px left border
 @c-anchor-active-color: var(--hdx-primary-5);
 @c-anchor-color:        var(--hdx-neutral-8);
 
 @c-pager-border:        1px solid var(--hdx-neutral-2);   // #d8e0e1
-@c-pager-active-bg:     var(--hdx-neutral-95);            // #101212
-@c-pager-active-color:  var(--hdx-neutral-0);
+@c-pager-active-bg:     var(--hdx-neutral-0);
+@c-pager-active-color:  var(--hdx-neutral-95);            // #101212
 
 @c-letter-active-color: var(--hdx-primary-5);
 @c-letter-hover-color:  var(--hdx-primary-5);
@@ -129,8 +129,8 @@
     &__item--inactive &__border { background-color: transparent; }
     &__item--inactive &__label  { font-weight: var(--hdx-fw-regular); color: var(--hdx-neutral-8); }
 
-    &__item:hover:not(&__item--active) &__border { background-color: var(--hdx-neutral-2); }
-    &__item:hover:not(&__item--active) &__label  { color: var(--hdx-neutral-95); }
+    //&__item:hover:not(&__item--active) &__border { background-color: var(--hdx-neutral-2); }
+    //&__item:hover:not(&__item--active) &__label  { color: var(--hdx-neutral-95); }
 }
 
 
@@ -179,10 +179,10 @@
 
 .c-pagination {
     display:     inline-flex;
-    align-items: flex-start;
-    border:      @c-pager-border;
-    overflow:    hidden;
-    border-radius: var(--hdx-radius-sm);
+    //align-items: flex-start;
+    //border:      @c-pager-border;
+    //overflow:    hidden;
+    //border-radius: var(--hdx-radius-sm);
 
     &__item {
         background-color: var(--hdx-neutral-0);
@@ -193,7 +193,7 @@
         justify-content:  center;
         cursor:           pointer;
         font-family:      var(--hdx-font-body);
-        font-weight:      var(--hdx-fw-medium);
+        font-weight:      var(--hdx-fw-regular);
         line-height:      130%;
         color:            var(--hdx-neutral-8);
         text-decoration:  none;
@@ -204,11 +204,10 @@
 
         &:first-child { margin-left: 0; }
 
-        &:hover { background-color: var(--hdx-neutral-01); color: var(--hdx-neutral-95); }
-
         &--active {
             background-color: @c-pager-active-bg;
             color:            @c-pager-active-color;
+            font-weight:      var(--hdx-fw-medium);
             z-index:          1;
 
             &:hover {
@@ -220,8 +219,9 @@
         // Prev / next arrows
         &--prev,
         &--next {
+            line-height: 0;
             color:     var(--hdx-neutral-95);
-            font-size: var(--hdx-fs-m);   // 16 px — Switzer-like arrow glyphs
+            //font-size: var(--hdx-fs-m);   // 16 px — Switzer-like arrow glyphs
         }
 
         &--ellipsis {
@@ -295,12 +295,12 @@
         &:hover { color: var(--hdx-primary-5); }
     }
 
-    // Separator (›)
+    // Separator (/)
     &__separator {
-        color:       var(--hdx-neutral-7);
+        color:       var(--hdx-neutral-5);
         font-size:   var(--hdx-fs-s);
         line-height: 130%;
-        margin:      0 var(--hdx-space-1);  // 0 4
+        margin-left: var(--hdx-space-2);  // 8
     }
 
     // Current (non-linked) crumb
@@ -323,7 +323,7 @@
     display:     block;
     width:       100%;
     height:      1px;
-    background-color: var(--hdx-neutral-2);   // #d8e0e1
+    background-color: var(--hdx-neutral-3);
     border:      none;
     margin:      0;
     flex-shrink: 0;

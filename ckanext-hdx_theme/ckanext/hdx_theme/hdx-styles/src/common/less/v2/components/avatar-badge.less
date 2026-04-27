@@ -12,17 +12,16 @@
 @c-avatar-bg-active:   var(--hdx-neutral-0);  // #fff — active/selected state
 
 // Avatar text (initials)
-@c-avatar-color:       #18614c;   // teal — darkest contrast on powderblue bg
+@c-avatar-color:       var(--hdx-brand-7);   // teal — darkest contrast on powderblue bg
 @c-avatar-color-active: var(--hdx-neutral-8); // #3f4748 — on white bg
 
 // Badge (status dot)
-@c-badge-color:        #c44536;   // firebrick — online / active status
-@c-badge-ring:         var(--hdx-neutral-0);  // white isolation ring
+@c-badge-color:        var(--hdx-error-5);   // firebrick — online / active status
 @c-badge-size:         0.375rem;  //  6 px
 
 // Sizing map
-@c-avatar-l-dim:   3rem;       // 48 px
-@c-avatar-l-fs:    var(--hdx-fs-m);  // 16 px (using 20px via lh-28 in Figma → medium token)
+@c-avatar-l-dim:   4rem;       // 48 px
+@c-avatar-l-fs:    var(--hdx-fs-xl);  // 20 px
 @c-avatar-md-dim:  2.5rem;     // 40 px
 @c-avatar-md-fs:   var(--hdx-fs-m);  // 16 px
 @c-avatar-sm-dim:  2rem;       // 32 px
@@ -43,11 +42,10 @@
     border-radius:   100%;
     background-color: @c-avatar-bg-default;
     font-family:     var(--hdx-font-body);
-    font-weight:     var(--hdx-fw-medium);
     color:           @c-avatar-color;
     user-select:     none;
     flex-shrink:     0;
-    transition:      background-color 0.15s ease, box-shadow 0.15s ease;
+    transition:      background-color 0.15s ease;
 
     // ── Elements ────────────────────────────────────────────
 
@@ -72,12 +70,11 @@
         position:         absolute;
         top:              0;
         right:            0;
-        transform:        translate(25%, -25%);
+        transform:        translate(50%, -50%);
         width:            @c-badge-size;
         height:           @c-badge-size;
         border-radius:    100%;
         background-color: @c-badge-color;
-        box-shadow:       0 0 0 1px @c-badge-ring;
         z-index:          2;
         flex-shrink:      0;
     }
@@ -86,9 +83,10 @@
     // ── Size modifiers ───────────────────────────────────────
 
     &--size-l {
-        width:     @c-avatar-l-dim;
-        height:    @c-avatar-l-dim;
-        font-size: @c-avatar-l-fs;
+        width:       @c-avatar-l-dim;
+        height:      @c-avatar-l-dim;
+        font-size:   @c-avatar-l-fs;
+        font-weight: var(--hdx-fw-medium);
     }
 
     &--size-md {
@@ -117,11 +115,10 @@
         color:            @c-avatar-color;
     }
 
-    // Hovered: same bg as enabled — visual cue via ring
+    // Hovered: same bg as enabled
     &:hover,
     &--hovered {
         background-color: @c-avatar-bg-default;
-        box-shadow:       0 0 0 2px var(--hdx-primary-5);   // royalblue focus ring
         color:            @c-avatar-color;
     }
 
@@ -129,7 +126,6 @@
     &:active,
     &--active {
         background-color: @c-avatar-bg-active;
-        box-shadow:       0 0 0 2px var(--hdx-primary-5);
         color:            @c-avatar-color-active;
     }
 }
@@ -145,6 +141,5 @@
     height:           @c-badge-size;
     border-radius:    100%;
     background-color: @c-badge-color;
-    box-shadow:       0 0 0 1px @c-badge-ring;
     flex-shrink:      0;
 }

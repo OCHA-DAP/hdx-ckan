@@ -8,23 +8,23 @@
 
 // ── Local colour palette (label colours) ────────────────────
 // Each colour maps to: background, text-colour
-@c-label-light-bg:    #f5f7f7;   // whitesmoke-100  → var(--hdx-neutral-05)
+@c-label-light-bg:    var(--hdx-neutral-05);   // whitesmoke-100  → var(--hdx-neutral-05)
 @c-label-light-color: var(--hdx-neutral-95);   // #101212
 
-@c-label-grey-bg:     #ebeff0;   // whitesmoke-200
+@c-label-grey-bg:     var(--hdx-neutral-1);   // whitesmoke-200
 @c-label-grey-color:  var(--hdx-neutral-95);
 
 @c-label-dark-bg:     var(--hdx-neutral-2);    // gainsboro #d8e0e1
 @c-label-dark-color:  var(--hdx-neutral-95);
 
-@c-label-cyan-bg:     #d4eae4;   // lightcyan
-@c-label-cyan-color:  #0b2d24;   // darkslategray-300
+@c-label-cyan-bg:     var(--hdx-brand-1);   // lightcyan
+@c-label-cyan-color:  var(--hdx-brand-85);   // darkslategray-300
 
-@c-label-yellow-bg:   #f6e9d4;   // antiquewhite
-@c-label-yellow-color: #553911;  // saddlebrown
+@c-label-yellow-bg:   var(--hdx-warning-1);   // antiquewhite
+@c-label-yellow-color: var(--hdx-warning-8);;  // saddlebrown
 
-@c-label-blue-bg:     #d1e0f7;   // lavender
-@c-label-blue-color:  #05142b;   // var(--hdx-primary-9)
+@c-label-blue-bg:     var(--hdx-primary-1);   // lavender
+@c-label-blue-color:  var(--hdx-primary-9);;   // var(--hdx-primary-9)
 
 // ── Sizing ───────────────────────────────────────────────────
 // M — 29 px (text+icon) or pill
@@ -68,6 +68,7 @@
     box-sizing:      border-box;
 
     &__icon {
+        line-height: 0;
         flex-shrink: 0;
         display:     block;
     }
@@ -125,11 +126,16 @@
 // ────────────────────────────────────────────────────────────
 
 // Format → background colour
-@c-ft-neutral-bg:  #ebeff0;   // whitesmoke-200
-@c-ft-geo-bg:      #f6e9d4;   // antiquewhite
-@c-ft-tabular-bg:  #d4eae4;   // lightcyan
-@c-ft-document-bg: #d1e0f7;   // lavender
-@c-ft-web-bg:      #f3dad7;   // mistyrose
+@c-ft-neutral:     var(--hdx-neutral-8);
+@c-ft-neutral-bg:  var(--hdx-neutral-1);   // whitesmoke-200
+@c-ft-geo:         var(--hdx-warning-8);
+@c-ft-geo-bg:      var(--hdx-warning-1);   // antiquewhite
+@c-ft-tabular:     var(--hdx-brand-7);
+@c-ft-tabular-bg:  var(--hdx-brand-1);   // lightcyan
+@c-ft-document:    var(--hdx-primary-7);
+@c-ft-document-bg: var(--hdx-primary-1);   // lavender
+@c-ft-web:         var(--hdx-error-8);
+@c-ft-web-bg:      var(--hdx-error-1);   // mistyrose
 
 .c-file-type {
     display:         inline-flex;
@@ -139,9 +145,10 @@
     box-sizing:      border-box;
 
     &__icon {
-        display:    block;
-        width:      1.5rem;  // default M; overridden per size
-        max-height: 100%;
+        line-height: 0;
+        display:     block;
+        width:       var(--hdx-space-6);  // default M; overridden per size
+        max-height:  100%;
     }
 
     // ── Sizes ────────────────────────────────────────────────
@@ -152,34 +159,49 @@
         border-radius: var(--hdx-radius-md);  // 4 px
         padding:       var(--hdx-space-2);
 
-        .c-file-type__icon { width: 1.5rem; }
+        .c-file-type__icon { width: var(--hdx-space-6); }
     }
 
     &--size-s {
-        width:         2rem;     // 32 px
-        height:        2rem;
+        width:         var(--hdx-space-8);     // 32 px
+        height:        var(--hdx-space-8);
         border-radius: var(--hdx-radius-sm);  // 2 px
         padding:       var(--hdx-space-2);
 
-        .c-file-type__icon { width: 1rem; }
+        .c-file-type__icon { width: var(--hdx-space-4); }
     }
 
     &--size-xs {
-        width:         1.5rem;   // 24 px
-        height:        1.5rem;
+        width:         var(--hdx-space-6);   // 24 px
+        height:        var(--hdx-space-6);
         border-radius: var(--hdx-radius-sm);
         padding:       var(--hdx-space-1);
 
-        .c-file-type__icon { width: 1rem; }
+        .c-file-type__icon { width: var(--hdx-space-16); }
     }
 
     // ── Format colours ───────────────────────────────────────
 
-    &--neutral  { background-color: @c-ft-neutral-bg;  }
-    &--geo      { background-color: @c-ft-geo-bg;      }
-    &--tabular  { background-color: @c-ft-tabular-bg;  }
-    &--document { background-color: @c-ft-document-bg; }
-    &--web      { background-color: @c-ft-web-bg;      }
+    &--neutral  {
+      color: @c-ft-neutral;
+      background-color: @c-ft-neutral-bg;
+    }
+    &--geo      {
+      color: @c-ft-geo;
+      background-color: @c-ft-geo-bg;
+    }
+    &--tabular  {
+      color: @c-ft-tabular;
+      background-color: @c-ft-tabular-bg;
+    }
+    &--document {
+      color: @c-ft-document;
+      background-color: @c-ft-document-bg;
+    }
+    &--web      {
+      color: @c-ft-web;
+      background-color: @c-ft-web-bg;
+    }
 }
 
 
@@ -187,7 +209,7 @@
 // 3. c-tooltip — dark (text) and light (rich) variants
 // ────────────────────────────────────────────────────────────
 
-@c-tooltip-dark-bg:    #0b2d24;   // darkslategray-300
+@c-tooltip-dark-bg:    var(--hdx-brand-85);   // darkslategray-300
 @c-tooltip-dark-color: var(--hdx-neutral-0);
 @c-tooltip-dark-shadow: 0px 8px 35px rgba(0, 0, 0, 0.16);
 
@@ -220,8 +242,9 @@
         flex-shrink: 0;
 
         // Position variants
-        &--below { bottom: -@c-tooltip-arrow-h; left: 50%; transform: translateX(-50%); }
-        &--above { top:    -@c-tooltip-arrow-h; left: 50%; transform: translateX(-50%) rotate(180deg); }
+
+        &--below { bottom: 0; left: 50%; transform: translateX(-50%); }
+        &--above { top:    -1px; left: 50%; transform: translateX(-50%) rotate(180deg); }
     }
 
     &__text {
@@ -239,6 +262,9 @@
         font-size:        var(--hdx-fs-s);  // 14 px
 
         .c-tooltip__text { align-self: stretch; }
+        .c-tooltip__arrow {
+          color: @c-tooltip-dark-bg;
+        }
     }
 
     // ── Light variant (rich map / graph tooltip) ──────────────
@@ -250,13 +276,18 @@
         gap:              var(--hdx-space-13);  // 6 px
         font-size:        var(--hdx-fs-s);
 
+        .c-tooltip__arrow {
+          color: @c-tooltip-light-bg;
+        }
+
         .c-tooltip__body {
-            align-self: stretch;
-            display:    flex;
-            align-items: flex-start;
-            gap:        var(--hdx-space-13);  // 6 px
-            z-index:    1;
-            flex-shrink: 0;
+            align-self:      stretch;
+            justify-content: center;
+            display:         flex;
+            align-items:     flex-start;
+            gap:             var(--hdx-space-13);  // 6 px
+            z-index:         1;
+            flex-shrink:     0;
         }
 
         .c-tooltip__flag {
@@ -287,7 +318,7 @@
             align-self:  stretch;
             font-size:   var(--hdx-fs-xs);   // 12 px
             line-height: 130%;
-            color:       #2f3536;   // darkslategray-200
+            color:       var(--hdx-neutral-85);   // darkslategray-200
         }
     }
 
@@ -299,6 +330,18 @@
         padding:          var(--hdx-space-2);
         gap:              var(--hdx-space-13);
         font-size:        var(--hdx-fs-s);
+
+        .c-tooltip__arrow {
+          color: @c-tooltip-light-bg;
+        }
+
+        .c-tooltip__text {
+          font-size: var(--hdx-fs-xs);
+          color: var(--hdx-neutral-85);
+          z-index: 1;
+          align-self: stretch;
+          margin-bottom: var(--hdx-space-2);
+        }
 
         .c-tooltip__legend {
             align-self:     stretch;

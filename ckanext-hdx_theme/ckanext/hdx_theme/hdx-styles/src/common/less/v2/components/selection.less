@@ -58,6 +58,7 @@
     transition:       background-color 0.15s ease, border 0.15s ease, color 0.15s ease;
 
     &__icon {
+        line-height: 0;
         flex-shrink: 0;
         display:     none;   // hidden unless .c-selection-item--has-icon
     }
@@ -75,6 +76,7 @@
     }
 
     &__close {
+        line-height: 0;
         flex-shrink: 0;
         display:     none;   // shown in active state
     }
@@ -121,6 +123,23 @@
         }
     }
 
+    // Active hovered (selected — close icon visible, border near-black)
+    &--active-hovered {
+        border:     1.5px solid @c-sel-active-border;
+        color:      var(--hdx-neutral-95);
+        box-shadow: none;
+
+        .c-selection-item__close { display: block; }
+
+        &:hover {
+            border: 1.5px solid @c-sel-active-hover-border;
+        }
+
+        &.c-selection-item--cyan {
+            background-color: @c-sel-cyan-bg;
+        }
+    }
+
     &--has-icon  .c-selection-item__icon  { display: block; }
     &--has-count .c-selection-item__count { display: block; }
 
@@ -133,7 +152,7 @@
         font-size: var(--hdx-fs-m);                  // 16 px
         max-width: 18.75rem;
 
-        .c-selection-item__icon  { width: 1rem; }
+        .c-selection-item__icon  { width: 1.25rem; }
         .c-selection-item__close { width: 1.25rem; }
     }
 
@@ -144,8 +163,8 @@
         font-size: var(--hdx-fs-s);                  // 14 px
         max-width: 15.625rem;
 
-        .c-selection-item__icon  { width: 0.875rem; }
-        .c-selection-item__close { width: 1.25rem; }
+        .c-selection-item__icon  { width: 1rem; }
+        .c-selection-item__close { width: 1rem; }
     }
 
     // Small
@@ -155,7 +174,7 @@
         font-size: var(--hdx-fs-xs);               // 12 px
         max-width: 12.5rem;
 
-        .c-selection-item__icon  { width: 0.75rem; }
+        .c-selection-item__icon  { width: 0.875rem; }
         .c-selection-item__close { width: 0.875rem; }
     }
 }
