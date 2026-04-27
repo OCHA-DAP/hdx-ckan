@@ -147,7 +147,7 @@ pbr==6.1.1
     # via stevedore
 polib==1.2.0
     # via -r requirements.in
-psycopg2==2.9.9
+psycopg2==2.9.12
     # via -r requirements.in
 pyjwt==2.8.0
     # via -r requirements.in
