@@ -9,8 +9,8 @@
   total_pages   {int}     Total pages.  default: 1
   base_url      {string}  URL base; page number appended as ?page=N.
                           default: '?'
-  prev_icon_src {string}  default: 'images/icons/chevron-left.svg'
-  next_icon_src {string}  default: 'images/icons/chevron-right.svg'
+  prev_icon_src {string}  default: 'v2/icons/chevron-left.svg'
+  next_icon_src {string}  default: 'v2/icons/chevron-right.svg'
   extra_classes {string}  default: ''
   ─────────────────────────────────────────────────
   Example
@@ -24,8 +24,8 @@
 {% set current_page  = current_page  if current_page  is defined else 1 %}
 {% set total_pages   = total_pages   if total_pages   is defined else 1 %}
 {% set base_url      = base_url      if base_url      is defined else '?' %}
-{% set prev_icon_src = prev_icon_src if prev_icon_src is defined else 'icons/chevron-left.svg' %}
-{% set next_icon_src = next_icon_src if next_icon_src is defined else 'icons/chevron-right.svg' %}
+{% set prev_icon_src = prev_icon_src if prev_icon_src is defined else 'v2/icons/chevron-left.svg' %}
+{% set next_icon_src = next_icon_src if next_icon_src is defined else 'v2/icons/chevron-right.svg' %}
 {% set extra_classes = extra_classes if extra_classes is defined else '' %}
 
 {% set is_first = (current_page <= 1) %}
@@ -39,7 +39,7 @@
      href="{{ base_url }}{{ current_page - 1 }}"
      {% if is_first %}aria-disabled="true" tabindex="-1"{% endif %}
      aria-label="Previous page">
-    <img src="{{ h.url_for_static(prev_icon_src) }}" alt="Previous">
+    {% include h.url_for_static(prev_icon_src) %}
   </a>
 
   {# Pages — show up to 5, with ellipsis #}
@@ -66,7 +66,7 @@
      href="{{ base_url }}{{ current_page + 1 }}"
      {% if is_last %}aria-disabled="true" tabindex="-1"{% endif %}
      aria-label="Next page">
-    <img src="{{ h.url_for_static(next_icon_src) }}" alt="Next">
+    {% include h.url_for_static(next_icon_src) %}
   </a>
 
 </nav>

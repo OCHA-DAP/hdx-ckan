@@ -10,6 +10,7 @@
   box-sizing: border-box;
 }
 .c-label__icon {
+  line-height: 0;
   flex-shrink: 0;
   display: block;
 }
@@ -60,11 +61,11 @@
   min-width: 1.25rem;
 }
 .c-label--light {
-  background-color: #f5f7f7;
+  background-color: var(--hdx-neutral-05);
   color: var(--hdx-neutral-95);
 }
 .c-label--grey {
-  background-color: #ebeff0;
+  background-color: var(--hdx-neutral-1);
   color: var(--hdx-neutral-95);
 }
 .c-label--dark {
@@ -72,16 +73,16 @@
   color: var(--hdx-neutral-95);
 }
 .c-label--cyan {
-  background-color: #d4eae4;
-  color: #0b2d24;
+  background-color: var(--hdx-brand-1);
+  color: var(--hdx-brand-85);
 }
 .c-label--yellow {
-  background-color: #f6e9d4;
-  color: #553911;
+  background-color: var(--hdx-warning-1);
+  color: var(--hdx-warning-8);
 }
 .c-label--blue {
-  background-color: #d1e0f7;
-  color: #05142b;
+  background-color: var(--hdx-primary-1);
+  color: var(--hdx-primary-9);
 }
 .c-file-type {
   display: inline-flex;
@@ -91,8 +92,9 @@
   box-sizing: border-box;
 }
 .c-file-type__icon {
+  line-height: 0;
   display: block;
-  width: 1.5rem;
+  width: var(--hdx-space-6);
   max-height: 100%;
 }
 .c-file-type--size-m {
@@ -102,40 +104,45 @@
   padding: var(--hdx-space-2);
 }
 .c-file-type--size-m .c-file-type__icon {
-  width: 1.5rem;
+  width: var(--hdx-space-6);
 }
 .c-file-type--size-s {
-  width: 2rem;
-  height: 2rem;
+  width: var(--hdx-space-8);
+  height: var(--hdx-space-8);
   border-radius: var(--hdx-radius-sm);
   padding: var(--hdx-space-2);
 }
 .c-file-type--size-s .c-file-type__icon {
-  width: 1rem;
+  width: var(--hdx-space-4);
 }
 .c-file-type--size-xs {
-  width: 1.5rem;
-  height: 1.5rem;
+  width: var(--hdx-space-6);
+  height: var(--hdx-space-6);
   border-radius: var(--hdx-radius-sm);
   padding: var(--hdx-space-1);
 }
 .c-file-type--size-xs .c-file-type__icon {
-  width: 1rem;
+  width: var(--hdx-space-16);
 }
 .c-file-type--neutral {
-  background-color: #ebeff0;
+  color: var(--hdx-neutral-8);
+  background-color: var(--hdx-neutral-1);
 }
 .c-file-type--geo {
-  background-color: #f6e9d4;
+  color: var(--hdx-warning-8);
+  background-color: var(--hdx-warning-1);
 }
 .c-file-type--tabular {
-  background-color: #d4eae4;
+  color: var(--hdx-brand-7);
+  background-color: var(--hdx-brand-1);
 }
 .c-file-type--document {
-  background-color: #d1e0f7;
+  color: var(--hdx-primary-7);
+  background-color: var(--hdx-primary-1);
 }
 .c-file-type--web {
-  background-color: #f3dad7;
+  color: var(--hdx-error-8);
+  background-color: var(--hdx-error-1);
 }
 .c-tooltip {
   border-radius: var(--hdx-radius-sm);
@@ -158,12 +165,12 @@
   flex-shrink: 0;
 }
 .c-tooltip__arrow--below {
-  bottom: -0.5rem;
+  bottom: 0;
   left: 50%;
   transform: translateX(-50%);
 }
 .c-tooltip__arrow--above {
-  top: -0.5rem;
+  top: -1px;
   left: 50%;
   transform: translateX(-50%) rotate(180deg);
 }
@@ -174,12 +181,15 @@
   flex-shrink: 0;
 }
 .c-tooltip--dark {
-  background-color: #0b2d24;
+  background-color: var(--hdx-brand-85);
   color: var(--hdx-neutral-0);
   font-size: var(--hdx-fs-s);
 }
 .c-tooltip--dark .c-tooltip__text {
   align-self: stretch;
+}
+.c-tooltip--dark .c-tooltip__arrow {
+  color: var(--hdx-brand-85);
 }
 .c-tooltip--light {
   background-color: var(--hdx-neutral-0);
@@ -188,8 +198,12 @@
   gap: var(--hdx-space-13);
   font-size: var(--hdx-fs-s);
 }
+.c-tooltip--light .c-tooltip__arrow {
+  color: var(--hdx-neutral-0);
+}
 .c-tooltip--light .c-tooltip__body {
   align-self: stretch;
+  justify-content: center;
   display: flex;
   align-items: flex-start;
   gap: var(--hdx-space-13);
@@ -221,7 +235,7 @@
   align-self: stretch;
   font-size: var(--hdx-fs-xs);
   line-height: 130%;
-  color: #2f3536;
+  color: var(--hdx-neutral-85);
 }
 .c-tooltip--graph {
   background-color: var(--hdx-neutral-0);
@@ -229,6 +243,16 @@
   padding: var(--hdx-space-2);
   gap: var(--hdx-space-13);
   font-size: var(--hdx-fs-s);
+}
+.c-tooltip--graph .c-tooltip__arrow {
+  color: var(--hdx-neutral-0);
+}
+.c-tooltip--graph .c-tooltip__text {
+  font-size: var(--hdx-fs-xs);
+  color: var(--hdx-neutral-85);
+  z-index: 1;
+  align-self: stretch;
+  margin-bottom: var(--hdx-space-2);
 }
 .c-tooltip--graph .c-tooltip__legend {
   align-self: stretch;

@@ -10,29 +10,45 @@
                           default: 'neutral'
   size          {string}  'm' | 's' | 'xs'   default: 'm'
   icon_src      {string}  SVG icon inside the badge.
-                          default: 'images/icons/dataset.svg'
+                          default: 'v2/icons/placeholder.svg'
   aria_label    {string}  e.g. 'Excel spreadsheet'.  default: ''
   extra_classes {string}  default: ''
   ─────────────────────────────────────────────────
   Examples
 
   {% snippet 'snippets/components/label/file-type-icon.html',
-      format='tabular', size='m', icon_src='images/icons/excel.svg',
-      aria_label='Excel' %}
+      format='tabular', size='m', aria_label='Excel' %}
 #}
 
 {% set format        = format        if format        is defined else 'neutral' %}
 {% set size          = size          if size          is defined else 'm' %}
-{% set icon_src      = icon_src      if icon_src      is defined else 'icons/dataset.svg' %}
 {% set aria_label    = aria_label    if aria_label    is defined else '' %}
 {% set extra_classes = extra_classes if extra_classes is defined else '' %}
+
+{% set base_icon_path = 'v2/icons/' %}
+
+{% if icon_src is defined %}
+  {% set icon_src = icon_src %}
+{% else %}
+  {% if format == 'neutral' %}
+    {% set icon_src = base_icon_path ~ 'dataset.svg' %}
+  {% elif format == 'geo' %}
+    {% set icon_src = base_icon_path ~ 'geographic-format.svg' %}
+  {% elif format == 'tabular' %}
+    {% set icon_src = base_icon_path ~ 'view-table.svg' %}
+  {% elif format == 'document' %}
+    {% set icon_src = base_icon_path ~ 'document-format.svg' %}
+  {% elif format == 'web' %}
+    {% set icon_src = base_icon_path ~ 'markup-format.svg' %}
+  {% else %}
+    {% set icon_src = base_icon_path ~ 'placeholder.svg' %}
+  {% endif %}
+{% endif %}
 
 {% set classes = ['c-file-type', 'c-file-type--' ~ format, 'c-file-type--size-' ~ size] %}
 {% if extra_classes %}{% set classes = classes + [extra_classes] %}{% endif %}
 
 <span class="{{ classes | join(' ') }}"
       {% if aria_label %}role="img" aria-label="{{ aria_label }}"{% endif %}>
-  <img class="c-file-type__icon"
-       src="{{ h.url_for_static(icon_src) }}"
-       alt="" aria-hidden="true">
+  <span class="c-file-type__icon">{% include h.url_for_static(icon_src) %}</span>
 </span>

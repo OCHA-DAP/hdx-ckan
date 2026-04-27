@@ -36,7 +36,7 @@
 }
 .c-nav-item--disabled {
   border-bottom: 4px solid var(--hdx-neutral-3);
-  color: var(--hdx-neutral-7);
+  color: var(--hdx-neutral-5);
   cursor: not-allowed;
   pointer-events: none;
 }
@@ -86,12 +86,6 @@
   font-weight: var(--hdx-fw-regular);
   color: var(--hdx-neutral-8);
 }
-.c-anchor-links__item:hover:not(.c-anchor-links__item--active) .c-anchor-links__border {
-  background-color: var(--hdx-neutral-2);
-}
-.c-anchor-links__item:hover:not(.c-anchor-links__item--active) .c-anchor-links__label {
-  color: var(--hdx-neutral-95);
-}
 .c-letter-anchor {
   display: inline-flex;
   align-items: center;
@@ -130,10 +124,6 @@
 }
 .c-pagination {
   display: inline-flex;
-  align-items: flex-start;
-  border: 1px solid var(--hdx-neutral-2);
-  overflow: hidden;
-  border-radius: var(--hdx-radius-sm);
 }
 .c-pagination__item {
   background-color: var(--hdx-neutral-0);
@@ -144,7 +134,7 @@
   justify-content: center;
   cursor: pointer;
   font-family: var(--hdx-font-body);
-  font-weight: var(--hdx-fw-medium);
+  font-weight: var(--hdx-fw-regular);
   line-height: 130%;
   color: var(--hdx-neutral-8);
   text-decoration: none;
@@ -155,23 +145,20 @@
 .c-pagination__item:first-child {
   margin-left: 0;
 }
-.c-pagination__item:hover {
-  background-color: var(--hdx-neutral-01);
-  color: var(--hdx-neutral-95);
-}
 .c-pagination__item--active {
-  background-color: var(--hdx-neutral-95);
-  color: var(--hdx-neutral-0);
+  background-color: var(--hdx-neutral-0);
+  color: var(--hdx-neutral-95);
+  font-weight: var(--hdx-fw-medium);
   z-index: 1;
 }
 .c-pagination__item--active:hover {
-  background-color: var(--hdx-neutral-95);
-  color: var(--hdx-neutral-0);
+  background-color: var(--hdx-neutral-0);
+  color: var(--hdx-neutral-95);
 }
 .c-pagination__item--prev,
 .c-pagination__item--next {
+  line-height: 0;
   color: var(--hdx-neutral-95);
-  font-size: var(--hdx-fs-m);
 }
 .c-pagination__item--ellipsis {
   cursor: default;
@@ -239,10 +226,10 @@
   color: var(--hdx-primary-5);
 }
 .c-breadcrumb__separator {
-  color: var(--hdx-neutral-7);
+  color: var(--hdx-neutral-5);
   font-size: var(--hdx-fs-s);
   line-height: 130%;
-  margin: 0 var(--hdx-space-1);
+  margin-left: var(--hdx-space-2);
 }
 .c-breadcrumb__current {
   color: var(--hdx-neutral-7);
@@ -256,7 +243,7 @@
   display: block;
   width: 100%;
   height: 1px;
-  background-color: var(--hdx-neutral-2);
+  background-color: var(--hdx-neutral-3);
   border: none;
   margin: 0;
   flex-shrink: 0;

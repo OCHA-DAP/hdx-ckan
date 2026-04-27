@@ -16,8 +16,8 @@
   state         {string}  'enabled' | 'hover' | 'active' | 'disabled' | 'filter'
                           default: 'enabled'
   icon          {bool}    Show leading filter icon.  default: False
-  icon_src      {string}  Leading icon path.  default: 'images/icons/placeholder.svg'
-  chevron_src   {string}  Chevron icon path.  default: 'images/icons/chevron-down.svg'
+  icon_src      {string}  Leading icon path.  default: 'v2/icons/placeholder.svg'
+  chevron_src   {string}  Chevron icon path.  default: 'v2/icons/chevron-down.svg'
   panel_id      {string}  id of the panel element (for aria-controls).  default: ''
   extra_classes {string}  default: ''
   attrs         {dict}    Extra HTML attrs.  default: {}
@@ -36,8 +36,8 @@
 {% set count         = count         if count         is defined else '' %}
 {% set state         = state         if state         is defined else 'enabled' %}
 {% set icon          = icon          if icon          is defined else False %}
-{% set icon_src      = icon_src      if icon_src      is defined else 'icons/placeholder.svg' %}
-{% set chevron_src   = chevron_src   if chevron_src   is defined else 'icons/chevron-down.svg' %}
+{% set icon_src      = icon_src      if icon_src      is defined else 'v2/icons/placeholder.svg' %}
+{% set chevron_src   = chevron_src   if chevron_src   is defined else 'v2/icons/chevron-down.svg' %}
 {% set panel_id      = panel_id      if panel_id      is defined else '' %}
 {% set extra_classes = extra_classes if extra_classes is defined else '' %}
 {% set attrs         = attrs         if attrs         is defined else {} %}
@@ -64,9 +64,7 @@
           {% if panel_id %}aria-controls="{{ panel_id }}" aria-expanded="{{ 'true' if is_open else 'false' }}"{% endif %}>
 
     {% if icon %}
-      <img class="c-dropdown__trigger-icon"
-           src="{{ h.url_for_static(icon_src) }}"
-           alt="" aria-hidden="true">
+      <span class="c-dropdown__trigger-icon">{% include h.url_for_static(icon_src) %}</span>
     {% endif %}
 
     <span class="c-dropdown__trigger-value">
@@ -77,9 +75,7 @@
       <span class="c-dropdown__trigger-count">{{ count }}</span>
     {% endif %}
 
-    <img class="c-dropdown__chevron"
-         src="{{ h.url_for_static(chevron_src) }}"
-         alt="" aria-hidden="true">
+    <span class="c-dropdown__chevron">{% include h.url_for_static(chevron_src) %}</span>
   </button>
 
 </div>
