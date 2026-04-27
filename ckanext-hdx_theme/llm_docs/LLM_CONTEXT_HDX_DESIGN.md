@@ -15,7 +15,7 @@ HDX is undergoing a progressive redesign using a Figma-driven, responsive compon
 - **Component library**: `templates/v2/components/` ✅ In Progress
   - Implemented components include `button`, `label`, `avatar`, `dropdown`, `input-field`, `navigation`, `selection`, and `text-link`.
   - Demo page: `templates/v2/components.html`.
-- **SVG icons**: `public/icons/` ✅
+- **SVG icons**: `templates/v2/icons/` ✅
   - Includes exported icon sets `locations-flags/` and `humanitarian-data-grids/`.
 
 ---
