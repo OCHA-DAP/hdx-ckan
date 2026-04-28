@@ -1,0 +1,75 @@
+{#
+  Snippet: list-item.html
+  Path:    templates/v2/components/list-item.html
+
+  Renders a c-list-item — flexible list item with optional checkbox.
+
+  Two types:
+  - 'list': text-only item (supports sizes: md, sm)
+  - 'checklist': item with checkbox, label, and optional count badge
+
+  Parameters
+  ─────────────────────────────────────────────────────────────
+  type          {string}  'list' or 'checklist'  default: 'list'
+  label         {string}  Item text/label
+  size          {string}  'md' or 'sm' (text-only)  default: 'md'
+  state         {string}  'default'|'hovered'|'active'|'active-hovered'  default: 'default'
+  checked       {boolean} For checklist type  default: false
+  count         {string}  Badge text like "(309)"  default: ''
+  href          {string}  Optional link URL  default: ''
+  extra_classes {string}  Additional classes  default: ''
+  ─────────────────────────────────────────────────────────────
+  Examples
+
+  {% snippet 'v2/components/list-item.html',
+      type='list', label='Afghanistan', size='md' %}
+
+  {% snippet 'v2/components/list-item.html',
+      type='checklist', label='Sudan', count='(245)',
+      checked=true, state='active' %}
+
+  {% snippet 'v2/components/list-item.html',
+      type='list', label='Mauritania', size='sm',
+      href='/dataset?location=mr' %}
+#}
+
+{% set type          = type          if type          is defined else 'list' %}
+{% set label         = label         if label         is defined else '' %}
+{% set size          = size          if size          is defined else 'md' %}
+{% set state         = state         if state         is defined else 'default' %}
+{% set checked       = checked       if checked       is defined else false %}
+{% set count         = count         if count         is defined else '' %}
+{% set href          = href          if href          is defined else '' %}
+{% set extra_classes = extra_classes if extra_classes is defined else '' %}
+
+{% if type == 'list' %}
+  {# Text-only list item #}
+  {% set classes = ['c-list-item', 'c-list-item--type-list', 'c-list-item--size-' ~ size] %}
+  {% if state == 'hovered' %}{% set classes = classes + ['is-hovered'] %}{% endif %}
+  {% if extra_classes %}{% set classes = classes + [extra_classes] %}{% endif %}
+
+  {% if href %}
+    <a class="{{ classes | join(' ') }}" href="{{ href }}">{{ label }}</a>
+  {% else %}
+    <div class="{{ classes | join(' ') }}">{{ label }}</div>
+  {% endif %}
+
+{% elif type == 'checklist' %}
+  {# Checklist item with checkbox, label, and optional count #}
+  {% set classes = ['c-list-item', 'c-list-item--type-checklist'] %}
+  {% if state == 'hovered' %}{% set classes = classes + ['is-hovered'] %}{% endif %}
+  {% if state == 'active' %}{% set classes = classes + ['is-active'] %}{% endif %}
+  {% if state == 'active-hovered' %}{% set classes = classes + ['is-active-hovered'] %}{% endif %}
+  {% if extra_classes %}{% set classes = classes + [extra_classes] %}{% endif %}
+
+  <div class="{{ classes | join(' ') }}">
+    {% snippet 'v2/components/checkbox.html',
+        checked=checked, disabled=false %}
+
+    <div class="c-list-item__content">
+      <span class="c-list-item__label">{{ label }}</span>
+      {% if count %}<span class="c-list-item__count">{{ count }}</span>{% endif %}
+    </div>
+  </div>
+
+{% endif %}

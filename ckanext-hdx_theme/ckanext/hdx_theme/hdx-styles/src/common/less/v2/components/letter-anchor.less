@@ -1,0 +1,76 @@
+// ============================================================
+// c-letter-anchor — alphabet letter link for navigation/filtering
+// ============================================================
+// Figma source: "Letter anchor links"
+// ============================================================
+
+// ── Local tokens ────────────────────────────────────────────
+@c-letter-color:        var(--hdx-neutral-8);             // #3f4748
+@c-letter-active-color: var(--hdx-primary-5);             // #1862d8
+@c-letter-hover-color:  var(--hdx-primary-5);
+@c-letter-disabled-color: var(--hdx-neutral-3);           // #c4d0d1
+
+@c-letter-border-radius: var(--hdx-radius-sm);            // 2 px
+
+
+// ────────────────────────────────────────────────────────────
+// c-letter-anchor
+// ────────────────────────────────────────────────────────────
+
+.c-letter-anchor {
+    display:         inline-flex;
+    align-items:     center;
+    justify-content: center;
+    border-radius:   @c-letter-border-radius;
+    cursor:          pointer;
+    font-family:     var(--hdx-font-body);
+    font-weight:     var(--hdx-fw-regular);
+    text-decoration: none;
+    transition:      color 0.15s ease;
+    color:           @c-letter-color;
+    overflow:        hidden;
+    text-overflow:   ellipsis;
+    white-space:     nowrap;
+    gap:             var(--hdx-space-1);                  // 4 px
+
+    // ── Size: Large (2.3125rem = 37px) ──────────────────────
+
+    &--size-lg {
+        width:     2.3125rem;
+        padding:   var(--hdx-space-2) var(--hdx-space-3);   // 8 12
+        font-size: var(--hdx-fs-m);                         // 16 px
+    }
+
+    // ── Size: Small (1.5rem = 24px) ─────────────────────────
+
+    &--size-sm {
+        width:     1.5rem;
+        padding:   var(--hdx-space-1) var(--hdx-space-2);   // 4 8
+        font-size: var(--hdx-fs-xs);                        // 12 px
+    }
+
+    // ── States ──────────────────────────────────────────────
+
+    &.is-active {
+        color:       @c-letter-active-color;
+    }
+
+    &:hover:not(&.is-disabled) {
+        color: @c-letter-hover-color;
+    }
+
+    &.is-disabled {
+        color:          @c-letter-disabled-color;
+        cursor:         not-allowed;
+        pointer-events: none;
+    }
+
+    // ── Subcomponents ───────────────────────────────────────
+
+    &__letter {
+        overflow:      hidden;
+        text-overflow: ellipsis;
+        white-space:   nowrap;
+        flex-shrink:   0;
+    }
+}

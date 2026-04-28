@@ -1,0 +1,42 @@
+{#
+  Snippet: letter-anchor.html
+  Path:    templates/v2/components/letter-anchor.html
+
+  Renders a c-letter-anchor — clickable letter for alphabet-based navigation/filtering.
+
+  Parameters
+  ─────────────────────────────────────────────────────────────
+  letter        {string}  The letter to display (e.g., 'A')
+  size          {string}  'lg' (large) or 'sm' (small)  default: 'lg'
+  state         {string}  'enabled'|'hovered'|'active'|'disabled'  default: 'enabled'
+  href          {string}  Link URL  default: '#'
+  extra_classes {string}  Additional classes  default: ''
+  ─────────────────────────────────────────────────────────────
+  Examples
+
+  {% snippet 'v2/components/letter-anchor.html',
+      letter='A', count='(245)', size='lg', state='enabled' %}
+
+  {% snippet 'v2/components/letter-anchor.html',
+      letter='Z', size='sm', state='active', href='#letter-z' %}
+
+  {% snippet 'v2/components/letter-anchor.html',
+      letter='B', state='disabled' %}
+#}
+
+{% set letter        = letter        if letter        is defined else 'A' %}
+{% set size          = size          if size          is defined else 'lg' %}
+{% set state         = state         if state         is defined else 'enabled' %}
+{% set href          = href          if href          is defined else '#' %}
+{% set extra_classes = extra_classes if extra_classes is defined else '' %}
+
+{% set classes = ['c-letter-anchor', 'c-letter-anchor--size-' ~ size] %}
+{% if state == 'active' %}{% set classes = classes + ['is-active'] %}{% endif %}
+{% if state == 'disabled' %}{% set classes = classes + ['is-disabled'] %}{% endif %}
+{% if extra_classes %}{% set classes = classes + [extra_classes] %}{% endif %}
+
+<a class="{{ classes | join(' ') }}"
+   href="{{ href }}"
+   {% if state == 'disabled' %}aria-disabled="true" tabindex="-1"{% endif %}>
+  <span class="c-letter-anchor__letter">{{ letter }}</span>
+</a>
