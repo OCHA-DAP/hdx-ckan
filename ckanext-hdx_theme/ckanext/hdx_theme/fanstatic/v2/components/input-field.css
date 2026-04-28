@@ -84,7 +84,7 @@
 .c-autocomplete__panel {
   align-self: stretch;
   background-color: var(--hdx-neutral-0);
-  border: 0.8px solid #ebeff0;
+  border: 0.75px solid var(--hdx-neutral-1);
   border-radius: var(--hdx-radius-sm);
   box-shadow: var(--hdx-shadow-sm);
   display: flex;
@@ -93,13 +93,13 @@
   padding: var(--hdx-space-3);
   gap: var(--hdx-space-3);
   font-size: var(--hdx-fs-s);
-  color: #2f3536;
+  color: var(--hdx-neutral-85);
 }
 .c-autocomplete__section-title {
   position: relative;
   line-height: 130%;
   font-size: var(--hdx-fs-s);
-  color: #2f3536;
+  color: var(--hdx-neutral-85);
 }
 .c-autocomplete__chips {
   align-self: stretch;
