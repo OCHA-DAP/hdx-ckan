@@ -210,20 +210,10 @@
 .c-breadcrumb__item {
   display: flex;
   align-items: center;
-}
-.c-breadcrumb__link {
-  text-decoration: underline;
-  line-height: 130%;
-  font-weight: var(--hdx-fw-medium);
-  color: var(--hdx-neutral-8);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   max-width: 21.875rem;
-  transition: color 0.15s ease;
-}
-.c-breadcrumb__link:hover {
-  color: var(--hdx-primary-5);
 }
 .c-breadcrumb__separator {
   color: var(--hdx-neutral-5);
