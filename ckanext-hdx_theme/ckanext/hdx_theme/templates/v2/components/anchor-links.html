@@ -33,10 +33,10 @@
        href="{{ item.href }}"
        {% if item.active %}aria-current="true"{% endif %}>
 
+      <span class="c-anchor-links__border" aria-hidden="true"></span>
       <div class="c-anchor-links__content">
         <span class="c-anchor-links__label">{{ item.label }}</span>
       </div>
-      <span class="c-anchor-links__border" aria-hidden="true"></span>
 
     </a>
   {% endfor %}
