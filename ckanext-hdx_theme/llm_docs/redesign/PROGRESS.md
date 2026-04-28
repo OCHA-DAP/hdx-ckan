@@ -13,6 +13,7 @@ This document tracks the implementation of the HDX redesign (v2), a progressive 
 The migration strategy follows the plan outlined in [PLAN.md](PLAN.md): build the new design system as a parallel layer, then migrate pages one-by-one, leaving unmigrated pages untouched on the old stack.
 
 > Task definitions, requirements, and implementation checklists are tracked in `llm_docs/redesign/requirements/`.
+> Implementation status for each task is tracked in [`requirements/STATUS.md`](requirements/STATUS.md) — a markdown table mapping each requirement file to one of `not_started`, `in_progress`, or `implemented`. Update that file when a task changes state.
 
 ---
 
