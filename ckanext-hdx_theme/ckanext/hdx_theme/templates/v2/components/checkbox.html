@@ -42,5 +42,7 @@
     {% if disabled %}disabled="disabled"{% endif %}
     {% if name %}name="{{ name }}"{% endif %}
     {% if value %}value="{{ value }}"{% endif %} />
-  <span class="c-checkbox__box"></span>
+  <span class="c-checkbox__box">
+    <span class="c-checkbox__icon">{% include h.url_for_static('v2/icons/check.svg') %}</span>
+  </span>
 </div>
