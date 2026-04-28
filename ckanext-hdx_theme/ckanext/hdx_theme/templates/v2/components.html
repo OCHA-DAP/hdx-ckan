@@ -614,6 +614,8 @@
     </div>
   </section>
 
+  <br><br><br><br><br>
+
   <hr class="demo-divider">
 
   {# ══════════════════════════════════════════════════════
@@ -750,7 +752,7 @@
   ══════════════════════════════════════════════════════ #}
   <section class="demo-section">
     <h1 class="demo-section__title">Navigation &amp; Pagination</h1>
-    <p class="demo-section__subtitle">nav items · anchor links · letter anchors · pagination · breadcrumb</p>
+    <p class="demo-section__subtitle">nav items · anchor links · pagination · breadcrumb</p>
 
     <h2 class="demo-subsection__heading">Nav items</h2>
     <div class="demo-row">
@@ -777,15 +779,6 @@
               {'label': 'Geography',     'href': '#geo',        'active': False},
             ] %}
       </div>
-    </div>
-
-    <h2 class="demo-subsection__heading">Letter anchors</h2>
-    <div class="demo-row">
-      {% for letter in ['A','B','C','D','E','F'] %}
-        {% snippet 'v2/components/nav-item.html',
-            label=letter, href='#letter-' ~ letter,
-            status=('active' if loop.first else 'default') %}
-      {% endfor %}
     </div>
 
     <h2 class="demo-subsection__heading">Pagination — MD (page 3 of 12)</h2>
