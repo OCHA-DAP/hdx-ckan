@@ -8,3 +8,4 @@
 | 004 | [implement-list-item-component](004-implement-list-item-component.md) | implemented | |
 | 005 | [implement-letter-anchor-component](005-implement-letter-anchor-component.md) | implemented | |
 | 006 | [update-autocomplete-chips-and-search-results](006-update-autocomplete-chips-and-search-results.md) | implemented | |
+| 007 | [stable-border-width-across-states](007-stable-border-width-across-states.md) | implemented | |

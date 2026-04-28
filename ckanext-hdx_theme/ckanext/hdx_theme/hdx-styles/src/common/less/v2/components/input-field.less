@@ -23,10 +23,12 @@
 @c-input-min-w:        7.5rem;  // 120 px
 
 // L sizing
+@c-input-l-h:    2.5rem;         // 40 px — fixed height so border grows inward
 @c-input-l-fs:   var(--hdx-fs-m);      // 16 px
 @c-input-l-pad:  var(--hdx-space-2) var(--hdx-space-3) var(--hdx-space-2) var(--hdx-space-4); // 8 12 8 16
 
 // M sizing
+@c-input-m-h:    2.125rem;       // 34 px — fixed height so border grows inward
 @c-input-m-fs:   var(--hdx-fs-s);      // 14 px
 @c-input-m-pad:  var(--hdx-space-2) var(--hdx-space-3); // 8 12
 
@@ -96,6 +98,7 @@
     // ── Size modifiers ───────────────────────────────────────
 
     &--size-l {
+        height:    @c-input-l-h;
         padding:   @c-input-l-pad;
         gap:       var(--hdx-space-2);   // 8 px
         font-size: @c-input-l-fs;
@@ -105,6 +108,7 @@
     }
 
     &--size-m {
+        height:    @c-input-m-h;
         padding:   @c-input-m-pad;
         gap:       var(--hdx-space-2);   // 8 px
         font-size: @c-input-m-fs;

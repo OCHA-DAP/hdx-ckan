@@ -86,6 +86,7 @@
   display: block;
 }
 .c-selection-item--size-l {
+  height: 2.5rem;
   padding: var(--hdx-space-2) var(--hdx-space-3);
   gap: var(--hdx-space-13);
   font-size: var(--hdx-fs-m);
@@ -98,6 +99,7 @@
   width: 1.25rem;
 }
 .c-selection-item--size-m {
+  height: 2.125rem;
   padding: var(--hdx-space-2);
   gap: var(--hdx-space-1);
   font-size: var(--hdx-fs-s);
@@ -110,6 +112,7 @@
   width: 1rem;
 }
 .c-selection-item--size-s {
+  height: 1.5rem;
   padding: var(--hdx-space-13);
   gap: var(--hdx-space-1);
   font-size: var(--hdx-fs-xs);
