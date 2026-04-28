@@ -35,11 +35,10 @@
 
     <span class="c-breadcrumb__item">
 
+      {% snippet 'v2/components/text-link.html', label=item.label, href=item.href, style='tertiary', size='xs' %}
+
       {% if not is_last %}
-        <a class="c-breadcrumb__link" href="{{ item.href }}">{{ item.label }}</a>
         <span class="c-breadcrumb__separator" aria-hidden="true">{{ separator }}</span>
-      {% else %}
-        <span class="c-breadcrumb__current" aria-current="page">{{ item.label }}</span>
       {% endif %}
 
     </span>
