@@ -78,7 +78,10 @@
           <span class="c-autocomplete__section-title">{{ location_label }}</span>
         {% endif %}
         {% for chip in chips %}
-          <button type="button" class="c-autocomplete__chip">{{ chip }}</button>
+          {% snippet 'v2/components/button.html',
+              style='tertiary', size='m', type='text', label=chip,
+              state='enabled', icon=False,
+              extra_classes='c-autocomplete__chip' %}
         {% endfor %}
       </div>
     {% endif %}
@@ -92,8 +95,10 @@
         {% for result in results %}
           <div class="c-autocomplete__result-row">
             <div class="c-autocomplete__result-link">
-              <a class="c-autocomplete__result-label"
-                 href="{{ result.url }}">{{ result.label }}</a>
+              {% snippet 'v2/components/text-link.html',
+                  label=result.label, href=result.url,
+                  style='tertiary', size='m', state='enabled',
+                  extra_classes='c-autocomplete__result-label' %}
             </div>
             {% if result.count is defined %}
               <span class="c-autocomplete__result-count">{{ result.count }}</span>
@@ -104,9 +109,10 @@
     {% endif %}
 
     {# ─ Confirm button ────────────────────────────── #}
-    <button type="submit" class="c-autocomplete__confirm-btn">
-      {{ confirm_label }}
-    </button>
+    {% snippet 'v2/components/button.html',
+        style='secondary', size='m', type='text', label=confirm_label,
+        state='enabled', button_type='submit',
+        extra_classes='c-autocomplete__confirm-btn' %}
 
   </div>
   {% endif %}
