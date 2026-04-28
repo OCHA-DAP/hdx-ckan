@@ -52,22 +52,23 @@
         border: @c-checkbox-border-width solid @c-checkbox-border-color;
         border-radius: @c-checkbox-border-radius;
         background-color: @c-checkbox-bg-unchecked;
+        color: @c-checkbox-checkmark-color;
         transition: background-color 0.15s ease, border-color 0.15s ease;
         display: flex;
         align-items: center;
         justify-content: center;
         pointer-events: none;
+    }
 
-        &::after {
-            content: '';
-            position: absolute;
-            width: 0.5rem;    // 8 px
-            height: 0.325rem; // 5.2 px
-            border: solid @c-checkbox-checkmark-color;
-            border-width: 0 2px 2px 0;
-            transform: rotate(45deg);
-            opacity: 0;
-            transition: opacity 0.15s ease;
+    &__icon {
+        width: 0.5rem;
+        display: flex;
+        opacity: 0;
+        transition: opacity 0.15s ease;
+
+        svg {
+            width: 100%;
+            height: 100%;
         }
     }
 
@@ -77,10 +78,10 @@
     &__input:checked ~ &__box {
         background-color: @c-checkbox-bg-checked;
         border-color: @c-checkbox-bg-checked;
+    }
 
-        &::after {
-            opacity: 1;
-        }
+    &__input:checked ~ &__box &__icon {
+        opacity: 1;
     }
 
     // Hover state (when not disabled)
@@ -104,9 +105,6 @@
     &__input:disabled:checked ~ &__box {
         background-color: @c-checkbox-disabled-bg;
         border-color: @c-checkbox-disabled-border;
-
-        &::after {
-            border-color: @c-checkbox-disabled-border;
-        }
+        color: @c-checkbox-disabled-border;
     }
 }
