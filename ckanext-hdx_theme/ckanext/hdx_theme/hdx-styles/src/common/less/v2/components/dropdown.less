@@ -29,11 +29,13 @@
 
 // Size M
 @c-dropdown-m-fs:   var(--hdx-fs-s);    // 14 px
+@c-dropdown-m-h:    2.125rem;           // 34 px — fixed height so border grows inward
 @c-dropdown-m-pad:  var(--hdx-space-2) var(--hdx-space-2) var(--hdx-space-2) var(--hdx-space-14); // 8 8 8 10
 @c-dropdown-m-gap:  var(--hdx-space-1); //  4 px
 
 // Size S
 @c-dropdown-s-fs:   var(--hdx-fs-xs);   // 12 px
+@c-dropdown-s-h:    1.5rem;             // 24 px — fixed height so border grows inward
 @c-dropdown-s-pad:  var(--hdx-space-13) var(--hdx-space-2) var(--hdx-space-13) var(--hdx-space-14); // 6 8 6 10
 @c-dropdown-s-gap:  var(--hdx-space-1); //  4 px
 
@@ -67,6 +69,7 @@
         border-radius:    var(--hdx-radius-sm);
         background-color: @c-dropdown-bg;
         border:           @c-dropdown-border;
+        box-sizing:       border-box;
         box-shadow:       @c-dropdown-panel-shadow;
         cursor:           pointer;
         transition:       background-color 0.15s ease, border 0.15s ease;
@@ -159,7 +162,7 @@
         gap: var(--hdx-space-2);   // 8 px between label and trigger
 
         .c-dropdown__label      { font-size: @c-dropdown-m-fs; }
-        .c-dropdown__trigger    { padding: @c-dropdown-m-pad; gap: @c-dropdown-m-gap; font-size: @c-dropdown-m-fs; }
+        .c-dropdown__trigger    { height: @c-dropdown-m-h; padding: @c-dropdown-m-pad; gap: @c-dropdown-m-gap; font-size: @c-dropdown-m-fs; }
         .c-dropdown__trigger-value { font-size: @c-dropdown-m-fs; }
     }
 
@@ -167,7 +170,7 @@
         gap: var(--hdx-space-1);   // 4 px between label and trigger
 
         .c-dropdown__label      { font-size: @c-dropdown-s-fs; }
-        .c-dropdown__trigger    { padding: @c-dropdown-s-pad; gap: @c-dropdown-s-gap; font-size: @c-dropdown-s-fs; }
+        .c-dropdown__trigger    { height: @c-dropdown-s-h; padding: @c-dropdown-s-pad; gap: @c-dropdown-s-gap; font-size: @c-dropdown-s-fs; }
         .c-dropdown__trigger-value { font-size: @c-dropdown-s-fs; }
         .c-dropdown__chevron    { width: 0.875rem; }
     }
@@ -413,10 +416,12 @@
         display:          flex;
         align-items:      center;
         justify-content:  center;
+        height:           @c-dropdown-m-h;
         padding:          var(--hdx-space-2);   // 8 px
         border-radius:    var(--hdx-radius-sm);
         background-color: @c-dropdown-bg;
         border:           @c-dropdown-border;
+        box-sizing:       border-box;
         box-shadow:       @c-dropdown-panel-shadow;
         cursor:           pointer;
         font-family:      var(--hdx-font-body);

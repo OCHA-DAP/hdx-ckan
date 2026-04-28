@@ -33,6 +33,11 @@
 @c-toggle-on-bg:   var(--hdx-primary-5);        // royalblue
 @c-toggle-thumb-bg: var(--hdx-neutral-0);       // white
 
+// Selection item heights — fixed so border-width changes grow inward
+@c-sel-l-h:        2.5rem;     // 40 px
+@c-sel-m-h:        2.125rem;   // 34 px
+@c-sel-s-h:        1.5rem;     // 24 px
+
 // Graph point
 @c-gp-dim:         0.5rem;     //  8 px
 @c-gp-focus-dim:   1.5rem;     // 24 px
@@ -147,6 +152,7 @@
 
     // Large
     &--size-l {
+        height:    @c-sel-l-h;
         padding:   var(--hdx-space-2) var(--hdx-space-3);  // 8 12
         gap:       var(--hdx-space-13);              //  6 px
         font-size: var(--hdx-fs-m);                  // 16 px
@@ -158,6 +164,7 @@
 
     // Medium
     &--size-m {
+        height:    @c-sel-m-h;
         padding:   var(--hdx-space-2);               // 8 px
         gap:       var(--hdx-space-1);               // 4 px
         font-size: var(--hdx-fs-s);                  // 14 px
@@ -169,6 +176,7 @@
 
     // Small
     &--size-s {
+        height:    @c-sel-s-h;
         padding:   var(--hdx-space-13);             //  6 px
         gap:       var(--hdx-space-1);              //  4 px
         font-size: var(--hdx-fs-xs);               // 12 px

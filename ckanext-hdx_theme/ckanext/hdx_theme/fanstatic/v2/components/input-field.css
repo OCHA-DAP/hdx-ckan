@@ -53,6 +53,7 @@
   color: var(--hdx-neutral-95);
 }
 .c-search-input--size-l {
+  height: 2.5rem;
   padding: var(--hdx-space-2) var(--hdx-space-3) var(--hdx-space-2) var(--hdx-space-4);
   gap: var(--hdx-space-2);
   font-size: var(--hdx-fs-m);
@@ -62,6 +63,7 @@
   font-size: var(--hdx-fs-m);
 }
 .c-search-input--size-m {
+  height: 2.125rem;
   padding: var(--hdx-space-2) var(--hdx-space-3);
   gap: var(--hdx-space-2);
   font-size: var(--hdx-fs-s);
