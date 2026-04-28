@@ -1,7 +1,6 @@
 // ============================================================
 // c-nav-item       — top-bar navigation item with active underline
 // c-anchor-links   — sidebar vertical anchor link list
-// c-letter-anchor  — alphabet letter anchor button
 // c-pagination     — numbered page control bar
 // c-breadcrumb     — horizontal breadcrumb trail
 // c-divider        — horizontal rule
@@ -24,11 +23,6 @@
 @c-pager-border:        1px solid var(--hdx-neutral-2);   // #d8e0e1
 @c-pager-active-bg:     var(--hdx-neutral-0);
 @c-pager-active-color:  var(--hdx-neutral-95);            // #101212
-
-@c-letter-active-color: var(--hdx-primary-5);
-@c-letter-hover-color:  var(--hdx-primary-5);
-@c-letter-color:        var(--hdx-neutral-8);             // #3f4748
-@c-letter-disabled-color: var(--hdx-neutral-3);           // #c4d0d1
 
 
 // ────────────────────────────────────────────────────────────
@@ -135,46 +129,8 @@
 
 
 // ────────────────────────────────────────────────────────────
-// 3. c-letter-anchor — alphabet letter link button
 // ────────────────────────────────────────────────────────────
-
-.c-letter-anchor {
-    display:         inline-flex;
-    align-items:     center;
-    justify-content: center;
-    border-radius:   var(--hdx-radius-sm);
-    cursor:          pointer;
-    font-family:     var(--hdx-font-body);
-    font-weight:     var(--hdx-fw-medium);
-    text-decoration: none;
-    transition:      color 0.15s ease;
-    color:           @c-letter-color;
-    overflow:        hidden;
-    text-overflow:   ellipsis;
-    white-space:     nowrap;
-
-    // Large
-    &--size-lg {
-        width:     2.3125rem;
-        padding:   var(--hdx-space-2) var(--hdx-space-3);   // 8 12
-        font-size: var(--hdx-fs-m);                    // 16 px
-    }
-
-    // Small
-    &--size-sm {
-        width:     1.5rem;
-        padding:   var(--hdx-space-1) var(--hdx-space-2);   // 4 8
-        font-size: var(--hdx-fs-xs);                   // 12 px
-    }
-
-    &--active  { color: @c-letter-active-color;   font-weight: var(--hdx-fw-semibold); }
-    &:hover    { color: @c-letter-hover-color; }
-    &--disabled { color: @c-letter-disabled-color; pointer-events: none; }
-}
-
-
-// ────────────────────────────────────────────────────────────
-// 4. c-pagination
+// 3. c-pagination
 // ────────────────────────────────────────────────────────────
 
 .c-pagination {

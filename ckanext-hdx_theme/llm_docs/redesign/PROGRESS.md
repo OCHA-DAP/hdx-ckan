@@ -2,7 +2,7 @@
 
 **Status**: In-progress
 **Started**: 2026-04-16
-**Last Updated**: 2026-04-24
+**Last Updated**: 2026-04-28
 
 ---
 
@@ -111,6 +111,10 @@ The v2 component library uses the current `templates/v2/components/` directory w
 - [x] Navigation
 - [x] Selection
 - [x] Text link
+- [x] Breadcrumb
+- [x] Checkbox
+- [x] List item
+- [x] Letter anchor
 - [x] Divider
 - [x] Search + autocomplete
 - [x] File type indicators

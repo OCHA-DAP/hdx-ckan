@@ -867,6 +867,174 @@
     </div>
   </section>
 
+  <hr class="demo-divider">
+
+  {# ══════════════════════════════════════════════════════
+     10. CHECKBOX
+  ══════════════════════════════════════════════════════ #}
+  <section class="demo-section">
+    <h1 class="demo-section__title">Checkbox</h1>
+    <p class="demo-section__subtitle">state — visual checkbox with semantic input</p>
+
+    <h2 class="demo-subsection__heading">States</h2>
+    <div class="demo-row">
+      <span class="demo-row__label">Unchecked</span>
+      <div class="demo-row__items">
+        {% snippet 'v2/components/checkbox.html',
+            id='checkbox-unchecked', checked=false, disabled=false %}
+      </div>
+    </div>
+
+    <div class="demo-row">
+      <span class="demo-row__label">Checked</span>
+      <div class="demo-row__items">
+        {% snippet 'v2/components/checkbox.html',
+            id='checkbox-checked', checked=true, disabled=false %}
+      </div>
+    </div>
+
+    <div class="demo-row">
+      <span class="demo-row__label">Disabled</span>
+      <div class="demo-row__items">
+        {% snippet 'v2/components/checkbox.html',
+            id='checkbox-disabled-unchecked', checked=false, disabled=true %}
+        {% snippet 'v2/components/checkbox.html',
+            id='checkbox-disabled-checked', checked=true, disabled=true %}
+      </div>
+    </div>
+  </section>
+
+  <hr class="demo-divider">
+
+  {# ══════════════════════════════════════════════════════
+     11. LIST ITEM
+  ══════════════════════════════════════════════════════ #}
+  <section class="demo-section">
+    <h1 class="demo-section__title">List Item</h1>
+    <p class="demo-section__subtitle">type × size × state — text-only or checklist items</p>
+
+    <h2 class="demo-subsection__heading">Text-only lists</h2>
+
+    <div class="demo-row">
+      <span class="demo-row__label">Size MD</span>
+      <div class="demo-row__items">
+        {% snippet 'v2/components/list-item.html',
+            type='list', label='Afghanistan', size='md', state='default' %}
+        {% snippet 'v2/components/list-item.html',
+            type='list', label='Afghanistan', size='md', state='hovered' %}
+      </div>
+    </div>
+
+    <div class="demo-row">
+      <span class="demo-row__label">Size SM</span>
+      <div class="demo-row__items">
+        {% snippet 'v2/components/list-item.html',
+            type='list', label='Sudan', size='sm', state='default' %}
+        {% snippet 'v2/components/list-item.html',
+            type='list', label='Sudan', size='sm', state='hovered' %}
+      </div>
+    </div>
+
+    <h2 class="demo-subsection__heading">Checklist items</h2>
+
+    <div class="demo-row">
+      <span class="demo-row__label">Default</span>
+      <div class="demo-row__items">
+        {% snippet 'v2/components/list-item.html',
+            type='checklist', label='Afghanistan', count='(309)', checked=false, state='default' %}
+      </div>
+    </div>
+
+    <div class="demo-row">
+      <span class="demo-row__label">Hovered</span>
+      <div class="demo-row__items">
+        {% snippet 'v2/components/list-item.html',
+            type='checklist', label='Afghanistan', count='(309)', checked=false, state='hovered' %}
+      </div>
+    </div>
+
+    <div class="demo-row">
+      <span class="demo-row__label">Active</span>
+      <div class="demo-row__items">
+        {% snippet 'v2/components/list-item.html',
+            type='checklist', label='Afghanistan', count='(309)', checked=true, state='active' %}
+      </div>
+    </div>
+
+    <div class="demo-row">
+      <span class="demo-row__label">Active</span>
+      <div class="demo-row__items">
+        {% snippet 'v2/components/list-item.html',
+            type='checklist', label='Afghanistan', count='(309)', checked=true, state='active-hovered' %}
+      </div>
+    </div>
+  </section>
+
+  <hr class="demo-divider">
+
+  {# ══════════════════════════════════════════════════════
+     12. LETTER ANCHOR
+  ══════════════════════════════════════════════════════ #}
+  <section class="demo-section">
+    <h1 class="demo-section__title">Letter Anchor</h1>
+    <p class="demo-section__subtitle">size × state — alphabet navigation/filtering</p>
+
+    <h2 class="demo-subsection__heading">Size LG</h2>
+    <div class="demo-row">
+      <span class="demo-row__label">Enabled</span>
+      <div class="demo-row__items">
+        {% snippet 'v2/components/letter-anchor.html',
+            letter='A', size='lg', state='enabled' %}
+      </div>
+    </div>
+
+    <div class="demo-row">
+      <span class="demo-row__label">Active</span>
+      <div class="demo-row__items">
+        {% snippet 'v2/components/letter-anchor.html',
+            letter='C', size='lg', state='active' %}
+      </div>
+    </div>
+
+    <div class="demo-row">
+      <span class="demo-row__label">Disabled</span>
+      <div class="demo-row__items">
+        {% snippet 'v2/components/letter-anchor.html',
+            letter='Z', size='lg', state='disabled' %}
+      </div>
+    </div>
+
+    <h2 class="demo-subsection__heading">Size SM</h2>
+    <div class="demo-row">
+      <span class="demo-row__label">Enabled</span>
+      <div class="demo-row__items">
+        {% snippet 'v2/components/letter-anchor.html',
+            letter='A', size='sm', state='enabled' %}
+        {% snippet 'v2/components/letter-anchor.html',
+            letter='B', count='(245)', size='sm', state='enabled' %}
+      </div>
+    </div>
+
+    <div class="demo-row">
+      <span class="demo-row__label">Active</span>
+      <div class="demo-row__items">
+        {% snippet 'v2/components/letter-anchor.html',
+            letter='C', size='sm', state='active' %}
+        {% snippet 'v2/components/letter-anchor.html',
+            letter='D', count='(12)', size='sm', state='active' %}
+      </div>
+    </div>
+
+    <div class="demo-row">
+      <span class="demo-row__label">Disabled</span>
+      <div class="demo-row__items">
+        {% snippet 'v2/components/letter-anchor.html',
+            letter='Z', size='sm', state='disabled' %}
+      </div>
+    </div>
+  </section>
+
+
 </div>{# /demo-page #}
 
 {% endblock %}

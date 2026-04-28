@@ -1,0 +1,46 @@
+{#
+  Snippet: checkbox.html
+  Path:    templates/v2/components/checkbox.html
+
+  Renders a c-checkbox — visual checkbox with state management.
+  Use the semantic input element internally for accessibility.
+
+  Parameters
+  ─────────────────────────────────────────────────────────────
+  id            {string}  Unique identifier.  default: 'checkbox'
+  checked       {boolean} Whether checked.  default: false
+  disabled      {boolean} Whether disabled.  default: false
+  name          {string}  Form name attr.  default: ''
+  value         {string}  Form value attr.  default: ''
+  extra_classes {string}  Additional classes.  default: ''
+  ─────────────────────────────────────────────────────────────
+  Example
+
+  {% snippet 'v2/components/checkbox.html',
+      id='my-checkbox', checked=false, disabled=false %}
+
+  {% snippet 'v2/components/checkbox.html',
+      id='agree-terms', checked=true %}
+#}
+
+{% set id            = id            if id            is defined else 'checkbox' %}
+{% set checked       = checked       if checked       is defined else false %}
+{% set disabled      = disabled      if disabled      is defined else false %}
+{% set name          = name          if name          is defined else '' %}
+{% set value         = value         if value         is defined else '' %}
+{% set extra_classes = extra_classes if extra_classes is defined else '' %}
+
+{% set classes = ['c-checkbox'] %}
+{% if extra_classes %}{% set classes = classes + [extra_classes] %}{% endif %}
+
+<div class="{{ classes | join(' ') }}">
+  <input
+    class="c-checkbox__input"
+    type="checkbox"
+    id="{{ id }}"
+    {% if checked %}checked="checked"{% endif %}
+    {% if disabled %}disabled="disabled"{% endif %}
+    {% if name %}name="{{ name }}"{% endif %}
+    {% if value %}value="{{ value }}"{% endif %} />
+  <span class="c-checkbox__box"></span>
+</div>

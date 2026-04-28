@@ -227,9 +227,12 @@ v2-components-styles:
     - v2/foundation.css
     - v2/components/avatar-badge.css
     - v2/components/buttons.css
+    - v2/components/checkbox.css
     - v2/components/dropdown.css
     - v2/components/input-field.css
     - v2/components/label.css
+    - v2/components/letter-anchor.css
+    - v2/components/list-item.css
     - v2/components/navigation.css
     - v2/components/selection.css
     - v2/components/text-link.css
