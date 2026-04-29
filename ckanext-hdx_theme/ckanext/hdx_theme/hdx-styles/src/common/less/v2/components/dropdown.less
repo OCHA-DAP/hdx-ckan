@@ -1,6 +1,5 @@
 // ============================================================
 // c-dropdown — select trigger + panel overlay
-// c-dropdown-item — individual list row (checkbox + label + count)
 // c-dropdown-calendar — month-picker overlay
 // ============================================================
 // Figma source: "Dropdown"
@@ -22,10 +21,6 @@
 
 @c-dropdown-panel-border:  0.8px solid #ebeff0;  // whitesmoke
 @c-dropdown-panel-shadow:  var(--hdx-shadow-sm);
-
-@c-dropdown-cb-dim:        1rem;                  // 16 px checkbox
-@c-dropdown-cb-checked-bg: var(--hdx-primary-5);        // royalblue
-@c-dropdown-cb-radius:     var(--hdx-radius-sm);        //  2 px
 
 // Size M
 @c-dropdown-m-fs:   var(--hdx-fs-s);    // 14 px
@@ -197,35 +192,6 @@
         color:            var(--hdx-neutral-8);
     }
 
-    // Search field inside panel
-    &__search {
-        align-self:       stretch;
-        display:          flex;
-        align-items:      center;
-        border-radius:    var(--hdx-radius-sm);
-        background-color: @c-dropdown-bg;
-        border:           @c-dropdown-border;
-        padding:          var(--hdx-space-2) var(--hdx-space-3); // 8 12
-        gap:              var(--hdx-space-2);               // 8 px
-        min-width:        7.5rem;
-        overflow:         hidden;
-
-        input {
-            flex:         1;
-            border:       none;
-            background:   transparent;
-            font-family:  var(--hdx-font-body);
-            font-size:    @c-dropdown-m-fs;
-            color:        var(--hdx-neutral-8);
-            line-height:  130%;
-            outline:      none;
-
-            &::placeholder { color: var(--hdx-neutral-7); }
-        }
-
-        img { width: 1rem; flex-shrink: 0; }
-    }
-
     // Scrollable list area
     &__list-wrap {
         align-self:    stretch;
@@ -244,6 +210,7 @@
         align-items:   flex-start;
         gap:           var(--hdx-space-13); // 6 px
         overflow-y:    auto;
+        padding-left:  0;
     }
 
     // Scrollbar track
@@ -281,87 +248,7 @@
 
 
 // ────────────────────────────────────────────────────────────
-// 2. c-dropdown-item — single list row
-// ────────────────────────────────────────────────────────────
-
-.c-dropdown-item {
-    align-self:  stretch;
-    display:     flex;
-    align-items: flex-start;
-    padding:     var(--hdx-space-15) 0;  // 2 px top/bottom
-    gap:         var(--hdx-space-13);    // 6 px
-    cursor:      pointer;
-    font-size:   var(--hdx-fs-s);        // 14 px
-    line-height: 130%;
-    color:       var(--hdx-neutral-95);  // #101212
-
-    &:hover {
-        color: var(--hdx-primary-5);
-    }
-
-    &--hovered { color: var(--hdx-primary-5); }
-    &--checked { color: var(--hdx-primary-5); }
-
-    // Checkbox box
-    &__checkbox {
-        display:       flex;
-        align-items:   flex-start;
-        flex-shrink:   0;
-        position:      relative;
-        isolation:     isolate;
-    }
-
-    &__checkbox-bg {
-        width:            @c-dropdown-cb-dim;
-        height:           @c-dropdown-cb-dim;
-        border-radius:    @c-dropdown-cb-radius;
-        background-color: @c-dropdown-bg;
-        border:           @c-dropdown-border;
-        box-sizing:       border-box;
-        flex-shrink:      0;
-
-        // Checked state
-        .c-dropdown-item--checked & {
-            background-color: @c-dropdown-cb-checked-bg;
-            border-color:     @c-dropdown-cb-checked-bg;
-        }
-    }
-
-    &__checkbox-check {
-        position:   absolute;
-        top:        50%;
-        left:       50%;
-        transform:  translate(-50%, -50%);
-        width:      0.5rem;
-        display:    none;
-
-        .c-dropdown-item--checked & {
-            display: block;
-        }
-    }
-
-    // Text area
-    &__body {
-        flex:        1;
-        display:     flex;
-        align-items: center;
-        gap:         var(--hdx-space-1); // 4 px
-    }
-
-    &__label {
-        flex:        1;
-        line-height: 130%;
-    }
-
-    &__count {
-        font-size: var(--hdx-fs-xs); // 12 px
-        color:     var(--hdx-neutral-8);
-    }
-}
-
-
-// ────────────────────────────────────────────────────────────
-// 3. c-dropdown-calendar — month picker panel
+// 2. c-dropdown-calendar — month picker panel
 // ────────────────────────────────────────────────────────────
 
 .c-dropdown-calendar {
