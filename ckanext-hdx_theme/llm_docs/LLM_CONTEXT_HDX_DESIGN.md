@@ -10,8 +10,11 @@ HDX is undergoing a progressive redesign using a Figma-driven, responsive compon
 
 - **Design tokens**: `less/v2/foundation.less`, `less/v2/colors.less`, `less/v2/spacing.less`, `less/v2/radius.less`, `less/v2/elevation.less`, `less/v2/typography.less` ✅ Complete
   - All color palettes, spacing, corner radius, elevation, typography, and token mixins are implemented in `ckanext-hdx_theme/ckanext/hdx_theme/less/v2/`.
-- **V2 page scaffold**: `templates/v2/page.html` ⚠️ Placeholder
-  - Currently extends `page_light.html` and loads `hdx_theme/page-extra-light-styles` plus `hdx_theme/bem-blocks-styles`.
+- **V2 page scaffold**: `templates/v2/page.html` ✅ Scaffolding complete — header/footer stubs need real content
+  - Extends `base.html` directly (not `page_light.html`).
+  - Loads Google Fonts (Merriweather, Roboto), `hdx_theme/v2-components-styles`, and `hdx_theme/v2-components-scripts`.
+  - Includes `v2/header.html` (stub) and `v2/footer.html` (stub) — placeholders awaiting real implementation.
+  - Provides standard layout blocks: `styles`, `header`, `header_core`, `page_content`, `toolbar`, `flash`, `content`, `footer`, `scripts`.
 - **Component library**: `templates/v2/components/` ✅ In Progress
   - Implemented components include `button`, `label`, `avatar`, `dropdown`, `input-field`, `navigation`, `selection`, and `text-link`.
   - Demo page: `templates/v2/components.html`.
@@ -49,6 +52,8 @@ HDX overrides CKAN by adding its template directories in `ckanext-hdx_theme/ckan
 
 ## Core layout templates (HDX theme)
 
+There are three active layout base templates. The goal is to maintain exactly these three variants during the migration period, then converge to `v2/page.html` alone.
+
 - `ckanext-hdx_theme/ckanext/hdx_theme/templates/base.html`
   - Base HTML skeleton for all pages.
   - Renders global analytics snippets and includes `{{ h.render_assets('style') }}`.
@@ -60,8 +65,15 @@ HDX overrides CKAN by adding its template directories in `ckanext-hdx_theme/ckan
 - `ckanext-hdx_theme/ckanext/hdx_theme/templates/page_light.html`
   - "Light" layout variant for simplified pages.
   - Loads `hdx_theme/page-light-styles` and `hdx_theme/page-light-scripts`.
+- `ckanext-hdx_theme/ckanext/hdx_theme/templates/v2/page.html`
+  - New v2 layout. Extends `base.html` directly.
+  - Loads Google Fonts, `hdx_theme/v2-components-styles`, and `hdx_theme/v2-components-scripts`.
+  - Includes `v2/header.html` (stub) and `v2/footer.html` (stub).
+  - Target base for all pages once the v2 redesign is complete.
 
 ## Header and footer composition (HDX theme)
+
+### Legacy header/footer (used by `page.html` and `page_light.html`)
 
 - Header templates:
   - `ckanext-hdx_theme/ckanext/hdx_theme/templates/header_base.html`
@@ -71,7 +83,12 @@ HDX overrides CKAN by adding its template directories in `ckanext-hdx_theme/ckan
   - `ckanext-hdx_theme/ckanext/hdx_theme/templates/footer.html`
   - `ckanext-hdx_theme/ckanext/hdx_theme/templates/footer-wide.html`
 
-These are included from `page.html` or `page_light.html`, so changes to header/footer should start here.
+### V2 header/footer (used by `v2/page.html`)
+
+- `ckanext-hdx_theme/ckanext/hdx_theme/templates/v2/header.html` — **stub, pending real implementation**
+- `ckanext-hdx_theme/ckanext/hdx_theme/templates/v2/footer.html` — **stub, pending real implementation**
+
+Pages that are still in the `page_light.html` holding state (landing pages, signup, org/join, etc.) manually override `{% block header_core %}` to include the legacy `header-mobile.html`. Once the v2 header/footer stubs are filled in, those pages will migrate back to `v2/page.html`.
 
 ## BEM components (HDX custom UI blocks)
 
@@ -126,7 +143,7 @@ Example page-specific template (light search):
 
 ## Practical guidance for design changes
 
-- Start from the layout template (`page.html` or `page_light.html`) and identify the specific page template that extends it.
+- Start from the layout template (`page.html`, `page_light.html`, or `v2/page.html`) and identify the specific page template that extends it.
 - Check which asset bundles are loaded in that page and trace them back in `ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/webassets.yml`.
 - For UI elements (forms, cards, tables), inspect or reuse BEM blocks in `templates/bem.blocks` and styles in `less/bem.blocks`.
 - Use CKAN core templates and assets as a baseline; HDX overrides live under the HDX theme path.
@@ -179,28 +196,30 @@ There are **two versions** of this page that share some assets but use different
 ### Signals page (`/signals`)
 
 - **Template**: `ckanext-hdx_theme/ckanext/hdx_theme/templates/landing_pages/signals.html`
-  - Extends `templates/v2/page.html` via the current v2 scaffold.
-  - `templates/v2/page.html` currently extends `page_light.html` and loads `hdx_theme/page-extra-light-styles`, `hdx_theme/bem-blocks-styles`, and `hdx_theme/bem-blocks-scripts`.
+  - Extends `page_light.html` directly (holding state — will migrate to `v2/page.html` once its header/footer are implemented).
+  - Overrides `{% block header_core %}` to include legacy `header-mobile.html`.
+  - Manually loads `hdx_theme/page-extra-light-styles` and `hdx_theme/bem-blocks-styles` in `{% block styles %}`.
   - Uses BEM blocks heavily: `bem.blocks/hero.html`, `bem.blocks/card.html`, `bem.blocks/paragraph.html`.
   - UI copy comes from `h.HDX_CONST('UI_CONSTANTS')['LANDING_PAGES']['SIGNALS_LANDING_PAGE']`.
 - **Core assets**:
   - `hdx_theme/hdx-signals-scripts` — signals-specific JS (`landing_pages/hdx_signals.js`).
   - `hdx_theme/hdx-signals-styles` — signals-specific CSS (`landing_pages/hdx_signals.css`).
-  - `hdx_theme/bem-blocks-styles` and `hdx_theme/bem-blocks-scripts` — shared BEM component styles and JS (currently loaded by `templates/v2/page.html`).
+  - `hdx_theme/bem-blocks-styles` and `hdx_theme/bem-blocks-scripts` — shared BEM component styles and JS (loaded directly by this template).
 
 ---
 
 ### HAPI page (`/hapi`)
 
 - **Template**: `ckanext-hdx_theme/ckanext/hdx_theme/templates/landing_pages/hapi.html`
-  - Extends `templates/v2/page.html` (same landing-page layout as Signals above).
+  - Extends `page_light.html` directly (holding state — same as Signals, will migrate to `v2/page.html` once its header/footer are implemented).
+  - Overrides `{% block header_core %}` to include legacy `header-mobile.html`.
+  - Manually loads `hdx_theme/page-extra-light-styles` and `hdx_theme/bem-blocks-styles` in `{% block styles %}`.
   - Uses BEM blocks: `bem.blocks/hero.html`, `bem.blocks/card.html`.
   - Embeds an iframe (`/visualization/hapi-availability/`) for data-availability visualisation.
   - UI copy comes from `h.HDX_CONST('UI_CONSTANTS')['LANDING_PAGES']['HAPI_LANDING_PAGE']`.
-  - No dedicated styles bundle — relies entirely on the inherited `bem-blocks-styles` and `page-extra-light-styles`.
 - **Core assets**:
   - `hdx_theme/hdx-hapi-scripts` — HAPI-specific JS (`landing_pages/hdx_hapi.js`).
-  - `hdx_theme/bem-blocks-styles` and `hdx_theme/bem-blocks-scripts` — shared BEM component styles and JS (currently loaded by `templates/v2/page.html`).
+  - `hdx_theme/bem-blocks-styles` and `hdx_theme/bem-blocks-scripts` — shared BEM component styles and JS (loaded directly by this template).
 
 ---
 
@@ -223,16 +242,14 @@ There are **two versions** of this page that share some assets but use different
 
 ---
 
-### Placeholder Page (`/placeholder`)
+### V2 Component Demo (`/components`)
 
-- **Template**: `ckanext-hdx_theme/ckanext/hdx_theme/templates/landing_pages/placeholder.html`
-  - Extends `templates/v2/page.html` (V2 layout scaffold for testing new components).
-  - **Purpose**: Demo page showing all v2 components in action.
-  - Displays: Labels (all sizes and colors), badges, and other v2 components as they're added.
+- **Template**: `ckanext-hdx_theme/ckanext/hdx_theme/templates/v2/components.html`
+  - Extends `templates/v2/page.html` (v2 layout scaffold).
+  - **Purpose**: Demo page rendering all v2 components side-by-side for development verification.
 - **Core assets**:
-  - `hdx_theme/page-extra-light-styles` — lightweight page styles (from `templates/v2/page.html`).
-  - `hdx_theme/v2-components-styles` — all v2 component styles.
-  - `hdx_theme/hdx-hapi-scripts` — inherited from landing page structure.
+  - `hdx_theme/v2-components-styles` — all v2 component styles (loaded by `v2/page.html`).
+  - `hdx_theme/v2-components-scripts` — all v2 component JS (loaded by `v2/page.html`).
 
 ---
 
@@ -252,8 +269,9 @@ When working on the v2 redesign:
    - LESS styles: `less/v2/components/component-name.less` — component styles referencing `foundation.less`
 
 4. **Page migrations**:
-   - Start simple (landing pages, signup, contact page)
-   - Change `{% extends "page.html" %}` to `{% extends "templates/v2/page.html" %}`
+   - `v2/page.html` is now a proper layout base extending `base.html` — ready to receive page migrations
+   - Pages currently in holding state on `page_light.html` (landing pages, signup, org/join, etc.) should be migrated to `{% extends "v2/page.html" %}` once `v2/header.html` and `v2/footer.html` are implemented
+   - When migrating: remove the manual `header_core`, `styles`, and `scripts` overrides that were added as holding-state workarounds
    - Replace old BEM snippets (`bem.blocks/`) with v2 equivalents (`templates/v2/components/`)
    - Register new asset bundles in `webassets.yml` if needed
 

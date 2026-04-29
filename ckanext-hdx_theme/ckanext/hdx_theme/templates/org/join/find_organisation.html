@@ -1,9 +1,23 @@
-{% extends "v2/page.html" %}
+{% extends "page_light.html" %}
 
 {% set CONST = h.HDX_CONST('UI_CONSTANTS')['ONBOARDING']['REQUEST_JOIN_ORGANISATION'] %}
 {% set selected_org_id = request.args.get('selected', None) %}
 
 {% block subtitle %}{{ _('Request to join an organisation') }}{% endblock %}
+
+{% block styles %}
+  {% asset 'hdx_theme/page-extra-light-styles' %}
+  {% asset 'hdx_theme/bem-blocks-styles' %}
+{% endblock %}
+
+{% block scripts %}
+  {{ super() }}
+  {% asset 'hdx_theme/bem-blocks-scripts' %}
+{% endblock %}
+
+{% block header_core %}
+  {% snippet 'header-mobile.html', page_has_desktop_version=False, page_has_mobile_version=False %}
+{% endblock %}
 
 {% block breadcrumb_content %}
   {% snippet "snippets/active_breadcrumb_item.html", title=_('Organisations'), position=2 %}

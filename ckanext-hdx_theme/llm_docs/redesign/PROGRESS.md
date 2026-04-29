@@ -2,7 +2,7 @@
 
 **Status**: In-progress
 **Started**: 2026-04-16
-**Last Updated**: 2026-04-28
+**Last Updated**: 2026-04-29
 
 ---
 
@@ -64,31 +64,60 @@ Each palette is documented with Figma step mappings and usage guidance for data 
 
 **Location**: [`templates/v2/page.html`](../ckanext-hdx_theme/ckanext/hdx_theme/templates/v2/page.html)
 
-**Status**: ⚠️ **Placeholder — Needs Implementation**
+**Status**: ✅ **Scaffolding Complete — Header/Footer stubs need real implementation**
 
-Currently, `templates/v2/page.html` extends the old `page_light.html` layout and loads legacy asset bundles. This is a temporary scaffold that needs to be replaced with proper v2 structure.
+`templates/v2/page.html` now extends `base.html` directly and is a proper v2 layout base. It is no longer a thin wrapper over `page_light.html`.
 
-**What needs to be done**:
-- Extend `base.html` directly (not `page_light.html`)
-- Create new asset bundles: `hdx_theme/page-v2-styles`, `hdx_theme/page-v2-scripts`
-- Create `header-v2.html` and `footer-v2.html` snippets
-- Define responsive grid structure and key layout blocks
+**Current structure**:
+- Extends `base.html` directly
+- Loads Google Fonts (Merriweather + Roboto) in `{% block styles %}`
+- Loads `hdx_theme/v2-components-styles` and conditionally loads onboarding bundles
+- Overrides `{% block page %}` with: header block → page_content block (toolbar + flash + content) → footer block
+- `{% block header_core %}` includes `v2/header.html` via `{% snippet %}`
+- `{% block footer %}` includes `v2/footer.html` via `{% include %}`
+- Loads `hdx_theme/v2-components-scripts` in `{% block scripts %}`
 
-**Current scaffold usage**:
-- `templates/v2/components.html` renders the current v2 component demo page
+**What still needs to be done**:
+- Implement real content in `v2/header.html` (currently a stub)
+- Implement real content in `v2/footer.html` (currently a stub)
+- Consider dedicated `hdx_theme/page-v2-styles` / `hdx_theme/page-v2-scripts` bundles for page-level CSS/JS (layout reset, responsive grid, header/footer styles) once those are designed
+
+**Current usage**:
+- `templates/v2/components.html` renders the v2 component demo page
+- Ready to receive page-level template migrations once header/footer stubs are implemented
 
 ---
 
 ## Pages Migrated to V2
 
-| Page | Template | Status | Notes |
-|------|----------|--------|-------|
-| Signup | `ckanext/contribute_flow/signup.html` | ✅ Using BEM | Uses the temporary v2 scaffold; needs re-evaluation |
-| Landing pages | `landing_pages/*.html` | ✅ Using BEM | Uses the temporary v2 scaffold; needs re-evaluation |
-| Contact contributor | `contribute_flow/contact_contrib.html` | ✅ Using BEM | Uses the temporary v2 scaffold; needs re-evaluation |
-| Find/join org | `org/join_org.html` | ✅ Using BEM | Uses the temporary v2 scaffold; needs re-evaluation |
+No pages are currently on `v2/page.html`. All previously migrated pages were reverted to `page_light.html` as part of the structural reorganisation that upgraded `v2/page.html` into a real layout base. They are now in a holding state on the legacy stack, ready to be re-migrated once the v2 header/footer are implemented.
 
-**Note**: These pages are using BEM components as mentioned, but the current v2 scaffold in `templates/v2/page.html` is still a temporary wrapper. Once the new layout is complete, these should be re-validated.
+### Pages in holding state (on `page_light.html`)
+
+Each page below:
+- Extends `page_light.html` directly
+- Manually overrides `{% block styles %}` to load `hdx_theme/page-extra-light-styles` and `hdx_theme/bem-blocks-styles`
+- Manually loads `hdx_theme/bem-blocks-scripts` in `{% block scripts %}`
+- Overrides `{% block header_core %}` to include `header-mobile.html`
+
+| Page | Template(s) | Notes |
+|------|-------------|-------|
+| Landing — Signals | `landing_pages/signals.html` | Also loads `hdx_theme/hdx-signals-styles` / `hdx-signals-scripts` |
+| Landing — HAPI | `landing_pages/hapi.html` | Also loads `hdx_theme/hdx-hapi-scripts` |
+| Signup — user info | `onboarding/signup/user-info.html` | |
+| Signup — value proposition | `onboarding/signup/value-proposition.html` | |
+| Signup — verify email | `onboarding/signup/verify-email.html` | |
+| Signup — change email | `onboarding/signup/change-email.html` | Also loads `hdx_theme/hdx-form-validator` |
+| Signup — account validated | `onboarding/signup/account-validated.html` | |
+| Org join — find org | `org/join/find_organisation.html` | |
+| Org join — confirm org | `org/join/confirm_organisation.html` | |
+| Org join — reason request | `org/join/reason_request.html` | |
+| Org join — completed | `org/join/completed.html` | |
+| Org request — new request | `org/request/org_new_request.html` | |
+| Org request — completed | `org/request/completed_request.html` | |
+| Contact contributor | `package/contact_contributor.html` | |
+| Request access | `package/request_access.html` | |
+| Create/edit dataset | `contribute_flow/create_edit.html` | Also loads `hdx_theme/contribute-flow-styles` |
 
 ---
 
@@ -133,14 +162,14 @@ Each component file should have:
 **Location**: [`fanstatic/webassets.yml`](../ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/webassets.yml)
 
 Bundle configuration:
-- `hdx_theme/v2-components-styles` — contains all v2 component CSS files
-  - Current contents: `v2/components/avatar-badge.css`, `v2/components/buttons.css`, `v2/components/dropdown.css`, `v2/components/input-field.css`, `v2/components/label.css`, `v2/components/navigation.css`, `v2/components/selection.css`, `v2/components/text-link.css`
-  - Will be updated as new components are added
+- `hdx_theme/v2-components-styles` — all v2 component CSS files
+  - Contents: `v2/foundation.css`, `v2/components/avatar-badge.css`, `v2/components/buttons.css`, `v2/components/checkbox.css`, `v2/components/dropdown.css`, `v2/components/input-field.css`, `v2/components/label.css`, `v2/components/letter-anchor.css`, `v2/components/list-item.css`, `v2/components/navigation.css`, `v2/components/selection.css`, `v2/components/text-link.css`
+  - Updated as new components are added
+- `hdx_theme/v2-components-scripts` ✅ Now defined — contains `v2/components/password-toggle.js`
 
-Still needed:
-- `hdx_theme/page-v2-styles` — foundation + layout reset + responsive grid + header-v2/footer-v2 styles
+Still needed (pending header/footer implementation):
+- `hdx_theme/page-v2-styles` — foundation + layout reset + responsive grid + v2 header/footer styles
 - `hdx_theme/page-v2-scripts` — responsive header behavior, shared v2 JS utilities
-- `hdx_theme/v2-components-scripts` — any JS needed by v2 components
 
 Page-specific bundles will be created as pages are migrated (e.g., `hdx_theme/homepage-v2-styles`).
 
@@ -160,13 +189,13 @@ Use the design foundations in `less/v2/foundation.less`, `less/v2/colors.less`, 
 
 ## Implementation Checklist
 
-### Phase 1: Foundation ✅ (In Progress)
+### Phase 1: Foundation ✅ (Complete)
 - [x] Create `less/v2/foundation.less` with all design tokens
 - [x] Export design tokens from Figma for reference
-- [ ] Set up `templates/v2/page.html` to extend `base.html` (not `page_light.html`)
-- [ ] Create `header-v2.html` and `footer-v2.html` snippets
-- [ ] Register v2 asset bundles in `webassets.yml`
-- [ ] Test foundation tokens in a simple test page
+- [x] Set up `templates/v2/page.html` to extend `base.html` (not `page_light.html`)
+- [x] Create `v2/header.html` and `v2/footer.html` snippets (stubs — content TBD)
+- [x] Register v2 asset bundles in `webassets.yml` (`v2-components-styles`, `v2-components-scripts`)
+- [x] Test foundation tokens in a simple test page
 
 ### Phase 2: Component Library 🔄 (Next Priority)
 - [x] Create `templates/v2/components/` directory ✓
@@ -217,22 +246,23 @@ Use the design foundations in `less/v2/foundation.less`, `less/v2/colors.less`, 
 - [x] Typography tokens as reusable mixins ✓
 - [x] Line count: 460 lines (reasonable size) ✓
 
-⚠️ **templates/v2/page.html**
-- [ ] Should extend `base.html`, not `page_light.html`
-- [ ] Needs new v2 asset bundle registration
-- [ ] Needs responsive header/footer snippets
-- [ ] Current references in signup/landing/contact pages should be re-validated after template update
+✅ **templates/v2/page.html**
+- [x] Extends `base.html` directly
+- [x] Loads `v2-components-styles` and `v2-components-scripts` bundles
+- [x] Includes `v2/header.html` (stub) and `v2/footer.html` (stub)
+- [ ] Header and footer stubs need real content implemented
+- [ ] Pages previously on this template (signup, landing, org/join, etc.) are on `page_light.html` holding state — needs re-migration once header/footer are real
 
 ---
 
 ## Next Steps
 
-1. **Update `templates/v2/page.html`** to properly extend `base.html` and load v2 bundles
-2. **Create responsive header/footer** templates for v2 (`header-v2.html`, `footer-v2.html`)
-3. **Register v2 asset bundles** in `webassets.yml`
-4. **Build component library** (`templates/v2/components/`) starting with core components (button, input, card)
-5. **Migrate first simple page** (signup or landing page) as proof-of-concept
-6. **Iterate** through remaining pages
+1. **Implement `v2/header.html`** — replace the stub with the redesigned responsive header markup and styles
+2. **Implement `v2/footer.html`** — replace the stub with the redesigned footer markup and styles
+3. **Register `hdx_theme/page-v2-styles` and `hdx_theme/page-v2-scripts`** bundles in `webassets.yml` once header/footer styles are ready; load them from `v2/page.html`
+4. **Re-migrate pages** from `page_light.html` holding state back to `v2/page.html`, starting with the simplest (landing pages, then signup/onboarding, then org/join, etc.)
+5. **Continue building component library** as needed for page migrations
+6. **Iterate** through remaining pages (homepage, dataset list, etc.)
 
 ---
 

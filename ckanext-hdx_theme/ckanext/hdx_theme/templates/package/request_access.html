@@ -1,13 +1,23 @@
-{% extends "v2/page.html" %}
+{% extends "page_light.html" %}
 
 {% block scripts %}
   {{ super() }}
   {% asset 'hdx_theme/request-access-scripts' %}
+  {% asset 'hdx_theme/bem-blocks-scripts' %}
+{% endblock %}
+
+{% block styles %}
+  {% asset 'hdx_theme/page-extra-light-styles' %}
+  {% asset 'hdx_theme/bem-blocks-styles' %}
 {% endblock %}
 
 {% set CONST = h.HDX_CONST('UI_CONSTANTS')['REQUEST_ACCESS'] %}
 
 {% block subtitle %}{{ CONST.PAGE_TITLE }}{% endblock %}
+
+{% block header_core %}
+  {% snippet 'header-mobile.html', page_has_desktop_version=False, page_has_mobile_version=False %}
+{% endblock %}
 
 {% block breadcrumb_content %}
   {% snippet "snippets/other_breadcrumb_item.html", title=pkg_dict.title|truncate(120), named_route='hdx_dataset.read', id=pkg_dict.name, position=2 %}
