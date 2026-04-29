@@ -237,10 +237,11 @@ v2-components-styles:
     - v2/components/selection.css
     - v2/components/text-link.css
 
-#v2-components-scripts:
-#  <<: *common-js
-#  output: ckanext-hdx_theme/%(version)s_components-scripts.js
-#  contents: []
+v2-components-scripts:
+  <<: *common-js
+  output: ckanext-hdx_theme/%(version)s_components-scripts.js
+  contents:
+    - v2/components/password-toggle.js
 
 hdx-signals-scripts:
   <<: *common-js

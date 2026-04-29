@@ -3,6 +3,7 @@
   Path:    templates/snippets/components/input-field/search-input.html
 
   Renders a c-search-input — a standalone search/text input bar.
+  Pass type='password' to enable the eye / eye-off toggle (requires v2-components-scripts).
 
   Parameters
   ─────────────────────────────────────────────────
@@ -13,14 +14,23 @@
                           default: 'enabled'
   name          {string}  input name attr.  default: 'q'
   id            {string}  input id attr.   default: ''
-  icon_src      {string}  Right icon path. default: 'v2/icons/search.svg'
+  type          {string}  input type attr. 'search' | 'password' | 'text' …
+                          default: 'search'. When 'password', renders an
+                          interactive eye toggle instead of a static icon.
+  autocomplete  {string}  autocomplete attr value.  default: ''
+  icon_src      {string}  Right icon path (ignored when type='password').
+                          default: 'v2/icons/search.svg'
   extra_classes {string}  default: ''
   attrs         {dict}    Extra HTML attrs on the wrapper div.  default: {}
   ─────────────────────────────────────────────────
-  Example
+  Examples
 
-  {% snippet 'snippets/components/input-field/search-input.html',
+  {% snippet 'v2/components/search-input.html',
       size='l', placeholder='Search datasets…', name='q' %}
+
+  {% snippet 'v2/components/search-input.html',
+      type='password', name='password',
+      placeholder='Enter password', autocomplete='current-password' %}
 #}
 
 {% set size          = size          if size          is defined else 'l' %}
@@ -29,6 +39,8 @@
 {% set state         = state         if state         is defined else 'enabled' %}
 {% set name          = name          if name          is defined else 'q' %}
 {% set id            = id            if id            is defined else '' %}
+{% set type          = type          if type          is defined else 'search' %}
+{% set autocomplete  = autocomplete  if autocomplete  is defined else '' %}
 {% set icon_src      = icon_src      if icon_src      is defined else 'v2/icons/search.svg' %}
 {% set extra_classes = extra_classes if extra_classes is defined else '' %}
 {% set attrs         = attrs         if attrs         is defined else {} %}
@@ -42,13 +54,26 @@
 <div class="{{ classes | join(' ') }}"
      {% for key, val in attrs.items() %}{{ key }}="{{ val }}"{% endfor %}>
 
-  <input type="search"
+  <input type="{{ type }}"
          name="{{ name }}"
          {% if id %}id="{{ id }}"{% endif %}
          placeholder="{{ placeholder }}"
          value="{{ value }}"
-         autocomplete="off">
+         {% if autocomplete %}autocomplete="{{ autocomplete }}"{% else %}autocomplete="off"{% endif %}>
 
-  <span class="c-search-input__icon">{% include h.url_for_static(icon_src) %}</span>
+  {% if type == 'password' %}
+    <button class="c-search-input__icon c-search-input__toggle"
+            type="button"
+            aria-label="Show password">
+      <span class="c-search-input__toggle-eye">
+        {% include h.url_for_static('v2/icons/eye.svg') %}
+      </span>
+      <span class="c-search-input__toggle-eye-off" hidden>
+        {% include h.url_for_static('v2/icons/eye-off.svg') %}
+      </span>
+    </button>
+  {% else %}
+    <span class="c-search-input__icon">{% include h.url_for_static(icon_src) %}</span>
+  {% endif %}
 
 </div>

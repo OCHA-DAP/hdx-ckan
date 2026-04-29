@@ -74,6 +74,23 @@
         flex-shrink: 0;
     }
 
+    &__toggle {
+        display:     flex;
+        align-items: center;
+        background:  none;
+        border:      none;
+        padding:     0;
+        cursor:      pointer;
+        color:       inherit;
+        flex-shrink: 0;
+
+        svg {
+            width:   @c-input-icon-dim;
+            height:  @c-input-icon-dim;
+            display: block;
+        }
+    }
+
     // ── States ──────────────────────────────────────────────
 
     &:hover,
