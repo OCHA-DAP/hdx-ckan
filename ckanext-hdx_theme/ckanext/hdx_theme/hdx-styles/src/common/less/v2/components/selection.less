@@ -233,8 +233,44 @@
         transition:       background-color 0.15s ease;
     }
 
+    &__body {
+        display:     flex;
+        align-items: center;
+        gap:         var(--hdx-space-13);  // 6 px — tighter than outer 8 px gap
+    }
+
     &__label { position: relative; line-height: 130%; }
-    &__hint  { width: 1rem; flex-shrink: 0; }
+
+    &__hint-wrap {
+        position:    relative;
+        display:     inline-flex;
+        align-items: center;
+
+        .c-tooltip {
+            position:    absolute;
+            bottom:      calc(100% + 0.375rem);
+            left:        50%;
+            transform:   translateX(-50%);
+            white-space: nowrap;
+            display:     none;
+            z-index:     10;
+        }
+
+        &:hover .c-tooltip { display: block; }
+    }
+
+    &__hint {
+        width:       1rem;
+        flex-shrink: 0;
+        display:     block;
+        color:       inherit;
+
+        svg {
+            width:   1rem;
+            height:  1rem;
+            display: block;
+        }
+    }
 
     // ── States ──────────────────────────────────────────────
 
@@ -256,11 +292,11 @@
     &--disabled {
         cursor:         not-allowed;
         pointer-events: none;
-        color:          var(--hdx-neutral-7);  // #9db1b3
+        color:          var(--hdx-neutral-5);
     }
 
     &--disabled &__ring {
-        border-color: #ebeff0;  // whitesmoke
+        border-color: var(--hdx-neutral-1);
     }
 
     &--disabled&--checked &__dot {
