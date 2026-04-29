@@ -15,7 +15,7 @@
   ── Light / map card (variant='light') ─────────────────────
   title        {string}   Dataset title (max 2 lines).  default: ''
   subtitle     {string}   Small metadata text below title.  default: ''
-  flag_src     {string}   Flag image path.  default: ''
+  flag_src     {string}   Optional right-side icon (inline SVG path).  default: ''
   action_label {string}   Optional button label.  default: ''
 
   ── Graph (variant='graph') ─────────────────────────────────
@@ -58,12 +58,6 @@
   {% elif variant == 'light' %}
 
     <div class="c-tooltip__body">
-      {% if flag_src %}
-        <img class="c-tooltip__flag"
-             src="{{ h.url_for_static(flag_src) }}"
-             alt="" aria-hidden="true">
-      {% endif %}
-
       <div class="c-tooltip__content">
         {% if title %}
           <span class="c-tooltip__title">{{ title }}</span>
@@ -72,6 +66,13 @@
           <span class="c-tooltip__subtitle">{{ subtitle }}</span>
         {% endif %}
       </div>
+
+      {% if flag_src %}
+
+        <div class="c-tooltip__icon-btn" aria-hidden="true">
+          {% include h.url_for_static(flag_src) %}
+        </div>
+      {% endif %}
     </div>
 
     {% if arrow %}
