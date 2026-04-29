@@ -10,3 +10,4 @@
 | 006 | [update-autocomplete-chips-and-search-results](006-update-autocomplete-chips-and-search-results.md) | implemented | |
 | 007 | [stable-border-width-across-states](007-stable-border-width-across-states.md) | implemented | |
 | 008 | [replace-checkbox-checkmark-with-svg](008-replace-checkbox-checkmark-with-svg.md) | implemented | |
+| 009 | [refactor-dropdown-panel-to-use-existing-components](009-refactor-dropdown-panel-to-use-existing-components.md) | pending | |
