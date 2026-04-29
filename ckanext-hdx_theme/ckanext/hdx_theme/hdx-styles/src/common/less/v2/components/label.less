@@ -290,10 +290,6 @@
             flex-shrink:     0;
         }
 
-        .c-tooltip__flag {
-            width: 1.25rem;
-        }
-
         .c-tooltip__content {
             flex:           1;
             display:        flex;
@@ -319,6 +315,18 @@
             font-size:   var(--hdx-fs-xs);   // 12 px
             line-height: 130%;
             color:       var(--hdx-neutral-85);   // darkslategray-200
+        }
+
+        .c-tooltip__icon-btn {
+            align-self:       stretch;
+            display:          flex;
+            align-items:      flex-start;
+            justify-content:  center;
+            background-color: @c-tooltip-light-bg;
+            border-radius:    var(--hdx-radius-sm);
+            flex-shrink:      0;
+
+            svg { width: 1.25rem; }
         }
     }
 
