@@ -1,17 +1,5 @@
 {% extends "v2/page.html" %}
 
-{% block bodyclassname %}home{% endblock %}
-
-{% block styles %}
-  {{ super() }}
-  {% asset 'hdx_theme/v2-components-styles' %}
-{% endblock %}
-
-{% block scripts %}
-  {{ super() }}
-  {% asset 'hdx_theme/v2-components-scripts' %}
-{% endblock %}
-
 {% block subtitle %}{{ _('Components') }}{% endblock %}
 
 {% block content %}
