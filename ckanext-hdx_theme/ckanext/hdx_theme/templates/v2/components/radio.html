@@ -12,19 +12,27 @@
   label         {string}  Visible label text.  default: ''
   checked       {bool}    Whether checked.  default: False
   state         {string}  'enabled' | 'disabled'  default: 'enabled'
-  hint          {bool}    Show a hint/info icon.  default: False
-  hint_src      {string}  Hint icon path.  default: 'v2/icons/info.svg'
+  hint          {bool}    Show an info-circle icon to the right of the label.
+                          default: False
+  hint_text     {string}  Tooltip text shown on icon hover. When empty, the
+                          icon renders without a tooltip.  default: ''
+  hint_src      {string}  Hint icon path (inline SVG).
+                          default: 'v2/icons/info-circle.svg'
   id            {string}  Input id (generated from name+value if omitted).
                           default: ''
   extra_classes {string}  default: ''
   ─────────────────────────────────────────────────
   Examples
 
-  {% snippet 'snippets/components/selection/radio.html',
+  {% snippet 'v2/components/radio.html',
       name='format', value='csv', label='CSV', checked=True %}
 
-  {% snippet 'snippets/components/selection/radio.html',
+  {% snippet 'v2/components/radio.html',
       name='format', value='xlsx', label='Excel', state='disabled' %}
+
+  {% snippet 'v2/components/radio.html',
+      name='format', value='csv', label='CSV',
+      hint=True, hint_text='Comma-separated values' %}
 #}
 
 {% set name          = name          if name          is defined else 'radio-group' %}
@@ -33,7 +41,8 @@
 {% set checked       = checked       if checked       is defined else False %}
 {% set state         = state         if state         is defined else 'enabled' %}
 {% set hint          = hint          if hint          is defined else False %}
-{% set hint_src      = hint_src      if hint_src      is defined else 'v2/icons/info.svg' %}
+{% set hint_text     = hint_text     if hint_text     is defined else '' %}
+{% set hint_src      = hint_src      if hint_src      is defined else 'v2/icons/info-circle.svg' %}
 {% set id            = id            if id            is defined else (name ~ '-' ~ value) %}
 {% set extra_classes = extra_classes if extra_classes is defined else '' %}
 
@@ -61,14 +70,28 @@
     <span class="c-radio__dot"></span>
   </span>
 
-  {% if label %}
-    <span class="c-radio__label">{{ label }}</span>
-  {% endif %}
+  {% if label or hint %}
+    <span class="c-radio__body">
 
-  {% if hint %}
-    <img class="c-radio__hint"
-         src="{{ h.url_for_static(hint_src) }}"
-         alt="More information" aria-label="More information about {{ label }}">
+      {% if label %}
+        <span class="c-radio__label">{{ label }}</span>
+      {% endif %}
+
+      {% if hint %}
+        <span class="c-radio__hint-wrap">
+          <span class="c-radio__hint" aria-hidden="true">
+
+            {% include h.url_for_static(hint_src) %}
+          </span>
+          {% if hint_text %}
+            {% snippet 'v2/components/tooltip.html',
+
+                variant='dark', text=hint_text, arrow='' %}
+          {% endif %}
+        </span>
+      {% endif %}
+
+    </span>
   {% endif %}
 
 </label>

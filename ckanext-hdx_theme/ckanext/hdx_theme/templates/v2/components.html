@@ -867,6 +867,22 @@
           name='demo', value='d', label='Disabled checked', checked=True, state='disabled' %}
     </div>
 
+    <h2 class="demo-subsection__heading">Radio inputs — with info tooltip</h2>
+    <div class="demo-row--column">
+      {% snippet 'v2/components/radio.html',
+          name='demo-hint', value='a', label='Unchecked with info',
+          hint=True, hint_text='Additional context for this option' %}
+      {% snippet 'v2/components/radio.html',
+          name='demo-hint', value='b', label='Checked with info',
+          checked=True, hint=True, hint_text='Additional context for this option' %}
+      {% snippet 'v2/components/radio.html',
+          name='demo-hint', value='c', label='Disabled unchecked with info',
+          state='disabled', hint=True, hint_text='Additional context for this option' %}
+      {% snippet 'v2/components/radio.html',
+          name='demo-hint', value='d', label='Disabled checked with info',
+          checked=True, state='disabled', hint=True, hint_text='Additional context for this option' %}
+    </div>
+
     <h2 class="demo-subsection__heading">Toggles</h2>
     <div class="demo-row">
       {% snippet 'v2/components/toggle.html',
