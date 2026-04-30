@@ -1,39 +1,31 @@
----
-id: 013
-title: Bootstrap integration in v2/page.html
-status: ready
----
+# Task 013: Load Bootstrap in v2 page bundle
 
-# REQ-013: Bootstrap Integration in v2/page.html
+Add Bootstrap 5 to the v2 page asset bundle so that Bootstrap classes used in `v2/page.html` (`container`, `alert`, `alert-dismissible`, `fade`, `breadcrumb`) are actually styled.
 
 ## Context
 
-`v2/page.html` extends `base.html` but overrides the `styles` block without calling `{{ super() }}`.
-As a result, **no Bootstrap CSS is currently loaded** on v2 pages, even though Bootstrap classes
-are used in the template (`container`, `alert`, `alert-dismissible`, `fade`, `breadcrumb`).
+`v2/page.html` overrides `{% block styles %}` without calling `{{ super() }}`, so the legacy `page-common-styles` bundle (which includes Bootstrap) is never loaded on v2 pages. Bootstrap classes in the template have no stylesheet backing.
 
-The only bundle loaded is `hdx_theme/v2-components-styles`, which contains the HDX design system
-tokens and component CSS — Bootstrap is not in it.
+## What to update
 
-Bootstrap 5.2.3 is vendored at `fanstatic/vendor/bootstrap5/css/`.
+### `fanstatic/webassets.yml`
 
----
+Add a new `v2-page-styles` bundle that loads Bootstrap and preloads the existing component bundle:
 
-## Requirements
+```yaml
+v2-page-styles:
+  output: ckanext-hdx_theme/%(version)s_v2-page-styles.css
+  <<: *common-css
+  extra:
+    preload:
+      - hdx_theme/v2-components-styles
+  contents:
+    - vendor/bootstrap5/css/bootstrap.css
+```
 
-### 1. Create a `v2-page-styles` webassets bundle
+Keep `v2-components-styles` unchanged — it is the standalone design system bundle for non-page contexts (component previews, embedded widgets).
 
-Create a new webassets bundle in `webassets.yml` named `v2-page-styles` that loads, **in order**:
-
-1. Bootstrap CSS — use the full `bootstrap.css` (not grid-only) to cover resets, utilities,
-   and alert styles used in the template.
-2. All contents currently in `v2-components-styles` (design tokens + components).
-
-Rationale for a separate bundle rather than adding Bootstrap to `v2-components-styles`:
-the component bundle is a self-contained design system and may eventually be used outside
-full-page contexts; Bootstrap is a page-level dependency.
-
-### 2. Update `v2/page.html` to use the new bundle
+### `templates/v2/page.html`
 
 Replace:
 ```
@@ -44,15 +36,10 @@ with:
 {% asset 'hdx_theme/v2-page-styles' %}
 ```
 
-The `v2-components-styles` bundle can remain for contexts where only design system CSS
-is needed (e.g. component previews, embedded widgets).
+### Verify
 
-### 3. Verify no legacy overrides bleed in
+Confirm in browser DevTools that `fanstatic/base/layout.css` and `fanstatic/base/base.css` are **not** loaded on v2 pages. These files hard-code a 1170px container width and disable Bootstrap's responsive behaviour — they must not apply to v2 pages. Because `v2/page.html` fully replaces the styles block, this should already be the case.
 
-Confirm that the following files are **not** loaded on v2 pages:
+## Why
 
-- `fanstatic/base/layout.css` — hard-codes a 1170px container and disables responsive behavior
-- `fanstatic/base/base.css` — sets `min-width: 1260px` on body and overrides container `max-width`
-
-Because `v2/page.html` fully replaces the styles block, these should already be excluded.
-Verify in-browser with DevTools and add a note in the template if confirmed.
+`v2-components-styles` is kept separate to preserve its usefulness outside full-page contexts. Bootstrap is a page-level dependency and belongs in the page bundle, loaded after the design system so component overrides take precedence.

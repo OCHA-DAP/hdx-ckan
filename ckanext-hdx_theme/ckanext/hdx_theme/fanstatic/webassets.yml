@@ -245,6 +245,7 @@ v2-page-styles:
       - hdx_theme/v2-components-styles
   contents:
     - vendor/bootstrap5/css/bootstrap.css
+    - v2/layout.css
 
 v2-components-scripts:
   <<: *common-js

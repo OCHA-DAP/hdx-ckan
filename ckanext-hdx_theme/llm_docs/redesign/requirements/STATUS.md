@@ -12,3 +12,7 @@
 | 008 | [replace-checkbox-checkmark-with-svg](008-replace-checkbox-checkmark-with-svg.md) | implemented | |
 | 009 | [refactor-dropdown-panel-to-use-existing-components](009-refactor-dropdown-panel-to-use-existing-components.md) | implemented | |
 | 010 | [extend-tooltip-with-icon-button](010-extend-tooltip-with-icon-button.md) | implemented | |
+| 011 | [password-field-toggle](011-password-field-toggle.md) | implemented | |
+| 012 | [radio-info-tooltip](012-radio-info-tooltip.md) | implemented | |
+| 013 | [bootstrap-v2-integration](013-bootstrap-v2-integration.md) | implemented | |
+| 014 | [v2-grid-layout](014-v2-grid-layout.md) | implemented | |
