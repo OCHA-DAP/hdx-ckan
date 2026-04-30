@@ -237,6 +237,15 @@ v2-components-styles:
     - v2/components/selection.css
     - v2/components/text-link.css
 
+v2-page-styles:
+  output: ckanext-hdx_theme/%(version)s_v2-page-styles.css
+  <<: *common-css
+  extra:
+    preload:
+      - hdx_theme/v2-components-styles
+  contents:
+    - vendor/bootstrap5/css/bootstrap.css
+
 v2-components-scripts:
   <<: *common-js
   output: ckanext-hdx_theme/%(version)s_components-scripts.js
