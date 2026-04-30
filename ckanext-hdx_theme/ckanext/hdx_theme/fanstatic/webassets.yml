@@ -246,6 +246,8 @@ v2-page-styles:
   contents:
     - vendor/bootstrap5/css/bootstrap.css
     - v2/layout.css
+    - v2/top-bar.css
+    - v2/footer.css
 
 v2-components-scripts:
   <<: *common-js

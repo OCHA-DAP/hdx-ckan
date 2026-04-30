@@ -16,3 +16,5 @@
 | 012 | [radio-info-tooltip](012-radio-info-tooltip.md) | implemented | |
 | 013 | [bootstrap-v2-integration](013-bootstrap-v2-integration.md) | implemented | |
 | 014 | [v2-grid-layout](014-v2-grid-layout.md) | implemented | |
+| 015 | [footer](015-footer.md) | implemented | |
+| 016 | [top-bar](016-top-bar.md) | implemented | |
