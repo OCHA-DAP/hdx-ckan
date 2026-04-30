@@ -1,0 +1,354 @@
+// ============================================================
+// hdx-footer — v2 redesigned footer
+// Figma: llm_docs/redesign/figma_exports/footer.html
+// ============================================================
+//
+// Breakpoints:
+//   SM  < 48rem     — fully stacked
+//   MD  48–79rem    — newsletter + social side by side; nav 3-column (Bootstrap)
+//   XL  ≥ 80rem     — two-column: branding left / nav grid right
+//
+// Nav columns use Bootstrap row/col — no flex overrides needed on __nav/__nav-col.
+// __legal right-alignment at MD+ handled by Bootstrap utility classes in HTML.
+// ============================================================
+
+@hdx-footer-bg:       #0b2d24;   // dark teal — brand-9 area
+@hdx-footer-bp-md:    48rem;     // 768px
+@hdx-footer-bp-xl:    80rem;     // 1280px
+
+
+// ── Root ─────────────────────────────────────────────────────
+
+.hdx-footer {
+    background-color: @hdx-footer-bg;
+    color:            var(--hdx-neutral-0);
+    font-family:      var(--hdx-font-body);
+    font-size:        var(--hdx-fs-s);
+    padding:          3.5rem 1rem;
+
+    @media (min-width: @hdx-footer-bp-md) { padding: 4rem 3rem; }
+    @media (min-width: @hdx-footer-bp-xl) { padding: 5rem 3rem; }
+
+    // Override c-text-link colours for dark background
+    .c-text-link {
+        color: var(--hdx-neutral-0);
+        &:hover  { color: var(--hdx-neutral-2); }
+        &:active { color: var(--hdx-neutral-1); }
+    }
+
+
+    // ── Top: branding + nav ──────────────────────────────────
+
+    &__top {
+        display:        flex;
+        flex-direction: column;
+        gap:            2rem;
+
+        @media (min-width: @hdx-footer-bp-xl) {
+            flex-direction: row;
+            align-items:    flex-start;
+            gap:            1.5rem;
+        }
+    }
+
+
+    // ── Branding column ──────────────────────────────────────
+
+    &__branding {
+        display:        flex;
+        flex-direction: column;
+        gap:            1.5rem;
+
+        @media (min-width: @hdx-footer-bp-xl) {
+            flex:            1;
+            justify-content: space-between;
+            height:          17.5rem;
+        }
+    }
+
+    &__logo-wrap {
+        display:        flex;
+        flex-direction: column;
+        gap:            1.5rem;
+    }
+
+    &__logo {
+        width:       7.5rem;
+        line-height: 0;
+        flex-shrink: 0;
+
+        // hdx.svg uses fill="currentColor" — inherits white from .hdx-footer
+        svg { width: 100%; height: auto; display: block; }
+    }
+
+    &__tagline {
+        margin:      0;
+        font-size:   1rem;
+        line-height: 130%;
+
+        @media (min-width: @hdx-footer-bp-xl) { font-size: 1.125rem; }
+    }
+
+
+    // ── Actions: newsletter + social ─────────────────────────
+
+    &__actions {
+        display:        flex;
+        flex-direction: column;
+        gap:            1.5rem;
+
+        // MD only: side by side
+        @media (min-width: @hdx-footer-bp-md) and (max-width: (@hdx-footer-bp-xl - 0.001rem)) {
+            flex-direction: row;
+            align-items:    flex-start;
+            gap:            2.5rem;
+        }
+    }
+
+    &__newsletter {
+        display:        flex;
+        flex-direction: column;
+        gap:            var(--hdx-space-2);
+        font-size:      1rem;
+
+        @media (min-width: @hdx-footer-bp-md) and (max-width: (@hdx-footer-bp-xl - 0.001rem)) {
+            flex: 1;
+        }
+    }
+
+    &__newsletter-label {
+        margin:      0;
+        line-height: 130%;
+    }
+
+    &__newsletter-row {
+        display:     flex;
+        align-items: center;
+        gap:         var(--hdx-space-2);
+    }
+
+    &__email-input {
+        flex:             1;
+        min-width:        7.5rem;
+        height:           2.125rem;  // aligns with c-button--size-m (34 px)
+        padding:          var(--hdx-space-2) var(--hdx-space-3);
+        border:           1px solid var(--hdx-neutral-2);
+        border-radius:    var(--hdx-radius-sm);
+        background-color: var(--hdx-neutral-0);
+        color:            var(--hdx-neutral-8);
+        font-family:      var(--hdx-font-body);
+        font-size:        var(--hdx-fs-s);
+        line-height:      130%;
+        box-sizing:       border-box;
+        outline:          none;
+
+        &::placeholder { color: var(--hdx-neutral-6); }
+        &:focus        { border-color: var(--hdx-neutral-0); }
+    }
+
+    // Ghost/outline subscribe button — overrides c-button base colours
+    &__subscribe-btn {
+        background-color: transparent;
+        color:            var(--hdx-neutral-0);
+        border:           1px solid var(--hdx-neutral-2);
+        white-space:      nowrap;
+
+        &:hover         { background-color: rgba(255, 255, 255, 0.1); border-color: var(--hdx-neutral-0); }
+        &:active        { background-color: rgba(255, 255, 255, 0.15); }
+        &:focus-visible { outline-color: var(--hdx-neutral-0); }
+    }
+
+
+    // ── Social links ─────────────────────────────────────────
+
+    &__social {
+        display:     flex;
+        align-items: flex-end;
+        gap:         1.5rem;
+    }
+
+    &__social-link {
+        display:         flex;
+        align-items:     flex-end;
+        gap:             var(--hdx-space-13);  // 6 px
+        text-decoration: none;
+    }
+
+    &__social-icon {
+        font-size:   1.25rem;
+        line-height: 0.875rem;
+        color:       var(--hdx-neutral-0);
+        width:       1.25rem;
+        text-align:  center;
+        flex-shrink: 0;
+    }
+
+    &__social-label {
+        font-size:       var(--hdx-fs-s);
+        font-weight:     var(--hdx-fw-medium);
+        text-decoration: underline;
+        line-height:     130%;
+        color:           var(--hdx-neutral-0);
+    }
+
+
+    // ── Related-to ───────────────────────────────────────────
+
+    &__related {
+        display:     flex;
+        align-items: flex-start;
+        gap:         var(--hdx-space-2);
+        font-size:   var(--hdx-fs-s);
+    }
+
+    &__related-label {
+        white-space: nowrap;
+        line-height: 130%;
+        flex-shrink: 0;
+    }
+
+
+    // ── External link — icon + text inside one <a> ───────────
+    // Used on "Related to", "Open source", "Blog", "Contact" links.
+
+    &__ext-link {
+        display:     inline-flex;
+        align-items: center;
+        gap:         var(--hdx-space-1);  // 4 px
+    }
+
+    &__ext-icon {
+        flex-shrink: 0;
+        line-height: 0;
+        width:       1rem;
+
+        // link-external.svg uses stroke="currentColor" — no fill override needed
+        svg { width: 1rem; height: auto; }
+    }
+
+
+    // ── Navigation grid — columns handled by Bootstrap row/col ──
+
+    &__nav {
+        // inner Bootstrap .row.g-4 handles 3-column layout and responsive stacking
+        @media (min-width: @hdx-footer-bp-xl) {
+            flex: 1;
+        }
+    }
+
+    &__nav-col {
+        display:        flex;
+        flex-direction: column;
+        align-items:    flex-start;
+        gap:            1.5rem;
+        // Bootstrap col-12 col-md-4 handles width and responsive behaviour
+    }
+
+    &__nav-heading {
+        font-family: var(--hdx-font-display);  // Merriweather
+        font-size:   1.5rem;
+        font-weight: var(--hdx-fw-bold);
+        line-height: 120%;
+        color:       var(--hdx-neutral-0);
+        margin:      0;
+    }
+
+    &__nav-list {
+        list-style:     none;
+        margin:         0;
+        padding:        0;
+        display:        flex;
+        flex-direction: column;
+        align-items:    flex-start;
+        gap:            var(--hdx-space-3);  // 12 px
+    }
+
+
+    // ── Divider — extends c-divider with white colour ────────
+
+    &__divider {
+        background-color: var(--hdx-neutral-0);  // white — overrides c-divider neutral-3
+        margin:           1.75rem 0;
+    }
+
+
+    // ── Bottom bar ───────────────────────────────────────────
+
+    &__bottom {
+        display:        flex;
+        flex-direction: column;
+        gap:            var(--hdx-space-2);
+        font-size:      var(--hdx-fs-xs);  // 12 px
+    }
+
+    &__service {
+        display:        flex;
+        flex-direction: column;
+        gap:            var(--hdx-space-2);
+    }
+
+    &__service-label {
+        margin:      0;
+        line-height: 130%;
+    }
+
+    &__service-detail {
+        display:     flex;
+        align-items: center;
+        gap:         var(--hdx-space-14);  // 10 px
+
+        @media (max-width: (@hdx-footer-bp-md - 0.001rem)) {
+            flex-direction: column;
+            align-items:    flex-start;
+        }
+    }
+
+    &__ocha-logo {
+        height:        2.625rem;
+        flex-shrink:   0;
+        line-height:   0;
+        // Figma shows vertical separator between logo and description text
+        border-right:  1px solid rgba(255, 255, 255, 0.3);
+        padding-right: 0.5rem;
+
+        // ocha.svg uses fill="currentColor" — inherits white from .hdx-footer
+        svg { height: 100%; width: auto; display: block; }
+    }
+
+    &__ocha-text {
+        max-width:   31.875rem;
+        line-height: 130%;
+        margin:      0;
+    }
+
+    &__license {
+        display:     flex;
+        align-items: center;
+        gap:         var(--hdx-space-2);
+
+        @media (max-width: (@hdx-footer-bp-md - 0.001rem)) {
+            flex-direction: column;
+            align-items:    flex-start;
+        }
+    }
+
+    &__license-icon {
+        width:       1.25rem;
+        flex-shrink: 0;
+        line-height: 0;
+
+        // creative-commons.svg uses fill="currentColor" — inherits white from .hdx-footer
+        svg { width: 1.25rem; height: auto; display: block; }
+    }
+
+    &__license-text {
+        line-height: 130%;
+        margin:      0;
+    }
+
+    // Right-alignment at MD+ is handled by Bootstrap utilities in the template:
+    // class="... d-flex align-items-center justify-content-start justify-content-md-end gap-3"
+    &__legal {
+        font-size: var(--hdx-fs-s);
+    }
+}
