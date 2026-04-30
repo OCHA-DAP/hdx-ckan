@@ -2,7 +2,7 @@
 
 **Status**: In-progress
 **Started**: 2026-04-16
-**Last Updated**: 2026-04-29
+**Last Updated**: 2026-04-30
 
 ---
 
@@ -71,7 +71,8 @@ Each palette is documented with Figma step mappings and usage guidance for data 
 **Current structure**:
 - Extends `base.html` directly
 - Loads Google Fonts (Merriweather + Roboto) in `{% block styles %}`
-- Loads `hdx_theme/v2-components-styles` and conditionally loads onboarding bundles
+- Loads `hdx_theme/v2-page-styles` and conditionally loads onboarding bundles
+- Sets `{% block bodyclassname %}hdx-v2{% endblock %}` for grid scoping
 - Overrides `{% block page %}` with: header block → page_content block (toolbar + flash + content) → footer block
 - `{% block header_core %}` includes `v2/header.html` via `{% snippet %}`
 - `{% block footer %}` includes `v2/footer.html` via `{% include %}`
@@ -80,7 +81,6 @@ Each palette is documented with Figma step mappings and usage guidance for data 
 **What still needs to be done**:
 - Implement real content in `v2/header.html` (currently a stub)
 - Implement real content in `v2/footer.html` (currently a stub)
-- Consider dedicated `hdx_theme/page-v2-styles` / `hdx_theme/page-v2-scripts` bundles for page-level CSS/JS (layout reset, responsive grid, header/footer styles) once those are designed
 
 **Current usage**:
 - `templates/v2/components.html` renders the v2 component demo page
@@ -162,13 +162,14 @@ Each component file should have:
 **Location**: [`fanstatic/webassets.yml`](../ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/webassets.yml)
 
 Bundle configuration:
-- `hdx_theme/v2-components-styles` — all v2 component CSS files
+- `hdx_theme/v2-components-styles` — standalone design system bundle (tokens + components), no Bootstrap
   - Contents: `v2/foundation.css`, `v2/components/avatar-badge.css`, `v2/components/buttons.css`, `v2/components/checkbox.css`, `v2/components/dropdown.css`, `v2/components/input-field.css`, `v2/components/label.css`, `v2/components/letter-anchor.css`, `v2/components/list-item.css`, `v2/components/navigation.css`, `v2/components/selection.css`, `v2/components/text-link.css`
-  - Updated as new components are added
+  - Kept separate for non-page contexts (component previews, embedded widgets)
+- `hdx_theme/v2-page-styles` ✅ Now defined — full page bundle: preloads `v2-components-styles`, then adds `vendor/bootstrap5/css/bootstrap.css` and `v2/layout.css`
+  - `v2/layout.css` (LESS source: `less/v2/layout.less`) contains Bootstrap container overrides aligned to Figma grid specs, scoped to `.hdx-v2`
 - `hdx_theme/v2-components-scripts` ✅ Now defined — contains `v2/components/password-toggle.js`
 
 Still needed (pending header/footer implementation):
-- `hdx_theme/page-v2-styles` — foundation + layout reset + responsive grid + v2 header/footer styles
 - `hdx_theme/page-v2-scripts` — responsive header behavior, shared v2 JS utilities
 
 Page-specific bundles will be created as pages are migrated (e.g., `hdx_theme/homepage-v2-styles`).
@@ -213,7 +214,8 @@ Use the design foundations in `less/v2/foundation.less`, `less/v2/colors.less`, 
 - [x] Build Text link component ✓
 - [x] Build remaining components (File type indicator, Tooltip)
 - [x] Register `v2-components-styles` bundle in webassets.yml ✓
-- [ ] Create `v2-components-scripts` bundle (if needed)
+- [x] Create `v2-components-scripts` bundle ✓
+- [x] Create `v2-page-styles` bundle with Bootstrap + grid layout overrides ✓
 - [x] Add placeholder demo page with all components ✓
 
 ### Phase 3: Page Migrations 🔲 (Sequential)
@@ -248,7 +250,8 @@ Use the design foundations in `less/v2/foundation.less`, `less/v2/colors.less`, 
 
 ✅ **templates/v2/page.html**
 - [x] Extends `base.html` directly
-- [x] Loads `v2-components-styles` and `v2-components-scripts` bundles
+- [x] Loads `v2-page-styles` (Bootstrap + grid + components) and `v2-components-scripts` bundles
+- [x] Sets `bodyclassname` to `hdx-v2` for grid scoping
 - [x] Includes `v2/header.html` (stub) and `v2/footer.html` (stub)
 - [ ] Header and footer stubs need real content implemented
 - [ ] Pages previously on this template (signup, landing, org/join, etc.) are on `page_light.html` holding state — needs re-migration once header/footer are real
@@ -259,7 +262,7 @@ Use the design foundations in `less/v2/foundation.less`, `less/v2/colors.less`, 
 
 1. **Implement `v2/header.html`** — replace the stub with the redesigned responsive header markup and styles
 2. **Implement `v2/footer.html`** — replace the stub with the redesigned footer markup and styles
-3. **Register `hdx_theme/page-v2-styles` and `hdx_theme/page-v2-scripts`** bundles in `webassets.yml` once header/footer styles are ready; load them from `v2/page.html`
+3. **Register `hdx_theme/page-v2-scripts`** bundle once header/footer JS is ready; load from `v2/page.html`
 4. **Re-migrate pages** from `page_light.html` holding state back to `v2/page.html`, starting with the simplest (landing pages, then signup/onboarding, then org/join, etc.)
 5. **Continue building component library** as needed for page migrations
 6. **Iterate** through remaining pages (homepage, dataset list, etc.)

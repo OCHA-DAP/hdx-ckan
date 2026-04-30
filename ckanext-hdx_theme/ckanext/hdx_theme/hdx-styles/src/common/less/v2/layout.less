@@ -1,0 +1,41 @@
+// ============================================================
+// v2 page layout — Bootstrap container overrides
+// Scoped to .hdx-v2 body class (set via bodyclassname block in v2/page.html)
+// ============================================================
+//
+// Breakpoint mapping (Figma label → Bootstrap equivalent):
+//   XS  < 576px      Bootstrap XS   — fluid, 16px side padding
+//   SM  576–767px    Bootstrap SM   — fluid, 16px side padding  (no Figma spec; follows XS)
+//   MD  768–991px    Bootstrap MD   — fluid, 48px side padding
+//   LG  992–1199px   Bootstrap LG   — fluid, 48px side padding  (no Figma spec; follows MD)
+//   LG  1200–1399px  Bootstrap XL   — fluid, 48px side padding
+//   XL  ≥ 1400px     Bootstrap XXL  — max-width 1320px, centered
+//
+// 4-column XS visual grid: each design column = col-3 in Bootstrap's 12-column grid.
+// Gutter 24px matches Bootstrap default (--bs-gutter-x: 1.5rem) — no override needed.
+// ============================================================
+
+@v2-container-padding-xs:  1rem;     // 16px — XS + SM
+@v2-container-padding-md:  3rem;     // 48px — MD through XL
+@v2-container-max-width:   1320px;   // XXL centered, matches Figma XL spec
+@v2-breakpoint-md:         768px;
+@v2-breakpoint-xxl:        1400px;
+
+.hdx-v2 .container {
+    max-width: 100%;
+    padding-right: @v2-container-padding-xs;
+    padding-left:  @v2-container-padding-xs;
+
+    @media (min-width: @v2-breakpoint-md) {
+        padding-right: @v2-container-padding-md;
+        padding-left:  @v2-container-padding-md;
+    }
+
+    @media (min-width: @v2-breakpoint-xxl) {
+        max-width:     @v2-container-max-width;
+        padding-right: calc(var(--bs-gutter-x) * 0.5);
+        padding-left:  calc(var(--bs-gutter-x) * 0.5);
+        margin-right:  auto;
+        margin-left:   auto;
+    }
+}
