@@ -191,27 +191,35 @@
         {% if c.userobj %}
           {% set notif = h.hdx_get_user_notifications() %}
 
-          {# Bell — triggers notifications panel (task 018) #}
-          <button class="hdx-navbar__bell" type="button"
-                  aria-label="{{ _('Notifications') }}"
-                  aria-expanded="false"
-                  data-hdx-panel="notifications">
-            <span class="hdx-navbar__bell-icon">{% include 'v2/icons/bell.svg' %}</span>
-            {% if notif.count > 0 %}
-              <span class="hdx-navbar__bell-badge" aria-hidden="true">{{ notif.count }}</span>
-            {% endif %}
-          </button>
+          {# Bell + Notifications panel #}
+          <div class="hdx-navbar__bell-wrap">
+            <button class="hdx-navbar__bell" type="button"
+                    aria-label="{{ _('Notifications') }}"
+                    aria-expanded="false"
+                    aria-controls="hdx-panel-notifications"
+                    data-hdx-panel="notifications">
+              <span class="hdx-navbar__bell-icon">{% include 'v2/icons/bell.svg' %}</span>
+              {% if notif.count > 0 %}
+                <span class="hdx-navbar__bell-badge" aria-hidden="true">{{ notif.count }}</span>
+              {% endif %}
+            </button>
+            {% snippet 'v2/navbar-notifications.html' %}
+          </div>
 
-          {# Avatar — triggers user menu (task 018) #}
-          <button class="hdx-navbar__avatar-trigger" type="button"
-                  aria-label="{{ _('User menu') }}"
-                  aria-expanded="false"
-                  data-hdx-panel="user-menu">
-            {% snippet 'v2/components/avatar.html',
-                size='sm',
-                initials=c.userobj.display_name[0] | upper,
-                badge=notif.count > 0 %}
-          </button>
+          {# Avatar + User menu panel #}
+          <div class="hdx-navbar__avatar-wrap">
+            <button class="hdx-navbar__avatar-trigger" type="button"
+                    aria-label="{{ _('User menu') }}"
+                    aria-expanded="false"
+                    aria-controls="hdx-panel-user-menu"
+                    data-hdx-panel="user-menu">
+              {% snippet 'v2/components/avatar.html',
+                  size='sm',
+                  initials=c.userobj.display_name[0] | upper,
+                  badge=notif.count > 0 %}
+            </button>
+            {% snippet 'v2/navbar-user-menu.html' %}
+          </div>
 
           {% snippet 'v2/components/button.html',
               style='secondary', size='m', label=_('Add data'),
