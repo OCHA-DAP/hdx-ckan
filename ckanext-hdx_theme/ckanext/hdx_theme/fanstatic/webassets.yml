@@ -254,6 +254,7 @@ v2-page-styles:
     - v2/layout.css
     - v2/top-bar.css
     - v2/footer.css
+    - v2/navbar.css
 
 v2-page-scripts:
   <<: *common-js
