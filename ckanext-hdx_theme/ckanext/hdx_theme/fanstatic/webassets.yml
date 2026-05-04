@@ -221,7 +221,7 @@ bem-blocks-scripts:
 #    - bs_tooltip.js
 
 v2-components-styles:
-  output: ckanext-hdx_theme/%(version)s_components-styles.css
+  output: ckanext-hdx_theme/%(version)s_v2-components-styles.css
   <<: *common-css
   contents:
     - v2/foundation.css
@@ -237,6 +237,12 @@ v2-components-styles:
     - v2/components/selection.css
     - v2/components/text-link.css
 
+v2-components-scripts:
+  <<: *common-js
+  output: ckanext-hdx_theme/%(version)s_v2-components-scripts.js
+  contents:
+    - v2/components/password-toggle.js
+
 v2-page-styles:
   output: ckanext-hdx_theme/%(version)s_v2-page-styles.css
   <<: *common-css
@@ -249,11 +255,14 @@ v2-page-styles:
     - v2/top-bar.css
     - v2/footer.css
 
-v2-components-scripts:
+v2-page-scripts:
   <<: *common-js
-  output: ckanext-hdx_theme/%(version)s_components-scripts.js
+  output: ckanext-hdx_theme/%(version)s_v2-page-scripts.js
+  extra:
+    preload:
+      - hdx_theme/v2-components-scripts
   contents:
-    - v2/components/password-toggle.js
+    - v2/navbar.js
 
 hdx-signals-scripts:
   <<: *common-js
