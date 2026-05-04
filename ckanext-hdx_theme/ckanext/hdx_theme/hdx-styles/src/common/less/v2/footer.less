@@ -13,8 +13,8 @@
 // ============================================================
 
 @hdx-footer-bg:       #0b2d24;   // dark teal — brand-9 area
-@hdx-footer-bp-md:    48rem;     // 768px
-@hdx-footer-bp-xl:    80rem;     // 1280px
+@hdx-bp-md:    48rem;     // 768px
+@hdx-bp-xl:    80rem;     // 1280px
 
 
 // ── Root ─────────────────────────────────────────────────────
@@ -26,8 +26,8 @@
     font-size:        var(--hdx-fs-s);
     padding:          3.5rem 1rem;
 
-    @media (min-width: @hdx-footer-bp-md) { padding: 4rem 3rem; }
-    @media (min-width: @hdx-footer-bp-xl) { padding: 5rem 3rem; }
+    @media (min-width: @hdx-bp-md) { padding: 4rem 3rem; }
+    @media (min-width: @hdx-bp-xl) { padding: 5rem 3rem; }
 
     // Override c-text-link colours for dark background
     .c-text-link {
@@ -44,7 +44,7 @@
         flex-direction: column;
         gap:            2rem;
 
-        @media (min-width: @hdx-footer-bp-xl) {
+        @media (min-width: @hdx-bp-xl) {
             flex-direction: row;
             align-items:    flex-start;
             gap:            1.5rem;
@@ -59,7 +59,7 @@
         flex-direction: column;
         gap:            1.5rem;
 
-        @media (min-width: @hdx-footer-bp-xl) {
+        @media (min-width: @hdx-bp-xl) {
             flex:            1;
             justify-content: space-between;
             height:          17.5rem;
@@ -86,7 +86,7 @@
         font-size:   1rem;
         line-height: 130%;
 
-        @media (min-width: @hdx-footer-bp-xl) { font-size: 1.125rem; }
+        @media (min-width: @hdx-bp-xl) { font-size: 1.125rem; }
     }
 
 
@@ -98,7 +98,7 @@
         gap:            1.5rem;
 
         // MD only: side by side
-        @media (min-width: @hdx-footer-bp-md) and (max-width: (@hdx-footer-bp-xl - 0.001rem)) {
+        @media (min-width: @hdx-bp-md) and (max-width: (@hdx-bp-xl - 0.001rem)) {
             flex-direction: row;
             align-items:    flex-start;
             gap:            2.5rem;
@@ -111,7 +111,7 @@
         gap:            var(--hdx-space-2);
         font-size:      1rem;
 
-        @media (min-width: @hdx-footer-bp-md) and (max-width: (@hdx-footer-bp-xl - 0.001rem)) {
+        @media (min-width: @hdx-bp-md) and (max-width: (@hdx-bp-xl - 0.001rem)) {
             flex: 1;
         }
     }
@@ -231,7 +231,7 @@
 
     &__nav {
         // inner Bootstrap .row.g-4 handles 3-column layout and responsive stacking
-        @media (min-width: @hdx-footer-bp-xl) {
+        @media (min-width: @hdx-bp-xl) {
             flex: 1;
         }
     }
@@ -297,7 +297,7 @@
         align-items: center;
         gap:         var(--hdx-space-14);  // 10 px
 
-        @media (max-width: (@hdx-footer-bp-md - 0.001rem)) {
+        @media (max-width: (@hdx-bp-md - 0.001rem)) {
             flex-direction: column;
             align-items:    flex-start;
         }
@@ -326,7 +326,7 @@
         align-items: center;
         gap:         var(--hdx-space-2);
 
-        @media (max-width: (@hdx-footer-bp-md - 0.001rem)) {
+        @media (max-width: (@hdx-bp-md - 0.001rem)) {
             flex-direction: column;
             align-items:    flex-start;
         }

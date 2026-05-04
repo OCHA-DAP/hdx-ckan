@@ -1,5 +1,5 @@
 @hdx-top-bar-bg:    var(--hdx-brand-85);
-@hdx-top-bar-bp-md: 48rem;     // 768px
+@hdx-bp-md: 48rem;              // 768px — canonical: layout.less
 
 .hdx-top-bar {
     background-color: @hdx-top-bar-bg;
@@ -25,7 +25,7 @@
         justify-content: space-between;
         padding: 0 1rem;
 
-        @media (min-width: @hdx-top-bar-bp-md) {
+        @media (min-width: @hdx-bp-md) {
             padding: 0 3rem;
         }
     }
