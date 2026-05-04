@@ -2,7 +2,7 @@
 
 **Status**: In-progress
 **Started**: 2026-04-16
-**Last Updated**: 2026-04-30
+**Last Updated**: 2026-05-04
 
 ---
 
@@ -64,9 +64,9 @@ Each palette is documented with Figma step mappings and usage guidance for data 
 
 **Location**: [`templates/v2/page.html`](../ckanext-hdx_theme/ckanext/hdx_theme/templates/v2/page.html)
 
-**Status**: ✅ **Scaffolding Complete — Header/Footer stubs need real implementation**
+**Status**: ✅ **Complete**
 
-`templates/v2/page.html` now extends `base.html` directly and is a proper v2 layout base. It is no longer a thin wrapper over `page_light.html`.
+`templates/v2/page.html` extends `base.html` directly and is a proper v2 layout base. It is no longer a thin wrapper over `page_light.html`.
 
 **Current structure**:
 - Extends `base.html` directly
@@ -74,13 +74,9 @@ Each palette is documented with Figma step mappings and usage guidance for data 
 - Loads `hdx_theme/v2-page-styles` and conditionally loads onboarding bundles
 - Sets `{% block bodyclassname %}hdx-v2{% endblock %}` for grid scoping
 - Overrides `{% block page %}` with: header block → page_content block (toolbar + flash + content) → footer block
-- `{% block header_core %}` includes `v2/header.html` via `{% snippet %}`
-- `{% block footer %}` includes `v2/footer.html` via `{% include %}`
+- `{% block header_core %}` includes `v2/header.html` via `{% snippet %}` (top-bar + navbar, fully implemented)
+- `{% block footer %}` includes `v2/footer.html` via `{% include %}` (fully implemented)
 - Loads `hdx_theme/v2-components-scripts` in `{% block scripts %}`
-
-**What still needs to be done**:
-- Implement real content in `v2/header.html` (currently a stub)
-- Implement real content in `v2/footer.html` (currently a stub)
 
 **Current usage**:
 - `templates/v2/components.html` renders the v2 component demo page
@@ -165,12 +161,16 @@ Bundle configuration:
 - `hdx_theme/v2-components-styles` — standalone design system bundle (tokens + components), no Bootstrap
   - Contents: `v2/foundation.css`, `v2/components/avatar-badge.css`, `v2/components/buttons.css`, `v2/components/checkbox.css`, `v2/components/dropdown.css`, `v2/components/input-field.css`, `v2/components/label.css`, `v2/components/letter-anchor.css`, `v2/components/list-item.css`, `v2/components/navigation.css`, `v2/components/selection.css`, `v2/components/text-link.css`
   - Kept separate for non-page contexts (component previews, embedded widgets)
-- `hdx_theme/v2-page-styles` ✅ Now defined — full page bundle: preloads `v2-components-styles`, then adds `vendor/bootstrap5/css/bootstrap.css` and `v2/layout.css`
-  - `v2/layout.css` (LESS source: `less/v2/layout.less`) contains Bootstrap container overrides aligned to Figma grid specs, scoped to `.hdx-v2`
-- `hdx_theme/v2-components-scripts` ✅ Now defined — contains `v2/components/password-toggle.js`
+- `hdx_theme/v2-page-styles` ✅ Full page bundle: preloads `v2-components-styles`, then adds:
+  - `vendor/bootstrap5/css/bootstrap.css`
+  - `v2/layout.css` — Bootstrap container overrides aligned to Figma grid specs, scoped to `.hdx-v2`
+  - `v2/top-bar.css` — top-bar styles (OCHA services dropdown, documentation link)
+  - `v2/footer.css` — footer styles
+  - `v2/navbar.css` — main navbar styles (logo, search, nav items, actions, offcanvas)
+- `hdx_theme/v2-components-scripts` ✅ Contains `v2/components/password-toggle.js`
 
-Still needed (pending header/footer implementation):
-- `hdx_theme/page-v2-scripts` — responsive header behavior, shared v2 JS utilities
+Still needed (pending task 018/019):
+- `hdx_theme/page-v2-scripts` — navbar panel/offcanvas JS (`v2/navbar.js`)
 
 Page-specific bundles will be created as pages are migrated (e.g., `hdx_theme/homepage-v2-styles`).
 
@@ -252,17 +252,17 @@ Use the design foundations in `less/v2/foundation.less`, `less/v2/colors.less`, 
 - [x] Extends `base.html` directly
 - [x] Loads `v2-page-styles` (Bootstrap + grid + components) and `v2-components-scripts` bundles
 - [x] Sets `bodyclassname` to `hdx-v2` for grid scoping
-- [x] Includes `v2/header.html` (stub) and `v2/footer.html` (stub)
-- [ ] Header and footer stubs need real content implemented
-- [ ] Pages previously on this template (signup, landing, org/join, etc.) are on `page_light.html` holding state — needs re-migration once header/footer are real
+- [x] Includes `v2/header.html` (top-bar + responsive navbar, fully implemented)
+- [x] Includes `v2/footer.html` (fully implemented)
+- [ ] Pages previously on this template (signup, landing, org/join, etc.) are on `page_light.html` holding state — ready for re-migration now that header/footer are real
 
 ---
 
 ## Next Steps
 
-1. **Implement `v2/header.html`** — replace the stub with the redesigned responsive header markup and styles
-2. **Implement `v2/footer.html`** — replace the stub with the redesigned footer markup and styles
-3. **Register `hdx_theme/page-v2-scripts`** bundle once header/footer JS is ready; load from `v2/page.html`
+1. **Implement task 018** — navbar dropdowns: user menu panel, notifications panel (Products dropdown done in 017). Requires creating `navbar-user-menu.html`, `navbar-notifications.html`, and `v2/navbar.js`
+2. **Implement task 019** — offcanvas mobile/tablet menu (`navbar-offcanvas.html` is currently a stub)
+3. **Register `hdx_theme/page-v2-scripts`** bundle with `v2/navbar.js` once task 018/019 are complete; load from `v2/page.html`
 4. **Re-migrate pages** from `page_light.html` holding state back to `v2/page.html`, starting with the simplest (landing pages, then signup/onboarding, then org/join, etc.)
 5. **Continue building component library** as needed for page migrations
 6. **Iterate** through remaining pages (homepage, dataset list, etc.)

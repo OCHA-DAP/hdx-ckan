@@ -1,0 +1,356 @@
+// ============================================================
+// hdx-navbar — v2 main navigation bar
+// Figma: llm_docs/redesign/figma_exports/navbar.html
+//        llm_docs/redesign/figma_exports/navigation-dropdown.html
+// ============================================================
+//
+// Breakpoints:
+//   SM  < 48rem       — logo + search icon + hamburger
+//   MD  48rem – 79rem — logo + search (21.25rem) + right actions + hamburger
+//   XL  ≥ 80rem       — logo + search (25rem) + nav items + right actions
+//
+// ============================================================
+
+@hdx-navbar-bg:         var(--hdx-brand-7);   // #18614c
+@hdx-navbar-h:          4rem;
+@hdx-navbar-border:     0.5px solid #9db1b3;
+@hdx-top-bar-h:         2.125rem;
+
+@hdx-bp-md:             48rem;
+@hdx-bp-xl:             80rem;
+
+// Dropdown panel shared tokens
+@hdx-dropdown-bg:       #fff;
+@hdx-dropdown-border:   1px solid var(--hdx-neutral-1);  // #ebeff0
+@hdx-dropdown-radius:   4px;
+@hdx-dropdown-shadow:   0px 4px 10px rgba(0, 0, 0, 0.12);
+
+@hdx-top-bar-h: 2.125rem;
+@hdx-navbar-h:  4rem;
+
+// ── CSS custom properties for cross-file use ──────────────
+:root {
+    --hdx-top-bar-h: 2.125rem;
+    --hdx-navbar-h:  4rem;
+}
+
+
+// ── Header wrapper ─────────────────────────────────────────
+
+.hdx-header {
+    position: sticky;
+    top: 0;
+    z-index: 1030;
+}
+
+
+// ── Navbar bar ─────────────────────────────────────────────
+
+.hdx-navbar {
+    background:    @hdx-navbar-bg;
+    height:        @hdx-navbar-h;
+    border-bottom: @hdx-navbar-border;
+    font-family:   var(--hdx-font-body);
+    font-size:     var(--hdx-fs-s);
+
+    // ── Inner container ─────────────────────────────────
+    &__inner {
+        display:     flex;
+        align-items: center;
+        gap:         0;  // No gap between main sections; gaps are within nav and actions
+        padding:     0 3rem;
+        height:      100%;
+
+        @media (max-width: (@hdx-bp-md)) {
+            padding: 0 1rem;
+        }
+    }
+
+    // ── Logo ────────────────────────────────────────────
+    &__logo {
+        flex-shrink:     0;
+        height:          1.5rem;
+        width:           4.5rem;
+        display:         flex;
+        align-items:     center;
+        color:           var(--hdx-neutral-0);
+        text-decoration: none;
+        line-height:     0;
+
+        svg {
+            width:  100%;
+            height: 100%;
+        }
+
+        &:hover {
+          color: var(--hdx-neutral-0); // overwrites Bootstrap hover color
+        }
+    }
+
+    // ── Search — flex to fill space, centered with max-width ──
+    &__search {
+        flex:        1 1 auto;
+        //max-width:   25rem;
+        margin:      0 auto;  // Center search within available flex space
+
+        form {
+          max-width:   25rem;
+          margin-left: auto;
+          margin-right: auto;
+        }
+
+        @media (max-width: (@hdx-bp-xl)) {
+            //max-width: 21.25rem;
+          form {
+            max-width: 21.25rem;
+          }
+        }
+
+        // On SM: hide search form, show search icon only
+        @media (max-width: (@hdx-bp-md)) {
+            flex: 0 0 auto;
+            width: auto;
+            margin: 0;
+
+            form { display: none; }  // Hide search input form on SM
+        }
+    }
+
+    // Search icon button — visible on SM, hidden on MD/XL
+    // Styled identically to &__bell (same size, border-radius, hover)
+    &__search-icon {
+        display:         flex;
+        align-items:     center;
+        justify-content: center;
+        width:           2.125rem;
+        height:          2.125rem;
+        border:          none;
+        background:      transparent;
+        color:           var(--hdx-neutral-0);
+        cursor:          pointer;
+        border-radius:   2px;
+        padding:         0;
+        flex-shrink:     0;
+
+        &:hover         { background: rgba(255, 255, 255, 0.1); }
+        &:focus-visible { outline: 2px solid var(--hdx-neutral-0); outline-offset: 2px; }
+
+        svg {
+            width:  1.25rem;
+            height: 1.25rem;
+        }
+    }
+
+    // ── Nav items — right-aligned with margin-left:auto ──
+    &__nav {
+        display:    flex;
+        align-items: stretch;
+        align-self:  stretch;
+        gap: var(--hdx-space-3);
+        margin-left: auto;
+        margin-right: var(--hdx-space-3);  // Gap between products and login/bell button on XL
+
+        @media (max-width: (@hdx-bp-xl)) {
+            display:     none;
+            margin-left: 0;
+            margin-right: 0;
+        }
+
+        // Dark-background overrides for nav items
+        .c-nav-item {
+            color:       rgba(255, 255, 255, 0.9);
+            font-weight: var(--hdx-fw-medium);
+            font-size:   var(--hdx-fs-s);
+            border-bottom: 2px solid transparent;
+
+            &:hover:not(.c-nav-item--disabled) {
+                color: var(--hdx-neutral-0);
+                // no border on hover — per spec
+            }
+
+            &.c-nav-item--active {
+                color:         var(--hdx-neutral-0);
+                border-bottom-color: var(--hdx-neutral-0);
+            }
+
+            &__chevron svg { stroke: currentColor; }
+        }
+    }
+
+    // ── Actions (bell, avatar, buttons, hamburger) ───────
+    // Gaps between actions items (bell, avatar, button)
+    &__actions {
+        display:     flex;
+        align-items: center;
+        gap:         1rem;  // Gap between action items (bell, avatar, button, hamburger)
+        flex-shrink: 0;
+
+        // On MD/SM when nav is hidden
+        @media (max-width: (@hdx-bp-xl)) {
+            margin-left: auto;  // push actions to the right
+            gap: 0.75rem;
+        }
+    }
+
+    // ── Bell button ──────────────────────────────────────
+    &__bell {
+        position:        relative;
+        width:           2.125rem;
+        height:          2.125rem;
+        display:         flex;
+        align-items:     center;
+        justify-content: center;
+        border:          none;
+        background:      transparent;
+        color:           var(--hdx-neutral-0);
+        cursor:          pointer;
+        border-radius:   2px;
+        padding:         0;
+        flex-shrink:     0;
+
+        &:hover         { background: rgba(255, 255, 255, 0.1); }
+        &:focus-visible { outline: 2px solid var(--hdx-neutral-0); outline-offset: 2px; }
+    }
+
+    &__bell-icon {
+        width:           1.25rem;
+        height:          1.25rem;
+        display:         flex;
+        align-items:     center;
+        justify-content: center;
+        line-height:     0;
+
+        svg { width: 1.25rem; height: 1.25rem; }
+    }
+
+    &__bell-badge {
+        position:        absolute;
+        top:             0.125rem;
+        right:           0.125rem;
+        min-width:       1rem;
+        height:          1rem;
+        padding:         0 0.25rem;
+        background:      #c44536;
+        border:          1.5px solid @hdx-navbar-bg;
+        border-radius:   100px;
+        font-size:       0.625rem;
+        font-weight:     var(--hdx-fw-medium);
+        color:           var(--hdx-neutral-0);
+        display:         flex;
+        align-items:     center;
+        justify-content: center;
+        line-height:     1;
+    }
+
+    // ── Avatar trigger (logged-in) ──────────────────────
+    // XL: visible
+    // MD: hide (goes to dropdown)
+    // SM: hide (goes to dropdown)
+    &__avatar-trigger {
+        border:        none;
+        background:    transparent;
+        cursor:        pointer;
+        padding:       0;
+        display:       flex;
+        align-items:   center;
+        border-radius: 100px;
+
+        &:focus-visible { outline: 2px solid var(--hdx-neutral-0); outline-offset: 2px; }
+
+        @media (max-width: (@hdx-bp-xl)) {
+            display: none;  // Hide avatar on MD/SM, move to dropdown
+        }
+    }
+
+    // ── Hamburger ────────────────────────────────────────
+    &__hamburger {
+        display:         none;
+        width:           2.125rem;
+        height:          2.125rem;
+        border:          none;
+        background:      transparent;
+        color:           var(--hdx-neutral-0);
+        cursor:          pointer;
+        align-items:     center;
+        justify-content: center;
+        border-radius:   2px;
+        padding:         0;
+        flex-shrink:     0;
+
+        &:hover         { background: rgba(255, 255, 255, 0.1); }
+        //&:focus-visible { outline: 2px solid var(--hdx-neutral-0); outline-offset: 2px; }
+
+        svg { width: 1rem; height: 1rem; }
+
+        @media (max-width: (@hdx-bp-xl)) {
+            display: flex;
+        }
+    }
+
+    // ── Login button (logged-out only) ───────────────────
+    // XL: visible
+    // MD/SM: hidden
+    &__login {
+        @media (max-width: (@hdx-bp-xl)) {
+            display: none;
+        }
+    }
+
+    // ── Bell button (notifications) ──────────────────────
+    // Visible on XL and MD when logged in
+    // On SM: visible
+    &__bell {
+        @media (max-width: (@hdx-bp-md)) {
+            // Visible on SM; styling handled in &__bell above
+        }
+    }
+
+    // ── Button overrides on dark bg ──────────────────────
+    .c-button--secondary {
+        border-color: var(--hdx-neutral-2);
+        color:        var(--hdx-neutral-0);
+        background:   transparent;
+
+        &:hover {
+            background:   rgba(255, 255, 255, 0.1);
+            border-color: var(--hdx-neutral-0);
+        }
+    }
+
+    // ── Products dropdown ────────────────────────────────
+    &__products {
+        display:     flex;
+        align-items: stretch;
+    }
+
+    &__products-menu {
+        // Override Bootstrap defaults
+        min-width:     14rem;
+        padding:       0.75rem 0.5rem 0.75rem 1rem;
+        background:    @hdx-dropdown-bg;
+        border:        @hdx-dropdown-border;
+        border-radius: @hdx-dropdown-radius;
+        box-shadow:    @hdx-dropdown-shadow;
+        margin-top:    0;
+
+        .dropdown-item {
+            font-size:      var(--hdx-fs-s);
+            color:          var(--hdx-neutral-95);
+            padding:        0.25rem 0;
+            background:     transparent;
+            border-radius:  0;
+
+            &:hover,
+            &:focus {
+                background:      transparent;
+                color:           var(--hdx-neutral-95);
+                text-decoration: underline;
+            }
+
+            &:active {
+                background: transparent;
+                color:      var(--hdx-neutral-95);
+            }
+        }
+    }
+}

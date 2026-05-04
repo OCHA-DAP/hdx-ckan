@@ -1,118 +1,246 @@
 {#
-  v2 top bar
+  v2 header — top-bar + navbar
   Figma: llm_docs/redesign/figma_exports/top-bar.html
+         llm_docs/redesign/figma_exports/navbar.html
 
-  Breakpoints:
-    SM  < 80rem   — padding: 0 1rem
-    LG  ≥ 80rem   — padding: 0 3rem
-
-  Scope: thin utility bar only (OCHA Services + Documentation).
-  User auth and main navigation are separate tasks.
+  Breakpoints (navbar):
+    SM  < 48rem       — logo + search icon (hidden search field) + hamburger
+    MD  48rem – 79rem — logo + search (21.25rem) + right actions + hamburger
+    XL  ≥ 80rem       — logo + search (25rem) + nav items + right actions
 
   Analytics: all links carry data-module="hdx_click_stopper" and
              data-module-link_type="header" (feeds Mixpanel pipeline).
 #}
 
-<div class="hdx-top-bar">
-  <div class="hdx-top-bar__inner">
+<header class="hdx-header">
 
-    {# ── Left: OCHA Services dropdown ────────────────────── #}
-    <div class="hdx-top-bar__services dropdown">
-      <button class="hdx-top-bar__services-trigger"
-              type="button"
-              data-bs-toggle="dropdown"
-              aria-expanded="false"
-              aria-label="{{ _('OCHA services') }}">
-        <span class="hdx-top-bar__services-logo" aria-hidden="true">{% include 'v2/icons/ocha-logo.svg' %}</span>
-        <span class="hdx-top-bar__services-text">{{ _('OCHA Services') }}</span>
-        <span class="hdx-top-bar__services-chevron">{% include 'v2/icons/chevron-down.svg' %}</span>
-      </button>
+  {# ── Top-bar ─────────────────────────────────────────────── #}
+  <div class="hdx-top-bar">
+    <div class="hdx-top-bar__inner">
 
-      <div class="dropdown-menu hdx-top-bar__dropdown" role="menu">
-        <div class="hdx-top-bar__dropdown-grid">
+      {# Left: OCHA Services dropdown #}
+      <div class="hdx-top-bar__services dropdown">
+        <button class="hdx-top-bar__services-trigger"
+                type="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+                aria-label="{{ _('OCHA services') }}">
+          <span class="hdx-top-bar__services-logo" aria-hidden="true">{% include 'v2/icons/ocha-logo.svg' %}</span>
+          <span class="hdx-top-bar__services-text">{{ _('OCHA Services') }}</span>
+          <span class="hdx-top-bar__services-chevron">{% include 'v2/icons/chevron-down.svg' %}</span>
+        </button>
+
+        <div class="dropdown-menu hdx-top-bar__dropdown" role="menu">
+          <div class="hdx-top-bar__dropdown-grid">
 
           {# Related Platforms #}
-          <div class="hdx-top-bar__dropdown-col">
-            <p class="hdx-top-bar__dropdown-heading">{{ _('Related Platforms') }}</p>
-            <ul class="hdx-top-bar__dropdown-list">
-              <li>
-                <a href="https://centre.humdata.org/" target="_blank"
-                   data-module="hdx_click_stopper" data-module-link_type="header">Centre for Humanitarian Data</a>
-              </li>
-              <li>
-                <a href="https://hxlstandard.org/" target="_blank"
-                   data-module="hdx_click_stopper" data-module-link_type="header">Humanitarian Exchange Language (HXL)</a>
-              </li>
-            </ul>
-          </div>
+            <div class="hdx-top-bar__dropdown-col">
+              <p class="hdx-top-bar__dropdown-heading">{{ _('Related Platforms') }}</p>
+              <ul class="hdx-top-bar__dropdown-list">
+                <li>
+                  <a href="https://centre.humdata.org/" target="_blank"
+                     data-module="hdx_click_stopper" data-module-link_type="header">Centre for Humanitarian Data</a>
+                </li>
+                <li>
+                  <a href="https://hxlstandard.org/" target="_blank"
+                     data-module="hdx_click_stopper" data-module-link_type="header">Humanitarian Exchange Language (HXL)</a>
+                </li>
+              </ul>
+            </div>
 
           {# Other OCHA Services #}
-          <div class="hdx-top-bar__dropdown-col">
-            <p class="hdx-top-bar__dropdown-heading">{{ _('Other OCHA Services') }}</p>
-            <ul class="hdx-top-bar__dropdown-list">
-              <li>
-                <a href="https://fts.unocha.org/" target="_blank"
-                   data-module="hdx_click_stopper" data-module-link_type="header">Financial Tracking Service</a>
-              </li>
-              <li>
-                <a href="https://data.humdata.org/" target="_blank"
-                   data-module="hdx_click_stopper" data-module-link_type="header">Humanitarian Data Exchange</a>
-              </li>
-              <li>
-                <a href="https://humanitarian.id/" target="_blank"
-                   data-module="hdx_click_stopper" data-module-link_type="header">Humanitarian ID</a>
-              </li>
-              <li>
-                <a href="https://humanitarianaction.info/" target="_blank"
-                   data-module="hdx_click_stopper" data-module-link_type="header">Humanitarian Action</a>
-              </li>
-              <li>
-                <a href="https://response.reliefweb.int/" target="_blank"
-                   data-module="hdx_click_stopper" data-module-link_type="header">ReliefWeb Response</a>
-              </li>
-            </ul>
-          </div>
+            <div class="hdx-top-bar__dropdown-col">
+              <p class="hdx-top-bar__dropdown-heading">{{ _('Other OCHA Services') }}</p>
+              <ul class="hdx-top-bar__dropdown-list">
+                <li>
+                  <a href="https://fts.unocha.org/" target="_blank"
+                     data-module="hdx_click_stopper" data-module-link_type="header">Financial Tracking Service</a>
+                </li>
+                <li>
+                  <a href="https://data.humdata.org/" target="_blank"
+                     data-module="hdx_click_stopper" data-module-link_type="header">Humanitarian Data Exchange</a>
+                </li>
+                <li>
+                  <a href="https://humanitarian.id/" target="_blank"
+                     data-module="hdx_click_stopper" data-module-link_type="header">Humanitarian ID</a>
+                </li>
+                <li>
+                  <a href="https://humanitarianaction.info/" target="_blank"
+                     data-module="hdx_click_stopper" data-module-link_type="header">Humanitarian Action</a>
+                </li>
+                <li>
+                  <a href="https://response.reliefweb.int/" target="_blank"
+                     data-module="hdx_click_stopper" data-module-link_type="header">ReliefWeb Response</a>
+                </li>
+              </ul>
+            </div>
 
           {# Third column — no heading #}
-          <div class="hdx-top-bar__dropdown-col">
-            <ul class="hdx-top-bar__dropdown-list">
-              <li>
-                <a href="https://interagencystandingcommittee.org/" target="_blank"
-                   data-module="hdx_click_stopper" data-module-link_type="header">Inter-Agency Standing Committee</a>
-              </li>
-              <li>
-                <a href="https://www.unocha.org" target="_blank"
-                   data-module="hdx_click_stopper" data-module-link_type="header">OCHA Website</a>
-              </li>
-              <li>
-                <a href="https://reliefweb.int" target="_blank"
-                   data-module="hdx_click_stopper" data-module-link_type="header">Relief Web</a>
-              </li>
-              <li>
-                <a href="https://vosocc.unocha.org/" target="_blank"
-                   data-module="hdx_click_stopper" data-module-link_type="header">Virtual OSOCC</a>
-              </li>
-            </ul>
-          </div>
+            <div class="hdx-top-bar__dropdown-col">
+              <ul class="hdx-top-bar__dropdown-list">
+                <li>
+                  <a href="https://interagencystandingcommittee.org/" target="_blank"
+                     data-module="hdx_click_stopper" data-module-link_type="header">Inter-Agency Standing Committee</a>
+                </li>
+                <li>
+                  <a href="https://www.unocha.org" target="_blank"
+                     data-module="hdx_click_stopper" data-module-link_type="header">OCHA Website</a>
+                </li>
+                <li>
+                  <a href="https://reliefweb.int" target="_blank"
+                     data-module="hdx_click_stopper" data-module-link_type="header">Relief Web</a>
+                </li>
+                <li>
+                  <a href="https://vosocc.unocha.org/" target="_blank"
+                     data-module="hdx_click_stopper" data-module-link_type="header">Virtual OSOCC</a>
+                </li>
+              </ul>
+            </div>
 
           {# See all #}
-          <div class="hdx-top-bar__dropdown-col hdx-top-bar__dropdown-col--action">
-            <a href="https://www.unocha.org/ocha-digital-services" target="_blank"
-               data-module="hdx_click_stopper" data-module-link_type="header"
-               class="hdx-top-bar__see-all">{{ _('See all') }}</a>
-          </div>
+            <div class="hdx-top-bar__dropdown-col hdx-top-bar__dropdown-col--action">
+              <a href="https://www.unocha.org/ocha-digital-services" target="_blank"
+                 data-module="hdx_click_stopper" data-module-link_type="header"
+                 class="hdx-top-bar__see-all">{{ _('See all') }}</a>
+            </div>
 
+          </div>
         </div>
       </div>
+
+      {# Right: Documentation link #}
+      <nav class="hdx-top-bar__nav">
+        {% snippet 'v2/components/text-link.html',
+            label=_('Documentation'), href='#',
+            style='primary', size='s',
+            attrs={'data-module': 'hdx_click_stopper', 'data-module-link_type': 'header'} %}
+      </nav>
+
     </div>
-
-    {# ── Right: Documentation link ────────────────────────── #}
-    <nav class="hdx-top-bar__nav">
-      {% snippet 'v2/components/text-link.html',
-          label=_('Documentation'), href='#',
-          style='primary', size='s',
-          attrs={'data-module': 'hdx_click_stopper', 'data-module-link_type': 'header'} %}
-    </nav>
-
   </div>
-</div>
+
+  {# ── Navbar ───────────────────────────────────────────────── #}
+  <nav class="hdx-navbar"
+       aria-label="{{ _('Main navigation') }}"
+       {% if c.userobj %}data-logged-in="true"{% endif %}>
+    <div class="hdx-navbar__inner">
+
+      {# Logo #}
+      <a class="hdx-navbar__logo" href="{{ h.url_for('/') }}" aria-label="HDX — Humanitarian Data Exchange"
+         data-module="hdx_click_stopper" data-module-link_type="header">
+        {% include 'v2/icons/hdx.svg' %}
+      </a>
+
+      {# Search — visible on XL (25rem) and MD (21.25rem via CSS); hidden on SM #}
+      <div class="hdx-navbar__search">
+        <form action="{{ h.url_for('dataset.search') }}" method="get" role="search">
+          {% snippet 'v2/components/search-input.html',
+              size='m', name='q',
+              placeholder=_('Search for datasets'),
+              value=c.q if c.q is defined else '' %}
+        </form>
+      </div>
+
+      {# Nav items + actions — grouped on the right via margin-left:auto on __nav #}
+      <div class="hdx-navbar__nav">
+        {% snippet 'v2/components/nav-item.html',
+            label=_('Data'),
+            href=h.url_for('dataset.search'),
+            attrs={'data-module': 'hdx_click_stopper', 'data-module-link_type': 'header'} %}
+        {% snippet 'v2/components/nav-item.html',
+            label=_('Locations'),
+            href=h.url_for('group.index'),
+            attrs={'data-module': 'hdx_click_stopper', 'data-module-link_type': 'header'} %}
+        {% snippet 'v2/components/nav-item.html',
+            label=_('Organisations'),
+            href=h.url_for('organization.index'),
+            attrs={'data-module': 'hdx_click_stopper', 'data-module-link_type': 'header'} %}
+
+        {# Products — Bootstrap dropdown, items from quick-links registry #}
+        <div class="hdx-navbar__products dropdown">
+          {% snippet 'v2/components/nav-item.html',
+              label=_('Products'),
+              href='#',
+              chevron=True,
+              attrs={'data-bs-toggle': 'dropdown', 'aria-expanded': 'false',
+                     'id': 'navbar-products-trigger',
+                     'data-module': 'hdx_click_stopper', 'data-module-link_type': 'header'} %}
+          <ul class="dropdown-menu hdx-navbar__products-menu" aria-labelledby="navbar-products-trigger">
+            {% for product in h.hdx_get_quick_links_list(archived=False) %}
+              <li>
+                <a class="dropdown-item" href="{{ product.url }}"
+                   {% if product.newTab %}target="_blank" rel="noopener noreferrer"{% endif %}
+                   data-module="hdx_click_stopper" data-module-link_type="header">
+                  {{ product.title }}
+                </a>
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+
+      {# Actions — directly after __nav, no wrapper needed #}
+      <div class="hdx-navbar__actions">
+        {# Search icon — SM only, right-aligned alongside bell (d-md-none hides on MD/XL) #}
+        <button class="hdx-navbar__search-icon d-md-none" type="button"
+                aria-label="{{ _('Search') }}"
+                data-bs-toggle="offcanvas"
+                data-bs-target="#search-offcanvas">
+          {% include 'v2/icons/search.svg' %}
+        </button>
+        {% if c.userobj %}
+          {% set notif = h.hdx_get_user_notifications() %}
+
+          {# Bell — triggers notifications panel (task 018) #}
+          <button class="hdx-navbar__bell" type="button"
+                  aria-label="{{ _('Notifications') }}"
+                  aria-expanded="false"
+                  data-hdx-panel="notifications">
+            <span class="hdx-navbar__bell-icon">{% include 'v2/icons/bell.svg' %}</span>
+            {% if notif.count > 0 %}
+              <span class="hdx-navbar__bell-badge" aria-hidden="true">{{ notif.count }}</span>
+            {% endif %}
+          </button>
+
+          {# Avatar — triggers user menu (task 018) #}
+          <button class="hdx-navbar__avatar-trigger" type="button"
+                  aria-label="{{ _('User menu') }}"
+                  aria-expanded="false"
+                  data-hdx-panel="user-menu">
+            {% snippet 'v2/components/avatar.html',
+                size='sm',
+                initials=c.userobj.display_name[0] | upper,
+                badge=notif.count > 0 %}
+          </button>
+
+          {% snippet 'v2/components/button.html',
+              style='secondary', size='m', label=_('Add data'),
+              tag='a', href=h.url_for('dataset.new'),
+              extra_classes='hdx-navbar__add-data',
+              attrs={'data-module': 'hdx_click_stopper', 'data-module-link_type': 'header'} %}
+        {% else %}
+          {% snippet 'v2/components/button.html',
+              style='secondary', size='m', label=_('Log in'),
+              tag='a', href=h.url_for('hdx_signin.login'),
+              extra_classes='hdx-navbar__login',
+              attrs={'data-module': 'hdx_click_stopper', 'data-module-link_type': 'header'} %}
+        {% endif %}
+
+        {# Hamburger — MD/SM only, hidden on XL #}
+        <button class="hdx-navbar__hamburger" type="button"
+                aria-label="{{ _('Open menu') }}"
+                aria-expanded="false"
+                aria-controls="hdx-offcanvas"
+                data-hdx-panel="offcanvas">
+          {% include 'v2/icons/menu.svg' %}
+        </button>
+      </div>
+
+    </div>
+  </nav>
+
+
+  {# ── Offcanvas (task 019) ─────────────────────────────────── #}
+  {% snippet 'v2/navbar-offcanvas.html' %}
+
+</header>
