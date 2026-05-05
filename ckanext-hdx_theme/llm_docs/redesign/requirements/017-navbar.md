@@ -4,8 +4,6 @@ Implement the main navigation bar (`hdx-navbar`) in `v2/header.html` and CSS. Th
 
 **Figma source:** `llm_docs/redesign/figma_exports/navbar.html`
 
-**Status:** ✅ Implemented
-
 ## Responsive layout
 
 | State | XL (≥80rem) | MD (48–80rem) | SM (<48rem) |

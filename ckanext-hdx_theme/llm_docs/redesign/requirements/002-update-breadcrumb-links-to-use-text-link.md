@@ -2,31 +2,19 @@
 
 ## Goal
 
-Refactor the breadcrumb component's link implementation to use the existing `c-text-link` component instead of custom `c-breadcrumb__link` styles. This ensures design system consistency and reduces code duplication.
-
-## Why this is useful
-
-The current breadcrumb implementation has its own link styles (`c-breadcrumb__link`) that duplicate the functionality and appearance of the `c-text-link` component. By using the shared component, we:
-
-- Maintain consistent link behavior and styling across the design system
-- Reduce maintenance overhead by having a single source of truth for text links
-- Ensure breadcrumbs follow the established text-link patterns (tertiary style, xs size, enabled state)
+Refactor the breadcrumb component's link implementation to use the existing `c-text-link` component instead of custom `c-breadcrumb__link` styles.
 
 ## Scope
 
-This task focuses on updating the breadcrumb component to use the existing text-link component.
-
-### In scope
+**In:**
 
 - `ckanext-hdx_theme/ckanext/hdx_theme/templates/v2/components/breadcrumb.html`
 - `ckanext-hdx_theme/ckanext/hdx_theme/less/v2/components/navigation.less` (breadcrumb link styles)
 - Ensuring breadcrumb links use `c-text-link` with tertiary style, xs size, enabled state
 
-### Out of scope
-
+**Out:**
 - Changes to the `c-text-link` component itself
 - Updates to other navigation components in `navigation.less`
-- Template changes outside the breadcrumb component
 
 ## Requirements
 

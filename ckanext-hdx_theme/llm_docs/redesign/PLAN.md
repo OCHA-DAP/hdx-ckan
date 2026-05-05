@@ -23,14 +23,14 @@ Create new files that live **next to** the existing ones — never modify the ol
   - One HTML snippet + one LESS stylesheet per Figma building block: `button.html`, `link.html`, `tabs.html`, `tag.html`, etc.
   - Compiled CSS committed to `fanstatic/v2/components/` for webassets bundling.
   - Keep the existing `bem.blocks/` untouched; old pages keep using them.
-- **New design tokens file**: `hdx-styles/src/common/less/v2/foundation.less` holding the new Figma colours, spacing, typography, and breakpoints as variables. Both v2 blocks and page-level CSS reference this single source of truth.
+- **New design tokens file**: `ckanext-hdx_theme/ckanext/hdx_theme/less/v2/foundation.less` holding the new Figma colours, spacing, typography, and breakpoints as variables. Both v2 blocks and page-level CSS reference this single source of truth.
 
 ### 2. Register new webasset bundles in `webassets.yml`
 
 Add bundles in [webassets.yml](../../ckanext/hdx_theme/fanstatic/webassets.yml) that are loaded **only** by the new layout:
 
-- `hdx_theme/page-v2-styles` — new base CSS (design tokens, reset/normalise, responsive grid, new header/footer styles).
-- `hdx_theme/page-v2-scripts` — new base JS (responsive header behaviour, any shared new-design JS).
+- `hdx_theme/v2-page-styles` — new base CSS (design tokens, reset/normalise, responsive grid, new header/footer styles).
+- `hdx_theme/v2-page-scripts` — new base JS (responsive header behaviour, any shared new-design JS).
 - `hdx_theme/v2-components-styles` / `hdx_theme/v2-components-scripts` — compiled from `templates/v2/components/`.
 
 Old bundles (`page-styles`, `page-light-styles`, `bem-blocks-styles`, etc.) remain unchanged, so unmigrated pages are unaffected.
@@ -79,7 +79,7 @@ Today two layouts exist because the old design was not responsive (`page.html` =
 
 ## Further Considerations
 
-1. **LESS vs CSS custom properties for design tokens?** The current BEM blocks use LESS. The new design system could stay with LESS for consistency, or adopt CSS custom properties (`:root` vars) so tokens are runtime-switchable and don't need a build step. Recommendation: use CSS custom properties for tokens, LESS for block-level styles that reference them.
-2. **Should `templates/v2/page.html` extend `base.html` directly or introduce a new base?** `base.html` contains analytics/GTM boilerplate that all pages need regardless of design. Extending it directly keeps the chain short. Only create a `base_v2.html` if the new design requires different `<head>` content (e.g., new font loading, meta viewport changes).
+1. ✅ **Resolved — LESS vs CSS custom properties for design tokens.** Decision: CSS custom properties (`:root` vars) for foundation tokens, LESS for component-level styles that reference them. Implemented in task 001.
+2. ✅ **Resolved — Should `templates/v2/page.html` extend `base.html` directly or a new base?** Decision: extends `base.html` directly. Implemented in current `v2/page.html`.
 3. **Automated visual regression testing.** Since old and new pages coexist, consider adding screenshot-based tests (e.g., Cypress + Percy, or Playwright snapshots) to catch unintended bleed between old and new styles during the transition.
 

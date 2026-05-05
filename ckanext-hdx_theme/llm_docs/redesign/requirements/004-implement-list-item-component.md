@@ -2,17 +2,11 @@
 
 ## Goal
 
-Create a versatile list item component that supports two distinct list types: simple text lists and checklist-based lists with checkboxes. The component ensures consistent styling and layout across different usage contexts.
-
-## Why this is useful
-
-List items are fundamental to content presentation in the design system. By providing a unified component that handles both plain text items and checklist-based items, we reduce code duplication and ensure consistent styling, spacing, and interaction patterns.
+Create a list item component supporting two types: plain text lists and checklist-based lists with checkboxes.
 
 ## Scope
 
-This task focuses on implementing a flexible list item component that adapts to different content types.
-
-### In scope
+**In:**
 
 - `ckanext-hdx_theme/ckanext/hdx_theme/templates/v2/components/list-item.html`
 - `ckanext-hdx_theme/ckanext/hdx_theme/less/v2/components/list-item.less`
@@ -20,11 +14,8 @@ This task focuses on implementing a flexible list item component that adapts to 
 - States: `default`, `hovered`, `active` (for checklist)
 - Sizes: `md` (medium, 14px) and `sm` (small, 12px) for text-only lists
 
-### Out of scope
-
-- List container/wrapper component (that's a separate concern)
-- Form handling or state management (component is presentational only)
-- Nested list support
+**Out:**
+- List container/wrapper, form handling, state management, nested lists
 
 ## Requirements
 
