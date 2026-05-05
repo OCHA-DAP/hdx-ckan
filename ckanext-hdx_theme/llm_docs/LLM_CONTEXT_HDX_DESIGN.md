@@ -2,6 +2,28 @@
 
 Purpose: This file gives LLMs a quick map of how HDX (CKAN-based) pages are structured and where the current HTML, CSS, and JS live, so future tasks can recreate or refactor existing designs safely.
 
+---
+
+## ⚠️ Mandatory Rules for V2 Work
+
+These rules apply to every task that touches the V2 redesign. Violating them introduces regressions or duplicate code.
+
+### 1 — Never compile LESS files
+
+The IDE compiles LESS to CSS automatically whenever a `.less` file is saved. **Do not run `lessc`, `gulp`, `npm run build`, or any other LESS compilation command.** Just edit the source `.less` file and the compiled `.css` output in `fanstatic/v2/` will update on its own.
+
+If a `.css` output appears out of date, that is an environment issue for the developer to resolve — do not attempt to fix it by running compilation tools.
+
+### 2 — Always reuse existing V2 components
+
+Before writing any new HTML, CSS, or JS for a V2 feature, check whether an existing component already covers the requirement.
+
+**Component parameters are documented in the snippet's header comment.** Read those before using a component.
+
+**Do not duplicate links, routes, or section content** that is already rendered by an existing snippet. If you need the same content in a second context (e.g. a mobile panel reusing desktop menu sections), extract a shared body snippet and include it in both places.
+
+---
+
 ## ⚡ NEW: Design V2 Migration
 
 HDX is undergoing a progressive redesign using a Figma-driven, responsive component system. For detailed progress, architecture, and implementation status, see [**redesign/PROGRESS.md**](redesign/PROGRESS.md).
