@@ -6,15 +6,15 @@
   // ── Offcanvas helpers ────────────────────────────────────────
 
   function getOffcanvas() {
-    return document.getElementById('hdx-offcanvas');
+    return document.getElementById('hdx-v2-offcanvas');
   }
 
   function getHamburger() {
-    return document.querySelector('[data-hdx-panel="offcanvas"]');
+    return document.querySelector('[data-hdx-v2-panel="offcanvas"]');
   }
 
   function getBackdrop() {
-    return document.querySelector('[data-hdx-close="offcanvas"]');
+    return document.querySelector('[data-hdx-v2-close="offcanvas"]');
   }
 
   function openOffcanvas() {
@@ -47,18 +47,18 @@
     if (backdrop) backdrop.hidden = true;
     document.body.style.overflow = '';
     // Return to primary level
-    var primary = el.querySelector('.hdx-offcanvas__primary');
-    var levels = el.querySelectorAll('.hdx-offcanvas__level');
+    var primary = el.querySelector('.hdx-v2-offcanvas__primary');
+    var levels = el.querySelectorAll('.hdx-v2-offcanvas__level');
     if (primary) primary.hidden = false;
     levels.forEach(function (lvl) { lvl.hidden = true; });
   }
 
   function getPanelEl(name) {
-    return document.getElementById('hdx-panel-' + name);
+    return document.getElementById('hdx-v2-panel-' + name);
   }
 
   function getTrigger(name) {
-    return document.querySelector('[data-hdx-panel="' + name + '"]');
+    return document.querySelector('[data-hdx-v2-panel="' + name + '"]');
   }
 
   function closePanel(name) {
@@ -81,19 +81,19 @@
 
   // Rule 1 & 2: panel toggle, close button, outside click
   document.addEventListener('click', function (e) {
-    // Offcanvas close (backdrop or data-hdx-close="offcanvas")
-    var closeBtn = e.target.closest('[data-hdx-close]');
+    // Offcanvas close (backdrop or data-hdx-v2-close="offcanvas")
+    var closeBtn = e.target.closest('[data-hdx-v2-close]');
     if (closeBtn) {
-      var closeName = closeBtn.getAttribute('data-hdx-close');
+      var closeName = closeBtn.getAttribute('data-hdx-v2-close');
       if (closeName === 'offcanvas') { closeOffcanvas(); return; }
       closePanel(closeName);
       return;
     }
 
     // Offcanvas open (hamburger)
-    var trigger = e.target.closest('[data-hdx-panel]');
+    var trigger = e.target.closest('[data-hdx-v2-panel]');
     if (trigger) {
-      var panelName = trigger.getAttribute('data-hdx-panel');
+      var panelName = trigger.getAttribute('data-hdx-v2-panel');
       if (panelName === 'offcanvas') {
         var offcanvas = getOffcanvas();
         if (offcanvas && offcanvas.classList.contains('is-open')) {
@@ -114,12 +114,12 @@
     }
 
     // Offcanvas second-level: user row
-    var levelTrigger = e.target.closest('[data-hdx-offcanvas-level]');
+    var levelTrigger = e.target.closest('[data-hdx-v2-offcanvas-level]');
     if (levelTrigger) {
-      var levelId = 'hdx-offcanvas-level-' + levelTrigger.getAttribute('data-hdx-offcanvas-level');
+      var levelId = 'hdx-v2-offcanvas-level-' + levelTrigger.getAttribute('data-hdx-v2-offcanvas-level');
       var offcanvasEl = getOffcanvas();
       if (!offcanvasEl) return;
-      var primary = offcanvasEl.querySelector('.hdx-offcanvas__primary');
+      var primary = offcanvasEl.querySelector('.hdx-v2-offcanvas__primary');
       var levelEl = document.getElementById(levelId);
       if (primary) primary.hidden = true;
       if (levelEl) levelEl.hidden = false;
@@ -127,19 +127,19 @@
     }
 
     // Offcanvas back button
-    var backBtn = e.target.closest('[data-hdx-offcanvas-back]');
+    var backBtn = e.target.closest('[data-hdx-v2-offcanvas-back]');
     if (backBtn) {
       var offcanvasEl2 = getOffcanvas();
       if (!offcanvasEl2) return;
-      var primary2 = offcanvasEl2.querySelector('.hdx-offcanvas__primary');
-      var openLevel = offcanvasEl2.querySelector('.hdx-offcanvas__level:not([hidden])');
+      var primary2 = offcanvasEl2.querySelector('.hdx-v2-offcanvas__primary');
+      var openLevel = offcanvasEl2.querySelector('.hdx-v2-offcanvas__level:not([hidden])');
       if (openLevel) openLevel.hidden = true;
       if (primary2) primary2.hidden = false;
       return;
     }
 
     // Products inline toggle
-    var expandBtn = e.target.closest('.hdx-offcanvas__nav-item--expandable');
+    var expandBtn = e.target.closest('.hdx-v2-offcanvas__nav-item--expandable');
     if (expandBtn) {
       var expanded = expandBtn.getAttribute('aria-expanded') === 'true';
       var subnavId = expandBtn.getAttribute('aria-controls');
@@ -170,7 +170,7 @@
 
   // Rule 3: user menu section collapse
   document.addEventListener('click', function (e) {
-    var toggle = e.target.closest('.hdx-user-menu__section-toggle');
+    var toggle = e.target.closest('.hdx-v2-user-menu__section-toggle');
     if (!toggle) return;
     var expanded = toggle.getAttribute('aria-expanded') === 'true';
     var itemsEl = document.getElementById(toggle.getAttribute('aria-controls'));

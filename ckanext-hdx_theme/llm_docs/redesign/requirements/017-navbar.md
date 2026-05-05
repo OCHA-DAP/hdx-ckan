@@ -1,6 +1,6 @@
 # Task 017: Implement v2 navbar
 
-Implement the main navigation bar (`hdx-navbar`) in `v2/header.html` and CSS. This is the teal horizontal bar sitting directly below the top-bar, containing logo, search, nav items, and right-side actions.
+Implement the main navigation bar (`hdx-v2-navbar`) in `v2/header.html` and CSS. This is the teal horizontal bar sitting directly below the top-bar, containing logo, search, nav items, and right-side actions.
 
 **Figma source:** `llm_docs/redesign/figma_exports/navbar.html`
 

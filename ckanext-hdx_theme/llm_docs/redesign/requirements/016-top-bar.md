@@ -30,13 +30,13 @@ Key decisions:
 
 ### `hdx-styles/src/common/less/v2/top-bar.less` (new file)
 
-BEM block `.hdx-top-bar`. Local tokens: `@hdx-top-bar-bg: #0b2d24`, `@hdx-top-bar-bp-lg: 80rem`.
+BEM block `.hdx-v2-top-bar`. Local tokens: `@hdx-top-bar-bg: #0b2d24`, `@hdx-top-bar-bp-lg: 80rem`.
 
 Height: 2.125rem. Font: `var(--hdx-fs-xs)` (12px) Roboto, white, line-height 1.3.
 
 Elements: `__inner`, `__services`, `__services-trigger`, `__services-logo`, `__services-text`, `__services-chevron`, `__dropdown`, `__dropdown-grid`, `__dropdown-col`, `__dropdown-heading`, `__dropdown-list`, `__see-all`, `__nav`.
 
-Scoped override: `.hdx-top-bar .c-text-link { color: var(--hdx-neutral-0); font-size: var(--hdx-fs-xs); font-weight: var(--hdx-fw-medium) }` — white 12px text matching bar font.
+Scoped override: `.hdx-v2-top-bar .c-text-link { color: var(--hdx-neutral-0); font-size: var(--hdx-fs-xs); font-weight: var(--hdx-fw-medium) }` — white 12px text matching bar font.
 
 Dropdown overrides Bootstrap `.dropdown-menu` defaults: `background-color: @hdx-top-bar-bg`, `border: none`, `border-radius: 0`.
 
