@@ -3,13 +3,13 @@
   padding-right: 1rem;
   padding-left: 1rem;
 }
-@media (min-width: 768px) {
+@media (min-width: 48rem) {
   .hdx-v2 .container {
     padding-right: 3rem;
     padding-left: 3rem;
   }
 }
-@media (min-width: 1400px) {
+@media (min-width: 87.5rem) {
   .hdx-v2 .container {
     max-width: 1320px;
     padding-right: calc(var(--bs-gutter-x) * 0.5);

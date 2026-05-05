@@ -133,11 +133,11 @@
   white-space: nowrap;
 }
 .hdx-v2-footer__subscribe-btn:hover {
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: var(--hdx-overlay-white-10);
   border-color: var(--hdx-neutral-0);
 }
 .hdx-v2-footer__subscribe-btn:active {
-  background-color: rgba(255, 255, 255, 0.15);
+  background-color: var(--hdx-overlay-white-15);
 }
 .hdx-v2-footer__subscribe-btn:focus-visible {
   outline-color: var(--hdx-neutral-0);
@@ -255,7 +255,7 @@
   height: 2.625rem;
   flex-shrink: 0;
   line-height: 0;
-  border-right: 1px solid rgba(255, 255, 255, 0.3);
+  border-right: 1px solid var(--hdx-overlay-white-30);
   padding-right: 0.5rem;
 }
 .hdx-v2-footer__ocha-logo svg {

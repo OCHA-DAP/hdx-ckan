@@ -95,6 +95,12 @@
   --hdx-shadow-sm: 0 1px 4px rgba(0, 0, 0, 0.04);
   --hdx-shadow-md: 0 4px 10px rgba(0, 0, 0, 0.12);
   --hdx-shadow-lg: 0 8px 35px rgba(0, 0, 0, 0.16);
+  --hdx-shadow-overlay: 0 4px 16px rgba(0, 0, 0, 0.3);
+  --hdx-overlay-white-10: rgba(255, 255, 255, 0.1);
+  --hdx-overlay-white-15: rgba(255, 255, 255, 0.15);
+  --hdx-overlay-white-30: rgba(255, 255, 255, 0.3);
+  --hdx-overlay-white-90: rgba(255, 255, 255, 0.9);
+  --hdx-overlay-black-40: rgba(0, 0, 0, 0.4);
   --hdx-font-display: 'Merriweather', serif;
   --hdx-font-body: 'Roboto', sans-serif;
   --hdx-fs-xs: 0.75rem;

@@ -78,7 +78,7 @@
   border-radius: 0;
   padding: 2rem 3rem;
   min-width: 44rem;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  box-shadow: var(--hdx-shadow-overlay);
 }
 .hdx-v2-top-bar__dropdown-grid {
   display: flex;
@@ -133,11 +133,11 @@
   white-space: nowrap;
 }
 .hdx-v2-top-bar__see-all:hover {
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: var(--hdx-overlay-white-10);
   color: var(--hdx-neutral-0);
 }
 .hdx-v2-top-bar__see-all:active {
-  background-color: rgba(255, 255, 255, 0.15);
+  background-color: var(--hdx-overlay-white-15);
 }
 .hdx-v2-top-bar__nav {
   display: flex;

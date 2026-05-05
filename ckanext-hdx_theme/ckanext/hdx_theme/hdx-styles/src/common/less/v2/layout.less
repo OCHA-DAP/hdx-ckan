@@ -15,27 +15,23 @@
 // Gutter 24px matches Bootstrap default (--bs-gutter-x: 1.5rem) — no override needed.
 // ============================================================
 
-// Shared layout breakpoints — reused by navbar, top-bar, footer
-@hdx-bp-md: 48rem;   // 768px  — SM/MD boundary
-@hdx-bp-xl: 80rem;   // 1280px — MD/XL boundary (full inline nav)
+@import "breakpoints.less";
 
 @container-padding-xs:  1rem;     // 16px — XS + SM
 @container-padding-md:  3rem;     // 48px — MD through XL
 @container-max-width:   1320px;   // XXL centered, matches Figma XL spec
-@breakpoint-md:         768px;
-@breakpoint-xxl:        1400px;
 
 .hdx-v2 .container {
     max-width: 100%;
     padding-right: @container-padding-xs;
     padding-left:  @container-padding-xs;
 
-    @media (min-width: @breakpoint-md) {
+    @media (min-width: @hdx-bp-md) {
         padding-right: @container-padding-md;
         padding-left:  @container-padding-md;
     }
 
-    @media (min-width: @breakpoint-xxl) {
+    @media (min-width: @hdx-bp-xxl) {
         max-width:     @container-max-width;
         padding-right: calc(var(--bs-gutter-x) * 0.5);
         padding-left:  calc(var(--bs-gutter-x) * 0.5);
