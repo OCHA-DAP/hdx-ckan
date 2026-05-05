@@ -1,0 +1,29 @@
+// ============================================================
+// HDX Design Foundations — Overlay Tokens
+// ============================================================
+//
+// Semi-transparent overlay colours used on dark backgrounds
+// (navbar, offcanvas, footer, top-bar).
+//
+// White overlays are used for:
+//   hover / active states on dark-bg interactive elements
+//   dividers and borders on dark surfaces
+// Black overlays are used for:
+//   scrims and backdrop dimming
+// ============================================================
+
+// ------------------------------------------------------------------
+// White overlays  (rgba white at various opacities)
+// ------------------------------------------------------------------
+
+@hdx-overlay-white-10: rgba(255, 255, 255, 0.10);  // subtle hover bg on dark surface
+@hdx-overlay-white-15: rgba(255, 255, 255, 0.15);  // active / pressed bg on dark surface
+@hdx-overlay-white-30: rgba(255, 255, 255, 0.30);  // border / divider on dark surface
+@hdx-overlay-white-90: rgba(255, 255, 255, 0.90);  // muted text / icons on dark surface
+
+
+// ------------------------------------------------------------------
+// Dark overlays  (rgba black at various opacities)
+// ------------------------------------------------------------------
+
+@hdx-overlay-black-40: rgba(0, 0, 0, 0.40);        // backdrop / scrim dimming

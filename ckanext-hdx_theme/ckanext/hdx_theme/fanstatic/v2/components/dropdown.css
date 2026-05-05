@@ -72,7 +72,7 @@
 }
 .c-dropdown--disabled .c-dropdown__trigger {
   background-color: var(--hdx-neutral-0);
-  border: 1px solid #ebeff0;
+  border: 1px solid var(--hdx-neutral-1);
   box-shadow: none;
   cursor: not-allowed;
   pointer-events: none;
@@ -126,7 +126,7 @@
   right: 0;
   z-index: 200;
   background-color: var(--hdx-neutral-0);
-  border: 0.8px solid #ebeff0;
+  border: 0.8px solid var(--hdx-neutral-1);
   border-radius: var(--hdx-radius-sm);
   box-shadow: var(--hdx-shadow-sm);
   display: flex;
@@ -161,7 +161,7 @@
   position: relative;
   flex-shrink: 0;
   border-radius: var(--hdx-radius-sm);
-  background-color: #ebeff0;
+  background-color: var(--hdx-neutral-1);
 }
 .c-dropdown__scrollbar-thumb {
   position: absolute;
@@ -183,7 +183,7 @@
 }
 .c-dropdown-calendar {
   background-color: var(--hdx-neutral-0);
-  border: 0.8px solid #ebeff0;
+  border: 0.8px solid var(--hdx-neutral-1);
   border-radius: var(--hdx-radius-sm);
   box-shadow: var(--hdx-shadow-sm);
   display: flex;

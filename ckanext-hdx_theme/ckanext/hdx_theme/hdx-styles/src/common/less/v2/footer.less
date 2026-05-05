@@ -12,9 +12,9 @@
 // __legal right-alignment at MD+ handled by Bootstrap utility classes in HTML.
 // ============================================================
 
-@hdx-footer-bg:       #0b2d24;   // dark teal — brand-9 area
-@hdx-bp-md:    48rem;     // 768px
-@hdx-bp-xl:    80rem;     // 1280px
+@import "breakpoints.less";
+
+@hdx-footer-bg: #0b2d24;   // dark teal — brand-9 area
 
 
 // ── Root ─────────────────────────────────────────────────────
@@ -153,8 +153,8 @@
         border:           1px solid var(--hdx-neutral-2);
         white-space:      nowrap;
 
-        &:hover         { background-color: rgba(255, 255, 255, 0.1); border-color: var(--hdx-neutral-0); }
-        &:active        { background-color: rgba(255, 255, 255, 0.15); }
+        &:hover         { background-color: var(--hdx-overlay-white-10); border-color: var(--hdx-neutral-0); }
+        &:active        { background-color: var(--hdx-overlay-white-15); }
         &:focus-visible { outline-color: var(--hdx-neutral-0); }
     }
 
@@ -308,7 +308,7 @@
         flex-shrink:   0;
         line-height:   0;
         // Figma shows vertical separator between logo and description text
-        border-right:  1px solid rgba(255, 255, 255, 0.3);
+        border-right:  1px solid var(--hdx-overlay-white-30);
         padding-right: 0.5rem;
 
         // ocha.svg uses fill="currentColor" — inherits white from .hdx-v2-footer

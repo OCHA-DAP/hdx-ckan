@@ -10,16 +10,16 @@
 @c-dropdown-bg-hover:      var(--hdx-neutral-01);       // #fafbfb
 @c-dropdown-bg-active:     var(--hdx-neutral-01);       // #fafbfb
 
-@c-dropdown-border:        1px solid var(--hdx-neutral-2);             // #d8e0e1
-@c-dropdown-border-hover:  1.5px solid var(--hdx-neutral-8);           // #3f4748
-@c-dropdown-border-active: 1.5px solid var(--hdx-primary-5);           // #1862d8
-@c-dropdown-border-filter: 1px solid var(--hdx-neutral-95);            // #101212
+@c-dropdown-border:        1px solid var(--hdx-neutral-2);              // #d8e0e1
+@c-dropdown-border-hover:  1.5px solid var(--hdx-neutral-8);            // 1.5px: heavier border for stronger hover feedback
+@c-dropdown-border-active: 1.5px solid var(--hdx-primary-5);            // 1.5px: heavier border for stronger active/focus feedback
+@c-dropdown-border-filter: 1px solid var(--hdx-neutral-95);             // #101212
 
-@c-dropdown-text:          var(--hdx-neutral-8);        // #3f4748
-@c-dropdown-text-disabled: var(--hdx-neutral-7);        // #9db1b3
-@c-dropdown-border-disabled: 1px solid #ebeff0;  // whitesmoke
+@c-dropdown-text:          var(--hdx-neutral-8);         // #3f4748
+@c-dropdown-text-disabled: var(--hdx-neutral-7);         // #9db1b3
+@c-dropdown-border-disabled: 1px solid var(--hdx-neutral-1);
 
-@c-dropdown-panel-border:  0.8px solid #ebeff0;  // whitesmoke
+@c-dropdown-panel-border:  0.8px solid var(--hdx-neutral-1);  // 0.8px: hairline — visually lighter than the trigger border
 @c-dropdown-panel-shadow:  var(--hdx-shadow-sm);
 
 // Size M
@@ -220,7 +220,7 @@
         position:         relative;
         flex-shrink:      0;
         border-radius:    var(--hdx-radius-sm);
-        background-color: #ebeff0;  // whitesmoke
+        background-color: var(--hdx-neutral-1);
     }
 
     &__scrollbar-thumb {
