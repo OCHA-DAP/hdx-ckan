@@ -23,3 +23,4 @@
 | 017 | [navbar](017-navbar.md) | implemented | |
 | 018 | [navigation-dropdown](018-navigation-dropdown.md) | implemented | |
 | 019 | [navbar-open](019-navbar-open.md) | implemented | |
+| 020 | [rename-v2-class-prefix](020-rename-v2-class-prefix.md) | implemented | |

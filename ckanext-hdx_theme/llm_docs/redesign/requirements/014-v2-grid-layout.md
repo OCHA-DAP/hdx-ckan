@@ -24,24 +24,24 @@ The Figma XS layout uses 4 columns. Bootstrap always uses 12; each Figma column 
 ### `hdx-styles/src/common/less/v2/layout.less` (new file)
 
 ```less
-@v2-container-padding-xs:  1rem;     // 16px — XS + SM
-@v2-container-padding-md:  3rem;     // 48px — MD through XL
-@v2-container-max-width:   1320px;   // XXL centered
-@v2-breakpoint-md:         768px;
-@v2-breakpoint-xxl:        1400px;
+@container-padding-xs:  1rem;     // 16px — XS + SM
+@container-padding-md:  3rem;     // 48px — MD through XL
+@container-max-width:   1320px;   // XXL centered
+@breakpoint-md:         768px;
+@breakpoint-xxl:        1400px;
 
 .hdx-v2 .container {
     max-width: 100%;
-    padding-right: @v2-container-padding-xs;
-    padding-left:  @v2-container-padding-xs;
+    padding-right: @container-padding-xs;
+    padding-left:  @container-padding-xs;
 
-    @media (min-width: @v2-breakpoint-md) {
-        padding-right: @v2-container-padding-md;
-        padding-left:  @v2-container-padding-md;
+    @media (min-width: @breakpoint-md) {
+        padding-right: @container-padding-md;
+        padding-left:  @container-padding-md;
     }
 
-    @media (min-width: @v2-breakpoint-xxl) {
-        max-width:     @v2-container-max-width;
+    @media (min-width: @breakpoint-xxl) {
+        max-width:     @container-max-width;
         padding-right: calc(var(--bs-gutter-x) * 0.5);
         padding-left:  calc(var(--bs-gutter-x) * 0.5);
         margin-right:  auto;

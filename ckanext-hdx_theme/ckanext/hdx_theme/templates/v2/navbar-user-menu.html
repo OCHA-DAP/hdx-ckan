@@ -1,22 +1,22 @@
-<div class="hdx-user-menu" id="hdx-panel-user-menu" hidden>
+<div class="hdx-v2-user-menu" id="hdx-v2-panel-user-menu" hidden>
 
-  <div class="hdx-user-menu__header">
-    <span class="hdx-user-menu__name">{{ c.userobj.display_name }}</span>
-    <button class="hdx-user-menu__close" type="button"
+  <div class="hdx-v2-user-menu__header">
+    <span class="hdx-v2-user-menu__name">{{ c.userobj.display_name }}</span>
+    <button class="hdx-v2-user-menu__close" type="button"
             aria-label="{{ _('Close menu') }}"
-            data-hdx-close="user-menu">
+            data-hdx-v2-close="user-menu">
       {% include 'v2/icons/close.svg' %}
     </button>
   </div>
 
   {% for section in h.hdx_get_user_menu_sections() %}
-  <div class="hdx-user-menu__section">
-    <button class="hdx-user-menu__section-toggle" type="button"
+  <div class="hdx-v2-user-menu__section">
+    <button class="hdx-v2-user-menu__section-toggle" type="button"
             aria-expanded="true" aria-controls="desk-{{ section.id }}">
       {{ section.label }}
-      <span class="hdx-user-menu__chevron">{% include 'v2/icons/chevron-down.svg' %}</span>
+      <span class="hdx-v2-user-menu__chevron">{% include 'v2/icons/chevron-down.svg' %}</span>
     </button>
-    <ul class="hdx-user-menu__section-items" id="desk-{{ section.id }}">
+    <ul class="hdx-v2-user-menu__section-items" id="desk-{{ section.id }}">
       {% for item in section['items'] %}
       <li><a href="{{ item.href }}">{{ item.label }}</a></li>
       {% endfor %}
@@ -24,7 +24,7 @@
   </div>
   {% endfor %}
 
-  <div class="hdx-user-menu__footer">
+  <div class="hdx-v2-user-menu__footer">
     {% snippet 'v2/components/button.html',
         style='tertiary', size='m', label=_('Logout'),
         tag='a', href=h.url_for('user.logout') %}

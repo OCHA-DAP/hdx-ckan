@@ -12,31 +12,31 @@
              data-module-link_type="header" (feeds Mixpanel pipeline).
 #}
 
-<header class="hdx-header">
+<header class="hdx-v2-header">
 
   {# ── Top-bar ─────────────────────────────────────────────── #}
-  <div class="hdx-top-bar">
-    <div class="hdx-top-bar__inner">
+  <div class="hdx-v2-top-bar">
+    <div class="hdx-v2-top-bar__inner">
 
       {# Left: OCHA Services dropdown #}
-      <div class="hdx-top-bar__services dropdown">
-        <button class="hdx-top-bar__services-trigger"
+      <div class="hdx-v2-top-bar__services dropdown">
+        <button class="hdx-v2-top-bar__services-trigger"
                 type="button"
                 data-bs-toggle="dropdown"
                 aria-expanded="false"
                 aria-label="{{ _('OCHA services') }}">
-          <span class="hdx-top-bar__services-logo" aria-hidden="true">{% include 'v2/icons/ocha-logo.svg' %}</span>
-          <span class="hdx-top-bar__services-text">{{ _('OCHA Services') }}</span>
-          <span class="hdx-top-bar__services-chevron">{% include 'v2/icons/chevron-down.svg' %}</span>
+          <span class="hdx-v2-top-bar__services-logo" aria-hidden="true">{% include 'v2/icons/ocha-logo.svg' %}</span>
+          <span class="hdx-v2-top-bar__services-text">{{ _('OCHA Services') }}</span>
+          <span class="hdx-v2-top-bar__services-chevron">{% include 'v2/icons/chevron-down.svg' %}</span>
         </button>
 
-        <div class="dropdown-menu hdx-top-bar__dropdown" role="menu">
-          <div class="hdx-top-bar__dropdown-grid">
+        <div class="dropdown-menu hdx-v2-top-bar__dropdown" role="menu">
+          <div class="hdx-v2-top-bar__dropdown-grid">
 
           {# Related Platforms #}
-            <div class="hdx-top-bar__dropdown-col">
-              <p class="hdx-top-bar__dropdown-heading">{{ _('Related Platforms') }}</p>
-              <ul class="hdx-top-bar__dropdown-list">
+            <div class="hdx-v2-top-bar__dropdown-col">
+              <p class="hdx-v2-top-bar__dropdown-heading">{{ _('Related Platforms') }}</p>
+              <ul class="hdx-v2-top-bar__dropdown-list">
                 <li>
                   <a href="https://centre.humdata.org/" target="_blank"
                      data-module="hdx_click_stopper" data-module-link_type="header">Centre for Humanitarian Data</a>
@@ -49,9 +49,9 @@
             </div>
 
           {# Other OCHA Services #}
-            <div class="hdx-top-bar__dropdown-col">
-              <p class="hdx-top-bar__dropdown-heading">{{ _('Other OCHA Services') }}</p>
-              <ul class="hdx-top-bar__dropdown-list">
+            <div class="hdx-v2-top-bar__dropdown-col">
+              <p class="hdx-v2-top-bar__dropdown-heading">{{ _('Other OCHA Services') }}</p>
+              <ul class="hdx-v2-top-bar__dropdown-list">
                 <li>
                   <a href="https://fts.unocha.org/" target="_blank"
                      data-module="hdx_click_stopper" data-module-link_type="header">Financial Tracking Service</a>
@@ -76,8 +76,8 @@
             </div>
 
           {# Third column — no heading #}
-            <div class="hdx-top-bar__dropdown-col">
-              <ul class="hdx-top-bar__dropdown-list">
+            <div class="hdx-v2-top-bar__dropdown-col">
+              <ul class="hdx-v2-top-bar__dropdown-list">
                 <li>
                   <a href="https://interagencystandingcommittee.org/" target="_blank"
                      data-module="hdx_click_stopper" data-module-link_type="header">Inter-Agency Standing Committee</a>
@@ -98,10 +98,10 @@
             </div>
 
           {# See all #}
-            <div class="hdx-top-bar__dropdown-col hdx-top-bar__dropdown-col--action">
+            <div class="hdx-v2-top-bar__dropdown-col hdx-v2-top-bar__dropdown-col--action">
               <a href="https://www.unocha.org/ocha-digital-services" target="_blank"
                  data-module="hdx_click_stopper" data-module-link_type="header"
-                 class="hdx-top-bar__see-all">{{ _('See all') }}</a>
+                 class="hdx-v2-top-bar__see-all">{{ _('See all') }}</a>
             </div>
 
           </div>
@@ -109,7 +109,7 @@
       </div>
 
       {# Right: Documentation link #}
-      <nav class="hdx-top-bar__nav">
+      <nav class="hdx-v2-top-bar__nav">
         {% snippet 'v2/components/text-link.html',
             label=_('Documentation'), href='#',
             style='primary', size='s',
@@ -120,19 +120,19 @@
   </div>
 
   {# ── Navbar ───────────────────────────────────────────────── #}
-  <nav class="hdx-navbar"
+  <nav class="hdx-v2-navbar"
        aria-label="{{ _('Main navigation') }}"
        {% if c.userobj %}data-logged-in="true"{% endif %}>
-    <div class="hdx-navbar__inner">
+    <div class="hdx-v2-navbar__inner">
 
       {# Logo #}
-      <a class="hdx-navbar__logo" href="{{ h.url_for('/') }}" aria-label="HDX — Humanitarian Data Exchange"
+      <a class="hdx-v2-navbar__logo" href="{{ h.url_for('/') }}" aria-label="HDX — Humanitarian Data Exchange"
          data-module="hdx_click_stopper" data-module-link_type="header">
         {% include 'v2/icons/hdx.svg' %}
       </a>
 
       {# Search — visible on XL (25rem) and MD (21.25rem via CSS); hidden on SM #}
-      <div class="hdx-navbar__search">
+      <div class="hdx-v2-navbar__search">
         <form action="{{ h.url_for('dataset.search') }}" method="get" role="search">
           {% snippet 'v2/components/search-input.html',
               size='m', name='q',
@@ -142,7 +142,7 @@
       </div>
 
       {# Nav items + actions — grouped on the right via margin-left:auto on __nav #}
-      <div class="hdx-navbar__nav">
+      <div class="hdx-v2-navbar__nav">
         {% snippet 'v2/components/nav-item.html',
             label=_('Data'),
             href=h.url_for('dataset.search'),
@@ -157,15 +157,15 @@
             attrs={'data-module': 'hdx_click_stopper', 'data-module-link_type': 'header'} %}
 
         {# Products — custom panel, items from quick-links registry #}
-        <div class="hdx-navbar__products">
+        <div class="hdx-v2-navbar__products">
           {% snippet 'v2/components/nav-item.html',
               label=_('Products'),
               href='#',
               chevron=True,
-              attrs={'data-hdx-panel': 'products', 'aria-expanded': 'false',
-                     'aria-controls': 'hdx-panel-products',
+              attrs={'data-hdx-v2-panel': 'products', 'aria-expanded': 'false',
+                     'aria-controls': 'hdx-v2-panel-products',
                      'data-module': 'hdx_click_stopper', 'data-module-link_type': 'header'} %}
-          <ul class="hdx-navbar__products-panel" id="hdx-panel-products" hidden>
+          <ul class="hdx-v2-navbar__products-panel" id="hdx-v2-panel-products" hidden>
             {% for product in h.hdx_get_quick_links_list(archived=False) %}
               <li>
                 <a href="{{ product.url }}"
@@ -180,9 +180,9 @@
       </div>
 
       {# Actions — directly after __nav, no wrapper needed #}
-      <div class="hdx-navbar__actions">
+      <div class="hdx-v2-navbar__actions">
         {# Search icon — SM only, right-aligned alongside bell (d-md-none hides on MD/XL) #}
-        <button class="hdx-navbar__search-icon d-md-none" type="button"
+        <button class="hdx-v2-navbar__search-icon d-md-none" type="button"
                 aria-label="{{ _('Search') }}"
                 data-bs-toggle="offcanvas"
                 data-bs-target="#search-offcanvas">
@@ -192,27 +192,27 @@
           {% set notif = h.hdx_get_user_notifications() %}
 
           {# Bell + Notifications panel #}
-          <div class="hdx-navbar__bell-wrap">
-            <button class="hdx-navbar__bell" type="button"
+          <div class="hdx-v2-navbar__bell-wrap">
+            <button class="hdx-v2-navbar__bell" type="button"
                     aria-label="{{ _('Notifications') }}"
                     aria-expanded="false"
-                    aria-controls="hdx-panel-notifications"
-                    data-hdx-panel="notifications">
-              <span class="hdx-navbar__bell-icon">{% include 'v2/icons/bell.svg' %}</span>
+                    aria-controls="hdx-v2-panel-notifications"
+                    data-hdx-v2-panel="notifications">
+              <span class="hdx-v2-navbar__bell-icon">{% include 'v2/icons/bell.svg' %}</span>
               {% if notif.count > 0 %}
-                <span class="hdx-navbar__bell-badge" aria-hidden="true">{{ notif.count }}</span>
+                <span class="hdx-v2-navbar__bell-badge" aria-hidden="true">{{ notif.count }}</span>
               {% endif %}
             </button>
             {% snippet 'v2/navbar-notifications.html' %}
           </div>
 
           {# Avatar + User menu panel #}
-          <div class="hdx-navbar__avatar-wrap">
-            <button class="hdx-navbar__avatar-trigger" type="button"
+          <div class="hdx-v2-navbar__avatar-wrap">
+            <button class="hdx-v2-navbar__avatar-trigger" type="button"
                     aria-label="{{ _('User menu') }}"
                     aria-expanded="false"
-                    aria-controls="hdx-panel-user-menu"
-                    data-hdx-panel="user-menu">
+                    aria-controls="hdx-v2-panel-user-menu"
+                    data-hdx-v2-panel="user-menu">
               {% snippet 'v2/components/avatar.html',
                   size='sm',
                   initials=c.userobj.display_name[0] | upper,
@@ -224,24 +224,24 @@
           {% snippet 'v2/components/button.html',
               style='secondary', size='m', label=_('Add data'),
               tag='a', href=h.url_for('dataset.new'),
-              extra_classes='hdx-navbar__add-data',
+              extra_classes='hdx-v2-navbar__add-data',
               attrs={'data-module': 'hdx_click_stopper', 'data-module-link_type': 'header'} %}
         {% else %}
           {% snippet 'v2/components/button.html',
               style='secondary', size='m', label=_('Log in'),
               tag='a', href=h.url_for('hdx_signin.login'),
-              extra_classes='hdx-navbar__login',
+              extra_classes='hdx-v2-navbar__login',
               attrs={'data-module': 'hdx_click_stopper', 'data-module-link_type': 'header'} %}
         {% endif %}
 
         {# Hamburger — MD/SM only, hidden on XL #}
-        <button class="hdx-navbar__hamburger" type="button"
+        <button class="hdx-v2-navbar__hamburger" type="button"
                 aria-label="{{ _('Open menu') }}"
                 aria-expanded="false"
-                aria-controls="hdx-offcanvas"
-                data-hdx-panel="offcanvas">
-          <span class="hdx-navbar__icon-menu">{% include 'v2/icons/menu.svg' %}</span>
-          <span class="hdx-navbar__icon-close">{% include 'v2/icons/close.svg' %}</span>
+                aria-controls="hdx-v2-offcanvas"
+                data-hdx-v2-panel="offcanvas">
+          <span class="hdx-v2-navbar__icon-menu">{% include 'v2/icons/menu.svg' %}</span>
+          <span class="hdx-v2-navbar__icon-close">{% include 'v2/icons/close.svg' %}</span>
         </button>
       </div>
 

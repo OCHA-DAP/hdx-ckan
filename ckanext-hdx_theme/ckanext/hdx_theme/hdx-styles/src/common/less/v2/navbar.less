@@ -1,5 +1,5 @@
 // ============================================================
-// hdx-navbar — v2 main navigation bar
+// hdx-v2-navbar — v2 main navigation bar
 // Figma: llm_docs/redesign/figma_exports/navbar.html
 //        llm_docs/redesign/figma_exports/navigation-dropdown.html
 // ============================================================
@@ -38,7 +38,7 @@
 
 // ── Header wrapper ─────────────────────────────────────────────
 
-.hdx-header {
+.hdx-v2-header {
     position: sticky;
     top:      0;
     z-index:  1030;
@@ -47,7 +47,7 @@
 
 // ── Navbar bar ─────────────────────────────────────────────────
 
-.hdx-navbar {
+.hdx-v2-navbar {
     background:    var(--hdx-brand-7);                      // #18614c
     height:        var(--hdx-navbar-h);                     // 4rem
     border-bottom: 0.5px solid var(--hdx-neutral-5);        // #9db1b3
@@ -310,9 +310,9 @@
 // All three panels (Products, user menu, notifications) share the same
 // white-card appearance: background, border, shadow, radius, flex-column.
 
-.hdx-navbar__products-panel,
-.hdx-user-menu,
-.hdx-notifications {
+.hdx-v2-navbar__products-panel,
+.hdx-v2-user-menu,
+.hdx-v2-notifications {
     position:       absolute;
     top:            calc(100% + var(--hdx-space-2));        // 100% + 0.5rem below trigger
     z-index:        1050;
@@ -328,9 +328,9 @@
 
 // ── Panel alignment ────────────────────────────────────────────
 
-.hdx-user-menu,
-.hdx-navbar__products-panel,
-.hdx-notifications {
+.hdx-v2-user-menu,
+.hdx-v2-navbar__products-panel,
+.hdx-v2-notifications {
     right:     0;
     min-width: 14rem;
 }
@@ -339,20 +339,20 @@
 // Products and user menu share asymmetric padding (Figma: 12px 8px 12px 16px).
 // Notifications uses symmetric padding (Figma: 12px 16px).
 
-.hdx-navbar__products-panel,
-.hdx-user-menu {
+.hdx-v2-navbar__products-panel,
+.hdx-v2-user-menu {
     padding: var(--hdx-space-3) var(--hdx-space-2) var(--hdx-space-3) var(--hdx-space-4);
 }
 
-.hdx-notifications {
+.hdx-v2-notifications {
     padding: var(--hdx-space-3) var(--hdx-space-4);
 }
 
 // ── Shared panel header row ────────────────────────────────────
 // User menu and notifications both open with a flex header: label left, close button right.
 
-.hdx-user-menu__header,
-.hdx-notifications__header {
+.hdx-v2-user-menu__header,
+.hdx-v2-notifications__header {
     display:         flex;
     align-items:     center;
     justify-content: space-between;
@@ -361,8 +361,8 @@
 
 // ── Shared panel close button ──────────────────────────────────
 
-.hdx-user-menu__close,
-.hdx-notifications__close {
+.hdx-v2-user-menu__close,
+.hdx-v2-notifications__close {
     width:           1.25rem;
     height:          1.25rem;
     border:          none;
@@ -380,8 +380,8 @@
 // typography, spacing, and hover interaction (Figma: fs-14, neutral-95, underline on hover).
 // display:block + padding on the <a> (not the <li>) makes the full click target active.
 
-.hdx-navbar__products-panel a,
-.hdx-user-menu__section-items a {
+.hdx-v2-navbar__products-panel a,
+.hdx-v2-user-menu__section-items a {
     display:         block;
     padding:         var(--hdx-space-1) 0;
     font-size:       var(--hdx-fs-s);
@@ -396,7 +396,7 @@
 
 // ── Products panel ─────────────────────────────────────────────
 
-.hdx-navbar__products-panel {
+.hdx-v2-navbar__products-panel {
     list-style: none;
     margin:     0;
 }
@@ -404,7 +404,7 @@
 
 // ── User menu panel ────────────────────────────────────────────
 
-.hdx-user-menu {
+.hdx-v2-user-menu {
     gap: var(--hdx-space-2);
 
     &__name {
@@ -436,7 +436,7 @@
     }
 
     &__section-toggle[aria-expanded="false"] {
-        .hdx-user-menu__chevron { transform: rotate(-90deg); }
+        .hdx-v2-user-menu__chevron { transform: rotate(-90deg); }
     }
 
     &__section-items {
@@ -457,7 +457,7 @@
 
 // ── Notifications panel ────────────────────────────────────────
 
-.hdx-notifications {
+.hdx-v2-notifications {
     gap: var(--hdx-space-3);
 
     &__title {
@@ -498,7 +498,7 @@
 // Figma: llm_docs/redesign/figma_exports/navbar-open.html
 // Background: --hdx-brand-85 (#0b2d24), text: --hdx-neutral-0 (#fff)
 
-.hdx-offcanvas {
+.hdx-v2-offcanvas {
     position:   fixed;
     top:        calc(var(--hdx-top-bar-h, 2.125rem) + var(--hdx-navbar-h, 4rem));
     left:       0;
@@ -552,7 +552,7 @@
         //margin-bottom:   var(--hdx-space-1);                // 0.25rem
 
       &:hover {
-        .hdx-offcanvas__user-chevron {
+        .hdx-v2-offcanvas__user-chevron {
           color: var(--hdx-neutral-0);
         }
       }
@@ -615,7 +615,7 @@
       &:hover {
         color: var(--hdx-neutral-0);
 
-        .hdx-offcanvas__expand-icon {
+        .hdx-v2-offcanvas__expand-icon {
           color: var(--hdx-neutral-0);
         }
       }
@@ -744,11 +744,11 @@
 
 // ── Hamburger icon swap when offcanvas is open ─────────────────
 
-.hdx-navbar__hamburger {
-    .hdx-navbar__icon-close { display: none; }
+.hdx-v2-navbar__hamburger {
+    .hdx-v2-navbar__icon-close { display: none; }
 
     &.is-open {
-        .hdx-navbar__icon-menu  { display: none; }
-        .hdx-navbar__icon-close { display: block; }
+        .hdx-v2-navbar__icon-menu  { display: none; }
+        .hdx-v2-navbar__icon-close { display: block; }
     }
 }
