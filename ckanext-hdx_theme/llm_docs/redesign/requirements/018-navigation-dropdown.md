@@ -351,3 +351,36 @@ No jQuery. No external dependencies.
 ## Why
 
 The legacy user menu uses Bootstrap `dropstart` with jQuery collapse. The v2 design calls for a custom panel matching precise Figma shadow/border/sizing — not achievable cleanly with Bootstrap's built-in dropdown. The notifications panel replaces the old card-based dropdown with the same pattern. Both reuse the single `navbar.js` controller, keeping JS surface area minimal.
+
+---
+
+## Implementation notes
+
+### Products: migrated from Bootstrap to custom panel system
+
+The spec above left Products on Bootstrap (`data-bs-toggle="dropdown"`). The actual implementation migrated it to the same `data-hdx-panel` system as user menu and notifications:
+
+- Trigger: `data-hdx-panel="products"`, `aria-expanded`, `aria-controls="hdx-panel-products"` on the nav-item
+- Panel: `<ul class="hdx-navbar__products-panel" id="hdx-panel-products" hidden>` — no Bootstrap classes
+- `hdx-navbar__products` wrapper has `position: relative` so the absolute panel is anchored correctly
+
+### User menu sections: Python helper replaces shared template
+
+The spec called for `navbar-user-menu-body.html` as a shared snippet included by both the desktop panel and the mobile offcanvas second level. This was replaced with:
+
+- **`h.hdx_get_user_menu_sections()`** helper in `ckanext-hdx_theme/helpers/helpers.py` — returns a list of `{id, label, items: [{label, href}]}` dicts with all URLs resolved and sysadmin-only entries filtered based on `c.userobj.sysadmin`
+- Registered in `plugin.py` under `get_helpers()`
+- `navbar-user-menu.html` loops over the helper with `hdx-user-menu__*` markup (desktop panel)
+- `navbar-offcanvas.html` second level loops over the helper with `hdx-offcanvas__nav-item--expandable` + `hdx-offcanvas__subnav` markup (see task 019 notes)
+- `navbar-user-menu-body.html` deleted
+
+### LESS: unified shared panel block
+
+All three panels (products, user menu, notifications) share one container rule. Unique properties are split into separate blocks. See current `navbar.less` for the layered structure:
+1. Shared container (position, bg, border, radius, shadow, flex column)
+2. Alignment (right vs left, min-width)
+3. Padding (user-menu + products share asymmetric; notifications symmetric)
+4. Shared header row
+5. Shared close button
+6. Shared link style
+7. Panel-specific blocks (only unique properties)

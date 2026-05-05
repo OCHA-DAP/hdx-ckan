@@ -2,7 +2,7 @@
 
 **Status**: In-progress
 **Started**: 2026-04-16
-**Last Updated**: 2026-05-04
+**Last Updated**: 2026-05-05
 
 ---
 
@@ -259,8 +259,8 @@ Use the design foundations in `less/v2/foundation.less`, `less/v2/colors.less`, 
 ## Next Steps
 
 1. **Re-migrate pages** from `page_light.html` holding state back to `v2/page.html`, starting with the simplest (landing pages, then signup/onboarding, then org/join, etc.)
-5. **Continue building component library** as needed for page migrations
-6. **Iterate** through remaining pages (homepage, dataset list, etc.)
+2. **Continue building component library** as needed for page migrations
+3. **Iterate** through remaining pages (homepage, dataset list, etc.)
 
 ---
 

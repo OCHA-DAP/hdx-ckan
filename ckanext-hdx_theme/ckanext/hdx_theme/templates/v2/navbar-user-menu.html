@@ -9,61 +9,22 @@
     </button>
   </div>
 
-  {% if c.userobj.sysadmin %}
+  {% for section in h.hdx_get_user_menu_sections() %}
   <div class="hdx-user-menu__section">
     <button class="hdx-user-menu__section-toggle" type="button"
-            aria-expanded="true" aria-controls="menu-sysadmin">
-      {{ _('Sysadmin dashboard') }}
+            aria-expanded="true" aria-controls="desk-{{ section.id }}">
+      {{ section.label }}
       <span class="hdx-user-menu__chevron">{% include 'v2/icons/chevron-down.svg' %}</span>
     </button>
-    <ul class="hdx-user-menu__section-items" id="menu-sysadmin">
-      <li><a href="{{ h.url_for('admin.index') }}">{{ _('All sysadmins') }}</a></li>
-      <li><a href="{{ h.url_for('user.index') }}">{{ _('All users') }}</a></li>
-      <li><a href="{{ h.url_for('hdx_carousel.show') }}">{{ _('Carousel') }}</a></li>
-      <li><a href="{{ h.url_for('requestdata_ckanadmin.requests_data') }}">{{ _('HDX Connect Dashboard') }}</a></li>
-      <li><a href="{{ h.url_for('hdx_custom_pages.index') }}">{{ _('Custom/Event Pages') }}</a></li>
-      <li><a href="{{ h.url_for('hdx_quick_links.show') }}">{{ _('Quick Links') }}</a></li>
-      <li><a href="{{ h.url_for('hdx_package_links.show') }}">{{ _('Package Links') }}</a></li>
-      <li><a href="{{ h.url_for('requestdata_ckanadmin.email') }}">{{ _('Email') }}</a></li>
-      <li><a href="{{ h.url_for('admin.config') }}">{{ _('Config') }}</a></li>
+    <ul class="hdx-user-menu__section-items" id="desk-{{ section.id }}">
+      {% for item in section['items'] %}
+      <li><a href="{{ item.href }}">{{ item.label }}</a></li>
+      {% endfor %}
     </ul>
   </div>
-  {% endif %}
+  {% endfor %}
 
-  <div class="hdx-user-menu__section">
-    <button class="hdx-user-menu__section-toggle" type="button"
-            aria-expanded="true" aria-controls="menu-dashboard">
-      {{ _('User dashboard') }}
-      <span class="hdx-user-menu__chevron">{% include 'v2/icons/chevron-down.svg' %}</span>
-    </button>
-    <ul class="hdx-user-menu__section-items" id="menu-dashboard">
-      <li><a href="{{ h.url_for('activity.dashboard') }}">{{ _('Newsfeed') }}</a></li>
-      <li><a href="{{ h.url_for('hdx_user_dashboard.datasets') }}">{{ _('My datasets') }}</a></li>
-      <li><a href="{{ h.url_for('dashboard.organizations') }}">{{ _('My organisations') }}</a></li>
-      <li><a href="{{ h.url_for('dashboard.groups') }}">{{ _('My locations') }}</a></li>
-      <li><a href="{{ h.url_for('requestdata.my_requested_data', id=c.user) }}">{{ _('HDX Connect Requests') }}</a></li>
-    </ul>
-  </div>
-
-  <div class="hdx-user-menu__section">
-    <button class="hdx-user-menu__section-toggle" type="button"
-            aria-expanded="true" aria-controls="menu-settings">
-      {{ _('User settings') }}
-      <span class="hdx-user-menu__chevron">{% include 'v2/icons/chevron-down.svg' %}</span>
-    </button>
-    <ul class="hdx-user-menu__section-items" id="menu-settings">
-      <li><a href="{{ h.url_for('user.read', id=c.user) }}">{{ _('Datasets') }}</a></li>
-      <li><a href="{{ h.url_for('activity.user_activity', id=c.user) }}">{{ _('Activity stream') }}</a></li>
-      {% if c.userobj.sysadmin %}
-      <li><a href="{{ h.url_for('hdx_user_permission.read', id=c.user) }}">{{ _('User permission') }}</a></li>
-      {% endif %}
-      <li><a href="{{ h.url_for('user.api_tokens', id=c.user) }}">{{ _('API tokens') }}</a></li>
-      <li><a href="{{ h.url_for('hdx_user.notifications', id=c.user) }}">{{ _('Notifications') }}</a></li>
-      <li><a href="{{ h.url_for('user.edit', id=c.user) }}">{{ _('Profile and password') }}</a></li>
-    </ul>
-  </div>
-
-  <div>
+  <div class="hdx-user-menu__footer">
     {% snippet 'v2/components/button.html',
         style='tertiary', size='m', label=_('Logout'),
         tag='a', href=h.url_for('user.logout') %}
