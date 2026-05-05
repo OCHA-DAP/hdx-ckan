@@ -2,36 +2,20 @@
 
 ## Goal
 
-Refactor the letter anchor component to be a standalone, reusable component instead of relying on the `c-nav-item` styling. The letter anchor is a distinctly different interaction pattern from navigation items and should have its own dedicated component definition.
-
-## Why this is useful
-
-The current implementation uses `c-nav-item` styles for letter anchors, which conflates two different UI patterns:
-- Navigation items (horizontal menu in header/top bar)
-- Letter anchors (alphabet filtering, typically in sidebars)
-
-By creating a dedicated component, we:
-- Reduce confusion and maintenance burden
-- Allow independent styling evolution
-- Enable reuse in different contexts (sidebars, index lists, etc.) without nav-item baggage
-- Clarify the component's intended use and states
+Extract letter anchors from `c-nav-item` into a dedicated standalone component. The two patterns (nav items vs. alphabet filtering) have distinct semantics and should not share styles.
 
 ## Scope
 
-This task focuses on refactoring the letter anchor into a standalone component that currently exists in navigation.less.
-
-### In scope
+**In:**
 
 - `ckanext-hdx_theme/ckanext/hdx_theme/templates/v2/components/letter-anchor.html`
 - `ckanext-hdx_theme/ckanext/hdx_theme/less/v2/components/letter-anchor.less`
 - States: `enabled`, `hovered`, `active`, `disabled`
 - Sizes: `lg` (large, 2.3125rem) and `sm` (small, 1.5rem)
 
-### Out of scope
-
-- Navigation item component (remain in navigation.less)
-- List/grid layout for multiple letter anchors (that's a container concern)
-- Sorting or filtering logic (component is presentational only)
+**Out:**
+- Navigation item component (`navigation.less` unchanged)
+- List/grid layout, sorting or filtering logic
 
 ## Requirements
 

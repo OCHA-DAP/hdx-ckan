@@ -2,25 +2,20 @@
 
 ## Goal
 
-Replace the CSS `::after` pseudo-element used as the checkmark in `.c-checkbox__box` with the `v2/icons/check.svg` icon, loaded the same way as other v2 component snippets.
-
-## Why this is useful
-
-The current `::after` approach produces the checkmark by rotating a partial border, which is fragile and diverges from the Figma source. An SVG icon is explicit, pixel-accurate, and consistent with how every other v2 component renders icons.
+Replace the CSS `::after` pseudo-element checkmark in `.c-checkbox__box` with `v2/icons/check.svg`, consistent with how all other v2 components render icons.
 
 ## Scope
 
-### In scope
+**In:**
 
 - `ckanext-hdx_theme/ckanext/hdx_theme/templates/v2/components/checkbox.html`
 - `ckanext-hdx_theme/ckanext/hdx_theme/hdx-styles/src/common/less/v2/components/checkbox.less`
 - `ckanext-hdx_theme/ckanext/hdx_theme/templates/v2/icons/check.svg` (already added, read-only)
 
-### Out of scope
-
-- Component API (parameters remain unchanged)
-- Compiled CSS in `fanstatic/` (regenerated from LESS, do not edit manually)
-- Any other component that references or composes `c-checkbox`
+**Out:**
+- Component API (parameters unchanged)
+- Compiled CSS in `fanstatic/` (auto-generated, do not edit manually)
+- Other components that compose `c-checkbox`
 
 ## Requirements
 

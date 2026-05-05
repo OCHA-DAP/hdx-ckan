@@ -1,5 +1,7 @@
 # Requirements Status
 
+> **Rule:** Update this table whenever a task is **created**, moved to `in_progress`, or `implemented`. Status must always reflect the current state.
+
 | # | File | Status | Notes |
 |---|------|--------|-----|
 | 001 | [migrate-less-variables-to-css-variables](001-migrate-less-variables-to-css-variables.md) | implemented | |

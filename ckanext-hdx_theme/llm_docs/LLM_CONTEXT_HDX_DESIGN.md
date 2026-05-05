@@ -22,42 +22,19 @@ Before writing any new HTML, CSS, or JS for a V2 feature, check whether an exist
 
 **Do not duplicate links, routes, or section content** that is already rendered by an existing snippet. If you need the same content in a second context (e.g. a mobile panel reusing desktop menu sections), extract a shared body snippet and include it in both places.
 
----
+### 3 — Always update STATUS.md when task state changes
 
-## ⚡ NEW: Design V2 Migration
-
-HDX is undergoing a progressive redesign using a Figma-driven, responsive component system. For detailed progress, architecture, and implementation status, see [**redesign/PROGRESS.md**](redesign/PROGRESS.md).
-
-### V2 Foundation & Current Status
-
-- **Design tokens**: `less/v2/foundation.less`, `less/v2/colors.less`, `less/v2/spacing.less`, `less/v2/radius.less`, `less/v2/elevation.less`, `less/v2/typography.less` ✅ Complete
-  - All color palettes, spacing, corner radius, elevation, typography, and token mixins are implemented in `ckanext-hdx_theme/ckanext/hdx_theme/less/v2/`.
-- **V2 page scaffold**: `templates/v2/page.html` ✅ Scaffolding complete — header/footer stubs need real content
-  - Extends `base.html` directly (not `page_light.html`).
-  - Loads Google Fonts (Merriweather, Roboto), `hdx_theme/v2-components-styles`, and `hdx_theme/v2-components-scripts`.
-  - Includes `v2/header.html` (stub) and `v2/footer.html` (stub) — placeholders awaiting real implementation.
-  - Provides standard layout blocks: `styles`, `header`, `header_core`, `page_content`, `toolbar`, `flash`, `content`, `footer`, `scripts`.
-- **Component library**: `templates/v2/components/` ✅ In Progress
-  - Implemented components include `button`, `label`, `avatar`, `dropdown`, `input-field`, `navigation`, `selection`, and `text-link`.
-  - Demo page: `templates/v2/components.html`.
-- **SVG icons**: `templates/v2/icons/` ✅
-  - Includes exported icon sets `locations-flags/` and `humanitarian-data-grids/`.
+Whenever a task is created, moved to `in_progress`, or `implemented`, update the status table in [`redesign/requirements/STATUS.md`](redesign/requirements/STATUS.md). Status must always reflect the current state.
 
 ---
+
+## Design V2 Migration
+
+HDX is undergoing a progressive redesign using a Figma-driven, responsive component system. For progress, architecture, and implementation status, see [**redesign/PROGRESS.md**](redesign/PROGRESS.md).
 
 ### Figma extraction process
 
-- Foundations and reusable components were extracted from Figma by selecting the layer containing the source data:
-  - Foundations: color, typography, spacing, radius, elevation layers.
-  - Components: e.g. `Components > Buttons > "buttons"` layer.
-- Exported using **Locofy Lightning - Figma to Code in a flash** with:
-  - `Units: rem`
-  - `Styling: CSS`
-  - `File naming: Pascal Case`
-  - `CSS Variables: ON`
-- The plugin produced one HTML file plus `global.css` and `index.css`.
-- Those outputs were merged into a single reference HTML file with the `global.css` content first, then `index.css`, all inside a single `<style>` block.
-- The merged file was then used as input to Claude with the prompt in [**redesign/COMPONENT_IMPLEMENTATION_PROMPT.md**](redesign/COMPONENT_IMPLEMENTATION_PROMPT.md).
+Export components from Figma using **Locofy Lightning** with `Units: rem`, `Styling: CSS`, `File naming: Pascal Case`, `CSS Variables: ON`. Merge the plugin output (HTML + `global.css` + `index.css`) into a single reference HTML file (`global.css` content first, then `index.css`, all inside one `<style>` block). Use that merged file as input with the prompt in [**redesign/COMPONENT_IMPLEMENTATION_PROMPT.md**](redesign/COMPONENT_IMPLEMENTATION_PROMPT.md).
 
 ---
 
@@ -89,8 +66,8 @@ There are three active layout base templates. The goal is to maintain exactly th
   - Loads `hdx_theme/page-light-styles` and `hdx_theme/page-light-scripts`.
 - `ckanext-hdx_theme/ckanext/hdx_theme/templates/v2/page.html`
   - New v2 layout. Extends `base.html` directly.
-  - Loads Google Fonts, `hdx_theme/v2-components-styles`, and `hdx_theme/v2-components-scripts`.
-  - Includes `v2/header.html` (stub) and `v2/footer.html` (stub).
+  - Loads Google Fonts, `hdx_theme/v2-page-styles` (Bootstrap + grid + components), and `hdx_theme/v2-components-scripts`.
+  - Includes `v2/header.html` and `v2/footer.html` (fully implemented).
   - Target base for all pages once the v2 redesign is complete.
 
 ## Header and footer composition (HDX theme)
@@ -107,10 +84,10 @@ There are three active layout base templates. The goal is to maintain exactly th
 
 ### V2 header/footer (used by `v2/page.html`)
 
-- `ckanext-hdx_theme/ckanext/hdx_theme/templates/v2/header.html` — **stub, pending real implementation**
-- `ckanext-hdx_theme/ckanext/hdx_theme/templates/v2/footer.html` — **stub, pending real implementation**
+- `ckanext-hdx_theme/ckanext/hdx_theme/templates/v2/header.html` — top-bar + responsive navbar (fully implemented)
+- `ckanext-hdx_theme/ckanext/hdx_theme/templates/v2/footer.html` — dark-teal footer panel (fully implemented)
 
-Pages that are still in the `page_light.html` holding state (landing pages, signup, org/join, etc.) manually override `{% block header_core %}` to include the legacy `header-mobile.html`. Once the v2 header/footer stubs are filled in, those pages will migrate back to `v2/page.html`.
+Pages in holding state on `page_light.html` (landing pages, signup, org/join, etc.) manually override `{% block header_core %}` to include the legacy `header-mobile.html`. These are ready to migrate to `v2/page.html` — see [**redesign/PROGRESS.md**](redesign/PROGRESS.md) for the full holding-state list.
 
 ## BEM components (HDX custom UI blocks)
 
@@ -218,7 +195,7 @@ There are **two versions** of this page that share some assets but use different
 ### Signals page (`/signals`)
 
 - **Template**: `ckanext-hdx_theme/ckanext/hdx_theme/templates/landing_pages/signals.html`
-  - Extends `page_light.html` directly (holding state — will migrate to `v2/page.html` once its header/footer are implemented).
+  - Extends `page_light.html` directly (holding state — ready to migrate to `v2/page.html`).
   - Overrides `{% block header_core %}` to include legacy `header-mobile.html`.
   - Manually loads `hdx_theme/page-extra-light-styles` and `hdx_theme/bem-blocks-styles` in `{% block styles %}`.
   - Uses BEM blocks heavily: `bem.blocks/hero.html`, `bem.blocks/card.html`, `bem.blocks/paragraph.html`.
@@ -233,7 +210,7 @@ There are **two versions** of this page that share some assets but use different
 ### HAPI page (`/hapi`)
 
 - **Template**: `ckanext-hdx_theme/ckanext/hdx_theme/templates/landing_pages/hapi.html`
-  - Extends `page_light.html` directly (holding state — same as Signals, will migrate to `v2/page.html` once its header/footer are implemented).
+  - Extends `page_light.html` directly (holding state — ready to migrate to `v2/page.html`).
   - Overrides `{% block header_core %}` to include legacy `header-mobile.html`.
   - Manually loads `hdx_theme/page-extra-light-styles` and `hdx_theme/bem-blocks-styles` in `{% block styles %}`.
   - Uses BEM blocks: `bem.blocks/hero.html`, `bem.blocks/card.html`.
@@ -262,8 +239,6 @@ There are **two versions** of this page that share some assets but use different
 
 ---
 
----
-
 ### V2 Component Demo (`/components`)
 
 - **Template**: `ckanext-hdx_theme/ckanext/hdx_theme/templates/v2/components.html`
@@ -277,29 +252,15 @@ There are **two versions** of this page that share some assets but use different
 
 ## Guidance for V2 Development
 
-When working on the v2 redesign:
+1. **Design tokens** — Use variables from `less/v2/foundation.less` for all colors, spacing, typography, and shadows. Never hardcode values.
 
-1. **Reference the design tokens** — Always use variables from [`less/v2/foundation.less`](../ckanext-hdx_theme/ckanext/hdx_theme/less/v2/foundation.less) for colors, spacing, typography, and shadows. Never hardcode values.
+2. **BEM naming** — Components follow BEM: block (`.component`), element (`.component__item`), modifier (`.component--active`).
 
-2. **Use BEM naming** — v2 components follow BEM (Block-Element-Modifier) naming:
-   - Block: `.component` (the main building block)
-   - Element: `.component__item` (part of a component)
-   - Modifier: `.component--active` (variant or state)
+3. **Build in pairs** — Every component needs an HTML snippet (`templates/v2/components/component-name.html`) and LESS styles (`less/v2/components/component-name.less`).
 
-3. **Build components in pairs**:
-   - HTML snippet: `templates/v2/components/component-name.html` — reusable Jinja template
-   - LESS styles: `less/v2/components/component-name.less` — component styles referencing `foundation.less`
+4. **Page migrations** — Migrate pages by switching `{% extends %}` to `v2/page.html`, removing the holding-state `header_core`/`styles`/`scripts` overrides, replacing `bem.blocks/` snippets with `templates/v2/components/` equivalents, and registering any new bundles in `webassets.yml`.
 
-4. **Page migrations**:
-   - `v2/page.html` is now a proper layout base extending `base.html` — ready to receive page migrations
-   - Pages currently in holding state on `page_light.html` (landing pages, signup, org/join, etc.) should be migrated to `{% extends "v2/page.html" %}` once `v2/header.html` and `v2/footer.html` are implemented
-   - When migrating: remove the manual `header_core`, `styles`, and `scripts` overrides that were added as holding-state workarounds
-   - Replace old BEM snippets (`bem.blocks/`) with v2 equivalents (`templates/v2/components/`)
-   - Register new asset bundles in `webassets.yml` if needed
+5. **Keep old stack untouched** — Old templates and assets stay in place until all pages are migrated.
 
-5. **Keep old stack untouched** — Unmigrated pages should never break. Old templates and assets remain in place until all pages are migrated.
-
-6. **Update LLM docs** — When architecture changes, update [**redesign/PROGRESS.md**](redesign/PROGRESS.md) so future work stays synchronized with actual state.
-
-For detailed progress tracking and implementation status, always consult **[**redesign/PROGRESS.md**](redesign/PROGRESS.md)**.
+6. **Update LLM docs** — When architecture changes, update [**redesign/PROGRESS.md**](redesign/PROGRESS.md) and [**redesign/requirements/STATUS.md**](redesign/requirements/STATUS.md).
 
