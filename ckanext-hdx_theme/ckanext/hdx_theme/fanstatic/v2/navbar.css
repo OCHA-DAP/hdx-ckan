@@ -115,6 +115,7 @@
 }
 .hdx-navbar__nav .c-nav-item:hover:not(.c-nav-item--disabled) {
   color: var(--hdx-neutral-0);
+  border-bottom-color: var(--hdx-neutral-0);
 }
 .hdx-navbar__nav .c-nav-item.c-nav-item--active {
   color: var(--hdx-neutral-0);
