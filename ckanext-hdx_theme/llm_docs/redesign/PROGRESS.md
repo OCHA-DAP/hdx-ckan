@@ -168,9 +168,7 @@ Bundle configuration:
   - `v2/footer.css` — footer styles
   - `v2/navbar.css` — main navbar styles (logo, search, nav items, actions, offcanvas)
 - `hdx_theme/v2-components-scripts` ✅ Contains `v2/components/password-toggle.js`
-
-Still needed (pending task 018/019):
-- `hdx_theme/page-v2-scripts` — navbar panel/offcanvas JS (`v2/navbar.js`)
+- `hdx_theme/v2-page-scripts` ✅ Contains `v2/navbar.js` — navbar panel and offcanvas JS (tasks 018 + 019)
 
 Page-specific bundles will be created as pages are migrated (e.g., `hdx_theme/homepage-v2-styles`).
 
@@ -260,10 +258,7 @@ Use the design foundations in `less/v2/foundation.less`, `less/v2/colors.less`, 
 
 ## Next Steps
 
-1. **Implement task 018** — navbar dropdowns: user menu panel, notifications panel (Products dropdown done in 017). Requires creating `navbar-user-menu.html`, `navbar-notifications.html`, and `v2/navbar.js`
-2. **Implement task 019** — offcanvas mobile/tablet menu (`navbar-offcanvas.html` is currently a stub)
-3. **Register `hdx_theme/page-v2-scripts`** bundle with `v2/navbar.js` once task 018/019 are complete; load from `v2/page.html`
-4. **Re-migrate pages** from `page_light.html` holding state back to `v2/page.html`, starting with the simplest (landing pages, then signup/onboarding, then org/join, etc.)
+1. **Re-migrate pages** from `page_light.html` holding state back to `v2/page.html`, starting with the simplest (landing pages, then signup/onboarding, then org/join, etc.)
 5. **Continue building component library** as needed for page migrations
 6. **Iterate** through remaining pages (homepage, dataset list, etc.)
 
