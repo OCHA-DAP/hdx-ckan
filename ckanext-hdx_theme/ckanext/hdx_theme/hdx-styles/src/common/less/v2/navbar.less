@@ -9,64 +9,65 @@
 //   MD  48rem – 79rem — logo + search (21.25rem) + right actions + hamburger
 //   XL  ≥ 80rem       — logo + search (25rem) + nav items + right actions
 //
+// Note: breakpoint values are repeated as literals because CSS custom
+// properties cannot be used inside @media queries (they're runtime, not
+// compile-time). All other values use var(--hdx-*) design tokens.
 // ============================================================
-
-@hdx-navbar-bg:         var(--hdx-brand-7);   // #18614c
-@hdx-navbar-h:          4rem;
-@hdx-navbar-border:     0.5px solid #9db1b3;
-@hdx-top-bar-h:         2.125rem;
 
 @hdx-bp-md:             48rem;
 @hdx-bp-xl:             80rem;
 
-// Dropdown panel shared tokens
-@hdx-dropdown-bg:       #fff;
-@hdx-dropdown-border:   1px solid var(--hdx-neutral-1);  // #ebeff0
-@hdx-dropdown-radius:   4px;
-@hdx-dropdown-shadow:   0px 4px 10px rgba(0, 0, 0, 0.12);
 
-@hdx-top-bar-h: 2.125rem;
-@hdx-navbar-h:  4rem;
+// ── CSS custom properties for cross-file use ──────────────────
+// (Top-bar height and navbar height are needed by the offcanvas
+//  positioning calc, so they're exposed as runtime vars.)
 
-// ── CSS custom properties for cross-file use ──────────────
 :root {
     --hdx-top-bar-h: 2.125rem;
     --hdx-navbar-h:  4rem;
 }
 
 
-// ── Header wrapper ─────────────────────────────────────────
+// ── Dropdown panel shared values ──────────────────────────────
+// Inlined where used; defined here as a reference comment.
+//   bg:     var(--hdx-neutral-0)          #fff
+//   border: 1px solid var(--hdx-neutral-1) #ebeff0
+//   radius: var(--hdx-radius-md)           4px
+//   shadow: 0px 4px 10px rgba(0,0,0,0.12)  (no token — custom value)
+
+
+// ── Header wrapper ─────────────────────────────────────────────
 
 .hdx-header {
     position: sticky;
-    top: 0;
-    z-index: 1030;
+    top:      0;
+    z-index:  1030;
 }
 
 
-// ── Navbar bar ─────────────────────────────────────────────
+// ── Navbar bar ─────────────────────────────────────────────────
 
 .hdx-navbar {
-    background:    @hdx-navbar-bg;
-    height:        @hdx-navbar-h;
-    border-bottom: @hdx-navbar-border;
+    background:    var(--hdx-brand-7);                      // #18614c
+    height:        var(--hdx-navbar-h);                     // 4rem
+    border-bottom: 0.5px solid var(--hdx-neutral-5);        // #9db1b3
     font-family:   var(--hdx-font-body);
     font-size:     var(--hdx-fs-s);
 
-    // ── Inner container ─────────────────────────────────
+    // ── Inner container ─────────────────────────────────────
     &__inner {
         display:     flex;
         align-items: center;
-        gap:         0;  // No gap between main sections; gaps are within nav and actions
-        padding:     0 3rem;
+        gap:         0;
+        padding:     0 var(--hdx-space-12);                 // 0 3rem
         height:      100%;
 
-        @media (max-width: (@hdx-bp-md)) {
-            padding: 0 1rem;
+        @media (max-width: (@hdx-bp-md)) {                    // < 48rem (SM)
+            padding: 0 var(--hdx-space-4);                  // 0 1rem
         }
     }
 
-    // ── Logo ────────────────────────────────────────────
+    // ── Logo ────────────────────────────────────────────────
     &__logo {
         flex-shrink:     0;
         height:          1.5rem;
@@ -82,53 +83,45 @@
             height: 100%;
         }
 
-        &:hover {
-          color: var(--hdx-neutral-0); // overwrites Bootstrap hover color
-        }
+        &:hover { color: var(--hdx-neutral-0); }
     }
 
-    // ── Search — flex to fill space, centered with max-width ──
+    // ── Search — flex to fill space, centered with max-width ─
     &__search {
-        flex:        1 1 auto;
-        //max-width:   25rem;
-        margin:      0 auto;  // Center search within available flex space
+        flex:   1 1 auto;
+        margin: 0 auto;
 
         form {
-          max-width:   25rem;
-          margin-left: auto;
-          margin-right: auto;
+            max-width:    25rem;
+            margin-left:  auto;
+            margin-right: auto;
         }
 
-        @media (max-width: (@hdx-bp-xl)) {
-            //max-width: 21.25rem;
-          form {
-            max-width: 21.25rem;
-          }
+        @media (max-width: (@hdx-bp-xl)) {                    // < 80rem (MD/SM)
+            form { max-width: 21.25rem; }
         }
 
-        // On SM: hide search form, show search icon only
-        @media (max-width: (@hdx-bp-md)) {
-            flex: 0 0 auto;
-            width: auto;
+        @media (max-width: (@hdx-bp-md)) {                    // < 48rem (SM)
+            flex:   0 0 auto;
+            width:  auto;
             margin: 0;
 
-            form { display: none; }  // Hide search input form on SM
+            form { display: none; }
         }
     }
 
     // Search icon button — visible on SM, hidden on MD/XL
-    // Styled identically to &__bell (same size, border-radius, hover)
     &__search-icon {
         display:         flex;
         align-items:     center;
         justify-content: center;
-        width:           2.125rem;
-        height:          2.125rem;
+        width:           var(--hdx-top-bar-h);              // 2.125rem
+        height:          var(--hdx-top-bar-h);
         border:          none;
         background:      transparent;
         color:           var(--hdx-neutral-0);
         cursor:          pointer;
-        border-radius:   2px;
+        border-radius:   var(--hdx-radius-sm);              // 2px
         padding:         0;
         flex-shrink:     0;
 
@@ -141,35 +134,31 @@
         }
     }
 
-    // ── Nav items — right-aligned with margin-left:auto ──
+    // ── Nav items — right-aligned with margin-left:auto ─────
     &__nav {
-        display:    flex;
-        align-items: stretch;
-        align-self:  stretch;
-        gap: var(--hdx-space-3);
-        margin-left: auto;
-        margin-right: var(--hdx-space-3);  // Gap between products and login/bell button on XL
+        display:      flex;
+        align-items:  stretch;
+        align-self:   stretch;
+        gap:          var(--hdx-space-3);                   // 0.75rem
+        margin-left:  auto;
+        margin-right: var(--hdx-space-3);
 
-        @media (max-width: (@hdx-bp-xl)) {
-            display:     none;
-            margin-left: 0;
+        @media (max-width: (@hdx-bp-xl)) {                    // < 80rem (MD/SM)
+            display:      none;
+            margin-left:  0;
             margin-right: 0;
         }
 
-        // Dark-background overrides for nav items
         .c-nav-item {
-            color:       rgba(255, 255, 255, 0.9);
-            font-weight: var(--hdx-fw-medium);
-            font-size:   var(--hdx-fs-s);
+            color:         rgba(255, 255, 255, 0.9);
+            font-weight:   var(--hdx-fw-medium);
+            font-size:     var(--hdx-fs-s);
             border-bottom: 2px solid transparent;
 
-            &:hover:not(.c-nav-item--disabled) {
-                color: var(--hdx-neutral-0);
-                // no border on hover — per spec
-            }
+            &:hover:not(.c-nav-item--disabled) { color: var(--hdx-neutral-0); }
 
             &.c-nav-item--active {
-                color:         var(--hdx-neutral-0);
+                color:               var(--hdx-neutral-0);
                 border-bottom-color: var(--hdx-neutral-0);
             }
 
@@ -177,26 +166,24 @@
         }
     }
 
-    // ── Actions (bell, avatar, buttons, hamburger) ───────
-    // Gaps between actions items (bell, avatar, button)
+    // ── Actions (bell, avatar, buttons, hamburger) ───────────
     &__actions {
         display:     flex;
         align-items: center;
-        gap:         1rem;  // Gap between action items (bell, avatar, button, hamburger)
+        gap:         var(--hdx-space-4);                    // 1rem
         flex-shrink: 0;
 
-        // On MD/SM when nav is hidden
-        @media (max-width: (@hdx-bp-xl)) {
-            margin-left: auto;  // push actions to the right
-            gap: 0.75rem;
+        @media (max-width: (@hdx-bp-xl)) {                    // < 80rem (MD/SM)
+            margin-left: auto;
+            gap:         var(--hdx-space-3);                // 0.75rem
         }
     }
 
-    // ── Bell button ──────────────────────────────────────
+    // ── Bell button ─────────────────────────────────────────
     &__bell {
         position:        relative;
-        width:           2.125rem;
-        height:          2.125rem;
+        width:           var(--hdx-top-bar-h);              // 2.125rem
+        height:          var(--hdx-top-bar-h);
         display:         flex;
         align-items:     center;
         justify-content: center;
@@ -204,7 +191,7 @@
         background:      transparent;
         color:           var(--hdx-neutral-0);
         cursor:          pointer;
-        border-radius:   2px;
+        border-radius:   var(--hdx-radius-sm);              // 2px
         padding:         0;
         flex-shrink:     0;
 
@@ -225,13 +212,13 @@
 
     &__bell-badge {
         position:        absolute;
-        top:             0.125rem;
-        right:           0.125rem;
-        min-width:       1rem;
-        height:          1rem;
-        padding:         0 0.25rem;
-        background:      #c44536;
-        border:          1.5px solid @hdx-navbar-bg;
+        top:             var(--hdx-space-15);               // 0.125rem
+        right:           var(--hdx-space-15);
+        min-width:       var(--hdx-space-4);                // 1rem
+        height:          var(--hdx-space-4);
+        padding:         0 var(--hdx-space-1);              // 0 0.25rem
+        background:      var(--hdx-error-5);                // #c44536
+        border:          1.5px solid var(--hdx-brand-7);    // match navbar bg
         border-radius:   100px;
         font-size:       0.625rem;
         font-weight:     var(--hdx-fw-medium);
@@ -242,10 +229,7 @@
         line-height:     1;
     }
 
-    // ── Avatar trigger (logged-in) ──────────────────────
-    // XL: visible
-    // MD: hide (goes to dropdown)
-    // SM: hide (goes to dropdown)
+    // ── Avatar trigger (logged-in) ──────────────────────────
     &__avatar-trigger {
         border:        none;
         background:    transparent;
@@ -257,55 +241,38 @@
 
         &:focus-visible { outline: 2px solid var(--hdx-neutral-0); outline-offset: 2px; }
 
-        @media (max-width: (@hdx-bp-xl)) {
-            display: none;  // Hide avatar on MD/SM, move to dropdown
-        }
+        @media (max-width: (@hdx-bp-xl)) { display: none; }  // MD/SM → offcanvas
     }
 
-    // ── Hamburger ────────────────────────────────────────
+    // ── Hamburger ───────────────────────────────────────────
     &__hamburger {
         display:         none;
-        width:           2.125rem;
-        height:          2.125rem;
+        width:           var(--hdx-top-bar-h);              // 2.125rem
+        height:          var(--hdx-top-bar-h);
         border:          none;
         background:      transparent;
         color:           var(--hdx-neutral-0);
         cursor:          pointer;
         align-items:     center;
         justify-content: center;
-        border-radius:   2px;
+        border-radius:   var(--hdx-radius-sm);              // 2px
         padding:         0;
         flex-shrink:     0;
+        outline:         none;
 
-        &:hover         { background: rgba(255, 255, 255, 0.1); }
-        //&:focus-visible { outline: 2px solid var(--hdx-neutral-0); outline-offset: 2px; }
+        &:hover { background: rgba(255, 255, 255, 0.1); }
 
         svg { width: 1rem; height: 1rem; }
 
-        @media (max-width: (@hdx-bp-xl)) {
-            display: flex;
-        }
+        @media (max-width: (@hdx-bp-xl)) { display: flex; }  // MD/SM
     }
 
-    // ── Login button (logged-out only) ───────────────────
-    // XL: visible
-    // MD/SM: hidden
+    // ── Login button (logged-out, XL only) ──────────────────
     &__login {
-        @media (max-width: (@hdx-bp-xl)) {
-            display: none;
-        }
+        @media (max-width: (@hdx-bp-xl)) { display: none; }
     }
 
-    // ── Bell button (notifications) ──────────────────────
-    // Visible on XL and MD when logged in
-    // On SM: visible
-    &__bell {
-        @media (max-width: (@hdx-bp-md)) {
-            // Visible on SM; styling handled in &__bell above
-        }
-    }
-
-    // ── Button overrides on dark bg ──────────────────────
+    // ── Button overrides on dark bg ─────────────────────────
     .c-button--secondary {
         border-color: var(--hdx-neutral-2);
         color:        var(--hdx-neutral-0);
@@ -317,118 +284,145 @@
         }
     }
 
-    // ── Panel positioning wrappers ───────────────────────
-    // Provide position:relative context for absolute panels
+    // ── Panel positioning wrappers ──────────────────────────
     &__bell-wrap,
     &__avatar-wrap {
         position: relative;
     }
 
-    // ── Products dropdown ────────────────────────────────
+    // ── Products dropdown ───────────────────────────────────
     &__products {
+        position:    relative;
         display:     flex;
         align-items: stretch;
-    }
 
-    &__products-menu {
-        // Override Bootstrap defaults
-        min-width:     14rem;
-        padding:       0.75rem 0.5rem 0.75rem 1rem;
-        background:    @hdx-dropdown-bg;
-        border:        @hdx-dropdown-border;
-        border-radius: @hdx-dropdown-radius;
-        box-shadow:    @hdx-dropdown-shadow;
-        margin-top:    0;
-
-        .dropdown-item {
-            font-size:      var(--hdx-fs-s);
-            color:          var(--hdx-neutral-95);
-            padding:        0.25rem 0;
-            background:     transparent;
-            border-radius:  0;
-
-            &:hover,
-            &:focus {
-                background:      transparent;
-                color:           var(--hdx-neutral-95);
-                text-decoration: underline;
-            }
-
-            &:active {
-                background: transparent;
-                color:      var(--hdx-neutral-95);
-            }
-        }
+        // Rotate chevron when panel is open (mirrors user-menu chevron pattern)
+        > .c-nav-item .c-nav-item__chevron { transition: transform 0.15s; }
+        > .c-nav-item[aria-expanded="true"] .c-nav-item__chevron { transform: rotate(180deg); }
     }
 }
 
 
-// ── Shared panel container ────────────────────────────────────
-// Covers both the user menu and notifications panel
+// ── Shared panel container ─────────────────────────────────────
+// All three panels (Products, user menu, notifications) share the same
+// white-card appearance: background, border, shadow, radius, flex-column.
 
+.hdx-navbar__products-panel,
 .hdx-user-menu,
 .hdx-notifications {
     position:       absolute;
-    right:          0;
-    top:            calc(100% + 0.5rem);
+    top:            calc(100% + var(--hdx-space-2));        // 100% + 0.5rem below trigger
     z-index:        1050;
-    min-width:      14.125rem;
-    background:     @hdx-dropdown-bg;
-    border:         @hdx-dropdown-border;
-    border-radius:  @hdx-dropdown-radius;
-    box-shadow:     @hdx-dropdown-shadow;
+    background:     var(--hdx-neutral-0);
+    border:         1px solid var(--hdx-neutral-1);
+    border-radius:  var(--hdx-radius-md);                  // 4px
+    box-shadow:     0px 4px 10px rgba(0, 0, 0, 0.12);
     display:        flex;
     flex-direction: column;
 
     &[hidden] { display: none; }
 }
 
+// ── Panel alignment ────────────────────────────────────────────
 
-// ── User menu panel ───────────────────────────────────────────
+.hdx-user-menu,
+.hdx-navbar__products-panel,
+.hdx-notifications {
+    right:     0;
+    min-width: 14rem;
+}
+
+// ── Panel padding ──────────────────────────────────────────────
+// Products and user menu share asymmetric padding (Figma: 12px 8px 12px 16px).
+// Notifications uses symmetric padding (Figma: 12px 16px).
+
+.hdx-navbar__products-panel,
+.hdx-user-menu {
+    padding: var(--hdx-space-3) var(--hdx-space-2) var(--hdx-space-3) var(--hdx-space-4);
+}
+
+.hdx-notifications {
+    padding: var(--hdx-space-3) var(--hdx-space-4);
+}
+
+// ── Shared panel header row ────────────────────────────────────
+// User menu and notifications both open with a flex header: label left, close button right.
+
+.hdx-user-menu__header,
+.hdx-notifications__header {
+    display:         flex;
+    align-items:     center;
+    justify-content: space-between;
+    padding-bottom:  var(--hdx-space-2);
+}
+
+// ── Shared panel close button ──────────────────────────────────
+
+.hdx-user-menu__close,
+.hdx-notifications__close {
+    width:           1.25rem;
+    height:          1.25rem;
+    border:          none;
+    background:      transparent;
+    cursor:          pointer;
+    padding:         0;
+    display:         flex;
+    align-items:     center;
+    justify-content: center;
+    flex-shrink:     0;
+}
+
+// ── Shared panel link style ────────────────────────────────────
+// Links inside Products and inside user menu sections share the same
+// typography, spacing, and hover interaction (Figma: fs-14, neutral-95, underline on hover).
+// display:block + padding on the <a> (not the <li>) makes the full click target active.
+
+.hdx-navbar__products-panel a,
+.hdx-user-menu__section-items a {
+    display:         block;
+    padding:         var(--hdx-space-1) 0;
+    font-size:       var(--hdx-fs-s);
+    color:           var(--hdx-neutral-95);
+    text-decoration: none;
+
+    &:hover,
+    &:focus  { text-decoration: underline; }
+    &:active { color: var(--hdx-neutral-95); }
+}
+
+
+// ── Products panel ─────────────────────────────────────────────
+
+.hdx-navbar__products-panel {
+    list-style: none;
+    margin:     0;
+}
+
+
+// ── User menu panel ────────────────────────────────────────────
 
 .hdx-user-menu {
-    padding: 0.75rem 0.5rem 0.75rem 1rem;
-    gap:     0.5rem;
-
-    &__header {
-        display:         flex;
-        align-items:     center;
-        justify-content: space-between;
-        padding-bottom:  0.5rem;  // visual breathing room; no border
-    }
+    gap: var(--hdx-space-2);
 
     &__name {
-        color: var(--hdx-neutral-95);
-        font-weight: 600;
-        line-height: 130%;
+        color:       var(--hdx-neutral-95);
+        font-weight: var(--hdx-fw-semibold);
+        line-height: var(--hdx-lh-normal);
         flex:        1;
     }
 
-    &__close {
-        width:           1.25rem;
-        height:          1.25rem;
-        border:          none;
-        background:      transparent;
-        cursor:          pointer;
-        padding:         0;
-        display:         flex;
-        align-items:     center;
-        justify-content: center;
-        flex-shrink:     0;
-    }
-
     &__section-toggle {
-        color: var(--hdx-neutral-95);
+        color:           var(--hdx-neutral-95);
         width:           100%;
         display:         flex;
         align-items:     center;
         justify-content: space-between;
-        font-weight:     600;
-        font-size:       0.875rem;
+        font-weight:     var(--hdx-fw-semibold);
+        font-size:       var(--hdx-fs-s);
         border:          none;
         background:      transparent;
         cursor:          pointer;
-        padding:         0.125rem 0;
+        padding:         var(--hdx-space-15) 0;             // 0.125rem 0
         font-family:     inherit;
     }
 
@@ -445,53 +439,28 @@
     &__section-items {
         list-style: none;
         margin:     0;
-        padding:    0 0 0 1rem;
+        padding:    0 0 0 var(--hdx-space-4);               // left indent only (Figma: no bottom padding)
 
         &[hidden] { display: none; }
+    }
 
-        li { padding: 0.25rem 0; }
-
-        a {
-            font-size:       0.875rem;
-            color: var(--hdx-neutral-95);;
-            text-decoration: none;
-
-            &:hover { text-decoration: underline; }
-        }
+    &__footer {
+        margin-top:  auto;
+        display:     flex;
+        align-items: flex-start;
     }
 }
 
 
-// ── Notifications panel ───────────────────────────────────────
+// ── Notifications panel ────────────────────────────────────────
 
 .hdx-notifications {
-    padding: 0.75rem 1rem;
-    gap:     0.75rem;
-
-    &__header {
-        display:         flex;
-        align-items:     center;
-        justify-content: space-between;
-        padding-bottom:  0.5rem;  // visual breathing room; no border
-    }
+    gap: var(--hdx-space-3);
 
     &__title {
-        font-weight: 600;
-        font-size:   0.875rem;
+        font-weight: var(--hdx-fw-semibold);
+        font-size:   var(--hdx-fs-s);
         flex:        1;
-    }
-
-    &__close {
-        width:           1.25rem;
-        height:          1.25rem;
-        border:          none;
-        background:      transparent;
-        cursor:          pointer;
-        padding:         0;
-        display:         flex;
-        align-items:     center;
-        justify-content: center;
-        flex-shrink:     0;
     }
 
     &__list {
@@ -502,21 +471,281 @@
         overflow-y:     auto;
         display:        flex;
         flex-direction: column;
-        gap:            0.75rem;
+        gap:            var(--hdx-space-3);
     }
 
     &__item {
         display:        flex;
         flex-direction: column;
-        gap:            0.25rem;  // gap between title and date/arrow row
-        font-size:      0.875rem;
+        gap:            var(--hdx-space-1);
+        font-size:      var(--hdx-fs-s);
 
         &--sysadmin { background: lightyellow; }
     }
 
     &__empty {
-        font-size: 0.875rem;
-        color:     #6c757d;
+        font-size: var(--hdx-fs-s);
+        color:     var(--hdx-neutral-7);
         margin:    0;
+    }
+}
+
+
+// ── Offcanvas panel — task 019 ─────────────────────────────────
+// Figma: llm_docs/redesign/figma_exports/navbar-open.html
+// Background: --hdx-brand-85 (#0b2d24), text: --hdx-neutral-0 (#fff)
+
+.hdx-offcanvas {
+    position:   fixed;
+    top:        calc(var(--hdx-top-bar-h, 2.125rem) + var(--hdx-navbar-h, 4rem));
+    left:       0;
+    right:      0;
+    bottom:     0;
+    background: var(--hdx-brand-85);
+    color:      var(--hdx-neutral-0);
+    z-index:    1040;
+    transform:  translateY(-110%);
+    visibility: hidden;
+    //transition: transform 0.25s ease, visibility 0.25s;
+    overflow:   hidden;
+
+    &.is-open {
+        transform:  translateY(0);
+        visibility: visible;
+    }
+
+    @media (min-width: 80rem) { display: none; }            // XL — hidden
+
+    // ── Body scroll container ────────────────────────────────
+    &__body {
+        height:     100%;
+        overflow-y: auto;
+        position:   relative;
+    }
+
+    // ── Primary level ────────────────────────────────────────
+    // Figma: padding-20 padding-16 → 1.25rem 1rem
+    &__primary {
+        display:         flex;
+        flex-direction:  column;
+        padding:         var(--hdx-space-5) var(--hdx-space-4);
+        min-height:      100%;
+        justify-content: space-between;
+    }
+
+    // ── User row (logged in, primary level) ──────────────────
+    &__user-row {
+        display:         flex;
+        align-items:     center;
+        justify-content: space-between;
+        width:           100%;
+        padding:         var(--hdx-space-3) 0;              // 0.75rem 0
+        border:          none;
+        //border-bottom:   1px solid rgba(255, 255, 255, 0.1);
+        background:      transparent;
+        cursor:          pointer;
+        font-family:     inherit;
+        color:           var(--hdx-neutral-0);
+        //margin-bottom:   var(--hdx-space-1);                // 0.25rem
+
+      &:hover {
+        .hdx-offcanvas__user-chevron {
+          color: var(--hdx-neutral-0);
+        }
+      }
+    }
+
+    &__user-left {
+        display:     flex;
+        align-items: center;
+        gap:         var(--hdx-space-4);                    // 1rem
+        flex:        1;
+    }
+
+    &__user-name {
+        font-family: var(--hdx-font-body);
+        font-size:   var(--hdx-fs-l);                       // 1.125rem
+        font-weight: var(--hdx-fw-medium);
+        line-height: var(--hdx-lh-normal);
+        color:       var(--hdx-neutral-0);
+    }
+
+    &__user-chevron {
+        width:       1.25rem;
+        flex-shrink: 0;
+        color:       rgba(255, 255, 255, 0.9);
+    }
+
+    // ── User display row (second level — static, not interactive) ─
+    &__user-display {
+        display:       flex;
+        align-items:   center;
+        gap:           var(--hdx-space-4);
+        padding:       var(--hdx-space-3) 0;
+        //border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        //margin-bottom: var(--hdx-space-3);
+    }
+
+    // ── Primary nav links ────────────────────────────────────
+    &__nav {
+        display:        flex;
+        flex-direction: column;
+        flex:           1;
+    }
+
+    &__nav-item {
+        display:         flex;
+        align-items:     center;
+        justify-content: space-between;
+        width:           100%;
+        padding:         var(--hdx-space-3) 0;              // 0.75rem 0 (Figma: padding-12)
+        border:          none;
+        background:      transparent;
+        cursor:          pointer;
+        font-family:     var(--hdx-font-body);
+        font-size:       var(--hdx-fs-l);                   // 1.125rem (Figma: fs-18)
+        font-weight:     var(--hdx-fw-medium);
+        line-height:     var(--hdx-lh-normal);
+        color:           var(--hdx-neutral-0);
+        text-decoration: none;
+
+      &:hover {
+        color: var(--hdx-neutral-0);
+
+        .hdx-offcanvas__expand-icon {
+          color: var(--hdx-neutral-0);
+        }
+      }
+    }
+
+    &__expand-icon {
+        width:       1.25rem;
+        flex-shrink: 0;
+        transition:  transform 0.15s;
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    &__nav-item--expandable[aria-expanded="false"] &__expand-icon {
+        transform: rotate(-90deg);
+    }
+
+    // ── Products sub-nav ─────────────────────────────────────
+    // Figma: wrapper4/wrapper8 → padding 0 0 16px 16px, gap 8px
+    &__subnav {
+        list-style: none;
+        margin:     0;
+        padding:    0 0 var(--hdx-space-4) var(--hdx-space-4);
+
+        &[hidden] { display: none; }
+
+        li a {
+            display:         block;
+            padding:         var(--hdx-space-13) 0;         // 0.375rem 0 (Figma: padding-6)
+            font-family:     var(--hdx-font-body);
+            font-size:       var(--hdx-fs-m);               // 1rem (Figma: fs-16)
+            font-weight:     var(--hdx-fw-regular);
+            line-height:     var(--hdx-lh-normal);
+            color:           var(--hdx-neutral-0);
+            text-decoration: none;
+
+            &:hover { text-decoration: underline; }
+        }
+    }
+
+    // ── Footer — login / add-data / logout button ────────────
+    // Auto-width (not full-width), anchored to bottom via margin-top: auto
+    &__footer {
+        margin-top:  auto;
+        display:     flex;
+        align-items: flex-start;
+    }
+
+    // Override c-button--secondary and primary for dark background
+    .c-button--secondary {
+        border-color: var(--hdx-neutral-2);
+        color:        var(--hdx-neutral-0);
+        background:   transparent;
+
+        &:hover {
+            background:   rgba(255, 255, 255, 0.1);
+            border-color: var(--hdx-neutral-0);
+        }
+    }
+
+    .c-button--primary {
+        //margin-left: auto;
+        background:     var(--hdx-neutral-0);                  // Slightly lighter primary on dark bg
+        border-color:   var(--hdx-brand-85);
+        color:          var(--hdx-brand-85);
+
+        //&:hover {
+        //    color: var(--hdx-neutral-0);
+        //    background:   var(--hdx-brand-85);
+        //}
+    }
+
+    // ── Second level ─────────────────────────────────────────
+    &__level {
+        position:        absolute;
+        inset:           0;
+        background:      var(--hdx-brand-85);
+        color:           var(--hdx-neutral-0);
+        overflow-y:      auto;
+        padding:         var(--hdx-space-5) var(--hdx-space-4);
+        display:         flex;
+        flex-direction:  column;
+
+        &[hidden] { display: none; }
+    }
+
+    // ── Back button ──────────────────────────────────────────
+    &__back {
+        display:         flex;
+        align-items:     center;
+        gap:             var(--hdx-space-2);                // 0.5rem
+        border:          none;
+        background:      transparent;
+        cursor:          pointer;
+        font-family:     var(--hdx-font-body);
+        font-size:       var(--hdx-fs-m);
+        font-weight:     var(--hdx-fw-medium);
+        line-height:     var(--hdx-lh-normal);
+        text-decoration: underline;
+        color:           var(--hdx-neutral-0);
+        padding:         var(--hdx-space-2) 0;              // 0.5rem 0
+        //margin-bottom:   var(--hdx-space-3);                // 0.75rem
+
+        svg { width: 1.25rem; }
+    }
+
+    // ── Backdrop ─────────────────────────────────────────────
+    &__backdrop {
+        position:   fixed;
+        inset:      0;
+        background: rgba(0, 0, 0, 0.4);
+        z-index:    1039;
+
+        &[hidden] { display: none; }
+    }
+
+    // ── MD breakpoint — wider horizontal padding ──────────────
+    @media (min-width: 48rem) {                             // MD
+        &__primary,
+        &__level {
+            padding-left:  var(--hdx-space-12);             // 3rem
+            padding-right: var(--hdx-space-12);
+        }
+    }
+}
+
+
+// ── Hamburger icon swap when offcanvas is open ─────────────────
+
+.hdx-navbar__hamburger {
+    .hdx-navbar__icon-close { display: none; }
+
+    &.is-open {
+        .hdx-navbar__icon-menu  { display: none; }
+        .hdx-navbar__icon-close { display: block; }
     }
 }

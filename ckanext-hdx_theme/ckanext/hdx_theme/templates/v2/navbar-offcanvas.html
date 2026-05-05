@@ -1,1 +1,139 @@
-{# Offcanvas mobile/tablet menu — task 019 (not yet implemented) #}
+{# ── Offcanvas panel — task 019 ───────────────────────────── #}
+<div class="hdx-offcanvas" id="hdx-offcanvas" aria-hidden="true">
+  <div class="hdx-offcanvas__body">
+
+    {# ── Primary level ─────────────────────────────────── #}
+    <div class="hdx-offcanvas__primary">
+
+      {# User row (logged in) — tapping slides to second level #}
+      {% if c.userobj %}
+        {% set notif = h.hdx_get_user_notifications() %}
+        <button class="hdx-offcanvas__user-row" type="button"
+                data-hdx-offcanvas-level="user-detail"
+                aria-label="{{ _('User menu') }}">
+          <span class="hdx-offcanvas__user-left">
+            {% snippet 'v2/components/avatar.html',
+                size='sm',
+                initials=c.userobj.display_name[0] | upper,
+                badge=notif.count > 0 %}
+            <span class="hdx-offcanvas__user-name">{{ c.userobj.display_name }}</span>
+          </span>
+          <span class="hdx-offcanvas__user-chevron">{% include 'v2/icons/chevron-right.svg' %}</span>
+        </button>
+      {% endif %}
+
+      {# Primary nav links #}
+      <nav class="hdx-offcanvas__nav" aria-label="{{ _('Mobile navigation') }}">
+        <a class="hdx-offcanvas__nav-item" href="{{ h.url_for('home.index') }}"
+           data-module="hdx_click_stopper" data-module-link_type="header">
+          {{ _('Home') }}
+        </a>
+        <a class="hdx-offcanvas__nav-item" href="{{ h.url_for('dataset.search') }}"
+           data-module="hdx_click_stopper" data-module-link_type="header">
+          {{ _('Data') }}
+        </a>
+        <a class="hdx-offcanvas__nav-item" href="{{ h.url_for('group.index') }}"
+           data-module="hdx_click_stopper" data-module-link_type="header">
+          {{ _('Locations') }}
+        </a>
+        <a class="hdx-offcanvas__nav-item" href="{{ h.url_for('organization.index') }}"
+           data-module="hdx_click_stopper" data-module-link_type="header">
+          {{ _('Organisations') }}
+        </a>
+
+        {# Products — inline expandable; open by default per Figma #}
+        <button class="hdx-offcanvas__nav-item hdx-offcanvas__nav-item--expandable"
+                type="button"
+                aria-expanded="true"
+                aria-controls="offcanvas-products"
+                data-module="hdx_click_stopper" data-module-link_type="header">
+          {{ _('Products') }}
+          <span class="hdx-offcanvas__expand-icon">{% include 'v2/icons/chevron-down.svg' %}</span>
+        </button>
+        <ul class="hdx-offcanvas__subnav" id="offcanvas-products">
+          {% for product in h.hdx_get_quick_links_list(archived=False) %}
+            <li>
+              <a href="{{ product.url }}"
+                 {% if product.newTab %}target="_blank" rel="noopener noreferrer"{% endif %}
+                 data-module="hdx_click_stopper" data-module-link_type="header">
+                {{ product.title }}
+              </a>
+            </li>
+          {% endfor %}
+        </ul>
+      </nav>
+
+      {# Footer actions — pushed to bottom of panel #}
+      <div class="hdx-offcanvas__footer">
+        {% if c.userobj %}
+          {# Add data button (logged in) — primary style #}
+          {% snippet 'v2/components/button.html',
+              style='primary', size='l', label=_('Add data'),
+              tag='a', href=h.url_for('dataset.new'),
+              attrs={'data-module': 'hdx_click_stopper', 'data-module-link_type': 'header'} %}
+        {% else %}
+          {# Login button (logged out) #}
+          {% snippet 'v2/components/button.html',
+              style='secondary', size='l', label=_('Login'),
+              tag='a', href=h.url_for('hdx_signin.login'),
+              attrs={'data-module': 'hdx_click_stopper', 'data-module-link_type': 'header'} %}
+        {% endif %}
+      </div>
+
+    </div>{# /.hdx-offcanvas__primary #}
+
+    {# ── Second level — user account (logged in only) ──── #}
+    {% if c.userobj %}
+      <div class="hdx-offcanvas__level" id="hdx-offcanvas-level-user-detail" hidden>
+
+        {# Back button #}
+        <button class="hdx-offcanvas__back" type="button" data-hdx-offcanvas-back>
+          {% include 'v2/icons/chevron-left.svg' %}
+          {{ _('Back') }}
+        </button>
+
+        {# Avatar + name display row (no chevron — not interactive) #}
+        <div class="hdx-offcanvas__user-display">
+          {% snippet 'v2/components/avatar.html',
+              size='sm',
+              initials=c.userobj.display_name[0] | upper %}
+          <span class="hdx-offcanvas__user-name">{{ c.userobj.display_name }}</span>
+        </div>
+
+        {# User menu sections — same expandable pattern as Products in primary level #}
+        {% for section in h.hdx_get_user_menu_sections() %}
+          <button class="hdx-offcanvas__nav-item hdx-offcanvas__nav-item--expandable"
+                  type="button"
+                  aria-expanded="true"
+                  aria-controls="offcanvas-user-{{ section.id }}">
+            {{ section.label }}
+            <span class="hdx-offcanvas__expand-icon">{% include 'v2/icons/chevron-down.svg' %}</span>
+          </button>
+          <ul class="hdx-offcanvas__subnav" id="offcanvas-user-{{ section.id }}">
+            {% for item in section['items'] %}
+            <li>
+              <a href="{{ item.href }}"
+                 data-module="hdx_click_stopper" data-module-link_type="header">
+                {{ item.label }}
+              </a>
+            </li>
+            {% endfor %}
+          </ul>
+
+        {% endfor %}
+
+        <div class="hdx-offcanvas__footer">
+          {% snippet 'v2/components/button.html',
+              style='secondary', size='l', label=_('Logout'),
+              tag='a', href=h.url_for('user.logout'),
+              attrs={'data-module': 'hdx_click_stopper', 'data-module-link_type': 'header'} %}
+        </div>
+
+      </div>
+    {% endif %}
+
+  </div>{# /.hdx-offcanvas__body #}
+</div>
+
+{# Backdrop — closes the offcanvas on click #}
+<div class="hdx-offcanvas__backdrop" hidden data-hdx-close="offcanvas"></div>

@@ -1,7 +1,7 @@
 # Requirements Status
 
 | # | File | Status | Notes |
-|---|------|--------|-------|
+|---|------|--------|-----|
 | 001 | [migrate-less-variables-to-css-variables](001-migrate-less-variables-to-css-variables.md) | implemented | |
 | 002 | [update-breadcrumb-links-to-use-text-link](002-update-breadcrumb-links-to-use-text-link.md) | implemented | |
 | 003 | [implement-checkbox-component](003-implement-checkbox-component.md) | implemented | |
@@ -19,5 +19,5 @@
 | 015 | [footer](015-footer.md) | implemented | |
 | 016 | [top-bar](016-top-bar.md) | implemented | |
 | 017 | [navbar](017-navbar.md) | implemented | |
-| 018 | [navigation-dropdown](018-navigation-dropdown.md) | pending | |
-| 019 | [navbar-open](019-navbar-open.md) | pending | |
+| 018 | [navigation-dropdown](018-navigation-dropdown.md) | implemented | |
+| 019 | [navbar-open](019-navbar-open.md) | implemented | |
