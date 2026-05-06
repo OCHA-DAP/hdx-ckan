@@ -17,7 +17,7 @@
 
 {% block content %}
   <div class="container">
-    <div id="mapbox-baselayer-url-div" style="display: none;">/mapbox</div>
+    <div id="mapbox-baselayer-url-div" style="display: none;">{{ "/mapbox-base-tiles/{z}/{x}/{y}.png" }}</div>
     <div id="datasetCounts" style="display: none;">
         {{ countries }}
     </div>
