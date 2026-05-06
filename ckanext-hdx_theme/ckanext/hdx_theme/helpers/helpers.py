@@ -1071,8 +1071,9 @@ def hdx_decode_markup(value):
 
 def hdx_generate_basemap_config_string() -> str:
     conf_dict = {
-        'baseMapUrl': config.get('hdx.mapbox.baselayer.url'),
+        'baseMapUrl': '/mapbox',
         'token': config.get('hdx.mapbox.baselayer.token'),
+        'style': config.get('hdx.mapbox.style'),
     }
     return json.dumps(conf_dict)
 

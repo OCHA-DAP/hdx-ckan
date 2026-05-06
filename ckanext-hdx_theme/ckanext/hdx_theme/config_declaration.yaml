@@ -235,14 +235,14 @@ groups:
         # default: Needs to be empty for tests to work
         example: http://gislayer:5000/services/postgis/{resource_id}/wkb_geometry/vector-tiles/{z}/{x}/{y}.pbf
         description: URL for Resource PBF used in rendering maps
-      - key: hdx.mapbox.baselayer.url
-        default: https://data.humdata.org/mapbox
-        example: https://data.humdata.org/mapbox
-        description: Base Layer URL for Mapbox integration, actual it's the caching URL on our proxy
       - key: hdx.mapbox.baselayer.token
         default: cacheToken
         example: cacheToken or < usual token format >
         description: Provide "cacheToken" if Base URL is HDX caching, as the proxy will inject the token; otherwise add the actual Mapbox Token
+      - key: hdx.mapbox.style
+        default: mapbox://styles/humdata/cmneqc85n005a01ry0xal9ard
+        example: mapbox://styles/humdata/cmneqc85n005a01ry0xal9ard
+        description: Mapbox style URL used by MapLibre shape previews
       - key: hdx.change_detection.layer_url
         example: http://layer:5000/api/create-change-events
         description: Layer Change detection Url
