@@ -22,12 +22,6 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 1rem;
-}
-@media (min-width: 48rem) {
-  .hdx-v2-top-bar__inner {
-    padding: 0 3rem;
-  }
 }
 .hdx-v2-top-bar__services {
   position: relative;
