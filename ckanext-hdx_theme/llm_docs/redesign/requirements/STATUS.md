@@ -25,3 +25,5 @@
 | 019 | [navbar-open](019-navbar-open.md)                                                                              | implemented | |
 | 020 | [rename-v2-class-prefix](020-rename-v2-class-prefix.md)                                                        | implemented | |
 | 021 | [v2-less-css-architecture-standardization](021-v2-less-css-architecture-standardization.md)                    | implemented | |
+| 022 | [v2-grid-layout-audit](022-v2-grid-layout-audit.md)                                                            | implemented | |
+| 023 | [footer-refinements](023-footer-refinements.md)                                                                 | implemented | |

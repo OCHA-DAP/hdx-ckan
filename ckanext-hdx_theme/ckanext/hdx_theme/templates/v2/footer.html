@@ -27,10 +27,10 @@
         <p class="hdx-v2-footer__tagline">Find, share and use humanitarian data all in one place</p>
       </div>
 
-      {# Newsletter + social — on MD these sit side by side #}
+      {# Newsletter + social — Bootstrap row: col-9/col-3 at MD, stacked at SM/XL #}
       <div class="hdx-v2-footer__actions">
-
-        <div class="hdx-v2-footer__newsletter">
+        <div class="row gx-0 gy-4 align-items-start">
+        <div class="hdx-v2-footer__newsletter col-12 col-md-9 col-xl-12">
           <p class="hdx-v2-footer__newsletter-label">Subscribe to our mailing list</p>
           <div id="mc_embed_signup">
             <form action="{{ mailchimp_action }}" method="post"
@@ -38,16 +38,17 @@
                   name="mc-embedded-subscribe-form"
                   class="validate" target="_blank" novalidate>
               <div class="hdx-v2-footer__newsletter-row">
-                <input type="email" value="" name="EMAIL"
-                       class="hdx-v2-footer__email-input"
-                       id="mce-EMAIL"
-                       placeholder="{{ _('Enter your email') }}"
-                       aria-label="{{ _('Email address') }}">
-                <button type="submit" name="subscribe"
-                        id="mc-embedded-subscribe"
-                        class="c-button c-button--size-m hdx-v2-footer__subscribe-btn">
-                  <span class="c-button__label">{{ _('Subscribe') }}</span>
-                </button>
+                {% snippet 'v2/components/search-input.html',
+                    size='m', state='enabled',
+                    type='email', name='EMAIL', id='mce-EMAIL',
+                    placeholder=_('Enter your email'), value='',
+                    show_icon=False %}
+                {% snippet 'v2/components/button.html',
+                    style='secondary', type='text', size='m',
+                    state='enabled', icon=False,
+                    label=_('Subscribe'), button_type='submit',
+                    extra_classes='hdx-v2-footer__subscribe-btn',
+                    attrs={'name': 'subscribe', 'id': 'mc-embedded-subscribe'} %}
               </div>
               <div id="mce-responses" class="clear">
                 <div class="response" id="mce-error-response" style="display:none"></div>
@@ -62,15 +63,15 @@
           </div>
         </div>
 
-        <div class="hdx-v2-footer__social">
+        <div class="hdx-v2-footer__social col-12 col-md-3 col-xl-12">
           <a href="https://github.com/OCHA-DAP"
              target="_blank" rel="noopener noreferrer"
              class="hdx-v2-footer__social-link"
              data-module="hdx_click_stopper"
              data-module-link_type="footer"
              title="GitHub">
-            <i class="fa-brands fa-github hdx-v2-footer__social-icon" aria-hidden="true"></i>
-            <span class="hdx-v2-footer__social-label">GitHub</span>
+            <span class="hdx-v2-footer__social-icon" aria-hidden="true">{% include 'v2/icons/github.svg' %}</span>
+            <span class="c-text-link c-text-link--primary c-text-link--size-s">GitHub</span>
           </a>
           <a href="https://linkedin.com/company/ocha-centre-for-humanitarian-data"
              target="_blank" rel="noopener noreferrer"
@@ -78,10 +79,11 @@
              data-module="hdx_click_stopper"
              data-module-link_type="footer"
              title="LinkedIn">
-            <i class="fa-brands fa-linkedin-in hdx-v2-footer__social-icon" aria-hidden="true"></i>
-            <span class="hdx-v2-footer__social-label">LinkedIn</span>
+            <span class="hdx-v2-footer__social-icon" aria-hidden="true">{% include 'v2/icons/linkedin.svg' %}</span>
+            <span class="c-text-link c-text-link--primary c-text-link--size-s">LinkedIn</span>
           </a>
         </div>
+        </div>{# /row #}
 
       </div>{# /actions #}
 
@@ -215,9 +217,9 @@
 
     <div class="hdx-v2-footer__service">
       <p class="hdx-v2-footer__service-label">Service provided by</p>
-      <div class="hdx-v2-footer__service-detail">
-        <span class="hdx-v2-footer__ocha-logo" aria-label="OCHA">{% include 'v2/icons/ocha.svg' %}</span>
-        <p class="hdx-v2-footer__ocha-text">
+      <div class="hdx-v2-footer__service-detail row gx-3 align-items-center">
+        <span class="hdx-v2-footer__ocha-logo col-auto" aria-label="OCHA">{% include 'v2/icons/ocha.svg' %}</span>
+        <p class="hdx-v2-footer__ocha-text col-12 col-md-9">
           OCHA coordinates the global emergency response to save lives and protect people in humanitarian
           crises. We advocate for effective and principled humanitarian action by all, for all.
         </p>
