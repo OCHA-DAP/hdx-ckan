@@ -116,6 +116,7 @@
   position: relative;
   line-height: 130%;
   font-size: var(--hdx-fs-s);
+  font-family: var(--hdx-font-body);
   color: var(--hdx-neutral-85);
 }
 .c-autocomplete__chips {
@@ -181,6 +182,7 @@
 }
 .c-autocomplete__result-count {
   width: 6.25rem;
+  font-family: var(--hdx-font-body);
   font-size: var(--hdx-fs-s);
   line-height: 130%;
   text-align: right;

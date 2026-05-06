@@ -98,6 +98,7 @@
   box-shadow: var(--hdx-shadow-sm);
 }
 .c-button--secondary:hover {
+  color: var(--hdx-primary-7);
   box-shadow: none;
 }
 .c-button--secondary:active {

@@ -42,6 +42,7 @@
 }
 .c-dropdown__trigger-value {
   flex: 1;
+  font-family: var(--hdx-font-body);
   font-weight: var(--hdx-fw-medium);
   line-height: 130%;
   overflow: hidden;
