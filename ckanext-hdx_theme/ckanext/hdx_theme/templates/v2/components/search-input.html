@@ -20,6 +20,7 @@
   autocomplete  {string}  autocomplete attr value.  default: ''
   icon_src      {string}  Right icon path (ignored when type='password').
                           default: 'v2/icons/search.svg'
+  show_icon     {bool}   Whether to render the right icon. default: True
   extra_classes {string}  default: ''
   attrs         {dict}    Extra HTML attrs on the wrapper div.  default: {}
   ─────────────────────────────────────────────────
@@ -42,6 +43,7 @@
 {% set type          = type          if type          is defined else 'search' %}
 {% set autocomplete  = autocomplete  if autocomplete  is defined else '' %}
 {% set icon_src      = icon_src      if icon_src      is defined else 'v2/icons/search.svg' %}
+{% set show_icon     = show_icon     if show_icon     is defined else True %}
 {% set extra_classes = extra_classes if extra_classes is defined else '' %}
 {% set attrs         = attrs         if attrs         is defined else {} %}
 
@@ -72,7 +74,7 @@
         {% include h.url_for_static('v2/icons/eye-off.svg') %}
       </span>
     </button>
-  {% else %}
+  {% elif show_icon %}
     <span class="c-search-input__icon">{% include h.url_for_static(icon_src) %}</span>
   {% endif %}
 

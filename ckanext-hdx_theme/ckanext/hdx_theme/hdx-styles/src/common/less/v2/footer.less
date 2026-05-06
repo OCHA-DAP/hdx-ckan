@@ -47,7 +47,7 @@
 
         @media (min-width: @hdx-bp-xl) {
             flex-direction: row;
-            align-items:    flex-start;
+            align-items:    stretch;
             gap:            1.5rem;
         }
     }
@@ -63,7 +63,6 @@
         @media (min-width: @hdx-bp-xl) {
             flex:            1;
             justify-content: space-between;
-            height:          17.5rem;
         }
     }
 
@@ -96,14 +95,7 @@
     &__actions {
         display:        flex;
         flex-direction: column;
-        gap:            1.5rem;
-
-        // MD only: side by side
-        @media (min-width: @hdx-bp-md) and (max-width: (@hdx-bp-xl - 0.001rem)) {
-            flex-direction: row;
-            align-items:    flex-start;
-            gap:            2.5rem;
-        }
+        // Bootstrap row inside handles MD side-by-side / SM-XL stacking
     }
 
     &__newsletter {
@@ -111,10 +103,6 @@
         flex-direction: column;
         gap:            var(--hdx-space-2);
         font-size:      1rem;
-
-        @media (min-width: @hdx-bp-md) and (max-width: (@hdx-bp-xl - 0.001rem)) {
-            flex: 1;
-        }
     }
 
     &__newsletter-label {
@@ -128,23 +116,9 @@
         gap:         var(--hdx-space-2);
     }
 
-    &__email-input {
-        flex:             1;
-        min-width:        7.5rem;
-        height:           2.125rem;  // aligns with c-button--size-m (34 px)
-        padding:          var(--hdx-space-2) var(--hdx-space-3);
-        border:           1px solid var(--hdx-neutral-2);
-        border-radius:    var(--hdx-radius-sm);
-        background-color: var(--hdx-neutral-0);
-        color:            var(--hdx-neutral-8);
-        font-family:      var(--hdx-font-body);
-        font-size:        var(--hdx-fs-s);
-        line-height:      130%;
-        box-sizing:       border-box;
-        outline:          none;
-
-        &::placeholder { color: var(--hdx-neutral-6); }
-        &:focus        { border-color: var(--hdx-neutral-0); }
+    &__newsletter-row .c-search-input {
+        flex:      1;
+        max-width: 22rem;
     }
 
     // Ghost/outline subscribe button — overrides c-button base colours
@@ -154,7 +128,11 @@
         border:           1px solid var(--hdx-neutral-2);
         white-space:      nowrap;
 
-        &:hover         { background-color: var(--hdx-overlay-white-10); border-color: var(--hdx-neutral-0); }
+        &:hover         {
+          background-color: var(--hdx-overlay-white-10);
+          border-color: var(--hdx-neutral-0);
+          color: var(--hdx-neutral-0);
+        }
         &:active        { background-color: var(--hdx-overlay-white-15); }
         &:focus-visible { outline-color: var(--hdx-neutral-0); }
     }
@@ -176,20 +154,12 @@
     }
 
     &__social-icon {
-        font-size:   1.25rem;
-        line-height: 0.875rem;
-        color:       var(--hdx-neutral-0);
         width:       1.25rem;
-        text-align:  center;
         flex-shrink: 0;
-    }
+        line-height: 0;
+        color:       var(--hdx-neutral-0);
 
-    &__social-label {
-        font-size:       var(--hdx-fs-s);
-        font-weight:     var(--hdx-fw-medium);
-        text-decoration: underline;
-        line-height:     130%;
-        color:           var(--hdx-neutral-0);
+        svg { width: 1.25rem; height: auto; display: block; }
     }
 
 
@@ -200,6 +170,7 @@
         align-items: flex-start;
         gap:         var(--hdx-space-2);
         font-size:   var(--hdx-fs-s);
+        margin-top:  auto;
     }
 
     &__related-label {
@@ -257,7 +228,7 @@
     &__nav-list {
         list-style:     none;
         margin:         0;
-        padding:        0;
+        padding:        0 var(--hdx-space-3) 0 0;
         display:        flex;
         flex-direction: column;
         align-items:    flex-start;
@@ -293,31 +264,24 @@
         line-height: 130%;
     }
 
-    &__service-detail {
-        display:     flex;
-        align-items: center;
-        gap:         var(--hdx-space-14);  // 10 px
-
-        @media (max-width: (@hdx-bp-md - 0.001rem)) {
-            flex-direction: column;
-            align-items:    flex-start;
-        }
-    }
-
     &__ocha-logo {
-        height:        2.625rem;
+        height:        2.25rem;
         flex-shrink:   0;
         line-height:   0;
         // Figma shows vertical separator between logo and description text
-        border-right:  1px solid var(--hdx-overlay-white-30);
-        padding-right: 0.5rem;
+        border-right:  1px solid var(--hdx-neutral-0);
+        padding-right: var(--hdx-space-3);
+
+        @media (max-width: (@hdx-bp-md - 0.001rem)) {
+            border-right:  none;
+            padding-right: 0;
+        }
 
         // ocha.svg uses fill="currentColor" — inherits white from .hdx-v2-footer
         svg { height: 100%; width: auto; display: block; }
     }
 
     &__ocha-text {
-        max-width:   31.875rem;
         line-height: 130%;
         margin:      0;
     }
@@ -325,6 +289,8 @@
     &__license {
         display:     flex;
         align-items: center;
+        margin-top: var(--hdx-space-2);
+        margin-bottom: var(--hdx-space-2);
         gap:         var(--hdx-space-2);
 
         @media (max-width: (@hdx-bp-md - 0.001rem)) {
