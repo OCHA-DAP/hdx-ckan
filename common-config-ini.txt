@@ -246,8 +246,8 @@ hdx.orgrequest.sendmails = true
 hdx.faqrequest.email = hdx@humdata.org
 hdx.cache.onstartup = true
 # DEPRECATED -> hdx.homepage.extrasources = 13
-hdx.mapbox.baselayer.url = https://data.humdata.org/mapbox
 hdx.mapbox.baselayer.token = cacheToken
+hdx.mapbox.style = mapbox://styles/humdata/cmneqc85n005a01ry0xal9ard
 
 ## Chart / Top line num source settings
 
