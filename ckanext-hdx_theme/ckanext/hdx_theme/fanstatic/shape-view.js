@@ -52,6 +52,7 @@
   let vectorTileBaseMapConfig = {
     baseMapUrl: null,
     token: null,
+    style: null,
   };
   let vectorTileHDXLayerConfig = {
     serverUrl: null,
@@ -188,16 +189,18 @@
 
 
   /**
-   * Determine vector tile base map config (base map URL and token) from hidden <div>
+   * Determine vector tile base map config (base map URL, token and style) from hidden <div>
    */
   function setVectorTileBaseMapConfig() {
     let baseMapUrl = null;
     let token = null;
+    let style = null;
     let urlObj = null;
     try {
       const config = JSON.parse($('#mapbox-baselayer-url-div').text());
       baseMapUrl = config.baseMapUrl;
       token = config.token;
+      style = config.style;
       urlObj = new URL(baseMapUrl);
     }
     catch (e) {
@@ -207,6 +210,7 @@
     }
     vectorTileBaseMapConfig.baseMapUrl = urlObj.href;
     vectorTileBaseMapConfig.token = token;
+    vectorTileBaseMapConfig.style = style || vectorTileBaseMapConfig.style;
   }
 
   function getLayerStyling(geomType) {
@@ -526,7 +530,7 @@
       container: 'map',
       attributionControl: false,
       cooperativeGestures: true,
-      style: 'mapbox://styles/humdata/cl3lpk27k001k15msafr9714b',
+      style: vectorTileBaseMapConfig.style,
       transformRequest,
       bounds: getBounds(options.data[0].bounding_box),
     });
