@@ -6,16 +6,6 @@
   line-height: 1.3;
   height: 2.125rem;
 }
-.hdx-v2-top-bar .container {
-  padding-right: 1rem;
-  padding-left: 1rem;
-}
-@media (min-width: 80rem) {
-  .hdx-v2-top-bar .container {
-    padding-right: 3rem;
-    padding-left: 3rem;
-  }
-}
 .hdx-v2-top-bar .c-text-link {
   color: var(--hdx-neutral-0);
   font-size: var(--hdx-fs-xs);
