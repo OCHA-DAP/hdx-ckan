@@ -14,13 +14,7 @@
   display: flex;
   align-items: center;
   gap: 0;
-  padding: 0 var(--hdx-space-12);
   height: 100%;
-}
-@media (max-width: 48rem) {
-  .hdx-v2-navbar__inner {
-    padding: 0 var(--hdx-space-4);
-  }
 }
 .hdx-v2-navbar__logo {
   flex-shrink: 0;
