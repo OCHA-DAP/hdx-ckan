@@ -133,6 +133,7 @@
         {% include 'v2/icons/hdx.svg' %}
       </a>
 
+      {% if request.path != '/' %}
       {# Search — visible on XL (25rem) and MD (21.25rem via CSS); hidden on SM #}
       <div class="hdx-v2-navbar__search">
         <form action="{{ h.url_for('dataset.search') }}" method="get" role="search">
@@ -142,6 +143,7 @@
               value=c.q if c.q is defined else '' %}
         </form>
       </div>
+      {% endif %}
 
       {# Nav items + actions — grouped on the right via margin-left:auto on __nav #}
       <div class="hdx-v2-navbar__nav">
@@ -183,6 +185,7 @@
 
       {# Actions — directly after __nav, no wrapper needed #}
       <div class="hdx-v2-navbar__actions">
+        {% if request.path != '/' %}
         {# Search icon — SM only, right-aligned alongside bell (d-md-none hides on MD/XL) #}
         <button class="hdx-v2-navbar__search-icon d-md-none" type="button"
                 aria-label="{{ _('Search') }}"
@@ -190,6 +193,7 @@
                 data-bs-target="#search-offcanvas">
           {% include 'v2/icons/search.svg' %}
         </button>
+        {% endif %}
         {% if c.userobj %}
           {% set notif = h.hdx_get_user_notifications() %}
 
