@@ -1,0 +1,93 @@
+{#
+  Snippet: activity-card.html
+  Path:    templates/v2/components/activity-card.html
+
+  Renders a .c-activity-card component — an icon, heading, subtitle, and CTA button.
+
+  Parameters
+  ──────────────────────────────────────────────────────
+  size          {string}  'lg' | 'md' | 'sm'
+                          default: 'md'
+
+  state         {string}  'enabled' | 'hovered'
+                          default: 'enabled'
+
+  icon_src      {string}  Path to icon image, resolved via h.url_for_static().
+                          Pass '' to omit the icon.
+                          default: ''
+
+  heading       {string}  Card heading text.
+                          default: ''
+
+  subtitle      {string}  Card subtitle / description text.
+                          default: ''
+
+  button_label  {string}  CTA button label text. Pass '' to omit the footer.
+                          default: ''
+
+  button_href   {string}  CTA button link URL.
+                          default: '#'
+
+  extra_classes {string}  Additional CSS classes appended to the root element.
+                          default: ''
+
+  ──────────────────────────────────────────────────────
+  Examples
+
+  {% snippet 'v2/components/activity-card.html',
+      size='lg', heading='Find and use',
+      subtitle='Search and download datasets uploaded by HDX-verified organizations.',
+      button_label='Explore data', button_href='/dataset' %}
+
+  {% snippet 'v2/components/activity-card.html',
+      size='md', icon_src='v2/icons/search.svg',
+      heading='Find and use', subtitle='Search datasets.',
+      button_label='Explore data', button_href='/dataset',
+      state='hovered' %}
+#}
+
+{# ── Defaults ────────────────────────────────────────────── #}
+{% set size          = size          if size          is defined else 'md' %}
+{% set state         = state         if state         is defined else 'enabled' %}
+{% set icon_src      = icon_src      if icon_src      is defined else '' %}
+{% set heading       = heading       if heading       is defined else '' %}
+{% set subtitle      = subtitle      if subtitle      is defined else '' %}
+{% set button_label  = button_label  if button_label  is defined else '' %}
+{% set button_href   = button_href   if button_href   is defined else '#' %}
+{% set extra_classes = extra_classes if extra_classes is defined else '' %}
+
+{# ── BEM class list ──────────────────────────────────────── #}
+{% set classes = ['c-activity-card', 'c-activity-card--size-' ~ size] %}
+{% if state == 'hovered' %}
+  {% set classes = classes + ['is-hovered'] %}
+{% endif %}
+{% if extra_classes %}
+  {% set classes = classes + [extra_classes] %}
+{% endif %}
+
+{# ── Render ───────────────────────────────────────────────── #}
+<div class="{{ classes | join(' ') }}">
+
+  <div class="c-activity-card__header">
+    {% if icon_src %}
+      <img class="c-activity-card__icon" src="{{ h.url_for_static(icon_src) }}" alt="" aria-hidden="true">
+    {% endif %}
+    <div class="c-activity-card__body">
+      {% if heading %}
+        <p class="c-activity-card__heading">{{ heading }}</p>
+      {% endif %}
+      {% if subtitle %}
+        <p class="c-activity-card__subtitle">{{ subtitle }}</p>
+      {% endif %}
+    </div>
+  </div>
+
+  {% if button_label %}
+    <div class="c-activity-card__footer">
+      {% snippet 'v2/components/button.html',
+          style='primary', size='l', type='text',
+          label=button_label, tag='a', href=button_href %}
+    </div>
+  {% endif %}
+
+</div>
