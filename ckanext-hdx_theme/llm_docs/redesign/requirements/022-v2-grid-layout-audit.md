@@ -50,13 +50,7 @@ Verify that `layout.css` (compiled output) matches this and is present in the `v
 
 ## Full-bleed components
 
-Topbar, navbar, and footer span the full viewport width (coloured backgrounds). They must **not** use `.container` internally. Instead, apply equivalent side padding directly to their inner wrapper:
-
-| Component               | Inner wrapper class            | Padding XS  | Padding MD+ |
-|-------------------------|--------------------------------|-------------|-------------|
-| Top bar                 | `.hdx-v2-top-bar__inner`       | 0 1rem      | 0 3rem      |
-| Navbar                  | `.hdx-v2-navbar__inner`        | 0 1rem      | 0 3rem      |
-| Footer                  | `.hdx-v2-footer` (self)        | 3.5rem 1rem | 4rem 3rem / 5rem 3rem (XL) |
+Topbar, navbar, footer, and other full-bleed sections use `.container` on their inner wrapper element for horizontal padding and max-width. The outer element handles background and vertical padding only. See [CONVENTIONS.md](../CONVENTIONS.md) — "Container and full-bleed sections".
 
 Verify that these values are present in `top-bar.less`, `navbar.less`, and `footer.less` and that no `.container` wrapper has been introduced inside these components.
 

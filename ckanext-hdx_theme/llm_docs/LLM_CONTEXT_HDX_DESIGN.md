@@ -252,15 +252,13 @@ There are **two versions** of this page that share some assets but use different
 
 ## Guidance for V2 Development
 
-1. **Design tokens** — Use variables from `less/v2/foundation.less` for all colors, spacing, typography, and shadows. Never hardcode values.
+1. **CSS/BEM conventions** — See [**redesign/CONVENTIONS.md**](redesign/CONVENTIONS.md) for BEM prefixes, media query nesting, breakpoints, container usage, and token rules.
 
-2. **BEM naming** — Components follow BEM: block (`.component`), element (`.component__item`), modifier (`.component--active`).
+2. **Build in pairs** — Every component needs an HTML snippet (`templates/v2/components/component-name.html`) and LESS styles (`less/v2/components/component-name.less`).
 
-3. **Build in pairs** — Every component needs an HTML snippet (`templates/v2/components/component-name.html`) and LESS styles (`less/v2/components/component-name.less`).
+3. **Page migrations** — Migrate pages by switching `{% extends %}` to `v2/page.html`, removing the holding-state `header_core`/`styles`/`scripts` overrides, replacing `bem.blocks/` snippets with `templates/v2/components/` equivalents, and registering any new bundles in `webassets.yml`.
 
-4. **Page migrations** — Migrate pages by switching `{% extends %}` to `v2/page.html`, removing the holding-state `header_core`/`styles`/`scripts` overrides, replacing `bem.blocks/` snippets with `templates/v2/components/` equivalents, and registering any new bundles in `webassets.yml`.
+4. **Keep old stack untouched** — Old templates and assets stay in place until all pages are migrated.
 
-5. **Keep old stack untouched** — Old templates and assets stay in place until all pages are migrated.
-
-6. **Update LLM docs** — When architecture changes, update [**redesign/PROGRESS.md**](redesign/PROGRESS.md) and [**redesign/requirements/STATUS.md**](redesign/requirements/STATUS.md).
+5. **Update LLM docs** — When architecture changes, update [**redesign/PROGRESS.md**](redesign/PROGRESS.md) and [**redesign/requirements/STATUS.md**](redesign/requirements/STATUS.md).
 
