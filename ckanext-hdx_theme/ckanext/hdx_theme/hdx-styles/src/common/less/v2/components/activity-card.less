@@ -4,6 +4,8 @@
 // Figma source: llm_docs/redesign/figma_exports/hdx-activity-card.html
 // ============================================================
 
+@import "../breakpoints.less";
+
 // ── Local tokens ────────────────────────────────────────────
 
 @c-activity-card-bg:              var(--hdx-neutral-01);
@@ -11,6 +13,7 @@
 @c-activity-card-border-hovered:  1.5px solid var(--hdx-neutral-8);
 @c-activity-card-shadow:          var(--hdx-shadow-sm);
 @c-activity-card-radius:          var(--hdx-radius-sm);
+@c-activity-card-icon-color:      var(--hdx-neutral-5);
 @c-activity-card-icon-size:       1.5rem;              // 24px
 
 @c-activity-card-heading-font:    var(--hdx-font-display);
@@ -79,9 +82,17 @@
     }
 
     &__icon {
-        width:   @c-activity-card-icon-size;
-        height:  auto;
-        display: block;
+        display:     block;
+        line-height: 0;
+        flex-shrink: 0;
+        color:       @c-activity-card-icon-color;
+        width:       @c-activity-card-icon-size;
+
+        svg {
+            width:   100%;
+            height:  auto;
+            display: block;
+        }
     }
 
     &__body {
@@ -142,5 +153,35 @@
         .c-activity-card__body     { gap: @c-activity-card-sm-body-gap; }
         .c-activity-card__heading  { font-size: @c-activity-card-sm-heading-fs; }
         .c-activity-card__subtitle { font-size: @c-activity-card-sm-subtitle-fs; }
+    }
+
+    &--size-responsive {
+        padding: @c-activity-card-sm-padding;
+        gap:     @c-activity-card-sm-gap;
+
+        .c-activity-card__header   { gap: @c-activity-card-sm-header-gap; }
+        .c-activity-card__body     { gap: @c-activity-card-sm-body-gap; }
+        .c-activity-card__heading  { font-size: @c-activity-card-sm-heading-fs; }
+        .c-activity-card__subtitle { font-size: @c-activity-card-sm-subtitle-fs; }
+
+        @media (min-width: @hdx-bp-md) {
+            padding: @c-activity-card-md-padding;
+            gap:     @c-activity-card-md-gap;
+
+            .c-activity-card__header   { gap: @c-activity-card-md-header-gap; }
+            .c-activity-card__body     { gap: @c-activity-card-md-body-gap; }
+            .c-activity-card__heading  { font-size: @c-activity-card-md-heading-fs; }
+            .c-activity-card__subtitle { font-size: @c-activity-card-md-subtitle-fs; }
+        }
+
+        @media (min-width: @hdx-bp-xl) {
+            padding: @c-activity-card-lg-padding;
+            gap:     @c-activity-card-lg-gap;
+
+            .c-activity-card__header   { gap: @c-activity-card-lg-header-gap; }
+            .c-activity-card__body     { gap: @c-activity-card-lg-body-gap; }
+            .c-activity-card__heading  { font-size: @c-activity-card-lg-heading-fs; }
+            .c-activity-card__subtitle { font-size: @c-activity-card-lg-subtitle-fs; }
+        }
     }
 }

@@ -95,3 +95,73 @@
         }
     }
 }
+
+
+// ============================================================
+// hdx-v2-intro — homepage v2 intro section
+// Figma: llm_docs/redesign/figma_exports/homepage-intro-lg.html
+//        llm_docs/redesign/figma_exports/homepage-intro-md.html
+//        llm_docs/redesign/figma_exports/homepage-intro-sm.html
+// ============================================================
+
+.hdx-v2-intro {
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+
+    @media (min-width: @hdx-bp-md) { padding-top: 6rem; padding-bottom: 6rem; }
+    @media (min-width: @hdx-bp-xl) { padding-top: 7rem; padding-bottom: 7rem; }
+
+    &__inner {
+        display:        flex;
+        flex-direction: column;
+        align-items:    flex-start;
+        gap:            2rem;
+
+        @media (min-width: @hdx-bp-xl) { gap: 2.5rem; }
+    }
+
+    &__header {
+        display:        flex;
+        flex-direction: column;
+        align-items:    flex-start;
+        gap:            0.5rem;
+
+        @media (min-width: @hdx-bp-md) { gap: 0.75rem; }
+    }
+
+    &__label {
+        font-family: var(--hdx-font-body);
+        font-size:   var(--hdx-fs-s);
+        line-height: var(--hdx-lh-normal);
+        color:       var(--hdx-neutral-85);
+
+        @media (min-width: @hdx-bp-md) { font-size: var(--hdx-fs-m); }
+        @media (min-width: @hdx-bp-xl) { font-size: var(--hdx-fs-l); }
+    }
+
+    &__heading {
+        font-family: var(--hdx-font-display);
+        font-size:   var(--hdx-fs-2xl);
+        font-weight: var(--hdx-fw-bold);
+        line-height: var(--hdx-lh-normal);
+        color:       var(--hdx-neutral-95);
+        margin:      0;
+
+        @media (min-width: @hdx-bp-md) { font-size: var(--hdx-fs-3xl); }
+        @media (min-width: @hdx-bp-xl) { font-size: var(--hdx-fs-4xl); }
+    }
+
+    &__cards {
+        align-self:     stretch;
+        display:        flex;
+        flex-direction: column;
+        gap:            0.75rem;
+
+        @media (min-width: @hdx-bp-md) {
+            flex-direction: row;
+            gap: 1.25rem;
+        }
+
+        .c-activity-card { flex: 1; }
+    }
+}
