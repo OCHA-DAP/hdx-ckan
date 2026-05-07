@@ -1,0 +1,105 @@
+.hdx-v2-hero {
+  width: 100%;
+  background-color: var(--hdx-brand-7);
+  padding-top: 8rem;
+  padding-bottom: 4rem;
+}
+@media (min-width: 48rem) {
+  .hdx-v2-hero {
+    padding-top: 6rem;
+  }
+}
+@media (min-width: 80rem) {
+  .hdx-v2-hero {
+    padding-top: 10rem;
+  }
+}
+.hdx-v2-hero__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 2.5rem;
+}
+@media (min-width: 48rem) {
+  .hdx-v2-hero__inner {
+    gap: 3rem;
+  }
+}
+@media (min-width: 80rem) {
+  .hdx-v2-hero__inner {
+    gap: 5rem;
+  }
+}
+.hdx-v2-hero__header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  align-self: stretch;
+  gap: var(--hdx-space-3);
+}
+.hdx-v2-hero__heading {
+  font-family: var(--hdx-font-display);
+  font-size: var(--hdx-fs-4xl);
+  font-weight: var(--hdx-fw-bold);
+  line-height: var(--hdx-lh-normal);
+  color: var(--hdx-neutral-0);
+  margin: 0;
+}
+@media (min-width: 80rem) {
+  .hdx-v2-hero__heading {
+    font-size: 3rem;
+  }
+}
+.hdx-v2-hero__subtitle {
+  font-family: var(--hdx-font-body);
+  font-size: var(--hdx-fs-m);
+  font-weight: var(--hdx-fw-regular);
+  line-height: var(--hdx-lh-normal);
+  color: var(--hdx-neutral-0);
+  margin: 0;
+}
+@media (min-width: 80rem) {
+  .hdx-v2-hero__subtitle {
+    font-size: var(--hdx-fs-l);
+  }
+}
+.hdx-v2-hero__actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--hdx-space-3);
+  width: 100%;
+}
+@media (min-width: 48rem) {
+  .hdx-v2-hero__actions {
+    flex-direction: row;
+    width: 36.375rem;
+  }
+}
+.hdx-v2-hero__search {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  position: relative;
+}
+@media (min-width: 48rem) {
+  .hdx-v2-hero__search {
+    flex: 1;
+    width: auto;
+  }
+}
+.hdx-v2-hero .c-button--secondary {
+  background-color: transparent;
+  border-color: var(--hdx-neutral-2);
+  color: var(--hdx-neutral-0);
+}
+.hdx-v2-hero .c-button--secondary:hover {
+  background-color: var(--hdx-overlay-white-10);
+}
+.hdx-v2-hero .c-button--secondary:active {
+  background-color: var(--hdx-overlay-white-15);
+  border-color: var(--hdx-neutral-0);
+  color: var(--hdx-neutral-0);
+}
