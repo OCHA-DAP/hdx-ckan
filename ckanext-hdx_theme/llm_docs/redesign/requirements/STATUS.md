@@ -29,3 +29,4 @@
 | 023 | [footer-refinements](023-footer-refinements.md)                                                                 | implemented | |
 | 024 | [homepage-hero-section](024-homepage-hero-section.md)                                                           | implemented | |
 | 025 | [implement-activity-card-component](025-implement-activity-card-component.md)                                   | implemented | |
+| 026 | [homepage-intro-section](026-homepage-intro-section.md)                                                         | implemented | |

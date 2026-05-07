@@ -28,6 +28,10 @@
   button_href   {string}  CTA button link URL.
                           default: '#'
 
+  button_style  {string}  Button style variant passed to button.html.
+                          Accepts 'primary' | 'secondary' | 'tertiary'.
+                          default: 'primary'
+
   extra_classes {string}  Additional CSS classes appended to the root element.
                           default: ''
 
@@ -54,6 +58,7 @@
 {% set subtitle      = subtitle      if subtitle      is defined else '' %}
 {% set button_label  = button_label  if button_label  is defined else '' %}
 {% set button_href   = button_href   if button_href   is defined else '#' %}
+{% set button_style  = button_style  if button_style  is defined else 'primary' %}
 {% set extra_classes = extra_classes if extra_classes is defined else '' %}
 
 {# ── BEM class list ──────────────────────────────────────── #}
@@ -70,7 +75,9 @@
 
   <div class="c-activity-card__header">
     {% if icon_src %}
-      <img class="c-activity-card__icon" src="{{ h.url_for_static(icon_src) }}" alt="" aria-hidden="true">
+      <span class="c-activity-card__icon" aria-hidden="true">
+        {% include h.url_for_static(icon_src) %}
+      </span>
     {% endif %}
     <div class="c-activity-card__body">
       {% if heading %}
@@ -85,7 +92,7 @@
   {% if button_label %}
     <div class="c-activity-card__footer">
       {% snippet 'v2/components/button.html',
-          style='primary', size='l', type='text',
+          style=button_style, size='l', type='text',
           label=button_label, tag='a', href=button_href %}
     </div>
   {% endif %}
