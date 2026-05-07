@@ -60,6 +60,19 @@ In LESS, `__inner` has no horizontal padding — `.container` provides it via th
 
 ---
 
+## Preserve analytics and functional logic
+
+When redesigning or replacing an existing template or element, carry over all non-presentational logic from the original:
+
+- Analytics blocks (`{% block analytics_* %}`, `data-module`, `data-module-*` attributes)
+- SEO blocks (`{% block meta %}`, `{% block subtitle %}`, `structured_data`)
+- Functional Jinja blocks (`{% block scripts %}`, `{% block head_extras %}`, etc.) that load page-specific assets or set page state
+- Conditional snippets tied to runtime data (e.g. `alert_bar`)
+
+Only the visual structure (HTML elements, BEM classes, CSS) changes. Logic is not optional.
+
+---
+
 ## Design tokens
 
 - CSS custom properties: `--hdx-<category>-<step>` (e.g. `--hdx-brand-5`, `--hdx-space-3`)
