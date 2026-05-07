@@ -1055,6 +1055,76 @@
   </section>
 
 
+  <hr class="demo-divider">
+
+  {# ══════════════════════════════════════════════════════
+     13. ACTIVITY CARD
+  ══════════════════════════════════════════════════════ #}
+  <section class="demo-section">
+    <h1 class="demo-section__title">Activity Card</h1>
+    <p class="demo-section__subtitle">size × state — icon, heading, subtitle, CTA button</p>
+
+    <h2 class="demo-subsection__heading">Size LG</h2>
+    <div class="demo-row demo-row--flex-start">
+      <div>
+        <p class="demo-subsection__heading">Enabled</p>
+        {% snippet 'v2/components/activity-card.html',
+            size='lg', state='enabled',
+            heading='Find and use',
+            subtitle='Search and download datasets uploaded by organizations verified by HDX.',
+            button_label='Explore data', button_href='/dataset' %}
+      </div>
+      <div>
+        <p class="demo-subsection__heading">Hovered</p>
+        {% snippet 'v2/components/activity-card.html',
+            size='lg', state='hovered',
+            heading='Find and use',
+            subtitle='Search and download datasets uploaded by organizations verified by HDX.',
+            button_label='Explore data', button_href='/dataset' %}
+      </div>
+    </div>
+
+    <h2 class="demo-subsection__heading">Size MD</h2>
+    <div class="demo-row demo-row--flex-start">
+      <div>
+        <p class="demo-subsection__heading">Enabled</p>
+        {% snippet 'v2/components/activity-card.html',
+            size='md', state='enabled',
+            heading='Find and use',
+            subtitle='Search and download datasets uploaded by organizations verified by HDX.',
+            button_label='Explore data', button_href='/dataset' %}
+      </div>
+      <div>
+        <p class="demo-subsection__heading">Hovered</p>
+        {% snippet 'v2/components/activity-card.html',
+            size='md', state='hovered',
+            heading='Find and use',
+            subtitle='Search and download datasets uploaded by organizations verified by HDX.',
+            button_label='Explore data', button_href='/dataset' %}
+      </div>
+    </div>
+
+    <h2 class="demo-subsection__heading">Size SM</h2>
+    <div class="demo-row demo-row--flex-start">
+      <div>
+        <p class="demo-subsection__heading">Enabled</p>
+        {% snippet 'v2/components/activity-card.html',
+            size='sm', state='enabled',
+            heading='Find and use',
+            subtitle='Search and download datasets uploaded by organizations verified by HDX.',
+            button_label='Explore data', button_href='/dataset' %}
+      </div>
+      <div>
+        <p class="demo-subsection__heading">Hovered</p>
+        {% snippet 'v2/components/activity-card.html',
+            size='sm', state='hovered',
+            heading='Find and use',
+            subtitle='Search and download datasets uploaded by organizations verified by HDX.',
+            button_label='Explore data', button_href='/dataset' %}
+      </div>
+    </div>
+  </section>
+
   </div>{# /container #}
 </div>{# /demo-page #}
 

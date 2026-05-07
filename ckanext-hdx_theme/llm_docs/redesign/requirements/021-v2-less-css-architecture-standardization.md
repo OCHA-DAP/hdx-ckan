@@ -8,16 +8,9 @@ audit identified recurring inconsistencies that reduce maintainability and make 
 system harder to reason about. This document specifies what must be fixed without
 breaking existing design or functionality.
 
-## Current Strengths (Do Not Regress)
+See [CONVENTIONS.md](../CONVENTIONS.md) for general naming and token rules.
 
-- 105 CSS custom properties (`--hdx-*`) defined in `:root` via `foundation.less`
-- Design tokens split across focused files: `colors`, `elevation`, `radius`, `spacing`, `typography`
-- Consistent BEM naming (`.c-*` components, `.hdx-v2-*` layout, `--hdx-*` tokens)
-- Comprehensive inline documentation with Figma references
-
----
-
-## Issues to Fix
+## Issues Fixed
 
 ### 1. Breakpoint Variables — Consolidate to Single Source
 

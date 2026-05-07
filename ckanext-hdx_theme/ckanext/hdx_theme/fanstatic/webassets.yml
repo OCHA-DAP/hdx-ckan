@@ -225,6 +225,7 @@ v2-components-styles:
   <<: *common-css
   contents:
     - v2/foundation.css
+    - v2/components/activity-card.css
     - v2/components/avatar-badge.css
     - v2/components/buttons.css
     - v2/components/checkbox.css
@@ -255,6 +256,7 @@ v2-page-styles:
     - v2/top-bar.css
     - v2/footer.css
     - v2/navbar.css
+    - v2/styles.css
 
 v2-page-scripts:
   <<: *common-js

@@ -1,12 +1,7 @@
-{% extends "page.html" %}
+{% extends "v2/page.html" %}
 
 {% block analytics_came_from %}{{ analytics.analytics_came_from }}{% endblock %}
 {% block analytics_supports_notifications %}{{ analytics.analytics_supports_notifications }}{% endblock %}
-
-{%- block styles %}
-  {{ super() }}
-  {% asset 'hdx_theme/homepage-styles' %}
-{% endblock %}
 
 {% set carouselItems = h.hdx_get_carousel_list() %}
 {% set mobileCarouselItems = carouselItems|batch(2)|list %}
@@ -16,209 +11,126 @@
 
 {% block maintag %}{% endblock %}
 
-{% block bodytag %}{{ super() }} class="home"{% endblock %}
-
 {% block meta %}
-    {{ super() }}
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Access and share humanitarian data across crises and organizations. Explore on HDX {{count.datasets}} datasets from {{count.locations}} locations and {{count.sources}} sources to support effective humanitarian response." />
+  {{ super() }}
+  <meta name="description" content="Access and share humanitarian data across crises and organizations. Explore on HDX {{count.datasets}} datasets from {{count.locations}} locations and {{count.sources}} sources to support effective humanitarian response." />
 {% endblock %}
-
-{% block header_core %}
-  {# Override to get the fullwidth header #}
-  {% snippet "header-mobile.html", page_has_desktop_version=False, step=step %}
-{%  endblock %}
 
 {% block content %}
 
-<div class="homepage-main">
-  <div class="homepage-section hero-section">
-    <div class="container">
-      <div class="hero-section-content">
-        <div class="hero-description">
-          <h1 class="section-title">The Humanitarian Data Exchange</h1>
-        </div>
-        <div class="hero-boxes-container">
-          <div class="hero-boxes">
-            <div class="action-box">
-              <div class="box-header">
-                {{ _("Find data") }}
-              </div>
+<section class="hdx-v2-hero">
+  <div class="hdx-v2-hero__inner container">
 
-              <div class="first-search">
-                {{ self.home_search() }}
-              </div>
-              <div class="count-items">
-                <div class="row">
-                  <div class="col-4">
-                    <div class="row">
-                      <div class="col-12 item-count">
-                        <a href="{% url_for 'dataset.search' %}"
-                           data-module="count hdx_click_stopper" data-module-link_type="find data box">
-                          {{ count.datasets }}
-                        </a>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div id="datasets-count" class="col-12 item-name">
-                        {{ _("Datasets") }}
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-4">
-                    <div class="row">
-                      <div class="col-12 item-count">
-                        <a href="{% url_for 'group.index' %}"
-                           data-module="count hdx_click_stopper" data-module-link_type="find data box"
-                           data-url="{% url_for 'hdx_count.country' %}">
-                          {{ count.locations }}
-                        </a>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-12 item-name">
-                        {{ _("Locations") }}
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-4">
-                    <div class="row">
-                      <div class="col-12 item-count">
-                        <a
-                           data-module="count hdx_click_stopper" data-module-link_type="find data box"
-                           data-url="{% url_for 'hdx_count.source' %}">
-                          {{ count.sources }}
-                        </a>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-12 item-name">
-                        {{ _("Sources") }}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="hero-description">
-          <p class="section-subtitle">Find, share and use humanitarian data all in one place</p>
-        </div>
-        <div class="hero-description">
-          <a data-module="hdx_click_stopper" data-module-link_type="learn more faq" href="/faq" class="btn btn-faq"
-             aria-label="learn more">{{ _("LEARN MORE") }}</a>
-        </div>
-      </div>
+    <div class="hdx-v2-hero__header">
+      <h1 class="hdx-v2-hero__heading">{{ _('The Humanitarian Data Exchange') }}</h1>
+      <p class="hdx-v2-hero__subtitle">{{ _('Find, share and use humanitarian data all in one place') }}</p>
     </div>
+
+    <div class="hdx-v2-hero__actions">
+
+      <div class="hdx-v2-hero__search">
+        {% snippet 'v2/components/autocomplete.html',
+            placeholder=_('Search for datasets, locations or organisations'),
+            value='', state='enabled' %}
+      </div>
+
+      {% snippet 'v2/components/button.html',
+          style='secondary', type='text', size='l',
+          state='enabled', icon=False,
+          label=_('Explore data') %}
+
+    </div>
+
   </div>
+</section>
+
   {% if alert_bar and alert_bar.url %}
     {% snippet 'snippets/full_width_alert_bar.html', alert_bar_url=alert_bar.url, alert_bar_title=alert_bar.title %}
   {% endif %}
-  <div class="carousel-section">
-    <div class="container">
-      <div class="carousel-content">
-        <div class="carousel-title">
-          Highlights
-        </div>
-        <div class="carousel-items">
-          <div class="row">
-            <div id="homepageCarousel" class="carousel slide" data-ride="false">
-              <div class="carousel-inner d-md-none">
-                {% for pair in mobileCarouselItems %}
-                  <div class="carousel-item{% if loop.first %} active{% endif %}">
-                    <div class="row">
-                      {% for item in pair %}
-                        <div class="col-6">
-                          {% snippet 'home/snippets/hdx_carousel_item.html', item=item %}
-                        </div>
-                      {% endfor %}
-                    </div>
-                  </div>
-                {% endfor %}
-              </div>
-              <div class="carousel-inner d-none d-md-block">
-                <div class="carousel-item active">
-                  <div class="row justify-content-center">
-                    {% for item in carouselItems %}
-                      <div class="col-md-3">
-                        {% snippet 'home/snippets/hdx_carousel_item.html', item=item %}
-                      </div>
-                    {% endfor %}
-                  </div>
-                </div>
-              </div>
-              <div class="carousel-indicators d-md-none mt-3 mb-0">
-                {% for pair in mobileCarouselItems %}
-                  <button type="button" data-bs-target="#homepageCarousel" data-bs-slide-to="{{ loop.index0 }}"
-                          class="{% if loop.first %}active{% endif %}" aria-current="true"
-                          aria-label="Slide {{ loop.index }}"></button>
-                {% endfor %}
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  {# Disabled for now
-  <div class="homepage-section learn-section">
-    <div class="container">
-      <div class="section-content">
-        <div class="section-title">
-          Learn how to standardize your data
-        </div>
-        <div class="section-description">
-          HXL is a <strong>different kind</strong> of data standard, designed to improve
-          information sharing during a humanitarian crisis without
-          adding <strong>extra reporting burdens.</strong>
-        </div>
-        <div class="learn-photo">
-          <img src="/images/homepage/learn-placeholder.png" />
-          <a class="btn btn-learn">Learn More <i class="icon humanitarianicons-Out-of-platform"></i></a>
-        </div>
-      </div>
-    </div>
-  </div>
-  #}
-  <div class="modal presentation-modal" id="learn-quick-charts" tabindex="-1" role="dialog">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-      <button type="button" class="btn-close btn-close-white float-end" data-bs-dismiss="modal" aria-label="Close"></button>
-      <div class="modal-content">
-        <iframe load-src="https://docs.google.com/presentation/d/e/2PACX-1vR-gSY38muZE9SA27NjAcueKoobhKi_Dc3jN4BIDPTp7FJjOCiWIkhPU4ZkPyHvfR0pBdNpfswmKZ4p/embed?start=false&loop=false&delayms=3000" frameborder="0" width="900" height="560" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-{% endblock %}
-
-{% block header %}
-  <div class="homepageHeaderFooterBackground">
-     {{ super() }}
-  </div>
+{#  <div class="carousel-section">#}
+{#    <div class="container">#}
+{#      <div class="carousel-content">#}
+{#        <div class="carousel-title">#}
+{#          Highlights#}
+{#        </div>#}
+{#        <div class="carousel-items">#}
+{#          <div class="row">#}
+{#            <div id="homepageCarousel" class="carousel slide" data-ride="false">#}
+{#              <div class="carousel-inner d-md-none">#}
+{#                {% for pair in mobileCarouselItems %}#}
+{#                  <div class="carousel-item{% if loop.first %} active{% endif %}">#}
+{#                    <div class="row">#}
+{#                      {% for item in pair %}#}
+{#                        <div class="col-6">#}
+{#                          {% snippet 'home/snippets/hdx_carousel_item.html', item=item %}#}
+{#                        </div>#}
+{#                      {% endfor %}#}
+{#                    </div>#}
+{#                  </div>#}
+{#                {% endfor %}#}
+{#              </div>#}
+{#              <div class="carousel-inner d-none d-md-block">#}
+{#                <div class="carousel-item active">#}
+{#                  <div class="row justify-content-center">#}
+{#                    {% for item in carouselItems %}#}
+{#                      <div class="col-md-3">#}
+{#                        {% snippet 'home/snippets/hdx_carousel_item.html', item=item %}#}
+{#                      </div>#}
+{#                    {% endfor %}#}
+{#                  </div>#}
+{#                </div>#}
+{#              </div>#}
+{#              <div class="carousel-indicators d-md-none mt-3 mb-0">#}
+{#                {% for pair in mobileCarouselItems %}#}
+{#                  <button type="button" data-bs-target="#homepageCarousel" data-bs-slide-to="{{ loop.index0 }}"#}
+{#                          class="{% if loop.first %}active{% endif %}" aria-current="true"#}
+{#                          aria-label="Slide {{ loop.index }}"></button>#}
+{#                {% endfor %}#}
+{#              </div>#}
+{#            </div>#}
+{#          </div>#}
+{#        </div>#}
+{#      </div>#}
+{#    </div>#}
+{#  </div>#}
 
   <!--- DO NOT REMOVE or the warnings generated by this page will be transfered to the next page --->
   <div class="container" id="homepage-alerts">{{ self.flash() }}</div>
   <!--- END DO NOT REMOVE --->
-{% endblock %}
 
-{% block footer %}
-  {% include "footer-wide.html" %}
-{% endblock %}
+<section class="hdx-v2-intro">
+  <div class="hdx-v2-intro__inner container">
 
-
-{% block home_search %}
-  <form class="form-search" method="get" action="/search?sort=metadata_modified+desc">
-    <div class="input-group">
-      <input type="text" class="searchInput form-control" id="q2" name="q" value="{{ c.q }}" autocomplete="off" placeholder="{{ _('Search Datasets') }}" aria-label="Search Datasets">
-      <button type="submit" class="button input-group-text" aria-label="search">
-        <i class="humanitarianicons-Search"></i>
-      </button>
+    <div class="hdx-v2-intro__header">
+      <span class="hdx-v2-intro__label">{{ _('About HDX') }}</span>
+      <h2 class="hdx-v2-intro__heading">{{ _('A network of data-focused partners making data easy to find and use') }}</h2>
     </div>
-    <div class="search-ahead"></div>
-  </form>
+
+    <div class="hdx-v2-intro__cards">
+
+      {% snippet 'v2/components/activity-card.html',
+          size='responsive',
+          icon_src='v2/icons/search.svg',
+          heading=_('Find and use'),
+          subtitle=_('Search and download datasets uploaded by organizations verified by HDX.'),
+          button_label=_('Explore data'),
+          button_href=h.url_for('dataset.search'),
+          button_style='primary' %}
+
+      {% snippet 'v2/components/activity-card.html',
+          size='responsive',
+          icon_src='v2/icons/upload.svg',
+          heading=_('Share and contribute'),
+          subtitle=_('Organizations contribute new datasets and resources to HDX relevant to the community.'),
+          button_label=_('Login'),
+          button_href=h.url_for('user.login'),
+          button_style='secondary' %}
+
+    </div>
+
+  </div>
+</section>
+
 {% endblock %}
 
 {% block head_extras %}
@@ -228,11 +140,6 @@
       {{ structured_data | safe }}
     </script>
   {% endif %}
-{% endblock %}
-
-{% block scripts %}
-   {{ super() }}
-   {% asset 'hdx_theme/homepage-scripts' %}
 {% endblock %}
 
 {# Remove the toolbar. #}
