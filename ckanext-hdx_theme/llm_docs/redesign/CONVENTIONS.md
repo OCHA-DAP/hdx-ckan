@@ -1,0 +1,68 @@
+# v2 Redesign — Implementation Conventions
+
+Single source of truth for general rules. Update here; do not duplicate in task files.
+
+---
+
+## BEM class prefixes
+
+| Prefix | Used for | Example |
+|--------|----------|---------|
+| `c-` | Reusable components | `c-button`, `c-autocomplete` |
+| `hdx-v2-` | Non-reusable v2 sections and layouts | `hdx-v2-hero`, `hdx-v2-grid` |
+
+---
+
+## Media queries — nest inside element blocks
+
+```less
+// Do
+&__inner {
+    padding: 2rem;
+    @media (min-width: @hdx-bp-md) { padding: 4rem; }
+}
+
+// Don't
+&__inner { padding: 2rem; }
+@media (min-width: @hdx-bp-md) { &__inner { padding: 4rem; } }
+```
+
+Exception: a single `@media` block may group multiple unrelated elements when there is no per-element responsive logic.
+
+---
+
+## Breakpoints
+
+Defined **once** in `breakpoints.less`. Any file that uses breakpoints imports it. No local redefinitions.
+
+| Variable | Value | px |
+|----------|-------|----|
+| `@hdx-bp-md` | `48rem` | 768px |
+| `@hdx-bp-xl` | `80rem` | 1280px |
+| `@hdx-bp-xxl` | `87.5rem` | 1400px |
+
+---
+
+## Container and full-bleed sections
+
+Full-bleed sections (background spans full viewport width) use a two-layer pattern:
+
+- **Outer element** — sets `background-color`, vertical padding only
+- **Inner element** — add Bootstrap `.container` class for horizontal padding and max-width; set flex/grid layout here
+
+```html
+<section class="hdx-v2-hero">
+  <div class="hdx-v2-hero__inner container">...</div>
+</section>
+```
+
+In LESS, `__inner` has no horizontal padding — `.container` provides it via the `.hdx-v2 .container` override in `layout.less`.
+
+---
+
+## Design tokens
+
+- CSS custom properties: `--hdx-<category>-<step>` (e.g. `--hdx-brand-5`, `--hdx-space-3`)
+- LESS variables: same name with `@` (e.g. `@hdx-brand-5`) — LESS-only, not used in media queries
+- No hardcoded hex colors, `rgba(...)` overlays, or box-shadow values in component LESS — use the corresponding token (`var(--hdx-neutral-1)`, `var(--hdx-overlay-white-10)`, `var(--hdx-shadow-md)`)
+- Component-level LESS variables use `@c-*` prefix and are **not** exported as CSS custom properties
