@@ -25,19 +25,19 @@
       {# Primary nav links #}
       <nav class="hdx-v2-offcanvas__nav" aria-label="{{ _('Mobile navigation') }}">
         <a class="hdx-v2-offcanvas__nav-item" href="{{ h.url_for('home.index') }}"
-           data-module="hdx_click_stopper" data-module-link_type="header">
+           data-module="hdx_click_stopper" data-module-link_type="main nav">
           {{ _('Home') }}
         </a>
         <a class="hdx-v2-offcanvas__nav-item" href="{{ h.url_for('dataset.search') }}"
-           data-module="hdx_click_stopper" data-module-link_type="header">
+           data-module="hdx_click_stopper" data-module-link_type="main nav">
           {{ _('Data') }}
         </a>
         <a class="hdx-v2-offcanvas__nav-item" href="{{ h.url_for('group.index') }}"
-           data-module="hdx_click_stopper" data-module-link_type="header">
+           data-module="hdx_click_stopper" data-module-link_type="main nav">
           {{ _('Locations') }}
         </a>
         <a class="hdx-v2-offcanvas__nav-item" href="{{ h.url_for('organization.index') }}"
-           data-module="hdx_click_stopper" data-module-link_type="header">
+           data-module="hdx_click_stopper" data-module-link_type="main nav">
           {{ _('Organisations') }}
         </a>
 
@@ -46,7 +46,7 @@
                 type="button"
                 aria-expanded="true"
                 aria-controls="offcanvas-products"
-                data-module="hdx_click_stopper" data-module-link_type="header">
+                data-module="hdx_click_stopper" data-module-link_type="main nav">
           {{ _('Products') }}
           <span class="hdx-v2-offcanvas__expand-icon">{% include 'v2/icons/chevron-down.svg' %}</span>
         </button>
@@ -55,7 +55,7 @@
             <li>
               <a href="{{ product.url }}"
                  {% if product.newTab %}target="_blank" rel="noopener noreferrer"{% endif %}
-                 data-module="hdx_click_stopper" data-module-link_type="header">
+                 data-module="hdx_click_stopper" data-module-link_type="main nav">
                 {{ product.title }}
               </a>
             </li>
@@ -70,13 +70,13 @@
           {% snippet 'v2/components/button.html',
               style='primary', size='l', label=_('Add data'),
               tag='a', href=h.url_for('dataset.new'),
-              attrs={'data-module': 'hdx_click_stopper', 'data-module-link_type': 'header'} %}
+              attrs={'data-module': 'hdx_click_stopper', 'data-module-link_type': 'main nav'} %}
         {% else %}
           {# Login button (logged out) #}
           {% snippet 'v2/components/button.html',
               style='secondary', size='l', label=_('Login'),
               tag='a', href=h.url_for('hdx_signin.login'),
-              attrs={'data-module': 'hdx_click_stopper', 'data-module-link_type': 'header'} %}
+              attrs={'data-module': 'hdx_click_stopper', 'data-module-link_type': 'main nav'} %}
         {% endif %}
       </div>
 
@@ -113,7 +113,7 @@
             {% for item in section['items'] %}
             <li>
               <a href="{{ item.href }}"
-                 data-module="hdx_click_stopper" data-module-link_type="header">
+                 data-module="hdx_click_stopper" data-module-link_type="main nav">
                 {{ item.label }}
               </a>
             </li>
@@ -126,7 +126,7 @@
           {% snippet 'v2/components/button.html',
               style='secondary', size='l', label=_('Logout'),
               tag='a', href=h.url_for('user.logout'),
-              attrs={'data-module': 'hdx_click_stopper', 'data-module-link_type': 'header'} %}
+              attrs={'data-module': 'hdx_click_stopper', 'data-module-link_type': 'main nav'} %}
         </div>
 
       </div>

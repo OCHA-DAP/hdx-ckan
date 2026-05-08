@@ -150,15 +150,15 @@
         {% snippet 'v2/components/nav-item.html',
             label=_('Data'),
             href=h.url_for('dataset.search'),
-            attrs={'data-module': 'hdx_click_stopper', 'data-module-link_type': 'header'} %}
+            attrs={'data-module': 'hdx_click_stopper', 'data-module-link_type': 'main nav'} %}
         {% snippet 'v2/components/nav-item.html',
             label=_('Locations'),
             href=h.url_for('group.index'),
-            attrs={'data-module': 'hdx_click_stopper', 'data-module-link_type': 'header'} %}
+            attrs={'data-module': 'hdx_click_stopper', 'data-module-link_type': 'main nav'} %}
         {% snippet 'v2/components/nav-item.html',
             label=_('Organisations'),
             href=h.url_for('organization.index'),
-            attrs={'data-module': 'hdx_click_stopper', 'data-module-link_type': 'header'} %}
+            attrs={'data-module': 'hdx_click_stopper', 'data-module-link_type': 'main nav'} %}
 
         {# Products — custom panel, items from quick-links registry #}
         <div class="hdx-v2-navbar__products">
@@ -168,13 +168,13 @@
               chevron=True,
               attrs={'data-hdx-v2-panel': 'products', 'aria-expanded': 'false',
                      'aria-controls': 'hdx-v2-panel-products',
-                     'data-module': 'hdx_click_stopper', 'data-module-link_type': 'header'} %}
+                     'data-module': 'hdx_click_stopper', 'data-module-link_type': 'main nav'} %}
           <ul class="hdx-v2-navbar__products-panel" id="hdx-v2-panel-products" hidden>
             {% for product in h.hdx_get_quick_links_list(archived=False) %}
               <li>
                 <a href="{{ product.url }}"
                    {% if product.newTab %}target="_blank" rel="noopener noreferrer"{% endif %}
-                   data-module="hdx_click_stopper" data-module-link_type="header">
+                   data-module="hdx_click_stopper" data-module-link_type="main nav">
                   {{ product.title }}
                 </a>
               </li>
@@ -231,7 +231,7 @@
               style='secondary', size='m', label=_('Add data'),
               tag='a', href=h.url_for('dataset.new'),
               extra_classes='hdx-v2-navbar__add-data',
-              attrs={'data-module': 'hdx_click_stopper', 'data-module-link_type': 'header'} %}
+              attrs={'data-module': 'hdx_click_stopper', 'data-module-link_type': 'header add data'} %}
         {% else %}
           {% snippet 'v2/components/button.html',
               style='secondary', size='m', label=_('Log in'),
