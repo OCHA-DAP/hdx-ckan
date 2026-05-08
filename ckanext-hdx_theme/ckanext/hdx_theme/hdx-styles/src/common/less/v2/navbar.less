@@ -97,7 +97,7 @@
         }
     }
 
-    // Search icon button — visible on SM, hidden on MD/XL
+    // Search icon button — visible on SM only, hidden at MD and above
     &__search-icon {
         display:         flex;
         align-items:     center;
@@ -111,6 +111,8 @@
         border-radius:   var(--hdx-radius-sm);              // 2px
         padding:         0;
         flex-shrink:     0;
+
+        @media (min-width: @hdx-bp-md) { display: none; }
 
         &:hover         { background: var(--hdx-overlay-white-10); }
         &:focus-visible { outline: 2px solid var(--hdx-neutral-0); outline-offset: 2px; }

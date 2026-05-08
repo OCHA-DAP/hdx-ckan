@@ -78,12 +78,38 @@
 .hdx-v2-footer__actions {
   display: flex;
   flex-direction: column;
+  gap: 1.5rem;
+}
+@media (min-width: 48rem) {
+  .hdx-v2-footer__actions {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 0;
+  }
+}
+@media (min-width: 80rem) {
+  .hdx-v2-footer__actions {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
 }
 .hdx-v2-footer__newsletter {
   display: flex;
   flex-direction: column;
   gap: var(--hdx-space-2);
   font-size: 1rem;
+}
+@media (min-width: 48rem) {
+  .hdx-v2-footer__newsletter {
+    flex: 0 0 75%;
+    max-width: 75%;
+  }
+}
+@media (min-width: 80rem) {
+  .hdx-v2-footer__newsletter {
+    flex: none;
+    max-width: none;
+  }
 }
 .hdx-v2-footer__newsletter-label {
   margin: 0;
@@ -97,6 +123,11 @@
 .hdx-v2-footer__newsletter-row .c-search-input {
   flex: 1;
   max-width: 22rem;
+}
+@media (min-width: 80rem) {
+  .hdx-v2-footer__newsletter-row .c-search-input {
+    min-width: 22rem;
+  }
 }
 .hdx-v2-footer__subscribe-btn {
   background-color: transparent;
@@ -119,6 +150,18 @@
   display: flex;
   align-items: flex-end;
   gap: 1.5rem;
+}
+@media (min-width: 48rem) {
+  .hdx-v2-footer__social {
+    flex: 0 0 25%;
+    max-width: 25%;
+  }
+}
+@media (min-width: 80rem) {
+  .hdx-v2-footer__social {
+    flex: none;
+    max-width: none;
+  }
 }
 .hdx-v2-footer__social-link {
   display: flex;
@@ -163,6 +206,17 @@
   width: 1rem;
   height: auto;
 }
+.hdx-v2-footer__nav {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+@media (min-width: 48rem) {
+  .hdx-v2-footer__nav {
+    flex-direction: row;
+    gap: 1.5rem;
+  }
+}
 @media (min-width: 80rem) {
   .hdx-v2-footer__nav {
     flex: 1;
@@ -173,6 +227,11 @@
   flex-direction: column;
   align-items: flex-start;
   gap: 1.5rem;
+}
+@media (min-width: 48rem) {
+  .hdx-v2-footer__nav-col {
+    flex: 1 1 0;
+  }
 }
 .hdx-v2-footer__nav-heading {
   font-family: var(--hdx-font-display);
@@ -210,6 +269,17 @@
   margin: 0;
   line-height: 130%;
 }
+.hdx-v2-footer__service-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+@media (min-width: 48rem) {
+  .hdx-v2-footer__service-detail {
+    flex-direction: row;
+    align-items: center;
+  }
+}
 .hdx-v2-footer__ocha-logo {
   height: 2.25rem;
   flex-shrink: 0;
@@ -231,6 +301,7 @@
 .hdx-v2-footer__ocha-text {
   line-height: 130%;
   margin: 0;
+  flex: 1;
 }
 .hdx-v2-footer__license {
   display: flex;
@@ -261,4 +332,13 @@
 }
 .hdx-v2-footer__legal {
   font-size: var(--hdx-fs-s);
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.75rem;
+}
+@media (min-width: 48rem) {
+  .hdx-v2-footer__legal {
+    justify-content: flex-end;
+  }
 }

@@ -14,7 +14,7 @@
 {% set mailchimp_action = "//humdata.us14.list-manage.com/subscribe/post?u=ea3f905d50ea939780139789d&id=99796325d1" %}
 
 <footer class="hdx-v2-footer">
-  <div class="container">
+  <div class="hdx-container">
 
   {# ── Top: branding + nav ──────────────────────────────────── #}
   <div class="hdx-v2-footer__top">
@@ -27,10 +27,9 @@
         <p class="hdx-v2-footer__tagline">Find, share and use humanitarian data all in one place</p>
       </div>
 
-      {# Newsletter + social — Bootstrap row: col-9/col-3 at MD, stacked at SM/XL #}
+      {# Newsletter + social — SM/XL: stacked; MD: 75%/25% side by side (footer.less) #}
       <div class="hdx-v2-footer__actions">
-        <div class="row gx-0 gy-4 align-items-start">
-        <div class="hdx-v2-footer__newsletter col-12 col-md-9 col-xl-12">
+        <div class="hdx-v2-footer__newsletter">
           <p class="hdx-v2-footer__newsletter-label">Subscribe to our mailing list</p>
           <div id="mc_embed_signup">
             <form action="{{ mailchimp_action }}" method="post"
@@ -63,7 +62,7 @@
           </div>
         </div>
 
-        <div class="hdx-v2-footer__social col-12 col-md-3 col-xl-12">
+        <div class="hdx-v2-footer__social">
           <a href="https://github.com/OCHA-DAP"
              target="_blank" rel="noopener noreferrer"
              class="hdx-v2-footer__social-link"
@@ -83,8 +82,6 @@
             <span class="c-text-link c-text-link--primary c-text-link--size-s">LinkedIn</span>
           </a>
         </div>
-        </div>{# /row #}
-
       </div>{# /actions #}
 
       <div class="hdx-v2-footer__related">
@@ -102,10 +99,9 @@
 
     {# ── Navigation grid ──────────────────────────────────── #}
     <nav class="hdx-v2-footer__nav" aria-label="Footer navigation">
-      <div class="row g-4">
 
         {# Data column #}
-        <div class="hdx-v2-footer__nav-col col-12 col-md-4">
+        <div class="hdx-v2-footer__nav-col">
           <h2 class="hdx-v2-footer__nav-heading">Data</h2>
           <ul class="hdx-v2-footer__nav-list">
             <li>
@@ -130,7 +126,7 @@
         </div>
 
         {# Products column — populated from the header quick-links registry #}
-        <div class="hdx-v2-footer__nav-col col-12 col-md-4">
+        <div class="hdx-v2-footer__nav-col">
           <h2 class="hdx-v2-footer__nav-heading">Products</h2>
           <ul class="hdx-v2-footer__nav-list">
             {% for product in h.hdx_get_quick_links_list(archived=False) %}
@@ -146,7 +142,7 @@
         </div>
 
         {# Resources column #}
-        <div class="hdx-v2-footer__nav-col col-12 col-md-4">
+        <div class="hdx-v2-footer__nav-col">
           <h2 class="hdx-v2-footer__nav-heading">Resources</h2>
           <ul class="hdx-v2-footer__nav-list">
             <li>
@@ -205,7 +201,6 @@
           </ul>
         </div>
 
-      </div>{# /row #}
     </nav>{# /nav #}
 
   </div>{# /top #}
@@ -217,9 +212,9 @@
 
     <div class="hdx-v2-footer__service">
       <p class="hdx-v2-footer__service-label">Service provided by</p>
-      <div class="hdx-v2-footer__service-detail row gx-3 align-items-center">
-        <span class="hdx-v2-footer__ocha-logo col-auto" aria-label="OCHA">{% include 'v2/icons/ocha.svg' %}</span>
-        <p class="hdx-v2-footer__ocha-text col-12 col-md-9">
+      <div class="hdx-v2-footer__service-detail">
+        <span class="hdx-v2-footer__ocha-logo" aria-label="OCHA">{% include 'v2/icons/ocha.svg' %}</span>
+        <p class="hdx-v2-footer__ocha-text">
           OCHA coordinates the global emergency response to save lives and protect people in humanitarian
           crises. We advocate for effective and principled humanitarian action by all, for all.
         </p>
@@ -234,7 +229,7 @@
       </p>
     </div>
 
-    <div class="hdx-v2-footer__legal d-flex align-items-center justify-content-start justify-content-md-end gap-3">
+    <div class="hdx-v2-footer__legal">
       {% snippet 'v2/components/text-link.html',
           label='Terms of service',
           href=h.url_for('hdx_faqs.read', category='terms'),
@@ -249,5 +244,5 @@
 
   </div>{# /bottom #}
 
-  </div>{# /container #}
+  </div>{# /hdx-container #}
 </footer>

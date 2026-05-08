@@ -2,8 +2,8 @@
 
 > **Rule:** Update this table whenever a task is **created**, moved to `in_progress`, or `implemented`. Status must always reflect the current state.
 
-| #   | File                                                                                                           | Status | Notes |
-|-----|----------------------------------------------------------------------------------------------------------------|--------|-----|
+| #   | File                                                                                                           | Status      | Notes |
+|-----|----------------------------------------------------------------------------------------------------------------|-------------|----|
 | 001 | [migrate-less-variables-to-css-variables](001-migrate-less-variables-to-css-variables.md)                      | implemented | |
 | 002 | [update-breadcrumb-links-to-use-text-link](002-update-breadcrumb-links-to-use-text-link.md)                    | implemented | |
 | 003 | [implement-checkbox-component](003-implement-checkbox-component.md)                                            | implemented | |
@@ -30,3 +30,4 @@
 | 024 | [homepage-hero-section](024-homepage-hero-section.md)                                                           | implemented | |
 | 025 | [implement-activity-card-component](025-implement-activity-card-component.md)                                   | implemented | |
 | 026 | [homepage-intro-section](026-homepage-intro-section.md)                                                         | implemented | |
+| 027 | [bootstrap-v2-progressive-removal](027-bootstrap-v2-progressive-removal.md)                                     | implemented | |

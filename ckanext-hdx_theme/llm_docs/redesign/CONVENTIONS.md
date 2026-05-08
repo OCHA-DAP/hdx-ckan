@@ -43,20 +43,33 @@ Defined **once** in `breakpoints.less`. Any file that uses breakpoints imports i
 
 ---
 
+## Bootstrap classes — prohibited in v2
+
+Do **not** use Bootstrap grid classes (`row`, `col-*`, `gx-*`, `gy-*`, `g-*`) or utility classes (`d-*`, `gap-*`, `pt-*`, `mt-*`, `align-items-*`, `justify-content-*`, etc.) in v2 templates.
+
+All layout, spacing, and responsive behaviour must be implemented in LESS using `@hdx-bp-*` breakpoints and design tokens.
+
+---
+
 ## Container and full-bleed sections
 
 Full-bleed sections (background spans full viewport width) use a two-layer pattern:
 
 - **Outer element** — sets `background-color`, vertical padding only
-- **Inner element** — add Bootstrap `.container` class for horizontal padding and max-width; set flex/grid layout here
+- **Inner element** — add `hdx-container` class for horizontal padding and max-width; set flex/grid layout here
 
 ```html
 <section class="hdx-v2-hero">
-  <div class="hdx-v2-hero__inner container">...</div>
+  <div class="hdx-v2-hero__inner hdx-container">...</div>
 </section>
 ```
 
-In LESS, `__inner` has no horizontal padding — `.container` provides it via the `.hdx-v2 .container` override in `layout.less`.
+`.hdx-container` is defined in `layout.less`. It provides:
+- 1rem side padding at SM
+- 3rem side padding at MD through XL
+- `max-width: 1320px` centered at XXL (≥ 87.5rem)
+
+Do **not** use Bootstrap's `.container` class in v2 templates.
 
 ---
 
