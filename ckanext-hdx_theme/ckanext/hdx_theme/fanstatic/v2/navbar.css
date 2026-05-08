@@ -1,8 +1,3 @@
-.hdx-v2-header {
-  position: sticky;
-  top: 0;
-  z-index: 1030;
-}
 .hdx-v2-navbar {
   background: var(--hdx-brand-7);
   height: 4rem;
