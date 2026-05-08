@@ -28,6 +28,9 @@
   button_href   {string}  CTA button link URL.
                           default: '#'
 
+  button_attrs   {string} CTA button attrs.
+                          default: {}
+
   button_style  {string}  Button style variant passed to button.html.
                           Accepts 'primary' | 'secondary' | 'tertiary'.
                           default: 'primary'
@@ -58,6 +61,7 @@
 {% set subtitle      = subtitle      if subtitle      is defined else '' %}
 {% set button_label  = button_label  if button_label  is defined else '' %}
 {% set button_href   = button_href   if button_href   is defined else '#' %}
+{% set button_attrs  = button_attrs  if button_attrs  is defined else {} %}
 {% set button_style  = button_style  if button_style  is defined else 'primary' %}
 {% set extra_classes = extra_classes if extra_classes is defined else '' %}
 
@@ -93,7 +97,7 @@
     <div class="c-activity-card__footer">
       {% snippet 'v2/components/button.html',
           style=button_style, size='l', type='text',
-          label=button_label, tag='a', href=button_href %}
+          label=button_label, tag='a', href=button_href, attrs=button_attrs %}
     </div>
   {% endif %}
 
