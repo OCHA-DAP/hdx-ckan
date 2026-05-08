@@ -66,6 +66,11 @@
   padding: 0;
   flex-shrink: 0;
 }
+@media (min-width: 48rem) {
+  .hdx-v2-navbar__search-icon {
+    display: none;
+  }
+}
 .hdx-v2-navbar__search-icon:hover {
   background: var(--hdx-overlay-white-10);
 }

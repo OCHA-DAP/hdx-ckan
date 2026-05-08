@@ -1,19 +1,19 @@
-.hdx-v2 .container {
+.hdx-container {
   max-width: 100%;
   padding-right: 1rem;
   padding-left: 1rem;
 }
 @media (min-width: 48rem) {
-  .hdx-v2 .container {
+  .hdx-container {
     padding-right: 3rem;
     padding-left: 3rem;
   }
 }
 @media (min-width: 87.5rem) {
-  .hdx-v2 .container {
+  .hdx-container {
     max-width: 1320px;
-    padding-right: calc(var(--bs-gutter-x) * 0.5);
-    padding-left: calc(var(--bs-gutter-x) * 0.5);
+    padding-right: 0.75rem;
+    padding-left: 0.75rem;
     margin-right: auto;
     margin-left: auto;
   }
