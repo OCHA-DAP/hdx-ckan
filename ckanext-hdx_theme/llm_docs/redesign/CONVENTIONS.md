@@ -104,6 +104,25 @@ Do **not** add `is-hovered`, `--hovered`, `is-focus`, or similar classes to temp
 
 ---
 
+## Layout widths
+
+Do **not** use fixed `rem` or `px` values for layout column widths, max-widths, or min-widths. Use flex fractions or percentages instead.
+
+| Correct | Wrong |
+|---------|-------|
+| `flex: 2` / `flex: 1` (2:1 split) | `width: 27.5rem` |
+| `width: 100%` | `max-width: 25rem` |
+| `flex: 0 0 66.67%` | `width: 15.625rem` |
+
+Exceptions where fixed values are appropriate:
+- The global container cap: `max-width: 1320px` in `layout.less`
+- Fixed-height interactive elements (buttons, inputs, icon targets) where height is part of the design spec
+- Icon dimensions (`width: 1.25rem` on an SVG)
+
+Component width is controlled by the **container**, not the component. Reusable components (`c-*`) default to `width: 100%` so they fill whatever space their parent gives them.
+
+---
+
 ## Design tokens
 
 - CSS custom properties: `--hdx-<category>-<step>` (e.g. `--hdx-brand-5`, `--hdx-space-3`)
