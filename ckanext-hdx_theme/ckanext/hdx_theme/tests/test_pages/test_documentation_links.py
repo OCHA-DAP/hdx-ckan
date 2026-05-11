@@ -1,10 +1,10 @@
 import ckan.plugins.toolkit as tk
 
-h = tk.h
+helpers = tk.h
 
 
-def test_header_and_footer_documentation_links(app):
-    url = h.url_for('hdx_splash.index')
+def test_documentation_links_rendered(app):
+    url = helpers.url_for('hdx_splash.index')
     response = app.get(url)
 
     assert response.status_code == 200
