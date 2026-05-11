@@ -32,3 +32,4 @@
 | 026 | [homepage-intro-section](026-homepage-intro-section.md)                                                         | implemented | |
 | 027 | [bootstrap-v2-progressive-removal](027-bootstrap-v2-progressive-removal.md)                                     | implemented | |
 | 028 | [standardize-hover-interaction-states](028-standardize-hover-interaction-states.md)                             | implemented | |
+| 029 | [implement-dataset-card-component](029-implement-dataset-card-component.md)                                     | implemented | |
