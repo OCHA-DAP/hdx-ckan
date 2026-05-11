@@ -9,10 +9,12 @@ def test_documentation_links_rendered(app):
 
     assert response.status_code == 200
 
+    # Header documentation link.
     assert f'href="{DOCUMENTATION_LINKS["MAIN"]}"' in response.body
     assert '>Documentation<' in response.body
     assert 'aria-label="documentation link"' in response.body
 
+    # Footer documentation links and labels.
     assert f'href="{DOCUMENTATION_LINKS["TERMS_OF_SERVICE"]}"' in response.body
     assert f'href="{DOCUMENTATION_LINKS["QA_PROCESS"]}"' in response.body
     assert f'href="{DOCUMENTATION_LINKS["RESOURCES_FOR_DEVELOPERS"]}"' in response.body

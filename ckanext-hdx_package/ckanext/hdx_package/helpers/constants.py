@@ -17,6 +17,7 @@ DOCUMENTATION_LINKS = {
     'MAIN': 'https://docs.humdata.org/',
     'TABULAR_DATA_ENDPOINTS': 'https://docs.humdata.org/build/hdx-apis/tabular-data-endpoints',
     'TERMS_OF_SERVICE': 'https://docs.humdata.org/about/hdx-terms-of-service',
+    # Requested destination for QA Process in site footer navigation.
     'QA_PROCESS': 'https://docs.humdata.org/publish',
     'RESOURCES_FOR_DEVELOPERS': 'https://docs.humdata.org/build',
     'DATA_LICENSES': 'https://docs.humdata.org/about/data-licenses',
