@@ -74,7 +74,7 @@
 @media (min-width: 48rem) {
   .hdx-v2-hero__actions {
     flex-direction: row;
-    width: 36.375rem;
+    width: 60%;
   }
 }
 .hdx-v2-hero__search {
