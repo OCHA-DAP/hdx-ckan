@@ -1060,6 +1060,68 @@
     </div>
   </section>
 
+
+  <hr class="demo-divider">
+
+  {# ══════════════════════════════════════════════════════
+     14. DATASET CARD
+  ══════════════════════════════════════════════════════ #}
+  <section class="demo-section">
+    <h1 class="demo-section__title">Dataset Card</h1>
+    <p class="demo-section__subtitle">responsive · two-column (MD+) · stacked (SM) · description toggle</p>
+
+    {# ── Full card — all features enabled ─────────────── #}
+    <h2 class="demo-subsection__heading">Full card — location, subnational, description, mixed formats, overflow</h2>
+    <div class="demo-row demo-row--flex-start">
+      {% snippet 'v2/components/dataset-card.html',
+          org_name='Insecurity Insights',
+          title='Sanitary Pad Distribution and GBV Awareness Activities – Kassala State',
+          title_href='#',
+          description='This dataset covers the distribution of sanitary pads and GBV awareness activities conducted in Kassala State. Data includes location, beneficiary counts, and distribution dates across all sub-districts.',
+          location='Palestine', subnational=True,
+          date_range='Data from 12 Dec 2022 to 12 Dec 2025',
+          formats=[
+            {'type': 'private',   'text': '',     'icon_src': 'v2/icons/lock.svg'},
+            {'type': 'extension', 'text': 'CSV',  'icon_src': 'v2/icons/tabular-format.svg'},
+            {'type': 'extension', 'text': 'KML',  'icon_src': 'v2/icons/geographic-format.svg'},
+            {'type': 'cod_plus',  'text': 'COD+', 'icon_src': ''},
+          ],
+          formats_overflow=3,
+          show_others_label='View other 89 datasets from this contributor',
+          show_others_href='#' %}
+    </div>
+
+    {# ── Location only — no subnational, no description ── #}
+    <h2 class="demo-subsection__heading">Location only — no subnational, no description, COD label</h2>
+    <div class="demo-row demo-row--flex-start">
+      {% snippet 'v2/components/dataset-card.html',
+          org_name='OCHA',
+          title='Sudan: Humanitarian Needs Overview 2024',
+          title_href='#',
+          location='Sudan',
+          date_range='Data from Jan 2024 to Dec 2024',
+          formats=[
+            {'type': 'cod',       'text': 'COD',  'icon_src': ''},
+            {'type': 'extension', 'text': 'XLSX', 'icon_src': 'v2/icons/tabular-format.svg'},
+            {'type': 'extension', 'text': 'PDF',  'icon_src': 'v2/icons/document-format.svg'},
+          ],
+          show_others_label='View other 12 datasets from this contributor',
+          show_others_href='#' %}
+    </div>
+
+    {# ── Minimal card — SM-equivalent content ─────────── #}
+    <h2 class="demo-subsection__heading">Minimal — no description, no formats, no footer</h2>
+    <div class="demo-row demo-row--flex-start">
+      {% snippet 'v2/components/dataset-card.html',
+          org_name='ReliefWeb',
+          title='Democratic Republic of the Congo: Flood Response Situation Report',
+          title_href='#',
+          location='Democratic Republic of the Congo',
+          date_range='Data from 03 Apr 2024 to 15 Apr 2024' %}
+    </div>
+
+  </section>
+
   </div>{# /container #}
 </div>{# /demo-page #}
 
