@@ -122,8 +122,8 @@
           icon_src='v2/icons/upload.svg',
           heading=_('Share and contribute'),
           subtitle=_('Organizations contribute new datasets and resources to HDX relevant to the community.'),
-          button_label=_('Login') if c.userobj else _('Add data'),
-          button_href=h.url_for('hdx_signin.login') if c.userobj else h.url_for('dataset.new'),
+          button_label=_('Login') if not c.userobj else _('Add data'),
+          button_href=h.url_for('hdx_signin.login') if not c.userobj else h.url_for('hdx_contribute.new'),
           button_style='secondary',
           button_attrs={'data-module': 'hdx_click_stopper', 'data-module-link_type': 'homepage body'} %}
 
