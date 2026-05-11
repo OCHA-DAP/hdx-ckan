@@ -19,18 +19,19 @@
     <div class="hdx-v2-top-bar__inner hdx-container">
 
       {# Left: OCHA Services dropdown #}
-      <div class="hdx-v2-top-bar__services dropdown">
+      <div class="hdx-v2-top-bar__services">
         <button class="hdx-v2-top-bar__services-trigger"
                 type="button"
-                data-bs-toggle="dropdown"
+                data-hdx-v2-panel="services"
                 aria-expanded="false"
+                aria-controls="hdx-v2-panel-services"
                 aria-label="{{ _('OCHA services') }}">
           <span class="hdx-v2-top-bar__services-logo" aria-hidden="true">{% include 'v2/icons/ocha-logo.svg' %}</span>
           <span class="hdx-v2-top-bar__services-text">{{ _('OCHA Services') }}</span>
           <span class="hdx-v2-top-bar__services-chevron">{% include 'v2/icons/chevron-down.svg' %}</span>
         </button>
 
-        <div class="dropdown-menu hdx-v2-top-bar__dropdown" role="menu">
+        <div class="hdx-v2-top-bar__dropdown" id="hdx-v2-panel-services" role="menu" hidden>
           <div class="hdx-v2-top-bar__dropdown-grid">
 
           {# Related Platforms #}
