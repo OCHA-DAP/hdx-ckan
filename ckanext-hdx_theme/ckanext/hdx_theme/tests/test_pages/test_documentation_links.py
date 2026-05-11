@@ -21,5 +21,5 @@ def test_documentation_links_rendered(app):
     assert f'href="{DOCUMENTATION_LINKS["DATA_LICENSES"]}"' in response.body
     assert 'TERMS OF SERVICE' in response.body
     assert 'QA PROCESS' in response.body
-    assert 'RESOURCES FOR DEVELOPERS' in response.body
+    assert 'BUILD WITH HDX' in response.body
     assert 'DATA LICENSES' in response.body
