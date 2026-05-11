@@ -25,8 +25,7 @@
   cursor: pointer;
   transition: background-color 0.15s ease, border 0.15s ease;
 }
-.c-dropdown__trigger:hover,
-.c-dropdown--hovered > .c-dropdown__trigger {
+.c-dropdown__trigger:hover {
   background-color: var(--hdx-neutral-01);
   border: 1.5px solid var(--hdx-neutral-8);
   box-shadow: var(--hdx-shadow-sm);

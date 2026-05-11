@@ -16,7 +16,7 @@
 .c-list-item--type-list.c-list-item--size-sm {
   font-size: var(--hdx-fs-xs);
 }
-.c-list-item--type-list.is-hovered {
+.c-list-item--type-list:hover {
   color: var(--hdx-primary-5);
 }
 .c-list-item--type-checklist {
@@ -26,13 +26,13 @@
   font-size: var(--hdx-fs-s);
   cursor: pointer;
 }
-.c-list-item--type-checklist.is-hovered {
+.c-list-item--type-checklist:hover {
   color: var(--hdx-primary-5);
 }
 .c-list-item--type-checklist.is-active .c-list-item__label {
   font-weight: var(--hdx-fw-medium);
 }
-.c-list-item--type-checklist.is-active-hovered .c-list-item__label {
+.c-list-item--type-checklist.is-active:hover .c-list-item__label {
   color: var(--hdx-primary-5);
   font-weight: var(--hdx-fw-medium);
 }

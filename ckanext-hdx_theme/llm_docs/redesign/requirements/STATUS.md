@@ -31,3 +31,4 @@
 | 025 | [implement-activity-card-component](025-implement-activity-card-component.md)                                   | implemented | |
 | 026 | [homepage-intro-section](026-homepage-intro-section.md)                                                         | implemented | |
 | 027 | [bootstrap-v2-progressive-removal](027-bootstrap-v2-progressive-removal.md)                                     | implemented | |
+| 028 | [standardize-hover-interaction-states](028-standardize-hover-interaction-states.md)                             | implemented | |

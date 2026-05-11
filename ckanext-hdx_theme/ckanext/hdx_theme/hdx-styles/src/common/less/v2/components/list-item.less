@@ -42,7 +42,7 @@
             font-size: @c-list-item-fs-sm;  // 12 px
         }
 
-        &.is-hovered {
+        &:hover {
             color: @c-list-item-text-hover;
         }
     }
@@ -55,7 +55,7 @@
         font-size: @c-list-item-fs-md;  // 14 px
         cursor: pointer;
 
-        &.is-hovered {
+        &:hover {
             color: @c-list-item-text-hover;
         }
 
@@ -65,7 +65,7 @@
             }
         }
 
-        &.is-active-hovered {
+        &.is-active:hover {
             .c-list-item__label {
                 color: @c-list-item-text-hover;
                 font-weight: var(--hdx-fw-medium);

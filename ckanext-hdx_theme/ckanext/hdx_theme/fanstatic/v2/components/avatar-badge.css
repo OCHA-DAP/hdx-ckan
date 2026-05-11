@@ -62,8 +62,7 @@
   background-color: #bee0d6;
   color: var(--hdx-brand-7);
 }
-.c-avatar:hover,
-.c-avatar--hovered {
+.c-avatar:hover {
   background-color: #bee0d6;
   color: var(--hdx-brand-7);
 }

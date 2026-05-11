@@ -47,8 +47,7 @@
   height: 1rem;
   display: block;
 }
-.c-search-input:hover,
-.c-search-input--hovered {
+.c-search-input:hover {
   background-color: var(--hdx-neutral-01);
   border: 1.5px solid var(--hdx-neutral-8);
 }
