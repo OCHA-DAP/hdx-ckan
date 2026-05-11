@@ -11,18 +11,19 @@ Example
 #}
 
 {% set resource_id = h.sanitize_id(resource_id) %}
+{% set docs_links = h.const('DOCUMENTATION_LINKS') %}
 
 <div {% if not embedded %} class="bem-modal modal"{% endif %} tabindex="-1">
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
     <div class="bem-modal__content modal-content">
       <div class="bem-modal__header modal-header">
         <h6 class="modal-title">
-          {{ _('Access this data via API') }}
+          {{ _('Access this data via Tabular Data Endpoints') }}
         </h6>
       </div>
       <div {% if not embedded %} class="bem-modal__body modal-body"{% endif %}>
-        <p class="mb-1"><strong>{{ _('You can connect directly to this data via API.') }}</strong></p>
-        <p>Have any questions? See the <a href="https://un-ocha-centre-for-humanitarian.gitbook.io/hdx-docs/build-with-hdx/build-with-hdx/hdx-api/tabular-data-endpoints" target="_blank" title="documentation">documentation</a>.</p>
+        <p class="mb-1"><strong>{{ _('You can connect directly to this data via Tabular Data Endpoints (TDE).') }}</strong></p>
+        <p>Have any questions? See the <a href="{{ docs_links['TABULAR_DATA_ENDPOINTS'] }}" target="_blank" title="documentation">documentation</a>.</p>
 
         {% set token_paragraph = 'Get your token <a href="{0}" target="_blank" title="API tokens">here</a>.' %}
         {% if c.userobj %}
@@ -57,7 +58,7 @@ Example
 
         <p class="mb-1">
           <strong>{{ _('Example query') }}</strong>
-          <small><a href="https://un-ocha-centre-for-humanitarian.gitbook.io/hdx-docs/build-with-hdx/build-with-hdx/hdx-api/tabular-data-endpoints/how-to-query-the-tabular-data#id-2.-api-requests-native" target="_blank" title="query info">more info</a></small>
+          <small><a href="{{ docs_links['TABULAR_DATA_ENDPOINTS'] }}" target="_blank" title="query info">more info</a></small>
         </p>
 
         {% block query_examples %}
