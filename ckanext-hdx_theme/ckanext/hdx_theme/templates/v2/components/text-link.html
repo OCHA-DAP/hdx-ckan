@@ -50,6 +50,7 @@
 
 <a class="{{ classes | join(' ') }}"
    href="{{ href }}"
+   title="{{ label }}"
    {% if target      %}target="{{ target }}"{% endif %}
    {% if target == '_blank' %}rel="noopener noreferrer"{% endif %}
    {% if is_disabled %}aria-disabled="true" tabindex="-1"{% endif %}

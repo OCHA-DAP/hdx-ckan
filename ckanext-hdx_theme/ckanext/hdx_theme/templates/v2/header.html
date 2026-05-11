@@ -41,10 +41,10 @@
                   <a href="https://centre.humdata.org/" target="_blank"
                      data-module="hdx_click_stopper" data-module-link_type="header">Centre for Humanitarian Data</a>
                 </li>
-                <li>
-                  <a href="https://hxlstandard.org/" target="_blank"
-                     data-module="hdx_click_stopper" data-module-link_type="header">Humanitarian Exchange Language (HXL)</a>
-                </li>
+{#                <li>#}
+{#                  <a href="https://hxlstandard.org/" target="_blank"#}
+{#                     data-module="hdx_click_stopper" data-module-link_type="header">Humanitarian Exchange Language (HXL)</a>#}
+{#                </li>#}
               </ul>
             </div>
 
@@ -113,7 +113,7 @@
       {# Right: Documentation link #}
       <nav class="hdx-v2-top-bar__nav">
         {% snippet 'v2/components/text-link.html',
-            label=_('Documentation'), href='#',
+            label=_('Documentation'), href='https://docs.humdata.org',
             style='primary', size='s',
             attrs={'data-module': 'hdx_click_stopper', 'data-module-link_type': 'header'} %}
       </nav>
@@ -229,7 +229,7 @@
 
           {% snippet 'v2/components/button.html',
               style='secondary', size='m', label=_('Add data'),
-              tag='a', href=h.url_for('dataset.new'),
+              tag='a', href=h.url_for('hdx_contribute.new'),
               extra_classes='hdx-v2-navbar__add-data',
               attrs={'data-module': 'hdx_click_stopper', 'data-module-link_type': 'header add data'} %}
         {% else %}

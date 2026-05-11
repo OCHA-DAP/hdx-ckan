@@ -88,6 +88,7 @@
         <span class="hdx-v2-footer__related-label">Related to</span>
         <a href="https://centre.humdata.org"
            target="_blank" rel="noopener noreferrer"
+           title="Centre for Humanitarian Data"
            class="c-text-link c-text-link--primary c-text-link--size-s hdx-v2-footer__ext-link"
            data-module="hdx_click_stopper"
            data-module-link_type="footer">
@@ -106,19 +107,19 @@
           <ul class="hdx-v2-footer__nav-list">
             <li>
               {% snippet 'v2/components/text-link.html',
-                  label='Explore data', href='#',
+                  label='Explore data', href=h.url_for('dataset.search'),
                   style='primary', size='s',
                   attrs={'data-module': 'hdx_click_stopper', 'data-module-link_type': 'footer'} %}
             </li>
             <li>
               {% snippet 'v2/components/text-link.html',
-                  label='Locations', href='#',
+                  label='Locations', href=h.url_for('group.index'),
                   style='primary', size='s',
                   attrs={'data-module': 'hdx_click_stopper', 'data-module-link_type': 'footer'} %}
             </li>
             <li>
               {% snippet 'v2/components/text-link.html',
-                  label='Organisations', href='#',
+                  label='Organisations', href=h.url_for('organization.index'),
                   style='primary', size='s',
                   attrs={'data-module': 'hdx_click_stopper', 'data-module-link_type': 'footer'} %}
             </li>
@@ -147,13 +148,13 @@
           <ul class="hdx-v2-footer__nav-list">
             <li>
               {% snippet 'v2/components/text-link.html',
-                  label='Documentation', href='#',
+                  label='Documentation', href='https://docs.humdata.org',
                   style='primary', size='s',
                   attrs={'data-module': 'hdx_click_stopper', 'data-module-link_type': 'footer'} %}
             </li>
             <li>
               {% snippet 'v2/components/text-link.html',
-                  label='QA process', href='/about/hdx-qa-process',
+                  label='QA Process', href='https://docs.humdata.org/publish',
                   style='primary', size='s',
                   attrs={'data-module': 'hdx_click_stopper', 'data-module-link_type': 'footer'} %}
             </li>
@@ -168,15 +169,15 @@
             </li>
             <li>
               {% snippet 'v2/components/text-link.html',
-                  label='Resources for developers',
-                  href=h.url_for('hdx_faqs.read', category='devs'),
+                  label='Resources for Developers',
+                  href='https://docs.humdata.org/build',
                   style='primary', size='s',
                   attrs={'data-module': 'hdx_click_stopper', 'data-module-link_type': 'footer'} %}
             </li>
             <li>
               {% snippet 'v2/components/text-link.html',
-                  label='Data licenses',
-                  href=h.url_for('hdx_faqs.read', category='licenses'),
+                  label='Data Licenses',
+                  href='https://docs.humdata.org/about/data-licenses',
                   style='primary', size='s',
                   attrs={'data-module': 'hdx_click_stopper', 'data-module-link_type': 'footer'} %}
             </li>
@@ -231,13 +232,13 @@
 
     <div class="hdx-v2-footer__legal">
       {% snippet 'v2/components/text-link.html',
-          label='Terms of service',
-          href=h.url_for('hdx_faqs.read', category='terms'),
+          label='Terms of Service',
+          href='https://docs.humdata.org/about/hdx-terms-of-service',
           style='primary', size='s',
           attrs={'data-module': 'hdx_click_stopper', 'data-module-link_type': 'footer'} %}
       {% snippet 'v2/components/text-link.html',
-          label='Privacy policy',
-          href='#',
+          label='Privacy Policy',
+          href='https://docs.humdata.org/about/hdx-terms-of-service#privacy-notice',
           style='primary', size='s',
           attrs={'data-module': 'hdx_click_stopper', 'data-module-link_type': 'footer'} %}
     </div>
