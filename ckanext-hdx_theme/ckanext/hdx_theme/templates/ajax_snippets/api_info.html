@@ -11,7 +11,7 @@ Example
 #}
 
 {% set resource_id = h.sanitize_id(resource_id) %}
-{% set docs_links = h.const('DOCUMENTATION_LINKS') %}
+{% set docs_links = h.HDX_CONST('DOCUMENTATION_LINKS') %}
 
 <div {% if not embedded %} class="bem-modal modal"{% endif %} tabindex="-1">
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
