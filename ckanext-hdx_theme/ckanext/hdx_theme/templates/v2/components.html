@@ -542,7 +542,6 @@
     <h2 class="demo-subsection__heading">States — MD</h2>
     <div class="demo-row">
       {% snippet 'v2/components/avatar.html', size='md', initials='EN', state='enabled' %}
-      {% snippet 'v2/components/avatar.html', size='md', initials='HV', state='hovered' %}
       {% snippet 'v2/components/avatar.html', size='md', initials='AC', state='active' %}
     </div>
 
@@ -565,8 +564,6 @@
     <div class="demo-row demo-row--flex-start">
       {% snippet 'v2/components/dropdown.html',
           size='m', label='Label', placeholder='Dropdown', state='enabled' %}
-      {% snippet 'v2/components/dropdown.html',
-          size='m', label='Label', placeholder='Dropdown', state='hover' %}
       {% snippet 'v2/components/dropdown.html',
           size='m', label='Label', placeholder='Dropdown', state='active' %}
       {% snippet 'v2/components/dropdown.html',
@@ -625,9 +622,6 @@
     <div class="demo-row--column demo-max-width-l">
       {% snippet 'v2/components/search-input.html',
           size='l', placeholder='Value', state='enabled' %}
-      <br>
-      {% snippet 'v2/components/search-input.html',
-          size='l', placeholder='Value', state='hover' %}
       <br>
       {% snippet 'v2/components/search-input.html',
           size='l', placeholder='Value', state='active' %}
@@ -825,11 +819,7 @@
       {% snippet 'v2/components/selection-item.html',
           label='Afghanistan', size='l', color='light', state='enabled' %}
       {% snippet 'v2/components/selection-item.html',
-          label='Afghanistan', size='l', color='light', state='hover' %}
-      {% snippet 'v2/components/selection-item.html',
           label='Afghanistan', size='l', color='light', state='active' %}
-      {% snippet 'v2/components/selection-item.html',
-          label='Afghanistan', size='l', color='light', state='active-hovered' %}
     </div>
 
     <h2 class="demo-subsection__heading">Selection items — with icon &amp; count</h2>
@@ -882,8 +872,6 @@
     <div class="demo-row demo-row--highlight">
       {% snippet 'v2/components/graph-point.html',
           state='enabled', aria_label='Data point A' %}
-      {% snippet 'v2/components/graph-point.html',
-          state='focused', aria_label='Data point B (focused)' %}
     </div>
   </section>
 
@@ -940,8 +928,6 @@
       <div class="demo-row__items">
         {% snippet 'v2/components/list-item.html',
             type='list', label='Afghanistan', size='md', state='default' %}
-        {% snippet 'v2/components/list-item.html',
-            type='list', label='Afghanistan', size='md', state='hovered' %}
       </div>
     </div>
 
@@ -950,8 +936,6 @@
       <div class="demo-row__items">
         {% snippet 'v2/components/list-item.html',
             type='list', label='Sudan', size='sm', state='default' %}
-        {% snippet 'v2/components/list-item.html',
-            type='list', label='Sudan', size='sm', state='hovered' %}
       </div>
     </div>
 
@@ -966,26 +950,10 @@
     </div>
 
     <div class="demo-row">
-      <span class="demo-row__label">Hovered</span>
-      <div class="demo-row__items">
-        {% snippet 'v2/components/list-item.html',
-            type='checklist', label='Afghanistan', count='(309)', checked=false, state='hovered' %}
-      </div>
-    </div>
-
-    <div class="demo-row">
       <span class="demo-row__label">Active</span>
       <div class="demo-row__items">
         {% snippet 'v2/components/list-item.html',
             type='checklist', label='Afghanistan', count='(309)', checked=true, state='active' %}
-      </div>
-    </div>
-
-    <div class="demo-row">
-      <span class="demo-row__label">Active</span>
-      <div class="demo-row__items">
-        {% snippet 'v2/components/list-item.html',
-            type='checklist', label='Afghanistan', count='(309)', checked=true, state='active-hovered' %}
       </div>
     </div>
   </section>
@@ -1066,62 +1034,29 @@
 
     <h2 class="demo-subsection__heading">Size LG</h2>
     <div class="demo-row demo-row--flex-start">
-      <div>
-        <p class="demo-subsection__heading">Enabled</p>
-        {% snippet 'v2/components/activity-card.html',
-            size='lg', state='enabled',
-            heading='Find and use',
-            subtitle='Search and download datasets uploaded by organizations verified by HDX.',
-            button_label='Explore data', button_href='/dataset' %}
-      </div>
-      <div>
-        <p class="demo-subsection__heading">Hovered</p>
-        {% snippet 'v2/components/activity-card.html',
-            size='lg', state='hovered',
-            heading='Find and use',
-            subtitle='Search and download datasets uploaded by organizations verified by HDX.',
-            button_label='Explore data', button_href='/dataset' %}
-      </div>
+      {% snippet 'v2/components/activity-card.html',
+          size='lg', state='enabled',
+          heading='Find and use',
+          subtitle='Search and download datasets uploaded by organizations verified by HDX.',
+          button_label='Explore data', button_href='/dataset' %}
     </div>
 
     <h2 class="demo-subsection__heading">Size MD</h2>
     <div class="demo-row demo-row--flex-start">
-      <div>
-        <p class="demo-subsection__heading">Enabled</p>
-        {% snippet 'v2/components/activity-card.html',
-            size='md', state='enabled',
-            heading='Find and use',
-            subtitle='Search and download datasets uploaded by organizations verified by HDX.',
-            button_label='Explore data', button_href='/dataset' %}
-      </div>
-      <div>
-        <p class="demo-subsection__heading">Hovered</p>
-        {% snippet 'v2/components/activity-card.html',
-            size='md', state='hovered',
-            heading='Find and use',
-            subtitle='Search and download datasets uploaded by organizations verified by HDX.',
-            button_label='Explore data', button_href='/dataset' %}
-      </div>
+      {% snippet 'v2/components/activity-card.html',
+          size='md', state='enabled',
+          heading='Find and use',
+          subtitle='Search and download datasets uploaded by organizations verified by HDX.',
+          button_label='Explore data', button_href='/dataset' %}
     </div>
 
     <h2 class="demo-subsection__heading">Size SM</h2>
     <div class="demo-row demo-row--flex-start">
-      <div>
-        <p class="demo-subsection__heading">Enabled</p>
-        {% snippet 'v2/components/activity-card.html',
-            size='sm', state='enabled',
-            heading='Find and use',
-            subtitle='Search and download datasets uploaded by organizations verified by HDX.',
-            button_label='Explore data', button_href='/dataset' %}
-      </div>
-      <div>
-        <p class="demo-subsection__heading">Hovered</p>
-        {% snippet 'v2/components/activity-card.html',
-            size='sm', state='hovered',
-            heading='Find and use',
-            subtitle='Search and download datasets uploaded by organizations verified by HDX.',
-            button_label='Explore data', button_href='/dataset' %}
-      </div>
+      {% snippet 'v2/components/activity-card.html',
+          size='sm', state='enabled',
+          heading='Find and use',
+          subtitle='Search and download datasets uploaded by organizations verified by HDX.',
+          button_label='Explore data', button_href='/dataset' %}
     </div>
   </section>
 

@@ -100,8 +100,7 @@
 
     // ── State modifiers ──────────────────────────────────────
 
-    &:hover,
-    &--hovered {
+    &:hover {
         background-color: @c-sel-hover-bg;
         border:           1.5px solid @c-sel-hover-border;
         box-shadow:       var(--hdx-shadow-sm);
@@ -114,23 +113,6 @@
     // Active (selected — close icon visible, border near-black)
     &--active {
         border:     1px solid @c-sel-active-border;
-        color:      var(--hdx-neutral-95);
-        box-shadow: none;
-
-        .c-selection-item__close { display: block; }
-
-        &:hover {
-            border: 1.5px solid @c-sel-active-hover-border;
-        }
-
-        &.c-selection-item--cyan {
-            background-color: @c-sel-cyan-bg;
-        }
-    }
-
-    // Active hovered (selected — close icon visible, border near-black)
-    &--active-hovered {
-        border:     1.5px solid @c-sel-active-border;
         color:      var(--hdx-neutral-95);
         box-shadow: none;
 
@@ -386,9 +368,8 @@
 
     // ── States ──────────────────────────────────────────────
 
-    &--focused &__halo,
-    &:hover   &__halo,
-    &:focus   &__halo {
+    &:hover        &__halo,
+    &:focus-visible &__halo {
         opacity: 0.2;
     }
 }

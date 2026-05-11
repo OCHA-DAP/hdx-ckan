@@ -7,7 +7,7 @@
 
   Parameters
   ─────────────────────────────────────────────────
-  state         {string}  'enabled' | 'focused'   default: 'enabled'
+  state         {string}  'enabled'   default: 'enabled'
   aria_label    {string}  Accessible description of the data point.
                           default: ''
   extra_classes {string}  default: ''
@@ -23,7 +23,6 @@
 {% set extra_classes = extra_classes if extra_classes is defined else '' %}
 
 {% set classes = ['c-graph-point'] %}
-{% if state == 'focused' %}{% set classes = classes + ['c-graph-point--focused'] %}{% endif %}
 {% if extra_classes      %}{% set classes = classes + [extra_classes]            %}{% endif %}
 
 <span class="{{ classes | join(' ') }}"

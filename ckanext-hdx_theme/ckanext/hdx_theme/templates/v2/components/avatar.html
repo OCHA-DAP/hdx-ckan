@@ -14,7 +14,7 @@
                         If empty, initials are shown instead.
                         default: ''
 
-  state       {string}  'enabled' | 'hovered' | 'active'
+  state       {string}  'enabled' | 'active'
                         default: 'enabled'
 
   badge       {bool}    Whether to show the status dot badge.
@@ -45,14 +45,9 @@
 {% set aria_label    = aria_label    if aria_label    is defined else '' %}
 {% set extra_classes = extra_classes if extra_classes is defined else '' %}
 
-{% set classes = [
-    'c-avatar',
-    'c-avatar--size-' ~ size,
-    'c-avatar--' ~ state,
-] %}
-{% if extra_classes %}
-  {% set classes = classes + [extra_classes] %}
-{% endif %}
+{% set classes = ['c-avatar', 'c-avatar--size-' ~ size] %}
+{% if state in ['enabled', 'active'] %}{% set classes = classes + ['c-avatar--' ~ state] %}{% endif %}
+{% if extra_classes %}{% set classes = classes + [extra_classes] %}{% endif %}
 
 <div class="{{ classes | join(' ') }}"
      role="img"

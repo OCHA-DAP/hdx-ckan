@@ -9,7 +9,7 @@
   align-items: flex-start;
   transition: border 0.15s ease;
 }
-.c-activity-card.is-hovered {
+.c-activity-card:hover {
   border: 1.5px solid var(--hdx-neutral-8);
 }
 .c-activity-card__header {

@@ -86,6 +86,24 @@ Only the visual structure (HTML elements, BEM classes, CSS) changes. Logic is no
 
 ---
 
+## Interaction states: pseudo-classes vs. state classes
+
+Use CSS pseudo-classes for transient, user-triggered states.
+Use `is-*` classes only for persistent states set by the server or JavaScript.
+
+| State | Correct approach |
+|-------|-----------------|
+| Hover | `:hover` in LESS |
+| Focus | `:focus-visible` in LESS |
+| Pressed | `:active` in LESS |
+| Selected / current | `is-active` class (server or JS) |
+| Unavailable | `is-disabled` class (server or JS) |
+| Expanded | `is-open` class (JS only) |
+
+Do **not** add `is-hovered`, `--hovered`, `is-focus`, or similar classes to templates or JavaScript. If a JS controller must replicate hover visuals (e.g. keyboard navigation), use a clearly named parent-class such as `c-component--keyboard-active` and add a comment in the LESS file explaining why the class exists.
+
+---
+
 ## Design tokens
 
 - CSS custom properties: `--hdx-<category>-<step>` (e.g. `--hdx-brand-5`, `--hdx-space-3`)

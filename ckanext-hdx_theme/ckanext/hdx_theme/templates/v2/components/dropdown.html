@@ -13,7 +13,7 @@
   placeholder   {string}  Text shown when no value is selected. default: 'Dropdown'
   selected      {string}  Current selected value (if any).  default: ''
   count         {string}  Active selection count chip, e.g. '(3)'.  default: ''
-  state         {string}  'enabled' | 'hover' | 'active' | 'disabled' | 'filter'
+  state         {string}  'enabled' | 'active' | 'disabled' | 'filter'
                           default: 'enabled'
   icon          {bool}    Show leading filter icon.  default: False
   icon_src      {string}  Leading icon path.  default: 'v2/icons/placeholder.svg'
@@ -47,9 +47,8 @@
 {% set is_filter   = (state == 'filter') %}
 
 {% set classes = ['c-dropdown', 'c-dropdown--size-' ~ size] %}
-{% if is_open   %}{% set classes = classes + ['c-dropdown--open']     %}{% endif %}
-{% if is_filter %}{% set classes = classes + ['c-dropdown--filter']   %}{% endif %}
-{% if state == 'hover' %}{% set classes = classes + ['c-dropdown--hovered'] %}{% endif %}
+{% if is_open     %}{% set classes = classes + ['c-dropdown--open']     %}{% endif %}
+{% if is_filter   %}{% set classes = classes + ['c-dropdown--filter']   %}{% endif %}
 {% if is_disabled %}{% set classes = classes + ['c-dropdown--disabled'] %}{% endif %}
 {% if extra_classes %}{% set classes = classes + [extra_classes] %}{% endif %}
 

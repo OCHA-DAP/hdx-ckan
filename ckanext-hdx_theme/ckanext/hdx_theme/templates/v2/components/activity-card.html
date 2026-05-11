@@ -9,7 +9,7 @@
   size          {string}  'lg' | 'md' | 'sm'
                           default: 'md'
 
-  state         {string}  'enabled' | 'hovered'
+  state         {string}  'enabled'
                           default: 'enabled'
 
   icon_src      {string}  Path to icon image, resolved via h.url_for_static().
@@ -49,8 +49,7 @@
   {% snippet 'v2/components/activity-card.html',
       size='md', icon_src='v2/icons/search.svg',
       heading='Find and use', subtitle='Search datasets.',
-      button_label='Explore data', button_href='/dataset',
-      state='hovered' %}
+      button_label='Explore data', button_href='/dataset' %}
 #}
 
 {# ── Defaults ────────────────────────────────────────────── #}
@@ -67,9 +66,6 @@
 
 {# ── BEM class list ──────────────────────────────────────── #}
 {% set classes = ['c-activity-card', 'c-activity-card--size-' ~ size] %}
-{% if state == 'hovered' %}
-  {% set classes = classes + ['is-hovered'] %}
-{% endif %}
 {% if extra_classes %}
   {% set classes = classes + [extra_classes] %}
 {% endif %}

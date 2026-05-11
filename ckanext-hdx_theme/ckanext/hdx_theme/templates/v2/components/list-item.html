@@ -13,7 +13,7 @@
   type          {string}  'list' or 'checklist'  default: 'list'
   label         {string}  Item text/label
   size          {string}  'md' or 'sm' (text-only)  default: 'md'
-  state         {string}  'default'|'hovered'|'active'|'active-hovered'  default: 'default'
+  state         {string}  'default'|'active'  default: 'default'
   checked       {boolean} For checklist type  default: false
   count         {string}  Badge text like "(309)"  default: ''
   href          {string}  Optional link URL  default: ''
@@ -45,7 +45,6 @@
 {% if type == 'list' %}
   {# Text-only list item #}
   {% set classes = ['c-list-item', 'c-list-item--type-list', 'c-list-item--size-' ~ size] %}
-  {% if state == 'hovered' %}{% set classes = classes + ['is-hovered'] %}{% endif %}
   {% if extra_classes %}{% set classes = classes + [extra_classes] %}{% endif %}
 
   {% if href %}
@@ -57,9 +56,7 @@
 {% elif type == 'checklist' %}
   {# Checklist item with checkbox, label, and optional count #}
   {% set classes = ['c-list-item', 'c-list-item--type-checklist'] %}
-  {% if state == 'hovered' %}{% set classes = classes + ['is-hovered'] %}{% endif %}
   {% if state == 'active' %}{% set classes = classes + ['is-active'] %}{% endif %}
-  {% if state == 'active-hovered' %}{% set classes = classes + ['is-active-hovered'] %}{% endif %}
   {% if extra_classes %}{% set classes = classes + [extra_classes] %}{% endif %}
 
   <div class="{{ classes | join(' ') }}">

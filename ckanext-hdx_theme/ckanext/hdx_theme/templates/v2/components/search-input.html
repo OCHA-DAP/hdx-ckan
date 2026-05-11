@@ -10,7 +10,7 @@
   size          {string}  'l' | 'm'    default: 'l'
   placeholder   {string}  Input placeholder text.  default: 'Value'
   value         {string}  Pre-filled value.  default: ''
-  state         {string}  'enabled' | 'hover' | 'active' | 'filled'
+  state         {string}  'enabled' | 'active' | 'filled'
                           default: 'enabled'
   name          {string}  input name attr.  default: 'q'
   id            {string}  input id attr.   default: ''
@@ -48,7 +48,6 @@
 {% set attrs         = attrs         if attrs         is defined else {} %}
 
 {% set classes = ['c-search-input', 'c-search-input--size-' ~ size] %}
-{% if state == 'hover'  %}{% set classes = classes + ['c-search-input--hovered'] %}{% endif %}
 {% if state == 'active' %}{% set classes = classes + ['c-search-input--active']  %}{% endif %}
 {% if state == 'filled' %}{% set classes = classes + ['c-search-input--filled']  %}{% endif %}
 {% if extra_classes     %}{% set classes = classes + [extra_classes]              %}{% endif %}
