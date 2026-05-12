@@ -21,6 +21,7 @@ DOCUMENTATION_LINKS = {
     'QA_PROCESS': 'https://docs.humdata.org/publish',
     'RESOURCES_FOR_DEVELOPERS': 'https://docs.humdata.org/build',
     'DATA_LICENSES': 'https://docs.humdata.org/about/data-licenses',
+    'NOTIFICATIONS': 'https://docs.humdata.org/find/staying-up-to-date-with-hdx',
 }
 
 TABULAR_DATA_EXPLANATION_LINK = DOCUMENTATION_LINKS['TABULAR_DATA_ENDPOINTS']

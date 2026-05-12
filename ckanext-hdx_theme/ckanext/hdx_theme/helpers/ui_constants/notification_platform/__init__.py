@@ -1,3 +1,7 @@
+from ckanext.hdx_package.helpers.constants import DOCUMENTATION_LINKS
+
+_NOTIFICATIONS_URL = DOCUMENTATION_LINKS['NOTIFICATIONS']
+
 CONSTANTS = {
     'OPT_IN_TEXT': '''Get Notified''',
     'OPT_IN_EXPLANATION_DATASET': '''Get notifications when this dataset updates''',
@@ -6,8 +10,8 @@ CONSTANTS = {
 
     'SIGNUP_MODAL_TITLE_DATASET': '''Subscribe to notifications on this dataset''',
     'SIGNUP_MODAL_TITLE_SEARCH_RESULTS': '''Get notified about new datasets on this {0}''',
-    'SIGNUP_MODAL_TEXT_INTRO': '''Would you like to receive email notifications when new datasets are added to this {0}? <a href="https://un-ocha-centre-for-humanitarian.gitbook.io/hdx-docs/hdx-notifications" target="_blank">Learn more</a> about notifications.''',
-    'SIGNUP_MODAL_TEXT_INTRO_DATASET': '''Would you like to receive notifications when resources (files) in this dataset change? <a href="https://un-ocha-centre-for-humanitarian.gitbook.io/hdx-docs/hdx-notifications" target="_blank">Learn more</a> about notifications.''',
+    'SIGNUP_MODAL_TEXT_INTRO': f'Would you like to receive email notifications when new datasets are added to this {{0}}? <a href="{_NOTIFICATIONS_URL}" target="_blank">Learn more</a> about notifications.',
+    'SIGNUP_MODAL_TEXT_INTRO_DATASET': f'Would you like to receive notifications when resources (files) in this dataset change? <a href="{_NOTIFICATIONS_URL}" target="_blank">Learn more</a> about notifications.',
     'SIGNUP_MODAL_TEXT_INTRO_SECOND': '''If so, please <a href="{0}" title="login">log in</a> or enter your email address below:''',
     'SIGNUP_MODAL_TEXT_ALREADY_HAVE_ACCOUNT': '''Already have an account? <a href="{0}" title="login">Log in</a>''',
     'SIGNUP_MODAL_TEXT_UPDATE_FREQUENCY': '''This dataset updates approximately: {0}''',
