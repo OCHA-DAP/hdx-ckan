@@ -124,10 +124,10 @@ class TestFaqPageController(hdx_test_base.HdxBaseTest):
         _old_get_post = fw.faq_for_category
         fw.faq_for_category = mh.mock_documentation_page_content
         page = self._get_faqs_page('devs')
-        assert 'Resources for Developers' in page.body, 'the url /faq should redirect to the FAQ page when no user is logged in'
+        assert 'Build with HDX' in page.body, 'the url /faq should redirect to the FAQ page when no user is logged in'
         assert 'Accessing HDX by API' in page.body, 'the url /faq should redirect to the FAQ page when no user is logged in'
         page = self._get_faqs_page('devs', tester.apikey)
-        assert 'Resources for Developers' in page.body, 'the url /faqs/licenses should redirect to the FAQ page, even when the user is logged in'
+        assert 'Build with HDX' in page.body, 'the url /faqs/licenses should redirect to the FAQ page, even when the user is logged in'
         fw.faq_for_category = _old_get_post
 
     def test_data_responsability_page(self):
