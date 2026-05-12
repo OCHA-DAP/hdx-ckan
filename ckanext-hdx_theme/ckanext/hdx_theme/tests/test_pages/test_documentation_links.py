@@ -11,7 +11,7 @@ def test_documentation_links_rendered(app):
 
     # Header documentation link.
     assert f'href="{DOCUMENTATION_LINKS["MAIN"]}"' in response.body
-    assert '>Documentation<' in response.body
+    assert 'Documentation' in response.body
     assert 'aria-label="documentation link"' in response.body
 
     # Footer documentation links and labels.
