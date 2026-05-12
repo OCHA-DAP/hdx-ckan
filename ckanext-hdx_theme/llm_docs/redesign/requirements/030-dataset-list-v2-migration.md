@@ -9,7 +9,7 @@ Migrate the search results dataset list to the v2 layout system and replace indi
 ## Scope
 
 **In:**
-- Page/layout base: wrap the results section in v2 layout (`hdx-container`, no Bootstrap grid)
+- Page/layout base: wrap the results section in v2 layout (`hdx-v2-container`, no Bootstrap grid)
 - Dataset listing: replace current `<ul>` item loop with `c-dataset-card` snippet calls
 - Data mapping layer: new Jinja2 snippet that maps `package` object → `dataset-card` parameters
 - Any required extensions to `c-dataset-card` identified during mapping
@@ -113,7 +113,7 @@ No filters, no sort controls, no results header are shown in the Figma export (c
 | Aspect | Current | Figma (v2)                                         | Action |
 |---|---|----------------------------------------------------|---|
 | **Location labels** | NOT shown | Shown (cyan badges)                                | **New field** — map from `package.groups` |
-| **Layout** | Bootstrap `col-3 / col-9` grid | Flex + `.hdx-container`                            | Replace grid wrapper |
+| **Layout** | Bootstrap `col-3 / col-9` grid | Flex + `.hdx-v2-container`                            | Replace grid wrapper |
 | **List element** | `<ul class="dataset-list unstyled">` | `<div>` flex column                                | Replace with div |
 | **Title overflow** | Up to 2 lines (JS `hdx_show_more_lines`) | Up to 2 lines (LESS `dataset-card.less`)           | v2 CSS handles this |
 | **Trending indicator** | Icon + text shown | Not shown | Dropped |
@@ -240,7 +240,7 @@ formats_overflow = max(0, total - MAX_VISIBLE)
 
 ```html
 <section class="hdx-v2-dataset-list">
-  <div class="hdx-container">
+  <div class="hdx-v2-container">
     <div class="hdx-v2-dataset-list__cards">
       {# loop: package_item_v2.html per package #}
     </div>
@@ -252,7 +252,7 @@ BEM structure:
 
 ```
 .hdx-v2-dataset-list
-  .hdx-container
+  .hdx-v2-container
     .hdx-v2-dataset-list__cards   ← flex column, gap: var(--hdx-space-4) [1rem]
       .c-dataset-card              ← repeated
       .c-dataset-card
@@ -363,7 +363,7 @@ No equivalent field. Resolution depends on Open Question #8.
 1. Load `/search` and confirm:
    - DOM contains `.c-dataset-card` elements
    - No Bootstrap grid classes in the results area
-   - `.hdx-container` wraps the card list
+   - `.hdx-v2-container` wraps the card list
 
 2. Spot-check data mapping:
    - Single-country dataset → location label with country name

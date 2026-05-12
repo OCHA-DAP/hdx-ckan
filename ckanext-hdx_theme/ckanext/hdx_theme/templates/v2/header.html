@@ -16,7 +16,7 @@
 
   {# ── Top-bar ─────────────────────────────────────────────── #}
   <div class="hdx-v2-top-bar">
-    <div class="hdx-v2-top-bar__inner hdx-container">
+    <div class="hdx-v2-top-bar__inner hdx-v2-container">
 
       {# Left: OCHA Services dropdown #}
       <div class="hdx-v2-top-bar__services">
@@ -126,7 +126,7 @@
   <nav class="hdx-v2-navbar"
        aria-label="{{ _('Main navigation') }}"
        {% if c.userobj %}data-logged-in="true"{% endif %}>
-    <div class="hdx-v2-navbar__inner hdx-container">
+    <div class="hdx-v2-navbar__inner hdx-v2-container">
 
       {# Logo #}
       <a class="hdx-v2-navbar__logo" href="{{ h.url_for('/') }}" aria-label="HDX — Humanitarian Data Exchange"
