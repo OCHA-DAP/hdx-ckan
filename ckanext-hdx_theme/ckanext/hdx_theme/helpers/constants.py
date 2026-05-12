@@ -1,5 +1,6 @@
 import six
 
+from ckanext.hdx_package.helpers.constants import DOCUMENTATION_LINKS
 from ckanext.hdx_search.helpers.constants import DEFAULT_SORTING
 from ckanext.hdx_users.helpers.constants import (
     ONBOARDING_VALUE_PROPOSITION_INDIVIDUAL_ACCOUNT_WITH_ORG,
@@ -16,6 +17,7 @@ CONSTANTS = {
     'MOBILE_MEDIA': 'only screen and (max-width: 640px)',
     'PY3': six.PY3,
     'UI_CONSTANTS': UI_CONSTANTS,
+    'DOCUMENTATION_LINKS': DOCUMENTATION_LINKS,
     'ONBOARDING': {
         'VALUE_PROPOSITION_INDIVIDUAL_ACCOUNT_WITH_ORG': ONBOARDING_VALUE_PROPOSITION_INDIVIDUAL_ACCOUNT_WITH_ORG,
         'VALUE_PROPOSITION_INDIVIDUAL_ACCOUNT': ONBOARDING_VALUE_PROPOSITION_INDIVIDUAL_ACCOUNT,

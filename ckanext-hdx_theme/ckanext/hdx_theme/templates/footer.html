@@ -2,6 +2,7 @@
 {% set firstContainerClass = firstContainerClass | default("row paddingRowHack") %}
 {% set secondContainerClass = secondContainerClass | default("") %}
 {% set thirdContainerClass = thirdContainerClass | default("") %}
+{% set docs_links = h.HDX_CONST('DOCUMENTATION_LINKS') %}
 
 {#{% set events = h.hdx_events_list() %}#}
 
@@ -113,19 +114,19 @@
           <div class="col-12 paddingLeftHack paddingRightHack">
             <div class="social-footer">
               <div class="terms">
-                <a href="{{ h.url_for('hdx_faqs.read', category='terms') }}" data-module="hdx_click_stopper" data-module-link_type="footer">
+                <a href="{{ docs_links['TERMS_OF_SERVICE'] }}" data-module="hdx_click_stopper" data-module-link_type="footer">
                   TERMS OF SERVICE
                 </a>
-                <a href="/about/hdx-qa-process" data-module="hdx_click_stopper" data-module-link_type="footer">
+                <a href="{{ docs_links['QA_PROCESS'] }}" data-module="hdx_click_stopper" data-module-link_type="footer">
                   QA PROCESS
                 </a>
                 <a href="https://github.com/OCHA-DAP" target="_blank" data-module="hdx_click_stopper" data-module-link_type="footer">
                   OPEN SOURCE <i class="icon humanitarianicons-Out-of-platform"></i>
                 </a>
-                <a href="{{ h.url_for('hdx_faqs.read', category='devs') }}" data-module="hdx_click_stopper" data-module-link_type="footer">
-                  RESOURCES FOR DEVELOPERS
+                <a href="{{ docs_links['RESOURCES_FOR_DEVELOPERS'] }}" data-module="hdx_click_stopper" data-module-link_type="footer">
+                  BUILD WITH HDX
                 </a>
-                <a href="{{ h.url_for('hdx_faqs.read', category='licenses') }}" data-module="hdx_click_stopper" data-module-link_type="footer">
+                <a href="{{ docs_links['DATA_LICENSES'] }}" data-module="hdx_click_stopper" data-module-link_type="footer">
                   DATA LICENSES
                 </a>
                 <a href="https://centre.humdata.org/category/blog/" target="_blank" data-module="hdx_click_stopper" data-module-link_type="footer">

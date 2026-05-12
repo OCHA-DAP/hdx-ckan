@@ -13,7 +13,18 @@ BATCH_MODE_KEEP_OLD = 'KEEP_OLD'
 
 UNWANTED_DATASET_PROPERTIES = ['author_email', 'author', 'dataseries_name']
 
-TABULAR_DATA_EXPLANATION_LINK = 'https://un-ocha-centre-for-humanitarian.gitbook.io/hdx-docs/build-with-hdx/build-with-hdx/hdx-api/tabular-data-endpoints'
+DOCUMENTATION_LINKS = {
+    'MAIN': 'https://docs.humdata.org/',
+    'TABULAR_DATA_ENDPOINTS': 'https://docs.humdata.org/build/hdx-apis/tabular-data-endpoints',
+    'TERMS_OF_SERVICE': 'https://docs.humdata.org/about/hdx-terms-of-service',
+    # Requested destination for QA Process in site footer navigation.
+    'QA_PROCESS': 'https://docs.humdata.org/publish',
+    'RESOURCES_FOR_DEVELOPERS': 'https://docs.humdata.org/build',
+    'DATA_LICENSES': 'https://docs.humdata.org/about/data-licenses',
+    'NOTIFICATIONS': 'https://docs.humdata.org/find/staying-up-to-date-with-hdx',
+}
+
+TABULAR_DATA_EXPLANATION_LINK = DOCUMENTATION_LINKS['TABULAR_DATA_ENDPOINTS']
 
 COD_ENHANCED = 'cod-enhanced'
 COD_STANDARD = 'cod-standard'
