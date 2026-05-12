@@ -373,6 +373,52 @@ def render_date_from_concat_str(_str, separator='-'):
     return result
 
 
+def render_date_range_label(_str, separator='-'):
+    """Format dataset_date as "Data from DD Mon YYYY to DD Mon YYYY".
+
+    Parses the same concat-string format as render_date_from_concat_str but
+    uses abbreviated month names (%b) and adds a "Data from … to …" label.
+    Returns an empty string when _str is falsy or unparseable.
+    """
+    def _fmt(dt):
+        try:
+            return dt.strftime('%d %b %Y')
+        except ValueError:
+            month = datetime.date(1900, dt.month, 1).strftime('%b')
+            return '{:02d} {} {}'.format(dt.day, month, dt.year)
+
+    result = ''
+    if not _str:
+        return result
+
+    if 'TO' in _str:
+        parts = []
+        dates_list = str(_str).replace('[', '').replace(']', '').replace(' ', '').split('TO')
+        for date in dates_list:
+            if '*' not in date:
+                _date = datetime.datetime.strptime(date.split('T')[0], '%Y-%m-%d')
+                parts.append(_fmt(_date))
+            else:
+                parts.append(_fmt(datetime.datetime.today()))
+        if len(parts) == 2:
+            result = 'Data from {} to {}'.format(parts[0], parts[1])
+        elif len(parts) == 1:
+            result = 'Data from {}'.format(parts[0])
+    else:
+        dates = []
+        for strdate in _str.split(separator):
+            try:
+                dates.append(_fmt(datetime.datetime.strptime(strdate.strip(), '%m/%d/%Y')))
+            except ValueError:
+                pass
+        if len(dates) == 2:
+            result = 'Data from {} to {}'.format(dates[0], dates[1])
+        elif len(dates) == 1:
+            result = 'Data from {}'.format(dates[0])
+
+    return result
+
+
 def hdx_build_nav_icon_with_message(menu_item, title, **kw):
     htmlResult = h.build_nav_icon(menu_item, title, **kw)
     if 'message' not in kw or not kw['message']:

@@ -105,6 +105,7 @@
 {% set show_others_label = show_others_label if show_others_label is defined else '' %}
 {% set show_others_href  = show_others_href  if show_others_href  is defined else '#' %}
 {% set extra_classes     = extra_classes     if extra_classes     is defined else '' %}
+{% set query             = query             if query             is defined else '' %}
 
 {# ── BEM class list ──────────────────────────────────────── #}
 {% set classes = ['c-dataset-card'] %}
@@ -131,12 +132,12 @@
       {% endif %}
 
       {% if title %}
-        <a class="c-dataset-card__title" href="{{ title_href }}">{{ title }}</a>
+        <a class="c-dataset-card__title" href="{{ title_href }}"{% if query %} data-module="highlight" data-module-text="{{ query }}"{% endif %}>{{ title }}</a>
       {% endif %}
 
       {% if description %}
         <div class="c-dataset-card__desc" data-module="dataset-card">
-          <p class="c-dataset-card__desc-text">{{ description }}</p>
+          <p class="c-dataset-card__desc-text"{% if query %} data-module="highlight" data-module-text="{{ query }}"{% endif %}>{{ description }}</p>
           {% snippet 'v2/components/text-button.html',
               style='tertiary', size='s', label='Show more',
               icon=True, icon_position='right',
@@ -170,7 +171,7 @@
       {% if formats %}
         <div class="c-dataset-card__formats">
           {% for fmt in formats %}
-            {% if fmt.type == 'private' or fmt.type == 'archived' %}
+            {% if fmt.type == 'private' or fmt.type == 'archived' or fmt.type == 'requestdata' %}
               {% snippet 'v2/components/label.html',
                   color='dark', size='xs',
                   icon=True, icon_src=fmt.icon_src if fmt.icon_src else 'v2/icons/lock.svg',
