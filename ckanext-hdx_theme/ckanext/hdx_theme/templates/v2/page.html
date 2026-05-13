@@ -53,7 +53,7 @@
 
   {%- block content %}
     {% block maintag %}<div role="main">{% endblock %}
-      <div id="content" class="container">
+      <div id="content" class="hdx-v2-container">
         {% block main_content %}
       {% block toolbar %}
         <div class="toolbarRow">
@@ -186,7 +186,6 @@
 {%- block scripts %}
   {% asset 'hdx_theme/page-scripts' %}
   {{ super() }}
-  {% asset 'hdx_theme/search-scripts' %}
   {% asset 'hdx_theme/v2-page-scripts' %}
   {# TODO: check whether we still need these once the redesign has been completed #}
   {% if c.userobj %}

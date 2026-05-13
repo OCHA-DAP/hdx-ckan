@@ -100,7 +100,7 @@ Example:
         {% if packages %}
             <div class="search-list">
                 {% block search_list %}
-                <ul class="hdx-bs3 list-items {{ list_class or 'dataset-list unstyled' }}">
+                {% if v2 %}<div class="hdx-v2-dataset-list">{% else %}<ul class="hdx-bs3 list-items {{ list_class or 'dataset-list unstyled' }}">{% endif %}
 
                     {% if admin_view %}
                       <li class="list-items dataset-item ">
@@ -142,7 +142,7 @@ Example:
                       {% endfor %}
                       {% endif %}
                     {% endblock %}
-                </ul>
+                {% if v2 %}</div>{% else %}</ul>{% endif %}
                 {% endblock %}
             </div>
         {% else %}
