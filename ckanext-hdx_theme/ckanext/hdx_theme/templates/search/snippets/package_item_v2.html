@@ -1,6 +1,6 @@
 {# ── org ──────────────────────────────────────────────────── #}
 {% if package.organization %}
-  {% set org_name_val = package.organization.title %}
+  {% set org_name_val = package.organization.title or package.organization.name %}
   {% set org_href_val = h.url_for('organization.read', id=package.organization.name) %}
 {% else %}
   {% set org_name_val = '' %}
@@ -8,7 +8,7 @@
 {% endif %}
 
 {# ── title ────────────────────────────────────────────────── #}
-{% set title_val = package.title %}
+{% set title_val = package.title or package.name %}
 {% if package.is_requestdata_type %}
   {% set title_val = title_val ~ ' [By Request Only]' %}
 {% endif %}
@@ -81,8 +81,9 @@
 {% endif %}
 
 {# ── batch / "show others" footer ─────────────────────────── #}
-{% if package.batch_length and package.batch_length > 0 %}
-  {% set show_others_label_val = 'Show ' ~ h.hdx_show_singular_plural(package.batch_length, _('other recently updated dataset'), _('other recently updated datasets')) ~ ' from ' ~ (package.organization.title) %}
+{% if package.batch_length and package.batch_length > 0 and package.organization %}
+  {% set batch_org_name = package.organization.title or package.organization.name %}
+  {% set show_others_label_val = 'Show ' ~ h.hdx_show_singular_plural(package.batch_length, _('other recently updated dataset'), _('other recently updated datasets')) ~ ' from ' ~ batch_org_name %}
   {% set show_others_href_val = package.batch_url if package.batch_url else '#' %}
 {% else %}
   {% set show_others_label_val = '' %}

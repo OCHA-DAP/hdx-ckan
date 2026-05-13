@@ -43,7 +43,7 @@
 
   formats          {list}    List of format dicts, each with:
                                type     {string} 'extension' | 'cod' | 'cod_plus'
-                                                 | 'private' | 'archived'
+                                                 | 'private' | 'archived' | 'requestdata'
                                text     {string} Label text (e.g. 'CSV', 'COD+')
                                icon_src {string} SVG path (optional)
                              default: []
@@ -61,6 +61,10 @@
                              default: '#'
 
   extra_classes    {string}  Additional CSS classes on the root element.
+                             default: ''
+
+  query            {string}  Search query string for highlighting in title and
+                             description. Pass '' or omit to disable highlighting.
                              default: ''
 
   ──────────────────────────────────────────────────────
@@ -172,9 +176,15 @@
         <div class="c-dataset-card__formats">
           {% for fmt in formats %}
             {% if fmt.type == 'private' or fmt.type == 'archived' or fmt.type == 'requestdata' %}
+              {% set default_icon = 'v2/icons/lock.svg' %}
+              {% if fmt.type == 'archived' %}
+                {% set default_icon = 'v2/icons/placeholder.svg' %}
+              {% elif fmt.type == 'requestdata' %}
+                {% set default_icon = 'v2/icons/unlock.svg' %}
+              {% endif %}
               {% snippet 'v2/components/label.html',
                   color='dark', size='xs',
-                  icon=True, icon_src=fmt.icon_src if fmt.icon_src else 'v2/icons/lock.svg',
+                  icon=True, icon_src=fmt.icon_src if fmt.icon_src else default_icon,
                   icon_only=True %}
             {% elif fmt.type == 'cod' or fmt.type == 'cod_plus' %}
               {% snippet 'v2/components/label.html',

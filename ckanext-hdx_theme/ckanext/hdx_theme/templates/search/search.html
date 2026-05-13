@@ -1,5 +1,10 @@
 {% extends "v2/page.html" %}
 
+{% block scripts %}
+  {{ super() }}
+  {% asset 'hdx_theme/search-scripts' %}
+{% endblock %}
+
 {% set canonical_params = h.filter_search_seo_category_keys(data.full_facet_info.get('selected_categ_keys')) %}
 {% set canonical_info = h.generate_canonical_link(request.path, request.args, canonical_url, canonical_params, no_params) %}
 {% set add_canonical = canonical_info.add_canonical %}
