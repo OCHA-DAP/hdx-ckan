@@ -30,17 +30,11 @@
 }
 .hdx-v2-navbar__search {
   flex: 1 1 auto;
-  margin: 0 auto;
 }
 .hdx-v2-navbar__search form {
-  max-width: 25rem;
+  max-width: 60%;
   margin-left: auto;
   margin-right: auto;
-}
-@media (max-width: 80rem) {
-  .hdx-v2-navbar__search form {
-    max-width: 21.25rem;
-  }
 }
 @media (max-width: 48rem) {
   .hdx-v2-navbar__search {
@@ -434,6 +428,9 @@
   padding: var(--hdx-space-5) var(--hdx-space-4);
   min-height: 100%;
   justify-content: space-between;
+}
+.hdx-v2-offcanvas__primary .hdx-v2-offcanvas__footer {
+  margin-left: auto;
 }
 .hdx-v2-offcanvas__user-row {
   display: flex;

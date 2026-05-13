@@ -48,8 +48,8 @@ Three options:
 - **Pro:** No template changes for container. Familiar to developers.
 - **Con:** Still a Bootstrap class name in v2 HTML. Requires developers to know it's overridden. Contradicts the stated goal of removing Bootstrap class usage.
 
-### Option 2 — Replace with `hdx-container` custom class (recommended)
-Introduce a new `hdx-container` class in `layout.less` (same rules as current `.hdx-v2 .container`). Replace `.container` with `.hdx-container` in all v2 templates.
+### Option 2 — Replace with `hdx-v2-container` custom class (recommended)
+Introduce a new `hdx-v2-container` class in `layout.less` (same rules as current `.hdx-v2 .container`). Replace `.container` with `.hdx-v2-container` in all v2 templates.
 
 - **Pro:** Clean break. Self-documenting. Consistent with BEM/design-system naming. The override in `layout.less` becomes an explicit design system rule, not a Bootstrap patch.
 - **Con:** All v2 templates with a container need one-line class rename (3 files, ~4 occurrences).
@@ -60,7 +60,7 @@ Each `__inner` element owns its own `max-width` and `padding` in its section LES
 - **Pro:** Fully BEM. No shared utility dependency.
 - **Con:** Duplicated max-width/padding values across section LESS blocks. Harder to maintain a consistent content width globally.
 
-**Recommendation: Option 2 (`hdx-container`).** One-time rename, eliminates the Bootstrap name, and keeps a single source of truth for content width in `layout.less`.
+**Recommendation: Option 2 (`hdx-v2-container`).** One-time rename, eliminates the Bootstrap name, and keeps a single source of truth for content width in `layout.less`.
 
 ---
 
@@ -85,9 +85,9 @@ For each class, document: current class → replacement strategy (LESS rule, BEM
 
 ### Step 3 — Resolve container (based on Step 1 decision)
 
-**If Option 2 (`hdx-container`):**
-- Add `.hdx-container` to `layout.less` with the same rules as `.hdx-v2 .container`
-- Replace `.container` with `.hdx-container` in `header.html`, `page.html`, and all section templates that use the two-layer pattern (e.g., `home/index.html`)
+**If Option 2 (`hdx-v2-container`):**
+- Add `.hdx-v2-container` to `layout.less` with the same rules as `.hdx-v2 .container`
+- Replace `.container` with `.hdx-v2-container` in `header.html`, `page.html`, and all section templates that use the two-layer pattern (e.g., `home/index.html`)
 - Remove or keep `.hdx-v2 .container` override depending on whether any non-v2 templates still rely on it within `.hdx-v2` scope
 
 **If Option 1 (status quo):**
@@ -144,7 +144,7 @@ Verification checks:
 | Risk | Severity | Mitigation |
 |------|----------|------------|
 | Footer layout regression — the Bootstrap 12-column grid is replaced by hand-written flex/CSS grid; pixel-level differences are possible | Medium | Verify at every breakpoint against current screenshots before and after |
-| `hdx-container` rename misses an occurrence — a template with `.container` not caught in the audit keeps the Bootstrap name | Low | Grep `templates/v2/` for `\bcontainer\b` as part of step 8 verification |
+| `hdx-v2-container` rename misses an occurrence — a template with `.container` not caught in the audit keeps the Bootstrap name | Low | Grep `templates/v2/` for `\bcontainer\b` as part of step 8 verification |
 | `layout.less` `.hdx-v2 .container` override retained after rename — creates dead CSS | Low | Remove the old rule in the same PR if all occurrences are renamed |
 | Section templates outside `templates/v2/` that use the two-layer pattern (e.g. `home/index.html`) are not updated | Medium | Extend the grep in step 2 to cover all templates that render inside `.hdx-v2` scope |
 | Future page migrations add Bootstrap classes before CONVENTIONS.md is updated | Medium | Merge CONVENTIONS.md update in the same PR as the first file change |

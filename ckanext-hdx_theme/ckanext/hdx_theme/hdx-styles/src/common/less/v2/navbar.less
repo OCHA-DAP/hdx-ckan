@@ -73,19 +73,14 @@
         &:hover { color: var(--hdx-neutral-0); }
     }
 
-    // ── Search — flex to fill space, centered with max-width ─
+    // ── Search — flex to fill space, centered with max-width
     &__search {
         flex:   1 1 auto;
-        margin: 0 auto;
 
         form {
-            max-width:    25rem;
+            max-width:    60%;
             margin-left:  auto;
             margin-right: auto;
-        }
-
-        @media (max-width: (@hdx-bp-xl)) {                    // < 80rem (MD/SM)
-            form { max-width: 21.25rem; }
         }
 
         @media (max-width: (@hdx-bp-md)) {                    // < 48rem (SM)
@@ -523,6 +518,10 @@
         padding:         var(--hdx-space-5) var(--hdx-space-4);
         min-height:      100%;
         justify-content: space-between;
+
+        .hdx-v2-offcanvas__footer {
+          margin-left: auto;
+        }
     }
 
     // ── User row (logged in, primary level) ──────────────────

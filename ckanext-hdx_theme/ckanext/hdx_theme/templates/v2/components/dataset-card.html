@@ -1,0 +1,217 @@
+{#
+  Snippet: dataset-card.html
+  Path:    templates/v2/components/dataset-card.html
+
+  Renders a .c-dataset-card component — organisation, title, description
+  toggle, location labels, date range, file format badges, and a footer
+  "view others" link.
+
+  Responsive: two-column row at MD+, stacked single-column at SM.
+  Hover state handled via CSS :hover — no state class.
+
+  Parameters
+  ──────────────────────────────────────────────────────
+  org_name         {string}  Organisation / contributor display name.
+                             default: ''
+
+  org_href         {string}  URL for the org name link. Pass '' to render
+                             plain text instead of a link.
+                             default: ''
+
+  title            {string}  Dataset title text.
+                             default: ''
+
+  title_href       {string}  URL the title links to.
+                             default: '#'
+
+  description      {string}  Full description text shown on MD+ only, revealed
+                             when the user clicks "Show more". Pass '' to omit
+                             the description section entirely.
+                             default: ''
+
+  location         {string}  Location label text (e.g. 'Palestine').
+                             Pass '' to omit the locations row.
+                             default: ''
+
+  subnational      {bool}    Show a 'Sub-national' grey label alongside the
+                             location label (hidden on SM).
+                             default: false
+
+  date_range       {string}  Formatted date string
+                             (e.g. 'Data from 12 Dec 2022 to 12 Dec 2025').
+                             default: ''
+
+  formats          {list}    List of format dicts, each with:
+                               type     {string} 'extension' | 'cod' | 'cod_plus'
+                                                 | 'private' | 'archived' | 'requestdata'
+                               text     {string} Label text (e.g. 'CSV', 'COD+')
+                               icon_src {string} SVG path (optional)
+                             default: []
+
+  formats_overflow {int}     Count of formats not rendered; shows '+N' span
+                             when > 0.
+                             default: 0
+
+  show_others_label {string} Footer link text
+                             (e.g. 'View other 89 datasets from this contributor').
+                             Pass '' to omit the footer.
+                             default: ''
+
+  show_others_href  {string} Footer link URL.
+                             default: '#'
+
+  extra_classes    {string}  Additional CSS classes on the root element.
+                             default: ''
+
+  query            {string}  Search query string for highlighting in title and
+                             description. Pass '' or omit to disable highlighting.
+                             default: ''
+
+  ──────────────────────────────────────────────────────
+  Examples
+
+  Full card (XL/MD):
+  {% snippet 'v2/components/dataset-card.html',
+      org_name='Insecurity Insights',
+      title='Sanitary Pad Distribution and GBV Awareness Activities – Kassala State',
+      title_href='/dataset/sanitary-pad',
+      description='This dataset covers sanitary pad distributions across Kassala.',
+      location='Palestine', subnational=True,
+      date_range='Data from 12 Dec 2022 to 12 Dec 2025',
+      formats=[
+        {'type': 'private',   'text': '',    'icon_src': 'v2/icons/lock.svg'},
+        {'type': 'extension', 'text': 'CSV', 'icon_src': 'v2/icons/tabular-format.svg'},
+        {'type': 'cod_plus',  'text': 'COD+','icon_src': ''},
+      ],
+      formats_overflow=3,
+      show_others_label='View other 89 datasets from this contributor',
+      show_others_href='/organization/insecurity-insights' %}
+
+  Minimal card (SM):
+  {% snippet 'v2/components/dataset-card.html',
+      org_name='OCHA', title='Sudan Crisis Data 2024',
+      title_href='/dataset/sudan-crisis',
+      location='Sudan',
+      date_range='Data from Jan 2024 to Dec 2024' %}
+#}
+
+{# ── Defaults ────────────────────────────────────────────── #}
+{% set org_name          = org_name          if org_name          is defined else '' %}
+{% set org_href          = org_href          if org_href          is defined else '' %}
+{% set title             = title             if title             is defined else '' %}
+{% set title_href        = title_href        if title_href        is defined else '#' %}
+{% set description       = description       if description       is defined else '' %}
+{% set location          = location          if location          is defined else '' %}
+{% set subnational       = subnational       if subnational       is defined else false %}
+{% set date_range        = date_range        if date_range        is defined else '' %}
+{% set formats           = formats           if formats           is defined else [] %}
+{% set formats_overflow  = formats_overflow  if formats_overflow  is defined else 0 %}
+{% set show_others_label = show_others_label if show_others_label is defined else '' %}
+{% set show_others_href  = show_others_href  if show_others_href  is defined else '#' %}
+{% set extra_classes     = extra_classes     if extra_classes     is defined else '' %}
+{% set query             = query             if query             is defined else '' %}
+
+{# ── BEM class list ──────────────────────────────────────── #}
+{% set classes = ['c-dataset-card'] %}
+{% if extra_classes %}
+  {% set classes = classes + [extra_classes] %}
+{% endif %}
+
+{# ── Render ───────────────────────────────────────────────── #}
+<div class="{{ classes | join(' ') }}">
+
+  <div class="c-dataset-card__body">
+
+    {# ── Left column ───────────────────────────────────────── #}
+    <div class="c-dataset-card__left">
+
+      {% if org_name %}
+        <p class="c-dataset-card__org">
+          {% if org_href %}
+            <a href="{{ org_href }}">{{ org_name }}</a>
+          {% else %}
+            {{ org_name }}
+          {% endif %}
+        </p>
+      {% endif %}
+
+      {% if title %}
+        <a class="c-dataset-card__title" href="{{ title_href }}"{% if query %} data-module="highlight" data-module-text="{{ query }}"{% endif %}>{{ title }}</a>
+      {% endif %}
+
+      {% if description %}
+        <div class="c-dataset-card__desc" data-module="dataset-card">
+          <p class="c-dataset-card__desc-text"{% if query %} data-module="highlight" data-module-text="{{ query }}"{% endif %}>{{ description }}</p>
+          {% snippet 'v2/components/text-button.html',
+              style='tertiary', size='s', label='Show more',
+              icon=True, icon_position='right',
+              icon_src='v2/icons/chevron-down.svg',
+              tag='button', button_type='button' %}
+        </div>
+      {% endif %}
+
+    </div>
+
+    {# ── Right column ──────────────────────────────────────── #}
+    <div class="c-dataset-card__right">
+
+      {% if location %}
+        <div class="c-dataset-card__locations">
+          {% snippet 'v2/components/label.html',
+              text=location, color='cyan', size='xs', icon=False %}
+          {% if subnational %}
+            <span class="c-dataset-card__subnational">
+              {% snippet 'v2/components/label.html',
+                  text='Sub-national', color='grey', size='xs', icon=False %}
+            </span>
+          {% endif %}
+        </div>
+      {% endif %}
+
+      {% if date_range %}
+        <p class="c-dataset-card__date">{{ date_range }}</p>
+      {% endif %}
+
+      {% if formats %}
+        <div class="c-dataset-card__formats">
+          {% for fmt in formats %}
+            {% if fmt.type == 'private' or fmt.type == 'archived' or fmt.type == 'requestdata' %}
+              {% set default_icon = 'v2/icons/lock.svg' %}
+              {% if fmt.type == 'archived' %}
+                {% set default_icon = 'v2/icons/placeholder.svg' %}
+              {% elif fmt.type == 'requestdata' %}
+                {% set default_icon = 'v2/icons/unlock.svg' %}
+              {% endif %}
+              {% snippet 'v2/components/label.html',
+                  color='dark', size='xs',
+                  icon=True, icon_src=fmt.icon_src if fmt.icon_src else default_icon,
+                  icon_only=True %}
+            {% elif fmt.type == 'cod' or fmt.type == 'cod_plus' %}
+              {% snippet 'v2/components/label.html',
+                  text=fmt.text, color='dark', size='xs', icon=False %}
+            {% else %}
+              {% snippet 'v2/components/label.html',
+                  text=fmt.text, color='light', size='xs',
+                  icon=True,
+                  icon_src=fmt.icon_src if fmt.icon_src else 'v2/icons/document-format.svg' %}
+            {% endif %}
+          {% endfor %}
+          {% if formats_overflow > 0 %}
+            <span class="c-dataset-card__formats-more">+{{ formats_overflow }}</span>
+          {% endif %}
+        </div>
+      {% endif %}
+
+    </div>
+
+  </div>{# /.c-dataset-card__body #}
+
+  {% if show_others_label %}
+    <div class="c-dataset-card__footer">
+      {% snippet 'v2/components/text-link.html',
+          label=show_others_label, href=show_others_href,
+          style='tertiary', size='xs' %}
+    </div>
+  {% endif %}
+
+</div>{# /.c-dataset-card #}

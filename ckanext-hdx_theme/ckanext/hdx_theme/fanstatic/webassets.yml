@@ -226,6 +226,7 @@ v2-components-styles:
   contents:
     - v2/foundation.css
     - v2/components/activity-card.css
+    - v2/components/dataset-card.css
     - v2/components/avatar-badge.css
     - v2/components/buttons.css
     - v2/components/checkbox.css
@@ -243,6 +244,7 @@ v2-components-scripts:
   output: ckanext-hdx_theme/%(version)s_v2-components-scripts.js
   contents:
     - v2/components/password-toggle.js
+    - v2/components/dataset-card.js
 
 v2-page-styles:
   output: ckanext-hdx_theme/%(version)s_v2-page-styles.css

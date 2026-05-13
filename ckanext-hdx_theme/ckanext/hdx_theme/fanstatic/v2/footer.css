@@ -122,11 +122,11 @@
 }
 .hdx-v2-footer__newsletter-row .c-search-input {
   flex: 1;
-  max-width: 22rem;
+  max-width: 80%;
 }
 @media (min-width: 80rem) {
   .hdx-v2-footer__newsletter-row .c-search-input {
-    min-width: 22rem;
+    min-width: 100%;
   }
 }
 .hdx-v2-footer__subscribe-btn {

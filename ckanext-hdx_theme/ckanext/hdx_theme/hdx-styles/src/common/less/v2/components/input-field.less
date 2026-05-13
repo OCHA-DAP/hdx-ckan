@@ -20,7 +20,6 @@
 @c-input-color-value:       var(--hdx-neutral-95);  // #101212
 
 @c-input-icon-dim:     1rem;    // 16 px
-@c-input-min-w:        7.5rem;  // 120 px
 
 // L sizing
 @c-input-l-h:    2.5rem;         // 40 px — fixed height so border grows inward
@@ -49,7 +48,6 @@
     border:           @c-input-border;
     box-sizing:       border-box;
     overflow:         hidden;
-    min-width:        @c-input-min-w;
     font-family:      var(--hdx-font-body);
     transition:       background-color 0.15s ease, border 0.15s ease;
 
@@ -245,13 +243,12 @@
     }
 
     &__result-count {
-        width:          6.25rem;  // 100 px
-        font-family:    var(--hdx-font-body);
-        font-size:      var(--hdx-fs-s);
-        line-height:    130%;
-        text-align:     right;
-        color:          var(--hdx-neutral-8);
-        flex-shrink:    0;
+        font-family: var(--hdx-font-body);
+        font-size:   var(--hdx-fs-s);
+        line-height: 130%;
+        text-align:  right;
+        color:       var(--hdx-neutral-8);
+        flex-shrink: 0;
     }
 
     // "Search all" confirm button at bottom

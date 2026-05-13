@@ -1,13 +1,9 @@
-{% extends "page.html" %}
-{% import 'macros/form.html' as form %}
+{% extends "v2/page.html" %}
 
-{% block styles %}
+{% block scripts %}
   {{ super() }}
-  {% asset 'hdx_theme/dataset-styles' %}
-  {% asset 'hdx_theme/dataset-search-styles' %}
+  {% asset 'hdx_theme/search-scripts' %}
 {% endblock %}
-
-{% set page_has_mobile_version = True %}
 
 {% set canonical_params = h.filter_search_seo_category_keys(data.full_facet_info.get('selected_categ_keys')) %}
 {% set canonical_info = h.generate_canonical_link(request.path, request.args, canonical_url, canonical_params, no_params) %}
@@ -18,8 +14,6 @@
   {% set show_url = (not add_canonical) %}
 {% endif %}
 {% block links %}
-  <link rel="alternate" media="{{ h.HDX_CONST('MOBILE_MEDIA') }}" href="{{ h.hdx_switch_url_path(force=False) }}">
-  
   {# Filter out org/location filters from SEO and limit to max 2 content filters #}
   {% set canonical_params = h.filter_search_seo_category_keys(data.full_facet_info.get('selected_categ_keys')) %}
   {% set canonical_url = "/dataset"  %}
@@ -40,7 +34,6 @@
 {% block subtitle %}{{page_title}}{% endblock %}
 {% block meta %}
     {{ super() }}
-    <meta name="viewport" content="width=1260">
     {% if filters_no < 1 %}
       <meta name="description" content="Explore a comprehensive collection of humanitarian datasets curated by HDX. Access reliable data to support crisis response and informed decision-making." />
     {% else %}
@@ -56,8 +49,8 @@
     {% block search_results_wrapper %}
         <div id="search-recs" class="d-none"></div>
         {% snippet 'search/snippets/search_results_wrapper.html',
-                            tracking_enabled=g.tracking_enabled, my_c=data or c, display_min=true, 
-                            show_url=show_url %}
+                            tracking_enabled=g.tracking_enabled, my_c=data or c, display_min=true,
+                            show_url=show_url, v2=true %}
 
     {% endblock %}
   {% block package_search_results_api %}
@@ -66,17 +59,6 @@
 
 {% block secondary %}
 {% endblock %}
-
-
-{% block scripts2 %}
-  {{ super() }}
-{#  {% resource 'hdx_theme/bs_tooltip.js' %}#}
-{#  {% resource 'hdx_theme/jquery.highlight' %}#}
-{#  {% resource 'hdx_theme/jquery.expander' %}#}
-{#  {% resource 'hdx_theme/search/search_page.js' %} DOESN't SEEM TO BE USED ANYMORE #}
-
-{% endblock %}
-
 
 {% block  global_dataset_input_search%}
 	{% if c.other_links and c.other_links.params_noq %}

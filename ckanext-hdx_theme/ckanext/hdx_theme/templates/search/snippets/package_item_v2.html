@@ -1,0 +1,106 @@
+{# ── org ──────────────────────────────────────────────────── #}
+{% if package.organization %}
+  {% set org_name_val = package.organization.title or package.organization.name %}
+  {% set org_href_val = h.url_for('organization.read', id=package.organization.name) %}
+{% else %}
+  {% set org_name_val = '' %}
+  {% set org_href_val = '' %}
+{% endif %}
+
+{# ── title ────────────────────────────────────────────────── #}
+{% set title_val = package.title or package.name %}
+{% if package.is_requestdata_type %}
+  {% set title_val = title_val ~ ' [By Request Only]' %}
+{% endif %}
+{% set title_href_val = h.url_for('dataset.read', id=package.name) %}
+
+{# ── description ──────────────────────────────────────────── #}
+{% set desc_val = h.markdown_extract(package.notes, extract_length=0) if package.notes else '' %}
+
+{# ── location ─────────────────────────────────────────────── #}
+{% if package.groups and package.groups | length == 1 %}
+  {% set location_val = package.groups[0].title %}
+{% elif package.groups and package.groups | length > 1 %}
+  {% set location_val = 'Multiple locations' %}
+{% else %}
+  {% set location_val = '' %}
+{% endif %}
+
+{# ── subnational ──────────────────────────────────────────── #}
+{% set subnational_val = (package.subnational == '1') %}
+
+{# ── date ─────────────────────────────────────────────────── #}
+{% set date_range_val = h.render_date_range_label(package.dataset_date) %}
+
+{# ── formats: step 1 — package-level flag badges ─────────── #}
+{% set formats_val = [] %}
+{% if package.is_requestdata_type %}
+  {% set formats_val = formats_val + [{'type': 'requestdata', 'text': '', 'icon_src': 'v2/icons/unlock.svg'}] %}
+{% endif %}
+{% if package.private %}
+  {% set formats_val = formats_val + [{'type': 'private', 'text': '', 'icon_src': 'v2/icons/lock.svg'}] %}
+{% endif %}
+{% if package.archived %}
+  {% set formats_val = formats_val + [{'type': 'archived', 'text': '', 'icon_src': 'v2/icons/placeholder.svg'}] %}
+{% endif %}
+{% if package.cod_level == 'cod' %}
+  {% set formats_val = formats_val + [{'type': 'cod', 'text': 'COD', 'icon_src': ''}] %}
+{% elif package.cod_level == 'cod-enhanced' %}
+  {% set formats_val = formats_val + [{'type': 'cod_plus', 'text': 'COD+', 'icon_src': ''}] %}
+{% endif %}
+
+{# ── formats: step 2 — resource extension badges ─────────── #}
+{% if package.resources and not hide_resources and not package.is_requestdata_type %}
+  {% set tabular  = ['CSV', 'XLSX', 'XLS', 'ODS', 'TSV'] %}
+  {% set geo      = ['SHP', 'GEOJSON', 'KML', 'KMZ', 'GEOPACKAGE', 'GPKG', 'GEOTIFF', 'GEODATABASE', 'GDB'] %}
+  {% set document = ['PDF', 'DOC', 'DOCX'] %}
+  {% set _ns = namespace(extras=[]) %}
+  {% for fmt_str in h.dict_list_reduce(package.resources, 'format') %}
+    {% set fmt_upper = fmt_str.upper() %}
+    {% if fmt_upper in tabular %}
+      {% set icon_src_val = 'v2/icons/tabular-format.svg' %}
+    {% elif fmt_upper in geo %}
+      {% set icon_src_val = 'v2/icons/geographic-format.svg' %}
+    {% elif fmt_upper in document %}
+      {% set icon_src_val = 'v2/icons/document-format.svg' %}
+    {% else %}
+      {% set icon_src_val = 'v2/icons/other-format.svg' %}
+    {% endif %}
+    {% set _ns.extras = _ns.extras + [{'type': 'extension', 'text': fmt_str, 'icon_src': icon_src_val}] %}
+  {% endfor %}
+  {% set formats_val = formats_val + _ns.extras %}
+{% endif %}
+
+{# ── formats: step 3 — truncate to 3, compute overflow ───── #}
+{% set total_formats = formats_val | length %}
+{% if total_formats > 3 %}
+  {% set formats_overflow_val = total_formats - 3 %}
+  {% set formats_val = formats_val[:3] %}
+{% else %}
+  {% set formats_overflow_val = 0 %}
+{% endif %}
+
+{# ── batch / "show others" footer ─────────────────────────── #}
+{% if package.batch_length and package.batch_length > 0 and package.organization %}
+  {% set batch_org_name = package.organization.title or package.organization.name %}
+  {% set show_others_label_val = 'Show ' ~ h.hdx_show_singular_plural(package.batch_length, _('other recently updated dataset'), _('other recently updated datasets')) ~ ' from ' ~ batch_org_name %}
+  {% set show_others_href_val = package.batch_url if package.batch_url else '#' %}
+{% else %}
+  {% set show_others_label_val = '' %}
+  {% set show_others_href_val = '#' %}
+{% endif %}
+
+{% snippet 'v2/components/dataset-card.html',
+    org_name=org_name_val,
+    org_href=org_href_val,
+    title=title_val,
+    title_href=title_href_val,
+    description=desc_val,
+    location=location_val,
+    subnational=subnational_val,
+    date_range=date_range_val,
+    formats=formats_val,
+    formats_overflow=formats_overflow_val,
+    show_others_label=show_others_label_val,
+    show_others_href=show_others_href_val,
+    query=query if query is defined else '' %}

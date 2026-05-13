@@ -209,6 +209,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'markdown_extract_strip': hdx_helpers.markdown_extract_strip,
             'render_markdown_strip': hdx_helpers.render_markdown_strip,
             'render_date_from_concat_str': hdx_helpers.render_date_from_concat_str,
+            'render_date_range_label': hdx_helpers.render_date_range_label,
             'hdx_version': hdx_helpers.hdx_version,
             'hdx_build_nav_icon_with_message': hdx_helpers.hdx_build_nav_icon_with_message,
             'hdx_build_nav_no_icon': hdx_helpers.hdx_build_nav_no_icon,

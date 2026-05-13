@@ -67,7 +67,7 @@
         gap:            var(--hdx-space-3);
         width:          100%;
 
-        @media (min-width: @hdx-bp-md) { flex-direction: row; width: 36.375rem; }
+        @media (min-width: @hdx-bp-md) { flex-direction: row; width: 60%; }
     }
 
     &__search {
@@ -163,5 +163,28 @@
         }
 
         .c-activity-card { flex: 1; }
+    }
+}
+
+// ============================================================
+// hdx-v2-dataset-list — search results card list layout
+// Figma: llm_docs/redesign/figma_exports/dataset-list.html
+// ============================================================
+
+.hdx-v2-dataset-list {
+    &__cards {
+        display: flex;
+        flex-direction: column;
+        gap: var(--hdx-space-4);
+
+        // ============================================================
+        // Search highlight — text matched by the highlight.js module.
+        // The legacy rule lives in deprecated.css (page-styles bundle),
+        // which is not loaded on v2 pages.
+        // ============================================================
+
+        .highlight {
+            background-color: var(--hdx-warning-1);
+        }
     }
 }

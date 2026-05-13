@@ -65,13 +65,7 @@
 
       {# Footer actions — pushed to bottom of panel #}
       <div class="hdx-v2-offcanvas__footer">
-        {% if c.userobj %}
-          {# Add data button (logged in) — primary style #}
-          {% snippet 'v2/components/button.html',
-              style='primary', size='l', label=_('Add data'),
-              tag='a', href=h.url_for('hdx_contribute.new'),
-              attrs={'data-module': 'hdx_click_stopper', 'data-module-link_type': 'main nav'} %}
-        {% else %}
+        {% if not c.userobj %}
           {# Login button (logged out) #}
           {% snippet 'v2/components/button.html',
               style='secondary', size='l', label=_('Login'),

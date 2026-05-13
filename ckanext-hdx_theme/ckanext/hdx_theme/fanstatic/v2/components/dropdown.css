@@ -3,7 +3,7 @@
   flex-direction: column;
   align-items: flex-start;
   position: relative;
-  width: 15.625rem;
+  width: 100%;
 }
 .c-dropdown__label {
   align-self: stretch;
