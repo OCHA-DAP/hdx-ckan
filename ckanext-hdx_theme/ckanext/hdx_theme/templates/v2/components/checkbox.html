@@ -7,11 +7,13 @@
 
   Parameters
   ─────────────────────────────────────────────────────────────
-  id            {string}  Unique identifier.  default: 'checkbox'
+  id            {string}  Unique identifier.  default: ''
   checked       {boolean} Whether checked.  default: false
   disabled      {boolean} Whether disabled.  default: false
   name          {string}  Form name attr.  default: ''
   value         {string}  Form value attr.  default: ''
+  attrs         {dict}    Extra attrs on <input>.  default: {}
+                          Use 'data-indeterminate': '' for indeterminate state (JS sets .indeterminate=true).
   extra_classes {string}  Additional classes.  default: ''
   ─────────────────────────────────────────────────────────────
   Example
@@ -23,26 +25,28 @@
       id='agree-terms', checked=true %}
 #}
 
-{% set id            = id            if id            is defined else 'checkbox' %}
+{% set id            = id            if id            is defined else '' %}
 {% set checked       = checked       if checked       is defined else false %}
 {% set disabled      = disabled      if disabled      is defined else false %}
 {% set name          = name          if name          is defined else '' %}
 {% set value         = value         if value         is defined else '' %}
+{% set attrs         = attrs         if attrs         is defined else {} %}
 {% set extra_classes = extra_classes if extra_classes is defined else '' %}
 
 {% set classes = ['c-checkbox'] %}
 {% if extra_classes %}{% set classes = classes + [extra_classes] %}{% endif %}
 
-<div class="{{ classes | join(' ') }}">
+<span class="{{ classes | join(' ') }}">
   <input
     class="c-checkbox__input"
     type="checkbox"
-    id="{{ id }}"
+    {% if id %}id="{{ id }}"{% endif %}
     {% if checked %}checked="checked"{% endif %}
     {% if disabled %}disabled="disabled"{% endif %}
     {% if name %}name="{{ name }}"{% endif %}
-    {% if value %}value="{{ value }}"{% endif %} />
+    {% if value %}value="{{ value }}"{% endif %}
+    {% for key, val in attrs.items() %}{{ key }}="{{ val }}" {% endfor %} />
   <span class="c-checkbox__box">
     <span class="c-checkbox__icon">{% include h.url_for_static('v2/icons/check.svg') %}</span>
   </span>
-</div>
+</span>
