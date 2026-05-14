@@ -56,3 +56,6 @@
   flex-shrink: 0;
   text-transform: uppercase;
 }
+.c-list-item--child {
+  padding-left: var(--hdx-space-3);
+}

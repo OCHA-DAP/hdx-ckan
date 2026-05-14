@@ -76,6 +76,88 @@ Example:
     </div>
 </form>
 
+{# ─── v2: filter overlay, filter button, sidebar layout ────────────────── #}
+{% if v2 %}
+  {% set facet_list = full_facet_info.get('facets', {}) %}
+
+  {# Count selected items across all filters.
+     HPC (vocab_Topics) children are excluded from the advanced loop — already
+     captured by the main vocab_Topics facet above to avoid double-counting. #}
+  {% set _ns = namespace(total=0) %}
+  {% for _fk in ['groups', 'organization', 'res_format', 'vocab_Topics'] %}
+    {% set _ns.total = _ns.total + (facet_list.get(_fk, {}).get('items', []) | selectattr('selected') | list | length) %}
+  {% endfor %}
+  {% for _fi in facet_list.get('featured', {}).get('items', []) %}
+    {% if _fi.get('items') %}
+      {% if _fi.get('category_key') == 'cod_level' %}
+        {% for _si in _fi['items'] %}
+          {% if _si.selected %}{% set _ns.total = _ns.total + 1 %}{% endif %}
+        {% endfor %}
+      {% endif %}
+    {% elif _fi.selected %}
+      {% set _ns.total = _ns.total + 1 %}
+    {% endif %}
+  {% endfor %}
+  {% set total_selected = _ns.total %}
+
+  {# ── MD/SM full-screen filter overlay ────────────────────────────────── #}
+  <div class="hdx-v2-search-filter-overlay" id="hdx-filter-overlay">
+    <div class="hdx-v2-search-filter-overlay__header">
+      <span class="hdx-v2-search-filter-overlay__title">Filters</span>
+      <button type="button"
+              class="hdx-v2-search-filter-overlay__close"
+              data-action="close-overlay"
+              aria-label="Close filters">
+        {% include h.url_for_static('v2/icons/close.svg') %}
+      </button>
+    </div>
+    <div class="hdx-v2-search-filter-overlay__body">
+      <div class="hdx-v2-search-filters">
+        {% snippet 'v2/search-filters.html', facet_list=facet_list %}
+      </div>
+    </div>
+    <div class="hdx-v2-search-filter-overlay__footer">
+      {% snippet 'v2/components/button.html',
+          style='tertiary', size='l', label='Clear filters',
+          state='enabled' if total_selected > 0 else 'disabled',
+          attrs={'data-action': 'clear-filters'} %}
+      {% snippet 'v2/components/button.html',
+          style='primary', size='l', label='Show results',
+          attrs={'data-action': 'show-results'} %}
+    </div>
+  </div>
+
+  {# ── MD/SM filter button — hidden at LG via CSS ──────────────────────── #}
+  <div class="hdx-v2-search-filter-btn-row">
+    {% snippet 'v2/components/dropdown.html',
+        size='m',
+        placeholder='Filter',
+        count='(' ~ total_selected ~ ')' if total_selected > 0 else '',
+        state='filter' if total_selected > 0 else 'enabled',
+        icon=True,
+        icon_src='v2/icons/filter.svg',
+        chevron_src='',
+        panel_id='hdx-filter-overlay',
+        button_attrs={'data-module': 'filter-btn'} %}
+  </div>
+
+  {# ── LG two-column layout: sidebar + dataset list ────────────────────── #}
+  <div class="hdx-v2-search-layout">
+    <form id="search-page-filters-form" autocomplete="off">
+      <aside class="hdx-v2-search-filters">
+        {% snippet 'v2/search-filters.html', facet_list=facet_list %}
+        {% set ext_after_metadata_modified = h.hdx_get_request_param('ext_after_metadata_modified', None) %}
+        {% if ext_after_metadata_modified %}
+          <input id="ext_after_metadata_modified" type="hidden" name="ext_after_metadata_modified" value="{{ ext_after_metadata_modified }}"/>
+        {% endif %}
+        {% set ext_batch = h.hdx_get_request_param('ext_batch', None) %}
+        {% if ext_batch %}
+          <input id="ext_batch" type="hidden" name="ext_batch" value="{{ ext_batch }}"/>
+        {% endif %}
+      </aside>
+    </form>
+{% else %}
+{# v1: Bootstrap row/col ─────────────────────────────────────── #}
 <div class="row">
     <div id="search-page-filters" class="col-3">
       <form id="search-page-filters-form" autocomplete="off">
@@ -96,6 +178,8 @@ Example:
           {% endif %}
       </form>
     </div>
+{% endif %}
+
     <div id="search-page-results" class="col-9">
         {% if packages %}
             <div class="search-list">

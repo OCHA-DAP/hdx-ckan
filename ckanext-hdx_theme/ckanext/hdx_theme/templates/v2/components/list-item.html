@@ -15,8 +15,10 @@
   size          {string}  'md' or 'sm' (text-only)  default: 'md'
   state         {string}  'default'|'active'  default: 'default'
   checked       {boolean} For checklist type  default: false
+  value         {string}  Checkbox value attr  default: ''
   count         {string}  Badge text like "(309)"  default: ''
-  href          {string}  Optional link URL  default: ''
+  href          {string}  Optional link URL (type='list' only)  default: ''
+  attrs         {dict}    Extra attrs on the checkbox <input>  default: {}
   extra_classes {string}  Additional classes  default: ''
   ─────────────────────────────────────────────────────────────
   Examples
@@ -38,8 +40,10 @@
 {% set size          = size          if size          is defined else 'md' %}
 {% set state         = state         if state         is defined else 'default' %}
 {% set checked       = checked       if checked       is defined else false %}
+{% set value         = value         if value         is defined else '' %}
 {% set count         = count         if count         is defined else '' %}
 {% set href          = href          if href          is defined else '' %}
+{% set attrs         = attrs         if attrs         is defined else {} %}
 {% set extra_classes = extra_classes if extra_classes is defined else '' %}
 
 {% if type == 'list' %}
@@ -59,14 +63,16 @@
   {% if state == 'active' %}{% set classes = classes + ['is-active'] %}{% endif %}
   {% if extra_classes %}{% set classes = classes + [extra_classes] %}{% endif %}
 
-  <div class="{{ classes | join(' ') }}">
+  <label class="{{ classes | join(' ') }}">
     {% snippet 'v2/components/checkbox.html',
-        checked=checked, disabled=false %}
+        checked=checked, disabled=false,
+        value=value,
+        attrs=attrs %}
 
     <div class="c-list-item__content">
       <span class="c-list-item__label">{{ label }}</span>
-      {% if count %}<span class="c-list-item__count">{{ count }}</span>{% endif %}
+      {% if count is defined %}<span class="c-list-item__count">{{ count }}</span>{% endif %}
     </div>
-  </div>
+  </label>
 
 {% endif %}

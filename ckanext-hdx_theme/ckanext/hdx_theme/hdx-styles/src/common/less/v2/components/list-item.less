@@ -97,4 +97,16 @@
         flex-shrink: 0;
         text-transform: uppercase;
     }
+
+    // Parent "select all" row — medium weight label (used in advanced filter groups)
+    &--parent {
+        .c-list-item__label {
+            // font-weight: var(--hdx-fw-medium);
+        }
+    }
+
+    // Child row — indented (used for nested filter items e.g. COD sub-levels)
+    &--child {
+        padding-left: var(--hdx-space-3);  // 12 px
+    }
 }
