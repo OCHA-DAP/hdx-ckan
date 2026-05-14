@@ -83,7 +83,7 @@ SM behaves identically to MD.
 
 Defined in `breakpoints.less`:
 
-- **LG** ≥ `87.5rem` (1400px): inline sidebar (`@hdx-bp-xl`)
+- **LG** ≥ `87.5rem` (1400px): inline sidebar (`@hdx-bp-xxl`)
 - **MD / SM** < `87.5rem`: button + overlay
 
 ---
