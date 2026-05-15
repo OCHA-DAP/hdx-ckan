@@ -15,7 +15,7 @@
 {% set title_href_val = h.url_for('dataset.read', id=package.name) %}
 
 {# ── description ──────────────────────────────────────────── #}
-{% set desc_val = h.markdown_extract(package.notes, extract_length=0) if package.notes else '' %}
+{% set desc_val = h.markdown_extract(package.notes, extract_length=0) | striptags if package.notes else '' %}
 
 {# ── location ─────────────────────────────────────────────── #}
 {% if package.groups and package.groups | length == 1 %}
