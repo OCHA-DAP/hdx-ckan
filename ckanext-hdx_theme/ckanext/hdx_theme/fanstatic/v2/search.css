@@ -54,6 +54,12 @@
     display: none;
   }
 }
+.hdx-v2-pagination-row {
+  display: flex;
+  justify-content: center;
+  margin-top: var(--hdx-space-8);
+  margin-bottom: var(--hdx-space-10);
+}
 .hdx-v2-search-filter-overlay {
   display: none;
   position: fixed;
