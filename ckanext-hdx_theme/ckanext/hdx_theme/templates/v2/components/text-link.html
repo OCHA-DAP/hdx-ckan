@@ -17,7 +17,9 @@
   state         {string}  'enabled' | 'disabled'   default: 'enabled'
   target        {string}  Link target attr, e.g. '_blank'.  default: ''
   extra_classes {string}  default: ''
-  attrs         {dict}    Extra HTML attrs.  default: {}
+  attrs         {dict}    Extra HTML attrs on the <a>.  default: {}
+  inner_attrs   {dict}    When provided, wraps label text in a <span> with these
+                          attrs (e.g. {'property': 'name'} for RDFa).  default: {}
   ─────────────────────────────────────────────────
   Examples
 
@@ -37,6 +39,7 @@
 {% set target        = target        if target        is defined else '' %}
 {% set extra_classes = extra_classes if extra_classes is defined else '' %}
 {% set attrs         = attrs         if attrs         is defined else {} %}
+{% set inner_attrs   = inner_attrs   if inner_attrs   is defined else {} %}
 
 {% set is_disabled = (state == 'disabled') %}
 
@@ -55,5 +58,6 @@
    {% if target == '_blank' %}rel="noopener noreferrer"{% endif %}
    {% if is_disabled %}aria-disabled="true" tabindex="-1"{% endif %}
    {% for key, val in attrs.items() %}{{ key }}="{{ val }}"{% endfor %}>
-  {{ label }}
+  {% if inner_attrs %}<span {% for key, val in inner_attrs.items() %}{{ key }}="{{ val }}"{% endfor %}>{{ label }}</span>
+  {% else %}{{ label }}{% endif %}
 </a>
