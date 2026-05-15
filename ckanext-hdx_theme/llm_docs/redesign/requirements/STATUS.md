@@ -35,3 +35,5 @@
 | 029 | [implement-dataset-card-component](029-implement-dataset-card-component.md)                                     | implemented | |
 | 030 | [dataset-list-v2-migration](030-dataset-list-v2-migration.md)                                                   | implemented | |
 | 031 | [basic-filtering](031-basic-filtering.md)                                                                       | implemented | |
+| 032 | [breadcrumb-v2-search-page](032-breadcrumb-v2-search-page.md)                                                   | implemented | |
+| 033 | [pagination-v2-search](033-pagination-v2-search.md)                                                             | implemented | |

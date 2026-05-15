@@ -31,7 +31,18 @@ Example:
     </div>
 
     {% block page_pagination %}
+      {% if v2 %}
+        {% set base_url = my_c.page._url_generator(page='') %}
+        <div class="hdx-v2-pagination-row">
+          {% snippet 'v2/components/pagination.html',
+              size='md',
+              current_page=my_c.page.page,
+              total_pages=my_c.page.page_count,
+              base_url=base_url %}
+        </div>
+      {% else %}
         {{ my_c.page.pager(q=my_c.q) }}
+      {% endif %}
     {% endblock %}
 
 </section>

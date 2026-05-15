@@ -151,7 +151,7 @@
         font-family:      var(--hdx-font-body);
         font-weight:      var(--hdx-fw-regular);
         line-height:      130%;
-        color:            var(--hdx-neutral-8);
+        color:            var(--hdx-neutral-5);
         text-decoration:  none;
         transition:       background-color 0.15s ease, color 0.15s ease;
         // Collapse borders
@@ -176,13 +176,17 @@
         &--prev,
         &--next {
             line-height: 0;
-            color:     var(--hdx-neutral-95);
+            color:     var(--hdx-neutral-5);
             //font-size: var(--hdx-fs-m);   // 16 px — Switzer-like arrow glyphs
         }
 
         &--ellipsis {
             cursor: default;
             &:hover { background-color: var(--hdx-neutral-0); }
+        }
+
+        &:hover {
+          color: var(--hdx-primary-5); // overwrites Bootstrap style
         }
     }
 
