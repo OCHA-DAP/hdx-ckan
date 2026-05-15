@@ -1,8 +1,14 @@
 {% extends "v2/page.html" %}
 
+{% block styles %}
+  {{ super() }}
+  {% asset 'hdx_theme/v2-search-styles' %}
+{% endblock %}
+
 {% block scripts %}
   {{ super() }}
   {% asset 'hdx_theme/search-scripts' %}
+  {% asset 'hdx_theme/v2-search-scripts' %}
 {% endblock %}
 
 {% set canonical_params = h.filter_search_seo_category_keys(data.full_facet_info.get('selected_categ_keys')) %}

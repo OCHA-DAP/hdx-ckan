@@ -34,3 +34,4 @@
 | 028 | [standardize-hover-interaction-states](028-standardize-hover-interaction-states.md)                             | implemented | |
 | 029 | [implement-dataset-card-component](029-implement-dataset-card-component.md)                                     | implemented | |
 | 030 | [dataset-list-v2-migration](030-dataset-list-v2-migration.md)                                                   | implemented | |
+| 031 | [basic-filtering](031-basic-filtering.md)                                                                       | implemented | |

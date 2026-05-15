@@ -558,31 +558,24 @@
   ══════════════════════════════════════════════════════ #}
   <section class="demo-section">
     <h1 class="demo-section__title">Dropdown</h1>
-    <p class="demo-section__subtitle">size × state — trigger only (panel positioned by JS)</p>
+    <p class="demo-section__subtitle">size × state</p>
 
     <h2 class="demo-subsection__heading">Size M — all states</h2>
     <div class="demo-row demo-row--flex-start">
-      {% snippet 'v2/components/dropdown.html',
-          size='m', label='Label', placeholder='Dropdown', state='enabled' %}
-      {% snippet 'v2/components/dropdown.html',
-          size='m', label='Label', placeholder='Dropdown', state='active' %}
-      {% snippet 'v2/components/dropdown.html',
-          size='m', label='Label', placeholder='Dropdown', state='disabled' %}
-      {% snippet 'v2/components/dropdown.html',
-          size='m', label='Label', selected='Afghanistan', count='(3)', state='filter' %}
+      {% snippet 'v2/components/dropdown.html', size='m', label='Label', placeholder='Dropdown' %}
+      {% snippet 'v2/components/dropdown.html', size='m', label='Label', placeholder='Dropdown', state='active' %}
+      {% snippet 'v2/components/dropdown.html', size='m', label='Label', placeholder='Dropdown', state='disabled' %}
+      {% snippet 'v2/components/dropdown.html', size='m', label='Label', selected='Afghanistan', count='(3)', state='filter' %}
     </div>
 
     <h2 class="demo-subsection__heading">Size S</h2>
     <div class="demo-row demo-row--flex-start">
-      {% snippet 'v2/components/dropdown.html',
-          size='s', label='Label', placeholder='Dropdown', state='enabled' %}
-      {% snippet 'v2/components/dropdown.html',
-          size='s', label='Label', placeholder='Dropdown', state='active' %}
-      {% snippet 'v2/components/dropdown.html',
-          size='s', label='Label', placeholder='Dropdown', state='disabled' %}
+      {% snippet 'v2/components/dropdown.html', size='s', label='Label', placeholder='Dropdown' %}
+      {% snippet 'v2/components/dropdown.html', size='s', label='Label', placeholder='Dropdown', state='active' %}
+      {% snippet 'v2/components/dropdown.html', size='s', label='Label', placeholder='Dropdown', state='disabled' %}
     </div>
 
-    <h2 class="demo-subsection__heading">Panel overlay (static preview)</h2>
+    <h2 class="demo-subsection__heading">Dropdown panel (static preview)</h2>
     <div class="demo-row demo-row--flex-start demo-row--relative">
       <div class="demo-dropdown-panel">
         {% snippet 'v2/components/dropdown-panel.html',

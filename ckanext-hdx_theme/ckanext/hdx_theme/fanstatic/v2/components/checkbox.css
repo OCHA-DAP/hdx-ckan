@@ -33,7 +33,7 @@
   pointer-events: none;
 }
 .c-checkbox__icon {
-  width: 0.5rem;
+  width: 0.55rem;
   display: flex;
   opacity: 0;
   transition: opacity 0.15s ease;

@@ -55,7 +55,8 @@
           {% snippet 'v2/components/list-item.html',
               type='checklist', size='m',
               state='active' if item.checked else 'default',
-              label=item.label, count=item.count, checked=item.checked %}
+              label=item.label, count=item.get('count', '(0)'),
+              checked=item.checked, value=item.get('value', '') %}
         {% endfor %}
       </ul>
 
@@ -69,7 +70,7 @@
           style='secondary', type='text', size='m', state='enabled', label=confirm_label %}
 
       {% snippet 'v2/components/text-link.html',
-          style='tertiary', size='s', state='enabled', label=clear_label %}
+          style='tertiary', size='m', state='enabled', label=clear_label %}
     </div>
 
   {% endif %}

@@ -1,0 +1,157 @@
+// ============================================================
+// search-filters — filter sidebar, overlay, and filter button
+// for the v2 search/dataset-list page
+// ============================================================
+
+@import "breakpoints.less";
+
+// ── Local tokens ────────────────────────────────────────────
+@hdx-v2-sf-sidebar-width: 15rem;        // 240px sidebar fixed width
+
+
+// ────────────────────────────────────────────────────────────
+// hdx-v2-search-layout — LG two-column content wrapper
+// ────────────────────────────────────────────────────────────
+
+.hdx-v2-search-layout {
+    display:     flex;
+    gap:         var(--hdx-space-6);   // 24 px column gap
+    align-items: flex-start;
+
+    // dataset-list fills remaining width at LG
+    .hdx-v2-dataset-list {
+        flex:      1;
+        min-width: 0;  // prevent flex blowout
+    }
+
+    // Sidebar: hide at MD/SM only when it is a direct child of the layout
+    // (inside the overlay it is always visible)
+    .hdx-v2-search-filters {
+        @media (max-width: @hdx-bp-xl) {
+            display: none;
+        }
+
+        @media (min-width: @hdx-bp-xl) {
+            flex-shrink: 0;
+            width:       @hdx-v2-sf-sidebar-width;
+        }
+    }
+
+    @media (max-width: @hdx-bp-xl) {
+        // MD/SM: single column, sidebar hidden via child rule
+        flex-direction: column;
+    }
+}
+
+
+// ────────────────────────────────────────────────────────────
+// hdx-v2-search-filters — filter panel content
+// Used in both sidebar (LG) and overlay body (MD/SM)
+// ────────────────────────────────────────────────────────────
+
+.hdx-v2-search-filters {
+    display:        flex;
+    flex-direction: column;
+    gap:            var(--hdx-space-6);  // 24 px between filter items
+
+    &__heading {
+        font-family: var(--hdx-font-body);
+        font-size:   var(--hdx-fs-m);
+        font-weight: var(--hdx-fw-semibold);
+        color:       var(--hdx-neutral-95);
+        line-height: 130%;
+
+        @media (max-width: @hdx-bp-xl) {
+          display: none;
+        }
+    }
+
+    &__item {
+        // wrapper for each c-dropdown--checklist filter
+    }
+
+}
+
+
+// ────────────────────────────────────────────────────────────
+// hdx-v2-search-filter-btn-row — wrapper for the MD/SM filter button
+// ────────────────────────────────────────────────────────────
+
+.hdx-v2-search-filter-btn-row {
+    display:         flex;
+    justify-content: flex-end;
+    margin-bottom:   var(--hdx-space-4);  // 16 px above results
+
+    // LG: hidden — inline sidebar used instead
+    @media (min-width: @hdx-bp-xl) {
+        display: none;
+    }
+}
+
+
+// ────────────────────────────────────────────────────────────
+// hdx-v2-search-filter-overlay — full-screen overlay (MD/SM)
+// ────────────────────────────────────────────────────────────
+
+.hdx-v2-search-filter-overlay {
+    display:          none;
+    position:         fixed;
+    inset:            0;
+    z-index:          500;
+    background-color: var(--hdx-neutral-0);
+    flex-direction:   column;
+
+    &--open {
+        display: flex;
+    }
+
+    &__header {
+        display:         flex;
+        align-items:     center;
+        justify-content: space-between;
+        padding:         var(--hdx-space-6) var(--hdx-space-6) var(--hdx-space-3);  // 24
+        flex-shrink:     0;
+    }
+
+    &__title {
+        font-family: var(--hdx-font-body);
+        font-size:   var(--hdx-fs-l);
+        font-weight: var(--hdx-fw-semibold);
+        color:       var(--hdx-neutral-95);
+        line-height: 130%;
+    }
+
+    &__close {
+        display:         flex;
+        align-items:     center;
+        justify-content: center;
+        background:      none;
+        border:          none;
+        cursor:          pointer;
+        color:           var(--hdx-neutral-8);
+        flex-shrink:     0;
+
+        svg { width: 1.5rem; height: 1.5rem; }
+    }
+
+    &__body {
+        flex:       1;
+        overflow-y: auto;
+        padding:    var(--hdx-space-6);  // 24
+
+        // Overlay inner wrapper: stretch to full overlay body width
+        .hdx-v2-search-filters {
+            width: 100%;
+        }
+    }
+
+    &__footer {
+        display:         flex;
+        align-items:     center;
+        justify-content: space-between;
+        padding:         var(--hdx-space-4);  // 16
+        border-top:      1px solid var(--hdx-neutral-1);
+        flex-shrink:     0;
+
+    }
+}
