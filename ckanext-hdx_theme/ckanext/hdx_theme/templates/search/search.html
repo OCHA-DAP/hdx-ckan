@@ -47,8 +47,11 @@
     {% endif %}
 {% endblock %}
 
-{% block breadcrumb_content %}
-  {% snippet "snippets/active_breadcrumb_item.html", title=_('Datasets'), position=2 %}
+{% block toolbar %}
+  <div class="hdx-v2-breadcrumb-row">
+    {% snippet 'v2/components/breadcrumb.html',
+        items=[{'label': _('Datasets'), 'href': ''}] %}
+  </div>
 {% endblock %}
 
 {% block primary_content %}
