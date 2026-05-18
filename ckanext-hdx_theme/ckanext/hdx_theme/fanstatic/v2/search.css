@@ -47,6 +47,13 @@
 .hdx-v2-list-header__filter-btn .c-dropdown {
   width: auto;
 }
+.hdx-v2-search-bar-row {
+  width: 100%;
+  margin-bottom: var(--hdx-space-4);
+}
+.hdx-v2-search-bar-row .c-search-input {
+  width: 100%;
+}
 .hdx-v2-nav-controls {
   display: flex;
   align-items: center;
