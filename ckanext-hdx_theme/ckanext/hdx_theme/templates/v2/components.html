@@ -581,12 +581,13 @@
         {% snippet 'v2/components/dropdown-panel.html',
             panel_id='demo-panel',
             items=[
-              {'value': 'af', 'label': 'Afghanistan', 'count': '(309)', 'checked': True},
-              {'value': 'al', 'label': 'Albania',     'count': '(97)',  'checked': False},
-              {'value': 'dz', 'label': 'Algeria',     'count': '(21)',  'checked': False},
-              {'value': 'ao', 'label': 'Angola',      'count': '(57)',  'checked': True},
+              {'value': 'af', 'label': 'Afghanistan', 'count': '(309)', 'checked': True,  'active': True,  'attrs': {}},
+              {'value': 'al', 'label': 'Albania',     'count': '(97)',  'checked': False, 'active': False, 'attrs': {}},
+              {'value': 'dz', 'label': 'Algeria',     'count': '(21)',  'checked': False, 'active': False, 'attrs': {}},
+              {'value': 'ao', 'label': 'Angola',      'count': '(57)',  'checked': True,  'active': True,  'attrs': {}},
             ],
-            confirm_label='Confirm (2)', clear_label='Clear selection' %}
+            has_clear=True,
+            clear_facet='groups' %}
       </div>
     </div>
   </section>

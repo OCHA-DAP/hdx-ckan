@@ -37,3 +37,4 @@
 | 031 | [basic-filtering](031-basic-filtering.md)                                                                       | implemented | |
 | 032 | [breadcrumb-v2-search-page](032-breadcrumb-v2-search-page.md)                                                   | implemented | |
 | 033 | [pagination-v2-search](033-pagination-v2-search.md)                                                             | implemented | |
+| 034 | [dataset-header-v2](034-dataset-header-v2.md)                                                                   | implemented | |

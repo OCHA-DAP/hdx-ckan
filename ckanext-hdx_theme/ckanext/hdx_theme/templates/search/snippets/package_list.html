@@ -100,6 +100,34 @@ Example:
   {% endfor %}
   {% set total_selected = _ns.total %}
 
+  {# ── v2 dataset list header (title + count + sort/limit at XL) ───────── #}
+
+  <div class="hdx-v2-list-header">
+    <div class="hdx-v2-list-header__left">
+      <strong class="hdx-v2-list-header__title">{{ _('Datasets') }}</strong>
+      <span class="hdx-v2-list-header__count">{{ h.localised_number(packages_count) }}</span>
+    </div>
+    <div class="hdx-v2-list-header__controls">
+      {% snippet 'v2/search-nav-controls.html',
+          sorting_selected=sorting_selected,
+          ext_page_size=ext_page_size,
+          admin_view=admin_view,
+          panel_suffix='hdr' %}
+    </div>
+    <div class="hdx-v2-list-header__filter-btn">
+      {% snippet 'v2/components/dropdown.html',
+          size='m',
+          placeholder='Filter',
+          count='(' ~ total_selected ~ ')' if total_selected > 0 else '',
+          state='filter' if total_selected > 0 else 'enabled',
+          icon=True,
+          icon_src='v2/icons/filter.svg',
+          chevron_src='',
+          panel_id='hdx-filter-overlay',
+          button_attrs={'data-module': 'filter-btn'} %}
+    </div>
+  </div>
+
   {# ── MD/SM full-screen filter overlay ────────────────────────────────── #}
   <div class="hdx-v2-search-filter-overlay" id="hdx-filter-overlay">
     <div class="hdx-v2-search-filter-overlay__header">
@@ -112,6 +140,13 @@ Example:
       </button>
     </div>
     <div class="hdx-v2-search-filter-overlay__body">
+      <div class="hdx-v2-overlay-nav-controls">
+        {% snippet 'v2/search-nav-controls.html',
+            sorting_selected=sorting_selected,
+            ext_page_size=ext_page_size,
+            admin_view=admin_view,
+            panel_suffix='ovl' %}
+      </div>
       <div class="hdx-v2-search-filters">
         {% snippet 'v2/search-filters.html', facet_list=facet_list %}
       </div>
@@ -125,20 +160,6 @@ Example:
           style='primary', size='l', label='Show results',
           attrs={'data-action': 'show-results'} %}
     </div>
-  </div>
-
-  {# ── MD/SM filter button — hidden at LG via CSS ──────────────────────── #}
-  <div class="hdx-v2-search-filter-btn-row">
-    {% snippet 'v2/components/dropdown.html',
-        size='m',
-        placeholder='Filter',
-        count='(' ~ total_selected ~ ')' if total_selected > 0 else '',
-        state='filter' if total_selected > 0 else 'enabled',
-        icon=True,
-        icon_src='v2/icons/filter.svg',
-        chevron_src='',
-        panel_id='hdx-filter-overlay',
-        button_attrs={'data-module': 'filter-btn'} %}
   </div>
 
   {# ── LG two-column layout: sidebar + dataset list ────────────────────── #}

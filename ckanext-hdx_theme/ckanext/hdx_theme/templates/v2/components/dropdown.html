@@ -2,7 +2,8 @@
   Snippet: dropdown.html
   Path:    templates/v2/components/dropdown.html
 
-  Renders a complete c-dropdown — wrapper div + optional label + trigger button.
+  Renders a complete c-dropdown — wrapper div + optional label + trigger button
+  + optional panel (navigate-on-select or checklist).
 
   Parameters
   ─────────────────────────────────────────────────
@@ -19,6 +20,17 @@
   attrs         {dict}    Extra HTML attrs on the wrapper div.  default: {}
   panel_id      {string}  id of the panel element (for aria-controls on trigger).  default: ''
   button_attrs  {dict}    Extra HTML attrs on the <button>.  default: {}
+  items         {list}    Panel items. Navigate format: {value, label, active, tooltip?}.
+                          Checklist format: {value, label, count, checked, active,
+                          attrs, extra_classes, children?}.
+                          When non-empty a c-dropdown__panel is rendered.  default: []
+  navigate      {bool}    True → navigate-on-select panel.
+                          False → multi-select checklist panel.  default: False
+  has_search    {bool}    Show search input inside checklist panel.  default: False
+  filter_search_key {string} Value for data-filter-search attribute.  default: ''
+  has_clear     {bool}    Show clear-selection footer in checklist panel.  default: False
+  clear_facet   {string}  Facet key for the clear button (data-facet attr).
+                          Pass 'advanced' to clear all advanced filters.  default: ''
   ─────────────────────────────────────────────────
   State → wrapper class mapping:
     'enabled'  → (no extra class)
@@ -36,19 +48,25 @@
       selected='Afghanistan', count='(3)' %}
 #}
 
-{% set size          = size          if size          is defined else 'm' %}
-{% set label         = label         if label         is defined else '' %}
-{% set placeholder   = placeholder   if placeholder   is defined else 'Dropdown' %}
-{% set selected      = selected      if selected      is defined else '' %}
-{% set count         = count         if count         is defined else '' %}
-{% set state         = state         if state         is defined else 'enabled' %}
-{% set icon          = icon          if icon          is defined else False %}
-{% set icon_src      = icon_src      if icon_src      is defined else 'v2/icons/placeholder.svg' %}
-{% set chevron_src   = chevron_src   if chevron_src   is defined else 'v2/icons/chevron-down.svg' %}
-{% set panel_id      = panel_id      if panel_id      is defined else '' %}
-{% set extra_classes = extra_classes if extra_classes is defined else '' %}
-{% set attrs         = attrs         if attrs         is defined else {} %}
-{% set button_attrs  = button_attrs  if button_attrs  is defined else {} %}
+{% set size             = size             if size             is defined else 'm' %}
+{% set label            = label            if label            is defined else '' %}
+{% set placeholder      = placeholder      if placeholder      is defined else 'Dropdown' %}
+{% set selected         = selected         if selected         is defined else '' %}
+{% set count            = count            if count            is defined else '' %}
+{% set state            = state            if state            is defined else 'enabled' %}
+{% set icon             = icon             if icon             is defined else False %}
+{% set icon_src         = icon_src         if icon_src         is defined else 'v2/icons/placeholder.svg' %}
+{% set chevron_src      = chevron_src      if chevron_src      is defined else 'v2/icons/chevron-down.svg' %}
+{% set panel_id         = panel_id         if panel_id         is defined else '' %}
+{% set extra_classes    = extra_classes    if extra_classes    is defined else '' %}
+{% set attrs            = attrs            if attrs            is defined else {} %}
+{% set button_attrs     = button_attrs     if button_attrs     is defined else {} %}
+{% set items            = items            if items            is defined else [] %}
+{% set navigate         = navigate         if navigate         is defined else False %}
+{% set has_search       = has_search       if has_search       is defined else False %}
+{% set filter_search_key = filter_search_key if filter_search_key is defined else '' %}
+{% set has_clear        = has_clear        if has_clear        is defined else False %}
+{% set clear_facet      = clear_facet      if clear_facet      is defined else '' %}
 
 {% set is_disabled = (state == 'disabled') %}
 {% set is_open     = (state == 'active') %}
@@ -87,5 +105,16 @@
       <span class="c-dropdown__chevron">{% include h.url_for_static(chevron_src) %}</span>
     {% endif %}
   </button>
+
+  {% if items %}
+    {% snippet 'v2/components/dropdown-panel.html',
+        panel_id=panel_id,
+        items=items,
+        navigate=navigate,
+        has_search=has_search,
+        filter_search_key=filter_search_key,
+        has_clear=has_clear,
+        clear_facet=clear_facet %}
+  {% endif %}
 
 </div>

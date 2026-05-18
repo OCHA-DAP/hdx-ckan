@@ -45,6 +45,15 @@
         &:hover {
             color: @c-list-item-text-hover;
         }
+
+        &.is-active {
+            font-weight: var(--hdx-fw-medium);
+
+            &:hover {
+              color: @c-list-item-text-hover;
+              font-weight: var(--hdx-fw-medium);
+            }
+        }
     }
 
     // Checklist item (with checkbox)
@@ -63,14 +72,15 @@
             .c-list-item__label {
                 font-weight: var(--hdx-fw-medium);
             }
-        }
 
-        &.is-active:hover {
-            .c-list-item__label {
-                color: @c-list-item-text-hover;
-                font-weight: var(--hdx-fw-medium);
+            &:hover {
+              .c-list-item__label {
+                  color: @c-list-item-text-hover;
+                  font-weight: var(--hdx-fw-medium);
+              }
             }
         }
+
     }
 
     // ── Content wrapper (for checklist) ─────────────────────

@@ -25,7 +25,7 @@
 
 <span class="hdx-v2-search-filters__heading">Filter by</span>
 
-{# ── Basic filters (flat items) ─────────────────────────────────── #}
+{# ── Basic filters (flat checklist items) ───────────────────────── #}
 {% for filter in filter_defs %}
   {% set items = facet_list.get(filter.key, {}).get('items', []) %}
   {% set selected_count = items | selectattr('selected') | list | length %}
@@ -33,58 +33,30 @@
   {% set trigger_text = selected_names | join(', ') if selected_names else filter.placeholder %}
   {% set panel_id = 'hdx-filter-panel-' ~ filter.key %}
 
+  {# Build items list for this filter #}
+  {% set _ci = namespace(items=[]) %}
+  {% for item in items %}
+    {% set _attrs = {'data-filter-checkbox': '', 'data-facet': filter.key, 'name': filter.key} %}
+    {% set _ci.items = _ci.items + [{'value': item.name, 'label': item.display_name, 'count': '(' ~ item.count ~ ')' if item.count else '(0)', 'checked': item.selected, 'active': item.selected, 'attrs': _attrs}] %}
+  {% endfor %}
+
   <div class="hdx-v2-search-filters__item">
-    <div class="c-dropdown c-dropdown--size-m{% if selected_count > 0 %} c-dropdown--filter{% endif %}"
-         data-filter-key="{{ filter.key }}">
-
-      <span class="c-dropdown__label">{{ filter.label }}</span>
-
-      <button type="button" class="c-dropdown__trigger"
-              aria-controls="{{ panel_id }}" aria-expanded="false">
-        <span class="c-dropdown__trigger-value">{{ trigger_text }}</span>
-        <span class="c-dropdown__chevron">{% include h.url_for_static('v2/icons/chevron-down.svg') %}</span>
-      </button>
-
-      <div class="c-dropdown__panel" id="{{ panel_id }}"
-           role="listbox" aria-multiselectable="true" hidden>
-        {% if items | length > 8 %}
-          {% snippet 'v2/components/search-input.html',
-              size='m', placeholder='Search...', name='',
-              attrs={'data-filter-search': filter.key} %}
-        {% endif %}
-        <div class="c-dropdown__list-wrap">
-          <div class="c-dropdown__list" role="group">
-            {% if items %}
-              {% for item in items %}
-                {% snippet 'v2/components/list-item.html',
-                    type='checklist',
-                    checked=item.selected,
-                    value=item.name,
-                    label=item.display_name,
-                    count='(' ~ item.count ~ ')' if item.count else '(0)',
-                    state='active' if item.selected else 'default',
-                    attrs={'data-filter-checkbox': '', 'data-facet': filter.key, 'name': filter.key} %}
-              {% endfor %}
-            {% else %}
-              <span class="c-dropdown__list--empty">No options available</span>
-            {% endif %}
-          </div>
-        </div>
-        {% if selected_count > 0 %}
-          <div class="c-dropdown__footer">
-            {% snippet 'v2/components/text-button.html',
-                style='tertiary', size='m', tag='button',
-                label='Clear selection',
-                attrs={'data-action': 'clear-filter', 'data-facet': filter.key} %}
-          </div>
-        {% endif %}
-      </div>
-
-    </div>
+    {% snippet 'v2/components/dropdown.html',
+        size='m',
+        label=filter.label,
+        selected=trigger_text,
+        state='filter' if selected_count > 0 else 'enabled',
+        panel_id=panel_id,
+        attrs={'data-filter-key': filter.key},
+        items=_ci.items,
+        has_search=items | length > 8,
+        filter_search_key=filter.key,
+        has_clear=selected_count > 0,
+        clear_facet=filter.key %}
   </div>
 {% endfor %}
 
-{# ── Advanced filters (nested items: COD + flat ext_* flags) ────── #}
+{# ── Advanced filters (nested COD groups + flat ext_* flags) ────── #}
 {% set adv_items = facet_list.get('featured', {}).get('items', []) %}
 {% set _adv_ns = namespace(sel=0, names=[]) %}
 {% for ai in adv_items %}
@@ -102,83 +74,43 @@
 {% set adv_selected = _adv_ns.sel %}
 {% set adv_trigger_text = _adv_ns.names | join(', ') if _adv_ns.names else 'All advanced filters' %}
 
+{# Build items list for the advanced filter panel #}
+{% set _adv_ci = namespace(items=[]) %}
+{% for ai in adv_items %}
+  {% if ai.get('items') %}
+    {# Nested group (e.g. COD levels) — parent toggle + indented children #}
+    {% set _cns = namespace(sel=0, total=0, count=0, children=[]) %}
+    {% for si in ai['items'] %}
+      {% set _cns.total = _cns.total + 1 %}
+      {% set _cns.count = _cns.count + (si.count | default(0) | int) %}
+      {% if si.selected %}{% set _cns.sel = _cns.sel + 1 %}{% endif %}
+      {% set _cattrs = {'data-filter-checkbox': '', 'data-facet': si.category_key, 'name': si.category_key} %}
+      {% set _cns.children = _cns.children + [{'value': si.name, 'label': si.display_name, 'count': '(' ~ si.count ~ ')' if si.count else '(0)', 'checked': si.selected, 'active': si.selected, 'extra_classes': 'c-list-item--child', 'attrs': _cattrs}] %}
+    {% endfor %}
+    {% set _parent_all  = _cns.sel == _cns.total and _cns.total > 0 %}
+    {% set _parent_some = _cns.sel > 0 and _cns.sel < _cns.total %}
+    {% if _parent_some %}
+      {% set _pattrs = {'data-group-toggle': '', 'data-group': ai.category_key, 'data-indeterminate': ''} %}
+    {% else %}
+      {% set _pattrs = {'data-group-toggle': '', 'data-group': ai.category_key} %}
+    {% endif %}
+    {% set _adv_ci.items = _adv_ci.items + [{'label': ai.display_name, 'count': '(' ~ _cns.count ~ ')' if _cns.count > 0 else '(0)', 'checked': _parent_all, 'active': _parent_all, 'extra_classes': 'c-list-item--parent', 'attrs': _pattrs, 'children': _cns.children}] %}
+  {% else %}
+    {# Flat ext_* flag #}
+    {% set _fattrs = {'data-filter-checkbox': '', 'data-facet': ai.get('category_key', 'featured'), 'name': ai.get('category_key', 'featured')} %}
+    {% set _adv_ci.items = _adv_ci.items + [{'value': ai.name, 'label': ai.display_name, 'count': '(' ~ ai.count ~ ')' if ai.count else '(0)', 'checked': ai.selected, 'active': ai.selected, 'attrs': _fattrs}] %}
+  {% endif %}
+{% endfor %}
+
 <div class="hdx-v2-search-filters__item">
-  <div class="c-dropdown c-dropdown--size-m{% if adv_selected > 0 %} c-dropdown--filter{% endif %}"
-       data-filter-key="advanced">
-
-    <span class="c-dropdown__label">Advanced filters</span>
-
-    <button type="button" class="c-dropdown__trigger"
-            aria-controls="hdx-filter-panel-advanced" aria-expanded="false">
-      <span class="c-dropdown__trigger-value">{{ adv_trigger_text }}</span>
-      <span class="c-dropdown__chevron">{% include h.url_for_static('v2/icons/chevron-down.svg') %}</span>
-    </button>
-
-    <div class="c-dropdown__panel" id="hdx-filter-panel-advanced"
-         role="listbox" aria-multiselectable="true" hidden>
-      <div class="c-dropdown__list-wrap">
-        <div class="c-dropdown__list" role="group">
-          {% if adv_items %}
-            {% for ai in adv_items %}
-              {% if ai.get('items') %}
-                {# Nested group (COD levels, HPC) — parent "select all" + indented children #}
-                {% set _child_ns = namespace(sel=0, total=0, count=0) %}
-                {% for si in ai['items'] %}
-                  {% set _child_ns.total = _child_ns.total + 1 %}
-                  {% set _child_ns.count = _child_ns.count + (si.count | default(0) | int) %}
-                  {% if si.selected %}{% set _child_ns.sel = _child_ns.sel + 1 %}{% endif %}
-                {% endfor %}
-                {% set _parent_all  = _child_ns.sel == _child_ns.total and _child_ns.total > 0 %}
-                {% set _parent_some = _child_ns.sel > 0 and _child_ns.sel < _child_ns.total %}
-                {% if _parent_some %}
-                  {% set _pattrs = {'data-group-toggle': '', 'data-group': ai.category_key, 'data-indeterminate': ''} %}
-                {% else %}
-                  {% set _pattrs = {'data-group-toggle': '', 'data-group': ai.category_key} %}
-                {% endif %}
-                {% snippet 'v2/components/list-item.html',
-                    type='checklist',
-                    checked=_parent_all,
-                    label=ai.display_name,
-                    count='(' ~ _child_ns.count ~ ')' if _child_ns.count > 0 else '(0)',
-                    extra_classes='c-list-item--parent',
-                    attrs=_pattrs %}
-                {% for si in ai['items'] %}
-                  {% snippet 'v2/components/list-item.html',
-                      type='checklist',
-                      checked=si.selected,
-                      value=si.name,
-                      label=si.display_name,
-                      count='(' ~ si.count ~ ')' if si.count else '(0)',
-                      state='active' if si.selected else 'default',
-                      extra_classes='c-list-item--child',
-                      attrs={'data-filter-checkbox': '', 'data-facet': si.category_key, 'name': si.category_key} %}
-                {% endfor %}
-              {% else %}
-                {# Flat item — ext_* flag #}
-                {% snippet 'v2/components/list-item.html',
-                    type='checklist',
-                    checked=ai.selected,
-                    value=ai.name,
-                    label=ai.display_name,
-                    count='(' ~ ai.count ~ ')' if ai.count else '(0)',
-                    state='active' if ai.selected else 'default',
-                    attrs={'data-filter-checkbox': '', 'data-facet': ai.get('category_key', 'featured'), 'name': ai.get('category_key', 'featured')} %}
-              {% endif %}
-            {% endfor %}
-          {% else %}
-            <span class="c-dropdown__list--empty">No options available</span>
-          {% endif %}
-        </div>
-      </div>
-      {% if adv_selected > 0 %}
-        <div class="c-dropdown__footer">
-          {% snippet 'v2/components/text-button.html',
-              style='tertiary', size='m', tag='button',
-              label='Clear selection',
-              attrs={'data-action': 'clear-advanced'} %}
-        </div>
-      {% endif %}
-    </div>
-
-  </div>
+  {% snippet 'v2/components/dropdown.html',
+      size='m',
+      label='Advanced filters',
+      selected=adv_trigger_text,
+      state='filter' if adv_selected > 0 else 'enabled',
+      panel_id='hdx-filter-panel-advanced',
+      attrs={'data-filter-key': 'advanced'},
+      items=_adv_ci.items,
+      has_clear=adv_selected > 0,
+      clear_facet='advanced' %}
 </div>

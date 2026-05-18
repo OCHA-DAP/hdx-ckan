@@ -1,0 +1,86 @@
+{#
+  Snippet: search-nav-controls.html
+  Path:    templates/v2/search-nav-controls.html
+
+  Sort + results-per-page navigation dropdowns (size S, click-to-navigate).
+  Shared between the XL inline header and the MD/SM filter overlay.
+
+  Parameters
+  ──────────────────────────────────────────────────────────────────
+  sorting_selected  {string}  Current sort value.  default: DEFAULT_SORTING
+  ext_page_size     {int}     Current page size (10/25/50/100).  default: 10
+  admin_view        {bool}    Show admin-only "Due for Update" option.  default: False
+  panel_suffix      {string}  Unique suffix for panel IDs ('hdr'|'ovl').  default: 'hdr'
+  ──────────────────────────────────────────────────────────────────
+#}
+{% set sorting_selected = sorting_selected if sorting_selected is defined else h.HDX_CONST('DEFAULT_SORTING') %}
+{% set ext_page_size    = ext_page_size    if ext_page_size    is defined else 10 %}
+{% set admin_view       = admin_view       if admin_view       is defined else False %}
+{% set panel_suffix     = panel_suffix     if panel_suffix     is defined else 'hdr' %}
+
+{% set limits = [10, 25, 50, 100] %}
+{% set limit_selected = ext_page_size|int if ext_page_size else 10 %}
+
+{% set sorting = [
+  (_('Last Modified'),   h.HDX_CONST('DEFAULT_SORTING'),                   _('Last Modified')),
+  (_('Last Added'),      'metadata_created desc',                           _('Last Added')),
+  (_('Relevance'),       'score desc, ' ~ h.HDX_CONST('DEFAULT_SORTING'),  _('Relevance')),
+  (_('Name Ascending'),  'title_case_insensitive asc',                      _('Name Asc')),
+  (_('Name Descending'), 'title_case_insensitive desc',                     _('Name Desc')),
+  (_('Trending'),        'pageviews_last_14_days desc',                     _('Trending')),
+  (_('Most Downloads'),  'total_res_downloads desc',                        _('Most Downloads'))
+] %}
+{% if admin_view %}{% set nothing = sorting.insert(0, (_('Due for Update'), 'due_date asc', _('Due for Update'))) %}{% endif %}
+
+{# Resolve the current sort short label for the trigger display #}
+{% set _ns = namespace(sort_label=_('Last Modified')) %}
+{% for label, value, short_label in sorting %}
+  {% if sorting_selected == value %}{% set _ns.sort_label = short_label %}{% endif %}
+{% endfor %}
+
+{# Build results-per-page items list #}
+{% set _size_ns = namespace(items=[]) %}
+{% for v in limits %}
+  {% set _size_ns.items = _size_ns.items + [{'value': v|string, 'label': v|string, 'active': limit_selected == v}] %}
+{% endfor %}
+
+{# Build sort items list #}
+{% set _sort_ns = namespace(items=[]) %}
+{% for label, value, short_label in sorting %}
+  {% if label and value %}
+    {% set _tooltip = '' %}
+    {% if label == _('Trending') %}{% set _tooltip = _('Trending is determined by page views last 14 days') %}{% endif %}
+    {% if label == _('Due for Update') %}{% set _tooltip = _('Show datasets that need to be updated at the top of the list') %}{% endif %}
+    {% set _sort_ns.items = _sort_ns.items + [{'value': value, 'label': label, 'active': sorting_selected == value, 'tooltip': _tooltip}] %}
+  {% endif %}
+{% endfor %}
+
+<div class="hdx-v2-nav-controls">
+
+  {# ── Results per page ────────────────────────────────────── #}
+  <div class="hdx-v2-nav-ctrl-pair">
+    <span class="hdx-v2-nav-ctrl-label">{{ _('Results per page') }}</span>
+    {% snippet 'v2/components/dropdown.html',
+        size='s',
+        selected=limit_selected|string,
+        state='enabled',
+        panel_id='hdx-nav-panel-size-' ~ panel_suffix,
+        attrs={'data-nav-key': 'ext_page_size'},
+        navigate=True,
+        items=_size_ns.items %}
+  </div>
+
+  {# ── Sort by ─────────────────────────────────────────────── #}
+  <div class="hdx-v2-nav-ctrl-pair">
+    <span class="hdx-v2-nav-ctrl-label">{{ _('Sort by') }}</span>
+    {% snippet 'v2/components/dropdown.html',
+        size='s',
+        selected=_ns.sort_label,
+        state='enabled',
+        panel_id='hdx-nav-panel-sort-' ~ panel_suffix,
+        attrs={'data-nav-key': 'sort'},
+        navigate=True,
+        items=_sort_ns.items %}
+  </div>
+
+</div>

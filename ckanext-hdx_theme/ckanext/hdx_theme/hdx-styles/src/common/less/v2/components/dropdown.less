@@ -30,7 +30,7 @@
 
 // Size S
 @c-dropdown-s-fs:   var(--hdx-fs-xs);   // 12 px
-@c-dropdown-s-h:    1.5rem;             // 24 px — fixed height so border grows inward
+@c-dropdown-s-h:    1.75rem;
 @c-dropdown-s-pad:  var(--hdx-space-13) var(--hdx-space-2) var(--hdx-space-13) var(--hdx-space-14); // 6 8 6 10
 @c-dropdown-s-gap:  var(--hdx-space-1); //  4 px
 
@@ -115,6 +115,7 @@
         width:      1rem;
         flex-shrink: 0;
         transition: transform 0.2s ease;
+        line-height: 0;
 
         .c-dropdown--open & {
             transform: rotate(180deg);

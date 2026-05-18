@@ -83,8 +83,8 @@ SM behaves identically to MD.
 
 Defined in `breakpoints.less`:
 
-- **LG** ≥ `87.5rem` (1400px): inline sidebar (`@hdx-bp-xxl`)
-- **MD / SM** < `87.5rem`: button + overlay
+- **XL** ≥ `80rem` (1280px): inline sidebar (`@hdx-bp-xl`)
+- **MD / SM** < `80rem` (1280px): button + overlay
 
 ---
 
@@ -186,19 +186,24 @@ On button click → full-page overlay:
 
 - **`checkbox.html`**: params `id`, `checked`, `disabled`, `name`, `value`, `attrs`, `extra_classes`. No `wrapper_tag` — always renders `<span>`.
 - **`list-item.html`**: params `type`, `label`, `size`, `state`, `checked`, `value`, `count`, `href`, `attrs`, `extra_classes`. No `tag` — checklist always renders `<label>`.
-- **`dropdown.html`**: full-wrapper component. States: `'enabled'` | `'active'` (open) | `'disabled'` | `'filter'`. Params: `size`, `label`, `placeholder`, `selected`, `count`, `state`, `icon`, `icon_src`, `chevron_src`, `extra_classes`, `attrs`, `panel_id`, `button_attrs`. No panel or list rendering — trigger only.
+- **`dropdown.html`**: full-wrapper component. States: `'enabled'` | `'active'` (open) | `'disabled'` | `'filter'`. Trigger params: `size`, `label`, `placeholder`, `selected`, `count`, `state`, `icon`, `icon_src`, `chevron_src`, `extra_classes`, `attrs`, `panel_id`, `button_attrs`. Panel params: `items` (unified list), `navigate` (bool), `has_search`, `filter_search_key`, `has_clear`, `clear_facet`. Panel rendering is delegated to `dropdown-panel.html`.
+- **`list-item.html`**: `type='list'` supports `attrs` (rendered on outer `<div>`/`<a>`), `state='active'` (adds `is-active`), and `tooltip` (renders as `title` attribute). `type='checklist'` always renders `<label>`; `attrs` applied to inner `<input>`.
 
 ### Dropdown panel structure
 
-Panels are rendered inline in `search-filters.html` (not via a separate composite component):
+Panels are rendered via `dropdown.html` (which delegates to `dropdown-panel.html`). `search-filters.html` builds `items` lists and passes them to `dropdown.html` — no inline panel HTML in `search-filters.html`.
 
+`dropdown-panel.html` renders one of two modes:
+
+**`navigate=False`** (default — used for all filter dropdowns):
 ```
-c-dropdown__panel
-  ├─ c-search-input  (optional; only when filter has > 8 items;
+c-dropdown__panel  [role=listbox aria-multiselectable=true]
+  ├─ c-search-input  (optional; has_search=True when filter has > 8 items;
   │                   attrs: {data-filter-search: facet_key};
   │                   MiniSearch + toNormalForm for diacritic-insensitive filtering)
   └─ c-dropdown__list-wrap
-       └─ c-dropdown__list   (flex column, overflow-y:auto, max-height: 20rem — native scrollbar)
+       └─ c-dropdown__list  [role=group]
+            │   items + children are flattened into a single loop
             │
             ├─ [regular item]   — list-item.html (type='checklist')
             │      attrs: {data-filter-checkbox, data-facet}
@@ -210,9 +215,17 @@ c-dropdown__panel
             └─ [child item — advanced filters, indented]
                  extra_classes='c-list-item--child'
                    attrs: {data-filter-checkbox, data-facet}
-  └─ c-dropdown__footer
-       (border-top; visible when ≥ 1 item selected)
-       └─ text-button.html  (style='tertiary', size='m', tag='button', data-action attrs)
+  └─ c-dropdown__footer  (visible when has_clear=True)
+       └─ text-button.html  (style='tertiary', size='m', tag='button',
+                             data-action='clear-filter', data-facet=clear_facet)
+```
+
+**`navigate=True`** (used for sort/results-per-page; see task 034):
+```
+c-dropdown__panel
+  └─ c-dropdown__list-wrap
+       └─ c-dropdown__list
+            └─ list-item.html (type='list', attrs={data-nav-value}, state='active' when selected)
 ```
 
 No "Show more / Show less" — all values always visible.
@@ -243,8 +256,9 @@ Template renders hierarchy — parent "select all" row + indented children for c
 | `templates/v2/search-filters.html` | Shared filter panel — all 5 dropdowns inlined (no separate composite component) |
 | `templates/search/snippets/package_list.html` | Top-level v2/v1 layout branch: v2 block computes `total_selected` once, renders filter overlay + button, and wraps sidebar + dataset list; v1 uses `row`/`col-3` |
 | `templates/search/snippets/search_results_wrapper.html` | Thin wrapper — passes `full_facet_info` + `v2` flag into `package_list.html` via `h.snippet`; no filter logic |
-| `templates/v2/components/dropdown.html` | Full-wrapper trigger component; state `'active'` = open |
-| `templates/v2/components/list-item.html` | Checklist always `<label>`; no `tag` param |
+| `templates/v2/components/dropdown.html` | Full-wrapper component: trigger + panel delegation; single `items` list + `navigate` bool; delegates panel rendering to `dropdown-panel.html` |
+| `templates/v2/components/dropdown-panel.html` | Panel overlay; `navigate=False` for checklist filters, `navigate=True` for navigate-on-select (sort/limit); items + children flattened before render |
+| `templates/v2/components/list-item.html` | `type='list'`: `<div>`/`<a>` with `attrs`, `tooltip`, `is-active`; `type='checklist'`: always `<label>`; no `tag` param |
 | `templates/v2/components/checkbox.html` | Always `<span>` wrapper; no `wrapper_tag` param |
 | `less/v2/search.less` | Layout styles (search-layout, sidebar, overlay, filter-btn-row); overlay footer button overrides |
 | `less/v2/components/dropdown.less` | `c-dropdown` trigger + panel structural styles; `c-dropdown__list-item*` removed (use `c-list-item` from list-item.less) |
@@ -267,11 +281,15 @@ package_list.html  (top-level v2/v1 branch)
   v2:
     ① compute total_selected once (main filters + ext_* flat + cod_level children;
        HPC children excluded — already captured by vocab_Topics)
-    ② hdx-v2-search-filter-overlay#hdx-filter-overlay  (fixed, MD/SM; sibling of layout)
+    ② hdx-v2-list-header (title, count, nav-controls at XL, filter-btn at MD/SM)
+         ├── __left  (title + count)
+         ├── __controls  (sort + results-per-page; hidden at MD/SM)
+         └── __filter-btn  (filter button; hidden at XL)
+    ③ hdx-v2-search-filter-overlay#hdx-filter-overlay  (fixed, MD/SM; sibling of layout)
          ├── header (title + close btn)
-         ├── body > div.hdx-v2-search-filters > search-filters.html
+         ├── body > hdx-v2-overlay-nav-controls (sort + results-per-page)
+         │         > div.hdx-v2-search-filters > search-filters.html
          └── footer (Clear filters [tertiary/disabled-when-0] + Show results [primary])
-    ③ hdx-v2-search-filter-btn-row (MD/SM filter button, hidden at LG via CSS)
     ④ hdx-v2-search-layout (flex row)
          ├── form > aside.hdx-v2-search-filters  (LG sidebar)
          │     └── search-filters.html + hidden passthrough inputs
@@ -322,7 +340,7 @@ Dropdown JS identification: `[data-filter-key]` attribute (replaces former `c-dr
 
 ## Verification
 
-1. **LG filter sidebar visible**: at ≥ 1400px (`@hdx-bp-xl`), sidebar appears left of dataset cards
+1. **XL filter sidebar visible**: at ≥ 1280px (`@hdx-bp-xl`), sidebar appears left of dataset cards
 2. **LG dropdown open/close**: click trigger → panel opens with all checkboxes + counts; click outside → closes
 3. **LG real-time select**: check a location → URL gains `?groups=afghanistan`; page reloads; trigger shows `(1)`
 4. **LG clear selection**: "Clear selection" inside panel removes that facet's params from URL
