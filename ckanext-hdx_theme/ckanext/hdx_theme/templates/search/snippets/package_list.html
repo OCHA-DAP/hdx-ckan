@@ -128,6 +128,17 @@ Example:
     </div>
   </div>
 
+  {# ── v2 search bar row ───────────────────────────────────────────────── #}
+  <form class="hdx-v2-search-bar-row" id="dataset-filter-form">
+    {% snippet 'v2/components/search-input.html',
+        name='q',
+        id='headerSearch',
+        size='m',
+        placeholder=_('Search for datasets'),
+        value=searchValue,
+        autocomplete='off' %}
+  </form>
+
   {# ── MD/SM full-screen filter overlay ────────────────────────────────── #}
   <div class="hdx-v2-search-filter-overlay" id="hdx-filter-overlay">
     <div class="hdx-v2-search-filter-overlay__header">
