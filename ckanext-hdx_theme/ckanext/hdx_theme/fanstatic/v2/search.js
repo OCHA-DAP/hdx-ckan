@@ -12,6 +12,13 @@
 
   // ── URL helpers ─────────────────────────────────────────────────────────────
 
+  function setNavParam(key, value) {
+    var url = new URL(window.location.href);
+    url.searchParams.set(key, value);
+    url.searchParams.delete('page');
+    window.location.href = url.toString();
+  }
+
   function updateUrl(facet, value, checked) {
     var url    = new URL(window.location.href);
     var values = url.searchParams.getAll(facet);
@@ -26,21 +33,21 @@
         url.searchParams.append(facet, v);
       });
     }
-    url.searchParams.set('page', '1');
+    url.searchParams.delete('page');
     window.location.href = url.toString();
   }
 
   function clearFacet(facet) {
     var url = new URL(window.location.href);
     url.searchParams.delete(facet);
-    url.searchParams.set('page', '1');
+    url.searchParams.delete('page');
     window.location.href = url.toString();
   }
 
   function clearAdvancedFilters() {
     var url = new URL(window.location.href);
     ADVANCED_FILTER_PARAMS.forEach(function (param) { url.searchParams.delete(param); });
-    url.searchParams.set('page', '1');
+    url.searchParams.delete('page');
     window.location.href = url.toString();
   }
 
@@ -48,7 +55,7 @@
     var url = new URL(window.location.href);
     FILTER_PARAMS.forEach(function (param) { url.searchParams.delete(param); });
     ADVANCED_FILTER_PARAMS.forEach(function (param) { url.searchParams.delete(param); });
-    url.searchParams.set('page', '1');
+    url.searchParams.delete('page');
     window.location.href = url.toString();
   }
 
@@ -63,6 +70,17 @@
   }
 
   // ── Dropdown open/close ──────────────────────────────────────────────────────
+
+  function closeAllNavDropdowns(except) {
+    document.querySelectorAll('[data-nav-key].c-dropdown--open').forEach(function (dd) {
+      if (dd === except) return;
+      dd.classList.remove('c-dropdown--open');
+      var t = dd.querySelector('.c-dropdown__trigger');
+      var p = dd.querySelector('.c-dropdown__panel');
+      if (t) t.setAttribute('aria-expanded', 'false');
+      if (p) p.hidden = true;
+    });
+  }
 
   function closeAllDropdowns(except) {
     document.querySelectorAll('[data-filter-key].c-dropdown--open').forEach(function (dd) {
@@ -125,7 +143,7 @@
     // Delegated: click dispatcher
     document.addEventListener('click', function (e) {
 
-      // ── Dropdown trigger toggle ───────────────────────────────
+      // ── Filter dropdown trigger toggle ───────────────────────
       var trigger = e.target.closest && e.target.closest('[data-filter-key] .c-dropdown__trigger');
       if (trigger) {
         var dd     = trigger.closest('[data-filter-key]');
@@ -139,25 +157,51 @@
         return;
       }
 
-      // ── Outside click → close all ─────────────────────────────
+      // ── Nav dropdown trigger toggle (sort / results-per-page) ─
+      var navTrigger = e.target.closest && e.target.closest('[data-nav-key] .c-dropdown__trigger');
+      if (navTrigger) {
+        var dd     = navTrigger.closest('[data-nav-key]');
+        var isOpen = dd.classList.contains('c-dropdown--open');
+        closeAllNavDropdowns(dd);
+        dd.classList.toggle('c-dropdown--open', !isOpen);
+        navTrigger.setAttribute('aria-expanded', isOpen ? 'false' : 'true');
+        var panel = dd.querySelector('.c-dropdown__panel');
+        if (panel) panel.hidden = isOpen;
+        e.stopPropagation();
+        return;
+      }
+
+      // ── Nav item click → navigate immediately ─────────────────
+      var navItem = e.target.closest && e.target.closest('[data-nav-key] [data-nav-value]');
+      if (navItem) {
+        var dd    = navItem.closest('[data-nav-key]');
+        var key   = dd.getAttribute('data-nav-key');
+        var value = navItem.getAttribute('data-nav-value');
+        setNavParam(key, value);
+        return;
+      }
+
+      // ── Outside click → close all filter dropdowns ───────────
       if (!e.target.closest || !e.target.closest('[data-filter-key]')) {
         closeAllDropdowns(null);
       }
 
-      // ── Clear single facet ────────────────────────────────────
+      // ── Outside click → close all nav dropdowns ──────────────
+      if (!e.target.closest || !e.target.closest('[data-nav-key]')) {
+        closeAllNavDropdowns(null);
+      }
+
+      // ── Clear facet / advanced filters ───────────────────────
       var clearBtn = e.target.closest && e.target.closest('[data-action="clear-filter"]');
       if (clearBtn) {
         var facet = clearBtn.getAttribute('data-facet');
-        clearFacet(facet);
-        // track('filter_cleared', { scope: 'single', facet: facet });
-        return;
-      }
-
-      // ── Clear advanced filters (ext_* + cod_level) ────────────
-      var clearAdvBtn = e.target.closest && e.target.closest('[data-action="clear-advanced"]');
-      if (clearAdvBtn) {
-        clearAdvancedFilters();
-        // track('filter_cleared', { scope: 'advanced' });
+        if (facet === 'advanced') {
+          clearAdvancedFilters();
+          // track('filter_cleared', { scope: 'advanced' });
+        } else {
+          clearFacet(facet);
+          // track('filter_cleared', { scope: 'single', facet: facet });
+        }
         return;
       }
 

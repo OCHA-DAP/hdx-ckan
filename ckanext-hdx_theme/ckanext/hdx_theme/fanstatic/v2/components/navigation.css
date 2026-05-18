@@ -100,7 +100,7 @@
   font-family: var(--hdx-font-body);
   font-weight: var(--hdx-fw-regular);
   line-height: 130%;
-  color: var(--hdx-neutral-5);
+  color: var(--hdx-neutral-8);
   text-decoration: none;
   transition: background-color 0.15s ease, color 0.15s ease;
   margin-left: -1px;

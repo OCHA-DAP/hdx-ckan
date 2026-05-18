@@ -4,9 +4,105 @@
 // ============================================================
 
 @import "breakpoints.less";
+@import "typography.less";
 
 // ── Local tokens ────────────────────────────────────────────
 @hdx-v2-sf-sidebar-width: 15rem;        // 240px sidebar fixed width
+
+
+// ────────────────────────────────────────────────────────────
+// hdx-v2-list-header — dataset list header (title + controls)
+// ────────────────────────────────────────────────────────────
+
+.hdx-v2-list-header {
+    display:       flex;
+    align-items:   center;
+    width:         100%;
+    margin-bottom: var(--hdx-space-4);  // 16 px below header
+
+
+    &__left {
+        flex:        1;
+        display:     flex;
+        align-items: center;
+        gap:         var(--hdx-space-2);  // 8 px between title and count
+    }
+
+    &__title {
+        font-family: @hdx-font-display;
+        font-weight: @hdx-fw-bold;
+        line-height: 130%;
+        color:       var(--hdx-neutral-95);
+        font-size:   var(--hdx-fs-4xl);  // 2rem XL
+
+        @media (max-width: @hdx-bp-xl) {
+            font-size: var(--hdx-fs-3xl);  // 1.75rem MD
+        }
+
+        @media (max-width: @hdx-bp-md) {
+            font-size: var(--hdx-fs-2xl);  // 1.5rem SM
+        }
+    }
+
+    &__count {
+        font-family: var(--hdx-font-body);
+        font-size:   var(--hdx-fs-m);  // 1rem
+        font-weight: var(--hdx-fw-regular);
+        line-height: 130%;
+        color:       var(--hdx-neutral-8);
+    }
+
+    &__controls {
+        // XL: visible; MD/SM: hidden — controls move to the filter overlay
+        @media (max-width: @hdx-bp-xl) {
+            display: none;
+        }
+    }
+
+    &__filter-btn {
+        // MD/SM: visible alongside title; XL: hidden (controls shown instead)
+        @media (min-width: @hdx-bp-xl) {
+            display: none;
+        }
+
+        .c-dropdown { width: auto; }  // don't stretch to 100%
+    }
+}
+
+
+// ────────────────────────────────────────────────────────────
+// hdx-v2-nav-controls — sort + results-per-page pair
+// Used in both the XL header and the MD/SM filter overlay.
+// Each child is a hdx-v2-nav-ctrl-pair (label + c-dropdown side by side).
+// ────────────────────────────────────────────────────────────
+
+.hdx-v2-nav-controls {
+    display:     flex;
+    align-items: center;
+    gap:         var(--hdx-space-4);  // 16 px between the two pairs
+
+
+    // Label + trigger side by side (matches Figma .wrapper layout)
+    .hdx-v2-nav-ctrl-pair {
+        display:     flex;
+        align-items: center;
+        gap:         var(--hdx-space-3);  // 12 px label → trigger (Figma: 0.75rem)
+
+        // External label (rendered outside the c-dropdown wrapper)
+        .hdx-v2-nav-ctrl-label {
+            font-family: var(--hdx-font-body);
+            font-size:   var(--hdx-fs-s);       // 0.875rem / 14 px
+            font-weight: @hdx-fw-regular;
+            line-height: 130%;
+            color:       var(--hdx-neutral-8);
+            white-space: nowrap;
+        }
+
+        .c-dropdown--size-s {
+            width: auto;  // size to trigger content, not 100% of parent
+        }
+    }
+}
 
 
 // ────────────────────────────────────────────────────────────
@@ -84,22 +180,6 @@
 
 
 // ────────────────────────────────────────────────────────────
-// hdx-v2-search-filter-btn-row — wrapper for the MD/SM filter button
-// ────────────────────────────────────────────────────────────
-
-.hdx-v2-search-filter-btn-row {
-    display:         flex;
-    justify-content: flex-end;
-    margin-bottom:   var(--hdx-space-4);  // 16 px above results
-
-    // LG: hidden — inline sidebar used instead
-    @media (min-width: @hdx-bp-xl) {
-        display: none;
-    }
-}
-
-
-// ────────────────────────────────────────────────────────────
 // hdx-v2-pagination-row — centers c-pagination below the dataset list
 // ────────────────────────────────────────────────────────────
 
@@ -165,6 +245,33 @@
         .hdx-v2-search-filters {
             width: 100%;
         }
+
+        // ────────────────────────────────────────────────────────────
+        // hdx-v2-overlay-nav-controls — sort/limit inside the MD/SM overlay
+        // ────────────────────────────────────────────────────────────
+
+        .hdx-v2-overlay-nav-controls {
+            margin-bottom: var(--hdx-space-6);  // 24 px before filter groups
+
+            .hdx-v2-nav-controls {
+                display:               grid;
+                grid-template-columns: 1fr 1fr;
+                align-items:           center;
+                width:                 100%;
+                gap:                   var(--hdx-space-4);
+            }
+
+            // Sort by pair: right-aligned in its grid cell
+            .hdx-v2-nav-ctrl-pair:last-child {
+                justify-content: flex-end;
+                // Sort panel: right-anchored so it never overflows past the right viewport edge
+                .c-dropdown__panel {
+                    left:  auto;
+                    right: 0;
+                }
+            }
+        }
+
     }
 
     &__footer {
