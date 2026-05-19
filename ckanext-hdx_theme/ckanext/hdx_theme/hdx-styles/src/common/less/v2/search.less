@@ -7,7 +7,7 @@
 @import "typography.less";
 
 // ── Local tokens ────────────────────────────────────────────
-@hdx-v2-sf-sidebar-width: 15rem;        // 240px sidebar fixed width
+@hdx-v2-sf-sidebar-width: 21.875rem;    // 350px sidebar fixed width
 
 
 // ────────────────────────────────────────────────────────────
@@ -131,36 +131,62 @@
 
 
 // ────────────────────────────────────────────────────────────
-// hdx-v2-search-layout — LG two-column content wrapper
+// Applied via wrapper_class block in search/search.html
 // ────────────────────────────────────────────────────────────
 
-.hdx-v2-search-layout {
+.hdx-v2-content-columns {
     display:     flex;
-    gap:         var(--hdx-space-6);   // 24 px column gap
-    align-items: flex-start;
+    align-items: stretch;
 
-    // dataset-list fills remaining width at LG
-    .hdx-v2-dataset-list {
-        flex:      1;
-        min-width: 0;  // prevent flex blowout
-    }
+    // ────────────────────────────────────────────────────────────
+    // hdx-v2-search-sidebar — sidebar column (wrapper-secondary)
+    // Applied via wrapper_secondary_class in search/search.html
+    // ────────────────────────────────────────────────────────────
 
-    // Sidebar: hide at MD/SM only when it is a direct child of the layout
-    // (inside the overlay it is always visible)
-    .hdx-v2-search-filters {
+    .hdx-v2-search-sidebar {
+        @media (min-width: @hdx-bp-xl) {
+            flex-shrink:  0;
+            width:        @hdx-v2-sf-sidebar-width;
+            border-right: 1px solid var(--hdx-neutral-1);
+            padding:      var(--hdx-space-5)    // 20px top
+                          var(--hdx-space-10)  // 40px right
+                          5rem                 // 80px bottom
+                          0;
+        }
+
         @media (max-width: @hdx-bp-xl) {
             display: none;
         }
-
-        @media (min-width: @hdx-bp-xl) {
-            flex-shrink: 0;
-            width:       @hdx-v2-sf-sidebar-width;
-        }
     }
 
-    @media (max-width: @hdx-bp-xl) {
-        // MD/SM: single column, sidebar hidden via child rule
-        flex-direction: column;
+
+    // ────────────────────────────────────────────────────────────
+    // hdx-v2-search-content — content column (wrapper-primary)
+    // Applied via wrapper_primary_class in search/search.html
+    // ────────────────────────────────────────────────────────────
+
+    .hdx-v2-search-content {
+        flex:      1;
+        min-width: 0;  // prevent flex blowout
+        padding:   var(--hdx-space-10)  // 40px top
+                   0  // 0 right
+                   var(--hdx-space-10)  // 40px bottom
+                   var(--hdx-space-10); // 40px left
+
+        // MD (768–1280px): side padding removed — hdx-v2-container provides 3rem sides
+        @media (max-width: @hdx-bp-xl) {
+            padding: var(--hdx-space-8) 0;  // 32px top/bottom
+        }
+
+        // SM (< 768px): hdx-v2-container provides 1rem sides
+        @media (max-width: @hdx-bp-md) {
+            padding: var(--hdx-space-6) 0;  // 24px top/bottom
+        }
+
+        .hdx-v2-dataset-list {
+            flex:      1;
+            min-width: 0;
+        }
     }
 }
 

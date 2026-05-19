@@ -30,6 +30,7 @@ Example:
 
 <div style="display: none;" id="analytics-number-of-results">{{packages_count}}</div>
 {%  set current_page_url = other_links.get('current_page_url') if 'current_page_url' in other_links else '' %}
+{% if not v2 %}
 <form id="dataset-filter-form" style="display: inline;">
 
     <div id="base-filter-location" style="display: none;">{{current_page_url}}</div>
@@ -75,6 +76,7 @@ Example:
 
     </div>
 </form>
+{% endif %}
 
 {# ─── v2: filter overlay, filter button, sidebar layout ────────────────── #}
 {% if v2 %}
@@ -173,21 +175,6 @@ Example:
     </div>
   </div>
 
-  {# ── LG two-column layout: sidebar + dataset list ────────────────────── #}
-  <div class="hdx-v2-search-layout">
-    <form id="search-page-filters-form" autocomplete="off">
-      <aside class="hdx-v2-search-filters">
-        {% snippet 'v2/search-filters.html', facet_list=facet_list %}
-        {% set ext_after_metadata_modified = h.hdx_get_request_param('ext_after_metadata_modified', None) %}
-        {% if ext_after_metadata_modified %}
-          <input id="ext_after_metadata_modified" type="hidden" name="ext_after_metadata_modified" value="{{ ext_after_metadata_modified }}"/>
-        {% endif %}
-        {% set ext_batch = h.hdx_get_request_param('ext_batch', None) %}
-        {% if ext_batch %}
-          <input id="ext_batch" type="hidden" name="ext_batch" value="{{ ext_batch }}"/>
-        {% endif %}
-      </aside>
-    </form>
 {% else %}
 {# v1: Bootstrap row/col ─────────────────────────────────────── #}
 <div class="row">
@@ -212,7 +199,7 @@ Example:
     </div>
 {% endif %}
 
-    <div id="search-page-results" class="col-9">
+    <div id="search-page-results" class="{% if not v2 %}col-9{% endif %}">
         {% if packages %}
             <div class="search-list">
                 {% block search_list %}
@@ -271,4 +258,4 @@ Example:
             </div>
         {% endif %}
     </div>
-</div>
+{% if not v2 %}</div>{% endif %}
