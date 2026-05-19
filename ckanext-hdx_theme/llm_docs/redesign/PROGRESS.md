@@ -2,7 +2,7 @@
 
 **Status**: In-progress
 **Started**: 2026-04-16
-**Last Updated**: 2026-05-05
+**Last Updated**: 2026-05-19
 
 ---
 
@@ -51,15 +51,14 @@ CSS custom property equivalents (`--hdx-*`) are defined in `v2/foundation.css` (
 
 ## Pages Migrated to V2
 
-No pages are currently on `v2/page.html`. All previously migrated pages were reverted to `page_light.html` as part of the structural reorganisation that upgraded `v2/page.html` into a real layout base. They are now in a holding state on the legacy stack, ready to be re-migrated once the v2 header/footer are implemented.
+| Page | Template | Notes |
+|------|----------|-------|
+| Homepage | `home/index.html` | Extends `v2/page.html` |
+| Dataset search | `search/search.html` | Extends `v2/page.html`; uses `v2=true` gate for v2 UI |
 
 ### Pages in holding state (on `page_light.html`)
 
-Each page below:
-- Extends `page_light.html` directly
-- Manually overrides `{% block styles %}` to load `hdx_theme/page-extra-light-styles` and `hdx_theme/bem-blocks-styles`
-- Manually loads `hdx_theme/bem-blocks-scripts` in `{% block scripts %}`
-- Overrides `{% block header_core %}` to include `header-mobile.html`
+Each page below extends `page_light.html`, manually overrides `{% block styles %}` to load `hdx_theme/page-extra-light-styles` and `hdx_theme/bem-blocks-styles`, loads `hdx_theme/bem-blocks-scripts` in `{% block scripts %}`, and overrides `{% block header_core %}` to include `header-mobile.html`. Ready to migrate to `v2/page.html`.
 
 | Page | Template(s) | Notes |
 |------|-------------|-------|
@@ -84,11 +83,9 @@ Each page below:
 
 ## Component Library (V2 Components)
 
-**Location**: `templates/v2/components/`, `less/v2/components/`
+**Location**: `templates/v2/components/`, `less/v2/components/`, `fanstatic/v2/components/`
 
 **Status**: ✅ **Complete**
-
-**Location**: `templates/v2/components/`, `less/v2/components/`, `fanstatic/v2/components/`
 
 **Implemented components**:
 - [x] Buttons
@@ -143,7 +140,7 @@ Page-specific bundles will be created as pages are migrated (e.g., `hdx_theme/ho
 - [x] Create `less/v2/foundation.less` with all design tokens
 - [x] Export design tokens from Figma for reference
 - [x] Set up `templates/v2/page.html` to extend `base.html` (not `page_light.html`)
-- [x] Create `v2/header.html` and `v2/footer.html` snippets (stubs — content TBD)
+- [x] Create `v2/header.html` and `v2/footer.html` snippets (fully implemented)
 - [x] Register v2 asset bundles in `webassets.yml` (`v2-components-styles`, `v2-components-scripts`)
 - [x] Test foundation tokens in a simple test page
 
@@ -188,7 +185,7 @@ Page-specific bundles will be created as pages are migrated (e.g., `hdx_theme/ho
 
 ## Next Steps
 
-1. **Migrate pages** from `page_light.html` holding state to `v2/page.html` — start with landing pages, then signup/onboarding, then org/join, then homepage and dataset list.
+1. **Migrate pages** from `page_light.html` holding state to `v2/page.html` — landing pages, then signup/onboarding, then org/join.
 2. **Build page-specific components** as needed during individual page migrations.
 
 ---

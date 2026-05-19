@@ -8,8 +8,8 @@ The design source is Figma, and I already have:
 Your job is to transform the design into production-ready, reusable BEM components that integrate cleanly into CKAN.
 ---
 ## Task
-Implement the **Button components (including text buttons)** as reusable BEM components.
-This is part of a larger task:
+Implement the **[COMPONENT NAME]** as a reusable BEM component.
+This is part of the v2 component library:
 "Implement base building blocks (most common reusable UI components)"
 ---
 ## Requirements

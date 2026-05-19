@@ -87,7 +87,7 @@ There are three active layout base templates. The goal is to maintain exactly th
 - `ckanext-hdx_theme/ckanext/hdx_theme/templates/v2/header.html` — top-bar + responsive navbar (fully implemented)
 - `ckanext-hdx_theme/ckanext/hdx_theme/templates/v2/footer.html` — dark-teal footer panel (fully implemented)
 
-Pages in holding state on `page_light.html` (landing pages, signup, org/join, etc.) manually override `{% block header_core %}` to include the legacy `header-mobile.html`. These are ready to migrate to `v2/page.html` — see [**redesign/PROGRESS.md**](redesign/PROGRESS.md) for the full holding-state list.
+Pages in holding state on `page_light.html` (landing pages, signup, org/join, etc.) manually override `{% block header_core %}` to include the legacy `header-mobile.html`. The homepage and dataset search page have already been migrated to `v2/page.html`. See [**redesign/PROGRESS.md**](redesign/PROGRESS.md) for the full holding-state and migrated-pages lists.
 
 ## BEM components (HDX custom UI blocks)
 
@@ -152,43 +152,30 @@ Example page-specific template (light search):
 ### Homepage (`/`)
 
 - **Template**: `ckanext-hdx_theme/ckanext/hdx_theme/templates/home/index.html`
-  - Extends `page.html` (full layout with header, footer, and global asset bundles).
-  - Overrides the `header_core` block to use `header-mobile.html` (no desktop nav bar).
-  - Removes the toolbar block entirely.
-- **Core assets**:
-  - `hdx_theme/homepage-styles` — homepage-specific CSS (`homepage/homepage.css`, `homepage/homepage-responsive.css`); preloads `hdx_theme/adaptive-page-styles`.
-  - `hdx_theme/homepage-scripts` — homepage JS (`homepage/count.js`, `homepage/homepage-responsive.js`, `vendor/hammer/hammer.js`); preloads `hdx_theme/homepage-styles`.
-  - Inherits the full `page.html` stack: `hdx_theme/page-styles`, `hdx_theme/page-scripts`, `hdx_theme/search-scripts`.
+  - Extends `v2/page.html`. No additional asset bundles — inherits the full `v2/page.html` stack.
 
 ---
 
 ### Dataset list page (`/dataset` or `/search`)
 
-There are **two versions** of this page that share some assets but use different layouts.
+#### V2 version (active)
 
-#### Desktop version
+- **Template**: `ckanext-hdx_theme/ckanext/hdx_theme/templates/search/search.html`
+  - Extends `v2/page.html`. Uses `v2=true` gate to switch UI inside shared snippets.
+  - Two-column layout: `hdx-v2-search-sidebar` (filter panel) + `hdx-v2-search-content` (results).
+- **Core assets**: `hdx_theme/v2-search-styles`, `hdx_theme/search-scripts`, `hdx_theme/v2-search-scripts`.
+
+#### Legacy desktop version
 
 - **Template**: `ckanext-hdx_theme/ckanext/hdx_theme/templates/package/search.html`
-  - Extends `page.html` (full layout with header, sidebar, footer).
-  - Renders facet filters via `snippets/facet_list_new.html` and results via `snippets/package_list.html`.
-  - Uses the two-column layout inherited from `page.html` (primary + secondary blocks).
-- **Core assets**:
-  - `hdx_theme/dataset-styles` — general dataset CSS (`datasets/dataset.css`, `datasets/datasets.css`); preloads `dataset-search-styles`, `requestdata-styles`, `charting-styles`.
-  - `hdx_theme/dataset-search-styles` — styles for the multiple-select filter widget (`vendor/multiple-select-1.1.0/multiple-select.css`).
-  - Inherits the full `page.html` stack: `hdx_theme/page-styles`, `hdx_theme/page-scripts`, `hdx_theme/search-scripts`.
+  - Extends `page.html`. Uses Bootstrap two-column layout.
+- **Core assets**: `hdx_theme/dataset-styles`, `hdx_theme/dataset-search-styles`; inherits `page.html` stack.
 
-#### Light version
+#### Legacy light version
 
 - **Template**: `ckanext-hdx_theme/ckanext/hdx_theme/templates/light/search/search.html`
-  - Extends `page_light.html` (lightweight layout, no sidebar).
-  - Renders the result listing via `light/snippets/package_list.html`.
-- **Core assets**:
-  - `hdx_theme/dataset-search-styles` — styles for the multiple-select filter widget (`vendor/multiple-select-1.1.0/multiple-select.css`).
-  - `hdx_theme/dataset-styles` — general dataset list/detail CSS; preloads `dataset-search-styles`, `requestdata-styles`, `charting-styles`.
-  - `hdx_theme/search-light-styles` — light search-specific CSS (`light/search/search-light.css`).
-  - `hdx_theme/search-scripts` — common search JS (preloaded by `page_light.html`).
-  - `hdx_theme/dataset-search-scripts` — filter/list-header JS (`datasets/list-header.js`, `vendor/multiple-select`); preloads `hdx_theme/ckan` and `dataset-search-styles`.
-  - `hdx_theme/dataset-scripts` — additional dataset JS (loaded in the scripts block).
+  - Extends `page_light.html`. No sidebar.
+- **Core assets**: `hdx_theme/search-light-styles`, `hdx_theme/dataset-styles`, `hdx_theme/dataset-search-scripts`, `hdx_theme/dataset-scripts`.
 
 ---
 
