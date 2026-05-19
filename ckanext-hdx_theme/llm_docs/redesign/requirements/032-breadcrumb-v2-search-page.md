@@ -310,44 +310,11 @@ unchanged. All other pages that extend `v2/page.html` continue using the legacy 
 
 ---
 
-## Open Questions
+## Decisions Taken
 
-These are NOT blocking (reasonable defaults are stated) but should be confirmed before
-integration into additional pages:
-
-1. **Spacing above breadcrumb**: Is additional top margin needed between the v2 header/navbar
-   and the breadcrumb row, beyond the component's own `padding: 8px 0`?
-
-2. **Separator character**: Should the separator remain `/` or use a different character or
-   icon (e.g. `›`, `>`) in the v2 design?
-
-3. **Long label truncation**: The `.c-breadcrumb__item` LESS applies `max-width: 21.875rem`
-   (350px) with ellipsis. Is this sufficient for the search page, or should the current crumb
-   ("Datasets") be exempt from truncation as it is always short?
-
-4. **Future pages — `href` for "Datasets" link**: On the dataset detail page, the breadcrumb
-   will be `Home > Datasets > [Title]`. Should the "Datasets" item link to `/dataset` (the
-   search page root) or to `/dataset` with filters preserved?
-
----
-
-## Verification
-
-1. **c-breadcrumb renders on search page**: navigate to `/dataset` with `v2=true`; confirm
-   `<nav class="c-breadcrumb">` is present in the DOM with two items
-2. **Home item is a link**: "Home" renders as `<a href="/">` with `.c-text-link` classes;
-   clicking navigates to `/`
-3. **Datasets item is non-linked**: "Datasets" renders as
-   `<span class="c-breadcrumb__current">`, not an `<a>` tag; not clickable
-4. **Separator present**: `<span class="c-breadcrumb__separator">/</span>` between Home and
-   Datasets; no separator after "Datasets"
-5. **All breakpoints**: breadcrumb visible at SM (`< 48rem`), MD (`48–87.5rem`), LG (`≥ 87.5rem`)
-6. **No legacy toolbar bar**: `.toolbarRow` is absent from the search page DOM in v2 mode;
-   the gray toolbar bar and Bootstrap `<ol class="breadcrumb">` are gone
-7. **Non-v2 pages unaffected**: `/dataset` without `v2=true` (via `package/search.html`)
-   renders the legacy breadcrumb unchanged
-8. **Other v2 pages unaffected**: any page extending `v2/page.html` that is not
-   `search/search.html` continues to render its existing legacy breadcrumb via the toolbar block
-9. **RDFa present**: `<nav vocab="https://schema.org/" typeof="BreadcrumbList">` in DOM;
-   each item has `typeof="ListItem"`, `property="itemListElement"`, position meta tag
-10. **Accessibility**: `<nav aria-label="Breadcrumb">` present; current item has no href
+| # | Question | Decision |
+|---|----------|----------|
+| Q1 | Spacing above breadcrumb: additional top margin beyond component's own `padding: 8px 0`? | Yes — `.hdx-v2-breadcrumb-row` adds `margin-top: var(--hdx-space-2)` (8px) and `margin-bottom: var(--hdx-space-2)` (8px) |
+| Q2 | Separator character: `/` or different character/icon? | `/` — default kept; no change |
+| Q3 | Long label truncation: `max-width: 21.875rem` sufficient, or exempt "Datasets" crumb? | Existing truncation kept as-is; "Datasets" is always short so no special exemption needed |
+| Q4 | Future pages — `href` for "Datasets" link on dataset detail page: `/dataset` or with filters? | Deferred — out of scope for this task (search page only) |

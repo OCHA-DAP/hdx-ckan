@@ -133,15 +133,3 @@ grid, with no explanation of why they were added:
 
 ---
 
-## Verification
-
-After all changes are applied:
-
-1. **Compile check** — LESS build produces zero errors and zero warnings
-2. **Diff check** — Compiled CSS output is identical to pre-refactor (whitespace aside)
-3. **Breakpoint check** — `grep -r "@hdx-bp-md\|@hdx-bp-xl\|@breakpoint-md\|@breakpoint-xxl" less/v2/`
-   returns results only in `layout.less`
-4. **Overlay rgba check** — `grep -r "rgba(255, 255, 255" less/v2/` returns zero results
-5. **Hex color check** — `grep -rE "#[0-9a-fA-F]{3,6}" less/v2/components/` returns zero results
-6. **Visual QA** — Render navbar, footer, top-bar, and all component stories at mobile
-   (< 768px), tablet (768–1280px), and desktop (> 1280px) and confirm no regressions

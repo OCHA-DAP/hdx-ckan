@@ -55,14 +55,14 @@ v2-page-styles:
     - v2/footer.css
 ```
 
-## Open items
+## Decisions Taken
 
-| # | Item                 | Notes                                          |
-|---|----------------------|------------------------------------------------|
-| 1 | Privacy policy URL   | Using `#` placeholder                          |
-| 2 | Documentation URL    | Using `#` placeholder                          |
-| 3 | Data column URLs     | Explore data / Locations / Organisations — `#` |
-| 4 | Products column URLs | All 5 active product links — `#`               |
+| # | Question | Decision |
+|---|----------|----------|
+| 1 | Privacy policy URL | `https://docs.humdata.org/about/hdx-terms-of-service#privacy-notice` |
+| 2 | Documentation URL | `https://docs.humdata.org` |
+| 3 | Data column URLs | Resolved to real CKAN routes: `h.url_for('dataset.search')`, `h.url_for('group.index')`, `h.url_for('organization.index')` |
+| 4 | Products column URLs | Driven by `h.hdx_get_quick_links_list(archived=False)` helper — real URLs from the quick-links registry, no hardcoded placeholders |
 
 ## Why
 

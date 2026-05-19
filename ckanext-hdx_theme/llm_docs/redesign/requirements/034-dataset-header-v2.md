@@ -271,38 +271,27 @@ These MUST be preserved:
 
 ---
 
-## 8. Open Questions
+## 8. Decisions Taken
 
-These are unresolved and must be answered before implementation begins.
-
-| ID | Question | Impact |
-|----|----------|--------|
-| OQ-1 | **Count source:** Should the count shown always be `packages_count` (full result set), or reflect the active tab (unarchived vs. archived)? When the "Archived" tab is active, what number do we show? | Template variable choice |
-| OQ-2 | **Sort default:** When `used_default_sort_by=True`, no `sort` param exists in the URL. Should the v2 dropdown still show "Last Modified" as label, or a neutral placeholder? | JS/template default handling |
-| OQ-3 | **Overlay position:** Should sort + results-per-page appear ABOVE or BELOW the existing filter groups in the overlay body? | Template ordering |
-| OQ-4 | **Zero results:** What should the count display when `packages_count = 0`? Show "0" or omit the count entirely? | Edge case display |
-| OQ-5 | **Count format:** Confirm `h.localised_number(count)` (comma-separated) is the right formatter, or should a different format be used? | Display format |
-| OQ-6 | **Admin sort option:** Should the v2 dropdown also conditionally show "Due for Update" for admins (matching existing `admin_view` param logic)? | Sort options scope |
-| OQ-7 | **Tooltips:** Should the "Trending" and "Due for Update" tooltips from v1 be preserved in v2? If yes, how (title attr, tooltip component)? | UX fidelity |
-| OQ-8 | **Analytics:** Should sort and results-per-page changes fire Mixpanel events? If yes, what event name and which properties? | Tracking coverage |
-| OQ-9 | **Dropdown navigation mode:** The existing `dropdown.html` renders a panel with optional confirm/clear. For sort/limit (immediate navigation), can the panel be used as-is (with a JS listener on list-item click), or does the component need a new param/mode? | Component design |
-| OQ-10 | **Results per page options:** Should `[10, 25, 50, 100]` remain the options, or does v2 change this set? | Data |
-
----
-
-## 9. Confirmed Decisions
-
-These were confirmed by the team and are not open:
-
-| Decision | Detail |
-|----------|--------|
-| Overlay sort/limit behavior | Immediate navigation on selection — no "Show results" button involvement |
-| Page heading | Always static **"Datasets"** — no dynamic filter context in the heading |
-| Search input | Excluded from this task |
+| ID | Question | Decision |
+|----|----------|---------|
+| OQ-1 | Count source | Always `packages_count` (full result set) — no tab-conditional count |
+| OQ-2 | Sort default when `used_default_sort_by=True` | "Last Modified" shown as default label — `_ns.sort_label` defaults to `_('Last Modified')` when no match found |
+| OQ-3 | Overlay position | Sort + results-per-page appear ABOVE filter groups (`hdx-v2-overlay-nav-controls` block) |
+| OQ-4 | Zero results | Show "0" — `h.localised_number(0)` renders "0" |
+| OQ-5 | Count format | `h.localised_number()` confirmed (comma-separated) |
+| OQ-6 | Admin sort option | Admin "Due for Update" preserved — `admin_view` param passed to `search-nav-controls.html` |
+| OQ-7 | Tooltips | "Trending" and "Due for Update" tooltips preserved via `tooltip` key in `nav_items` list |
+| OQ-8 | Analytics | No Mixpanel events — analytics remain commented-out as in v1 |
+| OQ-9 | Dropdown navigation mode | `[data-nav-key]` / `[data-nav-value]` data attributes; `setNavParam()` in `search.js` navigates immediately on click |
+| OQ-10 | Results per page options | Options remain `[10, 25, 50, 100]` |
+| — | Overlay sort/limit behavior | Immediate navigation on selection — no "Show results" button involvement |
+| — | Page heading | Always static **"Datasets"** — no dynamic filter context in the heading |
+| — | Search input | Excluded from this task |
 
 ---
 
-## 10. Files Involved
+## 9. Files Involved
 
 **Created (new):**
 
@@ -325,7 +314,7 @@ These were confirmed by the team and are not open:
 
 ---
 
-## 11. Implementation Notes
+## 10. Implementation Notes
 
 ### Labels are external to the c-dropdown wrapper
 
@@ -340,14 +329,3 @@ The `c-dropdown` wrapper uses `flex-direction: column`, so the built-in `label=`
 ### Sort panel right-anchored
 
 `[data-nav-key="sort"] .c-dropdown__panel` uses `right: 0; left: auto` so the panel opens to the LEFT and never overflows past the right viewport edge on small screens.
-
-### Resolved open questions
-
-| ID | Resolution |
-|----|------------|
-| OQ-2 | Default sort shows "Last Modified" (short label) — `_ns.sort_label` defaults to `_('Last Modified')` when no match found. |
-| OQ-3 | Sort + results-per-page appear ABOVE the filter groups in the overlay (`hdx-v2-overlay-nav-controls` block). |
-| OQ-6 | Admin "Due for Update" option preserved — `admin_view` param passed to `search-nav-controls.html`. |
-| OQ-7 | "Trending" and "Due for Update" tooltips preserved via `tooltip` key in `nav_items` list. |
-| OQ-9 | Navigate-on-select uses `[data-nav-key]` / `[data-nav-value]` data attributes; JS `setNavParam()` in `search.js` sets the new param and deletes `page` on click. |
-| OQ-10 | Options remain `[10, 25, 50, 100]`. |

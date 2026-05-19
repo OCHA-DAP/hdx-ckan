@@ -313,45 +313,18 @@ Use `size='m'` to match the height of existing v2 header controls (dropdowns at 
 
 ---
 
-## 9. Open Questions
+## 9. Decisions Taken
 
-All of the following must be resolved before implementation begins.
-
-### 9.1 Placeholder text
-Figma: `"Search for datasets"`. Current v1: `"Search all datasets ..."`.
-Which string should the v2 bar use?
-
-### 9.2 Search icon
-Figma img tags have no `src` (empty Figma export). The `c-search-input` snippet defaults to `v2/icons/search.svg` (right-aligned magnifying glass).
-Confirm: use `v2/icons/search.svg` as the right icon?
-
-### 9.3 Autocomplete overlay (MD only)
-The MD Figma includes an empty `.search-autocomplete` div with `z-index: 3` positioned above the search bar. This suggests a future autocomplete/suggestions dropdown.
-**Question:** Is an autocomplete dropdown required in this task, or is it out-of-scope for now?
-If needed, it is a new component not yet built and would be a separate task.
-
-### 9.4 SM layout conflict — sort/limit outside overlay
-The SM Figma shows Results per page and Sort by dropdowns in the main page body alongside the search bar. The current v2 implementation renders these only inside the filter overlay at MD/SM (`search-nav-controls.html`).
-
-**Question:** Should the SM (and possibly MD) layout change so that sort/limit controls also appear outside the overlay? Or is the Figma showing an overlay-open state / design artifact?
-This decision significantly affects the SM and MD layout work.
-
-### 9.5 Border token — XL vs MD/SM
-XL border: `1px solid #ebeff0` (whitesmoke-200, var `--border-2`).
-MD/SM border: `1px solid #d8e0e1` (gainsboro, var `--border-1`).
-**Question:** Are these intentionally different, or should one token be used consistently? Which?
-
-### 9.6 Width at MD/SM
-Figma shows fixed pixel widths: 43.5rem (MD), 22.563rem (SM). These appear to be Figma canvas sizes, not necessarily responsive intent.
-**Question:** Should the implementation use exact fixed widths, or should the input stretch to fill available space in its flex row?
-
-### 9.7 Sort not preserved on search
-When a user submits a new search term, the current sort selection is discarded (`helpers.py:170` excludes `sort` from hidden fields). The user gets the default sort.
-**Question:** Is this the intended behavior in v2? Should v2 preserve sort on search?
-
-### 9.8 `#headerSearch` anchor scroll
-On submit, `organizations.js` appends `#headerSearch` to the URL, causing the page to scroll back to the input after reload. In v2, the search bar is in its own row below the header — meaning it may be below the fold.
-**Question:** Is the anchor-scroll behavior still desired? Should the `+ "#headerSearch"` be removed for v2?
+| # | Question | Decision |
+|---|----------|----------|
+| Q9.1 | Placeholder text | `"Search for datasets"` — Figma text used; v1 `"Search all datasets ..."` retained only in the v1 bar |
+| Q9.2 | Search icon | `v2/icons/search.svg` — `c-search-input` default used; no custom icon |
+| Q9.3 | Autocomplete overlay (MD only) | Deferred — out of scope for this task; no autocomplete component implemented |
+| Q9.4 | SM layout conflict — sort/limit outside overlay | Sort/limit remains inside the filter overlay only at MD/SM; Figma SM view treated as a design artifact; `hdx-v2-search-bar-row` is full-width standalone row at all breakpoints |
+| Q9.5 | Border token — XL vs MD/SM | Single consistent token — `c-search-input` component handles its own border via design tokens; no per-breakpoint border override added |
+| Q9.6 | Width at MD/SM | `width: 100%` stretch — Figma fixed widths treated as canvas sizes; `.hdx-v2-search-bar-row` and `.c-search-input` both set to `width: 100%` |
+| Q9.7 | Sort not preserved on search | Preserved as-is — existing `helpers.py` behavior unchanged; sort reset on new search is intentional |
+| Q9.8 | `#headerSearch` anchor scroll | Preserved — `organizations.js` unchanged; anchor scroll kept as-is |
 
 ---
 

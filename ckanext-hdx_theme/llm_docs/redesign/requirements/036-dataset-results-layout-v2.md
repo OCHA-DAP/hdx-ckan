@@ -427,24 +427,3 @@ Remaining v1 remnants (no active CSS depending on them in v2):
 
 6. **Content column right padding**: Currently 0 (right padding relies on `hdx-v2-container`). Acceptable — no additional right padding needed.
 
----
-
-## 11. Verification Checklist
-
-- [x] No `col-9` class on `#search-page-results` in v2 rendered output
-- [x] Sidebar gap = 0 (no `gap` on the flex container)
-- [x] Sidebar width 350px (`21.875rem`)
-- [x] `hdx-v2-search-layout` removed
-- [x] Legacy Bootstrap wrappers removed from page.html
-- [ ] Orphan `</div>` in `package_list.html` line 261 fixed (`{% if not v2 %}</div>{% endif %}`) ← **fixed this session**
-- [ ] Sidebar padding: 20px top / 40px right / 80px bottom / 48px left ← **fixed this session**
-- [ ] XL (≥ 1280px): sidebar visible left at 350px; `border-right` present; sidebar stretches full height
-- [ ] XL: header (title + count + sort) inside content column, not spanning sidebar
-- [ ] XL: search bar inside content column
-- [ ] XL: pagination inside content column, not spanning full page width
-- [ ] MD (768–1280px): sidebar hidden; content full-width; filter button and overlay work
-- [ ] SM (< 768px): single-column; overlay works
-- [ ] Existing tests pass: `pytest ckanext-hdx_theme/ckanext/hdx_theme/tests/ -k search`
-- [ ] Visual comparison against `figma_exports/dataset-results-xl.html` at XL
-- [ ] Visual comparison against `figma_exports/dataset-results-md.html` at MD
-- [ ] Visual comparison against `figma_exports/dataset-results-sm.html` at SM

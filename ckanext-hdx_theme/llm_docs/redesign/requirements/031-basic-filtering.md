@@ -336,20 +336,3 @@ var ADVANCED_FILTER_PARAMS = [
 
 Dropdown JS identification: `[data-filter-key]` attribute (replaces former `c-dropdown--checklist` class selector).
 
----
-
-## Verification
-
-1. **XL filter sidebar visible**: at ≥ 1280px (`@hdx-bp-xl`), sidebar appears left of dataset cards
-2. **LG dropdown open/close**: click trigger → panel opens with all checkboxes + counts; click outside → closes
-3. **LG real-time select**: check a location → URL gains `?groups=afghanistan`; page reloads; trigger shows `(1)`
-4. **LG clear selection**: "Clear selection" inside panel removes that facet's params from URL
-5. **MD/SM filter button**: at < 1400px, sidebar hidden; filter button visible; badge `(N)` reflects all selected (main + advanced, no double-counting)
-6. **MD/SM overlay open/close/clear**: works as expected
-7. **Advanced filters dropdown**: items rendered in hierarchy — flat ext_* items, then CODs parent + indented children, then HPC parent + indented children
-8. **Group select all**: clicking CODs parent → all cod_level values added to URL; clicking again → all removed; indeterminate shown when partial selection
-9. **Advanced clear selection**: clears ext_* + cod_level, leaves vocab_Topics intact
-10. **v1 path unchanged**: without `v2=true`, existing filter/facet UI renders via v1 layout; `{% block package %}` loop uses `package_item.html`
-11. **Dataset cards unchanged**: card rendering, Mixpanel events unaffected
-12. **Topics only (no Tags)**: no tags filter in the sidebar; Topics (`vocab_Topics`) is the only tag-like filter
-13. **Search within dropdown**: filters with > 8 items show a search input inside the panel; typing filters visible list items in real-time (MiniSearch, diacritic-insensitive); clearing the input restores all items

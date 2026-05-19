@@ -123,18 +123,3 @@ why the class exists.
 - No changes to non-v2 templates or LESS files
 - No changes to JS state management for structural states
 
----
-
-## Verification
-
-1. **Grep check** — after changes, this must return zero results (excluding documented keyboard-nav exceptions):
-   ```
-   grep -r 'is-hovered\|--hovered\|is-active-hovered\|--active-hovered' \
-     ckanext/hdx_theme/templates/v2/ \
-     ckanext/hdx_theme/hdx-styles/src/common/less/v2/
-   ```
-2. **Compile check** — LESS build produces zero errors
-3. **Visual QA** — in browser, mouse over each affected component (activity card, list item, selection item, dropdown trigger, search input) and confirm hover styles apply correctly
-4. **Active+hover QA** — for checklist list items and selection items, set `is-active` then hover; confirm combined styling matches Figma
-5. **Showcase page** — components page loads without errors; no broken or missing state variants
-6. **Keyboard nav** — tab through the navbar dropdown; confirm focus state renders correctly
