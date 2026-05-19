@@ -118,7 +118,7 @@ Size S specs: 12px font, 24px height, padding 6/8/6/10px, gap 4px. Panel renderi
 
 - Fixed full-screen, `z-index: 500`, shown on MD/SM (< `@hdx-bp-xl` = 80rem/1280px)
 - Structure: header ("Filters" + close) → scrollable body (filter dropdowns) → footer ("Clear filters" + "Show results")
-- Sort/limit controls are **not yet present** in the overlay body
+- Sort/limit controls are present in the overlay body above the filter groups (added by this task)
 
 ---
 

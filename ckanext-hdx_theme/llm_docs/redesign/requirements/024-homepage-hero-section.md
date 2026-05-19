@@ -63,8 +63,6 @@ Extends `v2/page.html`. The hero section markup uses `autocomplete.html` only â€
 </section>
 ```
 
-The other sections will be added later.
-
 ### `hdx-styles/src/common/less/v2/styles.less`
 
 BEM block: `hdx-v2-hero`. Dark background token: `@hdx-v2-hero-bg: var(--hdx-brand-7)`.
