@@ -115,11 +115,11 @@ Use `g-3` (24px) for standard column grids. Use `g-4` (32px) only where Figma ex
 
 ---
 
-## Open question
+## Decisions Taken
 
-**XL navbar breakpoint delta.** `breakpoints.less` defines `@hdx-bp-xl: 80rem (1280px)` — this is the point where the navbar switches from hamburger to inline navigation. The Figma grid spec marks XL as ≥ 1200px for layout margins only (48px, already covered by the MD rule). The two numbers do not conflict for grid purposes, but they diverge for nav visibility.
-
-Before any changes to `@hdx-bp-xl`, confirm with design whether the navbar should display inline items at 1200px or 1280px. Do not change the breakpoint without that decision.
+| # | Question | Decision |
+|---|----------|----------|
+| 1 | XL navbar breakpoint delta — should the navbar display inline items at 1200px (Figma grid XL) or 1280px (`@hdx-bp-xl`)? | Kept at `@hdx-bp-xl: 80rem` (1280px). The Figma grid XL (1200px) governs layout margins only, which are already covered by the MD 48px padding rule. The navbar hamburger-to-inline switch remains at 1280px; no breakpoint change was made. |
 
 ---
 

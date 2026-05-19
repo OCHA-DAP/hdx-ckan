@@ -55,12 +55,12 @@ v2-page-styles:
     - v2/top-bar.css
 ```
 
-## Open items
+## Decisions Taken
 
-| # | Item                  | Notes                                              |
-|---|-----------------------|----------------------------------------------------|
-| 1 | Documentation URL     | Using `#` placeholder                              |
-| 2 | Dropdown open state   | Not shown in Figma; ported from production header  |
+| # | Question | Decision |
+|---|----------|----------|
+| 1 | Documentation URL | `https://docs.humdata.org` |
+| 2 | Dropdown open state | Implemented using the custom `data-hdx-v2-panel="services"` system (same as navbar panels), managed by `navbar.js` — Bootstrap dropdown JS not used |
 
 ## Why
 

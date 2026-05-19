@@ -36,7 +36,3 @@ Border-width changes on auto-height elements shift surrounding layout, causing v
 on hover and focus. Anchoring the element to a fixed height makes `box-sizing: border-box`
 effective and keeps the outer box pixel-stable across all states.
 
-## Verification
-
-In browser DevTools, select each affected component, toggle between default / hover / focus
-states, and confirm the element's bounding box (height and width) does not change.

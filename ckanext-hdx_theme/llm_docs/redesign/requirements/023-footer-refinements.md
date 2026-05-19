@@ -122,11 +122,11 @@ Recompile from `footer.less` after all LESS changes.
 
 ---
 
-## Open items
+## Decisions Taken
 
-| # | Item | Notes |
-|---|------|-------|
-| 1 | Newsletter input icon | Resolved — added `show_icon` param to `c-search-input` (REQ-9) and passed `show_icon=False` in the footer newsletter snippet (REQ-7). |
+| # | Question | Decision |
+|---|----------|----------|
+| 1 | Newsletter input icon — should the search icon be shown in the footer email input? | No icon shown. Added `show_icon` boolean param (default `True`) to `c-search-input` (REQ-9) and passed `show_icon=False` in the footer newsletter snippet (REQ-7). |
 
 ---
 

@@ -171,3 +171,13 @@ The requirement file MUST include:
 
 DO NOT implement anything.
 ASK QUESTIONS before making decisions.
+
+---
+
+## Lifecycle
+
+| Phase | Action |
+|-------|--------|
+| Analysis | List ALL open questions in section 9. Do not assume. |
+| Implementation | Resolve questions; document resolutions in "Confirmed Decisions" or "Implementation Notes". |
+| After `implemented` | Replace "Open questions" section with "Decisions Taken" table. Remove the Verification section. |

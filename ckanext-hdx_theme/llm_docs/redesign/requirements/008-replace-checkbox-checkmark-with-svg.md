@@ -46,10 +46,3 @@ Replace the CSS `::after` pseudo-element checkmark in `.c-checkbox__box` with `v
 6. **Accessibility.**
    The included SVG already has no role or focusable attributes. Do not alter the hidden `<input type="checkbox">` or any existing ARIA attributes.
 
-## Verification
-
-1. Render the checkbox in checked and unchecked states — icon should appear and disappear correctly.
-2. Toggle disabled + checked — icon should render in muted (`--hdx-neutral-3`) color.
-3. Tab to the checkbox — focus ring should appear (keyboard navigation unchanged).
-4. Inspect the DOM — no `::after` pseudo-element on `.c-checkbox__box`.
-5. Zoom to 200% — icon scales cleanly without aliasing.

@@ -326,76 +326,15 @@ Same as above — `sort=field+asc/desc` is already preserved by `_params_nopage(
 
 ---
 
-## Open Questions
+## Decisions Taken
 
-These must be resolved before or during implementation. **Do not assume defaults.**
-
-| # | Question | Impact |
-|---|---|---|
-| Q1 | Should pagination be hidden when `total_pages == 1`? (Current default: yes, via `show_if_single_page=False`.) | Whether the `page_count > 1` guard stays in the template |
-| Q2 | Should mobile viewport use `size='sm'` (28px cells) rather than `'md'` (38px)? If yes: what breakpoint triggers the size switch? | May require responsive size selection logic in template or LESS |
-| Q3 | Is the active-page visual finalized as **darker text + medium weight only** (no background/border accent color)? | If not: `@c-pager-active-bg` in `navigation.less` needs a value change |
-| Q4 | Should this task include the "results count" text (e.g. "Showing 1–25 of 847 datasets")? It appears near pagination in Figma designs. | Adds `my_c.page.first_item` / `last_item` / `item_count` rendering; separate component or inline |
-| Q5 | Is a per-page selector (25/50/100) in scope for this task, or deferred? | If in scope: adds separate UI control and `ext_page_size` param wiring |
-| Q6 | Should pagination apply to org/group/location listing pages as part of this task, or only dataset search for now? | Scope boundary; other page types use different templates and URL generators |
-| Q7 | Should an ARIA live region announce page changes to screen readers when navigation occurs? | If yes: minor JS addition to the snippet |
-| Q8 | Edge case: `total_pages == 0` (zero search results). The component renders with disabled prev/next and a single `1` button. Should pagination be hidden entirely when there are no results? | Template guard condition |
-
----
-
-## Verification
-
-1. Load `/dataset?q=water` (v2 page):
-   - DOM contains `<nav class="c-pagination c-pagination--size-md">`
-   - No Bootstrap `.pagination`, `.page-item`, `.page-link` classes present
-   - Page number links include `q=water` in href
-
-2. Apply a filter (e.g. click a country):
-   - URL becomes `/dataset?q=water&groups=tur`
-   - Pagination links preserve `groups=tur` in href
-
-3. Navigate to page 2:
-   - URL becomes `/dataset?q=water&groups=tur&page=2`
-   - Active page cell shows `2` with `.c-pagination__item--active`
-   - Prev button is enabled (href includes `page=1`)
-   - All other query params preserved in all links
-
-4. Navigate to first page:
-   - Prev button has `.is-disabled`, `aria-disabled="true"`, `tabindex="-1"`
-
-5. Navigate to last page:
-   - Next button has `.is-disabled`, `aria-disabled="true"`, `tabindex="-1"`
-
-6. Multi-valued org filter:
-   - URL `/dataset?organization=wfp&organization=unocha&page=3`
-   - All pagination links contain both `organization=wfp&organization=unocha`
-
-7. Non-v2 page (e.g. `/organization`):
-   - Bootstrap `.pagination` markup still rendered
-   - No `c-pagination` component present
-
-8. Single-result-page search (fewer items than `items_per_page`):
-   - Pagination hidden (or shows disabled state — per decision on Q1/Q10)
-
-9. Responsiveness:
-   - Pagination centered horizontally at all breakpoints
-   - `margin-top` spacing matches Figma gap
-
----
-
-## Reference Files
-
-| Purpose | Path |
-|---|---|
-| v2 pagination component | `ckanext-hdx_theme/ckanext/hdx_theme/templates/v2/components/pagination.html` |
-| Pagination LESS source | `ckanext-hdx_theme/ckanext/hdx_theme/hdx-styles/src/common/less/v2/components/navigation.less` |
-| Search LESS | `ckanext-hdx_theme/ckanext/hdx_theme/hdx-styles/src/common/less/v2/search.less` |
-| Search wrapper template | `ckanext-hdx_theme/ckanext/hdx_theme/templates/search/snippets/search_results_wrapper.html` |
-| Search entry template | `ckanext-hdx_theme/ckanext/hdx_theme/templates/search/search.html` |
-| HDX URL generator | `ckanext-hdx_search/ckanext/hdx_search/controller_logic/search_logic.py` |
-| CKAN pagination engine | `ckan/lib/pagination.py` |
-| Design tokens | `ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/v2/foundation.css` |
-| Asset bundle config | `ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/webassets.yml` |
-| Comparable task (dataset list) | `ckanext-hdx_theme/llm_docs/redesign/requirements/030-dataset-list-v2-migration.md` |
-| Comparable task (breadcrumb) | `ckanext-hdx_theme/llm_docs/redesign/requirements/032-breadcrumb-v2-search-page.md` |
-| Pagination filter test | `ckanext-hdx_search/ckanext/hdx_search/tests/test_pages/test_pagination.py` |
+| # | Question | Decision |
+|---|----------|---------|
+| Q1 | Hide pagination when `total_pages == 1`? | Hidden — `page_count > 1` guard in template; same guard covers `total_pages == 0` |
+| Q2 | Mobile viewport use `size='sm'`? | No — always `size='md'`; no breakpoint-based size switch implemented |
+| Q3 | Active-page visual finalized as darker text + weight only? | Yes — darker text (`#101212`) + weight 500, same white background; confirmed in design analysis |
+| Q4 | Include "results count" text? | Deferred — explicitly out of scope for this task |
+| Q5 | Per-page selector in scope? | Deferred — explicitly out of scope for this task |
+| Q6 | Apply to org/group/location listing pages? | Deferred — dataset search page only in this task |
+| Q7 | ARIA live region for page changes? | No — no JS added; all navigation via standard `<a href>` links |
+| Q8 | Edge case `total_pages == 0` — hide entirely? | Hidden — same `page_count > 1` guard covers this case |

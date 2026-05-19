@@ -5,7 +5,7 @@
 HDX has three layout bases (`page.html`, `page_light.html`, `landing_pages/page.html`) all inheriting from `base.html`, plus a library of BEM blocks. The new Figma design introduces new building blocks (buttons, links, tabs, etc.) and makes every page responsive. Because we cannot migrate everything at once, the strategy is to **build the new design system as a parallel layer** — a new base layout, new BEM blocks, and new asset bundles — then **migrate pages one-by-one** by switching their `{% extends %}` to the new layout, leaving unmigrated pages untouched on the old stack.
 
 > Implementation tasks for this redesign are recorded in `llm_docs/redesign/requirements/`.
-> Implementation status for each task is tracked in [`requirements/STATUS.md`](requirements/STATUS.md) — a markdown table mapping each requirement file to one of `not_started`, `in_progress`, or `implemented`. Update that file when a task changes state.
+> Implementation status for each task is tracked in [`requirements/STATUS.md`](requirements/STATUS.md) — a markdown table mapping each requirement file to one of `not_started`, `in_progress`, or `implemented`. Update that file when a task changes state. When a task is implemented, also update the requirement file itself: replace Open questions with Decisions Taken and remove the Verification section.
 
 ---
 
