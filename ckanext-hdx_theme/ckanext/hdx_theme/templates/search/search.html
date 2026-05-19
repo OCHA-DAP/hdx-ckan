@@ -1,5 +1,8 @@
 {% extends "v2/page.html" %}
 
+{% set wrapper_secondary_class = 'hdx-v2-search-sidebar' %}
+{% set wrapper_primary_class = 'hdx-v2-search-content' %}
+
 {% block styles %}
   {{ super() }}
   {% asset 'hdx_theme/v2-search-styles' %}
@@ -66,7 +69,22 @@
   {% endblock %}
 {% endblock %}
 
-{% block secondary %}
+{% block secondary_content %}
+  <form id="search-page-filters-form" autocomplete="off">
+    <aside class="hdx-v2-search-filters">
+      {% snippet 'v2/search-filters.html',
+          facet_list=(data or c).full_facet_info.get('facets', {}) %}
+      {% set ext_after_metadata_modified = h.hdx_get_request_param('ext_after_metadata_modified', None) %}
+      {% if ext_after_metadata_modified %}
+        <input id="ext_after_metadata_modified" type="hidden"
+               name="ext_after_metadata_modified" value="{{ ext_after_metadata_modified }}"/>
+      {% endif %}
+      {% set ext_batch = h.hdx_get_request_param('ext_batch', None) %}
+      {% if ext_batch %}
+        <input id="ext_batch" type="hidden" name="ext_batch" value="{{ ext_batch }}"/>
+      {% endif %}
+    </aside>
+  </form>
 {% endblock %}
 
 {% block  global_dataset_input_search%}
