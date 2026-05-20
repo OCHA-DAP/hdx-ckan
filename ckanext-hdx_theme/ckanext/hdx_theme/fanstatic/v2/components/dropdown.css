@@ -61,6 +61,7 @@
   width: 1rem;
   flex-shrink: 0;
   transition: transform 0.2s ease;
+  line-height: 0;
 }
 .c-dropdown--open .c-dropdown__chevron {
   transform: rotate(180deg);
@@ -107,7 +108,7 @@
   font-size: var(--hdx-fs-xs);
 }
 .c-dropdown--size-s .c-dropdown__trigger {
-  height: 1.5rem;
+  height: 1.75rem;
   padding: var(--hdx-space-13) var(--hdx-space-2) var(--hdx-space-13) var(--hdx-space-14);
   gap: var(--hdx-space-1);
   font-size: var(--hdx-fs-xs);

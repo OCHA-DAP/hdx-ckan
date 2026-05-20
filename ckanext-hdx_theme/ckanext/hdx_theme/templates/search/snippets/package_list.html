@@ -30,6 +30,7 @@ Example:
 
 <div style="display: none;" id="analytics-number-of-results">{{packages_count}}</div>
 {%  set current_page_url = other_links.get('current_page_url') if 'current_page_url' in other_links else '' %}
+{% if not v2 %}
 <form id="dataset-filter-form" style="display: inline;">
 
     <div id="base-filter-location" style="display: none;">{{current_page_url}}</div>
@@ -75,6 +76,7 @@ Example:
 
     </div>
 </form>
+{% endif %}
 
 {# ─── v2: filter overlay, filter button, sidebar layout ────────────────── #}
 {% if v2 %}
@@ -100,6 +102,45 @@ Example:
   {% endfor %}
   {% set total_selected = _ns.total %}
 
+  {# ── v2 dataset list header (title + count + sort/limit at XL) ───────── #}
+
+  <div class="hdx-v2-list-header">
+    <div class="hdx-v2-list-header__left">
+      <strong class="hdx-v2-list-header__title">{{ _('Datasets') }}</strong>
+      <span class="hdx-v2-list-header__count">{{ h.localised_number(packages_count) }}</span>
+    </div>
+    <div class="hdx-v2-list-header__controls">
+      {% snippet 'v2/search-nav-controls.html',
+          sorting_selected=sorting_selected,
+          ext_page_size=ext_page_size,
+          admin_view=admin_view,
+          panel_suffix='hdr' %}
+    </div>
+    <div class="hdx-v2-list-header__filter-btn">
+      {% snippet 'v2/components/dropdown.html',
+          size='m',
+          placeholder='Filter',
+          count='(' ~ total_selected ~ ')' if total_selected > 0 else '',
+          state='filter' if total_selected > 0 else 'enabled',
+          icon=True,
+          icon_src='v2/icons/filter.svg',
+          chevron_src='',
+          panel_id='hdx-filter-overlay',
+          button_attrs={'data-module': 'filter-btn'} %}
+    </div>
+  </div>
+
+  {# ── v2 search bar row ───────────────────────────────────────────────── #}
+  <form class="hdx-v2-search-bar-row" id="dataset-filter-form">
+    {% snippet 'v2/components/search-input.html',
+        name='q',
+        id='headerSearch',
+        size='m',
+        placeholder=_('Search for datasets'),
+        value=searchValue,
+        autocomplete='off' %}
+  </form>
+
   {# ── MD/SM full-screen filter overlay ────────────────────────────────── #}
   <div class="hdx-v2-search-filter-overlay" id="hdx-filter-overlay">
     <div class="hdx-v2-search-filter-overlay__header">
@@ -112,6 +153,13 @@ Example:
       </button>
     </div>
     <div class="hdx-v2-search-filter-overlay__body">
+      <div class="hdx-v2-overlay-nav-controls">
+        {% snippet 'v2/search-nav-controls.html',
+            sorting_selected=sorting_selected,
+            ext_page_size=ext_page_size,
+            admin_view=admin_view,
+            panel_suffix='ovl' %}
+      </div>
       <div class="hdx-v2-search-filters">
         {% snippet 'v2/search-filters.html', facet_list=facet_list %}
       </div>
@@ -127,35 +175,6 @@ Example:
     </div>
   </div>
 
-  {# ── MD/SM filter button — hidden at LG via CSS ──────────────────────── #}
-  <div class="hdx-v2-search-filter-btn-row">
-    {% snippet 'v2/components/dropdown.html',
-        size='m',
-        placeholder='Filter',
-        count='(' ~ total_selected ~ ')' if total_selected > 0 else '',
-        state='filter' if total_selected > 0 else 'enabled',
-        icon=True,
-        icon_src='v2/icons/filter.svg',
-        chevron_src='',
-        panel_id='hdx-filter-overlay',
-        button_attrs={'data-module': 'filter-btn'} %}
-  </div>
-
-  {# ── LG two-column layout: sidebar + dataset list ────────────────────── #}
-  <div class="hdx-v2-search-layout">
-    <form id="search-page-filters-form" autocomplete="off">
-      <aside class="hdx-v2-search-filters">
-        {% snippet 'v2/search-filters.html', facet_list=facet_list %}
-        {% set ext_after_metadata_modified = h.hdx_get_request_param('ext_after_metadata_modified', None) %}
-        {% if ext_after_metadata_modified %}
-          <input id="ext_after_metadata_modified" type="hidden" name="ext_after_metadata_modified" value="{{ ext_after_metadata_modified }}"/>
-        {% endif %}
-        {% set ext_batch = h.hdx_get_request_param('ext_batch', None) %}
-        {% if ext_batch %}
-          <input id="ext_batch" type="hidden" name="ext_batch" value="{{ ext_batch }}"/>
-        {% endif %}
-      </aside>
-    </form>
 {% else %}
 {# v1: Bootstrap row/col ─────────────────────────────────────── #}
 <div class="row">
@@ -180,7 +199,7 @@ Example:
     </div>
 {% endif %}
 
-    <div id="search-page-results" class="col-9">
+    <div id="search-page-results" class="{% if not v2 %}col-9{% endif %}">
         {% if packages %}
             <div class="search-list">
                 {% block search_list %}
@@ -239,4 +258,4 @@ Example:
             </div>
         {% endif %}
     </div>
-</div>
+{% if not v2 %}</div>{% endif %}

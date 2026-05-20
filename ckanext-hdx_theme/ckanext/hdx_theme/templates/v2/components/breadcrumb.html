@@ -1,6 +1,6 @@
 {#
   Snippet: breadcrumb.html
-  Path:    templates/snippets/components/navigation/breadcrumb.html
+  Path:    templates/v2/components/breadcrumb.html
 
   Renders a c-breadcrumb horizontal trail.
 
@@ -10,32 +10,66 @@
                           The LAST item is rendered as the current (non-linked) crumb.
                           All previous items are rendered as links.
                           default: []
+  show_home     {bool}    When true (default), prepend a Home link as the first crumb.
+                          Set to false on pages that manage the first crumb themselves.
+                          default: true
   separator     {string}  Separator character between crumbs.  default: '/'
   extra_classes {string}  default: ''
   ─────────────────────────────────────────────────
-  Example
+  Example (Home prepended automatically)
 
-  {% snippet 'snippets/components/navigation/breadcrumb.html',
+  {% snippet 'v2/components/breadcrumb.html',
       items=[
-        {'label': 'Datasets',          'href': '/dataset'},
         {'label': 'Sudan',             'href': '/dataset?location=sd'},
         {'label': 'Humanitarian data', 'href': ''},
+      ] %}
+
+  Example (Home omitted)
+
+  {% snippet 'v2/components/breadcrumb.html',
+      show_home=false,
+      items=[
+        {'label': 'Datasets', 'href': '/dataset'},
+        {'label': 'My title', 'href': ''},
       ] %}
 #}
 
 {% set items         = items         if items         is defined else [] %}
+{% set show_home     = show_home     if show_home     is defined else true %}
 {% set separator     = separator     if separator     is defined else '/' %}
 {% set extra_classes = extra_classes if extra_classes is defined else '' %}
 
+{% if show_home %}
+  {% set items = [{'label': _('Home'), 'href': '/'}] + items %}
+{% endif %}
+
 <nav class="c-breadcrumb{{ ' ' ~ extra_classes if extra_classes }}"
-     aria-label="Breadcrumb">
+     aria-label="Breadcrumb"
+     vocab="https://schema.org/"
+     typeof="BreadcrumbList">
 
   {% for item in items %}
-    {% set is_last = loop.last %}
+    {% set is_last   = loop.last %}
+    {% set is_linked = item.href %}
 
-    <span class="c-breadcrumb__item">
+    <span class="c-breadcrumb__item"
+          property="itemListElement"
+          typeof="ListItem">
 
-      {% snippet 'v2/components/text-link.html', label=item.label, href=item.href, style='tertiary', size='xs' %}
+      {% if is_linked %}
+        {% snippet 'v2/components/text-link.html',
+            label=item.label,
+            href=item.href,
+            style='tertiary',
+            size='xs',
+            attrs={'property': 'item', 'typeof': 'WebPage'},
+            inner_attrs={'property': 'name'} %}
+      {% else %}
+        <span class="c-breadcrumb__current"
+              property="name">{{ item.label }}</span>
+      {% endif %}
+
+      <meta property="position" content="{{ loop.index }}">
 
       {% if not is_last %}
         <span class="c-breadcrumb__separator" aria-hidden="true">{{ separator }}</span>

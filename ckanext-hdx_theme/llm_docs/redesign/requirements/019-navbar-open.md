@@ -295,15 +295,15 @@ Add to the existing IIFE the following behaviors:
    - Toggle `hidden` on `#offcanvas-products`.
    - Flip `aria-expanded`.
 
-## Open items
+## Decisions Taken
 
-| # | Item                      | Notes                                                |
-|---|---------------------------|------------------------------------------------------|
-| 1 | `arrow-left.svg` path     | Confirm icon exists in `v2/icons/`                  |
-| 2 | `chevron-right.svg` path  | Confirm icon exists                                  |
-| 3 | Body scroll lock          | Verify no conflict with existing page scroll logic   |
-| 4 | Products URLs             | All `#` — real URLs needed before launch             |
-| 5 | Hamburger icon swap       | Decide: swap SVG or use CSS transform on single icon |
+| # | Question | Decision |
+|---|----------|----------|
+| 1 | `arrow-left.svg` path — confirm icon exists in `v2/icons/` | Confirmed — `arrow-left.svg` exists in `templates/v2/icons/` |
+| 2 | `chevron-right.svg` path — confirm icon exists | Confirmed — `chevron-right.svg` exists in `templates/v2/icons/` |
+| 3 | Body scroll lock — verify no conflict with existing page scroll logic | Implemented via `document.body.style.overflow = 'hidden'` / `''`; no conflicts observed |
+| 4 | Products URLs — all `#`, real URLs needed before launch | Resolved — products are rendered dynamically via `h.hdx_get_quick_links_list(archived=False)`; no hardcoded `#` URLs remain |
+| 5 | Hamburger icon swap — swap SVG or use CSS transform on single icon | CSS class approach chosen: `.is-open` added to the hamburger button; icon swap handled via CSS without JS SVG manipulation |
 
 ## Why
 

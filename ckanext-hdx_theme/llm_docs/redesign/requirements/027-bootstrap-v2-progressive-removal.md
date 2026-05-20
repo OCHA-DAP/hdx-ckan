@@ -34,33 +34,11 @@ This follows the Bootstrap audit (task 022) and implements decision **B1 — pro
 
 ---
 
-## Open decision: container handling
+## Decisions Taken
 
-**Must be resolved before implementation begins.**
-
-The current pattern (from CONVENTIONS.md and tasks 013/014) uses Bootstrap's `.container` class on `__inner` elements, with a scoped override applied via `.hdx-v2 .container` in `layout.less`. This means the class name is Bootstrap's, but the behavior is entirely ours.
-
-Three options:
-
-### Option 1 — Keep `.container` with the `.hdx-v2` override (status quo)
-`.container` remains in v2 templates. `layout.less` continues to override it inside `.hdx-v2`. Bootstrap's version is never visible.
-
-- **Pro:** No template changes for container. Familiar to developers.
-- **Con:** Still a Bootstrap class name in v2 HTML. Requires developers to know it's overridden. Contradicts the stated goal of removing Bootstrap class usage.
-
-### Option 2 — Replace with `hdx-v2-container` custom class (recommended)
-Introduce a new `hdx-v2-container` class in `layout.less` (same rules as current `.hdx-v2 .container`). Replace `.container` with `.hdx-v2-container` in all v2 templates.
-
-- **Pro:** Clean break. Self-documenting. Consistent with BEM/design-system naming. The override in `layout.less` becomes an explicit design system rule, not a Bootstrap patch.
-- **Con:** All v2 templates with a container need one-line class rename (3 files, ~4 occurrences).
-
-### Option 3 — Inline container logic per BEM element
-Each `__inner` element owns its own `max-width` and `padding` in its section LESS block. No shared container class at all.
-
-- **Pro:** Fully BEM. No shared utility dependency.
-- **Con:** Duplicated max-width/padding values across section LESS blocks. Harder to maintain a consistent content width globally.
-
-**Recommendation: Option 2 (`hdx-v2-container`).** One-time rename, eliminates the Bootstrap name, and keeps a single source of truth for content width in `layout.less`.
+| # | Question | Decision |
+|---|----------|----------|
+| 1 | Container handling — keep Bootstrap `.container` with `.hdx-v2` override, replace with `hdx-v2-container`, or inline per BEM element? | Option 2 adopted: `hdx-v2-container` custom class introduced in `layout.less`. All v2 templates (`header.html`, `footer.html`, `page.html`, `home/index.html`, etc.) use `.hdx-v2-container` on `__inner` elements. The `.hdx-v2 .container` override was removed. |
 
 ---
 

@@ -45,16 +45,22 @@
 {% set href          = href          if href          is defined else '' %}
 {% set attrs         = attrs         if attrs         is defined else {} %}
 {% set extra_classes = extra_classes if extra_classes is defined else '' %}
+{% set tooltip       = tooltip       if tooltip       is defined else '' %}
 
 {% if type == 'list' %}
   {# Text-only list item #}
   {% set classes = ['c-list-item', 'c-list-item--type-list', 'c-list-item--size-' ~ size] %}
+  {% if state == 'active' %}{% set classes = classes + ['is-active'] %}{% endif %}
   {% if extra_classes %}{% set classes = classes + [extra_classes] %}{% endif %}
 
   {% if href %}
-    <a class="{{ classes | join(' ') }}" href="{{ href }}">{{ label }}</a>
+    <a class="{{ classes | join(' ') }}" href="{{ href }}"
+       {% for key, val in attrs.items() %}{{ key }}="{{ val }}" {% endfor %}
+       {% if tooltip %}title="{{ tooltip }}"{% endif %}>{{ label }}</a>
   {% else %}
-    <div class="{{ classes | join(' ') }}">{{ label }}</div>
+    <div class="{{ classes | join(' ') }}"
+         {% for key, val in attrs.items() %}{{ key }}="{{ val }}" {% endfor %}
+         {% if tooltip %}title="{{ tooltip }}"{% endif %}>{{ label }}</div>
   {% endif %}
 
 {% elif type == 'checklist' %}

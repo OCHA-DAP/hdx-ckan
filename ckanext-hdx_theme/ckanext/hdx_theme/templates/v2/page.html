@@ -88,9 +88,9 @@
         </div>
       {% endblock %}
 
-      <div class="container mainContent">
+      <div>
         {% set secondary_block_output = self.secondary() %}
-        <div class="hdx-wrapper wrapper{% block wrapper_class %}{% endblock %}{% if secondary_block_output|trim == '' %} no-nav{% endif %}">
+        <div class="{% if secondary_block_output|trim == '' %}no-nav{% endif %}">
           {#
           The pre_primary block can be used to add content to before the
           rendering of the main content columns of the page.
@@ -104,9 +104,9 @@
             </div>
           {% endif %}
 
-          <div class="contentBackground{% if secondary_block_output|trim != '' and not secondary_right_side %} twoColumnBackground{% endif %}">
+          <div>
             <div>
-              <div>
+              <div class="hdx-v2-content-columns">
                 {% if secondary_block_output|trim != '' and not secondary_right_side %}
                   <div class="{% if wrapper_secondary_class %}{{ wrapper_secondary_class }}{% else %}{% endif %} wrapper-secondary">
                     {{ secondary_block_output }}

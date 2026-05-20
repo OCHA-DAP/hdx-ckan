@@ -2,77 +2,117 @@
   Snippet: dropdown-panel.html
   Path:    templates/v2/components/dropdown-panel.html
 
-  Renders the PANEL OVERLAY of a dropdown (search, list, footer).
-  Shown/hidden by JS; must be positioned relative to its trigger.
-
-  Uses: c-search-input, c-list-item, c-button, c-text-link
+  Renders the PANEL OVERLAY of a dropdown (navigate-on-select or checklist).
+  Called from dropdown.html; can also be used standalone.
 
   Parameters
   ─────────────────────────────────────────────────
-  panel_id           {string}  HTML id for aria-controls linkage.  default: ''
-  search             {bool}    Show a search field.  default: True
-  search_placeholder {string}  default: 'Search'
-  items              {list}    List of dicts: {value, label, count, checked}.
-                               default: []
-  confirm_label      {string}  Text for confirm button, e.g. 'Confirm (3)'.  default: 'Confirm'
-  clear_label        {string}  Clear link label.  default: 'Clear selection'
-  type               {string}  'list' | 'calendar'  default: 'list'
-  extra_classes      {string}  default: ''
+  panel_id          {string}  id on the panel div.  default: ''
+  items             {list}    Panel items.
+                              Navigate format: {value, label, active, tooltip?}.
+                              Checklist format: {value, label, count, checked, active,
+                              attrs, extra_classes, children?}.
+                              default: []
+  navigate          {bool}    True → navigate-on-select list (sort, results-per-page).
+                              False → multi-select checklist.  default: False
+  has_search        {bool}    Show search input (checklist only).  default: False
+  filter_search_key {string}  Value for data-filter-search attr.  default: ''
+  has_clear         {bool}    Show clear footer (checklist only).  default: False
+  clear_facet       {string}  Facet key written to data-facet on the clear button.
+                              Pass 'advanced' to clear all advanced filters.  default: ''
   ─────────────────────────────────────────────────
-  Example
+  Example (navigate)
+
+  {% snippet 'v2/components/dropdown-panel.html',
+      panel_id='dd-sort',
+      navigate=True,
+      items=[
+        {'value': 'metadata_modified desc', 'label': 'Last Modified', 'active': True},
+        {'value': 'metadata_created desc',  'label': 'Last Added',    'active': False},
+      ] %}
+
+  Example (checklist)
 
   {% snippet 'v2/components/dropdown-panel.html',
       panel_id='dd-country',
       items=[
-        {'value': 'af', 'label': 'Afghanistan', 'count': '(309)', 'checked': True},
-        {'value': 'al', 'label': 'Albania',     'count': '(97)',  'checked': False},
-      ] %}
+        {'value': 'af', 'label': 'Afghanistan', 'count': '(309)', 'checked': True,  'active': True,  'attrs': {}},
+        {'value': 'al', 'label': 'Albania',     'count': '(97)',  'checked': False, 'active': False, 'attrs': {}},
+      ],
+      has_clear=True, clear_facet='groups' %}
 #}
 
-{% set panel_id           = panel_id           if panel_id           is defined else '' %}
-{% set search             = search             if search             is defined else True %}
-{% set search_placeholder = search_placeholder if search_placeholder is defined else 'Search' %}
-{% set items              = items              if items              is defined else [] %}
-{% set confirm_label      = confirm_label      if confirm_label      is defined else 'Confirm' %}
-{% set clear_label        = clear_label        if clear_label        is defined else 'Clear selection' %}
-{% set type               = type               if type               is defined else 'list' %}
-{% set extra_classes      = extra_classes      if extra_classes      is defined else '' %}
+{% set panel_id          = panel_id          if panel_id          is defined else '' %}
+{% set items             = items             if items             is defined else [] %}
+{% set navigate          = navigate          if navigate          is defined else False %}
+{% set has_search        = has_search        if has_search        is defined else False %}
+{% set filter_search_key = filter_search_key if filter_search_key is defined else '' %}
+{% set has_clear         = has_clear         if has_clear         is defined else False %}
+{% set clear_facet       = clear_facet       if clear_facet       is defined else '' %}
 
-<div class="c-dropdown__panel{{ ' ' ~ extra_classes if extra_classes }}"
-     {% if panel_id %}id="{{ panel_id }}"{% endif %}
-     role="listbox" aria-multiselectable="true">
+{% if navigate %}
 
-  {% if type == 'list' %}
-
-    {% if search %}
-      {% snippet 'v2/components/search-input.html',
-          size='m', state='enabled', placeholder=search_placeholder %}
-    {% endif %}
-
+  <div class="c-dropdown__panel"
+       {% if panel_id %}id="{{ panel_id }}"{% endif %}
+       hidden>
     <div class="c-dropdown__list-wrap">
-      <ul class="c-dropdown__list" role="group">
+      <div class="c-dropdown__list">
         {% for item in items %}
           {% snippet 'v2/components/list-item.html',
-              type='checklist', size='m',
-              state='active' if item.checked else 'default',
-              label=item.label, count=item.get('count', '(0)'),
-              checked=item.checked, value=item.get('value', '') %}
+              type='list',
+              label=item.label,
+              state='active' if item.active else 'default',
+              attrs={'data-nav-value': item.value},
+              tooltip=item.get('tooltip', '') %}
         {% endfor %}
-      </ul>
-
-      <div class="c-dropdown__scrollbar" aria-hidden="true">
-        <div class="c-dropdown__scrollbar-thumb"></div>
       </div>
     </div>
+  </div>
 
-    <div class="c-dropdown__footer">
-      {% snippet 'v2/components/button.html',
-          style='secondary', type='text', size='m', state='enabled', label=confirm_label %}
+{% else %}
 
-      {% snippet 'v2/components/text-link.html',
-          style='tertiary', size='m', state='enabled', label=clear_label %}
+  <div class="c-dropdown__panel"
+       {% if panel_id %}id="{{ panel_id }}"{% endif %}
+       role="listbox" aria-multiselectable="true"
+       hidden>
+    {% if has_search %}
+      {% snippet 'v2/components/search-input.html',
+          size='m', placeholder='Search...', name='',
+          attrs={'data-filter-search': filter_search_key} %}
+    {% endif %}
+    <div class="c-dropdown__list-wrap">
+      <div class="c-dropdown__list" role="group">
+        {# Flatten parent items + their children into a single sequence #}
+        {% set _flat = namespace(rows=[]) %}
+        {% for item in items %}
+          {% set _flat.rows = _flat.rows + [item] %}
+          {% if item.get('children') %}
+            {% for child in item.children %}
+              {% set _flat.rows = _flat.rows + [child] %}
+            {% endfor %}
+          {% endif %}
+        {% endfor %}
+        {% for row in _flat.rows %}
+          {% snippet 'v2/components/list-item.html',
+              type='checklist',
+              checked=row.checked,
+              value=row.get('value', ''),
+              label=row.label,
+              count=row.get('count', ''),
+              state='active' if row.get('active') else 'default',
+              extra_classes=row.get('extra_classes', ''),
+              attrs=row.get('attrs', {}) %}
+        {% endfor %}
+      </div>
     </div>
+    {% if has_clear %}
+      <div class="c-dropdown__footer">
+        {% snippet 'v2/components/text-button.html',
+            style='tertiary', size='m', tag='button',
+            label='Clear selection',
+            attrs={'data-action': 'clear-filter', 'data-facet': clear_facet} %}
+      </div>
+    {% endif %}
+  </div>
 
-  {% endif %}
-
-</div>
+{% endif %}

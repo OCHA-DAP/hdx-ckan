@@ -31,6 +31,7 @@
 {% set is_first = (current_page <= 1) %}
 {% set is_last  = (current_page >= total_pages) %}
 
+{% if total_pages > 1 %}
 <nav class="c-pagination c-pagination--size-{{ size }}{{ ' ' ~ extra_classes if extra_classes }}"
      aria-label="Pagination">
 
@@ -70,3 +71,4 @@
   </a>
 
 </nav>
+{% endif %}

@@ -4,42 +4,189 @@
 // ============================================================
 
 @import "breakpoints.less";
+@import "typography.less";
 
 // ── Local tokens ────────────────────────────────────────────
-@hdx-v2-sf-sidebar-width: 15rem;        // 240px sidebar fixed width
+@hdx-v2-sf-sidebar-width: 21.875rem;    // 350px sidebar fixed width
 
 
 // ────────────────────────────────────────────────────────────
-// hdx-v2-search-layout — LG two-column content wrapper
+// hdx-v2-list-header — dataset list header (title + controls)
 // ────────────────────────────────────────────────────────────
 
-.hdx-v2-search-layout {
-    display:     flex;
-    gap:         var(--hdx-space-6);   // 24 px column gap
-    align-items: flex-start;
+.hdx-v2-list-header {
+    display:       flex;
+    align-items:   center;
+    width:         100%;
+    margin-bottom: var(--hdx-space-4);  // 16 px below header
 
-    // dataset-list fills remaining width at LG
-    .hdx-v2-dataset-list {
-        flex:      1;
-        min-width: 0;  // prevent flex blowout
+
+    &__left {
+        flex:        1;
+        display:     flex;
+        align-items: center;
+        gap:         var(--hdx-space-2);  // 8 px between title and count
     }
 
-    // Sidebar: hide at MD/SM only when it is a direct child of the layout
-    // (inside the overlay it is always visible)
-    .hdx-v2-search-filters {
+    &__title {
+        font-family: @hdx-font-display;
+        font-weight: @hdx-fw-bold;
+        line-height: 130%;
+        color:       var(--hdx-neutral-95);
+        font-size:   var(--hdx-fs-4xl);  // 2rem XL
+
+        @media (max-width: @hdx-bp-xl) {
+            font-size: var(--hdx-fs-3xl);  // 1.75rem MD
+        }
+
+        @media (max-width: @hdx-bp-md) {
+            font-size: var(--hdx-fs-2xl);  // 1.5rem SM
+        }
+    }
+
+    &__count {
+        font-family: var(--hdx-font-body);
+        font-size:   var(--hdx-fs-m);  // 1rem
+        font-weight: var(--hdx-fw-regular);
+        line-height: 130%;
+        color:       var(--hdx-neutral-8);
+    }
+
+    &__controls {
+        // XL: visible; MD/SM: hidden — controls move to the filter overlay
         @media (max-width: @hdx-bp-xl) {
             display: none;
         }
+    }
 
+    &__filter-btn {
+        // MD/SM: visible alongside title; XL: hidden (controls shown instead)
         @media (min-width: @hdx-bp-xl) {
-            flex-shrink: 0;
-            width:       @hdx-v2-sf-sidebar-width;
+            display: none;
+        }
+
+        .c-dropdown { width: auto; }  // don't stretch to 100%
+    }
+}
+
+
+// ────────────────────────────────────────────────────────────
+// hdx-v2-search-bar-row — full-width search input row
+// Sits between the list header and the filter overlay/layout
+// ────────────────────────────────────────────────────────────
+
+.hdx-v2-search-bar-row {
+    width:         100%;
+    margin-bottom: var(--hdx-space-4);  // 16 px gap before the dataset layout
+
+    .c-search-input {
+        width: 100%;
+    }
+}
+
+
+// ────────────────────────────────────────────────────────────
+// hdx-v2-nav-controls — sort + results-per-page pair
+// Used in both the XL header and the MD/SM filter overlay.
+// Each child is a hdx-v2-nav-ctrl-pair (label + c-dropdown side by side).
+// ────────────────────────────────────────────────────────────
+
+.hdx-v2-nav-controls {
+    display:     flex;
+    align-items: center;
+    gap:         var(--hdx-space-4);  // 16 px between the two pairs
+
+
+    // Label + trigger side by side (matches Figma .wrapper layout)
+    .hdx-v2-nav-ctrl-pair {
+        display:     flex;
+        align-items: center;
+        gap:         var(--hdx-space-3);  // 12 px label → trigger (Figma: 0.75rem)
+
+        // External label (rendered outside the c-dropdown wrapper)
+        .hdx-v2-nav-ctrl-label {
+            font-family: var(--hdx-font-body);
+            font-size:   var(--hdx-fs-s);       // 0.875rem / 14 px
+            font-weight: @hdx-fw-regular;
+            line-height: 130%;
+            color:       var(--hdx-neutral-8);
+            white-space: nowrap;
+        }
+
+        .c-dropdown--size-s {
+            width: auto;  // size to trigger content, not 100% of parent
+        }
+    }
+}
+
+
+// ────────────────────────────────────────────────────────────
+// hdx-v2-breadcrumb-row — breadcrumb wrapper above search content
+// ────────────────────────────────────────────────────────────
+
+.hdx-v2-breadcrumb-row {
+    margin-top: var(--hdx-space-2);
+    margin-bottom: var(--hdx-space-2);
+}
+
+
+// ────────────────────────────────────────────────────────────
+// Applied via wrapper_class block in search/search.html
+// ────────────────────────────────────────────────────────────
+
+.hdx-v2-content-columns {
+    display:     flex;
+    align-items: stretch;
+
+    // ────────────────────────────────────────────────────────────
+    // hdx-v2-search-sidebar — sidebar column (wrapper-secondary)
+    // Applied via wrapper_secondary_class in search/search.html
+    // ────────────────────────────────────────────────────────────
+
+    .hdx-v2-search-sidebar {
+        @media (min-width: @hdx-bp-xl) {
+            flex-shrink:  0;
+            width:        @hdx-v2-sf-sidebar-width;
+            border-right: 1px solid var(--hdx-neutral-1);
+            padding:      var(--hdx-space-5)    // 20px top
+                          var(--hdx-space-10)  // 40px right
+                          5rem                 // 80px bottom
+                          0;
+        }
+
+        @media (max-width: @hdx-bp-xl) {
+            display: none;
         }
     }
 
-    @media (max-width: @hdx-bp-xl) {
-        // MD/SM: single column, sidebar hidden via child rule
-        flex-direction: column;
+
+    // ────────────────────────────────────────────────────────────
+    // hdx-v2-search-content — content column (wrapper-primary)
+    // Applied via wrapper_primary_class in search/search.html
+    // ────────────────────────────────────────────────────────────
+
+    .hdx-v2-search-content {
+        flex:      1;
+        min-width: 0;  // prevent flex blowout
+        padding:   var(--hdx-space-10)  // 40px top
+                   0  // 0 right
+                   var(--hdx-space-10)  // 40px bottom
+                   var(--hdx-space-10); // 40px left
+
+        // MD (768–1280px): side padding removed — hdx-v2-container provides 3rem sides
+        @media (max-width: @hdx-bp-xl) {
+            padding: var(--hdx-space-8) 0;  // 32px top/bottom
+        }
+
+        // SM (< 768px): hdx-v2-container provides 1rem sides
+        @media (max-width: @hdx-bp-md) {
+            padding: var(--hdx-space-6) 0;  // 24px top/bottom
+        }
+
+        .hdx-v2-dataset-list {
+            flex:      1;
+            min-width: 0;
+        }
     }
 }
 
@@ -74,18 +221,14 @@
 
 
 // ────────────────────────────────────────────────────────────
-// hdx-v2-search-filter-btn-row — wrapper for the MD/SM filter button
+// hdx-v2-pagination-row — centers c-pagination below the dataset list
 // ────────────────────────────────────────────────────────────
 
-.hdx-v2-search-filter-btn-row {
+.hdx-v2-pagination-row {
     display:         flex;
-    justify-content: flex-end;
-    margin-bottom:   var(--hdx-space-4);  // 16 px above results
-
-    // LG: hidden — inline sidebar used instead
-    @media (min-width: @hdx-bp-xl) {
-        display: none;
-    }
+    justify-content: center;
+    margin-top:      var(--hdx-space-8);   // 32px
+    margin-bottom:   var(--hdx-space-10);
 }
 
 
@@ -143,6 +286,33 @@
         .hdx-v2-search-filters {
             width: 100%;
         }
+
+        // ────────────────────────────────────────────────────────────
+        // hdx-v2-overlay-nav-controls — sort/limit inside the MD/SM overlay
+        // ────────────────────────────────────────────────────────────
+
+        .hdx-v2-overlay-nav-controls {
+            margin-bottom: var(--hdx-space-6);  // 24 px before filter groups
+
+            .hdx-v2-nav-controls {
+                display:               grid;
+                grid-template-columns: 1fr 1fr;
+                align-items:           center;
+                width:                 100%;
+                gap:                   var(--hdx-space-4);
+            }
+
+            // Sort by pair: right-aligned in its grid cell
+            .hdx-v2-nav-ctrl-pair:last-child {
+                justify-content: flex-end;
+                // Sort panel: right-anchored so it never overflows past the right viewport edge
+                .c-dropdown__panel {
+                    left:  auto;
+                    right: 0;
+                }
+            }
+        }
+
     }
 
     &__footer {

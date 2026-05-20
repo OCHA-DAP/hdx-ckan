@@ -338,15 +338,15 @@ No jQuery. No external dependencies.
 
 `fanstatic/webassets.yml` already references `v2/navbar.js` in `v2-page-scripts` — no change needed.
 
-## Open items
+## Decisions Taken
 
-| # | Item                    | Notes                                                          |
-|---|-------------------------|----------------------------------------------------------------|
-| 1 | Products URLs           | All `#` — real URLs needed before launch                       |
-| 2 | Sysadmin dashboard URLs | Some routes use `#` — verify actual route names in codebase    |
-| 3 | Notification item links | Each `html_template` snippet needs a link URL per type         |
-| 4 | `close.svg` icon        | Confirm path `v2/icons/close.svg` exists                       |
-| 5 | `arrow-right.svg` icon  | Needed in notification item snippets                           |
+| # | Question | Decision |
+|---|----------|----------|
+| 1 | Products URLs | Driven by `h.hdx_get_quick_links_list(archived=False)` helper — real URLs from the quick-links registry, no `#` placeholders |
+| 2 | Sysadmin dashboard URLs | All routes resolved in `h.hdx_get_user_menu_sections()` helper (e.g. `hdx_carousel.show`, `hdx_quick_links.show`, `hdx_user_permission.read`, etc.) — no `#` placeholders remain |
+| 3 | Notification item links | Each `html_template` snippet is included directly via `{% include notification.html_template %}` — link URLs are rendered inside each individual notification snippet |
+| 4 | `close.svg` icon | Confirmed — exists at `v2/icons/close.svg` |
+| 5 | `arrow-right.svg` icon | Confirmed — exists at `v2/icons/arrow-right.svg` |
 
 ## Why
 

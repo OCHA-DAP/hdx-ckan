@@ -122,13 +122,16 @@
 .c-pagination__item--prev,
 .c-pagination__item--next {
   line-height: 0;
-  color: var(--hdx-neutral-95);
+  color: var(--hdx-neutral-5);
 }
 .c-pagination__item--ellipsis {
   cursor: default;
 }
 .c-pagination__item--ellipsis:hover {
   background-color: var(--hdx-neutral-0);
+}
+.c-pagination__item:hover {
+  color: var(--hdx-primary-5);
 }
 .c-pagination--size-md .c-pagination__item {
   width: 2.375rem;
