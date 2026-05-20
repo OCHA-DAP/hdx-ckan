@@ -81,7 +81,6 @@ $(function(){
 
             var hashCode = hdxUtil.compute.strListHash(properties);
 
-            console.log('Hash code for ' + this.get('name') + ' is ' + hashCode);
             return hashCode;
 
         },
@@ -267,18 +266,42 @@ $(function(){
             // Fetch the collection if we have a package_id and no models.
             if (this.collection.package_id !== null && this.collection.length === 0){
                 this.collection.fetch({
+                reset: true,
                 success: function(){
                     // console.log('Fetched the collection.');
                 }.bind(this),
                 error: function(e){
                     console.log('Cannot render: ' + e);
+                    // Still hide the loading widget so the user isn't stuck on the spinner
+                    this.contribute_global.controlUserWaitingWidget(false);
                 }.bind(this)});
             } else if (this.collection.length > 0) {
                 this.render();
                 this.updateTotal();
             }
-            this.listenTo(this.collection, 'sync add remove reset change', this.generateDatasetPreviewOptions);
-            this.listenTo(this.collection, 'sync add remove reset', this.render);
+
+            // Debounced rebuild for noisy per-keypress events (resource name edits).
+            // 300 ms is enough to avoid rebuilding on every keystroke while staying
+            // responsive.  Structural events (sync, reset, add, remove, sort) are
+            // NOT debounced because they are infrequent and must be in sync immediately.
+            this._generatePreviewOptionsDebounced = _.debounce(function() {
+                this.contribute_global.generateDatasetPreviewOptions(this.collection);
+            }.bind(this), 300);
+
+            // Structural events: rebuild preview options immediately.
+            // 'sort' is included because the preview <select> uses collection indices
+            // as values — after a drag-drop reorder those indices change.
+            // 'change:dataset_preview_enabled' is intentionally omitted: that change
+            // originates from the dropdown itself, so listening would create a feedback loop.
+            this.listenTo(this.collection, 'sync reset add remove sort', this.generateDatasetPreviewOptions);
+
+            // Name changes are debounced to avoid rebuilding the dropdown on every keystroke.
+            this.listenTo(this.collection, 'change:name', this._generatePreviewOptionsDebounced);
+
+            this.listenTo(this.collection, 'reset', this.render);
+            this.listenTo(this.collection, 'add', this.addOne);
+            this.listenTo(this.collection, 'remove', this.removeOne);
+            this.listenTo(this.collection, 'sort', this.renderPositionLabels);
             this.listenTo(this.collection, 'add remove reset', this.updateTotal);
             this.listenTo(this.collection, 'remove', this.onSortOrderChange);
             this.listenTo(this.collection, 'upload event', this.showUserWaitingMessage);
@@ -293,35 +316,92 @@ $(function(){
                     this.$el.trigger('sort-updated');
                 }.bind(this),
                 onStart: function(e){
-                    console.log("Drag Area Disable");
                     this.$el.find(".drag-drop-component").trigger("drag-area-disable");
                 }.bind(this),
                 onEnd: function(e){
-                    console.log("Drag Area Enable");
                     this.$el.find(".drag-drop-component").trigger("drag-area-enable");
-                    this.render();
                 }.bind(this)
             });
         },
 
         render: function() {
-            this.resource_list.empty();
-            this.collection.each(function(resource) {
-                this.addOne(resource);
-            }, this);
+            var self = this;
+            // Snapshot the models array so async batches work against a stable list
+            // even if the collection is mutated (add/remove/sort) before they finish.
+            var models = this.collection.models.slice();
+            var BATCH_SIZE = 10;
+
+            // Increment the render generation counter.  Each batch closure captures
+            // the current generation and aborts if a newer render() has superseded it,
+            // preventing stale batches from appending DOM nodes out of order or
+            // re-moving already-inserted view.el nodes.
+            this._renderGeneration = (this._renderGeneration || 0) + 1;
+            var generation = this._renderGeneration;
+
+            this.resource_list[0].innerHTML = "";
+
+            var renderBatch = function(startIdx) {
+                // Stale batch — a newer render() was called while we were waiting;
+                // discard this batch's work entirely.
+                if (self._renderGeneration !== generation) return;
+
+                var fragment = document.createDocumentFragment();
+                var endIdx = Math.min(startIdx + BATCH_SIZE, models.length);
+                for (var i = startIdx; i < endIdx; i++) {
+                    var view = self._getOrCreateView(models[i]);
+                    view.render();
+                    fragment.appendChild(view.el);
+                }
+                self.resource_list[0].appendChild(fragment);
+                if (endIdx < models.length) {
+                    var scheduleCallback = window.requestIdleCallback || function(cb) { setTimeout(cb, 16); };
+                    scheduleCallback(function() { renderBatch(endIdx); });
+                }
+            };
+
+            renderBatch(0);
             return this;
         },
 
-        generateDatasetPreviewOptions: function(options) {
-            if(options.changed && !options.changed.dataset_preview_enabled){
-                this.contribute_global.generateDatasetPreviewOptions(this.collection);
+        _getOrCreateView: function(resource) {
+            if (!resource.view) {
+                resource.view = new ResourceItemView({model: resource});
+                this.listenTo(resource.view, "upload progress", this.showUserWaitingMessage);
             }
+            return resource.view;
+        },
+
+        generateDatasetPreviewOptions: function() {
+            this.contribute_global.generateDatasetPreviewOptions(this.collection);
         },
 
         addOne: function(resource) {
-            var view = new ResourceItemView({model: resource});
-            this.listenTo(view, 'upload progress', this.showUserWaitingMessage);
-            this.resource_list.append(view.render().el);
+            var view = this._getOrCreateView(resource);
+            view.render();
+            this.resource_list.prepend(view.el);
+            this.onSortOrderChange();
+            // updateTotal is handled by the 'add' collection listener
+        },
+
+        removeOne: function(resource) {
+            if (resource.view) {
+                // Stop listening to the view BEFORE nulling the reference so we can
+                // still pass the correct object to stopListening.
+                this.stopListening(resource.view);
+                resource.view.remove();  // removes el from DOM + calls view.stopListening()
+                resource.view = null;    // break the model→view reference so GC can collect
+                                         // the detached view even though the model stays alive
+                                         // in collection.removedModels until the next save.
+            }
+            // updateTotal is handled by the 'remove' collection listener
+        },
+
+        renderPositionLabels: function() {
+            this.collection.each(function(resource, i) {
+                if (resource.view) {
+                    resource.view.$('.resource-position').text('File ' + (i + 1));
+                }
+            });
         },
 
         updateTotal: function() {
@@ -331,7 +411,6 @@ $(function(){
 
         showUserWaitingMessage: function(msg) {
           this.contribute_global.controlUserWaitingWidget(true, msg);
-          console.log('User waiting msg: ' + msg);
         },
 
         moveResourceUp: function (event) {
@@ -363,6 +442,7 @@ $(function(){
             // Sort order may be changed by drag n drop reordering, sorting arrows or by removing a resource.
             var has_changed = false;
             this.collection.each(function(resource, i) {
+                if (!resource.view) return;  // view may not exist yet during addOne
                 var new_pos = resource.view.$el.index();
                 if (resource.get('position') != new_pos) {
                     has_changed = true;
@@ -372,7 +452,6 @@ $(function(){
             if (has_changed) {
                 this.collection.orderChanged = true;
                 this.collection.sort();
-                this.render();
             }
         }
     });
@@ -440,7 +519,6 @@ $(function(){
             }, false);
 
             this.el.addEventListener("dragend", function(e) {
-                console.log("Removing ghost!");
                 //dragParent.removeChild(dragGhost);
             }, false);
 
@@ -453,7 +531,7 @@ $(function(){
                 this.dragAreaEnabled = true;
             }.bind(this));
 
-            this.googlepicker = this.initGooglePicker();
+            this.googlepicker = null;
 
             if (!this.model.id) {
                 this._guessFormat();
@@ -476,6 +554,15 @@ $(function(){
         },
 
         render: function () {
+            // If already rendered, do not destroy and recreate the DOM — that would
+            // tear down Select2 and other initialized CKAN modules without re-initializing
+            // them.  Position labels are maintained by renderPositionLabels(); format
+            // updates by _guessFormat(); file/source changes reset _rendered=false before
+            // calling render() so they always get a fresh init.
+            if (this._rendered) {
+                return this;
+            }
+
             var template_data = _.clone(this.model.attributes);
             template_data.template_position = this.model.collection.indexOf(this.model);
             template_data.lower_case_format = template_data.format ? template_data.format.toLowerCase() : null;
@@ -484,13 +571,14 @@ $(function(){
             var html = this.template(template_data);
             this.$el.html(html);
 
-            /* Initializing CKAN js modules inside this VIEW */
+            /* Initialize CKAN js modules (Select2, etc.) on first render only */
             this.$el.find('[data-module]').each(
                 function (i, el) {
-                    //console.log("Initializing ckan module for " + $(el).prop('outerHTML'));
                     ckan.module.initializeElement(el);
                 }
             );
+            this._rendered = true;
+
             this._setUpDragAndDrop();
 
             var modelUrlType = this.model.get('url_type');
@@ -504,9 +592,6 @@ $(function(){
                 this._setUpForSourceType('source-file');
             }
 
-            // if (template_data.pii && template_data.pii === 'true') {
-            //   this.$el.addClass('orange');
-            // }
 
             this._showFormatWarningIfNeeded();
 
@@ -616,6 +701,7 @@ $(function(){
             this.model.set('format', '');
             this._setUpWithPath(file.name, true, null, false, file);
             this._setUpForSourceType("source-file-selected");
+            this._rendered = false;  // force module re-init after file type change
             this.render();
             this._guessFormat();
         },
@@ -672,6 +758,9 @@ $(function(){
         },
 
         createGoogleDrivePicker: function() {
+            if (!this.googlepicker) {
+                this.googlepicker = this.initGooglePicker();
+            }
             this.googlepicker.open();
         },
 
@@ -680,6 +769,7 @@ $(function(){
             this._setUpForSourceType("source-url");
             // focus on first text field
             this.$('input:text')[0].focus();
+            this._rendered = false;  // force module re-init after cloud file selection
             this.render();
         },
 
@@ -788,8 +878,26 @@ $(function(){
         _guessFormat: function() {
             var onSuccessSetFormat = function(data) {
                 if (data.success === true && data.result) {
-                    this.model.set('format', data.result);
-                    this.render();
+                    var format = data.result;
+                    this.model.set('format', format);
+
+                    // Update the format label and Select2 directly instead of a full
+                    // re-render, because this.$el.html() would destroy the already-
+                    // initialized Select2 widget without re-initializing it (_rendered=true).
+                    this.$('.format-label').attr('data-format', format.toLowerCase());
+                    var $select = this.$('.resource_format_field');
+                    if ($select.length) {
+                        // The format autocomplete select may not have this option yet; add it.
+                        if ($select.find('option[value="' + format + '"]').length === 0) {
+                            $select.append(new Option(format, format, true, true));
+                        }
+                        $select.val(format).trigger('change');
+                    } else {
+                        // View hasn't rendered yet (race condition); fall back to full render.
+                        this._rendered = false;
+                        this.render();
+                    }
+                    this._showFormatWarningIfNeeded();
                 }
             }.bind(this);
             var extension = this._computeExtension();
@@ -831,7 +939,7 @@ $(function(){
         resourceDefaults: function () {
             return {
                 //id: 'new',
-                /* Internally the position will start from 0 like in CKAN. In template it is +1 */
+                // Keep position unique for DOM id/name attributes in the template.
                 position: this.resourceCollection.length,
                 url: '',
                 format: '',
@@ -866,7 +974,19 @@ $(function(){
 
                         this.contribute_global.setResourceModelList(this.resourceCollection);
                         this.contribute_global.generateDatasetPreviewOptions(this.resourceCollection);
-                        this.contribute_global.controlUserWaitingWidget(false);
+
+                        // For large datasets (>20 resources) no inline JSON is embedded,
+                        // so the collection fetches via AJAX. Delay hiding the loading widget
+                        // until the fetch completes (the 'sync' event on the collection).
+                        // For small/new datasets the data is already present; hide immediately.
+                        if (this.resourceCollection.length === 0 && package_id) {
+                            // Collection is fetching — hide widget after sync
+                            this.resourceCollection.once('sync', function() {
+                                this.contribute_global.controlUserWaitingWidget(false);
+                            }.bind(this));
+                        } else {
+                            this.contribute_global.controlUserWaitingWidget(false);
+                        }
                     }.bind(this)
                 );
 
@@ -903,8 +1023,7 @@ $(function(){
         onCreateBtn: function(e) {
             var data = this.resourceDefaults();
             var newResourceModel = new Resource(data);
-            this.resourceCollection.unshift(newResourceModel);
-            this.resourceListView.onSortOrderChange();
+            this.resourceCollection.add(newResourceModel);
         },
         onFileViaDragAndDrop: function(file){
             var data = this.resourceDefaults();
