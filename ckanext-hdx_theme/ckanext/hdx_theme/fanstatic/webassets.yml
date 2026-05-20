@@ -245,6 +245,7 @@ v2-components-scripts:
   contents:
     - v2/components/password-toggle.js
     - v2/components/dataset-card.js
+    - v2/components/dataset-page-header.js
 
 v2-page-styles:
   output: ckanext-hdx_theme/%(version)s_v2-page-styles.css

@@ -130,7 +130,7 @@
 .c-pagination__item--ellipsis:hover {
   background-color: var(--hdx-neutral-0);
 }
-.c-pagination__item:hover {
+.c-pagination__item:not(.is-disabled):hover {
   color: var(--hdx-primary-5);
 }
 .c-pagination--size-md .c-pagination__item {
