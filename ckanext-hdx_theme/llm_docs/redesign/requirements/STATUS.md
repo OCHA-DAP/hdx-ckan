@@ -38,3 +38,6 @@
 | 032 | [breadcrumb-v2-search-page](032-breadcrumb-v2-search-page.md)                                                   | implemented | |
 | 033 | [pagination-v2-search](033-pagination-v2-search.md)                                                             | implemented | |
 | 034 | [dataset-header-v2](034-dataset-header-v2.md)                                                                   | implemented | |
+| 035 | [dataset-search-bar-v2](035-dataset-search-bar-v2.md)                                                           | implemented | |
+| 036 | [dataset-results-layout-v2](036-dataset-results-layout-v2.md)                                                   | implemented | |
+| 037 | [dataset-page-header-v2](036-dataset-page-header-v2.md)                                                         | implemented | |
