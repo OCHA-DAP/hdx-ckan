@@ -51,22 +51,17 @@
 
 {# ── formats: step 2 — resource extension badges ─────────── #}
 {% if package.resources and not hide_resources and not package.is_requestdata_type %}
-  {% set tabular  = ['CSV', 'XLSX', 'XLS', 'ODS', 'TSV'] %}
-  {% set geo      = ['SHP', 'GEOJSON', 'KML', 'KMZ', 'GEOPACKAGE', 'GPKG', 'GEOTIFF', 'GEODATABASE', 'GDB'] %}
-  {% set document = ['PDF', 'DOC', 'DOCX'] %}
+  {% set _category_icon = {
+    'tabular':  'v2/icons/tabular-format.svg',
+    'geo':      'v2/icons/geographic-format.svg',
+    'document': 'v2/icons/document-format.svg',
+    'web':      'v2/icons/markup-format.svg',
+    'neutral':  'v2/icons/other-format.svg'
+  } %}
   {% set _ns = namespace(extras=[]) %}
   {% for fmt_str in h.dict_list_reduce(package.resources, 'format') %}
-    {% set fmt_upper = fmt_str.upper() %}
-    {% if fmt_upper in tabular %}
-      {% set icon_src_val = 'v2/icons/tabular-format.svg' %}
-    {% elif fmt_upper in geo %}
-      {% set icon_src_val = 'v2/icons/geographic-format.svg' %}
-    {% elif fmt_upper in document %}
-      {% set icon_src_val = 'v2/icons/document-format.svg' %}
-    {% else %}
-      {% set icon_src_val = 'v2/icons/other-format.svg' %}
-    {% endif %}
-    {% set _ns.extras = _ns.extras + [{'type': 'extension', 'text': fmt_str, 'icon_src': icon_src_val}] %}
+    {% set _cat = h.hdx_format_to_icon_category(fmt_str) %}
+    {% set _ns.extras = _ns.extras + [{'type': 'extension', 'text': fmt_str, 'icon_src': _category_icon[_cat]}] %}
   {% endfor %}
   {% set formats_val = formats_val + _ns.extras %}
 {% endif %}

@@ -5,20 +5,6 @@
     var header = document.querySelector('.hdx-v2-dataset-header');
     if (!header) return;
 
-    // ── Description expand / collapse ────────────────────────
-    var descModule = header.querySelector('[data-module="dataset-page-header"]');
-    if (descModule) {
-      var btn   = descModule.querySelector('.c-text-button');
-      var label = btn && btn.querySelector('.c-text-button__label');
-      if (btn) {
-        btn.addEventListener('click', function () {
-          var isExpanded = descModule.classList.toggle('is-expanded');
-          if (label) label.textContent = isExpanded ? 'Show less' : 'Show more';
-          btn.setAttribute('aria-expanded', isExpanded ? 'true' : 'false');
-        });
-      }
-    }
-
     // ── Source "View more" — show only when text overflows ───
     var sourceMeta  = header.querySelector('#metadata-source');
     if (sourceMeta) {

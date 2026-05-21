@@ -104,6 +104,8 @@ Each page below extends `page_light.html`, manually overrides `{% block styles %
 - [x] Search + autocomplete
 - [x] File type indicators
 - [x] Tooltips
+- [x] Dataset card (with shared clamped-text.js toggle)
+- [x] Resource card
 
 Each component file should have:
 1. **HTML template** (`templates/v2/components/component-name.html`) — reusable snippet with BEM markup
@@ -118,7 +120,7 @@ Each component file should have:
 
 Bundle configuration:
 - `hdx_theme/v2-components-styles` — standalone design system bundle (tokens + components), no Bootstrap
-  - Contents: `v2/foundation.css`, `v2/components/avatar-badge.css`, `v2/components/buttons.css`, `v2/components/checkbox.css`, `v2/components/dropdown.css`, `v2/components/input-field.css`, `v2/components/label.css`, `v2/components/letter-anchor.css`, `v2/components/list-item.css`, `v2/components/navigation.css`, `v2/components/selection.css`, `v2/components/text-link.css`
+  - Contents: `v2/foundation.css`, `v2/components/activity-card.css`, `v2/components/dataset-card.css`, `v2/components/resource-card.css`, `v2/components/avatar-badge.css`, `v2/components/buttons.css`, `v2/components/checkbox.css`, `v2/components/dropdown.css`, `v2/components/input-field.css`, `v2/components/label.css`, `v2/components/letter-anchor.css`, `v2/components/list-item.css`, `v2/components/navigation.css`, `v2/components/selection.css`, `v2/components/text-link.css`
   - Kept separate for non-page contexts (component previews, embedded widgets)
 - `hdx_theme/v2-page-styles` ✅ Full page bundle: preloads `v2-components-styles`, then adds:
   - `vendor/bootstrap5/css/bootstrap.css`
@@ -126,7 +128,7 @@ Bundle configuration:
   - `v2/top-bar.css` — top-bar styles (OCHA services dropdown, documentation link)
   - `v2/footer.css` — footer styles
   - `v2/navbar.css` — main navbar styles (logo, search, nav items, actions, offcanvas)
-- `hdx_theme/v2-components-scripts` ✅ Contains `v2/components/password-toggle.js`
+- `hdx_theme/v2-components-scripts` ✅ Contains `v2/components/password-toggle.js`, `v2/components/clamped-text.js` (shared show-more/less), `v2/components/dataset-page-header.js`
 - `hdx_theme/v2-page-scripts` ✅ Contains `v2/navbar.js` — navbar panel and offcanvas JS (tasks 018 + 019)
 
 Page-specific bundles will be created as pages are migrated (e.g., `hdx_theme/homepage-v2-styles`).

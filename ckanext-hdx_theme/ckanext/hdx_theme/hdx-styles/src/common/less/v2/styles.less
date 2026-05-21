@@ -286,6 +286,15 @@
         align-items:    flex-start;
         gap:            var(--hdx-space-2);
         align-self:     stretch;
+
+        // Show-more button: hidden until JS confirms content is actually clamped
+        .c-text-button { display: none; }
+        &.is-clamped .c-text-button { display: inline-flex; }
+
+        &.is-open .c-text-button__icon {
+            transform:  rotate(180deg);
+            transition: transform 0.15s ease;
+        }
     }
 
     &__desc-text {
@@ -301,8 +310,7 @@
         overflow:          hidden;
     }
 
-    // Expanded state toggled by data-module="dataset-page-header"
-    &__desc.is-expanded &__desc-text {
+    &__desc-text.is-open {
         -webkit-line-clamp: unset;
         overflow:           visible;
     }
