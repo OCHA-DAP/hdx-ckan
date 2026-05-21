@@ -276,6 +276,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'facet_url_extra_args': hdx_helpers.facet_url_extra_args,
             'build_facet_filter_url': hdx_helpers.build_facet_filter_url,
             'hdx_dataset_has_datastore_resources': hdx_helpers.hdx_dataset_has_datastore_resources,
+            'hdx_format_to_icon_category': hdx_helpers.hdx_format_to_icon_category,
         }
 
     def get_actions(self):

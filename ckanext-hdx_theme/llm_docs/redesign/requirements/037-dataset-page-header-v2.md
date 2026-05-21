@@ -154,7 +154,7 @@ The tooltip-wrap div has `margin-left: auto` to push it to the right edge of the
 | Divider | `<hr class="c-divider hdx-v2-dataset-header__divider">` |
 | Org logo | `<img>` with `max-width` + `object-fit: contain` |
 | Dataset title | `<h1>` — Merriweather bold, responsive font-size; gets `data-module="hdx-quick-edit"` attrs when `edit_mode=True` |
-| Description container | `<div data-module="dataset-page-header">` + `<p class="...__desc-text">` + show-more button |
+| Description container | `<div data-module="clamped-text">` + `<p class="...__desc-text" data-clamped-content>` + show-more button (updated task 038) |
 | Download count | `<div>` with inline SVG + `<span>` |
 
 ---
@@ -232,16 +232,16 @@ The tooltip-wrap div has `margin-left: auto` to push it to the right edge of the
 
 ### 5.1 Description expand/collapse
 
-Uses `data-module="dataset-page-header"` (not `dataset-card`). Handled by `dataset-page-header.js`.
+~~`data-module="dataset-page-header"`~~ → **updated (task 038)**: now uses shared `data-module="clamped-text"` with `data-clamped-content` on `<p>`. Handled by `clamped-text.js`.
 
 ```html
-<div class="hdx-v2-dataset-header__desc" data-module="dataset-page-header">
-  <p class="hdx-v2-dataset-header__desc-text">{{ description }}</p>
+<div class="hdx-v2-dataset-header__desc" data-module="clamped-text">
+  <p class="hdx-v2-dataset-header__desc-text" data-clamped-content>{{ description }}</p>
   <!-- c-text-button "Show more" / "Show less" -->
 </div>
 ```
 
-JS toggles `is-expanded` class on the container div. CSS uses `-webkit-line-clamp: 3` by default; the `is-expanded` state removes the clamp.
+JS toggles `is-open` class on the `<p>` (not `is-expanded` on the container). CSS uses `-webkit-line-clamp: 3` by default; `.is-open` on `<p>` removes the clamp.
 
 ### 5.2 Tooltip (time period + source)
 
@@ -325,8 +325,8 @@ hdx-v2-dataset-header
   __labels
   __link-group          one per links_list item
   __title
-  __desc                data-module="dataset-page-header"
-  __desc-text           line-clamped <p>; clamp lifted when __desc.is-expanded
+  __desc                data-module="clamped-text" (updated task 038)
+  __desc-text           line-clamped <p> data-clamped-content; clamp lifted when __desc-text.is-open
   __cta
   __notify-btn
   __downloads
@@ -376,7 +376,7 @@ hdx-v2-dataset-header
 | OQ-8 | Hidden text-link in Location value row (Figma only) — out of scope, skipped. |
 | OQ-9 | Tooltip copy hardcoded. Time period: defined. Source: placeholder `"Source information placeholder."` (TBD). |
 | OQ-10 | Labels flex-wrap freely with no per-line cap. |
-| OQ-11 | Description expand/collapse uses `data-module="dataset-page-header"` (not `dataset-card`), handled by new `dataset-page-header.js`. |
+| OQ-11 | ~~`data-module="dataset-page-header"` handled by `dataset-page-header.js`~~ → **updated (task 038)**: uses shared `data-module="clamped-text"` + `data-clamped-content`; JS handler removed from `dataset-page-header.js`. |
 | OQ-12 | Tooltip trigger is `c-button` (icon-only) with CSS chrome removed; aria-expanded toggled by JS; outside click closes. |
 | OQ-13 | Source "View more" link is rendered but hidden; JS reveals it only when text visually overflows 1 line (scrollWidth > clientWidth). Links to `#dataset-additional-info` in the secondary block. |
 | OQ-14 | `hdx_read.html` has no v2 feature gate — the new header is always rendered. v1 layout block removed. |

@@ -1116,6 +1116,73 @@
 
   </section>
 
+  {# ══════════════════════════════════════════════════════
+     15. RESOURCE CARD
+  ══════════════════════════════════════════════════════ #}
+  <section class="demo-section">
+    <h1 class="demo-section__title">Resource Card</h1>
+    <p class="demo-section__subtitle">file-type icon · labels · description toggle · action buttons</p>
+
+    {# ── Full card — all features enabled ─────────────── #}
+    <h2 class="demo-subsection__heading">Full — geo format, P-coded, API available, preview, show-more</h2>
+    <div class="demo-row demo-row--flex-start">
+      {% snippet 'v2/components/resource-card.html',
+          title='UNHCR Population of Concern per country 2021 - ArcMap',
+          title_href='#',
+          format_text='GEOJSON',
+          format_category='geo',
+          description='A weekly dataset providing the total number of reported political violence events and fatalities in Zimbabwe broken down by month. Political violence events include ACLED\'s battles, violence against civilians, and explosions/remote violence event types, as well as the mob violence sub-event type of the riots event type.',
+          pcoded=True,
+          api_available=True,
+          preview_available=True,
+          download_url='#',
+          download_size='14.2K' %}
+    </div>
+
+    {# ── Tabular format — no labels, no preview ────────── #}
+    <h2 class="demo-subsection__heading">Tabular — CSV, no labels, no preview, no show-more</h2>
+    <div class="demo-row demo-row--flex-start">
+      {% snippet 'v2/components/resource-card.html',
+          title='Global Food Prices Database (WFP)',
+          title_href='#',
+          format_text='CSV',
+          format_category='tabular',
+          description='Monthly retail prices for commonly consumed food commodities across multiple countries and markets.',
+          download_url='#',
+          download_size='2.1M' %}
+    </div>
+
+    {# ── Document format — minimal, no description ─────── #}
+    <h2 class="demo-subsection__heading">Document — PDF, API available only, no description</h2>
+    <div class="demo-row demo-row--flex-start">
+      {% snippet 'v2/components/resource-card.html',
+          title='Methodology and Technical Notes 2024',
+          title_href='#',
+          format_text='PDF',
+          format_category='document',
+          api_available=True,
+          download_url='#' %}
+    </div>
+
+    {# ── Expanded state — preview_opened=True ─────────── #}
+    <h2 class="demo-subsection__heading">Expanded — preview_opened=True (server-side pre-expanded)</h2>
+    <div class="demo-row demo-row--flex-start">
+      {% snippet 'v2/components/resource-card.html',
+          title='UNHCR Population of Concern per country 2021 - ArcGIS Pro',
+          title_href='#',
+          format_text='GEOJSON',
+          format_category='geo',
+          description='A weekly dataset providing the total number of reported political violence events and fatalities in Zimbabwe broken down by month. Political violence events include ACLED\'s battles, violence against civilians, and explosions/remote violence event types, as well as the mob violence sub-event type of the riots event type. A weekly dataset providing the total number of reported political violence events and fatalities in Zimbabwe broken down by month.',
+          preview_opened=True,
+          pcoded=True,
+          api_available=True,
+          preview_available=True,
+          download_url='#',
+          download_size='14.2K' %}
+    </div>
+
+  </section>
+
   </div>{# /container #}
 </div>{# /demo-page #}
 

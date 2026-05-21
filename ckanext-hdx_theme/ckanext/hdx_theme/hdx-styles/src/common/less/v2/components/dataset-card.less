@@ -157,6 +157,10 @@
             align-self:     stretch;
         }
 
+        // Show-more button: hidden until JS confirms content is actually clamped
+        .c-text-button { display: none; }
+        &.is-clamped .c-text-button { display: inline-flex; }
+
         // Rotate chevron icon when expanded
         &.is-open .c-text-button__icon {
             transform:  rotate(180deg);

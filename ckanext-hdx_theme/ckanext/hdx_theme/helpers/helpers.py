@@ -1323,3 +1323,16 @@ def hdx_get_user_menu_sections():
     })
 
     return sections
+
+
+def hdx_format_to_icon_category(format_str):
+    tabular  = {'csv', 'xlsx', 'xls', 'ods', 'tsv'}
+    geo      = {'shp', 'geojson', 'kml', 'kmz', 'geopackage', 'gpkg', 'geotiff', 'geodatabase', 'gdb'}
+    document = {'pdf', 'doc', 'docx'}
+    web      = {'html', 'htm', 'xml'}
+    fmt = (format_str or '').lower()
+    if fmt in tabular:  return 'tabular'
+    if fmt in geo:      return 'geo'
+    if fmt in document: return 'document'
+    if fmt in web:      return 'web'
+    return 'neutral'

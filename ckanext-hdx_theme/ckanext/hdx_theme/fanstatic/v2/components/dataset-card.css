@@ -86,6 +86,12 @@
     align-self: stretch;
   }
 }
+.c-dataset-card__desc .c-text-button {
+  display: none;
+}
+.c-dataset-card__desc.is-clamped .c-text-button {
+  display: inline-flex;
+}
 .c-dataset-card__desc.is-open .c-text-button__icon {
   transform: rotate(180deg);
   transition: transform 0.15s ease;
