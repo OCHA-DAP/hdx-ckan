@@ -149,7 +149,7 @@ polib==1.2.0
     # via -r requirements.in
 psycopg2==2.9.9
     # via -r requirements.in
-pyjwt==2.8.0
+pyjwt==2.13.0
     # via -r requirements.in
 pyld==2.0.4
     # via
