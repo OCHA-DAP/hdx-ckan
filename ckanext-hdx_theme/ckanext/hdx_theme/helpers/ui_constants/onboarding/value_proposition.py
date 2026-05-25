@@ -7,7 +7,7 @@ CONSTANTS = {
 
     'FEATURE_CONTACT_CONTRIBUTOR': '''Ask questions to data contributors''',
     'FEATURE_REQUEST_DATA': '''Request access to sensitive datasets''',
-    'FEATURE_MANAGE_NOTIFICATIONS': '''COMING SOON - Manage notifications about data updates''',
+    'FEATURE_MANAGE_NOTIFICATIONS': '''Manage notifications about data updates''',
 
     'STEP_CREATE_ACCOUNT': '''First <a href="{0}" id="{1}" data-module="{2}" data-value-proposition-page="{3}">create an individual HDX account</a>''',
     'STEP_APPLICATION_REVIEWED': '''Your application will be reviewed''',
