@@ -66,6 +66,8 @@ def resource_update(context, data_dict):
         raise NotFound(_('Resource was not found.'))
 
     old_resource_format = resource_obj.format
+    old_datastore_active = resource_obj.extras.get('datastore_active') is True
+    old_resource_url = resource_obj.url
 
     process_batch_mode(context, data_dict)
     # flag_if_file_uploaded(context, data_dict)
@@ -127,6 +129,11 @@ def resource_update(context, data_dict):
     res_list = [res for res in package.get('resources', []) if res.get('id') == id]
     resource = res_list[-1]
 
+    _handle_datastore_on_resource_update(
+        context, id, data_dict, resource,
+        old_datastore_active, old_resource_url
+    )
+
     if old_resource_format != resource['format']:
         _get_action('resource_create_default_resource_views')(
             {'model': context['model'], 'user': context['user'],
@@ -147,6 +154,70 @@ def run_action_without_geo_preview(action, context, data_dict):
         result_dict = action(context, data_dict)
 
     return result_dict
+
+
+def _handle_datastore_on_resource_update(context, resource_id, data_dict, resource,
+                                          old_datastore_active, old_url):
+    '''
+    Called after package_revise commits, with the fresh updated resource dict.
+
+    Bug 1 — format changed to unsupported (e.g. CSV → PDF):
+      If the resource previously had an active datastore table, delete it and
+      clear the datastore_active flag. datastore_delete alone does not update
+      the flag for non-deleted resources (only after_resource_delete does).
+
+    Bug 2 — format still supported and a file was actually replaced (e.g. CSV → CSV):
+      Explicitly trigger datapusher so the new file is pushed to the datastore.
+      IResourceUrlChange.notify() handles URL changes but fires before-commit with
+      stale data; this runs post-commit with the fresh resource dict and also
+      covers same-filename replacements where last_modified changes but notify()
+      may race. _submit_to_datapusher's own task-state guard prevents double jobs.
+    '''
+    _model = context['model']
+    supported_formats = [f.lower() for f in tk.config.get('ckan.datapusher.formats', [])]
+    new_format = (resource.get('format') or '').lower()
+
+    if old_datastore_active and new_format not in supported_formats:
+        # --- Bug 1 fix ---
+        try:
+            _get_action('datastore_delete')(
+                {'ignore_auth': True},
+                {'resource_id': resource_id, 'force': True}
+            )
+        except tk.ObjectNotFound:
+            pass  # table already gone, nothing to do
+        except Exception as e:
+            log.error('Failed to delete datastore table for resource %s: %s', resource_id, e)
+
+        # Update datastore_active flag directly; resource_patch would re-enter
+        # resource_update, and after_resource_delete only fires on full deletion.
+        try:
+            res_obj = _model.Resource.get(resource_id)
+            if res_obj:
+                new_extras = dict(res_obj.extras or {})
+                new_extras['datastore_active'] = False
+                _model.Session.query(_model.Resource).filter_by(id=resource_id).update(
+                    {'extras': new_extras}, synchronize_session=False
+                )
+                _model.Session.commit()
+        except Exception as e:
+            log.error('Failed to set datastore_active=False for resource %s: %s', resource_id, e)
+
+    elif new_format in supported_formats:
+        # --- Bug 2 fix ---
+        # Only trigger if a file was actually replaced, not on metadata-only edits.
+        file_was_replaced = (
+            bool(data_dict.get('upload'))
+            or resource.get('url') != old_url
+        )
+        if file_was_replaced:
+            datapusher_plugin = next(
+                (p for p in plugins.PluginImplementations(plugins.IResourceController)
+                 if p.name == 'datapusher_plus'),
+                None
+            )
+            if datapusher_plugin:
+                datapusher_plugin._submit_to_datapusher(resource)
 
 
 def _delete_old_file_if_necessary(prev_resource_dict, resource_dict):
