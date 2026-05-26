@@ -65,18 +65,31 @@ def tag_s3_version(resource_id, resource_url, in_quarantine, dataset_name=None):
 
 
 def _create_s3_client():
-    p_key = _config.get('ckanext.s3filestore.aws_access_key_id')
-    s_key = _config.get('ckanext.s3filestore.aws_secret_access_key')
     region = _config.get('ckanext.s3filestore.region_name')
     signature = _config.get('ckanext.s3filestore.signature_version')
     host_name = _config.get('ckanext.s3filestore.host_name')
+    use_assume_role = tk.asbool(_config.get('ckanext.s3filestore.aws_use_assume_role', False))
 
-    session = boto3.session.Session(aws_access_key_id=p_key,
-                                    aws_secret_access_key=s_key,
-                                    region_name=region)
+    if use_assume_role:
+        from ckanext.s3filestore.caching import get_cached_s3_credentials
+        credentials = get_cached_s3_credentials()
+        session = boto3.Session(
+            aws_access_key_id=credentials['access_key'],
+            aws_secret_access_key=credentials['secret_key'],
+            aws_session_token=credentials['session_token'],
+            region_name=region,
+        )
+    else:
+        p_key = _config.get('ckanext.s3filestore.aws_access_key_id')
+        s_key = _config.get('ckanext.s3filestore.aws_secret_access_key')
+        session = boto3.session.Session(
+            aws_access_key_id=p_key,
+            aws_secret_access_key=s_key,
+            region_name=region,
+        )
+
     s3 = session.resource('s3', endpoint_url=host_name,
                           config=botocore.client.Config(signature_version=signature))
-
     return s3.meta.client
 
 
