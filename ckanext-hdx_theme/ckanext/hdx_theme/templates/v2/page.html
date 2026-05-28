@@ -53,7 +53,7 @@
 
   {%- block content %}
     {% block maintag %}<div role="main">{% endblock %}
-      <div id="content" class="hdx-v2-container">
+      <div id="content">
         {% block main_content %}
       {% block toolbar %}
         <div class="toolbarRow">
@@ -75,8 +75,8 @@
       {% endblock %}
 
       {% block flash %}
-        <div class="dataset-light">
-          <div class="flash-messages">
+        <div class="flash-messages">
+          <div class="hdx-v2-container">
             {% block flash_inner %}
               {% for category, message in h.get_flashed_messages(with_categories=true) %}
                 <div class="alert alert-dismissible fade show {{ category }}">
@@ -88,45 +88,39 @@
         </div>
       {% endblock %}
 
-      <div>
-        {% set secondary_block_output = self.secondary() %}
-        <div class="{% if secondary_block_output|trim == '' %}no-nav{% endif %}">
-          {#
-          The pre_primary block can be used to add content to before the
-          rendering of the main content columns of the page.
-          #}
-          {% if self.pre_primary() | trim %}
-            <div class="contentBackground">
-              <div>
-                {% block pre_primary %}
-                {% endblock %}
-              </div>
-            </div>
-          {% endif %}
+      {% set secondary_block_output = self.secondary() %}
+      <div class="{% if secondary_block_output|trim == '' %}no-nav{% endif %}">
+        {#
+        The pre_primary block can be used to add content before the
+        main content columns. Each page template wraps it in its own container.
+        #}
+        {% if self.pre_primary() | trim %}
+          {% block pre_primary %}
+          {% endblock %}
+        {% endif %}
 
-          <div>
-            <div>
-              <div class="hdx-v2-content-columns">
-                {% if secondary_block_output|trim != '' and not secondary_right_side %}
-                  <div class="{% if wrapper_secondary_class %}{{ wrapper_secondary_class }}{% else %}{% endif %} wrapper-secondary">
-                    {{ secondary_block_output }}
-                  </div>
-                {% endif %}
-                <div class="{% if secondary_block_output|trim != '' %} {% if wrapper_primary_class %}{{ wrapper_primary_class }}{% else %}{% endif %} wrapper-primary{% else %}{% endif %}">
-                  {{ self.primary() }}
+        <div class="{{ ' ' ~ outer_row_class if outer_row_class else '' }}">
+          <div class="hdx-v2-container">
+            <div class="hdx-v2-content-columns{{ ' ' ~ columns_class if columns_class else '' }}">
+              {% if secondary_block_output|trim != '' and not secondary_right_side %}
+                <div class="{{ sidebar_class if sidebar_class else '' }}">
+                  {{ secondary_block_output }}
                 </div>
-                {% if secondary_block_output|trim != '' and secondary_right_side %}
-                  <div>
-                    {{ secondary_block_output }}
-                  </div>
-                {% endif %}
+              {% endif %}
+              <div class="{{ content_class if content_class and secondary_block_output|trim != '' else '' }}">
+                {{ self.primary() }}
               </div>
+              {% if secondary_block_output|trim != '' and secondary_right_side %}
+                <div>
+                  {{ secondary_block_output }}
+                </div>
+              {% endif %}
             </div>
           </div>
-
-          {% block post_primary %}{% endblock %}
-
         </div>
+
+        {% block post_primary %}{% endblock %}
+
       </div>
 
         {% endblock %}

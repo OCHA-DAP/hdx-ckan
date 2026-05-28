@@ -18,6 +18,28 @@
 @container-padding-md:  3rem;     // 48px — MD through XL
 @container-max-width:   1320px;   // XXL centered, matches Figma XL spec
 
+
+// ── Page background ───────────────────────────────────────────
+// All v2 pages use the light-grey page canvas (Figma: color-gray-100 = #fafbfb).
+// Components that need white surfaces set background-color: var(--hdx-neutral-0) explicitly.
+body.hdx-v2 {
+    background-color: var(--hdx-neutral-01);
+}
+
+// ── Breadcrumb row ────────────────────────────────────────────
+// Shared across search and dataset pages.
+// A bottom border acts as the visual separator above the page header.
+.hdx-v2-breadcrumb-row {
+    border-bottom: 1px solid var(--hdx-neutral-1);
+}
+
+// Base flex layout used on any v2 two-column page (search, dataset page, etc.)
+// Horizontal gap between columns is set per-page via gap or column padding.
+.hdx-v2-content-columns {
+    display:     flex;
+    align-items: stretch;
+}
+
 .hdx-v2-container {
     max-width:     100%;
     padding-right: @container-padding-xs;

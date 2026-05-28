@@ -1,0 +1,60 @@
+{#
+  Snippet: showcase-card.html
+  Path:    templates/v2/components/showcase-card.html
+
+  Renders a single showcase card for the dataset page showcases grid.
+
+  Parameters
+  ─────────────────────────────────────────────────
+  title           {string}  Showcase title. default: ''
+  description     {string}  Short excerpt (markdown-extracted). default: ''
+  img_url         {string}  Thumbnail image URL. Empty → shows placeholder. default: ''
+  url             {string}  Primary "View" button link (may be external). default: '#'
+  read_more_href  {string}  "Read more" text-link — always the HDX showcase page. default: '#'
+  url_is_external {bool}    Adds target="_blank" on the View button. default: False
+  ─────────────────────────────────────────────────
+#}
+
+{% set title           = title           if title           is defined else '' %}
+{% set description     = description     if description     is defined else '' %}
+{% set img_url         = img_url         if img_url         is defined else '' %}
+{% set url             = url             if url             is defined else '#' %}
+{% set read_more_href  = read_more_href  if read_more_href  is defined else '#' %}
+{% set url_is_external = url_is_external if url_is_external is defined else False %}
+
+<div class="c-showcase-card">
+
+  <div class="c-showcase-card__image">
+    {% if img_url %}
+      <img class="c-showcase-card__img lazyload"
+           data-src="{{ img_url }}"
+           src="{{ img_url }}"
+           alt="{{ title }}">
+    {% else %}
+      <div class="c-showcase-card__image-placeholder"></div>
+    {% endif %}
+  </div>
+
+  <div class="c-showcase-card__body">
+    <h3 class="c-showcase-card__title">{{ title }}</h3>
+    {% if description %}
+      <p class="c-showcase-card__desc">{{ description }}</p>
+    {% endif %}
+    <div class="c-showcase-card__actions">
+      {% snippet 'v2/components/button.html',
+          label=_('View'),
+          tag='a',
+          href=url,
+          icon=True, icon_src='v2/icons/link-external.svg',
+          style='secondary',
+          size='m',
+          attrs=({'target': '_blank', 'rel': 'noopener noreferrer'} if url_is_external else {}) %}
+      {% snippet 'v2/components/text-link.html',
+          label=_('Read more'),
+          href=read_more_href,
+          style='primary',
+          size='s' %}
+    </div>
+  </div>
+
+</div>

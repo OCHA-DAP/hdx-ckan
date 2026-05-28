@@ -8,6 +8,7 @@
   line-height: 130%;
   white-space: nowrap;
   box-sizing: border-box;
+  text-decoration: none;
 }
 .c-label__icon {
   line-height: 0;
@@ -296,4 +297,35 @@
   font-weight: var(--hdx-fw-medium);
   line-height: 130%;
   color: var(--hdx-neutral-8);
+}
+.c-info-icon {
+  display: inline-flex;
+  align-items: center;
+  color: var(--hdx-neutral-85);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.c-info-icon svg {
+  width: 0.875rem;
+  height: 0.875rem;
+}
+.c-tooltip-anchor {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+.c-tooltip-anchor .c-tooltip {
+  position: absolute;
+  bottom: calc(100% + var(--hdx-space-1));
+  right: 0;
+  left: auto;
+  transform: none;
+  z-index: 100;
+  display: none;
+  white-space: normal;
+}
+.c-tooltip-anchor .c-info-icon:hover ~ .c-tooltip,
+.c-tooltip-anchor .c-info-icon:focus-visible ~ .c-tooltip,
+.c-tooltip-anchor .c-info-icon.is-open ~ .c-tooltip {
+  display: block;
 }

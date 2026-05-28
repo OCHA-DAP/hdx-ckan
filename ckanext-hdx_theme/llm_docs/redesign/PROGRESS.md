@@ -2,7 +2,7 @@
 
 **Status**: In-progress
 **Started**: 2026-04-16
-**Last Updated**: 2026-05-19
+**Last Updated**: 2026-05-22
 
 ---
 
@@ -51,10 +51,11 @@ CSS custom property equivalents (`--hdx-*`) are defined in `v2/foundation.css` (
 
 ## Pages Migrated to V2
 
-| Page | Template | Notes |
-|------|----------|-------|
-| Homepage | `home/index.html` | Extends `v2/page.html` |
-| Dataset search | `search/search.html` | Extends `v2/page.html`; uses `v2=true` gate for v2 UI |
+| Page | Template | Notes                                                                                     |
+|------|----------|-------------------------------------------------------------------------------------------|
+| Homepage | `home/index.html` | Extends `v2/page.html`                                                                    |
+| Dataset search | `search/search.html` | Extends `v2/page.html`; uses `v2=true` gate for v2 UI                                     |
+| Dataset page | `package/hdx_read.html` | Extends `v2/page.html`; full page implemented — see `requirements/038-dataset-page.md` |
 
 ### Pages in holding state (on `page_light.html`)
 
@@ -106,6 +107,8 @@ Each page below extends `page_light.html`, manually overrides `{% block styles %
 - [x] Tooltips
 - [x] Dataset card (with shared clamped-text.js toggle)
 - [x] Resource card
+- [x] Showcase card
+- [x] Anchor links — extended with `heading`, `with_mobile_dropdown` params; mobile sticky dropdown (`c-anchor-links-mobile`) styles in `navigation.less`
 
 Each component file should have:
 1. **HTML template** (`templates/v2/components/component-name.html`) — reusable snippet with BEM markup
@@ -120,7 +123,7 @@ Each component file should have:
 
 Bundle configuration:
 - `hdx_theme/v2-components-styles` — standalone design system bundle (tokens + components), no Bootstrap
-  - Contents: `v2/foundation.css`, `v2/components/activity-card.css`, `v2/components/dataset-card.css`, `v2/components/resource-card.css`, `v2/components/avatar-badge.css`, `v2/components/buttons.css`, `v2/components/checkbox.css`, `v2/components/dropdown.css`, `v2/components/input-field.css`, `v2/components/label.css`, `v2/components/letter-anchor.css`, `v2/components/list-item.css`, `v2/components/navigation.css`, `v2/components/selection.css`, `v2/components/text-link.css`
+  - Contents: `v2/foundation.css`, `v2/components/activity-card.css`, `v2/components/dataset-card.css`, `v2/components/resource-card.css`, `v2/components/avatar-badge.css`, `v2/components/buttons.css`, `v2/components/checkbox.css`, `v2/components/dropdown.css`, `v2/components/input-field.css`, `v2/components/label.css`, `v2/components/letter-anchor.css`, `v2/components/list-item.css`, `v2/components/navigation.css`, `v2/components/selection.css`, `v2/components/showcase-card.css`, `v2/components/text-link.css`
   - Kept separate for non-page contexts (component previews, embedded widgets)
 - `hdx_theme/v2-page-styles` ✅ Full page bundle: preloads `v2-components-styles`, then adds:
   - `vendor/bootstrap5/css/bootstrap.css`
@@ -128,10 +131,13 @@ Bundle configuration:
   - `v2/top-bar.css` — top-bar styles (OCHA services dropdown, documentation link)
   - `v2/footer.css` — footer styles
   - `v2/navbar.css` — main navbar styles (logo, search, nav items, actions, offcanvas)
-- `hdx_theme/v2-components-scripts` ✅ Contains `v2/components/password-toggle.js`, `v2/components/clamped-text.js` (shared show-more/less), `v2/components/dataset-page-header.js`
+  - `v2/styles.css` — shared global v2 styles
+- `hdx_theme/v2-components-scripts` ✅ Contains `v2/components/password-toggle.js`, `v2/components/clamped-text.js` (shared show-more/less), `v2/components/dataset-page-header.js`, `v2/components/anchor-links.js` (smooth scroll + mobile dropdown + active tracking for `c-anchor-links`)
 - `hdx_theme/v2-page-scripts` ✅ Contains `v2/navbar.js` — navbar panel and offcanvas JS (tasks 018 + 019)
-
-Page-specific bundles will be created as pages are migrated (e.g., `hdx_theme/homepage-v2-styles`).
+- `hdx_theme/v2-search-styles` — page-specific: preloads `v2-page-styles`, adds `v2/search.css`
+- `hdx_theme/v2-search-scripts` — page-specific: preloads `v2-page-scripts`, adds `v2/search.js`
+- `hdx_theme/v2-dataset-styles` — page-specific: preloads `v2-page-styles`, adds `v2/dataset.css`
+- `hdx_theme/v2-dataset-scripts` — page-specific: preloads `v2-page-scripts`, adds `v2/dataset.js` (section accordion only)
 
 ---
 

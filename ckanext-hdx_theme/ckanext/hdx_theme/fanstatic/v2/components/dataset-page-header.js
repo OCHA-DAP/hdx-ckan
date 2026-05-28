@@ -6,7 +6,7 @@
     if (!header) return;
 
     // ── Source "View more" — show only when text overflows ───
-    var sourceMeta  = header.querySelector('#metadata-source');
+    var sourceMeta  = header.querySelector('[data-header-meta="source"]');
     if (sourceMeta) {
       var sourceSpan    = sourceMeta.querySelector('.hdx-v2-dataset-header__meta-value--source span');
       var viewMoreLink  = sourceMeta.querySelector('.hdx-v2-dataset-header__source-view-more');
@@ -15,25 +15,25 @@
       }
     }
 
-    // ── Tooltip triggers ─────────────────────────────────────
-    var tooltipWraps = header.querySelectorAll('.hdx-v2-dataset-header__tooltip-wrap');
+    // ── Tooltip triggers (click/tap for mobile; hover handled by CSS) ──
+    var tooltipWraps = header.querySelectorAll('.c-tooltip-anchor');
 
     function closeAllTooltips() {
       tooltipWraps.forEach(function (wrap) {
-        var triggerBtn = wrap.querySelector('.c-button');
-        if (triggerBtn) triggerBtn.setAttribute('aria-expanded', 'false');
+        var icon = wrap.querySelector('.c-info-icon');
+        if (icon) icon.classList.remove('is-open');
       });
     }
 
     tooltipWraps.forEach(function (wrap) {
-      var triggerBtn = wrap.querySelector('.c-button');
-      if (!triggerBtn) return;
+      var icon = wrap.querySelector('.c-info-icon');
+      if (!icon) return;
 
-      triggerBtn.addEventListener('click', function (e) {
+      icon.addEventListener('click', function (e) {
         e.stopPropagation();
-        var isOpen = triggerBtn.getAttribute('aria-expanded') === 'true';
+        var isOpen = icon.classList.contains('is-open');
         closeAllTooltips();
-        if (!isOpen) triggerBtn.setAttribute('aria-expanded', 'true');
+        if (!isOpen) icon.classList.add('is-open');
       });
     });
 
