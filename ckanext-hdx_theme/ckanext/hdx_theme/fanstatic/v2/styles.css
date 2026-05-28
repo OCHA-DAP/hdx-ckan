@@ -195,18 +195,18 @@
   display: flex;
   flex-direction: column;
   gap: var(--hdx-space-6);
-  padding: var(--hdx-space-6) var(--hdx-space-4);
+  padding: var(--hdx-space-6) 0;
 }
 @media (min-width: 48rem) {
   .hdx-v2-dataset-header {
     gap: var(--hdx-space-8);
-    padding: var(--hdx-space-8) var(--hdx-space-12);
+    padding: var(--hdx-space-8) 0;
   }
 }
 @media (min-width: 80rem) {
   .hdx-v2-dataset-header {
     gap: var(--hdx-space-10);
-    padding: var(--hdx-space-10) var(--hdx-space-12);
+    padding: var(--hdx-space-10) 0;
   }
 }
 .hdx-v2-dataset-header__top {
@@ -397,6 +397,7 @@
 @media (min-width: 80rem) {
   .hdx-v2-dataset-header__metadata {
     font-size: var(--hdx-fs-xs);
+    gap: 0;
   }
 }
 .hdx-v2-dataset-header__meta-item {
@@ -412,9 +413,13 @@
 }
 @media (min-width: 80rem) {
   .hdx-v2-dataset-header__meta-item {
+    flex: 0 0 25%;
     width: auto;
-    flex: 1;
-    min-width: 15.625rem;
+    min-width: 0;
+    padding-right: var(--hdx-space-6);
+  }
+  .hdx-v2-dataset-header__meta-item:last-child {
+    padding-right: 0;
   }
 }
 .hdx-v2-dataset-header__meta-label-row {
@@ -450,46 +455,11 @@
 .hdx-v2-dataset-header__source-view-more {
   display: none;
 }
-.hdx-v2-dataset-header__tooltip-wrap {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
+.hdx-v2-dataset-header .c-tooltip-anchor {
   margin-left: auto;
 }
-.hdx-v2-dataset-header__tooltip-wrap .c-tooltip {
-  position: absolute;
-  bottom: calc(100% + var(--hdx-space-1));
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 100;
+.hdx-v2-dataset-header .c-tooltip-anchor .c-tooltip {
   width: 14rem;
-  display: none;
-  white-space: normal;
-}
-.hdx-v2-dataset-header__tooltip-wrap .c-button[aria-expanded="true"] ~ .c-tooltip {
-  display: block;
-}
-.hdx-v2-dataset-header__tooltip-wrap .c-button {
-  background: none;
-  border: none;
-  box-shadow: none;
-  padding: 0;
-  min-width: unset;
-  min-height: unset;
-  color: var(--hdx-neutral-7);
-}
-.hdx-v2-dataset-header__tooltip-wrap .c-button:hover,
-.hdx-v2-dataset-header__tooltip-wrap .c-button:focus {
-  background: none;
-  box-shadow: none;
-}
-.hdx-v2-dataset-header__tooltip-wrap .c-button .c-button__icon {
-  width: 0.875rem;
-  height: 0.875rem;
-}
-.hdx-v2-dataset-header__tooltip-wrap .c-button .c-button__icon svg {
-  width: 0.875rem;
-  height: 0.875rem;
 }
 .hdx-v2-dataset-list__cards {
   display: flex;

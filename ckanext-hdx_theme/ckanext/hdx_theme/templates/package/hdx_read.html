@@ -2,6 +2,7 @@
 
 {% block styles %}
   {{ super() }}
+  {% asset 'hdx_theme/v2-dataset-styles' %}
 {#  {% asset 'hdx_theme/requestdata-styles' %}#}
 {#  {% asset 'hdx_theme/dataset-styles' %}#}
 {#  {% asset 'hdx_theme/dataset-read-styles' %}#}
@@ -36,8 +37,10 @@
     <meta name="description" content="{{pkg.notes}} Access the {{ page_title }} dataset to support humanitarian efforts." />
 {% endblock %}
 
-{% set wrapper_secondary_class = '' %}
-{% set wrapper_primary_class = '' %}
+{% set sidebar_class    = 'hdx-v2-dataset-sidebar' %}
+{% set content_class    = 'hdx-v2-dataset-content' %}
+{% set outer_row_class  = 'hdx-v2-dataset-row' %}
+{% set columns_class    = 'hdx-v2-dataset-columns' %}
 
 {# The line below is for google analytics #}
 {% block analytics_org_name %}{{ pkg.organization.name }}{% endblock %}
@@ -59,122 +62,427 @@
 {% set object_name = pkg.name %}
 {% set object_type = 'dataset' %}
 
-{% block breadcrumb_content %}
-	{% block breadcrum_parent_item %}
-    {% snippet "snippets/other_breadcrumb_item.html", title=_('Datasets'), named_route='hdx_dataset.search', position=2 %}
-	{% endblock %}
-  {% snippet "snippets/active_breadcrumb_item.html", title=pkg.title|truncate(120), position=3 %}
+{# ── Build anchor nav items list (namespace allows mutation across scopes) ── #}
+{% set ns = namespace(anchor_items=[
+  {'label': _('Data and resources'), 'href': '#data-and-resources', 'active': True},
+  {'label': _('Metadata'), 'href': '#metadata', 'active': False},
+]) %}
+{% if pkg.customviz %}
+  {% set ns.anchor_items = ns.anchor_items + [{'label': _('Interactive data'), 'href': '#interactive-data', 'active': False}] %}
+{% endif %}
+{% if showcase_list %}
+  {% set ns.anchor_items = ns.anchor_items + [{'label': _('Showcases'), 'href': '#showcases', 'active': False}] %}
+{% endif %}
+{% set ns.anchor_items = ns.anchor_items + [{'label': _('Activity'), 'href': '#activity', 'active': False}] %}
 
-{% endblock %}
-
-{% block pre_primary %}
-<div class="row paddingRowHack whiteBackground">
-
-
-    {% block title_and_actions %}
-      {# ── v2 dataset page header ────────────────────────────────── #}
-      {% set _grps = pkg.groups or [] %}
-      {% if _grps | length > 1 %}
-        {% set _location_text = 'Multiple locations' %}
-      {% elif _grps | length == 1 %}
-        {% set _location_text = _grps[0].title %}
-      {% else %}
-        {% set _location_text = '' %}
-      {% endif %}
-
-      {% snippet 'v2/dataset-page-header.html',
-          title=pkg.title or pkg.name,
-          description=pkg.notes,
-          org_name=pkg.organization.title,
-          org_logo_src=logo_config.image_url if logo_config and logo_config.image_url else '',
-          org_href=h.url_for('organization.read', id=pkg.organization.name),
-          contact_href=h.url_for('hdx_dataset.contact_contributor', id=pkg.name or pkg.id),
-          download_count=pkg.approx_total_downloads,
-          request_only=pkg.is_requestdata_type,
-          cod_dataset=(analytics_is_cod == 'true'),
-          links_list=pkg.links_list or [],
-          supports_notifications=analytics_supports_notifications,
-          location_text=_location_text,
-          subnational=(pkg.subnational|int == 1),
-          update_frequency=h.hdx_get_frequency_by_value(pkg.data_update_frequency),
-          is_up_to_date=pkg.is_fresh,
-          time_period=h.render_date_from_concat_str(pkg.dataset_date),
-          time_period_tooltip=True,
-          source_text=pkg.dataset_source or '',
-          source_tooltip=True,
-          edit_mode=edit_mode,
-          pkg_id=pkg.id
-      %}
-    {% endblock %}
-    {% block pre_primary_content %}
-    {% endblock %}
-
-    {% block pre_primary_content2 %}
-      {% if pkg.customviz %}
-        <div class="col-12 paddingLeftHack paddingRightHack">
-          <div class="row">
-            {% snippet "package/snippets/custom_viz.html", customviz = pkg.customviz %}
-          </div>
-        </div>
-      {% endif %}
-    {% endblock %}
-</div>
-{% endblock %}
-
-{% block secondary %}
-
-  <div id="dataset-additional-info" class="list-header crisis-list-header mTop35">
-    <span class="mL15 list-header-title">
-      {{ _("Additional information") }}
-    </span>
-  </div>
-  <div class="px-4">
-    {% block indicator_additional_info %}
-      <div class="mTop35">
-        {% snippet "package/snippets/additional_info.html", pkg_dict=pkg %}
-      </div>
-    {% endblock %}
-    {% if not pkg.is_requestdata_type %}
-      <div id="dataset-downloads-data" class="d-none">
-        {{ h.json_dumps(stats_downloads_last_weeks) }}
-      </div>
-      <h2 class="uppercase">{{ _('Downloads') }}</h2>
-      <div id="dataset-downloads-chart">
-        <div id="dataset-downloads-chart-no-data" style="display: none;">
-          <div class="title">NO DATA</div>
-        </div>
-      </div>
-    {% endif %}
-    <div class="row">
-      <div class="col-12">
-        <h2 class="uppercase">{{ _('Related Showcases') }}</h2>
-        {% snippet "package/snippets/related_list.html", pkg=pkg, user=c.userobj, showcases=showcase_list %}
-      </div>
-      <div class="col-12">
-        <div class="form-check form-switch ps-0 mTop20">
-          <input class="form-check-input float-end" type="checkbox" autocomplete="off" role="switch" id="showDatasetActivity">
-          <label class="form-check-label" for="showDatasetActivity"><h2 class="uppercase mt-0">{{ _('Activity') }}</h2>
-          </label>
-        </div>
-        <div class="dataset-activity-wrapper d-none" data-fetched="false" data-dataset-id="{{ pkg.id }}">
-          {% snippet 'package/snippets/activity_stream.html', activity_stream=hdx_activities, id=pkg.id, object_type='package' %}
-          <br>
-          {% if h.follow_status('dataset', pkg.name) %}
-            <span class="more mb-2">See more in <a
-              href="{{ h.url_for('activity.dashboard') }}">your dashboard</a></span>
-          {% endif %}
-        </div>
-      </div>
+{% block toolbar %}
+  <div class="hdx-v2-breadcrumb-row">
+    <div class="hdx-v2-container">
+      {% snippet 'v2/components/breadcrumb.html',
+          items=[
+            {'label': pkg.organization.title, 'href': h.url_for('organization.read', id=pkg.organization.name)},
+            {'label': pkg.title or pkg.name, 'href': ''}
+          ] %}
     </div>
   </div>
 {% endblock %}
 
-{% block primary %}
-  <div class="mL30 mTop20">
-    {% block package_notes %}
-    {% endblock %}
+{% block pre_primary %}
+  <div class="hdx-v2-dataset-header-section">
+    <div class="hdx-v2-container">
+  {% block title_and_actions %}
+    {# ── v2 dataset page header ────────────────────────────────── #}
+    {% set _grps = pkg.groups or [] %}
+    {% if _grps | length > 1 %}
+      {% set _location_text = 'Multiple locations' %}
+    {% elif _grps | length == 1 %}
+      {% set _location_text = _grps[0].title %}
+    {% else %}
+      {% set _location_text = '' %}
+    {% endif %}
+
+    {% snippet 'v2/dataset-page-header.html',
+        title=pkg.title or pkg.name,
+        description=pkg.notes,
+        org_name=pkg.organization.title,
+        org_logo_src=logo_config.image_url if logo_config and logo_config.image_url else '',
+        org_href=h.url_for('organization.read', id=pkg.organization.name),
+        contact_href=h.url_for('hdx_dataset.contact_contributor', id=pkg.name or pkg.id),
+        download_count=pkg.approx_total_downloads,
+        request_only=pkg.is_requestdata_type,
+        cod_dataset=(analytics_is_cod == 'true'),
+        links_list=pkg.links_list or [],
+        supports_notifications=analytics_supports_notifications,
+        location_text=_location_text,
+        subnational=(pkg.subnational|int == 1),
+        update_frequency=h.hdx_get_frequency_by_value(pkg.data_update_frequency),
+        is_up_to_date=pkg.is_fresh,
+        time_period=h.render_date_from_concat_str(pkg.dataset_date),
+        time_period_tooltip=True,
+        source_text=pkg.dataset_source or '',
+        source_tooltip=True,
+        edit_mode=edit_mode,
+        pkg_id=pkg.id
+    %}
+  {% endblock %}
+    </div>
   </div>
-  {% snippet "package/hdx_resources_list.html", pkg=pkg %}
+{% endblock %}
+
+
+{% block secondary %}
+  {% snippet 'v2/components/anchor-links.html',
+      items=ns.anchor_items,
+      heading=_('Dataset details'),
+      with_mobile_dropdown=False %}
+{% endblock %}
+
+{% block primary %}
+
+  {% snippet 'v2/components/anchor-links.html',
+      items=ns.anchor_items,
+      mobile_only=True %}
+
+  {# ── 1. Data & resources — always open ── #}
+  <section class="hdx-v2-dataset-section" id="data-and-resources">
+    <div class="hdx-v2-dataset-section__header">
+      <h2 class="hdx-v2-dataset-section__title">
+        {{ _('Data and resources') }} ({{ pkg.resources | length }})
+      </h2>
+    </div>
+    <div class="hdx-v2-dataset-section__body">
+      {% snippet "package/snippets/resources_list.html",
+          pkg=pkg,
+          resources=pkg.resources,
+          resource_item_snippet='package/snippets/resource_item_v2.html',
+          list_tag='div' %}
+    </div>
+  </section>
+
+  {# ── 2. Interactive data — conditional, always open ── #}
+  {% if pkg.customviz %}
+    <hr class="c-divider">
+    <section class="hdx-v2-dataset-section" id="interactive-data">
+      <div class="hdx-v2-dataset-section__header">
+        <h2 class="hdx-v2-dataset-section__title">{{ _('Interactive data') }}</h2>
+      </div>
+      <div class="hdx-v2-dataset-section__body">
+        {% snippet "package/snippets/custom_viz.html", customviz=pkg.customviz %}
+      </div>
+    </section>
+  {% endif %}
+
+  {# ── 3. Metadata — collapsible, default open ── #}
+  <hr class="c-divider">
+  <section class="hdx-v2-dataset-section hdx-v2-dataset-section--collapsible is-open"
+           id="metadata">
+    <div class="hdx-v2-dataset-section__header"
+         role="button" tabindex="0"
+         aria-expanded="true" aria-controls="metadata-body">
+      <h2 class="hdx-v2-dataset-section__title">{{ _('Metadata') }}</h2>
+      <span class="hdx-v2-dataset-section__chevron" aria-hidden="true">{% include 'v2/icons/chevron-down.svg' %}</span>
+    </div>
+    <div class="hdx-v2-dataset-section__body" id="metadata-body">
+      {% set metadata_edit_mode = h.check_access('package_update', {'id': pkg.id}) %}
+
+      <div class="hdx-v2-dataset-metadata">
+
+        {# ── Row 1: Time period | Expected update frequency | Modified ── #}
+        <div class="hdx-v2-dataset-metadata__grid">
+
+          <div class="hdx-v2-dataset-metadata__cell"
+               {% if metadata_edit_mode %}data-module="hdx-quick-edit" data-module-anchor="ui_date_range1" data-module-dataset="{{ pkg.id }}"{% endif %}>
+            <div class="hdx-v2-dataset-metadata__label-row">
+              <span class="hdx-v2-dataset-metadata__label">{{ _('Time period') }}</span>
+              <div class="c-tooltip-anchor">
+                <span class="c-info-icon" tabindex="0" aria-label="{{ _('More info about time period') }}">{% include 'v2/icons/info-circle.svg' %}</span>
+                {% snippet 'v2/components/tooltip.html',
+                    variant='dark', arrow='',
+                    text=_('The earliest start date and latest end date across all resources included in the dataset.') %}
+              </div>
+            </div>
+            <span class="hdx-v2-dataset-metadata__value">
+              {{ h.render_date_from_concat_str(pkg.dataset_date) }}
+            </span>
+          </div>
+
+          <div class="hdx-v2-dataset-metadata__cell"
+               {% if metadata_edit_mode %}data-module="hdx-quick-edit" data-module-anchor="field_data_update_frequency" data-module-dataset="{{ pkg.id }}"{% endif %}>
+            <span class="hdx-v2-dataset-metadata__label">{{ _('Expected update frequency') }}</span>
+            <span class="hdx-v2-dataset-metadata__value">
+              {{ h.hdx_get_frequency_by_value(pkg.data_update_frequency) }}
+              {% if pkg.type == 'dataset' and pkg.data_update_frequency and pkg.is_fresh %}
+                <a href="/faq#auto-faq-Metadata_and_Data_Quality-What_does_the_green_leaf_symbol_mean_-a"
+                   target="_blank"
+                   class="humanitarianicons-Environment fresh ms-1"
+                   title="{{ _('This dataset is up to date') }}"></a>
+              {% endif %}
+            </span>
+          </div>
+
+          <div class="hdx-v2-dataset-metadata__cell">
+            <div class="hdx-v2-dataset-metadata__label-row">
+              <span class="hdx-v2-dataset-metadata__label">{{ _('Modified') }}</span>
+              <div class="c-tooltip-anchor">
+                <span class="c-info-icon" tabindex="0" aria-label="{{ _('More info about modified date') }}">{% include 'v2/icons/info-circle.svg' %}</span>
+                {% snippet 'v2/components/tooltip.html',
+                    variant='dark', arrow='',
+                    text=_('The date of the most recent change to any data or metadata.') %}
+              </div>
+            </div>
+            <span class="hdx-v2-dataset-metadata__value">
+              {{ h.render_datetime(pkg.last_modified) }}
+            </span>
+          </div>
+
+        </div>
+
+        {# ── Row 2: Contributor | Source | Dataset added on HDX ── #}
+        <div class="hdx-v2-dataset-metadata__grid">
+
+          <div class="hdx-v2-dataset-metadata__cell"
+               {% if metadata_edit_mode %}data-module="hdx-quick-edit" data-module-anchor="field_owner_org" data-module-dataset="{{ pkg.id }}"{% endif %}>
+            <span class="hdx-v2-dataset-metadata__label">{{ _('Contributor') }}</span>
+            <div class="hdx-v2-dataset-metadata__value">
+              {% if pkg.owner_org %}
+                {% set org_id = pkg.owner_org or pkg.organization.name %}
+                {% snippet 'v2/components/text-link.html',
+                    label=pkg.organization.title,
+                    href=h.url_for(controller='organization', action='read', id=org_id),
+                    style='secondary', size='m',
+                    extra_classes='mx-ga-dimension-organization' %}
+              {% endif %}
+            </div>
+          </div>
+
+          <div class="hdx-v2-dataset-metadata__cell" id="metadata-source"
+               {% if metadata_edit_mode %}data-module="hdx-quick-edit" data-module-anchor="field_dataset_source" data-module-dataset="{{ pkg.id }}"{% endif %}>
+            <span class="hdx-v2-dataset-metadata__label">{{ _('Source') }}</span>
+            <span class="hdx-v2-dataset-metadata__value">{{ pkg.dataset_source }}</span>
+          </div>
+
+          <div class="hdx-v2-dataset-metadata__cell">
+            <div class="hdx-v2-dataset-metadata__label-row">
+              <span class="hdx-v2-dataset-metadata__label">{{ _('Dataset added on HDX') }}</span>
+              <div class="c-tooltip-anchor">
+                <span class="c-info-icon" tabindex="0" aria-label="{{ _('More info about when dataset was added') }}">{% include 'v2/icons/info-circle.svg' %}</span>
+                {% snippet 'v2/components/tooltip.html',
+                    variant='dark', arrow='',
+                    text=_('The date when the dataset was first added to HDX.') %}
+              </div>
+            </div>
+            <span class="hdx-v2-dataset-metadata__value">
+              {{ h.render_datetime(pkg.metadata_created) }}
+            </span>
+          </div>
+
+        </div>
+
+        {# ── Location ── #}
+        <div class="hdx-v2-dataset-metadata__full" id="metadata-location"
+             {% if metadata_edit_mode %}data-module="hdx-quick-edit" data-module-anchor="field_locations" data-module-dataset="{{ pkg.id }}"{% endif %}>
+          <span class="hdx-v2-dataset-metadata__label">{{ _('Location') }}</span>
+          <div class="hdx-v2-dataset-metadata__value hdx-v2-dataset-metadata__value--locations">
+            {% for grp in pkg.groups %}
+              {% snippet 'v2/components/text-link.html',
+                  label=grp.title or grp.name,
+                  href=h.url_for(controller='group', action='read', id=grp.name),
+                  style='secondary', size='m' %}{% if not loop.last %}, {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+
+        {# ── Methodology ── #}
+        <div class="hdx-v2-dataset-metadata__full"
+             {% if metadata_edit_mode %}data-module="hdx-quick-edit" data-module-anchor="field_methodology" data-module-dataset="{{ pkg.id }}"{% endif %}>
+          <span class="hdx-v2-dataset-metadata__label">{{ _('Methodology') }}</span>
+          {% set methodology, methodology_other = h.methodology_bk_compat(pkg.methodology, pkg.methodology_other) %}
+          <div class="hdx-v2-dataset-metadata__value">
+            {% if not methodology_other %}
+              {% if methodology != None %}{{ methodology }}{% endif %}
+            {% else %}
+              {{ methodology_other }}
+            {% endif %}
+          </div>
+        </div>
+
+        {# ── Caveats / Comments ── #}
+        <div class="hdx-v2-dataset-metadata__full"
+             {% if metadata_edit_mode %}data-module="hdx-quick-edit" data-module-anchor="field_caveats" data-module-dataset="{{ pkg.id }}"{% endif %}>
+          <span class="hdx-v2-dataset-metadata__label">{{ _('Caveats / Comments') }}</span>
+          <div class="hdx-v2-dataset-metadata__value">
+            {{ h.render_markdown(pkg.caveats) }}
+          </div>
+        </div>
+
+        {# ── License (non-requestdata only) ── #}
+        {% if not pkg.is_requestdata_type %}
+          <div class="hdx-v2-dataset-metadata__full"
+               {% if metadata_edit_mode %}data-module="hdx-quick-edit" data-module-anchor="field_license_id" data-module-dataset="{{ pkg.id }}"{% endif %}>
+            <span class="hdx-v2-dataset-metadata__label">{{ _('License') }}</span>
+            <div class="hdx-v2-dataset-metadata__value">
+              {% if pkg.license_id %}
+                {% snippet 'v2/components/text-link.html',
+                    label=h.hdx_find_license_name(pkg.license_id, pkg.license_title),
+                    href=h.url_for('hdx_faqs.read', category='licenses'),
+                    style='secondary', size='m',
+                    attrs={'property': 'dc:rights'} %}
+                {% if pkg.license_id == 'hdx-other' and pkg.license_other %}:
+                  {{ h.render_markdown(pkg.license_other) }}
+                {% endif %}
+              {% endif %}
+            </div>
+          </div>
+        {% endif %}
+
+        {# ── RequestData-only fields ── #}
+        {% if pkg.is_requestdata_type %}
+          <div class="hdx-v2-dataset-metadata__full">
+            <span class="hdx-v2-dataset-metadata__label">{{ _('Field Names') }}</span>
+            <div class="hdx-v2-dataset-metadata__value hdx-v2-dataset-metadata__value--break">
+              {{ pkg.field_names | replace(",", ", ") }}
+            </div>
+          </div>
+          <div class="hdx-v2-dataset-metadata__full">
+            <span class="hdx-v2-dataset-metadata__label">{{ _('File Types') }}</span>
+            <div class="hdx-v2-dataset-metadata__value hdx-v2-dataset-metadata__value--break">
+              {{ pkg.file_types | replace(",", ", ") }}
+            </div>
+          </div>
+          <div class="hdx-v2-dataset-metadata__full">
+            <span class="hdx-v2-dataset-metadata__label">{{ _('Number of Rows') }}</span>
+            <div class="hdx-v2-dataset-metadata__value">{{ pkg.num_of_rows }}</div>
+          </div>
+        {% endif %}
+
+        {# ── Tags / Topics ── #}
+        <div class="hdx-v2-dataset-metadata__full"
+             {% if metadata_edit_mode %}data-module="hdx-quick-edit" data-module-anchor="field_tag_string" data-module-dataset="{{ pkg.id }}"{% endif %}>
+          <span class="hdx-v2-dataset-metadata__label">{{ _('Tags') }}</span>
+          <div class="hdx-v2-dataset-metadata__value hdx-v2-dataset-metadata__value--tags">
+            {% for tag in pkg.tags %}
+              {% if tag.vocabulary_id %}
+                {% snippet 'v2/components/label.html',
+                    text=tag.display_name,
+                    tag='a',
+                    href=h.url_for('hdx_dataset.search', vocab_Topics=tag.name),
+                    color='light', size='m' %}
+              {% else %}
+                {% snippet 'v2/components/label.html',
+                    text=tag.display_name,
+                    tag='a',
+                    href=h.url_for('hdx_dataset.search', tags=tag.name),
+                    color='light', size='m' %}
+              {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+
+        {# ── Visibility (non-requestdata, editor-only) ── #}
+        {% if not pkg.is_requestdata_type %}
+          {% if h.check_access('package_update', {'id': pkg.id}) %}
+            <div class="hdx-v2-dataset-metadata__full">
+              <span class="hdx-v2-dataset-metadata__label">{{ _('Visibility') }}</span>
+              <div class="hdx-v2-dataset-metadata__value">
+                <div id="private_block">
+                  {% if pkg.private %}
+                    <span id="visibility">{{ _('Private') }}</span> —
+                    {% snippet 'v2/components/text-link.html',
+                        label=_('make it public'),
+                        href='#', style='secondary', size='m',
+                        attrs={'onclick': "contributeAddDetails('" ~ pkg.id ~ "', 'make public')"} %}
+                  {% else %}
+                    <span id="visibility">{{ _('Public') }}</span> —
+                    {% snippet 'v2/components/text-link.html',
+                        label=_('make it private'),
+                        href='#', style='secondary', size='m',
+                        attrs={'onclick': "contributeAddDetails('" ~ pkg.id ~ "', 'make private')"} %}
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          {% else %}
+            <div class="hdx-v2-dataset-metadata__full">
+              <span class="hdx-v2-dataset-metadata__label">{{ _('Visibility') }}</span>
+              <div class="hdx-v2-dataset-metadata__value">
+                <div id="private_block">
+                  <span id="visibility">{% if pkg.private %}{{ _('Private') }}{% else %}{{ _('Public') }}{% endif %}</span>
+                </div>
+              </div>
+            </div>
+          {% endif %}
+        {% endif %}
+
+        {# ── Downloads chart (non-requestdata only) ── #}
+        {% if not pkg.is_requestdata_type %}
+          <div class="hdx-v2-dataset-metadata__full hdx-v2-dataset-metadata__downloads">
+            <div id="dataset-downloads-data" class="d-none">
+              {{ h.json_dumps(stats_downloads_last_weeks) }}
+            </div>
+            <span class="hdx-v2-dataset-metadata__label">{{ _('Downloads') }}</span>
+            <div id="dataset-downloads-chart">
+              <div id="dataset-downloads-chart-no-data" class="hdx-v2-dataset-metadata__no-data">
+                <div class="title">NO DATA</div>
+              </div>
+            </div>
+          </div>
+        {% endif %}
+
+      </div>{# /.hdx-v2-dataset-metadata #}
+    </div>
+  </section>
+
+  {# ── 4. Showcases — conditional, collapsible, default open ── #}
+  {% if showcase_list %}
+    <hr class="c-divider">
+    <section class="hdx-v2-dataset-section hdx-v2-dataset-section--collapsible is-open"
+             id="showcases">
+      <div class="hdx-v2-dataset-section__header"
+           role="button" tabindex="0"
+           aria-expanded="true" aria-controls="showcases-body">
+        <h2 class="hdx-v2-dataset-section__title">
+          {{ _('Showcases') }} ({{ showcase_list | length }})
+        </h2>
+        <span class="hdx-v2-dataset-section__chevron" aria-hidden="true">{% include 'v2/icons/chevron-down.svg' %}</span>
+      </div>
+      <div class="hdx-v2-dataset-section__body" id="showcases-body">
+        <div class="hdx-v2-dataset-showcase-grid">
+          {% for showcase in showcase_list %}
+            {% snippet 'v2/components/showcase-card.html',
+                title=showcase.title or showcase.name,
+                description=h.markdown_extract(showcase.notes, extract_length=140),
+                img_url=showcase.image_display_url or showcase.img_url or '',
+                url=showcase.url or h.url_for('showcase_blueprint.read', id=showcase.name),
+                read_more_href=h.url_for('showcase_blueprint.read', id=showcase.name),
+                url_is_external=(showcase.url and showcase.url.startswith('http')) %}
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+  {% endif %}
+
+  {# ── 5. Activity — collapsible, default open ── #}
+  <hr class="c-divider">
+  <section class="hdx-v2-dataset-section hdx-v2-dataset-section--collapsible is-open"
+           id="activity">
+    <div class="hdx-v2-dataset-section__header"
+         role="button" tabindex="0"
+         aria-expanded="true" aria-controls="activity-body">
+      <h2 class="hdx-v2-dataset-section__title">{{ _('Activity') }}</h2>
+      <span class="hdx-v2-dataset-section__chevron" aria-hidden="true">{% include 'v2/icons/chevron-down.svg' %}</span>
+    </div>
+    <div class="hdx-v2-dataset-section__body" id="activity-body">
+      <div class="dataset-activity-wrapper" data-fetched="false" data-dataset-id="{{ pkg.id }}">
+        {% snippet 'package/snippets/activity_stream.html', activity_stream=hdx_activities, id=pkg.id, object_type='package' %}
+        {% if h.follow_status('dataset', pkg.name) %}
+          <span class="more mb-2">{{ _('See more in') }} <a
+            href="{{ h.url_for('activity.dashboard') }}">{{ _('your dashboard') }}</a></span>
+        {% endif %}
+      </div>
+    </div>
+  </section>
+
+  {# ── Notifications modal (always present) ── #}
   {% snippet "notification_platform/modals.html",
       object_type=object_type,
       object_id=object_id,
@@ -200,6 +508,7 @@
 
 {% block scripts %}
   {{ super() }}
+  {% asset 'hdx_theme/v2-dataset-scripts' %}
 {#  {{ h.snippet('widget/onboarding/data-use-survey.html', id="dataUseSurveyPopup", pkg=pkg) }}#}
 {#  {% asset 'hdx_theme/dataset-styles' %}#}
 {#  {% asset 'hdx_theme/dataset-scripts' %}#}

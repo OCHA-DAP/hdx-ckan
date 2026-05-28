@@ -53,6 +53,21 @@
                              Appended to the Download button label when set.
                              default: ''
 
+  show_download    {bool}    Render the download button at all.
+                             Set False for requestdata resources without access.
+                             default: true
+
+  in_review        {bool}    Replace the download button with an "Under Review" link.
+                             default: false
+
+  download_extra_classes {string}  Extra CSS classes on the download <a> element.
+                             Used to attach legacy GA/notification tracking hooks.
+                             default: ''
+
+  download_attrs   {dict}    Extra HTML attributes on the download <a> element
+                             (e.g. data-resource-id, tracking-type).
+                             default: {}
+
   extra_classes    {string}  Additional CSS classes on the root element.
                              default: ''
 
@@ -91,9 +106,13 @@
 {% set api_available     = api_available     if api_available     is defined else false %}
 {% set preview_opened    = preview_opened    if preview_opened    is defined else false %}
 {% set preview_available = preview_available if preview_available is defined else false %}
-{% set download_url      = download_url      if download_url      is defined else '#' %}
-{% set download_size     = download_size     if download_size     is defined else '' %}
-{% set extra_classes     = extra_classes     if extra_classes     is defined else '' %}
+{% set download_url           = download_url           if download_url           is defined else '#' %}
+{% set download_size          = download_size          if download_size          is defined else '' %}
+{% set show_download          = show_download          if show_download          is defined else true %}
+{% set in_review              = in_review              if in_review              is defined else false %}
+{% set download_extra_classes = download_extra_classes if download_extra_classes is defined else '' %}
+{% set download_attrs         = download_attrs         if download_attrs         is defined else {} %}
+{% set extra_classes          = extra_classes          if extra_classes          is defined else '' %}
 
 {# ── BEM class list ──────────────────────────────────────── #}
 {% set classes = ['c-resource-card'] %}
@@ -169,12 +188,19 @@
             label='More information',
             tag='a', href=title_href %}
       {% endif %}
-      {% set dl_label = 'Download (' ~ download_size ~ ')' if download_size else 'Download' %}
-      {% snippet 'v2/components/button.html',
-          style='primary', size='m', type='text',
-          label=dl_label,
-          icon=True, icon_src='v2/icons/download.svg', icon_position='left',
-          tag='a', href=download_url %}
+      {% if in_review %}
+        <a href="/faq#auto-faq-Metadata_and_Data_Quality-What_does_it_mean_for_a_dataset_to_be__under_review__-a"
+           class="c-button c-button--secondary c-button--size-m">{{ _('Under Review') }}</a>
+      {% elif show_download %}
+        {% set dl_label = 'Download (' ~ download_size ~ ')' if download_size else 'Download' %}
+        {% snippet 'v2/components/button.html',
+            style='primary', size='m', type='text',
+            label=dl_label,
+            icon=True, icon_src='v2/icons/download.svg', icon_position='left',
+            tag='a', href=download_url,
+            extra_classes=download_extra_classes,
+            attrs=download_attrs %}
+      {% endif %}
     </div>
 
   </div>{# /.c-resource-card__footer #}

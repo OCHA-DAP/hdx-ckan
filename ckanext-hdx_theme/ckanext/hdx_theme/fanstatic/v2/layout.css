@@ -1,3 +1,13 @@
+body.hdx-v2 {
+  background-color: var(--hdx-neutral-01);
+}
+.hdx-v2-breadcrumb-row {
+  border-bottom: 1px solid var(--hdx-neutral-1);
+}
+.hdx-v2-content-columns {
+  display: flex;
+  align-items: stretch;
+}
 .hdx-v2-container {
   max-width: 100%;
   padding-right: 1rem;

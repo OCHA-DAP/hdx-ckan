@@ -1,7 +1,7 @@
 {% extends "v2/page.html" %}
 
-{% set wrapper_secondary_class = 'hdx-v2-search-sidebar' %}
-{% set wrapper_primary_class = 'hdx-v2-search-content' %}
+{% set sidebar_class = 'hdx-v2-search-sidebar' %}
+{% set content_class = 'hdx-v2-search-content' %}
 
 {% block styles %}
   {{ super() }}
@@ -52,8 +52,10 @@
 
 {% block toolbar %}
   <div class="hdx-v2-breadcrumb-row">
-    {% snippet 'v2/components/breadcrumb.html',
-        items=[{'label': _('Datasets'), 'href': ''}] %}
+    <div class="hdx-v2-container">
+      {% snippet 'v2/components/breadcrumb.html',
+          items=[{'label': _('Datasets'), 'href': ''}] %}
+    </div>
   </div>
 {% endblock %}
 

@@ -193,7 +193,7 @@
   <div class="hdx-v2-dataset-header__metadata">
 
     {# Location #}
-    <div class="hdx-v2-dataset-header__meta-item" id="metadata-location">
+    <div class="hdx-v2-dataset-header__meta-item">
       <div class="hdx-v2-dataset-header__meta-label-row">
         <span class="hdx-v2-dataset-header__meta-label">Location</span>
         {% if location_text %}
@@ -236,16 +236,11 @@
       <div class="hdx-v2-dataset-header__meta-label-row">
         <span class="hdx-v2-dataset-header__meta-label">Time period</span>
         {% if time_period_tooltip %}
-          <div class="hdx-v2-dataset-header__tooltip-wrap">
-            {% snippet 'v2/components/button.html',
-                style='tertiary', size='s', type='icon-only',
-                label='More info about time period',
-                icon=True, icon_src='v2/icons/info-circle.svg',
-                tag='button', button_type='button',
-                attrs={'aria-expanded': 'false'} %}
+          <div class="c-tooltip-anchor">
+            <span class="c-info-icon" tabindex="0" aria-label="{{ _('More info about time period') }}">{% include 'v2/icons/info-circle.svg' %}</span>
             {% snippet 'v2/components/tooltip.html',
                 variant='dark', arrow='',
-                text='The earliest start date and latest end date across all resources included in the dataset.' %}
+                text=_('The earliest start date and latest end date across all resources included in the dataset.') %}
           </div>
         {% endif %}
       </div>
@@ -257,7 +252,7 @@
     </div>
 
     {# Source #}
-    <div class="hdx-v2-dataset-header__meta-item" id="metadata-source">
+    <div class="hdx-v2-dataset-header__meta-item" data-header-meta="source">
       <div class="hdx-v2-dataset-header__meta-label-row">
         <span class="hdx-v2-dataset-header__meta-label">Source</span>
         {% if source_text %}
@@ -265,20 +260,15 @@
               style='tertiary', size='s', label='View more',
               icon=True, icon_position='right',
               icon_src='v2/icons/arrow-down.svg',
-              tag='a', href='#dataset-additional-info',
+              tag='a', href='#metadata-source',
               extra_classes='hdx-v2-dataset-header__source-view-more' %}
         {% endif %}
         {% if source_tooltip %}
-          <div class="hdx-v2-dataset-header__tooltip-wrap">
-            {% snippet 'v2/components/button.html',
-                style='tertiary', size='s', type='icon-only',
-                label='More info about source',
-                icon=True, icon_src='v2/icons/info-circle.svg',
-                tag='button', button_type='button',
-                attrs={'aria-expanded': 'false'} %}
+          <div class="c-tooltip-anchor">
+            <span class="c-info-icon" tabindex="0" aria-label="{{ _('More info about source') }}">{% include 'v2/icons/info-circle.svg' %}</span>
             {% snippet 'v2/components/tooltip.html',
                 variant='dark', arrow='',
-                text='Source information placeholder.' %}
+                text=_('Source information placeholder.') %}
           </div>
         {% endif %}
       </div>

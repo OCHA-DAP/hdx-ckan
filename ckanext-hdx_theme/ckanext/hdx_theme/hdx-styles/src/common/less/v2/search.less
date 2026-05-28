@@ -120,24 +120,12 @@
 }
 
 
-// ────────────────────────────────────────────────────────────
-// hdx-v2-breadcrumb-row — breadcrumb wrapper above search content
-// ────────────────────────────────────────────────────────────
-
-.hdx-v2-breadcrumb-row {
-    margin-top: var(--hdx-space-2);
-    margin-bottom: var(--hdx-space-2);
-}
-
 
 // ────────────────────────────────────────────────────────────
 // Applied via wrapper_class block in search/search.html
 // ────────────────────────────────────────────────────────────
 
 .hdx-v2-content-columns {
-    display:     flex;
-    align-items: stretch;
-
     // ────────────────────────────────────────────────────────────
     // hdx-v2-search-sidebar — sidebar column (wrapper-secondary)
     // Applied via wrapper_secondary_class in search/search.html
@@ -145,8 +133,7 @@
 
     .hdx-v2-search-sidebar {
         @media (min-width: @hdx-bp-xl) {
-            flex-shrink:  0;
-            width:        @hdx-v2-sf-sidebar-width;
+            flex:         0 0 25%;
             border-right: 1px solid var(--hdx-neutral-1);
             padding:      var(--hdx-space-5)    // 20px top
                           var(--hdx-space-10)  // 40px right
@@ -240,7 +227,7 @@
     display:          none;
     position:         fixed;
     inset:            0;
-    z-index:          500;
+    z-index:          1060;
     background-color: var(--hdx-neutral-0);
     flex-direction:   column;
 

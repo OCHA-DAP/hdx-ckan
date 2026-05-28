@@ -1,0 +1,208 @@
+// ============================================================
+// dataset.less
+// Styles for the full v2 dataset page.
+// Compiled output: fanstatic/v2/dataset.css
+// ============================================================
+
+@import "breakpoints.less";
+
+.hdx-v2-dataset-row {
+  background-color: var(--hdx-neutral-0);
+}
+
+// ── Dataset page layout wrapper ───────────────────────────────
+// Applied to .hdx-v2-content-columns on the dataset page via
+// columns_class = 'hdx-v2-dataset-columns' in hdx_read.html.
+.hdx-v2-dataset-columns {
+    padding: var(--hdx-space-4) 0 5rem; // 1rem top, 5rem bottom
+
+    @media (min-width: @hdx-bp-xl) {
+        gap: var(--hdx-space-6); // 1.5rem flex gap between sidebar and content
+    }
+}
+
+
+// ── Dataset sidebar (wrapper-secondary at XL) ──────────────────
+.hdx-v2-dataset-sidebar {
+    display: none;
+
+    @media (min-width: @hdx-bp-xl) {
+        display:      block;
+        flex:         0 0 25%;
+        padding:      var(--hdx-space-10) 0; // 2.5rem top/bottom
+    }
+}
+
+
+// ── Dataset content (wrapper-primary) ─────────────────────────
+// No horizontal padding — container provides 1rem/3rem sides.
+// Column gap at XL comes from flex gap on .hdx-v2-dataset-layout.
+.hdx-v2-dataset-content {
+    flex:      1;
+    min-width: 0;
+    padding:   var(--hdx-space-10) 0; // 2.5rem top/bottom, no sides
+
+    // First section flush with top — no extra padding before first divider
+    > section:first-of-type {
+        padding-top: 0;
+    }
+}
+
+
+// ── Section wrapper ───────────────────────────────────────────
+// Sections are separated by <hr class="c-divider"> in the template.
+.hdx-v2-dataset-section {
+    padding: var(--hdx-space-6) 0;
+
+    @media (min-width: @hdx-bp-md) {
+        padding: var(--hdx-space-12) 0;
+    }
+
+    &__header {
+        display:         flex;
+        align-items:     center;
+        justify-content: space-between;
+        gap:             var(--hdx-space-3);
+    }
+
+    &__title {
+        font-family: var(--hdx-font-display);
+        font-size:   var(--hdx-fs-xl);
+        font-weight: var(--hdx-fw-semibold);
+        line-height: var(--hdx-lh-normal);
+        color:       var(--hdx-neutral-95);
+        margin:      0;
+    }
+
+    &__chevron {
+        flex-shrink: 0;
+        color:       var(--hdx-neutral-85);
+        transition:  transform 0.2s ease;
+
+        svg {
+            width:   1.25rem;
+            height:  1.25rem;
+            display: block;
+        }
+    }
+
+    &__body {
+        padding-top: var(--hdx-space-8);
+    }
+
+    // Collapsible variant
+    &--collapsible {
+        .hdx-v2-dataset-section__header {
+            cursor:      pointer;
+            user-select: none;
+
+            &:hover .hdx-v2-dataset-section__title {
+                color: var(--hdx-primary-5);
+            }
+        }
+
+        &:not(.is-open) {
+            .hdx-v2-dataset-section__body {
+                display: none;
+            }
+
+            .hdx-v2-dataset-section__chevron {
+                transform: rotate(180deg);
+            }
+        }
+    }
+}
+
+
+// ── Metadata grid ─────────────────────────────────────────────
+.hdx-v2-dataset-metadata {
+    display:        flex;
+    flex-direction: column;
+    gap:            var(--hdx-space-10);
+
+    &__grid {
+        display:               grid;
+        grid-template-columns: 1fr;
+        gap:                   var(--hdx-space-4);
+
+        @media (min-width: @hdx-bp-md) {
+            grid-template-columns: repeat(3, 1fr);
+            gap:                   var(--hdx-space-6);
+        }
+    }
+
+    &__cell,
+    &__full {
+        display:        flex;
+        flex-direction: column;
+        gap:            var(--hdx-space-1);
+    }
+
+    &__label {
+        font-family: var(--hdx-font-body);
+        font-size:   var(--hdx-fs-m);
+        font-weight: var(--hdx-fw-semibold);
+        line-height: var(--hdx-lh-normal);
+        color:       var(--hdx-neutral-85);
+    }
+
+    &__label-row {
+        display:     flex;
+        align-items: center;
+        gap:         var(--hdx-space-1);
+    }
+
+    // Width constraint for tooltip anchors inside the metadata grid
+    .c-tooltip-anchor .c-tooltip {
+        width:       14rem;
+        margin-left: var(--hdx-space-1);
+    }
+
+    &__value {
+        font-family: var(--hdx-font-body);
+        font-size:   var(--hdx-fs-m);
+        font-weight: var(--hdx-fw-regular);
+        line-height: var(--hdx-lh-normal);
+        color:       var(--hdx-neutral-85);
+
+        &--tags {
+            display:   flex;
+            flex-wrap: wrap;
+            gap:       var(--hdx-space-1);
+        }
+
+        &--break {
+            word-break: break-all;
+        }
+    }
+
+    &__no-data {
+        display: none;
+    }
+
+    &__downloads #dataset-downloads-chart {
+        margin-top: var(--hdx-space-2);
+        min-height: 4rem;
+    }
+}
+
+
+// ── Showcase grid ─────────────────────────────────────────────
+.hdx-v2-dataset-showcase-grid {
+    display:               grid;
+    grid-template-columns: 1fr;
+    gap:                   var(--hdx-space-6);
+
+    @media (min-width: @hdx-bp-md) {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+// ── List wrapper context ──────────────────────────────────────
+// resources_list.html wraps cards in .resource-list > .resource-item (v2: divs).
+// These class names are also queried by hdx_resource_grouping.js.
+.resource-list {
+    display:        flex;
+    flex-direction: column;
+    gap:            var(--hdx-space-4);
+}

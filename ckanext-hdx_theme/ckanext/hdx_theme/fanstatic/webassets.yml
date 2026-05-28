@@ -238,6 +238,7 @@ v2-components-styles:
     - v2/components/list-item.css
     - v2/components/navigation.css
     - v2/components/selection.css
+    - v2/components/showcase-card.css
     - v2/components/text-link.css
 
 v2-components-scripts:
@@ -247,6 +248,7 @@ v2-components-scripts:
     - v2/components/password-toggle.js
     - v2/components/clamped-text.js
     - v2/components/dataset-page-header.js
+    - v2/components/anchor-links.js
 
 v2-page-styles:
   output: ckanext-hdx_theme/%(version)s_v2-page-styles.css
@@ -280,6 +282,15 @@ v2-search-styles:
   contents:
     - v2/search.css
 
+v2-dataset-styles:
+  output: ckanext-hdx_theme/%(version)s_v2-dataset-styles.css
+  <<: *common-css
+  extra:
+    preload:
+      - hdx_theme/v2-page-styles
+  contents:
+    - v2/dataset.css
+
 v2-search-scripts:
   <<: *common-js
   output: ckanext-hdx_theme/%(version)s_v2-search-scripts.js
@@ -288,6 +299,15 @@ v2-search-scripts:
       - hdx_theme/v2-page-scripts
   contents:
     - v2/search.js
+
+v2-dataset-scripts:
+  <<: *common-js
+  output: ckanext-hdx_theme/%(version)s_v2-dataset-scripts.js
+  extra:
+    preload:
+      - hdx_theme/v2-page-scripts
+  contents:
+    - v2/dataset.js
 
 hdx-signals-scripts:
   <<: *common-js

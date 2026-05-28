@@ -260,8 +260,8 @@ $(
 (function() {
     function setUpResourcesTracking() {
         $('.ga-download').on('click', function () {
-            var rTitle = $(this).find(".ga-download-resource-title").text().trim();
-            var rId = $(this).find(".ga-download-resource-id").text().trim();
+            var rTitle = $(this).data('resourceName') || $(this).find(".ga-download-resource-title").text().trim();
+            var rId    = $(this).data('resourceId')   || $(this).find(".ga-download-resource-id").text().trim();
             // var dTitle = $(this).find(".ga-download-dataset-title").text().trim();
             var dTitle = analyticsInfo.datasetName;
             hdxUtil.analytics.pushToGTMDataLayer({

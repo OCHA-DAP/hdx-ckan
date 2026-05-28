@@ -19,6 +19,7 @@
 | `preview_available` | bool | `false` | Show the "More information" secondary action button linking to `title_href`. |
 | `download_url` | string | `'#'` | URL for the primary Download button. |
 | `download_size` | string | `''` | Human-readable file size (e.g. `'14.2K'`). Appended to the Download button label when set. |
+| `download_attrs` | dict | `{}` | Extra HTML attributes on the Download button (e.g. `data-resource-name`, `data-resource-id` for GA/Mixpanel tracking). Passed from `resource_item_v2.html`. |
 | `extra_classes` | string | `''` | Extra CSS classes on the root element. |
 
 ---
@@ -68,7 +69,7 @@
 | `pcoded` | "P-coded" label chip |
 | `api_available` | "API available" label chip |
 | `preview_available` | "More information" secondary button → `title_href` |
-| `download_url` | "Download" primary button → always rendered |
+| `download_url` | "Download" primary button → always rendered via `{% snippet 'v2/components/button.html', ... %}` |
 | `download_size` | Appended to Download button label: "Download (14.2K)" |
 
 ---
@@ -121,3 +122,5 @@ Used to simplify the inline format-mapping logic in `package_item_v2.html`.
 | Shared JS or separate? | New shared `clamped-text.js` covering dataset-card + dataset-page-header + resource-card |
 | Format mapping? | New `h.hdx_format_to_icon_category()` Python helper; `package_item_v2.html` simplified to use it |
 | How is "Show more" hidden when description is short? | CSS hides `.c-text-button` by default; `clamped-text.js` adds `is-clamped` on the container after detecting overflow (`scrollHeight > clientHeight`); CSS re-shows on `is-clamped`. Same pattern applied to dataset-card and dataset-page-header. `show_show_more` prop removed — callers no longer need to determine truncation manually. |
+| How is GA/Mixpanel resource tracking done? | `resource-card.html` has no `resource_title`/`resource_id` params. Tracking data attributes (`data-resource-name`, `data-resource-id`) are passed via the `download_attrs` dict by `resource_item_v2.html`. `google-analytics.js` reads `$(this).data('resourceName')` first, falling back to `.find('.ga-download-resource-title').text()` for v1 backward compat. |
+| Resource list item element? | `resource_item_v2.html` uses `<div class="resource-item">` (not `<li>`). The list container uses `list_tag='div'` on `resources_list.html`, making `.resource-list` a `<div>` instead of `<ul>`. `hdx_resource_grouping.js` selector is `$('.resource-list .resource-item')`. `.resource-list` CSS has no `list-style: none` (not needed for divs). |
