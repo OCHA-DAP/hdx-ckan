@@ -461,13 +461,13 @@
     </section>
   {% endif %}
 
-  {# ── 5. Activity — collapsible, default open ── #}
+  {# ── 5. Activity — collapsible, default closed ── #}
   <hr class="c-divider">
-  <section class="hdx-v2-dataset-section hdx-v2-dataset-section--collapsible is-open"
+  <section class="hdx-v2-dataset-section hdx-v2-dataset-section--collapsible"
            id="activity">
     <div class="hdx-v2-dataset-section__header"
          role="button" tabindex="0"
-         aria-expanded="true" aria-controls="activity-body">
+         aria-expanded="false" aria-controls="activity-body">
       <h2 class="hdx-v2-dataset-section__title">{{ _('Activity') }}</h2>
       <span class="hdx-v2-dataset-section__chevron" aria-hidden="true">{% include 'v2/icons/chevron-down.svg' %}</span>
     </div>
@@ -511,8 +511,8 @@
   {% asset 'hdx_theme/v2-dataset-scripts' %}
 {#  {{ h.snippet('widget/onboarding/data-use-survey.html', id="dataUseSurveyPopup", pkg=pkg) }}#}
 {#  {% asset 'hdx_theme/dataset-styles' %}#}
-{#  {% asset 'hdx_theme/dataset-scripts' %}#}
-{#  {% asset 'hdx_theme/dataset-quick-edit-scripts' %}#}
+  {% asset 'hdx_theme/dataset-scripts' %}
+  {% asset 'hdx_theme/dataset-quick-edit-scripts' %}
 {#  {% asset 'hdx_theme/hdx-autocomplete' %}#}
 {#  {% resource 'hdx_theme/confirm-ajax.js' %}#}
 {% endblock %}

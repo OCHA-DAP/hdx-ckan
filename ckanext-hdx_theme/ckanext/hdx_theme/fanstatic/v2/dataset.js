@@ -36,4 +36,30 @@ function toggleSection() {
     var isOpen  = section.classList.contains('is-open');
     section.classList.toggle('is-open', !isOpen);
     this.setAttribute('aria-expanded', String(!isOpen));
+    if (!isOpen && section.id === 'activity') {
+        fetchActivitiesIfNeeded(section);
+    }
+}
+
+function fetchActivitiesIfNeeded(section) {
+    var wrapper = section.querySelector('.dataset-activity-wrapper');
+    if (!wrapper || wrapper.dataset.fetched !== 'false') return;
+    wrapper.dataset.fetched = 'true';
+    var datasetId = wrapper.dataset.datasetId;
+    $.ajax({
+        url: '/api/3/action/hdx_package_activity_stream',
+        type: 'POST',
+        headers: hdxUtil.net.getCsrfTokenAsObject(),
+        contentType: 'application/json',
+        data: JSON.stringify({ id: datasetId, limit: 7 }),
+        success: function (response) {
+            if (response.success) {
+                $(wrapper).html(response.result);
+                var $activities = $(wrapper).find('.activity');
+                if ($.trim($activities.text()) === '') {
+                    $activities.html('<p>' + 'No activities found.' + '</p>');
+                }
+            }
+        }
+    });
 }
