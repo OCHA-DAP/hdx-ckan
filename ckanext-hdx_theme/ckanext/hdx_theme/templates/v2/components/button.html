@@ -123,7 +123,7 @@
   href="{{ href }}"
   {% if is_disabled %}aria-disabled="true" tabindex="-1"{% endif %}
   {% if is_icon_only %}aria-label="{{ label }}"{% endif %}
-  {% for key, val in attrs.items() %}{{ key }}="{{ val }}"{% endfor %}
+  {% for key, val in attrs.items() %} {{ key }}="{{ val }}"{% endfor %}
 >
 {% else %}
 <button
@@ -131,7 +131,7 @@
   class="{{ classes | join(' ') }}"
   {% if is_disabled %}disabled aria-disabled="true"{% endif %}
   {% if is_icon_only %}aria-label="{{ label }}"{% endif %}
-  {% for key, val in attrs.items() %}{{ key }}="{{ val }}"{% endfor %}
+  {% for key, val in attrs.items() %} {{ key }}="{{ val }}"{% endfor %}
 >
 {% endif %}
 

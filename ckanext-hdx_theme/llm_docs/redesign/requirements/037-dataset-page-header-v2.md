@@ -273,7 +273,7 @@ Each item: `{label (optional), title, url, newTab}`. Rendered as a flex `__link-
 
 ### 5.5 edit_mode
 
-When `edit_mode=True`, the h1 title receives `data-module="hdx-quick-edit" data-module-anchor="field_title" data-module-dataset="{{ pkg_id }}"`. The description container receives equivalent `data-module-notes` attrs for the notes field.
+When `edit_mode=True`, the h1 title receives `data-module="hdx-quick-edit" data-module-anchor="field_title" data-module-dataset="{{ pkg_id }}"`. The description `<p>` (not the outer `clamped-text` div) receives `data-module="hdx-quick-edit" data-module-anchor="field_notes" data-module-dataset="{{ pkg_id }}"`, mirroring the title pattern.
 
 ---
 
