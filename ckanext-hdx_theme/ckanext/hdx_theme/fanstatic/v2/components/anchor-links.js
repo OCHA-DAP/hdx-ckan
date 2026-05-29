@@ -23,37 +23,17 @@
     }
 
     // ── Smooth scroll ────────────────────────────────────────────
-
-    function getStickyOffset() {
-        var navbar    = document.querySelector('.hdx-v2-navbar');
-        var mobileNav = document.querySelector('.c-anchor-links-mobile');
-        var offset    = 0;
-
-        if (navbar) {
-            var pos = getComputedStyle(navbar).position;
-            if (pos === 'sticky' || pos === 'fixed') {
-                offset += navbar.offsetHeight;
-            }
-        }
-
-        if (mobileNav && getComputedStyle(mobileNav).display !== 'none') {
-            var mobilePos = getComputedStyle(mobileNav).position;
-            if (mobilePos === 'sticky' || mobilePos === 'fixed') {
-                offset += mobileNav.offsetHeight;
-            }
-        }
-
-        return offset;
-    }
+    // Offset is read from the target's CSS scroll-margin-top so the same
+    // value governs both native anchor navigation and smooth scroll.
 
     function smoothScrollTo(target) {
-        var start       = window.scrollY;
-        var targetTop   = target.getBoundingClientRect().top + window.scrollY;
-        var offset      = getStickyOffset();
-        var destination = Math.max(0, targetTop - offset);
-        var distance    = destination - start;
-        var duration    = 500;
-        var startTime   = null;
+        var start        = window.scrollY;
+        var targetTop    = target.getBoundingClientRect().top + window.scrollY;
+        var scrollMargin = parseFloat(getComputedStyle(target).scrollMarginTop) || 0;
+        var destination  = Math.max(0, targetTop - scrollMargin);
+        var distance     = destination - start;
+        var duration     = 500;
+        var startTime    = null;
 
         function step(timestamp) {
             if (!startTime) startTime = timestamp;
