@@ -352,12 +352,12 @@
         background-color: var(--hdx-neutral-0);
         border-radius:    var(--hdx-radius-md);
 
-        // SM-only: inside left column, row layout
+        // SM-only: inside left column, column layout
         &--sm-only {
             display:        flex;
-            flex-direction: row;
-            align-items:    center;
-            gap:            var(--hdx-space-1);
+            flex-direction: column;
+            align-items:    flex-start;
+            gap:            var(--hdx-space-2);
             padding:        var(--hdx-space-2) var(--hdx-space-3);
 
             @media (min-width: @hdx-bp-md) {

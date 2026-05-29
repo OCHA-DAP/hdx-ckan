@@ -53,6 +53,11 @@
 {% set source_tooltip      = source_tooltip      if source_tooltip      is defined else False %}
 {% set edit_mode           = edit_mode           if edit_mode           is defined else False %}
 {% set pkg_id              = pkg_id              if pkg_id              is defined else '' %}
+{% set pkg_state           = pkg_state           if pkg_state           is defined else '' %}
+{% set membership          = membership          if membership          is defined else None %}
+{% set hide_membership     = hide_membership     if hide_membership     is defined else True %}
+{% set org_id              = org_id              if org_id              is defined else '' %}
+
 
 <section class="hdx-v2-dataset-header">
 
@@ -66,8 +71,14 @@
       <div class="hdx-v2-dataset-header__description">
 
         {# ── LABELS ROW ──────────────────────────────────── #}
-        {% if request_only or cod_dataset or links_list %}
+        {% if request_only or cod_dataset or links_list or (pkg_state and pkg_state.startswith('deleted')) %}
         <div class="hdx-v2-dataset-header__labels">
+
+          {% if pkg_state and pkg_state.startswith('deleted') %}
+            {% snippet 'v2/components/label.html',
+                text='Deleted',
+                color='red', size='s' %}
+          {% endif %}
 
           {% if request_only %}
             {% snippet 'v2/components/label.html',
@@ -141,6 +152,22 @@
             icon=True, icon_position='left',
             icon_src='v2/icons/mail.svg',
             tag='a', href=contact_href %}
+        {% if edit_mode %}
+          {% snippet 'v2/components/text-button.html',
+              style='tertiary', size='m', label='Edit Dataset',
+              icon=True, icon_position='left',
+              icon_src='v2/icons/placeholder.svg',
+              tag='a', href='#',
+              attrs={'onclick': "contributeAddDetails('" ~ pkg_id ~ "', 'dataset')"} %}
+        {% endif %}
+        {% if not hide_membership and membership and membership.display_group_message %}
+          {% snippet 'v2/components/text-button.html',
+              style='tertiary', size='m', label='Group message',
+              icon=True, icon_position='left',
+              icon_src='v2/icons/placeholder.svg',
+              tag='a', href='#',
+              attrs={'onclick': "closeCurrentWidget(this);$('#group-message-topics-selector').select2('val', '');spawnRecaptcha('#groupMessagePopup');showOnboardingWidget('#groupMessagePopup');"} %}
+        {% endif %}
       </div>
 
       {# ── CTA BLOCK ───────────────────────────────────────── #}
@@ -158,7 +185,7 @@
 
         {% if download_count %}
           <div class="hdx-v2-dataset-header__downloads">
-            {% include h.url_for_static('v2/icons/download.svg') %}
+            {% include h.url_for_static('v2/icons/trend-up.svg') %}
             <span>{{ download_count }} downloads</span>
           </div>
         {% endif %}
@@ -180,7 +207,24 @@
           style='tertiary', size='m', label='Contact organisation',
           icon=True, icon_position='left',
           icon_src='v2/icons/mail.svg',
-          tag='a', href=contact_href %}
+          tag='a', href=contact_href,
+          attrs={'id': 'contact-the-contributor'} %}
+      {% if edit_mode %}
+        {% snippet 'v2/components/text-button.html',
+            style='tertiary', size='m', label='Edit Dataset',
+            icon=True, icon_position='left',
+            icon_src='v2/icons/placeholder.svg',
+            tag='a', href='#',
+            attrs={'onclick': "contributeAddDetails('" ~ pkg_id ~ "', 'dataset')"} %}
+      {% endif %}
+      {% if not hide_membership and membership and membership.display_group_message %}
+        {% snippet 'v2/components/text-button.html',
+            style='tertiary', size='m', label='Group message',
+            icon=True, icon_position='left',
+            icon_src='v2/icons/placeholder.svg',
+            tag='a', href='#',
+            attrs={'id': 'contact-members', 'onclick': "closeCurrentWidget(this);$('#group-message-topics-selector').select2('val', '');spawnRecaptcha('#groupMessagePopup');showOnboardingWidget('#groupMessagePopup');"} %}
+      {% endif %}
     </div>
 
   </div>
@@ -268,7 +312,7 @@
             <span class="c-info-icon" tabindex="0" aria-label="{{ _('More info about source') }}">{% include 'v2/icons/info-circle.svg' %}</span>
             {% snippet 'v2/components/tooltip.html',
                 variant='dark', arrow='',
-                text=_('') %}
+                text=_(' ') %}
           </div>
         {% endif %}
       </div>
@@ -283,3 +327,11 @@
   {# end __metadata #}
 
 </section>
+
+{# TODO: remove these #}
+{% if not hide_membership and membership and membership.display_group_message %}
+  {% set membership_data = membership.data %}
+  {% set group_topics = membership.data.group_topics %}
+  {{ h.snippet('widget/membership/group-message.html', id="groupMessagePopup", title=title, groups=group_topics, org_id=org_id, pkg_id=pkg_id, membership_data=membership_data, base_title='dataset', base_type='dataset') }}
+  {{ h.snippet('widget/membership/done.html', id="membershipDonePopup") }}
+{% endif %}

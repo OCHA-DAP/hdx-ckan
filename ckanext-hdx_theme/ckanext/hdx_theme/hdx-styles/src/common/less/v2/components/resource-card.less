@@ -45,9 +45,39 @@
     padding:          @c-resource-card-padding;
     font-family:      var(--hdx-font-body);
     transition:       @c-resource-card-transition;
+    position:         relative;
 
     &:hover {
         border: @c-resource-card-border-hover;
+    }
+
+    // ── HDX Connect (requestdata) variant ────────────────────
+    &--hdx-connect {
+        background-color: var(--hdx-neutral-05);
+        border-color:     var(--hdx-neutral-1);
+
+        &:hover {
+            border-color: var(--hdx-neutral-2);
+        }
+    }
+
+    &__eye-off {
+        position:        absolute;
+        top:             50%;
+        left:            50%;
+        transform:       translate(-50%, -50%);
+        width:           2.5rem;
+        height:          2.5rem;
+        color:           var(--hdx-neutral-3);
+        pointer-events:  none;
+        display:         flex;
+        align-items:     center;
+        justify-content: center;
+
+        svg {
+            width:  100%;
+            height: 100%;
+        }
     }
 
     // ── __header ─────────────────────────────────────────────

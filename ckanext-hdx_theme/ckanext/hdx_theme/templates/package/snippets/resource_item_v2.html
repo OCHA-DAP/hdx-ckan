@@ -21,7 +21,9 @@
 
 {% set url              = h.url_for('dataset_resource.read', id=pkg.name, resource_id=res.id) %}
 {% set in_review        = res.in_quarantine %}
-{% set show_download    = h.check_access('hdx_resource_download', res) and not in_review %}
+{% set faq_review_url   = '/faq#auto-faq-Metadata_and_Data_Quality-What_does_it_mean_for_a_dataset_to_be__under_review__-a' %}
+{% set hdx_connect      = pkg.is_requestdata_type %}
+{% set show_download    = h.check_access('hdx_resource_download', res) and not in_review and not hdx_connect %}
 {% set resource_grouping = h.hdx_munge_title(res.x_grouping) if pkg.x_show_grouping else '' %}
 
 <div class="resource-item{% if in_review %} in-review{% endif %}"
@@ -30,7 +32,7 @@
 
   {% snippet 'v2/components/resource-card.html',
       title=h.resource_display_name(res),
-      title_href=url,
+      title_href=faq_review_url if in_review else url,
       format_text=res.format,
       format_category=h.hdx_format_to_icon_category(res.format),
       description=res.description or '',
@@ -41,6 +43,8 @@
       download_size=h.filesize_format(res.Size) if res.Size else '',
       show_download=show_download,
       in_review=in_review,
+      hdx_connect=hdx_connect,
+      request_href=h.url_for('hdx_dataset.request_access', id=pkg.name or pkg.id) if hdx_connect else '',
       download_extra_classes='resource-url-analytics ga-download resource-download-button',
       download_attrs={
         'data-resource-id':                    res.id,

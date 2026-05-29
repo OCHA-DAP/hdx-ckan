@@ -110,6 +110,8 @@
 {% set download_size          = download_size          if download_size          is defined else '' %}
 {% set show_download          = show_download          if show_download          is defined else true %}
 {% set in_review              = in_review              if in_review              is defined else false %}
+{% set hdx_connect            = hdx_connect            if hdx_connect            is defined else false %}
+{% set request_href           = request_href           if request_href           is defined else '#' %}
 {% set download_extra_classes = download_extra_classes if download_extra_classes is defined else '' %}
 {% set download_attrs         = download_attrs         if download_attrs         is defined else {} %}
 {% set extra_classes          = extra_classes          if extra_classes          is defined else '' %}
@@ -118,6 +120,9 @@
 {% set classes = ['c-resource-card'] %}
 {% if preview_opened %}
   {% set classes = classes + ['is-open'] %}
+{% endif %}
+{% if hdx_connect %}
+  {% set classes = classes + ['c-resource-card--hdx-connect'] %}
 {% endif %}
 {% if extra_classes %}
   {% set classes = classes + [extra_classes] %}
@@ -132,6 +137,7 @@
     {# Top row: file-type icon + labels #}
     <div class="c-resource-card__top">
 
+      {% if not hdx_connect %}
       <div class="c-resource-card__file-type">
         {% snippet 'v2/components/file-type-icon.html',
             format=format_category, size='m' %}
@@ -139,6 +145,7 @@
           <span class="c-resource-card__format-text">{{ format_text | upper }}</span>
         {% endif %}
       </div>
+      {% endif %}
 
       {% if pcoded or api_available %}
         <div class="c-resource-card__tags">
@@ -191,6 +198,12 @@
       {% if in_review %}
         <a href="/faq#auto-faq-Metadata_and_Data_Quality-What_does_it_mean_for_a_dataset_to_be__under_review__-a"
            class="c-button c-button--secondary c-button--size-m">{{ _('Under Review') }}</a>
+      {% elif hdx_connect %}
+        {% snippet 'v2/components/button.html',
+            style='primary', size='m', type='text',
+            label=_('Request data'),
+            tag='a', href=request_href,
+            icon=False %}
       {% elif show_download %}
         {% set dl_label = 'Download (' ~ download_size ~ ')' if download_size else 'Download' %}
         {% snippet 'v2/components/button.html',
@@ -204,5 +217,11 @@
     </div>
 
   </div>{# /.c-resource-card__footer #}
+
+  {% if hdx_connect %}
+    <span class="c-resource-card__eye-off" aria-hidden="true">
+      {% include 'v2/icons/eye-off.svg' %}
+    </span>
+  {% endif %}
 
 </div>{# /.c-resource-card #}
