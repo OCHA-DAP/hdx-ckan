@@ -6,6 +6,7 @@
 // ============================================================
 
 @import "breakpoints.less";
+@import "typography.less";
 
 @hero-bg: var(--hdx-brand-7);
 
@@ -165,6 +166,328 @@
         .c-activity-card { flex: 1; }
     }
 }
+
+// ============================================================
+// hdx-v2-dataset-header — dataset page hero header
+// Figma: llm_docs/redesign/figma_exports/dataset-page-header.html
+// ============================================================
+
+.hdx-v2-dataset-header {
+    background-color: var(--hdx-neutral-01);
+    display:          flex;
+    flex-direction:   column;
+    gap:              var(--hdx-space-6);
+    padding:          var(--hdx-space-6) 0;
+
+    @media (min-width: @hdx-bp-md) {
+        gap:     var(--hdx-space-8);
+        padding: var(--hdx-space-8) 0;
+    }
+
+    @media (min-width: @hdx-bp-xl) {
+        gap:     var(--hdx-space-10);
+        padding: var(--hdx-space-10) 0;
+    }
+
+
+    // ── Top two-column row ───────────────────────────────────
+
+    &__top {
+        display:        flex;
+        flex-direction: column;
+        gap:            var(--hdx-space-6);
+
+        @media (min-width: @hdx-bp-md) {
+            flex-direction: row;
+            align-items:    flex-start;
+            gap:            var(--hdx-space-6);
+        }
+    }
+
+
+    // ── Left column ──────────────────────────────────────────
+
+    &__left {
+        display:        flex;
+        flex-direction: column;
+        gap:            var(--hdx-space-6);
+
+        @media (min-width: @hdx-bp-md) {
+            flex:      1;
+            min-width: 0;
+            gap:       var(--hdx-space-10);
+        }
+    }
+
+
+    // ── Description block ────────────────────────────────────
+
+    &__description {
+        display:        flex;
+        flex-direction: column;
+        align-items:    flex-start;
+        gap:            var(--hdx-space-3);
+
+        @media (min-width: @hdx-bp-md) {
+            gap: var(--hdx-space-4);
+        }
+    }
+
+
+    // ── Labels row ───────────────────────────────────────────
+
+    &__labels {
+        display:     flex;
+        flex-wrap:   wrap;
+        align-items: center;
+        gap:         var(--hdx-space-2);
+
+        @media (min-width: @hdx-bp-md) {
+            gap: var(--hdx-space-13) var(--hdx-space-2);
+        }
+
+        @media (min-width: @hdx-bp-xl) {
+            gap: var(--hdx-space-3);
+        }
+    }
+
+    &__link-group {
+        display:     flex;
+        align-items: center;
+        gap:         var(--hdx-space-1);
+    }
+
+
+    // ── Title ────────────────────────────────────────────────
+
+    &__title {
+        font-family: var(--hdx-font-display);
+        font-size:   var(--hdx-fs-xl);   // 1.25rem SM
+        font-weight: var(--hdx-fw-bold);
+        line-height: var(--hdx-lh-normal);
+        color:       var(--hdx-neutral-95);
+        margin:      0;
+
+        @media (min-width: @hdx-bp-md) {
+            font-size: var(--hdx-fs-2xl);  // 1.5rem MD
+        }
+
+        @media (min-width: @hdx-bp-xl) {
+            font-size: var(--hdx-fs-3xl);  // 1.75rem XL
+        }
+    }
+
+
+    // ── Description text + show-more ─────────────────────────
+
+    &__desc {
+        display:        flex;
+        flex-direction: column;
+        align-items:    flex-start;
+        gap:            var(--hdx-space-2);
+        align-self:     stretch;
+
+        // Show-more button: hidden until JS confirms content is actually clamped
+        .c-text-button { display: none; }
+        &.is-clamped .c-text-button { display: inline-flex; }
+
+        &.is-open .c-text-button__icon {
+            transform:  rotate(180deg);
+            transition: transform 0.15s ease;
+        }
+    }
+
+    &__desc-text {
+        font-family:       var(--hdx-font-body);
+        font-size:         var(--hdx-fs-m);
+        font-weight:       var(--hdx-fw-regular);
+        line-height:       var(--hdx-lh-normal);
+        color:             var(--hdx-neutral-85);
+        margin:            0;
+        display:           -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow:          hidden;
+    }
+
+    &__desc-text.is-open {
+        -webkit-line-clamp: unset;
+        overflow:           visible;
+    }
+
+
+    // ── CTA block ────────────────────────────────────────────
+
+    &__cta {
+        display:        flex;
+        flex-direction: column;
+        align-items:    flex-start;
+        gap:            var(--hdx-space-2);
+    }
+
+    &__notify-btn {
+        // Shown/hidden by notification_platform JS — do not add display here.
+    }
+
+    &__downloads {
+        display:     flex;
+        align-items: center;
+        gap:         var(--hdx-space-1);
+        font-family: var(--hdx-font-body);
+        font-size:   var(--hdx-fs-s);
+        line-height: var(--hdx-lh-normal);
+        color:       var(--hdx-neutral-8);
+
+        svg {
+            width:       0.9375rem;
+            height:      0.9375rem;
+            flex-shrink: 0;
+        }
+    }
+
+
+    // ── Right card (org logo + contact) ──────────────────────
+
+    &__right-card {
+        background-color: var(--hdx-neutral-0);
+        border-radius:    var(--hdx-radius-md);
+
+        // SM-only: inside left column, column layout
+        &--sm-only {
+            display:        flex;
+            flex-direction: column;
+            align-items:    flex-start;
+            gap:            var(--hdx-space-2);
+            padding:        var(--hdx-space-2) var(--hdx-space-3);
+
+            @media (min-width: @hdx-bp-md) {
+                display: none;
+            }
+        }
+
+        // MD+: sidebar, column layout
+        &--md-up {
+            display: none;
+
+            @media (min-width: @hdx-bp-md) {
+                display:        flex;
+                flex-direction: column;
+                align-items:    flex-start;
+                gap:            var(--hdx-space-4);
+                padding:        var(--hdx-space-4);
+                width:          11.25rem;
+                flex-shrink:    0;
+            }
+
+            @media (min-width: @hdx-bp-xl) {
+                padding: var(--hdx-space-6);
+                width:   17.375rem;
+            }
+        }
+    }
+
+    &__org-logo {
+        max-width:       7.05rem;
+        height:          4rem;
+        object-fit:      contain;
+        object-position: left center;
+        display:         block;
+
+        @media (min-width: @hdx-bp-xl) {
+            max-width: 9.375rem;
+            height:    auto;
+        }
+    }
+
+
+    // ── Metadata strip ───────────────────────────────────────
+
+    &__metadata {
+        display:     flex;
+        flex-wrap:   wrap;
+        align-items: flex-start;
+        gap:         var(--hdx-space-6);
+        font-family: var(--hdx-font-body);
+        font-size:   var(--hdx-fs-s);    // 14px SM/MD
+        color:       var(--hdx-neutral-85);
+
+        @media (min-width: @hdx-bp-xl) {
+            font-size: var(--hdx-fs-xs);  // 12px XL
+            gap:       0;                 // spacing via padding-right on items
+        }
+    }
+
+    &__meta-item {
+        width:          100%;             // SM: each item full width
+        flex:           none;
+        display:        flex;
+        flex-direction: column;
+
+        @media (min-width: @hdx-bp-md) {
+            width: calc(50% - var(--hdx-space-3));  // MD: 2 columns
+        }
+
+        @media (min-width: @hdx-bp-xl) {
+            flex:          0 0 25%;   // exactly 1/4 each, 4×25% = 100% (no gap)
+            width:         auto;
+            min-width:     0;
+            padding-right: var(--hdx-space-6);  // replaces gap between items
+
+            &:last-child { padding-right: 0; }
+        }
+    }
+
+    &__meta-label-row {
+        display:     flex;
+        align-items: center;
+        gap:         var(--hdx-space-1);
+        padding:     var(--hdx-space-15) 0;
+    }
+
+    &__meta-label {
+        font-size:   var(--hdx-fs-s);
+        font-weight: var(--hdx-fw-semibold);
+        line-height: var(--hdx-lh-normal);
+        color:       var(--hdx-neutral-85);
+    }
+
+    &__meta-value {
+        display:     flex;
+        flex-wrap:   wrap;
+        align-items: center;
+        font-size:   var(--hdx-fs-s);
+        gap:         var(--hdx-space-1) var(--hdx-space-13);
+        padding:     var(--hdx-space-1) 0;
+        line-height: var(--hdx-lh-normal);
+
+        // Source: single truncated line
+        &--source {
+            flex-wrap: nowrap;
+            overflow:  hidden;
+
+            span {
+                white-space:   nowrap;
+                overflow:      hidden;
+                text-overflow: ellipsis;
+            }
+        }
+    }
+
+    &__source-view-more {
+        display: none;  // JS reveals when source overflows
+    }
+
+
+    // ── Tooltip wrapper ──────────────────────────────────────
+
+    // Header tooltip anchor: push to right of the label-row
+    .c-tooltip-anchor {
+        margin-left: auto;
+
+        .c-tooltip { width: 14rem; }
+    }
+}
+
 
 // ============================================================
 // hdx-v2-dataset-list — search results card list layout

@@ -9,7 +9,7 @@ Create a reusable, responsive dataset card component matching the Figma design e
 **In:**
 - `ckanext-hdx_theme/ckanext/hdx_theme/templates/v2/components/dataset-card.html`
 - `ckanext-hdx_theme/ckanext/hdx_theme/hdx-styles/src/common/less/v2/components/dataset-card.less`
-- A minimal JS module: `ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/v2/modules/dataset-card.js`
+- ~~A minimal JS module: `fanstatic/v2/components/dataset-card.js`~~ → **superseded**: logic moved to shared `fanstatic/v2/components/clamped-text.js` (task 038)
 
 **Out:**
 - CKAN template integration, data fetching, routing (consuming page's concern)
@@ -123,7 +123,7 @@ Rendered when there are more file formats than the visible set:
 
 ## JS Behavior
 
-Minimal JS module for description expand/collapse. Wire up via `data-module="dataset-card"` on `.c-dataset-card__desc`.
+~~`data-module="dataset-card"` on `.c-dataset-card__desc`~~ → **updated (task 038)**: now uses `data-module="clamped-text"` on `.c-dataset-card__desc` and `data-clamped-content` on `<p class="c-dataset-card__desc-text">`. Logic lives in the shared `clamped-text.js` module.
 
 **On "Show more" click:**
 1. Toggle `is-open` class on `.c-dataset-card__desc-text` — CSS controls `display: none` / `display: block`

@@ -1,0 +1,234 @@
+// ============================================================
+// c-resource-card — dataset resource card
+// ============================================================
+// Figma source: llm_docs/redesign/figma_exports/resource-card.html
+// Requirement:  llm_docs/redesign/requirements/resource-card.md
+// ============================================================
+
+@import "../breakpoints.less";
+
+// ── Local tokens ─────────────────────────────────────────────
+
+@c-resource-card-bg:             var(--hdx-neutral-0);
+@c-resource-card-border-default: 1px solid var(--hdx-neutral-1);
+@c-resource-card-border-hover:   1.5px solid var(--hdx-neutral-8);
+@c-resource-card-shadow:         var(--hdx-shadow-sm);
+@c-resource-card-radius:         var(--hdx-radius-sm);
+@c-resource-card-transition:     border 0.15s ease;
+
+@c-resource-card-padding:        var(--hdx-space-4);   // 16px
+@c-resource-card-gap:            var(--hdx-space-3);   // 12px
+
+// Typography
+@c-resource-card-format-fs:      var(--hdx-fs-s);     // 14px
+@c-resource-card-format-color:   var(--hdx-neutral-85);
+@c-resource-card-title-fs-sm:    var(--hdx-fs-m);      // 16px
+@c-resource-card-title-fs:       var(--hdx-fs-l);      // 18px
+@c-resource-card-title-color:    var(--hdx-neutral-95);
+@c-resource-card-title-fw:       var(--hdx-fw-semibold);
+@c-resource-card-desc-fs:        var(--hdx-fs-s);      // 14px
+@c-resource-card-desc-color:     var(--hdx-neutral-85);
+
+
+// ────────────────────────────────────────────────────────────
+// c-resource-card — base
+// ────────────────────────────────────────────────────────────
+
+.c-resource-card {
+    background-color: @c-resource-card-bg;
+    border:           @c-resource-card-border-default;
+    border-radius:    @c-resource-card-radius;
+    box-shadow:       @c-resource-card-shadow;
+    display:          flex;
+    flex-direction:   column;
+    gap:              @c-resource-card-gap;
+    padding:          @c-resource-card-padding;
+    font-family:      var(--hdx-font-body);
+    transition:       @c-resource-card-transition;
+    position:         relative;
+
+    &:hover {
+        border: @c-resource-card-border-hover;
+    }
+
+    // ── HDX Connect (requestdata) variant ────────────────────
+    &--hdx-connect {
+        background-color: var(--hdx-neutral-05);
+        border-color:     var(--hdx-neutral-1);
+
+        &:hover {
+            border-color: var(--hdx-neutral-2);
+        }
+    }
+
+    &__eye-off {
+        position:        absolute;
+        top:             50%;
+        left:            50%;
+        transform:       translate(-50%, -50%);
+        width:           2.5rem;
+        height:          2.5rem;
+        color:           var(--hdx-neutral-3);
+        pointer-events:  none;
+        display:         flex;
+        align-items:     center;
+        justify-content: center;
+
+        svg {
+            width:  100%;
+            height: 100%;
+        }
+    }
+
+    // ── __header ─────────────────────────────────────────────
+    &__header {
+        display:        flex;
+        flex-direction: column;
+        align-items:    flex-start;
+        gap:            var(--hdx-space-2);
+    }
+
+    // ── __top ────────────────────────────────────────────────
+    &__top {
+        align-self:      stretch;
+        display:         flex;
+        align-items:     center;
+        justify-content: space-between;
+        gap:             var(--hdx-space-2);
+    }
+
+    // ── __file-type ──────────────────────────────────────────
+    &__file-type {
+        display:     flex;
+        align-items: center;
+        gap:         var(--hdx-space-2);
+
+        // SM: override to xs size (24px square)
+        .c-file-type {
+            width:         var(--hdx-space-6);
+            height:        var(--hdx-space-6);
+            border-radius: var(--hdx-radius-sm);
+            padding:       var(--hdx-space-1);
+
+            .c-file-type__icon {
+                width: var(--hdx-space-3);
+            }
+        }
+
+        @media (min-width: @hdx-bp-md) {
+            // MD+: restore to s size (32px square)
+            .c-file-type {
+                width:         var(--hdx-space-8);
+                height:        var(--hdx-space-8);
+                border-radius: var(--hdx-radius-sm);
+                padding:       var(--hdx-space-2);
+
+                .c-file-type__icon {
+                    width: var(--hdx-space-4);
+                }
+            }
+        }
+    }
+
+    // ── __format-text ────────────────────────────────────────
+    &__format-text {
+        font-size:   @c-resource-card-format-fs;
+        font-weight: var(--hdx-fw-medium);
+        color:       @c-resource-card-format-color;
+        line-height: var(--hdx-lh-normal);
+    }
+
+    // ── __tags ───────────────────────────────────────────────
+    &__tags {
+        display:     flex;
+        align-items: center;
+        flex-wrap:   wrap;
+        gap:         var(--hdx-space-2);
+    }
+
+    // ── __title ──────────────────────────────────────────────
+    &__title {
+        align-self:         stretch;
+        font-size:          @c-resource-card-title-fs-sm;
+        font-weight:        @c-resource-card-title-fw;
+        color:              @c-resource-card-title-color;
+        line-height:        var(--hdx-lh-normal);
+        text-decoration:    none;
+        margin:             0;
+
+        &:hover {
+            color:           var(--hdx-primary-5);
+            text-decoration: underline;
+        }
+
+        @media (min-width: @hdx-bp-md) {
+            font-size: @c-resource-card-title-fs;
+        }
+    }
+
+    // ── __desc ───────────────────────────────────────────────
+    &__desc {
+        align-self: stretch;
+    }
+
+    // ── __desc-text ──────────────────────────────────────────
+    &__desc-text {
+        font-size:          @c-resource-card-desc-fs;
+        color:              @c-resource-card-desc-color;
+        line-height:        var(--hdx-lh-normal);
+        margin:             0;
+        display:            -webkit-box;
+        -webkit-line-clamp: 7;          // SM: allow more lines (narrower column)
+        -webkit-box-orient: vertical;
+        overflow:           hidden;
+
+        &.is-open {
+            -webkit-line-clamp: unset;
+            overflow:           visible;
+        }
+
+        @media (min-width: @hdx-bp-md) {
+            -webkit-line-clamp: 3;
+        }
+
+        a {
+            color: @c-resource-card-desc-color;
+
+            &:hover {
+                color: var(--hdx-primary-5);
+            }
+        }
+    }
+
+    // Show-more button: hidden until JS confirms content is actually clamped
+    .c-text-button { display: none; }
+    &.is-clamped .c-text-button { display: inline-flex; }
+
+    // Chevron icon rotation when expanded (show-more button is in __footer,
+    // but is-open is toggled on this root by clamped-text.js)
+    &.is-open .c-text-button__icon {
+        transform:  rotate(180deg);
+        transition: transform 0.15s ease;
+    }
+
+    .c-text-button__icon {
+        transition: transform 0.15s ease;
+    }
+
+    // ── __footer ─────────────────────────────────────────────
+    &__footer {
+        display:     flex;
+        align-items: center;
+        flex-wrap:   wrap;
+        gap:         var(--hdx-space-2);
+    }
+
+    // ── __actions ────────────────────────────────────────────
+    &__actions {
+        display:       flex;
+        align-items:   center;
+        flex-wrap:     wrap;
+        gap:           var(--hdx-space-2);
+        margin-left:   auto;            // push actions to the right
+    }
+}

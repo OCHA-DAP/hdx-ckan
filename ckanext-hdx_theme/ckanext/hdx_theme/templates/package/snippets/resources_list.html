@@ -19,23 +19,32 @@ Example:
 
 {{ h.snippet('widget/onboarding/data-use-survey.html', id="dataUseSurveyPopup", pkg=pkg) }}
 {% set resource_item_snippet = resource_item_snippet or 'package/snippets/resource_item.html' %}
+{% set list_tag = list_tag if list_tag is defined else 'ul' %}
 
 <div id="dataset-resources" class="resources mTop35 info-wrapper">
   <div class="requested-data-message"></div>
   {% block resource_list %}
     {% if resources %}
       {% snippet 'package/snippets/groupings.html', pkg=pkg %}
-      <ul class="{% block resource_list_class %}hdx-bs3 resource-list{% endblock %}">
+      <{{ list_tag }} class="{% block resource_list_class %}hdx-bs3 resource-list{% endblock %}">
         {% block resource_list_inner %}
           {% set supports_notifications = h.hdx_supports_notifications('dataset', pkg.id, pkg) %}
           {% for resource in resources %}
             {% snippet resource_item_snippet, pkg=pkg, res=resource, supports_notifications=supports_notifications %}
           {% endfor %}
         {% endblock %}
-      </ul>
+      </{{ list_tag }}>
     {% else %}
       {% if pkg.is_requestdata_type %}
-        {% set is_logged_in = True if g.userobj and not g.userobj.is_anonymous else False %}
+        {% if resource_item_snippet == 'package/snippets/resource_item_v2.html' %}
+          <div class="resource-item">
+            {% snippet 'v2/components/resource-card.html',
+                description=_('To access data please use the request button.'),
+                hdx_connect=True,
+                request_href=h.url_for('hdx_dataset.request_access', id=pkg.name or pkg.id) %}
+          </div>
+        {% else %}
+          {% set is_logged_in = True if g.userobj and not g.userobj.is_anonymous else False %}
           <p class="empty">The contributor has only shared the <a href="#" id="switch-to-metadata-tab">metadata</a> for this dataset. To access the data, please use the request button.</p>
           <span data-module="bs_tooltip"
                data-module-placement="left"
@@ -68,14 +77,13 @@ Example:
           </span>
 
           <div class="container-subpanel">
-
             <div class="circle gray-bg"></div>
             <div class="lines">
               <div class="upper gray-bg"></div>
               <div class="lower gray-bg"></div>
             </div>
-
           </div>
+        {% endif %}
       {% else %}
         {# Comment out "add some" as action doesn't exist yet #}
         <p class="empty mTop20">This dataset has no data,

@@ -66,6 +66,7 @@
     line-height:     130%;
     white-space:     nowrap;
     box-sizing:      border-box;
+    text-decoration: none;
 
     &__icon {
         line-height: 0;
@@ -390,5 +391,53 @@
             line-height: 130%;
             color:       var(--hdx-neutral-8);
         }
+    }
+}
+
+
+// ────────────────────────────────────────────────────────────
+// 4. c-info-icon — inline info trigger (shared across pages)
+// ────────────────────────────────────────────────────────────
+
+.c-info-icon {
+    display:     inline-flex;
+    align-items: center;
+    color:       var(--hdx-neutral-85);
+    cursor:      pointer;
+    flex-shrink: 0;
+
+    svg {
+        width:  0.875rem;
+        height: 0.875rem;
+    }
+}
+
+
+// ────────────────────────────────────────────────────────────
+// 5. c-tooltip-anchor — positions an absolute tooltip above
+//    the trigger icon; used wherever an info icon + tooltip
+//    pair needs right-anchored, above-positioned behaviour.
+// ────────────────────────────────────────────────────────────
+
+.c-tooltip-anchor {
+    position:    relative;
+    display:     inline-flex;
+    align-items: center;
+
+    .c-tooltip {
+        position:    absolute;
+        bottom:      calc(100% + var(--hdx-space-1));
+        right:       0;
+        left:        auto;
+        transform:   none;
+        z-index:     100;
+        display:     none;
+        white-space: normal;
+    }
+
+    .c-info-icon:hover ~ .c-tooltip,
+    .c-info-icon:focus-visible ~ .c-tooltip,
+    .c-info-icon.is-open ~ .c-tooltip {
+        display: block;
     }
 }

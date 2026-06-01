@@ -1,0 +1,61 @@
+{#
+  Snippet: resource_item_v2.html
+  Path:    package/snippets/resource_item_v2.html
+
+  v2 resource list item — wraps the c-resource-card component inside a
+  <div class="resource-item"> for the v2 layout.
+  The groupings JS (hdx_resource_grouping) uses .resource-list .resource-item
+  (no li qualifier) so this div is compatible.
+
+  All download-tracking data attributes are forwarded to the Download button
+  via resource-card's download_attrs param so resource-list.js still fires
+  on .resource-download-button clicks.
+
+  Parameters (supplied by resources_list.html)
+  ─────────────────────────────────────────────
+  pkg                    {dict}  Package dict.
+  res                    {dict}  Resource dict.
+  supports_notifications {bool}  From h.hdx_supports_notifications().
+#}
+
+
+{% set url              = h.url_for('dataset_resource.read', id=pkg.name, resource_id=res.id) %}
+{% set in_review        = res.in_quarantine %}
+{% set faq_review_url   = '/faq#auto-faq-Metadata_and_Data_Quality-What_does_it_mean_for_a_dataset_to_be__under_review__-a' %}
+{% set hdx_connect      = pkg.is_requestdata_type %}
+{% set show_download    = h.check_access('hdx_resource_download', res) and not in_review and not hdx_connect %}
+{% set resource_grouping = h.hdx_munge_title(res.x_grouping) if pkg.x_show_grouping else '' %}
+
+<div class="resource-item{% if in_review %} in-review{% endif %}"
+     data-grouping-id="{{ resource_grouping }}"
+     style="{{ 'display:none' if pkg.x_show_grouping else '' }}">
+
+  {% snippet 'v2/components/resource-card.html',
+      title=h.resource_display_name(res),
+      title_href=faq_review_url if in_review else url,
+      format_text=res.format,
+      format_category=h.hdx_format_to_icon_category(res.format),
+      description=res.description or '',
+      pcoded=(h.are_new_p_code_filters_enabled() and res.p_coded == True),
+      api_available=(res.datastore_active == True),
+      preview_available=(res.has_views and h.is_not_zipped(res) and not in_review),
+      download_url=res.hdx_rel_url,
+      download_size=h.filesize_format(res.Size) if res.Size else '',
+      show_download=show_download,
+      in_review=in_review,
+      hdx_connect=hdx_connect,
+      request_href=h.url_for('hdx_dataset.request_access', id=pkg.name or pkg.id) if hdx_connect else '',
+      download_extra_classes='resource-url-analytics ga-download resource-download-button',
+      download_attrs={
+        'data-resource-id':                    res.id,
+        'data-resource-name':                  h.resource_display_name(res),
+        'data-dataset-id':                     pkg.id,
+        'data-dataset-name':                   pkg.name,
+        'data-dataset-supports-notifications': supports_notifications | lower,
+        'data-user-survey-url':                pkg.user_survey_url or '',
+        'data-is-authenticated':               current_user.is_authenticated,
+        'tracking-type':                       res.url_type or ''
+      }
+  %}
+
+</div>
