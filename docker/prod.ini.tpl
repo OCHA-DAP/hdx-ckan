@@ -166,6 +166,7 @@ hdx.security.site_name = ${HDX_SECURITY_SITENAME}
 # Datapusher Plus Config
 ckan.datapusher.callback_url_base = http://${HDX_DATAPUSHER_INTERNAL_CKAN_ADDR}:${HDX_DATAPUSHER_INTERNAL_CKAN_PORT}
 ckanext.datapusher_plus.api_token = ${HDX_DATAPUSHER_CKAN_API_TOKEN}
+ckan.datapusher.formats = csv
 
 # Datapusher enabled objects
 hdx.datastore.enabled_objects_csv = ${HDX_DATAPUSHER_ENABLED_OBJECTS_CSV}
