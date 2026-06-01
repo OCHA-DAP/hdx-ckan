@@ -97,7 +97,8 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
         result = self.app.get(
             test_url, headers={'Authorization': str(testsysadmin.apikey)})
         assert result.status_code == 200
-        assert '<a class="heading" title="hdx_test.csv">' in result.body
+        assert 'c-resource-card__title' in result.body
+        assert 'hdx_test.csv' in result.body
 
     def test_hdx_package_delete_redirect(self):
 
