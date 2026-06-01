@@ -250,7 +250,7 @@ werkzeug[watchdog]==3.0.6
     #   werkzeug
 wtforms==3.1.2
     # via flask-wtf
-zope-interface==6.4.post2
+zope-interface==8.5
     # via -r requirements.in
 
 # The following packages are considered to be unsafe in a requirements file:
