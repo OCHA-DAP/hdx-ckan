@@ -47,7 +47,7 @@
 
 {# ── Desktop nav (with optional sticky wrapper + heading) ─── #}
 
-{% if not mobile_only %}
+{% if not mobile_only and items %}
 {% if heading or with_mobile_dropdown %}
 <div class="c-anchor-links-wrapper">
   {% if heading %}
@@ -89,7 +89,7 @@
 
 {# ── Mobile sticky dropdown ──────────────────────────────── #}
 
-{% if with_mobile_dropdown or mobile_only %}
+{% if (with_mobile_dropdown or mobile_only) and items %}
   {% set _active_label = items[0].label if items else '' %}
   <div class="c-anchor-links-mobile"
        data-module="anchor-dropdown">
