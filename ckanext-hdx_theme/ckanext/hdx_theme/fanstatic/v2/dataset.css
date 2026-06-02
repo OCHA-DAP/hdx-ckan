@@ -115,7 +115,8 @@
 }
 .hdx-v2-dataset-metadata .c-tooltip-anchor .c-tooltip {
   width: 14rem;
-  margin-left: var(--hdx-space-1);
+  left: 0;
+  right: auto;
 }
 .hdx-v2-dataset-metadata__value {
   font-family: var(--hdx-font-body);
