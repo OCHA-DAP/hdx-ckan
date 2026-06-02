@@ -260,7 +260,8 @@
 .c-breadcrumb {
   display: flex;
   align-items: center;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+  overflow: hidden;
   gap: var(--hdx-space-2);
   padding: var(--hdx-space-2) 0;
   font-family: var(--hdx-font-body);
@@ -273,12 +274,20 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   max-width: 21.875rem;
+  min-width: 0;
+}
+.c-breadcrumb__item .c-text-link {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 21.875rem;
 }
 .c-breadcrumb__separator {
   color: var(--hdx-neutral-5);
   font-size: var(--hdx-fs-s);
   line-height: 130%;
   margin-left: var(--hdx-space-2);
+  flex-shrink: 0;
 }
 .c-breadcrumb__current {
   color: var(--hdx-neutral-7);
@@ -287,6 +296,7 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   max-width: 21.875rem;
+  min-width: 0;
 }
 .c-divider {
   display: block;
