@@ -7,7 +7,7 @@
 ## Prerequisites
 
 Already implemented (do not re-implement):
-- `v2/dataset-page-header.html` — hero header (task 037)
+- `v2/page-header.html` — hero header (task 037)
 - `v2/components/resource-card.html` — resource file card (task 038)
 - `v2/components/breadcrumb.html` — breadcrumb (task 032)
 - `v2/components/anchor-links.html` — desktop anchor nav list
@@ -397,7 +397,7 @@ Uses `IntersectionObserver` on `.hdx-v2-dataset-section[id]` elements.
 
 ### Info icon tooltip pattern
 
-Used in both `dataset-page-header.html` (header metadata strip) and the inlined metadata fields in `hdx_read.html`.
+Used in both `page-header.html` (header metadata strip) and the inlined metadata fields in `hdx_read.html`.
 
 **Template**:
 ```jinja
@@ -422,7 +422,7 @@ Used in both `dataset-page-header.html` (header metadata strip) and the inlined 
 - Header (`styles.less` `.c-tooltip-anchor`): `margin-left: auto` — right-aligned in label-row.
 - Metadata section: no `margin-left: auto` — left-aligned immediately after label text.
 
-**JS** — `dataset-page-header.js` adds/removes `.is-open` on `.c-info-icon` on click; queries `.c-tooltip-anchor` for wrapper; document click closes all.
+**JS** — `page-header.js` adds/removes `.is-open` on `.c-info-icon` on click; queries `.c-tooltip-anchor` for wrapper; document click closes all.
 
 ---
 
@@ -562,7 +562,7 @@ No v2-specific CSS overrides. The `activity_stream.html` snippet provides its ow
 
 ## webassets.yml additions
 
-`v2-components-scripts` gets `v2/components/anchor-links.js` (after `dataset-page-header.js`).
+`v2-components-scripts` gets `v2/components/anchor-links.js` (after `page-header.js`).
 `v2-components-styles` gets `v2/components/showcase-card.css` (after `selection.css`).
 
 After `v2-search-scripts` block:
@@ -656,7 +656,7 @@ Standard `{% set items = items + [...] %}` fails in Jinja2 due to scoping — us
 |------|--------|
 | `templates/package/hdx_read.html` | Full restructure per block breakdown above; `columns_class`; inlined metadata fields; `<hr class="c-divider">` between sections |
 | `templates/v2/page.html` | Support `columns_class` on `hdx-v2-content-columns`; added `{% block mobile_sticky_nav %}` between `pre_primary` and main layout div |
-| `templates/v2/dataset-page-header.html` | Tooltip triggers: `<span class="c-info-icon">`; anchor hrefs fixed; `data-header-meta="source"` added |
+| `templates/v2/page-header.html` | Tooltip triggers: `<span class="c-info-icon">`; anchor hrefs fixed; `data-header-meta="source"` added |
 | `templates/v2/components/anchor-links.html` | Added `heading`, `with_mobile_dropdown`, and `mobile_only` params |
 | `templates/v2/components/resource-card.html` | Renamed `ga_resource_title` → `resource_title`, `ga_resource_id` → `resource_id` |
 | `templates/package/snippets/resource_item_v2.html` | Updated to use new param names |
@@ -666,7 +666,7 @@ Standard `{% set items = items + [...] %}` fails in Jinja2 due to scoping — us
 | `hdx-styles/src/common/less/v2/search.less` | `.hdx-v2-search-sidebar` at XL: `flex: 0 0 25%` |
 | `hdx-styles/src/common/less/v2/components/navigation.less` | Added `.c-anchor-links-wrapper`, `.c-anchor-links__heading`, `.c-anchor-links-mobile` blocks |
 | `hdx-styles/src/common/less/v2/components/resource-card.less` | Added `.resource-list` / `.resource-item` reset styles |
-| `fanstatic/v2/components/dataset-page-header.js` | Tooltip: target `.c-info-icon` + toggle `.is-open`; `.c-tooltip-anchor` wrapper; source overflow uses `[data-header-meta="source"]` |
+| `fanstatic/v2/components/page-header.js` | Tooltip: target `.c-info-icon` + toggle `.is-open`; `.c-tooltip-anchor` wrapper; source overflow uses `[data-header-meta="source"]` |
 | `fanstatic/webassets.yml` | Added `anchor-links.js` to `v2-components-scripts`; `showcase-card.css` to `v2-components-styles`; new `v2-dataset-styles`/`v2-dataset-scripts` bundles |
 
 ---

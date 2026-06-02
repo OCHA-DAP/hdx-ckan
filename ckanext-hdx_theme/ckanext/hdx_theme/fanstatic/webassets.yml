@@ -240,6 +240,7 @@ v2-components-styles:
     - v2/components/selection.css
     - v2/components/showcase-card.css
     - v2/components/text-link.css
+    - v2/components/copy-button.css
 
 v2-components-scripts:
   <<: *common-js
@@ -247,8 +248,10 @@ v2-components-scripts:
   contents:
     - v2/components/password-toggle.js
     - v2/components/clamped-text.js
-    - v2/components/dataset-page-header.js
+    - v2/components/dropdown.js
+    - v2/components/page-header.js
     - v2/components/anchor-links.js
+    - v2/components/copy-button.js
 
 v2-page-styles:
   output: ckanext-hdx_theme/%(version)s_v2-page-styles.css
@@ -290,6 +293,15 @@ v2-dataset-styles:
       - hdx_theme/v2-page-styles
   contents:
     - v2/dataset.css
+
+v2-resource-styles:
+  output: ckanext-hdx_theme/%(version)s_v2-resource-styles.css
+  <<: *common-css
+  extra:
+    preload:
+      - hdx_theme/v2-page-styles
+  contents:
+    - v2/resource-page.css
 
 v2-search-scripts:
   <<: *common-js

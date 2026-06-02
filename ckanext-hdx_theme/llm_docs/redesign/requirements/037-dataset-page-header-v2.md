@@ -164,7 +164,7 @@ The tooltip-wrap div has `margin-left: auto` to push it to the right edge of the
 ### 4.1 Snippet call (from `hdx_read.html`)
 
 ```jinja
-{% snippet 'v2/dataset-page-header.html',
+{% snippet 'v2/page-header.html',
     title=pkg.title or pkg.name,
     description=pkg.notes,
     org_name=pkg.organization.title,
@@ -247,7 +247,7 @@ JS toggles `is-open` class on the `<p>` (not `is-expanded` on the container). CS
 
 The `__tooltip-wrap` div has `margin-left: auto` to push it to the right of the `__meta-label-row`. Inside it: a `c-button` (icon-only, aria-expanded="false") and a `c-tooltip--dark`.
 
-CSS overrides strip the `c-button` of all button chrome (background, border, padding, shadow) and size the icon to `0.875rem`. CSS shows the tooltip when `.c-button[aria-expanded="true"] ~ .c-tooltip`. JS in `dataset-page-header.js` toggles `aria-expanded` on click and closes all tooltips on outside click.
+CSS overrides strip the `c-button` of all button chrome (background, border, padding, shadow) and size the icon to `0.875rem`. CSS shows the tooltip when `.c-button[aria-expanded="true"] ~ .c-tooltip`. JS in `page-header.js` toggles `aria-expanded` on click and closes all tooltips on outside click.
 
 Tooltip copy:
 - **Time period:** `"The earliest start date and latest end date across all resources included in the dataset."`
@@ -257,7 +257,7 @@ Tooltip copy:
 
 Source value is always truncated to 1 line via `white-space: nowrap; overflow: hidden; text-overflow: ellipsis` on the `__meta-value--source` modifier.
 
-The "View more" link (class `hdx-v2-dataset-header__source-view-more`) is always rendered in the HTML but hidden via CSS (`display: none`). On `DOMContentLoaded`, `dataset-page-header.js` checks if `sourceSpan.scrollWidth > sourceSpan.clientWidth` and if so sets `display: inline-flex` to reveal the link. Clicking "View more" scrolls to `#dataset-additional-info` (the "Additional information" section in the secondary column of `hdx_read.html`).
+The "View more" link (class `hdx-v2-dataset-header__source-view-more`) is always rendered in the HTML but hidden via CSS (`display: none`). On `DOMContentLoaded`, `page-header.js` checks if `sourceSpan.scrollWidth > sourceSpan.clientWidth` and if so sets `display: inline-flex` to reveal the link. Clicking "View more" scrolls to `#dataset-additional-info` (the "Additional information" section in the secondary column of `hdx_read.html`).
 
 ### 5.4 `links_list` rendering
 
@@ -302,10 +302,10 @@ All responsive logic via LESS `@media` queries nested inside element blocks.
 
 | File | Status | Role |
 |------|--------|------|
-| `templates/v2/dataset-page-header.html` | Created | Component snippet |
+| `templates/v2/page-header.html` | Created | Component snippet |
 | `hdx-styles/src/common/less/v2/styles.less` | Modified | Contains all `.hdx-v2-dataset-header` LESS (embedded, not a separate file) |
-| `fanstatic/v2/components/dataset-page-header.js` | Created | Show-more + tooltip JS |
-| `fanstatic/webassets.yml` | Modified | Adds `dataset-page-header.js` to `v2-components-scripts` bundle |
+| `fanstatic/v2/components/page-header.js` | Created | Show-more + tooltip JS |
+| `fanstatic/webassets.yml` | Modified | Adds `page-header.js` to `v2-components-scripts` bundle |
 | `templates/package/hdx_read.html` | Modified | Renders snippet unconditionally; passes `edit_mode` + `pkg_id`; `id="dataset-additional-info"` on secondary section header |
 
 ### 7.2 What was NOT created
@@ -376,7 +376,7 @@ hdx-v2-dataset-header
 | OQ-8 | Hidden text-link in Location value row (Figma only) — out of scope, skipped. |
 | OQ-9 | Tooltip copy hardcoded. Time period: defined. Source: placeholder `"Source information placeholder."` (TBD). |
 | OQ-10 | Labels flex-wrap freely with no per-line cap. |
-| OQ-11 | ~~`data-module="dataset-page-header"` handled by `dataset-page-header.js`~~ → **updated (task 038)**: uses shared `data-module="clamped-text"` + `data-clamped-content`; JS handler removed from `dataset-page-header.js`. |
+| OQ-11 | ~~`data-module="dataset-page-header"` handled by `page-header.js`~~ → **updated (task 038)**: uses shared `data-module="clamped-text"` + `data-clamped-content`; JS handler removed from `page-header.js`. |
 | OQ-12 | Tooltip trigger is `c-button` (icon-only) with CSS chrome removed; aria-expanded toggled by JS; outside click closes. |
 | OQ-13 | Source "View more" link is rendered but hidden; JS reveals it only when text visually overflows 1 line (scrollWidth > clientWidth). Links to `#dataset-additional-info` in the secondary block. |
 | OQ-14 | `hdx_read.html` has no v2 feature gate — the new header is always rendered. v1 layout block removed. |
