@@ -246,6 +246,7 @@ v2-components-scripts:
   <<: *common-js
   output: ckanext-hdx_theme/%(version)s_v2-components-scripts.js
   contents:
+    - v2/components/focus-trap.js
     - v2/components/password-toggle.js
     - v2/components/clamped-text.js
     - v2/components/dropdown.js
