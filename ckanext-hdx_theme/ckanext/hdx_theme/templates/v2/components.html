@@ -102,10 +102,359 @@
   .demo-max-width-xl {
     max-width: 37.5rem;
   }
+
+  /* ── Foundation / Tokens ─────────────────────────────── */
+
+  .demo-palette {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.375rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .demo-swatch {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+  }
+
+  .demo-swatch__color {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 4px;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+  }
+
+  .demo-swatch__name {
+    font-size: 0.55rem;
+    color: #7e8e8f;
+    text-align: center;
+    line-height: 1.2;
+    font-family: monospace;
+  }
+
+  .demo-swatch__hex {
+    font-size: 0.55rem;
+    color: #9db1b3;
+    text-align: center;
+    font-family: monospace;
+  }
+
+  .demo-type-row {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    margin-bottom: 0.875rem;
+  }
+
+  .demo-type-row__label {
+    font-size: 0.75rem;
+    color: #9db1b3;
+    min-width: 7rem;
+    flex-shrink: 0;
+    font-family: monospace;
+  }
+
+  .demo-type-row__sample {
+    color: #3f4748;
+    line-height: 1.3;
+  }
+
+  .demo-lh-block {
+    padding: 0.75rem 1rem;
+    background: #f5f7f7;
+    border-radius: 4px;
+    max-width: 26rem;
+    color: #3f4748;
+    font-size: 0.875rem;
+  }
+
+  .demo-spacing-strip {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .demo-spacing-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+  }
+
+  .demo-spacing-box {
+    background: var(--hdx-primary-15, #bad0f3);
+    border-radius: 2px;
+    width: 1rem;
+  }
+
+  .demo-spacing-item__label {
+    font-size: 0.55rem;
+    color: #7e8e8f;
+    font-family: monospace;
+    text-align: center;
+  }
+
+  .demo-shadow-strip {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .demo-shadow-card {
+    padding: 1rem 1.5rem;
+    border-radius: 4px;
+    background: #ffffff;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    min-width: 8rem;
+    text-align: center;
+  }
+
+  .demo-shadow-card__name {
+    font-size: 0.625rem;
+    color: #7e8e8f;
+    font-family: monospace;
+  }
+
+  .demo-radius-strip {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .demo-radius-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.375rem;
+  }
+
+  .demo-radius-box {
+    width: 4rem;
+    height: 2rem;
+    background: #d1e0f7;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+  }
+
+  .demo-radius-item__label {
+    font-size: 0.625rem;
+    color: #7e8e8f;
+    font-family: monospace;
+    text-align: center;
+  }
 </style>
 
 <div class="demo-page">
   <div class="container">
+
+  {# ══════════════════════════════════════════════════════
+     0. FOUNDATION / TOKENS
+  ══════════════════════════════════════════════════════ #}
+  <section class="demo-section">
+    <h1 class="demo-section__title">Foundation</h1>
+    <p class="demo-section__subtitle">Design tokens — colors, typography, spacing, elevation, radius</p>
+
+    {# ── Colors ─────────────────────────────────────── #}
+    <h2 class="demo-subsection__heading">Colors — Brand</h2>
+    <div class="demo-palette">
+      <div class="demo-swatch"><div class="demo-swatch__color" style="background:var(--hdx-brand-05,#e9f5f1)"></div><span class="demo-swatch__name">brand-05</span><span class="demo-swatch__hex">#e9f5f1</span></div>
+      <div class="demo-swatch"><div class="demo-swatch__color" style="background:var(--hdx-brand-1,#d4eae4)"></div><span class="demo-swatch__name">brand-1</span><span class="demo-swatch__hex">#d4eae4</span></div>
+      <div class="demo-swatch"><div class="demo-swatch__color" style="background:var(--hdx-brand-15,#bee0d6)"></div><span class="demo-swatch__name">brand-15</span><span class="demo-swatch__hex">#bee0d6</span></div>
+      <div class="demo-swatch"><div class="demo-swatch__color" style="background:var(--hdx-brand-2,#a8d5c9)"></div><span class="demo-swatch__name">brand-2</span><span class="demo-swatch__hex">#a8d5c9</span></div>
+      <div class="demo-swatch"><div class="demo-swatch__color" style="background:var(--hdx-brand-3,#7dc1ad)"></div><span class="demo-swatch__name">brand-3</span><span class="demo-swatch__hex">#7dc1ad</span></div>
+      <div class="demo-swatch"><div class="demo-swatch__color" style="background:var(--hdx-brand-4,#51ac92)"></div><span class="demo-swatch__name">brand-4</span><span class="demo-swatch__hex">#51ac92</span></div>
+      <div class="demo-swatch"><div class="demo-swatch__color" style="background:var(--hdx-brand-5,#269777)"></div><span class="demo-swatch__name">brand-5</span><span class="demo-swatch__hex">#269777</span></div>
+      <div class="demo-swatch"><div class="demo-swatch__color" style="background:var(--hdx-brand-6,#1e795f)"></div><span class="demo-swatch__name">brand-6</span><span class="demo-swatch__hex">#1e795f</span></div>
+      <div class="demo-swatch"><div class="demo-swatch__color" style="background:var(--hdx-brand-7,#18614c)"></div><span class="demo-swatch__name">brand-7</span><span class="demo-swatch__hex">#18614c</span></div>
+      <div class="demo-swatch"><div class="demo-swatch__color" style="background:var(--hdx-brand-8,#0f3c30)"></div><span class="demo-swatch__name">brand-8</span><span class="demo-swatch__hex">#0f3c30</span></div>
+      <div class="demo-swatch"><div class="demo-swatch__color" style="background:var(--hdx-brand-85,#0b2d24)"></div><span class="demo-swatch__name">brand-85</span><span class="demo-swatch__hex">#0b2d24</span></div>
+      <div class="demo-swatch"><div class="demo-swatch__color" style="background:var(--hdx-brand-9,#081e18)"></div><span class="demo-swatch__name">brand-9</span><span class="demo-swatch__hex">#081e18</span></div>
+      <div class="demo-swatch"><div class="demo-swatch__color" style="background:var(--hdx-brand-95,#040f0c)"></div><span class="demo-swatch__name">brand-95</span><span class="demo-swatch__hex">#040f0c</span></div>
+    </div>
+
+    <h2 class="demo-subsection__heading">Colors — Primary</h2>
+    <div class="demo-palette">
+      <div class="demo-swatch"><div class="demo-swatch__color" style="background:var(--hdx-primary-05,#e8effb)"></div><span class="demo-swatch__name">primary-05</span><span class="demo-swatch__hex">#e8effb</span></div>
+      <div class="demo-swatch"><div class="demo-swatch__color" style="background:var(--hdx-primary-1,#d1e0f7)"></div><span class="demo-swatch__name">primary-1</span><span class="demo-swatch__hex">#d1e0f7</span></div>
+      <div class="demo-swatch"><div class="demo-swatch__color" style="background:var(--hdx-primary-15,#bad0f3)"></div><span class="demo-swatch__name">primary-15</span><span class="demo-swatch__hex">#bad0f3</span></div>
+      <div class="demo-swatch"><div class="demo-swatch__color" style="background:var(--hdx-primary-2,#a3c0ef)"></div><span class="demo-swatch__name">primary-2</span><span class="demo-swatch__hex">#a3c0ef</span></div>
+      <div class="demo-swatch"><div class="demo-swatch__color" style="background:var(--hdx-primary-3,#74a1e8)"></div><span class="demo-swatch__name">primary-3</span><span class="demo-swatch__hex">#74a1e8</span></div>
+      <div class="demo-swatch"><div class="demo-swatch__color" style="background:var(--hdx-primary-4,#4681e0)"></div><span class="demo-swatch__name">primary-4</span><span class="demo-swatch__hex">#4681e0</span></div>
+      <div class="demo-swatch"><div class="demo-swatch__color" style="background:var(--hdx-primary-5,#1862d8)"></div><span class="demo-swatch__name">primary-5</span><span class="demo-swatch__hex">#1862d8</span></div>
+      <div class="demo-swatch"><div class="demo-swatch__color" style="background:var(--hdx-primary-6,#134ead)"></div><span class="demo-swatch__name">primary-6</span><span class="demo-swatch__hex">#134ead</span></div>
+      <div class="demo-swatch"><div class="demo-swatch__color" style="background:var(--hdx-primary-7,#0e3b82)"></div><span class="demo-swatch__name">primary-7</span><span class="demo-swatch__hex">#0e3b82</span></div>
+      <div class="demo-swatch"><div class="demo-swatch__color" style="background:var(--hdx-primary-8,#0a2756)"></div><span class="demo-swatch__name">primary-8</span><span class="demo-swatch__hex">#0a2756</span></div>
+      <div class="demo-swatch"><div class="demo-swatch__color" style="background:var(--hdx-primary-85,#071d41)"></div><span class="demo-swatch__name">primary-85</span><span class="demo-swatch__hex">#071d41</span></div>
+      <div class="demo-swatch"><div class="demo-swatch__color" style="background:var(--hdx-primary-9,#05142b)"></div><span class="demo-swatch__name">primary-9</span><span class="demo-swatch__hex">#05142b</span></div>
+    </div>
+
+    <h2 class="demo-subsection__heading">Colors — Neutral</h2>
+    <div class="demo-palette">
+      <div class="demo-swatch"><div class="demo-swatch__color" style="background:var(--hdx-neutral-01,#fafbfb)"></div><span class="demo-swatch__name">neutral-01</span><span class="demo-swatch__hex">#fafbfb</span></div>
+      <div class="demo-swatch"><div class="demo-swatch__color" style="background:var(--hdx-neutral-05,#f5f7f7)"></div><span class="demo-swatch__name">neutral-05</span><span class="demo-swatch__hex">#f5f7f7</span></div>
+      <div class="demo-swatch"><div class="demo-swatch__color" style="background:var(--hdx-neutral-1,#ebeff0)"></div><span class="demo-swatch__name">neutral-1</span><span class="demo-swatch__hex">#ebeff0</span></div>
+      <div class="demo-swatch"><div class="demo-swatch__color" style="background:var(--hdx-neutral-15,#e2e8e8)"></div><span class="demo-swatch__name">neutral-15</span><span class="demo-swatch__hex">#e2e8e8</span></div>
+      <div class="demo-swatch"><div class="demo-swatch__color" style="background:var(--hdx-neutral-2,#d8e0e1)"></div><span class="demo-swatch__name">neutral-2</span><span class="demo-swatch__hex">#d8e0e1</span></div>
+      <div class="demo-swatch"><div class="demo-swatch__color" style="background:var(--hdx-neutral-3,#c4d0d1)"></div><span class="demo-swatch__name">neutral-3</span><span class="demo-swatch__hex">#c4d0d1</span></div>
+      <div class="demo-swatch"><div class="demo-swatch__color" style="background:var(--hdx-neutral-4,#b1c1c2)"></div><span class="demo-swatch__name">neutral-4</span><span class="demo-swatch__hex">#b1c1c2</span></div>
+      <div class="demo-swatch"><div class="demo-swatch__color" style="background:var(--hdx-neutral-5,#9db1b3)"></div><span class="demo-swatch__name">neutral-5</span><span class="demo-swatch__hex">#9db1b3</span></div>
+      <div class="demo-swatch"><div class="demo-swatch__color" style="background:var(--hdx-neutral-6,#7e8e8f)"></div><span class="demo-swatch__name">neutral-6</span><span class="demo-swatch__hex">#7e8e8f</span></div>
+      <div class="demo-swatch"><div class="demo-swatch__color" style="background:var(--hdx-neutral-7,#5e6a6b)"></div><span class="demo-swatch__name">neutral-7</span><span class="demo-swatch__hex">#5e6a6b</span></div>
+      <div class="demo-swatch"><div class="demo-swatch__color" style="background:var(--hdx-neutral-8,#3f4748)"></div><span class="demo-swatch__name">neutral-8</span><span class="demo-swatch__hex">#3f4748</span></div>
+      <div class="demo-swatch"><div class="demo-swatch__color" style="background:var(--hdx-neutral-85,#2f3536)"></div><span class="demo-swatch__name">neutral-85</span><span class="demo-swatch__hex">#2f3536</span></div>
+      <div class="demo-swatch"><div class="demo-swatch__color" style="background:var(--hdx-neutral-9,#1f2324)"></div><span class="demo-swatch__name">neutral-9</span><span class="demo-swatch__hex">#1f2324</span></div>
+      <div class="demo-swatch"><div class="demo-swatch__color" style="background:var(--hdx-neutral-95,#101212)"></div><span class="demo-swatch__name">neutral-95</span><span class="demo-swatch__hex">#101212</span></div>
+      <div class="demo-swatch"><div class="demo-swatch__color" style="background:var(--hdx-neutral-10,#000000)"></div><span class="demo-swatch__name">neutral-10</span><span class="demo-swatch__hex">#000000</span></div>
+    </div>
+
+    <h2 class="demo-subsection__heading">Colors — Success</h2>
+    <div class="demo-palette">
+      <div class="demo-swatch"><div class="demo-swatch__color" style="background:var(--hdx-success-05,#eaf7f1)"></div><span class="demo-swatch__name">success-05</span><span class="demo-swatch__hex">#eaf7f1</span></div>
+      <div class="demo-swatch"><div class="demo-swatch__color" style="background:var(--hdx-success-1,#cff0e0)"></div><span class="demo-swatch__name">success-1</span><span class="demo-swatch__hex">#cff0e0</span></div>
+      <div class="demo-swatch"><div class="demo-swatch__color" style="background:var(--hdx-success-2,#a8e2c7)"></div><span class="demo-swatch__name">success-2</span><span class="demo-swatch__hex">#a8e2c7</span></div>
+      <div class="demo-swatch"><div class="demo-swatch__color" style="background:var(--hdx-success-3,#7ed3ad)"></div><span class="demo-swatch__name">success-3</span><span class="demo-swatch__hex">#7ed3ad</span></div>
+      <div class="demo-swatch"><div class="demo-swatch__color" style="background:var(--hdx-success-4,#55c493)"></div><span class="demo-swatch__name">success-4</span><span class="demo-swatch__hex">#55c493</span></div>
+      <div class="demo-swatch"><div class="demo-swatch__color" style="background:var(--hdx-success-5,#2f9e6f)"></div><span class="demo-swatch__name">success-5</span><span class="demo-swatch__hex">#2f9e6f</span></div>
+      <div class="demo-swatch"><div class="demo-swatch__color" style="background:var(--hdx-success-6,#26855d)"></div><span class="demo-swatch__name">success-6</span><span class="demo-swatch__hex">#26855d</span></div>
+      <div class="demo-swatch"><div class="demo-swatch__color" style="background:var(--hdx-success-7,#1f6b4b)"></div><span class="demo-swatch__name">success-7</span><span class="demo-swatch__hex">#1f6b4b</span></div>
+      <div class="demo-swatch"><div class="demo-swatch__color" style="background:var(--hdx-success-8,#185239)"></div><span class="demo-swatch__name">success-8</span><span class="demo-swatch__hex">#185239</span></div>
+      <div class="demo-swatch"><div class="demo-swatch__color" style="background:var(--hdx-success-9,#103828)"></div><span class="demo-swatch__name">success-9</span><span class="demo-swatch__hex">#103828</span></div>
+    </div>
+
+    <h2 class="demo-subsection__heading">Colors — Warning</h2>
+    <div class="demo-palette">
+      <div class="demo-swatch"><div class="demo-swatch__color" style="background:var(--hdx-warning-05,#fbf4ea)"></div><span class="demo-swatch__name">warning-05</span><span class="demo-swatch__hex">#fbf4ea</span></div>
+      <div class="demo-swatch"><div class="demo-swatch__color" style="background:var(--hdx-warning-1,#f6e9d4)"></div><span class="demo-swatch__name">warning-1</span><span class="demo-swatch__hex">#f6e9d4</span></div>
+      <div class="demo-swatch"><div class="demo-swatch__color" style="background:var(--hdx-warning-2,#eed2aa)"></div><span class="demo-swatch__name">warning-2</span><span class="demo-swatch__hex">#eed2aa</span></div>
+      <div class="demo-swatch"><div class="demo-swatch__color" style="background:var(--hdx-warning-3,#e5bc7f)"></div><span class="demo-swatch__name">warning-3</span><span class="demo-swatch__hex">#e5bc7f</span></div>
+      <div class="demo-swatch"><div class="demo-swatch__color" style="background:var(--hdx-warning-4,#dda555)"></div><span class="demo-swatch__name">warning-4</span><span class="demo-swatch__hex">#dda555</span></div>
+      <div class="demo-swatch"><div class="demo-swatch__color" style="background:var(--hdx-warning-5,#d48f2a)"></div><span class="demo-swatch__name">warning-5</span><span class="demo-swatch__hex">#d48f2a</span></div>
+      <div class="demo-swatch"><div class="demo-swatch__color" style="background:var(--hdx-warning-6,#aa7222)"></div><span class="demo-swatch__name">warning-6</span><span class="demo-swatch__hex">#aa7222</span></div>
+      <div class="demo-swatch"><div class="demo-swatch__color" style="background:var(--hdx-warning-7,#7f5619)"></div><span class="demo-swatch__name">warning-7</span><span class="demo-swatch__hex">#7f5619</span></div>
+      <div class="demo-swatch"><div class="demo-swatch__color" style="background:var(--hdx-warning-8,#553911)"></div><span class="demo-swatch__name">warning-8</span><span class="demo-swatch__hex">#553911</span></div>
+      <div class="demo-swatch"><div class="demo-swatch__color" style="background:var(--hdx-warning-9,#2a1d08)"></div><span class="demo-swatch__name">warning-9</span><span class="demo-swatch__hex">#2a1d08</span></div>
+    </div>
+
+    <h2 class="demo-subsection__heading">Colors — Error</h2>
+    <div class="demo-palette">
+      <div class="demo-swatch"><div class="demo-swatch__color" style="background:var(--hdx-error-05,#f9eceb)"></div><span class="demo-swatch__name">error-05</span><span class="demo-swatch__hex">#f9eceb</span></div>
+      <div class="demo-swatch"><div class="demo-swatch__color" style="background:var(--hdx-error-1,#f3dad7)"></div><span class="demo-swatch__name">error-1</span><span class="demo-swatch__hex">#f3dad7</span></div>
+      <div class="demo-swatch"><div class="demo-swatch__color" style="background:var(--hdx-error-2,#e7b5af)"></div><span class="demo-swatch__name">error-2</span><span class="demo-swatch__hex">#e7b5af</span></div>
+      <div class="demo-swatch"><div class="demo-swatch__color" style="background:var(--hdx-error-3,#dc8f86)"></div><span class="demo-swatch__name">error-3</span><span class="demo-swatch__hex">#dc8f86</span></div>
+      <div class="demo-swatch"><div class="demo-swatch__color" style="background:var(--hdx-error-4,#d06a5e)"></div><span class="demo-swatch__name">error-4</span><span class="demo-swatch__hex">#d06a5e</span></div>
+      <div class="demo-swatch"><div class="demo-swatch__color" style="background:var(--hdx-error-5,#c44536)"></div><span class="demo-swatch__name">error-5</span><span class="demo-swatch__hex">#c44536</span></div>
+      <div class="demo-swatch"><div class="demo-swatch__color" style="background:var(--hdx-error-6,#9d372b)"></div><span class="demo-swatch__name">error-6</span><span class="demo-swatch__hex">#9d372b</span></div>
+      <div class="demo-swatch"><div class="demo-swatch__color" style="background:var(--hdx-error-7,#762920)"></div><span class="demo-swatch__name">error-7</span><span class="demo-swatch__hex">#762920</span></div>
+      <div class="demo-swatch"><div class="demo-swatch__color" style="background:var(--hdx-error-8,#4e1c16)"></div><span class="demo-swatch__name">error-8</span><span class="demo-swatch__hex">#4e1c16</span></div>
+      <div class="demo-swatch"><div class="demo-swatch__color" style="background:var(--hdx-error-9,#270e0b)"></div><span class="demo-swatch__name">error-9</span><span class="demo-swatch__hex">#270e0b</span></div>
+    </div>
+
+    <hr class="demo-divider">
+
+    {# ── Typography ──────────────────────────────────── #}
+    <h2 class="demo-subsection__heading">Typography — Font Families</h2>
+    <div class="demo-row demo-row--column" style="margin-bottom:1.5rem">
+      <div class="demo-type-row">
+        <span class="demo-type-row__label">--hdx-font-display</span>
+        <span class="demo-type-row__sample" style="font-family:var(--hdx-font-display,'Merriweather',serif);font-size:1.25rem">Merriweather — The quick brown fox jumps over the lazy dog</span>
+      </div>
+      <div class="demo-type-row">
+        <span class="demo-type-row__label">--hdx-font-body</span>
+        <span class="demo-type-row__sample" style="font-family:var(--hdx-font-body,'Roboto',sans-serif);font-size:1.25rem">Roboto — The quick brown fox jumps over the lazy dog</span>
+      </div>
+    </div>
+
+    <h2 class="demo-subsection__heading">Typography — Font Sizes</h2>
+    <div style="margin-bottom:1.5rem">
+      <div class="demo-type-row"><span class="demo-type-row__label">--hdx-fs-5xl · 3rem</span><span class="demo-type-row__sample" style="font-size:var(--hdx-fs-5xl,3rem)">Aa</span></div>
+      <div class="demo-type-row"><span class="demo-type-row__label">--hdx-fs-4xl · 2rem</span><span class="demo-type-row__sample" style="font-size:var(--hdx-fs-4xl,2rem)">Aa</span></div>
+      <div class="demo-type-row"><span class="demo-type-row__label">--hdx-fs-3xl · 1.75rem</span><span class="demo-type-row__sample" style="font-size:var(--hdx-fs-3xl,1.75rem)">Aa — The quick brown fox</span></div>
+      <div class="demo-type-row"><span class="demo-type-row__label">--hdx-fs-2xl · 1.5rem</span><span class="demo-type-row__sample" style="font-size:var(--hdx-fs-2xl,1.5rem)">Aa — The quick brown fox</span></div>
+      <div class="demo-type-row"><span class="demo-type-row__label">--hdx-fs-xl · 1.25rem</span><span class="demo-type-row__sample" style="font-size:var(--hdx-fs-xl,1.25rem)">Aa — The quick brown fox</span></div>
+      <div class="demo-type-row"><span class="demo-type-row__label">--hdx-fs-l · 1.125rem</span><span class="demo-type-row__sample" style="font-size:var(--hdx-fs-l,1.125rem)">Aa — The quick brown fox jumps over the lazy dog</span></div>
+      <div class="demo-type-row"><span class="demo-type-row__label">--hdx-fs-m · 1rem</span><span class="demo-type-row__sample" style="font-size:var(--hdx-fs-m,1rem)">Aa — The quick brown fox jumps over the lazy dog</span></div>
+      <div class="demo-type-row"><span class="demo-type-row__label">--hdx-fs-s · 0.875rem</span><span class="demo-type-row__sample" style="font-size:var(--hdx-fs-s,0.875rem)">Aa — The quick brown fox jumps over the lazy dog</span></div>
+      <div class="demo-type-row"><span class="demo-type-row__label">--hdx-fs-xs · 0.75rem</span><span class="demo-type-row__sample" style="font-size:var(--hdx-fs-xs,0.75rem)">Aa — The quick brown fox jumps over the lazy dog</span></div>
+    </div>
+
+    <h2 class="demo-subsection__heading">Typography — Font Weights</h2>
+    <div style="margin-bottom:1.5rem">
+      <div class="demo-type-row"><span class="demo-type-row__label">--hdx-fw-regular · 400</span><span class="demo-type-row__sample" style="font-weight:var(--hdx-fw-regular,400)">The quick brown fox jumps over the lazy dog</span></div>
+      <div class="demo-type-row"><span class="demo-type-row__label">--hdx-fw-medium · 500</span><span class="demo-type-row__sample" style="font-weight:var(--hdx-fw-medium,500)">The quick brown fox jumps over the lazy dog</span></div>
+      <div class="demo-type-row"><span class="demo-type-row__label">--hdx-fw-semibold · 600</span><span class="demo-type-row__sample" style="font-weight:var(--hdx-fw-semibold,600)">The quick brown fox jumps over the lazy dog</span></div>
+      <div class="demo-type-row"><span class="demo-type-row__label">--hdx-fw-bold · 700</span><span class="demo-type-row__sample" style="font-weight:var(--hdx-fw-bold,700)">The quick brown fox jumps over the lazy dog</span></div>
+    </div>
+
+    <h2 class="demo-subsection__heading">Typography — Line Heights</h2>
+    <div class="demo-row" style="margin-bottom:1.5rem">
+      <div>
+        <p style="font-size:0.625rem;color:#9db1b3;font-family:monospace;margin:0 0 0.5rem">--hdx-lh-tight · 1.2</p>
+        <div class="demo-lh-block" style="line-height:var(--hdx-lh-tight,1.2)">Humanitarian needs remain acute in many parts of the world. Millions of people depend on timely access to data and resources to survive and recover.</div>
+      </div>
+      <div>
+        <p style="font-size:0.625rem;color:#9db1b3;font-family:monospace;margin:0 0 0.5rem">--hdx-lh-normal · 1.3</p>
+        <div class="demo-lh-block" style="line-height:var(--hdx-lh-normal,1.3)">Humanitarian needs remain acute in many parts of the world. Millions of people depend on timely access to data and resources to survive and recover.</div>
+      </div>
+    </div>
+
+    <hr class="demo-divider">
+
+    {# ── Spacing ─────────────────────────────────────── #}
+    <h2 class="demo-subsection__heading">Spacing Scale</h2>
+    <div class="demo-spacing-strip">
+      <div class="demo-spacing-item"><div class="demo-spacing-box" style="height:var(--hdx-space-15,0.125rem)"></div><span class="demo-spacing-item__label">space-15<br>2px</span></div>
+      <div class="demo-spacing-item"><div class="demo-spacing-box" style="height:var(--hdx-space-1,0.25rem)"></div><span class="demo-spacing-item__label">space-1<br>4px</span></div>
+      <div class="demo-spacing-item"><div class="demo-spacing-box" style="height:var(--hdx-space-13,0.375rem)"></div><span class="demo-spacing-item__label">space-13<br>6px</span></div>
+      <div class="demo-spacing-item"><div class="demo-spacing-box" style="height:var(--hdx-space-2,0.5rem)"></div><span class="demo-spacing-item__label">space-2<br>8px</span></div>
+      <div class="demo-spacing-item"><div class="demo-spacing-box" style="height:var(--hdx-space-14,0.625rem)"></div><span class="demo-spacing-item__label">space-14<br>10px</span></div>
+      <div class="demo-spacing-item"><div class="demo-spacing-box" style="height:var(--hdx-space-3,0.75rem)"></div><span class="demo-spacing-item__label">space-3<br>12px</span></div>
+      <div class="demo-spacing-item"><div class="demo-spacing-box" style="height:var(--hdx-space-16,0.875rem)"></div><span class="demo-spacing-item__label">space-16<br>14px</span></div>
+      <div class="demo-spacing-item"><div class="demo-spacing-box" style="height:var(--hdx-space-4,1rem)"></div><span class="demo-spacing-item__label">space-4<br>16px</span></div>
+      <div class="demo-spacing-item"><div class="demo-spacing-box" style="height:var(--hdx-space-5,1.25rem)"></div><span class="demo-spacing-item__label">space-5<br>20px</span></div>
+      <div class="demo-spacing-item"><div class="demo-spacing-box" style="height:var(--hdx-space-6,1.5rem)"></div><span class="demo-spacing-item__label">space-6<br>24px</span></div>
+      <div class="demo-spacing-item"><div class="demo-spacing-box" style="height:var(--hdx-space-8,2rem)"></div><span class="demo-spacing-item__label">space-8<br>32px</span></div>
+      <div class="demo-spacing-item"><div class="demo-spacing-box" style="height:var(--hdx-space-10,2.5rem)"></div><span class="demo-spacing-item__label">space-10<br>40px</span></div>
+      <div class="demo-spacing-item"><div class="demo-spacing-box" style="height:var(--hdx-space-12,3rem)"></div><span class="demo-spacing-item__label">space-12<br>48px</span></div>
+    </div>
+
+    <hr class="demo-divider">
+
+    {# ── Elevation ───────────────────────────────────── #}
+    <h2 class="demo-subsection__heading">Elevation — Shadows</h2>
+    <div class="demo-shadow-strip">
+      <div class="demo-shadow-card" style="box-shadow:var(--hdx-shadow-none,none)"><span class="demo-shadow-card__name">--hdx-shadow-none</span></div>
+      <div class="demo-shadow-card" style="box-shadow:var(--hdx-shadow-sm,0 1px 4px rgba(0,0,0,.04))"><span class="demo-shadow-card__name">--hdx-shadow-sm</span></div>
+      <div class="demo-shadow-card" style="box-shadow:var(--hdx-shadow-md,0 4px 10px rgba(0,0,0,.12))"><span class="demo-shadow-card__name">--hdx-shadow-md</span></div>
+      <div class="demo-shadow-card" style="box-shadow:var(--hdx-shadow-lg,0 8px 35px rgba(0,0,0,.16))"><span class="demo-shadow-card__name">--hdx-shadow-lg</span></div>
+      <div class="demo-shadow-card" style="box-shadow:var(--hdx-shadow-overlay,0 4px 16px rgba(0,0,0,.30))"><span class="demo-shadow-card__name">--hdx-shadow-overlay</span></div>
+    </div>
+
+    <hr class="demo-divider">
+
+    {# ── Radius ──────────────────────────────────────── #}
+    <h2 class="demo-subsection__heading">Radius</h2>
+    <div class="demo-radius-strip">
+      <div class="demo-radius-item">
+        <div class="demo-radius-box" style="border-radius:var(--hdx-radius-sm,2px)"></div>
+        <span class="demo-radius-item__label">--hdx-radius-sm<br>2px</span>
+      </div>
+      <div class="demo-radius-item">
+        <div class="demo-radius-box" style="border-radius:var(--hdx-radius-md,4px)"></div>
+        <span class="demo-radius-item__label">--hdx-radius-md<br>4px</span>
+      </div>
+    </div>
+
+  </section>
+
+  <hr class="demo-divider">
 
   {# ══════════════════════════════════════════════════════
      1. BUTTONS (filled / outlined)
