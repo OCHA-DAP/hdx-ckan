@@ -267,7 +267,7 @@
         extra_classes=_dl_extra,
         attrs={'data-resource-name': ga_resource_title, 'data-resource-id': ga_resource_id} %}
 
-    {% if export_json_url %}
+    {% if export_json_url and export_csv_url %}
     {% snippet 'v2/components/dropdown.html',
         size='m',
         placeholder=_('Export metadata'),

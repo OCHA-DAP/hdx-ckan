@@ -13,7 +13,9 @@
         button.classList.add('is-copied');
         setTimeout(function () {
           button.classList.remove('is-copied');
-        }, 1000);
+        }, 2000);
+      }).catch(function () {
+        // Silent no-op on failure (e.g. insecure context / permission denied)
       });
     });
   });
