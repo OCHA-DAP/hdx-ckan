@@ -345,7 +345,8 @@
 .c-breadcrumb {
     display:     flex;
     align-items: center;
-    flex-wrap:   wrap;
+    flex-wrap:   nowrap;             // single line — no wrapping
+    overflow:    hidden;             // clip any overflow at container level
     gap:         var(--hdx-space-2);   // 8 px
     padding:     var(--hdx-space-2) 0;
     font-family: var(--hdx-font-body);
@@ -358,6 +359,15 @@
         text-overflow: ellipsis;
         white-space: nowrap;
         max-width:   21.875rem;
+        min-width:   0;              // allow flex item to shrink below content size
+
+        // Truncate the link text inside the item
+        .c-text-link {
+            overflow:      hidden;
+            text-overflow: ellipsis;
+            white-space:   nowrap;
+            max-width:     21.875rem;
+        }
     }
 
     // Separator (/)
@@ -366,6 +376,7 @@
         font-size:   var(--hdx-fs-s);
         line-height: 130%;
         margin-left: var(--hdx-space-2);  // 8
+        flex-shrink: 0;              // separator is always visible
     }
 
     // Current (non-linked) crumb
@@ -376,6 +387,7 @@
         text-overflow: ellipsis;
         white-space: nowrap;
         max-width:   21.875rem;
+        min-width:   0;              // allow last item to shrink equally
     }
 }
 
