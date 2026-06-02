@@ -27,6 +27,12 @@
     // value governs both native anchor navigation and smooth scroll.
 
     function smoothScrollTo(target) {
+        // Respect the user's motion preference (V-10 / C-07)
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            target.scrollIntoView({ block: 'start' });
+            return;
+        }
+
         var start        = window.scrollY;
         var targetTop    = target.getBoundingClientRect().top + window.scrollY;
         var scrollMargin = parseFloat(getComputedStyle(target).scrollMarginTop) || 0;

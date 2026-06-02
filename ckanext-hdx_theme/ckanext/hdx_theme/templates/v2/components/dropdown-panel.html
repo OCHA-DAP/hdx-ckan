@@ -52,8 +52,10 @@
 
 {% if navigate %}
 
+  {# Navigate panel: role="menu" so AT announces widget structure (V-05) #}
   <div class="c-dropdown__panel"
        {% if panel_id %}id="{{ panel_id }}"{% endif %}
+       role="menu"
        hidden>
     <div class="c-dropdown__list-wrap">
       <div class="c-dropdown__list">
@@ -62,7 +64,7 @@
               type='list',
               label=item.label,
               state='active' if item.active else 'default',
-              attrs={'data-nav-value': item.value},
+              attrs={'data-nav-value': item.value, 'role': 'menuitem', 'tabindex': '-1'},
               tooltip=item.get('tooltip', '') %}
         {% endfor %}
       </div>
@@ -71,9 +73,11 @@
 
 {% else %}
 
+  {# Checklist panel: native <input type="checkbox"> elements handle their
+     own semantics; role="listbox" would create an invalid ARIA ownership
+     conflict with native form controls (V-05). #}
   <div class="c-dropdown__panel"
        {% if panel_id %}id="{{ panel_id }}"{% endif %}
-       role="listbox" aria-multiselectable="true"
        hidden>
     {% if has_search %}
       {% snippet 'v2/components/search-input.html',

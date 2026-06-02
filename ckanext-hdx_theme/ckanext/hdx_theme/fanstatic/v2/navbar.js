@@ -1,7 +1,9 @@
 (function () {
   'use strict';
 
-  var activePanel = null;
+  var activePanel     = null;
+  var offcanvasTrap   = null;
+  var hamburgerOpenLabel = null;
 
   // ── Offcanvas helpers ────────────────────────────────────────
 
@@ -31,6 +33,11 @@
     }
     if (backdrop) backdrop.hidden = false;
     document.body.style.overflow = 'hidden';
+    // Trap focus inside the offcanvas panel (V-02 / C-04)
+    if (window.FocusTrap) {
+      offcanvasTrap = new window.FocusTrap(el, btn);
+      offcanvasTrap.activate();
+    }
   }
 
   function closeOffcanvas() {
@@ -42,6 +49,8 @@
     el.setAttribute('aria-hidden', 'true');
     if (btn) {
       btn.setAttribute('aria-expanded', 'false');
+      // Restore the "Open menu" label (V-02: return focus + label on close)
+      if (hamburgerOpenLabel) btn.setAttribute('aria-label', hamburgerOpenLabel);
       btn.classList.remove('is-open');
     }
     if (backdrop) backdrop.hidden = true;
@@ -51,6 +60,11 @@
     var levels = el.querySelectorAll('.hdx-v2-offcanvas__level');
     if (primary) primary.hidden = false;
     levels.forEach(function (lvl) { lvl.hidden = true; });
+    // Release focus trap and return focus to hamburger (V-02)
+    if (offcanvasTrap) {
+      offcanvasTrap.deactivate();
+      offcanvasTrap = null;
+    }
   }
 
   function getPanelEl(name) {
@@ -176,6 +190,13 @@
     var itemsEl = document.getElementById(toggle.getAttribute('aria-controls'));
     toggle.setAttribute('aria-expanded', expanded ? 'false' : 'true');
     if (itemsEl) itemsEl.hidden = expanded;
+  });
+
+  // Capture the translated "Open menu" label once the DOM is ready so
+  // closeOffcanvas() can restore it (V-02 — aria-label must round-trip).
+  document.addEventListener('DOMContentLoaded', function () {
+    var btn = getHamburger();
+    if (btn) hamburgerOpenLabel = btn.getAttribute('aria-label');
   });
 
 }());

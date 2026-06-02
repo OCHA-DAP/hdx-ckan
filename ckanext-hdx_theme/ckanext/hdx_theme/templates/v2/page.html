@@ -25,6 +25,8 @@
 
 {%- block page -%}
 
+  <a href="#hdx-v2-main" class="sr-only sr-only--focusable">{{ _('Skip to main content') }}</a>
+
   {%- block header %}
     {% if data %}
       {% set step = data.current_step %}
@@ -52,7 +54,7 @@
   {% endblock %}
 
   {%- block content %}
-    {% block maintag %}<div role="main">{% endblock %}
+    {% block maintag %}<div role="main" id="hdx-v2-main">{% endblock %}
       <div id="content">
         {% block main_content %}
       {% block toolbar %}

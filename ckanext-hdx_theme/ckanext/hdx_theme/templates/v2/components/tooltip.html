@@ -39,11 +39,14 @@
 {% set graph_title   = graph_title   if graph_title   is defined else '' %}
 {% set legend_items  = legend_items  if legend_items  is defined else [] %}
 {% set extra_classes = extra_classes if extra_classes is defined else '' %}
+{% set tooltip_id    = tooltip_id    if tooltip_id    is defined else '' %}
 
 {% set classes = ['c-tooltip', 'c-tooltip--' ~ variant] %}
 {% if extra_classes %}{% set classes = classes + [extra_classes] %}{% endif %}
 
-<div class="{{ classes | join(' ') }}" role="tooltip">
+<div class="{{ classes | join(' ') }}"
+     role="tooltip"
+     {% if tooltip_id %}id="{{ tooltip_id }}"{% endif %}>
 
   {# ── Dark tooltip ─────────────────────────────────── #}
   {% if variant == 'dark' %}

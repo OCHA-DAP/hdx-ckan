@@ -118,3 +118,83 @@ Exceptions: global container cap (1320px), fixed-height elements (buttons, input
 - LESS variables: same name with `@` (e.g. `@hdx-brand-5`) — LESS-only, not used in media queries
 - No hardcoded hex colors, `rgba(...)` overlays, or box-shadow values in component LESS — use the corresponding token (`var(--hdx-neutral-1)`, `var(--hdx-overlay-white-10)`, `var(--hdx-shadow-md)`)
 - Component-level LESS variables use `@c-*` prefix and are **not** exported as CSS custom properties
+
+---
+
+## Accessibility (WCAG 2.1 AA) — mandatory for all v2 tasks
+
+These constraints apply to every component, template, and JS file in the v2 redesign. See `llm_docs/redesign/requirements/041-accessibility-wcag-audit.md` for the full rationale.
+
+### Keyboard interactions
+
+Every interactive element must be fully operable by keyboard. For custom interactive elements:
+
+- Use `<button>` for actions, `<a href>` for navigation — never `<div>`/`<span>` as interactive targets
+- `click` handlers on buttons/links already fire on Enter; add a `keydown` handler for `Space` if needed for `<button>` elements used as toggles
+- Dropdowns and panels: `Escape` closes and returns focus to the trigger
+
+### ARIA state attributes
+
+Update ARIA attributes whenever state changes:
+
+| State | Attribute |
+|-------|-----------|
+| Panel open/closed | `aria-expanded="true/false"` on the trigger |
+| Widget hidden/visible | `aria-hidden="true/false"` |
+| Current nav item | `aria-current="true"` |
+| Tooltip association | `aria-describedby` on trigger, `id` + `role="tooltip"` on tooltip element |
+
+### Focus management
+
+Overlays that block page content (offcanvas drawer, modal, full-screen overlay) must:
+1. Move focus inside on open (use `window.FocusTrap` from `focus-trap.js`)
+2. Trap Tab/Shift+Tab within the overlay
+3. Close on Escape
+4. Return focus to the triggering element on close
+
+Dropdowns (non-modal): move focus to first item on keyboard-triggered open; return focus to trigger on close.
+
+### SVG icons
+
+All inline SVG icons must carry `aria-hidden="true" focusable="false"`. Icon-only interactive elements require an `aria-label` on the parent `<button>` or `<a>`.
+
+```html
+<!-- decorative icon inside labeled button -->
+<button aria-label="Close menu">
+  <svg aria-hidden="true" focusable="false" ...></svg>
+</button>
+```
+
+### prefers-reduced-motion
+
+**CSS**: A global `@media (prefers-reduced-motion: reduce)` override in `foundation.less` disables all transitions and animations. Do not add per-component wrappers — the global rule covers everything.
+
+**JS**: Guard any programmatic animation before starting:
+
+```js
+if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    // instant fallback
+    return;
+}
+// animated path
+```
+
+### Screen-reader utilities
+
+`.sr-only` and `.sr-only--focusable` are defined in `foundation.less`. Use for:
+- Skip-to-main-content link (first focusable element in `<body>`)
+- `aria-live` status regions (copy success, form feedback)
+- Any text needed by AT but not visible on screen
+
+### Status messages
+
+Any user action that produces a success/error state must announce via a live region already in the DOM:
+
+```html
+<span class="sr-only" aria-live="polite" data-copy-status></span>
+```
+
+```js
+statusEl.textContent = 'Copied to clipboard';
+setTimeout(function () { statusEl.textContent = ''; }, 2000);
+```

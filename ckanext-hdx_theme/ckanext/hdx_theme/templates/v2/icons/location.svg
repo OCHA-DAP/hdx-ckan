@@ -1,4 +1,4 @@
-<svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+<svg aria-hidden="true" focusable="false" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path d="M11.8199 10.7338C10.732 11.8354 8.00156 14.6 8.00156 14.6C8.00156 14.6 5.20411 11.7675 4.18319 10.7338C2.07435 8.5986 2.07435 5.13669 4.18319 3.00145C6.29202 0.866215 9.71111 0.866215 11.8199 3.00145C13.9288 5.13669 13.9288 8.5986 11.8199 10.7338Z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/>
 <path d="M9.80156 6.40002C9.80156 7.39414 8.99568 8.20002 8.00156 8.20002C7.00745 8.20002 6.20156 7.39414 6.20156 6.40002C6.20156 5.40591 7.00745 4.60002 8.00156 4.60002C8.99568 4.60002 9.80156 5.40591 9.80156 6.40002Z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/>
 </svg>

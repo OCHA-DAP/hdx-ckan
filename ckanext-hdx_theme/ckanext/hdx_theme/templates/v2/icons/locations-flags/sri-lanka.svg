@@ -1,4 +1,4 @@
-<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
 <g clip-path="url(#clip0_7148_70468)">
 <path d="M12 24C18.6274 24 24 18.6274 24 12C24 5.37257 18.6274 0 12 0C5.37257 0 0 5.37257 0 12C0 18.6274 5.37257 24 12 24Z" fill="#FFDA44"/>
 <path d="M9.3915 2.08716H5.23672C5.0526 2.21302 4.87241 2.34403 4.69583 2.47964L3.65234 12.0002L4.69583 21.5207C4.87241 21.6563 5.0526 21.7874 5.23672 21.9132H9.3915V2.08716Z" fill="#FF9811"/>
