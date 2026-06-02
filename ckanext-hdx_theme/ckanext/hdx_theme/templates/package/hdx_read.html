@@ -88,7 +88,7 @@
 {% endblock %}
 
 {% block pre_primary %}
-  <div class="hdx-v2-dataset-header-section">
+  <div class="hdx-v2-page-header-section">
     <div class="hdx-v2-container">
   {% block title_and_actions %}
     {# ── v2 dataset page header ────────────────────────────────── #}
@@ -107,7 +107,7 @@
       {% set contact_href = h.url_for('hdx_signin.login', came_from=h.url_for('hdx_dataset.contact_contributor', id=pkg.name or pkg.id), info_message_type='contact-contributor') %}
     {% endif %}
 
-    {% snippet 'v2/dataset-page-header.html',
+    {% snippet 'v2/page-header.html',
         title=pkg.title or pkg.name,
         description=pkg.notes,
         org_name=pkg.organization.title,

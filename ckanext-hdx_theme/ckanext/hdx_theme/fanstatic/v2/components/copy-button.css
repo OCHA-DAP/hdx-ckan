@@ -1,0 +1,61 @@
+.c-copy-button {
+  display: inline-flex;
+  align-items: center;
+  border: none;
+  background: none;
+  cursor: pointer;
+  border-radius: var(--hdx-radius-sm);
+  font-family: var(--hdx-font-body);
+  font-weight: var(--hdx-fw-medium);
+  line-height: var(--hdx-lh-normal);
+  padding: 0;
+  text-decoration: none;
+  white-space: nowrap;
+  -webkit-appearance: none;
+  appearance: none;
+}
+.c-copy-button__icon {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+}
+.c-copy-button__icon svg {
+  display: block;
+}
+.c-copy-button.is-copied .c-copy-button__icon {
+  color: var(--hdx-success-5);
+}
+.c-copy-button--icon-left {
+  flex-direction: row;
+}
+.c-copy-button--icon-right {
+  flex-direction: row-reverse;
+}
+.c-copy-button--m {
+  gap: var(--hdx-space-13);
+  font-size: var(--hdx-fs-s);
+}
+.c-copy-button--m .c-copy-button__icon svg {
+  width: 1rem;
+  height: 1rem;
+}
+.c-copy-button--s {
+  gap: var(--hdx-space-15);
+  font-size: var(--hdx-fs-xs);
+}
+.c-copy-button--s .c-copy-button__icon svg {
+  width: 0.875rem;
+  height: 0.875rem;
+}
+.c-copy-button--secondary {
+  color: var(--hdx-neutral-8);
+}
+.c-copy-button--secondary:hover {
+  color: var(--hdx-primary-main);
+}
+.c-copy-button--tertiary {
+  color: var(--hdx-neutral-55);
+}
+.c-copy-button--tertiary:hover {
+  color: var(--hdx-neutral-85);
+}

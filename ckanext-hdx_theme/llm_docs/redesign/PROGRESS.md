@@ -132,7 +132,7 @@ Bundle configuration:
   - `v2/footer.css` — footer styles
   - `v2/navbar.css` — main navbar styles (logo, search, nav items, actions, offcanvas)
   - `v2/styles.css` — shared global v2 styles
-- `hdx_theme/v2-components-scripts` ✅ Contains `v2/components/password-toggle.js`, `v2/components/clamped-text.js` (shared show-more/less), `v2/components/dataset-page-header.js`, `v2/components/anchor-links.js` (smooth scroll + mobile dropdown + active tracking for `c-anchor-links`)
+- `hdx_theme/v2-components-scripts` ✅ Contains `v2/components/password-toggle.js`, `v2/components/clamped-text.js` (shared show-more/less), `v2/components/page-header.js`, `v2/components/anchor-links.js` (smooth scroll + mobile dropdown + active tracking for `c-anchor-links`)
 - `hdx_theme/v2-page-scripts` ✅ Contains `v2/navbar.js` — navbar panel and offcanvas JS (tasks 018 + 019)
 - `hdx_theme/v2-search-styles` — page-specific: preloads `v2-page-styles`, adds `v2/search.css`
 - `hdx_theme/v2-search-scripts` — page-specific: preloads `v2-page-scripts`, adds `v2/search.js`

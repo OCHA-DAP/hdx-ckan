@@ -1,6 +1,6 @@
 # Resource Card Component
 
-**Task:** resource-card  
+**Task:** resource-card
 **Status:** implemented
 
 ---
@@ -96,7 +96,7 @@ Replaces `dataset-card.js`. Generic IIFE that handles show-more/less for any
 - Content: `[data-clamped-content]`
 - Button: `.c-text-button` (first found within container)
 
-Affected components: `dataset-card.html`, `dataset-page-header.html`, `resource-card.html`.
+Affected components: `dataset-card.html`, `page-header.html`, `resource-card.html`.
 
 ### `h.hdx_format_to_icon_category(format_str)` (new Python helper)
 Maps resource format string → icon category. Registered in `plugin.py`.
