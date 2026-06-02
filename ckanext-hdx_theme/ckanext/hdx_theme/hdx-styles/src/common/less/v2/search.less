@@ -133,7 +133,8 @@
 
     .hdx-v2-search-sidebar {
         @media (min-width: @hdx-bp-xl) {
-            flex:         0 0 25%;
+            flex:      0 0 25%;
+            min-width: 0;          // prevent content from pushing sidebar wider than 25%
             border-right: 1px solid var(--hdx-neutral-1);
             padding:      var(--hdx-space-5)    // 20px top
                           var(--hdx-space-10)  // 40px right

@@ -152,10 +152,11 @@
         gap:         var(--hdx-space-1);
     }
 
-    // Width constraint for tooltip anchors inside the metadata grid
+    // Tooltip anchors inside the metadata grid: fixed width, extends rightward
     .c-tooltip-anchor .c-tooltip {
-        width:       14rem;
-        margin-left: var(--hdx-space-1);
+        width: 14rem;
+        left:  0;      // LEFT edge = icon left edge → tooltip extends to the right
+        right: auto;   // override base right: 0
     }
 
     &__value {
