@@ -101,6 +101,23 @@
       }
     });
 
+    // ── Inline search bar: intercept Enter before list-header.js ─────────
+    // list-header.js (loaded for both v1/v2) has a jQuery keydown handler on
+    // #headerSearch that builds a v1-style URL — losing active filter params.
+    // A capture-phase listener on the form parent fires before that handler.
+    var searchForm = document.getElementById('dataset-filter-form');
+    if (searchForm) {
+      searchForm.addEventListener('keydown', function (e) {
+        var input = e.target;
+        if (input.name === 'q' && (e.key === 'Enter' || e.keyCode === 13)) {
+          e.stopPropagation();
+          e.preventDefault();
+          setNavParam('q', input.value.trim());
+        }
+
+      }, true); // capture phase
+    }
+
     // Dropdown open/close and outside-click-close are handled by dropdown.js.
     // This handler covers only search-specific click interactions.
     document.addEventListener('click', function (e) {
