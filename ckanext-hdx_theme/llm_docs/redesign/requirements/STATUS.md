@@ -43,3 +43,4 @@
 | 037 | [dataset-page-header-v2](076-dataset-page-header-v2.md)                                                         | implemented | |
 | 038 | [resource-card](038-resource-card.md)                                                                           | implemented | |
 | 039 | [dataset-page](039-dataset-page.md)                                                                             | implemented | |
+| 040 | [resource-page](040-resource-page.md)                                                                           | implemented | |

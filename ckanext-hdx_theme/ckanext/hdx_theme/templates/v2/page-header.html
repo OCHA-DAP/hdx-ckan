@@ -1,0 +1,409 @@
+{#
+  Snippet: page-header.html
+  Path:    templates/v2/page-header.html
+
+  Unified page hero header. Renders the dataset header by default.
+  When resource_id is provided the resource layout is used instead.
+
+  ── Dataset parameters ───────────────────────────────────────
+  title               {string}  Dataset title text.  default: ''
+  description         {string}  Full description.  default: ''
+  org_name            {string}  Organisation display name.  default: ''
+  org_logo_src        {string}  Logo image URL.  default: ''
+  org_href            {string}  Link to org page.  default: '#'
+  contact_href        {string}  Link to contact page.  default: '#'
+  download_count      {int}     Approx downloads.  default: 0
+  request_only        {bool}    Show "Request only data" label.  default: False
+  cod_dataset         {bool}    Show "COD+" label.  default: False
+  links_list          {list}    {label, title, url, newTab} dicts.  default: []
+  supports_notifications {bool} Show "Get notified" button.  default: False
+  location_text       {string}  Location text.  default: ''
+  subnational         {bool}    Show "Sub-national" label.  default: False
+  update_frequency    {string}  Update frequency text.  default: ''
+  is_up_to_date       {bool}    Show "Up to date" label.  default: False
+  time_period         {string}  Time period text.  default: ''
+  time_period_tooltip {bool}    Show time period tooltip.  default: False
+  source_text         {string}  Source text.  default: ''
+  long_source         {bool}    Show "Show more" for source.  default: False
+  source_tooltip      {bool}    Show source tooltip.  default: False
+
+  ── Resource parameters (resource_id triggers resource layout) ──
+  resource_id       {string}  res.id.  default: ''
+  file_format       {string}  Format for file-type icon.  default: ''
+  download_url      {string}  Direct download href.  default: ''
+  can_download      {bool}    Download access check.  default: False
+  ga_resource_title {string}  GA tracking title.  default: ''
+  ga_resource_id    {string}  GA tracking id.  default: ''
+  export_json_url   {string}  Metadata JSON export URL.  default: ''
+  export_csv_url    {string}  Metadata CSV export URL.  default: ''
+  last_modified     {string}  Pre-rendered datetime.  default: ''
+  resource_url      {string}  res.url display string.  default: ''
+  resource_url_href {string}  Actual href (empty if not accessible).  default: ''
+  ─────────────────────────────────────────────────────────────
+#}
+
+{# ── Defaults ──────────────────────────────────────────────── #}
+{% set title               = title               if title               is defined else '' %}
+{% set description         = description         if description         is defined else '' %}
+{% set org_name            = org_name            if org_name            is defined else '' %}
+{% set org_logo_src        = org_logo_src        if org_logo_src        is defined else '' %}
+{% set org_href            = org_href            if org_href            is defined else '#' %}
+{% set contact_href        = contact_href        if contact_href        is defined else '#' %}
+{% set download_count      = download_count      if download_count      is defined else 0 %}
+{% set request_only        = request_only        if request_only        is defined else False %}
+{% set cod_dataset         = cod_dataset         if cod_dataset         is defined else False %}
+{% set links_list          = links_list          if links_list          is defined else [] %}
+{% set supports_notifications = supports_notifications if supports_notifications is defined else False %}
+{% set location_text       = location_text       if location_text       is defined else '' %}
+{% set subnational         = subnational         if subnational         is defined else False %}
+{% set update_frequency    = update_frequency    if update_frequency    is defined else '' %}
+{% set is_up_to_date       = is_up_to_date       if is_up_to_date       is defined else False %}
+{% set time_period         = time_period         if time_period         is defined else '' %}
+{% set time_period_tooltip = time_period_tooltip if time_period_tooltip is defined else False %}
+{% set source_text         = source_text         if source_text         is defined else '' %}
+{% set long_source         = long_source         if long_source         is defined else False %}
+{% set source_tooltip      = source_tooltip      if source_tooltip      is defined else False %}
+{% set edit_mode           = edit_mode           if edit_mode           is defined else False %}
+{% set pkg_id              = pkg_id              if pkg_id              is defined else '' %}
+{% set pkg_state           = pkg_state           if pkg_state           is defined else '' %}
+{% set membership          = membership          if membership          is defined else None %}
+{% set hide_membership     = hide_membership     if hide_membership     is defined else True %}
+{% set org_id              = org_id              if org_id              is defined else '' %}
+{% set resource_id         = resource_id         if resource_id         is defined else '' %}
+{% set file_format         = file_format         if file_format         is defined else '' %}
+{% set download_url        = download_url        if download_url        is defined else '' %}
+{% set can_download        = can_download        if can_download        is defined else False %}
+{% set ga_resource_title   = ga_resource_title   if ga_resource_title   is defined else '' %}
+{% set ga_resource_id      = ga_resource_id      if ga_resource_id      is defined else '' %}
+{% set export_json_url     = export_json_url     if export_json_url     is defined else '' %}
+{% set export_csv_url      = export_csv_url      if export_csv_url      is defined else '' %}
+{% set last_modified       = last_modified       if last_modified       is defined else '' %}
+{% set resource_url        = resource_url        if resource_url        is defined else '' %}
+{% set resource_url_href   = resource_url_href   if resource_url_href   is defined else '' %}
+{% set resource_type       = resource_type       if resource_type       is defined else '' %}
+{% set file_format_text    = file_format_text    if file_format_text    is defined else '' %}
+{% set download_size       = download_size       if download_size       is defined else '' %}
+
+{# resource_id being set switches to resource layout #}
+{% set _is_resource = resource_id %}
+
+
+<section class="hdx-v2-page-header{{ ' hdx-v2-page-header--resource' if _is_resource else '' }}">
+
+  {# ── TOP ─────────────────────────────────────────────────── #}
+  <div class="hdx-v2-page-header__top">
+
+    <div class="hdx-v2-page-header__left">
+      <div class="hdx-v2-page-header__description">
+
+        {# File format icon + label — resource #}
+        {% if file_format %}
+        <div class="hdx-v2-page-header__format">
+          {% snippet 'v2/components/file-type-icon.html', format=file_format, aria_label=file_format_text %}
+          {% if file_format_text %}
+            <span class="hdx-v2-page-header__format-label">{{ file_format_text | upper }}</span>
+          {% endif %}
+        </div>
+        {% endif %}
+
+        {# Labels row — dataset #}
+        {% if request_only or cod_dataset or links_list or (pkg_state and pkg_state.startswith('deleted')) %}
+        <div class="hdx-v2-page-header__labels">
+
+          {% if pkg_state and pkg_state.startswith('deleted') %}
+            {% snippet 'v2/components/label.html', text='Deleted', color='red', size='s' %}
+          {% endif %}
+
+          {% if request_only %}
+            {% snippet 'v2/components/label.html',
+                text='Request only data', color='yellow', size='s',
+                icon=True, icon_src='v2/icons/lock.svg' %}
+          {% endif %}
+
+          {% if cod_dataset %}
+            {% snippet 'v2/components/label.html', text='COD+', color='grey', size='s' %}
+          {% endif %}
+
+          {% for link in links_list %}
+            <div class="hdx-v2-page-header__link-group">
+              {% if link.label %}
+                {% snippet 'v2/components/label.html',
+                    text=link.label|replace('This dataset is part', 'Part'),
+                    color='grey', size='s' %}
+              {% endif %}
+              {% snippet 'v2/components/text-button.html',
+                  style='tertiary', size='s', label=link.title,
+                  icon=True, icon_position='right',
+                  icon_src='v2/icons/arrow-right.svg',
+                  tag='a', href=link.url,
+                  attrs={'target': '_blank' if link.newTab else '_self'} %}
+            </div>
+          {% endfor %}
+
+        </div>
+        {% endif %}
+
+        {# Title — always #}
+        <h1 class="hdx-v2-page-header__title"
+            {% if edit_mode %}
+              data-module="hdx-quick-edit"
+              data-module-anchor="field_title"
+              data-module-dataset="{{ pkg_id }}"
+            {% endif %}>{{ title }}</h1>
+
+        {# Description + show more — when provided #}
+        {% if description %}
+        <div class="hdx-v2-page-header__desc" data-module="clamped-text">
+          <p class="hdx-v2-page-header__desc-text" data-clamped-content
+             {% if edit_mode %}
+               data-module="hdx-quick-edit"
+               data-module-anchor="field_notes"
+               data-module-dataset="{{ pkg_id }}"
+             {% endif %}>{{ description }}</p>
+          {% snippet 'v2/components/text-button.html',
+              style='tertiary', size='s', label='Show more',
+              icon=True, icon_position='right',
+              icon_src='v2/icons/chevron-down.svg',
+              tag='button', button_type='button' %}
+        </div>
+        {% endif %}
+
+      </div>
+      {# end __description #}
+
+      {# Org card SM — dataset only, shown when org_name is provided #}
+      {% if org_name %}
+      <div class="hdx-v2-page-header__right-card hdx-v2-page-header__right-card--sm-only">
+        {% if org_logo_src %}
+          <img class="hdx-v2-page-header__org-logo" src="{{ org_logo_src }}" alt="{{ org_name }}">
+        {% endif %}
+        {% snippet 'v2/components/text-button.html',
+            style='tertiary', size='m', label='Contact organisation',
+            icon=True, icon_position='left', icon_src='v2/icons/mail.svg',
+            tag='a', href=contact_href %}
+        {% if edit_mode %}
+          {% snippet 'v2/components/text-button.html',
+              style='tertiary', size='m', label='Edit Dataset',
+              icon=True, icon_position='left', icon_src='v2/icons/placeholder.svg',
+              tag='a', href='#',
+              attrs={'onclick': "contributeAddDetails('" ~ pkg_id ~ "', 'dataset')"} %}
+        {% endif %}
+        {% if not hide_membership and membership and membership.display_group_message %}
+          {% snippet 'v2/components/text-button.html',
+              style='tertiary', size='m', label='Group message',
+              icon=True, icon_position='left', icon_src='v2/icons/placeholder.svg',
+              tag='a', href='#',
+              attrs={'onclick': "closeCurrentWidget(this);$('#group-message-topics-selector').select2('val', '');spawnRecaptcha('#groupMessagePopup');showOnboardingWidget('#groupMessagePopup');"} %}
+        {% endif %}
+      </div>
+      {% endif %}
+
+      {# CTA block (notifications + download count) — dataset only #}
+      {% if supports_notifications or download_count %}
+      <div class="hdx-v2-page-header__cta">
+        {% if supports_notifications %}
+          <div class="notification-platform-opt-in-action-menu d-none hdx-v2-page-header__notify-btn">
+            {% snippet 'v2/components/button.html',
+                style='primary', size='m', label='Get notified',
+                icon=True, icon_position='left', icon_src='v2/icons/bell.svg',
+                tag='button', button_type='button' %}
+          </div>
+        {% endif %}
+        {% if download_count %}
+          <div class="hdx-v2-page-header__downloads">
+            {% include h.url_for_static('v2/icons/trend-up.svg') %}
+            <span>{{ download_count }} downloads</span>
+          </div>
+        {% endif %}
+      </div>
+      {% endif %}
+
+    </div>
+    {# end __left #}
+
+    {# Org card MD+ — dataset only, shown when org_name is provided #}
+    {% if org_name %}
+    <div class="hdx-v2-page-header__right-card hdx-v2-page-header__right-card--md-up">
+      {% if org_logo_src %}
+        <img class="hdx-v2-page-header__org-logo" src="{{ org_logo_src }}" alt="{{ org_name }}">
+      {% endif %}
+      {% snippet 'v2/components/text-button.html',
+          style='tertiary', size='m', label='Contact organisation',
+          icon=True, icon_position='left', icon_src='v2/icons/mail.svg',
+          tag='a', href=contact_href,
+          attrs={'id': 'contact-the-contributor'} %}
+      {% if edit_mode %}
+        {% snippet 'v2/components/text-button.html',
+            style='tertiary', size='m', label='Edit Dataset',
+            icon=True, icon_position='left', icon_src='v2/icons/placeholder.svg',
+            tag='a', href='#',
+            attrs={'onclick': "contributeAddDetails('" ~ pkg_id ~ "', 'dataset')"} %}
+      {% endif %}
+      {% if not hide_membership and membership and membership.display_group_message %}
+        {% snippet 'v2/components/text-button.html',
+            style='tertiary', size='m', label='Group message',
+            icon=True, icon_position='left', icon_src='v2/icons/placeholder.svg',
+            tag='a', href='#',
+            attrs={'id': 'contact-members', 'onclick': "closeCurrentWidget(this);$('#group-message-topics-selector').select2('val', '');spawnRecaptcha('#groupMessagePopup');showOnboardingWidget('#groupMessagePopup');"} %}
+      {% endif %}
+    </div>
+    {% endif %}
+
+  </div>
+  {# end __top #}
+
+  {# ── DOWNLOAD + EXPORT ACTIONS — resource only ──────────── #}
+  {% if can_download %}
+  <div class="hdx-v2-page-header__cta">
+
+    {% set _dl_extra = 'ga-download resource-url-analytics resource-type-' ~ resource_type %}
+    {% set _dl_label = _('Download') ~ ' (' ~ download_size ~ ')' if download_size else _('Download') %}
+    {% snippet 'v2/components/button.html',
+        style='primary', size='m',
+        label=_dl_label,
+        icon=True, icon_position='left',
+        icon_src='v2/icons/download.svg',
+        tag='a', href=download_url,
+        extra_classes=_dl_extra,
+        attrs={'data-resource-name': ga_resource_title, 'data-resource-id': ga_resource_id} %}
+
+    {% if export_json_url and export_csv_url %}
+    {% snippet 'v2/components/dropdown.html',
+        size='m',
+        placeholder=_('Export metadata'),
+        navigate=True,
+        items=[
+          {'value': export_json_url, 'label': _('JSON'), 'active': False},
+          {'value': export_csv_url,  'label': _('CSV'),  'active': False}
+        ] %}
+    {% endif %}
+
+  </div>
+  {% endif %}
+
+  {# ── DIVIDER ─────────────────────────────────────────────── #}
+  <hr class="c-divider">
+
+  {# ── DATASET METADATA STRIP ──────────────────────────────── #}
+  {% if not _is_resource %}
+  <div class="hdx-v2-page-header__metadata">
+
+    <div class="hdx-v2-page-header__meta-item">
+      <div class="hdx-v2-page-header__meta-label-row">
+        <span class="hdx-v2-page-header__meta-label">Location</span>
+        {% if location_text %}
+          {% snippet 'v2/components/text-button.html',
+              style='tertiary', size='s', label='View all',
+              icon=True, icon_position='right', icon_src='v2/icons/arrow-down.svg',
+              tag='a', href='#metadata-location' %}
+        {% endif %}
+      </div>
+      <div class="hdx-v2-page-header__meta-value">
+        {% if location_text %}<span>{{ location_text }}</span>{% endif %}
+        {% if subnational %}
+          {% snippet 'v2/components/label.html', text='Sub-national', color='cyan', size='xs' %}
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="hdx-v2-page-header__meta-item">
+      <div class="hdx-v2-page-header__meta-label-row">
+        <span class="hdx-v2-page-header__meta-label">Expected update frequency</span>
+      </div>
+      <div class="hdx-v2-page-header__meta-value">
+        {% if update_frequency %}<span>{{ update_frequency }}</span>{% endif %}
+        {% if is_up_to_date %}
+          {% snippet 'v2/components/label.html', text='Up to date', color='cyan', size='xs' %}
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="hdx-v2-page-header__meta-item">
+      <div class="hdx-v2-page-header__meta-label-row">
+        <span class="hdx-v2-page-header__meta-label">Time period</span>
+        {% if time_period_tooltip %}
+          <div class="c-tooltip-anchor">
+            <span class="c-info-icon" tabindex="0" aria-label="{{ _('More info about time period') }}">{% include 'v2/icons/info-circle.svg' %}</span>
+            {% snippet 'v2/components/tooltip.html', variant='dark', arrow='',
+                text=_('The earliest start date and latest end date across all resources included in the dataset.') %}
+          </div>
+        {% endif %}
+      </div>
+      <div class="hdx-v2-page-header__meta-value">
+        {% if time_period %}<span>{{ time_period }}</span>{% endif %}
+      </div>
+    </div>
+
+    <div class="hdx-v2-page-header__meta-item" data-header-meta="source">
+      <div class="hdx-v2-page-header__meta-label-row">
+        <span class="hdx-v2-page-header__meta-label">Source</span>
+        {% if source_text %}
+          {% snippet 'v2/components/text-button.html',
+              style='tertiary', size='s', label='View more',
+              icon=True, icon_position='right', icon_src='v2/icons/arrow-down.svg',
+              tag='a', href='#metadata-source',
+              extra_classes='hdx-v2-page-header__source-view-more' %}
+        {% endif %}
+        {% if source_tooltip %}
+          <div class="c-tooltip-anchor">
+            <span class="c-info-icon" tabindex="0" aria-label="{{ _('More info about source') }}">{% include 'v2/icons/info-circle.svg' %}</span>
+            {% snippet 'v2/components/tooltip.html', variant='dark', arrow='', text=_(' ') %}
+          </div>
+        {% endif %}
+      </div>
+      <div class="hdx-v2-page-header__meta-value hdx-v2-page-header__meta-value--source">
+        {% if source_text %}<span>{{ source_text }}</span>{% endif %}
+      </div>
+    </div>
+
+  </div>
+  {% endif %}{# /not _is_resource #}
+
+  {# ── RESOURCE METADATA STRIP ─────────────────────────────── #}
+  {% if _is_resource %}
+  <div class="hdx-v2-page-header__meta">
+
+    <div class="hdx-v2-page-header__meta-item">
+      <span class="hdx-v2-page-header__meta-label">Last modified</span>
+      <span class="hdx-v2-page-header__meta-value">{{ last_modified }}</span>
+    </div>
+
+    <div class="hdx-v2-page-header__meta-item">
+      <div class="hdx-v2-page-header__meta-label-row">
+        <span class="hdx-v2-page-header__meta-label">Resource ID</span>
+        {% snippet 'v2/components/copy-button.html',
+            value=resource_id, style='secondary', size='s',
+            icon_position='left', label=_('Copy') %}
+      </div>
+      <span class="hdx-v2-page-header__meta-value">{{ resource_id }}</span>
+    </div>
+
+    <div class="hdx-v2-page-header__meta-item">
+      <div class="hdx-v2-page-header__meta-label-row">
+        <span class="hdx-v2-page-header__meta-label">Resource URL</span>
+        {% snippet 'v2/components/copy-button.html',
+            value=resource_url, style='secondary', size='s',
+            icon_position='left', label=_('Copy') %}
+      </div>
+      {% if resource_url_href %}
+        {% snippet 'v2/components/text-link.html',
+            label=resource_url,
+            href=resource_url_href,
+            style='tertiary', size='xs' %}
+      {% else %}
+        <span class="hdx-v2-page-header__meta-value">{{ resource_url }}</span>
+      {% endif %}
+    </div>
+
+  </div>
+  {% endif %}{# /_is_resource #}
+
+</section>
+
+{# Membership popups — dataset only #}
+{% if not hide_membership and membership and membership.display_group_message %}
+  {% set membership_data = membership.data %}
+  {% set group_topics = membership.data.group_topics %}
+  {{ h.snippet('widget/membership/group-message.html', id="groupMessagePopup", title=title, groups=group_topics, org_id=org_id, pkg_id=pkg_id, membership_data=membership_data, base_title='dataset', base_type='dataset') }}
+  {{ h.snippet('widget/membership/done.html', id="membershipDonePopup") }}
+{% endif %}

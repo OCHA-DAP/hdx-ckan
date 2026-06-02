@@ -1,0 +1,72 @@
+// ============================================================
+// c-copy-button — clipboard copy button with "Copied!" feedback
+// Used in the page header metadata strip and API section.
+// ============================================================
+
+.c-copy-button {
+    display:         inline-flex;
+    align-items:     center;
+    border:          none;
+    background:      none;
+    cursor:          pointer;
+    border-radius:   var(--hdx-radius-sm);
+    font-family:     var(--hdx-font-body);
+    font-weight:     var(--hdx-fw-medium);
+    line-height:     var(--hdx-lh-normal);
+    padding:         0;
+    text-decoration: none;
+    white-space:     nowrap;
+    -webkit-appearance: none;
+    appearance:         none;
+
+    &__icon {
+        display:     inline-flex;
+        flex-shrink: 0;
+        align-items: center;
+
+        svg { display: block; }
+    }
+
+    // Icon turns green briefly on successful copy
+    &.is-copied .c-copy-button__icon { color: var(--hdx-success-5); }
+
+    // ── Icon position ────────────────────────────────────────
+    &--icon-left  { flex-direction: row; }
+    &--icon-right { flex-direction: row-reverse; }
+
+    // ── Size: m (34px height, matches c-button--m) ───────────
+    &--m {
+        gap:       var(--hdx-space-13); // 6px
+        font-size: var(--hdx-fs-s);     // 14px
+
+        .c-copy-button__icon svg {
+            width:  1rem;
+            height: 1rem;
+        }
+    }
+
+    // ── Size: s (24px height, matches c-button--s) ───────────
+    &--s {
+        gap:       var(--hdx-space-15); // 2px
+        font-size: var(--hdx-fs-xs);    // 12px
+
+        .c-copy-button__icon svg {
+            width:  0.875rem;
+            height: 0.875rem;
+        }
+    }
+
+    // ── Style: secondary ─────────────────────────────────────
+    &--secondary {
+        color: var(--hdx-neutral-8);
+
+        &:hover { color: var(--hdx-primary-main); }
+    }
+
+    // ── Style: tertiary ──────────────────────────────────────
+    &--tertiary {
+        color: var(--hdx-neutral-55);
+
+        &:hover { color: var(--hdx-neutral-85); }
+    }
+}

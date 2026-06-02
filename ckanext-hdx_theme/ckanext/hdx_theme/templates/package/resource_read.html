@@ -1,10 +1,25 @@
-{% extends "page.html" %}
+{% extends "v2/page.html" %}
 
 {% set res = resource %}
 {% set pkg = pkg_dict %}
 {% set analytics = h.hdx_compute_analytics(pkg_dict) %}
 
-{# The lines below are for analytics #}
+{% set outer_row_class  = 'hdx-v2-resource-row' %}
+{% set columns_class    = 'hdx-v2-resource-columns' %}
+{% set sidebar_class    = 'hdx-v2-resource-sidebar' %}
+{% set content_class    = 'hdx-v2-resource-content' %}
+
+{# Find the Data Explorer view (first non-HXL-preview view) #}
+{% set _de_ns = namespace(view=None) %}
+{% for _v in resource_views or [] %}
+  {% if not _de_ns.view and _v.view_type != 'hdx_hxl_preview' %}
+    {% set _de_ns.view = _v %}
+  {% endif %}
+{% endfor %}
+{% set _data_explorer = _de_ns.view %}
+
+
+{# ── Analytics blocks (Mixpanel) — must remain verbatim ──── #}
 {% block analytics_org_name %}{{ package.organization.name }}{% endblock %}
 {% block analytics_org_id %}{{ package.organization.id }}{% endblock %}
 {% block analytics_is_cod %}{{ analytics.analytics_is_cod }}{% endblock %}
@@ -12,7 +27,7 @@
 {% block analytics_is_archived %}{{ analytics.analytics_is_archived }}{% endblock %}
 {% block analytics_group_names %}{{ analytics.analytics_group_names | safe }}{% endblock %}
 {% block analytics_group_ids %}{{ analytics.analytics_group_ids | safe }}{% endblock %}
-{% block analytics_dataset_name %}{{ package.name  }}{% endblock %}
+{% block analytics_dataset_name %}{{ package.name }}{% endblock %}
 {% block analytics_dataset_id %}{{ package.id }}{% endblock %}
 {% block analytics_dataset_availability %}{{ analytics.analytics_dataset_availability }}{% endblock %}
 
@@ -24,205 +39,178 @@
 {% endblock -%}
 
 {% block subtitle %}{{ h.resource_display_name(res) }} | {{ h.dataset_display_name(package) }} | Humanitarian Dataset {% endblock %}
-            
+
 {% block meta %}
-    {{ super() }}
-    <meta name="description" content="{% if res.description %}{{ res.description }}{% else %}Explore data for resource {{ h.resource_display_name(res) }} from the {{ h.dataset_display_name(package) }} humanitarian dataset.{% endif %}" />
-{% endblock %}
-{% block breadcrumb_content_selected %}{% endblock %}
-
-{% block breadcrumb_content %}
-  {% snippet "snippets/other_breadcrumb_item.html", title=_('Datasets'), named_route='hdx_dataset.search', position=2 %}
-  {% snippet "snippets/other_breadcrumb_item.html", title=pkg.title|truncate(30), named_route='hdx_dataset.read', id=pkg.name, position=3 %}
-  {% snippet "snippets/active_breadcrumb_item.html", title=h.resource_display_name(res)|truncate(30), position=4 %}
+  {{ super() }}
+  <meta name="description" content="{% if res.description %}{{ res.description }}{% else %}Explore data for resource {{ h.resource_display_name(res) }} from the {{ h.dataset_display_name(package) }} humanitarian dataset.{% endif %}" />
 {% endblock %}
 
+{% block styles %}
+  {{ super() }}
+  {% asset 'hdx_theme/v2-dataset-styles' %}
+  {% asset 'hdx_theme/v2-resource-styles' %}
+{% endblock %}
+
+{# ── Breadcrumb ──────────────────────────────────────────── #}
+{% block toolbar %}
+  <div class="hdx-v2-breadcrumb-row">
+    <div class="hdx-v2-container">
+      {% snippet 'v2/components/breadcrumb.html',
+          items=[
+            {'label': pkg.organization.title, 'href': h.url_for('organization.read', id=pkg.organization.name)},
+            {'label': pkg.title or pkg.name,  'href': h.url_for('hdx_dataset.read', id=pkg.name)},
+            {'label': h.resource_display_name(res), 'href': ''}
+          ] %}
+    </div>
+  </div>
+{% endblock %}
+
+{# ── Resource page header ─────────────────────────────────── #}
 {% block pre_primary %}
-  {% block resource %}
-    <section class="module module-resource">
-      {% block resource_inner %}
-        <div class="module-content">
-        <div class="actions">
-          {% block resource_actions %}
-          <ul class="mTop10 float-end">
-            {% block resource_actions_inner %}
-            {# No longer needed because of the new contribute flow
-              {% if h.check_access('package_update', {'id':pkg.id }) %}
-                <li>{% link_for _('Edit'), controller='package', action='resource_edit', id=pkg.name, resource_id=res.id, class_='btn hdx-btn resource-btn' %}</li>
-              {% endif %}
-             #}
-            {% if res.url and h.is_url(res.url) and h.check_access('hdx_resource_download', res) %}
-              <li>
-                <a class="btn hdx-btn ga-download resource-btn resource-icon-btn resource-url-analytics resource-type-{{ res.resource_type }}" href="{{ res.hdx_rel_url }}">
-                {#
-                  {% if res.resource_type in ('listing', 'service') %}
-                    <i class="icon-eye-open"></i> {{ _('View') }}
-                  {% elif  res.resource_type == 'api' %}
-                    <i class="icon-key"></i> {{ _('API Endpoint') }}
-                  {% elif not res.has_views or not res.can_be_previewed %}
-                    <i class="humanitarianicons-Out-of-platform"></i> {{ _('Go to resource') }}
-                  {% else %}
-                    <i class="icon-download"></i> {{ _('Download') }}
-                  {% endif %}
-                #}
-                  <span class="ga-download-resource-title" style="display: none">{{ res.name }}</span>
-                  <span class="ga-download-resource-id" style="display: none">{{ res.id }}</span>
-                </a>
-              </li>
-            {% endif %}
-            {% if res.datastore_active %}
-              <li>{% snippet 'package/snippets/data_api_button.html', resource=res %}</li>
-            {% endif %}
-            {% endblock %}
-          </ul>
-          {% endblock %}
-        </div>
-        {% block resource_content %}
-          {% block resource_read_title %}<h1 class="page-heading">{{ h.resource_display_name(res) | truncate(50) }}</h1>{% endblock %}
-          {% block resource_read_url %}
+  <div class="hdx-v2-page-header-section">
+    <div class="hdx-v2-container">
+      {% set metadata_url = h.url_for('hdx_dataset.resource_metadata', id=pkg.id, resource_id=res.id) %}
+      {% set can_dl = h.check_access('hdx_resource_download', res) %}
+      {% snippet 'v2/page-header.html',
+          resource_id=res.id,
+          file_format=h.hdx_format_to_icon_category(res.format),
+          file_format_text=res.format or '',
+          title=h.resource_display_name(res),
+          description=res.description or '',
+          download_url=res.hdx_rel_url,
+          can_download=can_dl,
+          ga_resource_title=res.name,
+          ga_resource_id=res.id,
+          export_json_url=metadata_url ~ '?format=json',
+          export_csv_url=metadata_url ~ '?format=csv',
+          last_modified=h.render_datetime(res.last_modified or res.created) or '',
+          resource_url=res.url or '',
+          resource_url_href=res.hdx_rel_url if (res.url and h.is_url(res.url) and can_dl) else '',
+          resource_type=res.resource_type or '',
+          download_size=h.filesize_format(res.Size) if res.Size else '' %}
+    </div>
+  </div>
+{% endblock %}
 
-             <p class="muted ellipsis">{{ _('URL:') }}
-              {% if h.check_access('hdx_resource_download', res) %}
-                {% if res.url and h.is_url(res.url) %}
-                  <a href="{{ res.hdx_rel_url }}" title="{{ res.hdx_rel_url }}">{{ res.url }}</a>
-                {% elif res.url %}
-                  {{ res.hdx_rel_url }}
-                {% endif %}
-              {% else %}
-                <a href="/faq#auto-faq-Metadata_and_Data_Quality-What_does_it_mean_for_a_dataset_to_be__under_review__-a" class="under-review">[ under review ]</a>
-              {% endif %}
-             </p>
+{# ── Anchor links — desktop sidebar ──────────────────────── #}
+{% block secondary %}
+  {% set ns = namespace(anchor_items=[]) %}
+  {% if _data_explorer %}
+    {% set ns.anchor_items = ns.anchor_items + [{'label': _('Resource preview'), 'href': '#resource-preview', 'active': True}] %}
+  {% endif %}
+  {% if res.datastore_active %}
+    {% set ns.anchor_items = ns.anchor_items + [{'label': _('API'), 'href': '#api-access', 'active': not _data_explorer}] %}
+  {% endif %}
+  {% snippet 'v2/components/anchor-links.html',
+      items=ns.anchor_items,
+      heading=_('Resource details'),
+      with_mobile_dropdown=False %}
+{% endblock %}
 
-          {% endblock %}
-          <div class="prose notes" property="rdfs:label">
-            {% if res.description %}
-              {{ h.render_markdown(res.description) }}
-            {% else %}
-              <p class="empty">{{ _('There is no description for this resource') }}</p>
-            {% endif %}
-            {% if not res.description and package.notes %}
-              <h3>{{ _('From the dataset abstract') }}</h3>
-              <blockquote>{{ h.markdown_extract(package.get('notes')) }}</blockquote>
-              <p>{% trans dataset=package.title, url=h.url_for('dataset_read', id=package['name']) %}Source: <a href="{{ url }}">{{ dataset }}</a>{% endtrans %}
-            {% endif %}
-          </div>
-        {% endblock %}
+{# ── Content sections ─────────────────────────────────────── #}
+{% block primary %}
+
+  {# Mobile sticky anchor dropdown (outside hidden sidebar) #}
+  {% set ns = namespace(anchor_items=[]) %}
+  {% if _data_explorer %}
+    {% set ns.anchor_items = ns.anchor_items + [{'label': _('Resource preview'), 'href': '#resource-preview', 'active': True}] %}
+  {% endif %}
+  {% if res.datastore_active %}
+    {% set ns.anchor_items = ns.anchor_items + [{'label': _('API'), 'href': '#api-access', 'active': not _data_explorer}] %}
+  {% endif %}
+  {% snippet 'v2/components/anchor-links.html',
+      items=ns.anchor_items,
+      mobile_only=True %}
+
+  {# ── Resource preview (Data Explorer only, no tab nav) ─── #}
+  {% if _data_explorer and h.check_access('hdx_resource_download', res) %}
+  <section class="hdx-v2-dataset-section" id="resource-preview">
+    <div class="hdx-v2-dataset-section__header">
+      <h2 class="hdx-v2-dataset-section__title">{{ _('Resource preview') }}</h2>
+    </div>
+    <div class="hdx-v2-dataset-section__body">
+      <div class="resource-view">
+        {% snippet 'package/snippets/resource_view.html',
+           resource_view=_data_explorer,
+           resource=resource,
+           package=package %}
       </div>
-        {% block data_preview %}
-          {% if h.check_access('hdx_resource_download', res) %}
-          {% block resource_view %}
-            {% block resource_view_nav %}
-              {% snippet "package/snippets/resource_views_list.html",
-                 views=resource_views,
-                 pkg=pkg,
-                 is_edit=false,
-                 view_id=current_resource_view['id'],
-                 resource=resource,
-                 extra_class="nav-tabs-plain"
-               %}
-            {% endblock %}
-            <div class="module-content">
-              {% block resource_view_content %}
-                <div class="resource-view">
-                  {% if resource_views %}
-                    {% for resource_view in resource_views %}
-                      {% if resource_view == current_resource_view %}
-                        {% snippet 'package/snippets/resource_view.html',
-                           resource_view=resource_view,
-                           resource=resource,
-                           package=package
-                         %}
-                      {% endif %}
-                    {% endfor %}
-                  {% else %}
-                    {# Views not created #}
-                    <div class="module-content data-viewer-info">
-                      <p>{{ _("There are no views created for this resource yet.") }}</p>
-                      {% if h.check_access('resource_view_create', {'resource_id': resource.id}) %}
-                        <p class="muted">
-                          <i class="icon-info-sign"></i>
-                          {{ _("Not seeing the views you were expecting?")}}
-                          <a href="javascript:void(0);" data-bs-toggle="collapse" data-bs-target="#data-view-info">
-                            {{ _('Click here for more information.') }}</a>
-                        </p>
-                        <div id="data-view-info" class="collapse">
-                          <p>{{ _('Here are some reasons you may not be seeing expected views:') }}</p>
-                          <ul>
-                            <li>{{ _("No view has been created that is suitable for this resource")}}</li>
-                            <li>{{ _("The site administrators may not have enabled the relevant view plugins")}}</li>
-                            <li>{{ _("If a view requires the DataStore, the DataStore plugin may not be enabled, or the data may not have been pushed to the DataStore, or the DataStore hasn't finished processing the data yet")}}</li>
-                          </ul>
-                        </div>
-                      {% endif %}
-                    </div>
-                  {% endif %}
-                </div>
-              {% endblock %}
-            </div>
-          {% endblock %}
+    </div>
+  </section>
+  {% endif %}
+
+  {# ── API access (conditional) ─── #}
+  {% if res.datastore_active %}
+  <section class="hdx-v2-dataset-section" id="api-access">
+    <div class="hdx-v2-dataset-section__header">
+      <h2 class="hdx-v2-dataset-section__title">{{ _('API access') }}</h2>
+      {% snippet 'v2/components/button.html',
+          style='tertiary', size='m',
+          label=_('See documentation'),
+          icon=True, icon_position='left',
+          icon_src='v2/icons/link-external.svg',
+          tag='a',
+          href='https://un-ocha-centre-for-humanitarian.gitbook.io/hdx-docs/build-with-hdx/build-with-hdx/hdx-api/tabular-data-endpoints',
+          attrs={'target': '_blank', 'rel': 'noopener'} %}
+    </div>
+    <div class="hdx-v2-dataset-section__body">
+      <div class="hdx-v2-resource-api">
+
+        {# Block 1: API token #}
+        <div class="hdx-v2-resource-api__block">
+          <p class="hdx-v2-resource-api__label">{{ _('API token to access data') }}</p>
+          {% if c.userobj %}
+            {% set token_url = h.url_for('user.api_tokens', id=c.userobj.name) %}
+          {% else %}
+            {% set token_url = h.url_for('user.login', came_from=h.url_for('hdx_redirect_manager.redirect_page', page_name='api_tokens_management')) %}
           {% endif %}
-        {% endblock %}
-      {% endblock %}
-    </section>
-  {% endblock %}
-{% endblock %}
-
-{% block primary_content %}
-  {# resource page should only show the preview accordig to https://github.com/OCHA-DAP/hdx-ckan/issues/204
-  {% block resource_additional_information %}
-    {% if res %}
-      <section class="module">
-        {% block resource_additional_information_inner %}
-        <div class="module-content">
-          <h2>{{ _('Additional Information') }}</h2>
-          <table class="table table-striped table-bordered table-condensed" data-module="table-toggle-more">
-            <thead>
-              <tr>
-                <th scope="col">{{ _('Field') }}</th>
-                <th scope="col">{{ _('Value') }}</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <th scope="row">{{ _('Last updated') }}</th>
-                <td>{{ h.render_datetime(res.last_modified) or h.render_datetime(res.revision_timestamp) or h.render_datetime(res.created) or _('unknown') }}</td>
-              </tr>
-              <tr>
-                <th scope="row">{{ _('Created') }}</th>
-                <td>{{ h.render_datetime(res.created) or _('unknown') }}</td>
-              </tr>
-              <tr>
-                <th scope="row">{{ _('Format') }}</th>
-                <td>{{ res.mimetype_inner or res.mimetype or res.format or _('unknown') }}</td>
-              </tr>
-              <tr>
-                <th scope="row">{{ _('License') }}</th>
-                <td>{% snippet "snippets/license.html", pkg_dict=pkg, text_only=True %}</td>
-              </tr>
-              {% for key, value in h.format_resource_items(res.items()) %}
-                <tr class="toggle-more"><th scope="row">{{ key }}</th><td>{{ value }}</td></tr>
-              {% endfor %}
-            </tbody>
-          </table>
+          {% snippet 'v2/components/button.html',
+              style='tertiary', size='m',
+              label=_('Access to get token'),
+              tag='a', href=token_url %}
         </div>
-        {% endblock %}
-      </section>
-    {% endif %}
-  {% endblock %}
-  #}
+
+        {# Block 2: Resource ID #}
+        <div class="hdx-v2-resource-api__block">
+          <div class="hdx-v2-resource-api__group">
+            <p class="hdx-v2-resource-api__label">{{ _('Resource ID') }}</p>
+            <p class="hdx-v2-resource-api__value">{{ res.id }}</p>
+          </div>
+          {% snippet 'v2/components/text-button.html',
+              style='secondary', size='m',
+              label=_('Copy resource ID'),
+              icon=True, icon_position='left',
+              icon_src='v2/icons/copy.svg',
+              tag='button', button_type='button',
+              attrs={'data-copy-value': res.id} %}
+        </div>
+
+        {# Block 3: Example query #}
+        <div class="hdx-v2-resource-api__block">
+          {% set query_url = h.url_for('api.action', logic_function='datastore_search', resource_id=res.id, limit=10, qualified=True) %}
+          <div class="hdx-v2-resource-api__group">
+            <div class="hdx-v2-resource-api__label-row">
+              <p class="hdx-v2-resource-api__label">{{ _('Example query') }}</p>
+              {% snippet 'v2/components/text-button.html',
+                  style='tertiary', size='s',
+                  label=_('More info'),
+                  icon=True, icon_position='left',
+                  icon_src='v2/icons/link-external.svg',
+                  tag='a',
+                  href='https://un-ocha-centre-for-humanitarian.gitbook.io/hdx-docs/build-with-hdx/build-with-hdx/hdx-api/tabular-data-endpoints/how-to-query-the-tabular-data#id-2.-api-requests-native',
+                  attrs={'target': '_blank', 'rel': 'noopener'} %}
+            </div>
+            {% snippet 'v2/components/text-link.html',
+                label=query_url,
+                href=query_url,
+                style='tertiary', size='s',
+                target='_blank' %}
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+  {% endif %}
+
 {% endblock %}
-
-{% block secondary %}{% endblock %}
-
-{% block secondary_content %}
-{#
-  {% block resources_list %}
-    {% snippet "package/snippets/resources.html", pkg=pkg, active=res.id %}
-  {% endblock %}
-
-  {% block resource_license %}
-    {% snippet "snippets/social.html" %}
-  {% endblock %}
-#}
-{% endblock %}
-

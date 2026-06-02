@@ -1,0 +1,30 @@
+{#
+  Snippet: copy-button.html
+  Path:    templates/v2/components/copy-button.html
+
+  Renders a c-copy-button that copies `value` to clipboard
+  and shows brief "Copied!" feedback.
+
+  Parameters
+  ─────────────────────────────
+  value         {string}  Text to copy.  default: ''
+  style         {string}  'secondary' | 'tertiary'.  default: 'secondary'
+  size          {string}  'm' | 's'.  default: 'm'
+  icon_position {string}  'left' | 'right'.  default: 'left'
+  label         {string}  Button label.  default: 'Copy'
+  extra_classes {string}  Extra CSS classes.  default: ''
+  ─────────────────────────────
+#}
+{% set value         = value         if value         is defined else '' %}
+{% set style         = style         if style         is defined else 'secondary' %}
+{% set size          = size          if size          is defined else 'm' %}
+{% set icon_position = icon_position if icon_position is defined else 'left' %}
+{% set label         = label         if label         is defined else 'Copy' %}
+{% set extra_classes = extra_classes if extra_classes is defined else '' %}
+
+<button type="button"
+        class="c-copy-button c-copy-button--{{ style }} c-copy-button--{{ size }}{{ ' c-copy-button--icon-' ~ icon_position if icon_position }}{{ ' ' ~ extra_classes if extra_classes }}"
+        data-copy-value="{{ value }}"
+        aria-label="{{ label if label else _('Copy to clipboard') }}">
+  <span class="c-copy-button__label">{{ label }}</span>
+</button>
