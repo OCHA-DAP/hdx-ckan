@@ -319,10 +319,9 @@ Does **not** use the legacy `copy-into-buffer.js` module.
 
 ### LESS: `hdx-styles/src/common/less/v2/components/copy-button.less`
 
-```less
-&.is-copied .c-copy-button__icon,
-&.is-copied svg { color: var(--hdx-success-main); }
-```
+~~~less
+&.is-copied .c-copy-button__icon { color: var(--hdx-success-5); }
+~~~
 
 Copy icon uses `stroke="currentColor"` / `fill="currentColor"` so the green color applies via CSS.
 

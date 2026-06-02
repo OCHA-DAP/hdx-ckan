@@ -25,7 +25,6 @@
 <button type="button"
         class="c-copy-button c-copy-button--{{ style }} c-copy-button--{{ size }}{{ ' c-copy-button--icon-' ~ icon_position if icon_position }}{{ ' ' ~ extra_classes if extra_classes }}"
         data-copy-value="{{ value }}"
-        aria-label="{{ _('Copy to clipboard') }}">
-  <span class="c-copy-button__icon" aria-hidden="true">{% include 'v2/icons/copy.svg' %}</span>
+        aria-label="{{ label if label else _('Copy to clipboard') }}">
   <span class="c-copy-button__label">{{ label }}</span>
 </button>
