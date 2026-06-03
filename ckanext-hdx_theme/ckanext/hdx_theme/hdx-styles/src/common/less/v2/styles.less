@@ -21,9 +21,9 @@
         flex-direction: column;
         align-items:    center;
         text-align:     center;
-        gap:            2.5rem;
+        gap:            var(--hdx-space-10);
 
-        @media (min-width: @hdx-bp-md) { gap: 3rem; }
+        @media (min-width: @hdx-bp-md) { gap: var(--hdx-space-12); }
         @media (min-width: @hdx-bp-xl) { gap: 5rem; }
     }
 
@@ -40,7 +40,7 @@
         color:  var(--hdx-neutral-0);
         margin: 0;
 
-        @media (min-width: @hdx-bp-xl) { font-size: 3rem; }
+        @media (min-width: @hdx-bp-xl) { font-size: var(--hdx-fs-5xl); }
     }
 
     &__subtitle {
@@ -94,6 +94,7 @@
 // ============================================================
 
 .hdx-v2-intro {
+    background-color: var(--hdx-neutral-0);
     padding-top: 4rem;
     padding-bottom: 4rem;
 
@@ -104,51 +105,166 @@
         display:        flex;
         flex-direction: column;
         align-items:    flex-start;
-        gap:            2rem;
+        gap:            var(--hdx-space-8);
 
-        @media (min-width: @hdx-bp-xl) { gap: 2.5rem; }
+        @media (min-width: @hdx-bp-xl) { gap: var(--hdx-space-10); }
     }
 
-    &__header {
-        display:        flex;
-        flex-direction: column;
-        align-items:    flex-start;
-        gap:            0.5rem;
-
-        @media (min-width: @hdx-bp-md) { gap: 0.75rem; }
-    }
-
-    &__label {
-        font-family: var(--hdx-font-body);
-        font-size:   var(--hdx-fs-s);
-        line-height: var(--hdx-lh-normal);
-        color:       var(--hdx-neutral-85);
-
-        @media (min-width: @hdx-bp-md) { font-size: var(--hdx-fs-m); }
-        @media (min-width: @hdx-bp-xl) { font-size: var(--hdx-fs-l); }
-    }
-
-    &__heading {
-        .hdx-display-s();
-        color:  var(--hdx-neutral-95);
-        margin: 0;
-
-        @media (min-width: @hdx-bp-md) { font-size: var(--hdx-fs-3xl); }
-        @media (min-width: @hdx-bp-xl) { font-size: var(--hdx-fs-4xl); }
-    }
+    &__header  { .hdx-section-header(); }
+    &__label   { .hdx-section-label(); }
+    &__heading { .hdx-section-heading(); }
 
     &__cards {
         align-self:     stretch;
         display:        flex;
         flex-direction: column;
-        gap:            0.75rem;
+        gap:            var(--hdx-space-3);
 
         @media (min-width: @hdx-bp-md) {
             flex-direction: row;
-            gap: 1.25rem;
+            gap: var(--hdx-space-5);
         }
 
         .c-activity-card { flex: 1; }
+    }
+}
+
+// ============================================================
+// hdx-v2-highlights — homepage v2 curated highlights section
+// Figma: llm_docs/redesign/figma_exports/hdx-highlights-xl.html
+//        llm_docs/redesign/figma_exports/hdx-highlights-md.html
+//        llm_docs/redesign/figma_exports/hdx-highlights-sm.html
+// ============================================================
+
+.hdx-v2-highlights {
+    width:            100%;
+    background-color: var(--hdx-neutral-0);
+    padding-top:      4rem;
+    padding-bottom:   4rem;
+
+    @media (min-width: @hdx-bp-md) {
+        padding-top:    5rem;
+        padding-bottom: 5rem;
+    }
+
+    @media (min-width: @hdx-bp-xl) {
+        padding-top:    6rem;
+        padding-bottom: 6rem;
+    }
+
+    &__inner {
+        display:        flex;
+        flex-direction: column;
+        align-items:    flex-start;
+        gap:            var(--hdx-space-8);    // 2rem — header → carousel
+
+        @media (min-width: @hdx-bp-xl) {
+            gap: var(--hdx-space-10);          // 2.5rem — header → cards
+        }
+    }
+
+    &__header  { .hdx-section-header(); }
+    &__label   { .hdx-section-label(); }
+    &__heading { .hdx-section-heading(); }
+
+    // ── Single carousel for all breakpoints ───────────────────
+    // SM/MD: overflow hidden, percentage card widths create peek effect.
+    // XL:    overflow visible, flex: 1 on items shows all 3 cards in one row.
+    //
+    // .highlight-slide is a custom class (not Bootstrap's .carousel-item)
+    // margin-right (not flexbox gap) at SM/MD so jQuery outerWidth(true)
+    // includes spacing for accurate swipe animation.
+
+    &__carousel {
+        align-self: stretch;
+        overflow:   hidden;
+
+        .mobile-carousel-inner {
+            position:    relative;
+            display:     flex;
+            align-items: stretch;
+        }
+
+        .highlight-slide {
+            display:        flex;
+            flex-direction: column;
+            width:          calc(90% - var(--hdx-space-5));   // SM: ~1.1 cards visible
+            flex-shrink:    0;
+            margin-right:   var(--hdx-space-5);
+
+            @media (min-width: @hdx-bp-md) {
+                width: calc(56% - var(--hdx-space-5));         // MD: ~1.8 cards visible
+            }
+        }
+
+        @media (min-width: @hdx-bp-xl) {
+            overflow: visible;
+            width:    100%;
+
+            .mobile-carousel-inner {
+                gap:   var(--hdx-space-5);
+                width: 100%;
+            }
+
+            .highlight-slide {
+                flex:      1;
+                min-width: 0;        // prevent img intrinsic width from breaking equal distribution
+                width:     auto;
+                flex-shrink: 1;
+                margin-right: 0;
+            }
+
+            // Clones added by JS at SM/MD must not appear in the XL static row.
+            .highlight-slide--clone { display: none; }
+        }
+    }
+
+    // Dots row (centered) then arrows row (right-aligned) — stacked vertically.
+    &__carousel-footer {
+        display:        flex;
+        flex-direction: column;
+        gap:            var(--hdx-space-4);
+        margin-top:     var(--hdx-space-6);
+        align-self:     stretch;
+
+        @media (min-width: @hdx-bp-xl) {
+            display: none;
+        }
+    }
+
+    // ── Navigation arrows — rendered as c-button tertiary icon-only size-l ──
+
+    &__arrows {
+        display:         flex;
+        justify-content: flex-end;
+        align-items:     center;
+        gap:             var(--hdx-space-2);
+    }
+
+    // ── Carousel dots ─────────────────────────────────────────
+
+    .highlight-dots {
+        display:         flex;
+        justify-content: center;
+        align-items:     center;
+        gap:             var(--hdx-space-1);
+
+        button {
+            width:            var(--hdx-space-8);
+            height:           var(--hdx-space-2);
+            border-radius:    var(--hdx-radius-sm);
+            background-color: var(--hdx-neutral-1);
+            border:           none;
+            cursor:           pointer;
+            padding:          0;
+
+            &.active         { background-color: var(--hdx-primary-5); }
+
+            &:focus-visible {
+                outline:        2px solid var(--hdx-primary-5);
+                outline-offset: 2px;
+            }
+        }
     }
 }
 
@@ -158,7 +274,6 @@
 // ============================================================
 
 .hdx-v2-page-header {
-    background-color: var(--hdx-neutral-01);
     display:          flex;
     flex-direction:   column;
     gap:              var(--hdx-space-6);
