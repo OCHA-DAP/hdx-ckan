@@ -133,6 +133,7 @@
 }
 .hdx-v2-intro__header {
   display: flex;
+  width: 100%;
   flex-direction: column;
   align-items: flex-start;
   gap: var(--hdx-space-2);
@@ -223,6 +224,7 @@
 }
 .hdx-v2-highlights__header {
   display: flex;
+  width: 100%;
   flex-direction: column;
   align-items: flex-start;
   gap: var(--hdx-space-2);
