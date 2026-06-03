@@ -40,10 +40,11 @@
 | 034 | [dataset-header-v2](034-dataset-header-v2.md)                                                                   | implemented | |
 | 035 | [dataset-search-bar-v2](035-dataset-search-bar-v2.md)                                                           | implemented | |
 | 036 | [dataset-results-layout-v2](036-dataset-results-layout-v2.md)                                                   | implemented | |
-| 037 | [dataset-page-header-v2](076-dataset-page-header-v2.md)                                                         | implemented | |
+| 037 | [dataset-page-header-v2](037-dataset-page-header-v2.md)                                                         | implemented | |
 | 038 | [resource-card](038-resource-card.md)                                                                           | implemented | |
 | 039 | [dataset-page](039-dataset-page.md)                                                                             | implemented | |
 | 040 | [resource-page](040-resource-page.md)                                                                           | implemented | |
 | 041 | [accessibility-wcag-audit](041-accessibility-wcag-audit.md)                                                     | implemented | |
 | 042 | [v2-audit-standardization](042-v2-audit-standardization.md)                                                     | implemented | |
+| 043 | [homepage-curated-highlights](043-homepage-curated-highlights.md)                                               | implemented | |
 | 044 | [homepage-dynamic-bar-chart](044-homepage-dynamic-bar-chart.md)                                                 | implemented | |
