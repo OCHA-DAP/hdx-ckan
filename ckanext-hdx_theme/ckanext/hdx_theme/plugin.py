@@ -270,6 +270,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'hdx_decode_markup': hdx_helpers.hdx_decode_markup,
             'hdx_generate_basemap_config_string': hdx_helpers.hdx_generate_basemap_config_string,
             'hdx_location_dict': hdx_helpers.hdx_location_dict,
+            'hdx_get_locations': hdx_helpers.hdx_get_locations,
             'hdx_user_orgs_dict': hdx_helpers.hdx_user_orgs_dict,
             'hdx_supports_notifications': hdx_helpers.hdx_supports_notifications,
             'HDX_CONST': const,
