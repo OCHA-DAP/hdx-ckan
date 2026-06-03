@@ -125,3 +125,34 @@
 .hdx-body-regular-base()  { .-hdx-body-base(var(--hdx-fw-regular));     }
 .hdx-body-medium-base()   { .-hdx-body-base(var(--hdx-fw-medium));      }
 .hdx-body-semibold-base() { .-hdx-body-base(var(--hdx-fw-semibold));    }
+
+// ── Section header pattern ─────────────────────────────────────
+// Shared label + heading structure for homepage sections (intro, highlights, etc.)
+
+.hdx-section-header() {
+    display:        flex;
+    flex-direction: column;
+    align-items:    flex-start;
+    gap:            var(--hdx-space-2);
+
+    @media (min-width: @hdx-bp-md) { gap: var(--hdx-space-3); }
+}
+
+.hdx-section-label() {
+    font-family: var(--hdx-font-body);
+    font-size:   var(--hdx-fs-s);
+    line-height: var(--hdx-lh-normal);
+    color:       var(--hdx-neutral-85);
+
+    @media (min-width: @hdx-bp-md) { font-size: var(--hdx-fs-m); }
+    @media (min-width: @hdx-bp-xl) { font-size: var(--hdx-fs-l); }
+}
+
+.hdx-section-heading() {
+    .hdx-display-s();
+    color:  var(--hdx-neutral-95);
+    margin: 0;
+
+    @media (min-width: @hdx-bp-md) { font-size: var(--hdx-fs-3xl); }
+    @media (min-width: @hdx-bp-xl) { font-size: var(--hdx-fs-4xl); max-width: 66.67%; }
+}
