@@ -8,6 +8,8 @@
 // colour change on state, no icon, no padding/background.
 // ============================================================
 
+@import "../mixins.less";
+
 // ── Colours ──────────────────────────────────────────────────
 // Primary: royalblue → near-black on hover/active
 // Secondary: near-black → royalblue on hover/active
@@ -32,11 +34,9 @@
 
 .c-text-link {
     display:         inline;
-    font-family:     var(--hdx-font-body);
-    font-weight:     var(--hdx-fw-medium);
+    .hdx-body-medium-base();
     text-decoration: underline;
     cursor:          pointer;
-    line-height:     130%;
     transition:      color 0.15s ease;
     background:      none;
     border:          none;

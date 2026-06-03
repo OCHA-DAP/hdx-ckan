@@ -10,12 +10,13 @@
   }
 }
 .hdx-v2-resource-sidebar {
+  flex: 0 0 25%;
+  min-width: 0;
   display: none;
 }
 @media (min-width: 80rem) {
   .hdx-v2-resource-sidebar {
     display: block;
-    flex: 0 0 25%;
     padding: var(--hdx-space-10) 0;
   }
 }
@@ -63,13 +64,15 @@
   gap: var(--hdx-space-2);
 }
 .hdx-v2-resource-api__label {
+  font-family: var(--hdx-font-body);
   font-size: var(--hdx-fs-m);
   font-weight: var(--hdx-fw-semibold);
+  line-height: var(--hdx-lh-normal);
   color: var(--hdx-neutral-85);
   margin: 0;
-  line-height: var(--hdx-lh-normal);
 }
 .hdx-v2-resource-api__value {
+  font-family: var(--hdx-font-body);
   font-size: var(--hdx-fs-s);
   color: var(--hdx-neutral-8);
   margin: 0;

@@ -1,0 +1,47 @@
+{#
+  Snippet: info-icon.html
+  Path:    templates/v2/components/info-icon.html
+
+  Renders a c-info-icon button with an attached dark tooltip.
+
+  Parameters
+  ─────────────────────────────────────────────────
+  aria_label   {string}  Button aria-label.  Required.
+  tooltip_text {string}  Tooltip body copy.  default: ''
+  tooltip_id   {string}  id on the tooltip element; also used as
+                         aria-describedby on the button.  Required.
+  icon_src     {string}  Inline SVG path.
+                         default: 'v2/icons/info-circle.svg'
+  arrow        {string}  '' | 'above' | 'below' (no arrow by default).
+                         default: ''
+  ─────────────────────────────────────────────────
+  Example
+
+  {% snippet 'v2/components/info-icon.html',
+      aria_label=_('More info about time period'),
+      tooltip_text=_('The earliest start date and latest end date...'),
+      tooltip_id='tooltip-time-period' %}
+#}
+
+{% set aria_label   = aria_label   if aria_label   is defined else '' %}
+{% set tooltip_text = tooltip_text if tooltip_text is defined else '' %}
+{% set tooltip_id   = tooltip_id   if tooltip_id   is defined else '' %}
+{% set icon_src     = icon_src     if icon_src     is defined else 'v2/icons/info-circle.svg' %}
+{% set arrow        = arrow        if arrow        is defined else '' %}
+
+<div class="c-tooltip-anchor">
+  <button type="button"
+          class="c-info-icon"
+          aria-label="{{ aria_label }}"
+          aria-expanded="false"
+          {% if tooltip_id %}aria-describedby="{{ tooltip_id }}"{% endif %}>
+    {% include h.url_for_static(icon_src) %}
+  </button>
+  {% if tooltip_text %}
+    {% snippet 'v2/components/tooltip.html',
+        variant='dark',
+        arrow=arrow,
+        text=tooltip_text,
+        tooltip_id=tooltip_id %}
+  {% endif %}
+</div>

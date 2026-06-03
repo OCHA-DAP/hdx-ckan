@@ -8,6 +8,8 @@
 //   All colour/spacing/type tokens come from that file.
 // ============================================================
 
+@import "../mixins.less";
+
 
 // ────────────────────────────────────────────────────────────
 // 1. Local design tokens (mapped from foundations)
@@ -64,9 +66,7 @@
     justify-content:  center;
     border-radius:    @c-button-radius;
     cursor:           pointer;
-    font-family:      var(--hdx-font-body);
-    font-weight:      var(--hdx-fw-medium);
-    line-height:      var(--hdx-lh-normal);
+    .hdx-body-medium-base();
     text-decoration:  none;
     white-space:      nowrap;
     box-sizing:       border-box;
@@ -312,9 +312,7 @@
     display:          inline-flex;
     align-items:      center;
     cursor:           pointer;
-    font-family:      var(--hdx-font-body);
-    font-weight:      var(--hdx-fw-medium);
-    line-height:      var(--hdx-lh-normal);
+    .hdx-body-medium-base();
     text-decoration:  none;      // outer element; underline applied to __label only
     border:           none;
     background:       none;

@@ -75,16 +75,12 @@
 {% endif %}
 {% set ns.anchor_items = ns.anchor_items + [{'label': _('Activity'), 'href': '#activity', 'active': False}] %}
 
-{% block toolbar %}
-  <div class="hdx-v2-breadcrumb-row">
-    <div class="hdx-v2-container">
-      {% snippet 'v2/components/breadcrumb.html',
-          items=[
-            {'label': pkg.organization.title, 'href': h.url_for('organization.read', id=pkg.organization.name)},
-            {'label': pkg.title or pkg.name, 'href': ''}
-          ] %}
-    </div>
-  </div>
+{% block breadcrumb_items %}
+  {% snippet 'v2/components/breadcrumb.html',
+      items=[
+        {'label': pkg.organization.title, 'href': h.url_for('organization.read', id=pkg.organization.name)},
+        {'label': pkg.title or pkg.name, 'href': ''}
+      ] %}
 {% endblock %}
 
 {% block pre_primary %}
@@ -204,12 +200,10 @@
                {% if metadata_edit_mode %}data-module="hdx-quick-edit" data-module-anchor="ui_date_range1" data-module-dataset="{{ pkg.id }}"{% endif %}>
             <div class="hdx-v2-dataset-metadata__label-row">
               <span class="hdx-v2-dataset-metadata__label">{{ _('Time period') }}</span>
-              <div class="c-tooltip-anchor">
-                <span class="c-info-icon" tabindex="0" aria-label="{{ _('More info about time period') }}">{% include 'v2/icons/info-circle.svg' %}</span>
-                {% snippet 'v2/components/tooltip.html',
-                    variant='dark', arrow='',
-                    text=_('The earliest start date and latest end date across all resources included in the dataset.') %}
-              </div>
+              {% snippet 'v2/components/info-icon.html',
+                  aria_label=_('More info about time period'),
+                  tooltip_text=_('The earliest start date and latest end date across all resources included in the dataset.'),
+                  tooltip_id='tooltip-md-time-period' %}
             </div>
             <span class="hdx-v2-dataset-metadata__value">
               {{ h.render_date_from_concat_str(pkg.dataset_date) }}
@@ -233,12 +227,10 @@
           <div class="hdx-v2-dataset-metadata__cell">
             <div class="hdx-v2-dataset-metadata__label-row">
               <span class="hdx-v2-dataset-metadata__label">{{ _('Modified') }}</span>
-              <div class="c-tooltip-anchor">
-                <span class="c-info-icon" tabindex="0" aria-label="{{ _('More info about modified date') }}">{% include 'v2/icons/info-circle.svg' %}</span>
-                {% snippet 'v2/components/tooltip.html',
-                    variant='dark', arrow='',
-                    text=_('The date of the most recent change to any data or metadata.') %}
-              </div>
+              {% snippet 'v2/components/info-icon.html',
+                  aria_label=_('More info about modified date'),
+                  tooltip_text=_('The date of the most recent change to any data or metadata.'),
+                  tooltip_id='tooltip-md-modified' %}
             </div>
             <span class="hdx-v2-dataset-metadata__value">
               {{ h.render_datetime(pkg.last_modified) }}
@@ -274,12 +266,10 @@
           <div class="hdx-v2-dataset-metadata__cell">
             <div class="hdx-v2-dataset-metadata__label-row">
               <span class="hdx-v2-dataset-metadata__label">{{ _('Dataset added on HDX') }}</span>
-              <div class="c-tooltip-anchor">
-                <span class="c-info-icon" tabindex="0" aria-label="{{ _('More info about when dataset was added') }}">{% include 'v2/icons/info-circle.svg' %}</span>
-                {% snippet 'v2/components/tooltip.html',
-                    variant='dark', arrow='',
-                    text=_('The date when the dataset was first added to HDX.') %}
-              </div>
+              {% snippet 'v2/components/info-icon.html',
+                  aria_label=_('More info about when dataset was added'),
+                  tooltip_text=_('The date when the dataset was first added to HDX.'),
+                  tooltip_id='tooltip-md-added' %}
             </div>
             <span class="hdx-v2-dataset-metadata__value">
               {{ h.render_datetime(pkg.metadata_created) }}

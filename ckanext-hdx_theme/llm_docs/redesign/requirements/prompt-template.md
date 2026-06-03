@@ -176,8 +176,25 @@ ASK QUESTIONS before making decisions.
 
 ## Lifecycle
 
-| Phase | Action |
-|-------|--------|
-| Analysis | List ALL open questions in section 9. Do not assume. |
-| Implementation | Resolve questions; document resolutions in "Confirmed Decisions" or "Implementation Notes". |
-| After `implemented` | Replace "Open questions" section with "Decisions Taken" table. Remove the Verification section. |
+### What a requirement file must NOT contain
+
+- **No `**Status**` field.** Status is tracked exclusively in `requirements/STATUS.md`. Never add a `**Status**: ...` line to a requirement file.
+- **No open questions after implementation.** Every question in section 9 must be resolved into a decision before implementation begins. Once implemented, the open questions section is removed entirely.
+- **No verification section after implementation.** The verification checklist is ephemeral — remove it once the task is verified. Its presence after implementation creates confusion about what still needs checking.
+
+### Format by phase
+
+| Element | Analysis | Ready for impl | Implemented |
+|---|---|---|---|
+| `**Status**` field | ❌ Never | ❌ | ❌ |
+| Open questions (section 9) | ✅ Required | ❌ Must be resolved | ❌ Remove entirely |
+| Decisions Taken table | Optional | ✅ Required | ✅ Keep |
+| Verification checklist | Optional | ✅ Recommended | ❌ Remove |
+| Files Affected table | Optional | ✅ Required | ✅ Keep |
+
+### Transitions
+
+| Transition | Action |
+|---|---|
+| Analysis → Ready for impl | Resolve every open question; replace section 9 with "Decisions Taken" table |
+| Ready for impl → Implemented | Update STATUS.md; remove verification section from requirement file |

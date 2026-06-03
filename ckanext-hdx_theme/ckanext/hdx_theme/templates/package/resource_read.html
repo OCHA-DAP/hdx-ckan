@@ -52,17 +52,13 @@
 {% endblock %}
 
 {# ── Breadcrumb ──────────────────────────────────────────── #}
-{% block toolbar %}
-  <div class="hdx-v2-breadcrumb-row">
-    <div class="hdx-v2-container">
-      {% snippet 'v2/components/breadcrumb.html',
-          items=[
-            {'label': pkg.organization.title, 'href': h.url_for('organization.read', id=pkg.organization.name)},
-            {'label': pkg.title or pkg.name,  'href': h.url_for('hdx_dataset.read', id=pkg.name)},
-            {'label': h.resource_display_name(res), 'href': ''}
-          ] %}
-    </div>
-  </div>
+{% block breadcrumb_items %}
+  {% snippet 'v2/components/breadcrumb.html',
+      items=[
+        {'label': pkg.organization.title, 'href': h.url_for('organization.read', id=pkg.organization.name)},
+        {'label': pkg.title or pkg.name,  'href': h.url_for('hdx_dataset.read', id=pkg.name)},
+        {'label': h.resource_display_name(res), 'href': ''}
+      ] %}
 {% endblock %}
 
 {# ── Resource page header ─────────────────────────────────── #}

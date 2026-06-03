@@ -1,0 +1,127 @@
+// ============================================================
+// HDX v2 — LESS Mixins
+// Single entry point for all compile-time LESS utilities.
+// Pulls in breakpoint and typography tokens so callers only
+// need one import to get everything:
+//   @import "mixins.less";         (from less/v2/)
+//   @import "../mixins.less";      (from less/v2/components/)
+//
+// NOTE: foundation.less keeps its own @import "typography.less"
+// to emit the CSS custom-property block; it does not use this file.
+// ============================================================
+
+@import "breakpoints.less";
+@import "typography.less";
+
+
+// ── Page-layout flex rules ─────────────────────────────────────
+// Used by two-column page sidebars (search, dataset, resource).
+
+.v2-sidebar-flex() {
+    flex:      0 0 25%;
+    min-width: 0;
+}
+
+.v2-content-flex() {
+    flex:      1;
+    min-width: 0;
+}
+
+
+// ── Typography — private parametric cores ─────────────────────
+// Prefixed with - to signal "internal — do not call directly".
+// All named mixins delegate here so each 4-property block is
+// defined exactly once per font family.
+
+// Display family (Merriweather): 4-property full style
+.-hdx-display(@fs, @fw) {
+  font-family: var(--hdx-font-display);
+  font-size:   @fs;
+  font-weight: @fw;
+  line-height: var(--hdx-lh-normal);
+}
+
+// Display family: 3-property base (no font-size)
+.-hdx-display-base(@fw) {
+  font-family: var(--hdx-font-display);
+  font-weight: @fw;
+  line-height: var(--hdx-lh-normal);
+}
+
+// Body family (Roboto): 4-property full style
+.-hdx-body(@fs, @fw) {
+  font-family: var(--hdx-font-body);
+  font-size:   @fs;
+  font-weight: @fw;
+  line-height: var(--hdx-lh-normal);
+}
+
+// Body family: 3-property base (no font-size)
+.-hdx-body-base(@fw) {
+  font-family: var(--hdx-font-body);
+  font-weight: @fw;
+  line-height: var(--hdx-lh-normal);
+}
+
+// Link family (Roboto medium + underline): 5-property full style
+.-hdx-link(@fs, @lh) {
+  font-family:     var(--hdx-font-body);
+  font-size:       @fs;
+  font-weight:     var(--hdx-fw-medium);
+  line-height:     @lh;
+  text-decoration: underline;
+}
+
+
+// ── Typography — named type-style mixins ───────────────────────
+
+// Display  (Merriweather, 130% line-height)
+.hdx-display-xl()          { .-hdx-display(var(--hdx-fs-5xl), var(--hdx-fw-bold));     }  // 48px bold
+.hdx-display-l()           { .-hdx-display(var(--hdx-fs-4xl), var(--hdx-fw-bold));     }  // 32px bold
+.hdx-display-m()           { .-hdx-display(var(--hdx-fs-3xl), var(--hdx-fw-bold));     }  // 28px bold
+.hdx-display-s()           { .-hdx-display(var(--hdx-fs-2xl), var(--hdx-fw-bold));     }  // 24px bold
+.hdx-display-xs()          { .-hdx-display(var(--hdx-fs-xl),  var(--hdx-fw-bold));     }  // 20px bold
+.hdx-display-xs-semibold() { .-hdx-display(var(--hdx-fs-xl),  var(--hdx-fw-semibold)); }  // 20px semibold
+
+// Heading  (Roboto, 130% line-height)
+.hdx-heading-h1() { .-hdx-body(var(--hdx-fs-2xl), var(--hdx-fw-medium));   }  // 24px medium
+.hdx-heading-h2() { .-hdx-body(var(--hdx-fs-xl),  var(--hdx-fw-semibold)); }  // 20px semibold
+.hdx-heading-h3() { .-hdx-body(var(--hdx-fs-l),   var(--hdx-fw-semibold)); }  // 18px semibold
+.hdx-heading-h4() { .-hdx-body(var(--hdx-fs-m),   var(--hdx-fw-semibold)); }  // 16px semibold
+
+// Lead text  (Roboto regular, 130% line-height)
+.hdx-lead() { .-hdx-body(var(--hdx-fs-2xl), var(--hdx-fw-regular)); }  // 24px regular
+
+// Body  (Roboto, 130% line-height)
+//   Sizes: L (18px) / M (16px) / S (14px) / XS (12px)
+//   Weights per size: semibold (600) / medium (500) / regular (400)
+.hdx-body-l-semibold()  { .-hdx-body(var(--hdx-fs-l),  var(--hdx-fw-semibold)); }
+.hdx-body-l-medium()    { .-hdx-body(var(--hdx-fs-l),  var(--hdx-fw-medium));   }
+.hdx-body-l()           { .-hdx-body(var(--hdx-fs-l),  var(--hdx-fw-regular));  }
+
+.hdx-body-m-semibold()  { .-hdx-body(var(--hdx-fs-m),  var(--hdx-fw-semibold)); }
+.hdx-body-m-medium()    { .-hdx-body(var(--hdx-fs-m),  var(--hdx-fw-medium));   }
+.hdx-body-m()           { .-hdx-body(var(--hdx-fs-m),  var(--hdx-fw-regular));  }
+
+.hdx-body-s-semibold()  { .-hdx-body(var(--hdx-fs-s),  var(--hdx-fw-semibold)); }
+.hdx-body-s-medium()    { .-hdx-body(var(--hdx-fs-s),  var(--hdx-fw-medium));   }
+.hdx-body-s()           { .-hdx-body(var(--hdx-fs-s),  var(--hdx-fw-regular));  }
+
+.hdx-body-xs-semibold() { .-hdx-body(var(--hdx-fs-xs), var(--hdx-fw-semibold)); }
+.hdx-body-xs-medium()   { .-hdx-body(var(--hdx-fs-xs), var(--hdx-fw-medium));   }
+.hdx-body-xs()          { .-hdx-body(var(--hdx-fs-xs), var(--hdx-fw-regular));  }
+
+// Link text  (Roboto medium, underlined — use var(--hdx-primary-5) for color)
+//   XL uses 120% line-height; L–XS use 130%.
+.hdx-link-xl() { .-hdx-link(var(--hdx-fs-xl),  var(--hdx-lh-tight));  }  // 20px, 120% lh
+.hdx-link-l()  { .-hdx-link(var(--hdx-fs-l),   var(--hdx-lh-normal)); }  // 18px
+.hdx-link-m()  { .-hdx-link(var(--hdx-fs-m),   var(--hdx-lh-normal)); }  // 16px
+.hdx-link-s()  { .-hdx-link(var(--hdx-fs-s),   var(--hdx-lh-normal)); }  // 14px
+.hdx-link-xs() { .-hdx-link(var(--hdx-fs-xs),  var(--hdx-lh-normal)); }  // 12px
+
+// Base-style mixins (no font-size — for use in component base classes where
+// font-size is controlled by a size modifier rather than the base class)
+.hdx-display-bold-base()  { .-hdx-display-base(var(--hdx-fw-bold));     }
+.hdx-body-regular-base()  { .-hdx-body-base(var(--hdx-fw-regular));     }
+.hdx-body-medium-base()   { .-hdx-body-base(var(--hdx-fw-medium));      }
+.hdx-body-semibold-base() { .-hdx-body-base(var(--hdx-fw-semibold));    }
