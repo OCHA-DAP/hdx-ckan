@@ -820,6 +820,46 @@ def hdx_location_dict(include_world=True):
     return OrderedDict(list(top_locations.items()) + list(bottom_locations.items()))
 
 
+def hdx_get_locations(hrp=None):
+    """
+    Return a filtered list of location groups from the cached group list,
+    ordered by ``display_name`` ascending (accent-aware, via the cache layer).
+
+    Each item in the returned list contains:
+        - id
+        - name
+        - display_name
+        - package_count
+        - hrp (bool) – ``True`` when ``activity_level == 'active'``, ``False`` otherwise
+
+    :param hrp: Optional filter. ``True`` returns only locations with
+                ``activity_level='active'``, ``False`` returns locations where
+                ``activity_level`` is anything other than ``'active'`` (including
+                missing values), ``None`` returns all.
+    :type hrp: bool or None
+    :rtype: list[dict]
+    """
+    try:
+        locations = logic.get_action('cached_group_list')({}, {})
+    except Exception:
+        return []
+
+    result = []
+    for loc in locations:
+        is_hrp = loc.get('activity_level') == 'active'
+        if hrp is not None and is_hrp != hrp:
+            continue
+        result.append({
+            'id': loc['id'],
+            'name': loc['name'],
+            'display_name': loc['display_name'],
+            'package_count': loc.get('package_count'),
+            'hrp': is_hrp,
+        })
+
+    return result
+
+
 def hdx_user_orgs_dict(user_id, include_org_type=False):
     try:
         orgs = _get_action('organization_list_for_user', {'id': user_id})

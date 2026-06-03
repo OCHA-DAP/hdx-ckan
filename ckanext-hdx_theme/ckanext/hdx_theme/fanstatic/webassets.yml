@@ -269,6 +269,16 @@ v2-page-styles:
     - v2/footer.css
     - v2/navbar.css
     - v2/styles.css
+    - v2/bar-chart.css
+
+v2-homepage-scripts:
+  <<: *common-js
+  output: ckanext-hdx_theme/%(version)s_v2-homepage-scripts.js
+  extra:
+    preload:
+      - hdx_theme/v2-page-scripts
+  contents:
+    - homepage/bar-chart.js
 
 v2-page-scripts:
   <<: *common-js

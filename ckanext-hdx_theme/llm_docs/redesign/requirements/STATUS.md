@@ -46,3 +46,4 @@
 | 040 | [resource-page](040-resource-page.md)                                                                           | implemented | |
 | 041 | [accessibility-wcag-audit](041-accessibility-wcag-audit.md)                                                     | implemented | |
 | 042 | [v2-audit-standardization](042-v2-audit-standardization.md)                                                     | implemented | |
+| 044 | [homepage-dynamic-bar-chart](044-homepage-dynamic-bar-chart.md)                                                 | implemented | |
