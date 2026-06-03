@@ -2,7 +2,6 @@
   width: 100%;
   background-color: var(--hdx-brand-7);
   padding-top: 8rem;
-  padding-bottom: 4rem;
 }
 @media (min-width: 48rem) {
   .hdx-v2-hero {

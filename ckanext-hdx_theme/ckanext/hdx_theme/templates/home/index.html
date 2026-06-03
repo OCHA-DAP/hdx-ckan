@@ -44,6 +44,33 @@
   </div>
 </section>
 
+{% set _hrp_filtered = h.hdx_get_locations(hrp=True) | selectattr('package_count') | list %}
+{% if _hrp_filtered %}
+  {% set _hrp_max = _hrp_filtered | map(attribute='package_count') | max %}
+  <section class="hdx-v2-barchart">
+    <div class="hdx-v2-barchart__inner">
+
+      <div class="hdx-v2-barchart__label" aria-live="polite" aria-atomic="true">
+        <span class="hdx-v2-barchart__label-name"></span>
+        <span class="hdx-v2-barchart__label-count"></span>
+        <span class="hdx-v2-barchart__dot" aria-hidden="true">{% include 'v2/icons/dot.svg' %}</span>
+      </div>
+
+      <div class="hdx-v2-barchart__bars"
+           data-interval="2000">
+        {% for loc in _hrp_filtered %}
+        <div class="hdx-v2-barchart__bar"
+             style="--bar-height: {{ (loc.package_count / _hrp_max * 100) | round(2) }}%"
+             data-name="{{ loc.display_name | e }}"
+             data-count="{{ loc.package_count }}">
+        </div>
+        {% endfor %}
+      </div>
+
+    </div>
+  </section>
+{% endif %}
+
   {% if alert_bar and alert_bar.url %}
     {% snippet 'snippets/full_width_alert_bar.html', alert_bar_url=alert_bar.url, alert_bar_title=alert_bar.title %}
   {% endif %}
@@ -136,6 +163,7 @@
 
 {% block head_extras %}
   {{ super() }}
+  {% asset 'hdx_theme/v2-homepage-scripts' %}
   {% if structured_data %}
     <script type="application/ld+json">
       {{ structured_data | safe }}

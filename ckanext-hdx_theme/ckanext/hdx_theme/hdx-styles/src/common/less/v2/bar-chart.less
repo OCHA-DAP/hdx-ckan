@@ -1,0 +1,87 @@
+@import "mixins.less";
+
+// ============================================================
+// hdx-v2-barchart — homepage HRP dataset count bar chart
+// Figma: llm_docs/redesign/figma_exports/home-bar-chart.html
+// ============================================================
+
+.hdx-v2-barchart {
+    background-color: var(--hdx-brand-7);
+    overflow: hidden;
+
+    &__inner {
+        position:    relative;
+        padding-top: 5rem;  // moved from hero padding-bottom; space for label above bars
+    }
+
+    &__bars {
+        display:         flex;
+        align-items:     flex-end;
+        justify-content: space-between;
+        gap:             var(--hdx-space-13);  // 6px SM
+        height:          17.625rem;
+        position:        relative;
+
+        @media (min-width: @hdx-bp-md) { gap: var(--hdx-space-3); }   // ~12px MD
+        @media (min-width: @hdx-bp-xl) { gap: var(--hdx-space-5); }   // 20px XL
+    }
+
+    &__bar {
+        // --bar-height is set per-element by Jinja: style="--bar-height: {pct}%"
+        width:            var(--hdx-space-2);  // 8px
+        height:           var(--bar-height, 10%);
+        background-color: var(--hdx-overlay-white-20);
+        transition:       background-color 300ms linear;
+        flex-shrink:      0;
+
+        &.is-active {
+            background-color: var(--hdx-overlay-white-90);
+        }
+
+        @media (prefers-reduced-motion: reduce) { transition: none; }
+    }
+
+    &__label {
+        // --label-top and --label-offset are both set by JS on each cycle
+        position:       absolute;
+        top:            var(--label-top, 0);
+        left:           0;
+        display:        flex;
+        flex-direction: column;
+        align-items:    center;
+        text-align:     center;
+        gap:            0.187rem;
+        color:          var(--hdx-neutral-0);
+        font-family:    var(--hdx-font-body);
+        font-size:      var(--hdx-fs-s);
+        transform:      translateX(var(--label-offset, 0px));
+        transition:     transform 300ms linear, top 300ms linear;
+        pointer-events: none;
+
+        @media (prefers-reduced-motion: reduce) { transition: none; }
+    }
+
+    &__label-name,
+    &__label-count {
+        line-height: var(--hdx-lh-normal);
+        text-shadow: 3px 0 0 var(--hdx-brand-7), 0 3px 0 var(--hdx-brand-7),
+                     -3px 0 0 var(--hdx-brand-7), 0 -3px 0 var(--hdx-brand-7);
+    }
+
+    &__label-name {
+        font-weight: var(--hdx-fw-semibold);
+    }
+
+    &__dot {
+        display:     block;
+        width:       var(--hdx-space-6);  // 1.5rem / 24px
+        height:      var(--hdx-space-6);
+        flex-shrink: 0;
+
+        svg {
+            width:   100%;
+            height:  100%;
+            display: block;
+        }
+    }
+}

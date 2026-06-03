@@ -839,7 +839,10 @@ def hdx_get_locations(hrp=None):
     :type hrp: bool or None
     :rtype: list[dict]
     """
-    locations = logic.get_action('cached_group_list')({}, {})
+    try:
+        locations = logic.get_action('cached_group_list')({}, {})
+    except Exception:
+        return []
 
     result = []
     for loc in locations:
