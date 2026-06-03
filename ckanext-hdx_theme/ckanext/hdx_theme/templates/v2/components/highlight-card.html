@@ -1,0 +1,43 @@
+{#
+  Snippet: highlight-card.html
+  Path:    templates/v2/components/highlight-card.html
+
+  Renders a single highlight card for the homepage curated highlights section.
+
+  Parameters
+  ─────────────────────────────────────────────────
+  image_url           {string}  Hero image URL. Empty → placeholder div. Required.
+  title               {string}  Card heading (single-line, truncated). Required.
+  href                {string}  Link target — entire card is an <a>. Required.
+  subtitle            {string}  Metadata row below title. Not shown in this iteration. default: ''
+  open_new_tab        {bool}    Adds target="_blank" rel="noopener noreferrer". default: false
+  analytics_link_type {string}  hdx_click_stopper link_type value. default: 'carousel'
+  ─────────────────────────────────────────────────
+#}
+
+{% set open_new_tab        = open_new_tab        if open_new_tab        is defined else false %}
+{% set analytics_link_type = analytics_link_type if analytics_link_type is defined else 'carousel' %}
+{% set subtitle            = subtitle            if subtitle            is defined else '' %}
+
+<a class="c-highlight-card"
+   href="{{ href }}"
+   {% if open_new_tab %}target="_blank" rel="noopener noreferrer"{% endif %}
+   data-module="hdx_click_stopper"
+   data-module-link_type="{{ analytics_link_type }}">
+
+  {% if image_url %}
+    <img class="c-highlight-card__image" src="{{ image_url }}" alt="{{ title }}" loading="lazy">
+  {% else %}
+    <div class="c-highlight-card__image c-highlight-card__image--placeholder"></div>
+  {% endif %}
+
+  <div class="c-highlight-card__body">
+    <div class="c-highlight-card__title">{{ title }}</div>
+    {% if subtitle %}
+      <div class="c-highlight-card__subtitle">{{ subtitle }}</div>
+    {% else %}
+      <div class="c-highlight-card__subtitle" aria-hidden="true"></div>
+    {% endif %}
+  </div>
+
+</a>
