@@ -151,3 +151,9 @@ class TestHdxGetLocations:
         result = self._call(groups, hrp=True)
         assert result == []
 
+    def test_missing_activity_level_included_by_hrp_false(self):
+        groups = [{'id': '99', 'name': 'unknown', 'display_name': 'Unknown', 'package_count': 0}]
+        result = self._call(groups, hrp=False)
+        assert len(result) == 1
+        assert result[0]['name'] == 'unknown'
+        assert result[0]['hrp'] is False

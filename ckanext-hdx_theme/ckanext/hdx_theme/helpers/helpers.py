@@ -825,9 +825,6 @@ def hdx_get_locations(hrp=None):
     Return a filtered list of location groups from the cached group list,
     ordered by ``display_name`` ascending (accent-aware, via the cache layer).
 
-    ``cached_group_list`` already returns only approved groups of type
-    ``'group'``, so no additional filtering on those fields is needed here.
-
     Each item in the returned list contains:
         - id
         - name
@@ -836,25 +833,26 @@ def hdx_get_locations(hrp=None):
         - hrp (bool) – ``True`` when ``activity_level == 'active'``, ``False`` otherwise
 
     :param hrp: Optional filter. ``True`` returns only locations with
-                ``activity_level='active'``, ``False`` returns only locations with
-                ``activity_level='inactive'``, ``None`` returns all.
+                ``activity_level='active'``, ``False`` returns locations where
+                ``activity_level`` is anything other than ``'active'`` (including
+                missing values), ``None`` returns all.
     :type hrp: bool or None
     :rtype: list[dict]
     """
     locations = logic.get_action('cached_group_list')({}, {})
 
-    result = [
-        {
+    result = []
+    for loc in locations:
+        is_hrp = loc.get('activity_level') == 'active'
+        if hrp is not None and is_hrp != hrp:
+            continue
+        result.append({
             'id': loc['id'],
             'name': loc['name'],
             'display_name': loc['display_name'],
             'package_count': loc.get('package_count'),
             'hrp': is_hrp,
-        }
-        for loc in locations
-        for is_hrp in (loc.get('activity_level') == 'active',)
-        if hrp is None or is_hrp == hrp
-    ]
+        })
 
     return result
 
