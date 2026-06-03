@@ -44,3 +44,5 @@
 | 038 | [resource-card](038-resource-card.md)                                                                           | implemented | |
 | 039 | [dataset-page](039-dataset-page.md)                                                                             | implemented | |
 | 040 | [resource-page](040-resource-page.md)                                                                           | implemented | |
+| 041 | [accessibility-wcag-audit](041-accessibility-wcag-audit.md)                                                     | implemented | |
+| 042 | [v2-audit-standardization](042-v2-audit-standardization.md)                                                     | implemented | |

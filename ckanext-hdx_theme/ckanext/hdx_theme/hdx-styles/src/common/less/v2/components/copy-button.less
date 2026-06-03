@@ -3,6 +3,8 @@
 // Used in the page header metadata strip and API section.
 // ============================================================
 
+@import "../mixins.less";
+
 .c-copy-button {
     display:         inline-flex;
     align-items:     center;
@@ -10,9 +12,7 @@
     background:      none;
     cursor:          pointer;
     border-radius:   var(--hdx-radius-sm);
-    font-family:     var(--hdx-font-body);
-    font-weight:     var(--hdx-fw-medium);
-    line-height:     var(--hdx-lh-normal);
+    .hdx-body-medium-base();
     padding:         0;
     text-decoration: none;
     white-space:     nowrap;
@@ -60,12 +60,12 @@
     &--secondary {
         color: var(--hdx-neutral-8);
 
-        &:hover { color: var(--hdx-primary-main); }
+        &:hover { color: var(--hdx-primary-5); }
     }
 
     // ── Style: tertiary ──────────────────────────────────────
     &--tertiary {
-        color: var(--hdx-neutral-55);
+        color: var(--hdx-neutral-5);
 
         &:hover { color: var(--hdx-neutral-85); }
     }

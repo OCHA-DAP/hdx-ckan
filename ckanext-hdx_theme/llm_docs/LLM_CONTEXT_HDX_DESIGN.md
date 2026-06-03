@@ -66,8 +66,10 @@ There are three active layout base templates. The goal is to maintain exactly th
   - Loads `hdx_theme/page-light-styles` and `hdx_theme/page-light-scripts`.
 - `ckanext-hdx_theme/ckanext/hdx_theme/templates/v2/page.html`
   - New v2 layout. Extends `base.html` directly.
-  - Loads Google Fonts, `hdx_theme/v2-page-styles` (Bootstrap + grid + components), and `hdx_theme/v2-components-scripts`.
-  - Includes `v2/header.html` and `v2/footer.html` (fully implemented).
+  - Loads Google Fonts and `hdx_theme/v2-page-styles`; legacy onboarding and `page-scripts` bundles commented out.
+  - `{% block toolbar %}` renders the breadcrumb row; pages override only `{% block breadcrumb_items %}` inside it.
+  - Flash messages use `hdx-v2-flash {{ category }}` class (no Bootstrap `.alert`).
+  - Includes `v2/header.html` and `v2/footer.html` via `{% snippet %}`.
   - Target base for all pages once the v2 redesign is complete.
 
 ## Header and footer composition (HDX theme)
@@ -87,7 +89,7 @@ There are three active layout base templates. The goal is to maintain exactly th
 - `ckanext-hdx_theme/ckanext/hdx_theme/templates/v2/header.html` — top-bar + responsive navbar (fully implemented)
 - `ckanext-hdx_theme/ckanext/hdx_theme/templates/v2/footer.html` — dark-teal footer panel (fully implemented)
 
-Pages in holding state on `page_light.html` (landing pages, signup, org/join, etc.) manually override `{% block header_core %}` to include the legacy `header-mobile.html`. The homepage and dataset search page have already been migrated to `v2/page.html`. See [**redesign/PROGRESS.md**](redesign/PROGRESS.md) for the full holding-state and migrated-pages lists.
+Pages in holding state on `page_light.html` (landing pages, signup, org/join, etc.) manually override `{% block header_core %}` to include the legacy `header-mobile.html`. The homepage, dataset search, dataset, and resource pages have already been migrated to `v2/page.html`. See [**redesign/PROGRESS.md**](redesign/PROGRESS.md) for the full holding-state and migrated-pages lists.
 
 ## BEM components (HDX custom UI blocks)
 

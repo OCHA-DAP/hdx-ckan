@@ -4,7 +4,7 @@
 // Compiled output: fanstatic/v2/dataset.css
 // ============================================================
 
-@import "breakpoints.less";
+@import "mixins.less";
 
 .hdx-v2-dataset-row {
   background-color: var(--hdx-neutral-0);
@@ -18,29 +18,21 @@
         gap: var(--hdx-space-6); // 1.5rem flex gap between sidebar and content
     }
 }
-
-
 // ── Dataset sidebar (wrapper-secondary at XL) ──────────────────
 .hdx-v2-dataset-sidebar {
+    .v2-sidebar-flex();
     display: none;
 
     @media (min-width: @hdx-bp-xl) {
-        display:      block;
-        flex:         0 0 25%;
-        padding:      var(--hdx-space-12) 0; // 3rem top/bottom
+        display:  block;
+        padding:  var(--hdx-space-12) 0; // 48px top/bottom
     }
 }
-
-
 // ── Dataset content (wrapper-primary) ─────────────────────────
 // No horizontal padding — container provides 1rem/3rem sides.
-// Column gap at XL comes from flex gap on .hdx-v2-dataset-layout.
 .hdx-v2-dataset-content {
-    flex:      1;
-    min-width: 0;
+    .v2-content-flex();
 }
-
-
 // ── Section wrapper ───────────────────────────────────────────
 // Sections are separated by <hr class="c-divider"> in the template.
 .hdx-v2-dataset-section {
@@ -62,10 +54,7 @@
     }
 
     &__title {
-        font-family: var(--hdx-font-display);
-        font-size:   var(--hdx-fs-xl);
-        font-weight: var(--hdx-fw-semibold);
-        line-height: var(--hdx-lh-normal);
+        .hdx-display-xs-semibold();
         color:       var(--hdx-neutral-95);
         margin:      0;
     }
@@ -108,8 +97,6 @@
         }
     }
 }
-
-
 // ── Metadata grid ─────────────────────────────────────────────
 .hdx-v2-dataset-metadata {
     display:        flex;
@@ -139,11 +126,8 @@
     }
 
     &__label {
-        font-family: var(--hdx-font-body);
-        font-size:   var(--hdx-fs-m);
-        font-weight: var(--hdx-fw-semibold);
-        line-height: var(--hdx-lh-normal);
-        color:       var(--hdx-neutral-85);
+        .hdx-heading-h4();
+        color: var(--hdx-neutral-85);
     }
 
     &__label-row {
@@ -160,11 +144,8 @@
     }
 
     &__value {
-        font-family: var(--hdx-font-body);
-        font-size:   var(--hdx-fs-m);
-        font-weight: var(--hdx-fw-regular);
-        line-height: var(--hdx-lh-normal);
-        color:       var(--hdx-neutral-85);
+        .hdx-body-m();
+        color: var(--hdx-neutral-85);
 
         &--tags {
             display:   flex;
@@ -186,8 +167,6 @@
         min-height: 4rem;
     }
 }
-
-
 // ── Showcase grid ─────────────────────────────────────────────
 .hdx-v2-dataset-showcase-grid {
     display:               grid;

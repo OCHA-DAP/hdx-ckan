@@ -2,9 +2,9 @@
   display: inline;
   font-family: var(--hdx-font-body);
   font-weight: var(--hdx-fw-medium);
+  line-height: var(--hdx-lh-normal);
   text-decoration: underline;
   cursor: pointer;
-  line-height: 130%;
   transition: color 0.15s ease;
   background: none;
   border: none;

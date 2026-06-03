@@ -31,9 +31,24 @@ Exception: a single `@media` block may group multiple unrelated elements when th
 
 ---
 
+## Single compile-time import
+
+Any file that needs breakpoints, typography variables, or type-style mixins should import `mixins.less` only — it re-exports everything:
+
+```less
+@import "mixins.less";          // from less/v2/
+@import "../mixins.less";       // from less/v2/components/
+```
+
+`mixins.less` internally imports `breakpoints.less` and `typography.less`, so callers get all LESS variables and all mixin definitions in one line.
+
+**Exception:** `foundation.less` imports `typography.less` directly (to emit CSS custom properties). Do not change that import.
+
+---
+
 ## Breakpoints
 
-Defined **once** in `breakpoints.less`. Any file that uses breakpoints imports it. No local redefinitions.
+Defined **once** in `breakpoints.less`; pulled in automatically via `mixins.less`. No local redefinitions.
 
 | Variable | Value | px |
 |----------|-------|----|
@@ -198,3 +213,36 @@ Any user action that produces a success/error state must announce via a live reg
 statusEl.textContent = 'Copied to clipboard';
 setTimeout(function () { statusEl.textContent = ''; }, 2000);
 ```
+
+---
+
+## Template inclusion — `{% snippet %}` vs `{% include %}`
+
+| Target | Method | Rationale |
+|---|---|---|
+| v2 components | `{% snippet 'v2/components/...' %}` | Always — enables parameterisation |
+| v2 layout sections (header, footer) | `{% snippet 'v2/...' %}` | Consistency |
+| Inline SVG icons | `{% include h.url_for_static(path) %}` | Inlines SVG markup at render time |
+
+Never use `{% include %}` for parameterised v2 templates. The only accepted `{% include %}` pattern in v2 is SVG inlining via `h.url_for_static()`.
+
+---
+
+## Layout variable completeness
+
+Every template extending `v2/page.html` that uses the two-column layout MUST set all four layout variables at the top of the template:
+
+```jinja2
+{% set outer_row_class = '...' %}
+{% set columns_class   = '...' %}
+{% set sidebar_class   = '...' %}
+{% set content_class   = '...' %}
+```
+
+Leaving any of these unset produces an unclassed wrapper div and makes CSS targeting impossible.
+
+---
+
+## `v2=True` gate policy
+
+Pages are gated with `{% if v2 %}` during rollout and promoted to always-v2 when v1 is retired for that page. Do not remove a gate without a deliberate, documented decision.

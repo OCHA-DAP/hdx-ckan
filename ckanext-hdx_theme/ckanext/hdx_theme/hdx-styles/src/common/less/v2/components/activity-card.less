@@ -3,8 +3,7 @@
 // ============================================================
 // Figma source: llm_docs/redesign/figma_exports/hdx-activity-card.html
 // ============================================================
-
-@import "../breakpoints.less";
+@import "../mixins.less";
 
 // ── Local tokens ────────────────────────────────────────────
 
@@ -50,8 +49,6 @@
 @c-activity-card-sm-body-gap:     var(--hdx-space-3);  // 12px
 @c-activity-card-sm-heading-fs:   var(--hdx-fs-xl);    // 20px
 @c-activity-card-sm-subtitle-fs:  var(--hdx-fs-m);     // 16px
-
-
 // ────────────────────────────────────────────────────────────
 // c-activity-card — base
 // ────────────────────────────────────────────────────────────
@@ -104,9 +101,7 @@
 
     &__heading {
         align-self:  stretch;
-        font-family: @c-activity-card-heading-font;
-        font-weight: @c-activity-card-heading-fw;
-        line-height: @c-activity-card-heading-lh;
+        .hdx-display-bold-base();
         color:       @c-activity-card-heading-color;
         margin:      0;
     }

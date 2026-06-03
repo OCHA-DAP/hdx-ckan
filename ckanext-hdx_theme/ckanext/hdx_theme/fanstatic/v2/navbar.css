@@ -404,7 +404,7 @@
 }
 .hdx-v2-offcanvas {
   position: fixed;
-  top: calc(var(--hdx-top-bar-h, 2.125rem) + var(--hdx-navbar-h, 4rem));
+  top: calc(2.125rem + 4rem);
   left: 0;
   right: 0;
   bottom: 0;

@@ -225,7 +225,7 @@
   font-family: var(--hdx-font-body);
   font-size: var(--hdx-fs-s);
   font-weight: var(--hdx-fw-medium);
-  line-height: 130%;
+  line-height: var(--hdx-lh-normal);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;

@@ -4,6 +4,7 @@
 // ============================================================
 // Figma source: "Dropdown"
 // ============================================================
+@import "../mixins.less";
 
 // ── Local tokens ────────────────────────────────────────────
 @c-dropdown-bg:            var(--hdx-neutral-0);        // #fff
@@ -292,10 +293,7 @@
         box-sizing:       border-box;
         box-shadow:       @c-dropdown-panel-shadow;
         cursor:           pointer;
-        font-family:      var(--hdx-font-body);
-        font-size:        var(--hdx-fs-s);
-        font-weight:      var(--hdx-fw-medium);
-        line-height:      130%;
+        .hdx-body-s-medium();
         overflow:         hidden;
         text-overflow:    ellipsis;
         white-space:      nowrap;

@@ -322,17 +322,10 @@
       <div class="hdx-v2-page-header__meta-label-row">
         <span class="hdx-v2-page-header__meta-label">Time period</span>
         {% if time_period_tooltip %}
-          <div class="c-tooltip-anchor">
-            <button type="button" class="c-info-icon"
-                    aria-label="{{ _('More info about time period') }}"
-                    aria-expanded="false"
-                    aria-describedby="tooltip-time-period">
-              {% include 'v2/icons/info-circle.svg' %}
-            </button>
-            {% snippet 'v2/components/tooltip.html', variant='dark', arrow='',
-                text=_('The earliest start date and latest end date across all resources included in the dataset.'),
-                tooltip_id='tooltip-time-period' %}
-          </div>
+          {% snippet 'v2/components/info-icon.html',
+              aria_label=_('More info about time period'),
+              tooltip_text=_('The earliest start date and latest end date across all resources included in the dataset.'),
+              tooltip_id='tooltip-time-period' %}
         {% endif %}
       </div>
       <div class="hdx-v2-page-header__meta-value">
@@ -351,16 +344,9 @@
               extra_classes='hdx-v2-page-header__source-view-more' %}
         {% endif %}
         {% if source_tooltip %}
-          <div class="c-tooltip-anchor">
-            <button type="button" class="c-info-icon"
-                    aria-label="{{ _('More info about source') }}"
-                    aria-expanded="false"
-                    aria-describedby="tooltip-source">
-              {% include 'v2/icons/info-circle.svg' %}
-            </button>
-            {% snippet 'v2/components/tooltip.html', variant='dark', arrow='', text=_(' '),
-                tooltip_id='tooltip-source' %}
-          </div>
+          {% snippet 'v2/components/info-icon.html',
+              aria_label=_('More info about source'),
+              tooltip_id='tooltip-source' %}
         {% endif %}
       </div>
       <div class="hdx-v2-page-header__meta-value hdx-v2-page-header__meta-value--source">

@@ -2,9 +2,9 @@
 
 {% block subtitle %}{{ _('Components') }}{% endblock %}
 
-{% block content %}
-
-<style>
+{% block styles %}
+  {{ super() }}
+  <style>
   .demo-page {
     margin-top: 3rem;
     margin-bottom: 3rem;
@@ -250,10 +250,15 @@
     font-family: monospace;
     text-align: center;
   }
-</style>
+  </style>
+{% endblock %}
 
+{% block breadcrumb_items %}
+  {% snippet 'v2/components/breadcrumb.html', items=[{'label': _('Components'), 'href': ''}] %}
+{% endblock %}
+
+{% block primary_content %}
 <div class="demo-page">
-  <div class="container">
 
   {# ══════════════════════════════════════════════════════
      0. FOUNDATION / TOKENS
@@ -403,6 +408,58 @@
         <p style="font-size:0.625rem;color:#9db1b3;font-family:monospace;margin:0 0 0.5rem">--hdx-lh-normal · 1.3</p>
         <div class="demo-lh-block" style="line-height:var(--hdx-lh-normal,1.3)">Humanitarian needs remain acute in many parts of the world. Millions of people depend on timely access to data and resources to survive and recover.</div>
       </div>
+    </div>
+
+    <hr class="demo-divider">
+
+    {# ── Named type-style mixins ─────────────────────── #}
+
+    <h2 class="demo-subsection__heading">Named type-style mixins — Display (Merriweather)</h2>
+    <div style="margin-bottom:1.5rem">
+      {% set _d = 'font-family:var(--hdx-font-display);line-height:var(--hdx-lh-normal)' %}
+      <div class="demo-type-row"><span class="demo-type-row__label">.hdx-display-xl · 48px bold</span>     <span class="demo-type-row__sample" style="{{ _d }};font-size:var(--hdx-fs-5xl);font-weight:var(--hdx-fw-bold)">Humanitarian Data</span></div>
+      <div class="demo-type-row"><span class="demo-type-row__label">.hdx-display-l · 32px bold</span>      <span class="demo-type-row__sample" style="{{ _d }};font-size:var(--hdx-fs-4xl);font-weight:var(--hdx-fw-bold)">Humanitarian Data Exchange</span></div>
+      <div class="demo-type-row"><span class="demo-type-row__label">.hdx-display-m · 28px bold</span>      <span class="demo-type-row__sample" style="{{ _d }};font-size:var(--hdx-fs-3xl);font-weight:var(--hdx-fw-bold)">Humanitarian Data Exchange</span></div>
+      <div class="demo-type-row"><span class="demo-type-row__label">.hdx-display-s · 24px bold</span>      <span class="demo-type-row__sample" style="{{ _d }};font-size:var(--hdx-fs-2xl);font-weight:var(--hdx-fw-bold)">Humanitarian Data Exchange — page heading</span></div>
+      <div class="demo-type-row"><span class="demo-type-row__label">.hdx-display-xs · 20px bold</span>     <span class="demo-type-row__sample" style="{{ _d }};font-size:var(--hdx-fs-xl);font-weight:var(--hdx-fw-bold)">Humanitarian Data Exchange — section title</span></div>
+      <div class="demo-type-row"><span class="demo-type-row__label">.hdx-display-xs-semibold · 20px 600</span><span class="demo-type-row__sample" style="{{ _d }};font-size:var(--hdx-fs-xl);font-weight:var(--hdx-fw-semibold)">Humanitarian Data Exchange — section title</span></div>
+    </div>
+
+    <h2 class="demo-subsection__heading">Named type-style mixins — Heading + Lead (Roboto)</h2>
+    <div style="margin-bottom:1.5rem">
+      {% set _b = 'font-family:var(--hdx-font-body);line-height:var(--hdx-lh-normal)' %}
+      <div class="demo-type-row"><span class="demo-type-row__label">.hdx-heading-h1 · 24px 500</span><span class="demo-type-row__sample" style="{{ _b }};font-size:var(--hdx-fs-2xl);font-weight:var(--hdx-fw-medium)">Dataset Title</span></div>
+      <div class="demo-type-row"><span class="demo-type-row__label">.hdx-heading-h2 · 20px 600</span><span class="demo-type-row__sample" style="{{ _b }};font-size:var(--hdx-fs-xl);font-weight:var(--hdx-fw-semibold)">Section Heading</span></div>
+      <div class="demo-type-row"><span class="demo-type-row__label">.hdx-heading-h3 · 18px 600</span><span class="demo-type-row__sample" style="{{ _b }};font-size:var(--hdx-fs-l);font-weight:var(--hdx-fw-semibold)">Subsection Heading</span></div>
+      <div class="demo-type-row"><span class="demo-type-row__label">.hdx-heading-h4 · 16px 600</span><span class="demo-type-row__sample" style="{{ _b }};font-size:var(--hdx-fs-m);font-weight:var(--hdx-fw-semibold)">Card or metadata label</span></div>
+      <div class="demo-type-row"><span class="demo-type-row__label">.hdx-lead · 24px 400</span>       <span class="demo-type-row__sample" style="{{ _b }};font-size:var(--hdx-fs-2xl);font-weight:var(--hdx-fw-regular)">Introductory paragraph text</span></div>
+    </div>
+
+    <h2 class="demo-subsection__heading">Named type-style mixins — Body (Roboto)</h2>
+    <div style="margin-bottom:1.5rem">
+      {% set _b = 'font-family:var(--hdx-font-body);line-height:var(--hdx-lh-normal)' %}
+      <div class="demo-type-row"><span class="demo-type-row__label">.hdx-body-l-semibold · 18px 600</span><span class="demo-type-row__sample" style="{{ _b }};font-size:var(--hdx-fs-l);font-weight:var(--hdx-fw-semibold)">Body text large semibold</span></div>
+      <div class="demo-type-row"><span class="demo-type-row__label">.hdx-body-l-medium · 18px 500</span>  <span class="demo-type-row__sample" style="{{ _b }};font-size:var(--hdx-fs-l);font-weight:var(--hdx-fw-medium)">Body text large medium</span></div>
+      <div class="demo-type-row"><span class="demo-type-row__label">.hdx-body-l · 18px 400</span>         <span class="demo-type-row__sample" style="{{ _b }};font-size:var(--hdx-fs-l);font-weight:var(--hdx-fw-regular)">Body text large regular</span></div>
+      <div class="demo-type-row"><span class="demo-type-row__label">.hdx-body-m-semibold · 16px 600</span><span class="demo-type-row__sample" style="{{ _b }};font-size:var(--hdx-fs-m);font-weight:var(--hdx-fw-semibold)">Body text medium semibold</span></div>
+      <div class="demo-type-row"><span class="demo-type-row__label">.hdx-body-m-medium · 16px 500</span>  <span class="demo-type-row__sample" style="{{ _b }};font-size:var(--hdx-fs-m);font-weight:var(--hdx-fw-medium)">Body text medium medium</span></div>
+      <div class="demo-type-row"><span class="demo-type-row__label">.hdx-body-m · 16px 400</span>         <span class="demo-type-row__sample" style="{{ _b }};font-size:var(--hdx-fs-m);font-weight:var(--hdx-fw-regular)">Body text medium regular</span></div>
+      <div class="demo-type-row"><span class="demo-type-row__label">.hdx-body-s-semibold · 14px 600</span><span class="demo-type-row__sample" style="{{ _b }};font-size:var(--hdx-fs-s);font-weight:var(--hdx-fw-semibold)">Body text small semibold</span></div>
+      <div class="demo-type-row"><span class="demo-type-row__label">.hdx-body-s-medium · 14px 500</span>  <span class="demo-type-row__sample" style="{{ _b }};font-size:var(--hdx-fs-s);font-weight:var(--hdx-fw-medium)">Body text small medium</span></div>
+      <div class="demo-type-row"><span class="demo-type-row__label">.hdx-body-s · 14px 400</span>         <span class="demo-type-row__sample" style="{{ _b }};font-size:var(--hdx-fs-s);font-weight:var(--hdx-fw-regular)">Body text small regular</span></div>
+      <div class="demo-type-row"><span class="demo-type-row__label">.hdx-body-xs-semibold · 12px 600</span><span class="demo-type-row__sample" style="{{ _b }};font-size:var(--hdx-fs-xs);font-weight:var(--hdx-fw-semibold)">Body text xs semibold</span></div>
+      <div class="demo-type-row"><span class="demo-type-row__label">.hdx-body-xs-medium · 12px 500</span> <span class="demo-type-row__sample" style="{{ _b }};font-size:var(--hdx-fs-xs);font-weight:var(--hdx-fw-medium)">Body text xs medium</span></div>
+      <div class="demo-type-row"><span class="demo-type-row__label">.hdx-body-xs · 12px 400</span>         <span class="demo-type-row__sample" style="{{ _b }};font-size:var(--hdx-fs-xs);font-weight:var(--hdx-fw-regular)">Body text xs regular</span></div>
+    </div>
+
+    <h2 class="demo-subsection__heading">Named type-style mixins — Links (Roboto medium, underlined)</h2>
+    <div style="margin-bottom:1.5rem">
+      {% set _l = 'font-family:var(--hdx-font-body);font-weight:var(--hdx-fw-medium);text-decoration:underline;color:var(--hdx-primary-5)' %}
+      <div class="demo-type-row"><span class="demo-type-row__label">.hdx-link-xl · 20px 120%lh</span><span class="demo-type-row__sample" style="{{ _l }};font-size:var(--hdx-fs-xl);line-height:var(--hdx-lh-tight)">Read the full report</span></div>
+      <div class="demo-type-row"><span class="demo-type-row__label">.hdx-link-l · 18px</span>         <span class="demo-type-row__sample" style="{{ _l }};font-size:var(--hdx-fs-l);line-height:var(--hdx-lh-normal)">Read the full report</span></div>
+      <div class="demo-type-row"><span class="demo-type-row__label">.hdx-link-m · 16px</span>         <span class="demo-type-row__sample" style="{{ _l }};font-size:var(--hdx-fs-m);line-height:var(--hdx-lh-normal)">Read the full report</span></div>
+      <div class="demo-type-row"><span class="demo-type-row__label">.hdx-link-s · 14px</span>         <span class="demo-type-row__sample" style="{{ _l }};font-size:var(--hdx-fs-s);line-height:var(--hdx-lh-normal)">Read the full report</span></div>
+      <div class="demo-type-row"><span class="demo-type-row__label">.hdx-link-xs · 12px</span>        <span class="demo-type-row__sample" style="{{ _l }};font-size:var(--hdx-fs-xs);line-height:var(--hdx-lh-normal)">Read the full report</span></div>
     </div>
 
     <hr class="demo-divider">
@@ -1084,6 +1141,34 @@
           ] %}
 
     </div>
+
+    <h2 class="demo-subsection__heading">Info icon (c-info-icon + tooltip)</h2>
+    <div class="demo-row demo-row--flex-start" style="gap:2rem">
+
+      {# Basic — dark tooltip, no arrow #}
+      {% snippet 'v2/components/info-icon.html',
+          aria_label='More info about time period',
+          tooltip_text='The earliest start date and latest end date across all resources included in the dataset.',
+          tooltip_id='demo-tooltip-time-period' %}
+
+      {# With arrow above #}
+      {% snippet 'v2/components/info-icon.html',
+          aria_label='More info about source',
+          tooltip_text='The organisation that collected or compiled this data.',
+          tooltip_id='demo-tooltip-source',
+          arrow='above' %}
+
+    </div>
+
+    <h2 class="demo-subsection__heading">Info icon — inline with metadata label</h2>
+    <div class="demo-row" style="align-items:center;gap:0.25rem">
+      <span style="font-size:var(--hdx-fs-m);font-weight:var(--hdx-fw-semibold);color:var(--hdx-neutral-85)">Modified</span>
+      {% snippet 'v2/components/info-icon.html',
+          aria_label='More info about modified date',
+          tooltip_text='The date of the most recent change to any data or metadata.',
+          tooltip_id='demo-tooltip-modified' %}
+    </div>
+
   </section>
 
   <hr class="demo-divider">
@@ -1532,7 +1617,6 @@
 
   </section>
 
-  </div>{# /container #}
 </div>{# /demo-page #}
 
 {% endblock %}

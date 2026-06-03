@@ -429,6 +429,7 @@
   padding: var(--hdx-space-15) 0;
 }
 .hdx-v2-page-header__meta-label {
+  font-family: var(--hdx-font-body);
   font-size: var(--hdx-fs-s);
   font-weight: var(--hdx-fw-semibold);
   line-height: var(--hdx-lh-normal);
@@ -438,6 +439,7 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
+  font-family: var(--hdx-font-body);
   font-size: var(--hdx-fs-s);
   gap: var(--hdx-space-1) var(--hdx-space-13);
   padding: var(--hdx-space-1) 0;
@@ -538,13 +540,6 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-}
-.hdx-v2-page-header--resource .hdx-v2-page-header__meta-value--link {
-  color: var(--hdx-primary-main);
-  white-space: normal;
-  overflow: visible;
-  text-overflow: clip;
-  word-break: break-all;
 }
 .hdx-v2-page-header--resource .hdx-v2-page-header__meta-item:last-child .c-text-link {
   word-break: break-all;

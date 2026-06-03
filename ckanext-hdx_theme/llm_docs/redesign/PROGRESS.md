@@ -2,7 +2,7 @@
 
 **Status**: In-progress
 **Started**: 2026-04-16
-**Last Updated**: 2026-05-22
+**Last Updated**: 2026-06-02
 
 ---
 
@@ -20,7 +20,9 @@
 All design tokens from Figma "Visual Redesign / Foundations":
 - **Colors**: 6 palettes, 75+ variables (`@hdx-brand-*`, `@hdx-primary-*`, `@hdx-neutral-*`, `@hdx-success-*`, `@hdx-warning-*`, `@hdx-error-*`)
 - **Layout**: 9-step spacing scale (4px base), 2 corner radii (sm/md), 4 elevation levels
-- **Typography**: 2 font families, 9-step size scale (xs–5xl), 4 weights, 2 line heights, named type-style mixins (display/heading/body/link/lead)
+- **Typography**: 2 font families, 9-step size scale (xs–5xl), 4 weights, 2 line heights. Split across two files:
+  - `typography.less` — **variable declarations only** (`@hdx-fs-*`, `@hdx-fw-*`, `@hdx-font-*`, `@hdx-lh-*`). Imported by `foundation.less` to emit CSS custom properties. Never import this directly for mixins.
+  - `mixins.less` — all mixin definitions: private parametric cores (`.-hdx-body`, `.-hdx-display`, etc.), named type-style mixins (`.hdx-body-m()`, `.hdx-heading-h4()`, etc.), base-style mixins, and layout mixins (`.v2-sidebar-flex()`, `.v2-content-flex()`)
 
 Variable naming: `@hdx-<category>-<step>` (e.g. `@hdx-brand-5`, `@hdx-space-4`). Decimals: digit-only (0.1→01).
 CSS custom property equivalents (`--hdx-*`) are defined in `v2/foundation.css` (task 001).
@@ -38,14 +40,43 @@ CSS custom property equivalents (`--hdx-*`) are defined in `v2/foundation.css` (
 **Current structure**:
 - Extends `base.html` directly
 - Loads Google Fonts (Merriweather + Roboto) in `{% block styles %}`
-- Loads `hdx_theme/v2-page-styles` and conditionally loads onboarding bundles
-- Sets `{% block bodyclassname %}hdx-v2{% endblock %}` for grid scoping
-- Overrides `{% block page %}` with: header block → page_content block (toolbar + flash + content) → footer block
-- `{% block header_core %}` includes `v2/header.html` via `{% snippet %}` (top-bar + navbar, fully implemented)
-- `{% block footer %}` includes `v2/footer.html` via `{% include %}` (fully implemented)
-- Loads `hdx_theme/v2-components-scripts` in `{% block scripts %}`
+- Loads `hdx_theme/v2-page-styles`; legacy onboarding and `page-scripts` bundles are commented out pending v1 retirement
+- Sets `{% block bodytag %}hdx-v2{% endblock %}` for scoping v2 styles to the body class
+- Overrides `{% block page %}` with: header block → main content (toolbar + flash + two-column layout) → footer block
+- `{% block header_core %}` includes `v2/header.html` via `{% snippet %}`
+- `{% block toolbar %}` renders `<div class="hdx-v2-breadcrumb-row">` with a `{% block breadcrumb_items %}` sub-block; page templates override only `{% block breadcrumb_items %}`
+- `{% block flash %}` renders flash messages using `hdx-v2-flash {{ category }}` class (Bootstrap `.alert` removed)
+- `secondary_right_side` feature removed; sidebar always renders on the left
+- `{% block footer %}` includes `v2/footer.html` via `{% snippet %}`
+- `{% block primary %}` (v1 fallback, never reached by v2 pages) annotated with TODO for removal on v1 retirement
+- Loads `hdx_theme/v2-page-scripts` in `{% block scripts %}`
 
 **Current usage**: `templates/v2/components.html` renders the v2 component demo page.
+
+---
+
+### LESS Infrastructure
+
+**Source root**: `hdx-styles/src/common/less/v2/`
+
+| File | Purpose |
+|---|---|
+| `foundation.less` | Exports all design tokens as CSS custom properties (imports colors, spacing, radius, typography) |
+| `typography.less` | **Variable declarations only** — font families, size scale, weights, line heights. Imported by `foundation.less` for CSS custom-property output. Do not import this directly from components. |
+| `mixins.less` | **Single compile-time entry point** — imports `breakpoints.less` + `typography.less`, then defines all mixins: layout (`.v2-sidebar-flex()`, `.v2-content-flex()`), typography cores, named type-style mixins, and base-style mixins. Import with `@import "mixins.less"` (or `"../mixins.less"` from `components/`). |
+| `breakpoints.less` | Breakpoint variables (`@hdx-bp-md`, `@hdx-bp-xl`, `@hdx-bp-xxl`); pulled in automatically by `mixins.less` |
+| `layout.less` | Container, breadcrumb row, content-columns base flex; compiled to `v2-page-styles` |
+| `search.less` | Search page sections; imports `mixins.less` |
+| `dataset.less` | Dataset page sections; imports `mixins.less` |
+| `resource-page.less` | Resource page sections; imports `mixins.less` |
+| `styles.less` | Hero, page-header, dataset-list, flash messages; compiled to `v2-page-styles`; imports `mixins.less` |
+| `components/divider.less` | `.c-divider` — extracted from `navigation.less`; compiled to `divider.css` and registered in `v2-components-styles` |
+| `components/*.less` | One file per component; each imports `"../mixins.less"` for tokens and mixins |
+
+**Typography mixin usage:**
+- Full 4-property block: `.hdx-body-m-semibold()`, `.hdx-display-l()`, `.hdx-heading-h4()`, etc.
+- Component base class (size controlled by modifier): `.hdx-body-medium-base()`, `.hdx-body-semibold-base()`.
+- All files using mixins import `mixins.less` only — no separate `typography.less` or `breakpoints.less` imports needed.
 
 ---
 
@@ -56,6 +87,7 @@ CSS custom property equivalents (`--hdx-*`) are defined in `v2/foundation.css` (
 | Homepage | `home/index.html` | Extends `v2/page.html`                                                                    |
 | Dataset search | `search/search.html` | Extends `v2/page.html`; uses `v2=true` gate for v2 UI                                     |
 | Dataset page | `package/hdx_read.html` | Extends `v2/page.html`; full page implemented — see `requirements/038-dataset-page.md` |
+| Resource page | `package/resource_read.html` | Extends `v2/page.html`; full page implemented — see `requirements/040-resource-page.md` |
 
 ### Pages in holding state (on `page_light.html`)
 
@@ -109,11 +141,14 @@ Each page below extends `page_light.html`, manually overrides `{% block styles %
 - [x] Resource card
 - [x] Showcase card
 - [x] Anchor links — extended with `heading`, `with_mobile_dropdown` params; mobile sticky dropdown (`c-anchor-links-mobile`) styles in `navigation.less`
+- [x] Info icon — `info-icon.html` snippet encapsulating the `c-tooltip-anchor` + `c-info-icon` button + tooltip pattern; HTML-only (no dedicated LESS/CSS)
 
 Each component file should have:
 1. **HTML template** (`templates/v2/components/component-name.html`) — reusable snippet with BEM markup
 2. **LESS styles** (`less/v2/components/component-name.less`) — styles referencing foundation tokens
 3. **Compiled CSS** (`fanstatic/v2/components/component-name.css`) — pre-compiled CSS for webassets
+
+Exception: `info-icon.html` has no dedicated LESS/CSS — it composes existing `c-tooltip-anchor`, `c-info-icon`, and `c-tooltip` styles.
 
 ---
 
@@ -123,7 +158,7 @@ Each component file should have:
 
 Bundle configuration:
 - `hdx_theme/v2-components-styles` — standalone design system bundle (tokens + components), no Bootstrap
-  - Contents: `v2/foundation.css`, `v2/components/activity-card.css`, `v2/components/dataset-card.css`, `v2/components/resource-card.css`, `v2/components/avatar-badge.css`, `v2/components/buttons.css`, `v2/components/checkbox.css`, `v2/components/dropdown.css`, `v2/components/input-field.css`, `v2/components/label.css`, `v2/components/letter-anchor.css`, `v2/components/list-item.css`, `v2/components/navigation.css`, `v2/components/selection.css`, `v2/components/showcase-card.css`, `v2/components/text-link.css`
+  - Contents: `v2/foundation.css`, then 17 component CSS files: `divider`, `activity-card`, `dataset-card`, `resource-card`, `avatar-badge`, `buttons`, `checkbox`, `copy-button`, `dropdown`, `input-field`, `label`, `letter-anchor`, `list-item`, `navigation`, `selection`, `showcase-card`, `text-link`
   - Kept separate for non-page contexts (component previews, embedded widgets)
 - `hdx_theme/v2-page-styles` ✅ Full page bundle: preloads `v2-components-styles`, then adds:
   - `vendor/bootstrap5/css/bootstrap.css`
@@ -132,12 +167,13 @@ Bundle configuration:
   - `v2/footer.css` — footer styles
   - `v2/navbar.css` — main navbar styles (logo, search, nav items, actions, offcanvas)
   - `v2/styles.css` — shared global v2 styles
-- `hdx_theme/v2-components-scripts` ✅ Contains `v2/components/password-toggle.js`, `v2/components/clamped-text.js` (shared show-more/less), `v2/components/page-header.js`, `v2/components/anchor-links.js` (smooth scroll + mobile dropdown + active tracking for `c-anchor-links`)
+- `hdx_theme/v2-components-scripts` ✅ Contains: `focus-trap.js`, `password-toggle.js`, `clamped-text.js` (show-more/less), `dropdown.js`, `page-header.js`, `anchor-links.js` (smooth scroll + mobile dropdown + active tracking), `copy-button.js`
 - `hdx_theme/v2-page-scripts` ✅ Contains `v2/navbar.js` — navbar panel and offcanvas JS (tasks 018 + 019)
 - `hdx_theme/v2-search-styles` — page-specific: preloads `v2-page-styles`, adds `v2/search.css`
 - `hdx_theme/v2-search-scripts` — page-specific: preloads `v2-page-scripts`, adds `v2/search.js`
 - `hdx_theme/v2-dataset-styles` — page-specific: preloads `v2-page-styles`, adds `v2/dataset.css`
-- `hdx_theme/v2-dataset-scripts` — page-specific: preloads `v2-page-scripts`, adds `v2/dataset.js` (section accordion only)
+- `hdx_theme/v2-dataset-scripts` — page-specific: preloads `v2-page-scripts`, adds `v2/dataset.js` (section accordion)
+- `hdx_theme/v2-resource-styles` — page-specific: preloads `v2-page-styles`, adds `v2/resource-page.css` (independent of dataset styles by design)
 
 ---
 

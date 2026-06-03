@@ -51,10 +51,10 @@
   color: var(--hdx-neutral-8);
 }
 .c-copy-button--secondary:hover {
-  color: var(--hdx-primary-main);
+  color: var(--hdx-primary-5);
 }
 .c-copy-button--tertiary {
-  color: var(--hdx-neutral-55);
+  color: var(--hdx-neutral-5);
 }
 .c-copy-button--tertiary:hover {
   color: var(--hdx-neutral-85);

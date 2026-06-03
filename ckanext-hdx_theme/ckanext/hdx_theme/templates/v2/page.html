@@ -8,12 +8,13 @@
     href="https://fonts.googleapis.com/css2?family=Merriweather:ital,opsz,wght@0,18..144,300..900;1,18..144,300..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
     rel="stylesheet">
   {% asset 'hdx_theme/v2-page-styles' %}
-  {# TODO: check whether we still need these once the redesign has been completed #}
+  {# TODO: check whether we still need these once the redesign has been completed
   {% if c.userobj %}
     {% asset 'hdx_theme/onboarding-bulk-user-styles' %}
   {% else %}
     {% asset 'hdx_theme/onboarding-bulk-anon-styles' %}
   {% endif %}
+  #}
 {% endblock %}
 
 {% block meta %}
@@ -58,20 +59,9 @@
       <div id="content">
         {% block main_content %}
       {% block toolbar %}
-        <div class="toolbarRow">
+        <div class="hdx-v2-breadcrumb-row">
           <div class="hdx-v2-container">
-            <div class="toolbar">
-              {% block breadcrumb %}
-                {% if self.breadcrumb_content() | trim %}
-                  <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb" vocab="https://schema.org/" typeof="BreadcrumbList">
-                      {% snippet 'snippets/home_breadcrumb_item.html' %}
-                      {% block breadcrumb_content %}{% endblock %}
-                    </ol>
-                  </nav>
-                {% endif %}
-              {% endblock %}
-            </div>
+            {% block breadcrumb_items %}{% endblock %}
           </div>
         </div>
       {% endblock %}
@@ -81,7 +71,7 @@
           <div class="hdx-v2-container">
             {% block flash_inner %}
               {% for category, message in h.get_flashed_messages(with_categories=true) %}
-                <div class="alert alert-dismissible fade show {{ category }}">
+                <div class="hdx-v2-flash {{ category }}">
                   {{ h.literal(message) }}
                 </div>
               {% endfor %}
@@ -104,7 +94,7 @@
         <div class="{{ ' ' ~ outer_row_class if outer_row_class else '' }}">
           <div class="hdx-v2-container">
             <div class="hdx-v2-content-columns{{ ' ' ~ columns_class if columns_class else '' }}">
-              {% if secondary_block_output|trim != '' and not secondary_right_side %}
+              {% if secondary_block_output|trim != '' %}
                 <div class="{{ sidebar_class if sidebar_class else '' }}">
                   {{ secondary_block_output }}
                 </div>
@@ -112,11 +102,6 @@
               <div class="{{ content_class if content_class and secondary_block_output|trim != '' else '' }}">
                 {{ self.primary() }}
               </div>
-              {% if secondary_block_output|trim != '' and secondary_right_side %}
-                <div>
-                  {{ secondary_block_output }}
-                </div>
-              {% endif %}
             </div>
           </div>
         </div>
@@ -131,7 +116,7 @@
   {% endblock -%}
 
   {%- block footer %}
-    {% include "v2/footer.html" %}
+    {% snippet 'v2/footer.html' %}
   {% endblock -%}
 {%- endblock -%}
 
@@ -141,6 +126,7 @@
   </div>
 {% endblock %}
 
+{# TODO: remove when v1 is retired #}
 {% block primary %}
   <div class="primary">
     {% block primary_content %}
@@ -180,13 +166,16 @@
 {% endblock %}
 
 {%- block scripts %}
+  {# TODO: check whether we still need these once the redesign has been completed
   {% asset 'hdx_theme/page-scripts' %}
+  #}
   {{ super() }}
   {% asset 'hdx_theme/v2-page-scripts' %}
-  {# TODO: check whether we still need these once the redesign has been completed #}
+  {# TODO: check whether we still need these once the redesign has been completed
   {% if c.userobj %}
     {% asset 'hdx_theme/onboarding-bulk-user-scripts' %}
   {% else %}
     {% asset 'hdx_theme/onboarding-bulk-anon-scripts' %}
   {% endif %}
+  #}
 {% endblock -%}

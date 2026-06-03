@@ -3,6 +3,7 @@
 // Card component for dataset page showcase items.
 // Compiled output: fanstatic/v2/components/showcase-card.css
 // ============================================================
+@import "../mixins.less";
 
 .c-showcase-card {
     display:          flex;
@@ -42,19 +43,13 @@
     }
 
     &__title {
-        font-family: var(--hdx-font-body);
-        font-size:   var(--hdx-fs-m);
-        font-weight: var(--hdx-fw-semibold);
-        line-height: var(--hdx-lh-normal);
+        .hdx-body-m-semibold();
         color:       var(--hdx-neutral-95);
         margin:      0;
     }
 
     &__desc {
-        font-family:        var(--hdx-font-body);
-        font-size:          var(--hdx-fs-m);
-        font-weight:        var(--hdx-fw-regular);
-        line-height:        var(--hdx-lh-normal);
+        .hdx-body-m();
         color:              var(--hdx-neutral-85);
         margin:             0;
         display:            -webkit-box;

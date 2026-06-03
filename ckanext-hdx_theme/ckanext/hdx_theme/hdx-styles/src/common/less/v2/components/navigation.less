@@ -1,4 +1,5 @@
-@import "../breakpoints.less";
+
+@import "../mixins.less";
 
 // ============================================================
 // c-nav-item       — top-bar navigation item with active underline
@@ -25,8 +26,6 @@
 @c-pager-border:        1px solid var(--hdx-neutral-2);   // #d8e0e1
 @c-pager-active-bg:     var(--hdx-neutral-0);
 @c-pager-active-color:  var(--hdx-neutral-95);            // #101212
-
-
 // ────────────────────────────────────────────────────────────
 // 1. c-nav-item
 // ────────────────────────────────────────────────────────────
@@ -74,8 +73,6 @@
         pointer-events: none;
     }
 }
-
-
 // ────────────────────────────────────────────────────────────
 // 2. c-anchor-links — vertical sidebar list
 // ────────────────────────────────────────────────────────────
@@ -128,8 +125,6 @@
     //&__item:hover:not(&__item--active) &__border { background-color: var(--hdx-neutral-2); }
     //&__item:hover:not(&__item--active) &__label  { color: var(--hdx-neutral-95); }
 }
-
-
 // ── Desktop sticky wrapper ───────────────────────────────────
 // Wraps the heading + c-anchor-links list in the sidebar so both
 // become sticky together (top = navbar height).
@@ -139,16 +134,11 @@
 
     // Heading rendered above the desktop list
     .c-anchor-links__heading {
-        font-family:    var(--hdx-font-body);
-        font-size:      var(--hdx-fs-m);
-        font-weight:    var(--hdx-fw-medium);
-        line-height:    var(--hdx-lh-normal);
-        color:          var(--hdx-secondary-95);
+        .hdx-body-m-medium();
+        color:          var(--hdx-neutral-95);
         margin:         0 0 var(--hdx-space-4) 0;
     }
 }
-
-
 // ── Mobile sticky dropdown ────────────────────────────────────
 // Hidden on XL+; on smaller viewports it breaks out of the sidebar
 // with position:fixed to span the full viewport below the sticky navbar.
@@ -242,8 +232,6 @@
         }
     }
 }
-
-
 // ────────────────────────────────────────────────────────────
 // ────────────────────────────────────────────────────────────
 // 3. c-pagination
@@ -336,46 +324,39 @@
     &--size-md &__item img { width: 1.5rem; }
     &--size-sm &__item img { width: 1rem; }
 }
-
-
 // ────────────────────────────────────────────────────────────
 // 5. c-breadcrumb — inline crumb trail
 // ────────────────────────────────────────────────────────────
 
 .c-breadcrumb {
+    .hdx-body-xs();                  // 12 px body regular
     display:     flex;
     align-items: center;
     flex-wrap:   nowrap;             // single line — no wrapping
     overflow:    hidden;             // clip any overflow at container level
-    gap:         var(--hdx-space-2);   // 8 px
+    width:       100%;               // always fill the full row
+    gap:         var(--hdx-space-2);
     padding:     var(--hdx-space-2) 0;
-    font-family: var(--hdx-font-body);
-    font-size:   var(--hdx-fs-xs);    // 12 px
 
     &__item {
         display:     flex;
         align-items: center;
         overflow:    hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        max-width:   21.875rem;
         min-width:   0;              // allow flex item to shrink below content size
 
-        // Truncate the link text inside the item
+        // Truncate link text only when actually squeezed — no artificial max-width cap
         .c-text-link {
             overflow:      hidden;
             text-overflow: ellipsis;
             white-space:   nowrap;
-            max-width:     21.875rem;
         }
     }
 
     // Separator (/)
     &__separator {
+        .hdx-body-s();               // 14 px body regular (slightly larger than crumb text)
         color:       var(--hdx-neutral-5);
-        font-size:   var(--hdx-fs-s);
-        line-height: 130%;
-        margin-left: var(--hdx-space-2);  // 8
+        margin-left: var(--hdx-space-2);
         flex-shrink: 0;              // separator is always visible
     }
 
@@ -386,23 +367,6 @@
         overflow:    hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
-        max-width:   21.875rem;
         min-width:   0;              // allow last item to shrink equally
     }
-}
-
-
-// ────────────────────────────────────────────────────────────
-// 6. c-divider — horizontal line
-// ────────────────────────────────────────────────────────────
-
-.c-divider {
-    display:     block;
-    width:       100%;
-    height:      1px;
-    background-color: var(--hdx-neutral-3);
-    border:      none;
-    margin:      0;
-    flex-shrink: 0;
-    opacity:     1; // overwrites bootstrap style
 }

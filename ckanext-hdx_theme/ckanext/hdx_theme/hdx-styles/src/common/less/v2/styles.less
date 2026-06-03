@@ -4,13 +4,9 @@
 //        llm_docs/redesign/figma_exports/homepage-md.html
 //        llm_docs/redesign/figma_exports/homepage-sm.html
 // ============================================================
-
-@import "breakpoints.less";
-@import "typography.less";
+@import "mixins.less";
 
 @hero-bg: var(--hdx-brand-7);
-
-
 .hdx-v2-hero {
     width:            100%;
     background-color: @hero-bg;
@@ -40,23 +36,17 @@
     }
 
     &__heading {
-        font-family: var(--hdx-font-display);  // Merriweather
-        font-size:   var(--hdx-fs-4xl);
-        font-weight: var(--hdx-fw-bold);
-        line-height: var(--hdx-lh-normal);
-        color:       var(--hdx-neutral-0);
-        margin:      0;
+        .hdx-display-l();
+        color:  var(--hdx-neutral-0);
+        margin: 0;
 
         @media (min-width: @hdx-bp-xl) { font-size: 3rem; }
     }
 
     &__subtitle {
-        font-family: var(--hdx-font-body);     // Roboto
-        font-size:   var(--hdx-fs-m);
-        font-weight: var(--hdx-fw-regular);
-        line-height: var(--hdx-lh-normal);
-        color:       var(--hdx-neutral-0);
-        margin:      0;
+        .hdx-body-m();
+        color:  var(--hdx-neutral-0);
+        margin: 0;
 
         @media (min-width: @hdx-bp-xl) { font-size: var(--hdx-fs-l); }
     }
@@ -96,8 +86,6 @@
         }
     }
 }
-
-
 // ============================================================
 // hdx-v2-intro — homepage v2 intro section
 // Figma: llm_docs/redesign/figma_exports/homepage-intro-lg.html
@@ -141,12 +129,9 @@
     }
 
     &__heading {
-        font-family: var(--hdx-font-display);
-        font-size:   var(--hdx-fs-2xl);
-        font-weight: var(--hdx-fw-bold);
-        line-height: var(--hdx-lh-normal);
-        color:       var(--hdx-neutral-95);
-        margin:      0;
+        .hdx-display-s();
+        color:  var(--hdx-neutral-95);
+        margin: 0;
 
         @media (min-width: @hdx-bp-md) { font-size: var(--hdx-fs-3xl); }
         @media (min-width: @hdx-bp-xl) { font-size: var(--hdx-fs-4xl); }
@@ -188,8 +173,6 @@
         gap:     var(--hdx-space-10);
         padding: var(--hdx-space-10) 0;
     }
-
-
     // ── Top two-column row ───────────────────────────────────
 
     &__top {
@@ -203,8 +186,6 @@
             gap:            var(--hdx-space-6);
         }
     }
-
-
     // ── Left column ──────────────────────────────────────────
 
     &__left {
@@ -218,8 +199,6 @@
             gap:       var(--hdx-space-10);
         }
     }
-
-
     // ── Description block ────────────────────────────────────
 
     &__description {
@@ -228,8 +207,6 @@
         align-items:    flex-start;
         gap:            var(--hdx-space-3);
     }
-
-
     // ── Labels row ───────────────────────────────────────────
 
     &__labels {
@@ -252,17 +229,12 @@
         align-items: center;
         gap:         var(--hdx-space-1);
     }
-
-
     // ── Title ────────────────────────────────────────────────
 
     &__title {
-        font-family: var(--hdx-font-display);
-        font-size:   var(--hdx-fs-xl);   // 1.25rem SM
-        font-weight: var(--hdx-fw-bold);
-        line-height: var(--hdx-lh-normal);
-        color:       var(--hdx-neutral-95);
-        margin:      0;
+        .hdx-display-xs();
+        color:  var(--hdx-neutral-95);
+        margin: 0;
 
         @media (min-width: @hdx-bp-md) {
             font-size: var(--hdx-fs-2xl);  // 1.5rem MD
@@ -272,8 +244,6 @@
             font-size: var(--hdx-fs-3xl);  // 1.75rem XL
         }
     }
-
-
     // ── Description text + show-more ─────────────────────────
 
     &__desc {
@@ -294,10 +264,7 @@
     }
 
     &__desc-text {
-        font-family:       var(--hdx-font-body);
-        font-size:         var(--hdx-fs-m);
-        font-weight:       var(--hdx-fw-regular);
-        line-height:       var(--hdx-lh-normal);
+        .hdx-body-m();
         color:             var(--hdx-neutral-85);
         margin:            0;
         display:           -webkit-box;
@@ -310,8 +277,6 @@
         -webkit-line-clamp: unset;
         overflow:           visible;
     }
-
-
     // ── CTA block ────────────────────────────────────────────
 
     &__cta {
@@ -340,8 +305,6 @@
             flex-shrink: 0;
         }
     }
-
-
     // ── Right card (org logo + contact) ──────────────────────
 
     &__right-card {
@@ -394,8 +357,6 @@
             height:    auto;
         }
     }
-
-
     // ── Metadata strip ───────────────────────────────────────
 
     &__metadata {
@@ -447,9 +408,7 @@
     }
 
     &__meta-label {
-        font-size:   var(--hdx-fs-s);
-        font-weight: var(--hdx-fw-semibold);
-        line-height: var(--hdx-lh-normal);
+        .hdx-body-s-semibold();
         color:       var(--hdx-neutral-85);
     }
 
@@ -457,6 +416,7 @@
         display:     flex;
         flex-wrap:   wrap;
         align-items: center;
+        font-family: var(--hdx-font-body);
         font-size:   var(--hdx-fs-s);
         gap:         var(--hdx-space-1) var(--hdx-space-13);
         padding:     var(--hdx-space-1) 0;
@@ -478,8 +438,6 @@
     &__source-view-more {
         display: none;  // JS reveals when source overflows
     }
-
-
     // ── Tooltip wrapper ──────────────────────────────────────
 
     // Header tooltip anchor: push to right of the label-row
@@ -488,8 +446,6 @@
 
         .c-tooltip { width: 14rem; }
     }
-
-
     // ── Resource variant ─────────────────────────────────────
 
     &--resource {
@@ -513,11 +469,8 @@
         }
 
         .hdx-v2-page-header__format-label {
-            font-family: var(--hdx-font-body);
-            font-size:   var(--hdx-fs-s);
-            font-weight: var(--hdx-fw-medium);
-            line-height: var(--hdx-lh-normal);
-            color:       var(--hdx-neutral-85);
+            .hdx-body-s-medium();
+            color: var(--hdx-neutral-85);
         }
 
         // ── Download + export (reuse __cta, override to row) ──
@@ -586,14 +539,6 @@
             overflow:      hidden;
             text-overflow: ellipsis;
             white-space:   nowrap;
-
-            &--link {
-                color:         var(--hdx-primary-main);
-                white-space:   normal;   // allow URL to wrap
-                overflow:      visible;
-                text-overflow: clip;
-                word-break:    break-all;
-            }
         }
 
         // Resource URL text-link (no extra_classes — targeted via parent)
@@ -603,8 +548,6 @@
         }
     }
 }
-
-
 // ============================================================
 // hdx-v2-dataset-list — search results card list layout
 // Figma: llm_docs/redesign/figma_exports/dataset-list.html
