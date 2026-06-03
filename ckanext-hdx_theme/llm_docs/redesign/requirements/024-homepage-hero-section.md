@@ -77,8 +77,7 @@ Media queries are nested directly inside each element block (see [CONVENTIONS.md
 .hdx-v2-hero {
     width:            100%;
     background-color: @hdx-v2-hero-bg;
-    padding-top:      8rem;
-    padding-bottom:   4rem;
+    padding-top: 8rem;
 
     @media (min-width: @hdx-bp-md) { padding-top: 6rem; }
     @media (min-width: @hdx-bp-xl) { padding-top: 10rem; }
