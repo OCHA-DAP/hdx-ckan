@@ -561,9 +561,6 @@
   display: flex;
   flex-direction: column;
 }
-.hdx-v2-page-header__meta-item:last-child {
-  margin-top: var(--hdx-space-6);
-}
 @media (min-width: 48rem) {
   .hdx-v2-page-header__meta-item {
     width: calc(50% - var(--hdx-space-3));
@@ -710,4 +707,7 @@
 }
 .hdx-v2-dataset-list__cards .highlight {
   background-color: var(--hdx-warning-1);
+}
+.data-viewer-error {
+  display: none;
 }

@@ -1,4 +1,4 @@
-$(document).ready(function () { hlInit(); });
+document.addEventListener('DOMContentLoaded', function () { hlInit(); });
 
 var hlIdx   = 1;      // current track index  (1 = first real card)
 var hlSlot  = 0;      // slot width in px     (card + margin-right)
@@ -11,53 +11,70 @@ var hlMql = window.matchMedia && window.matchMedia('(min-width: 80rem)');
 
 // ── Breakpoint change listener ────────────────────────────────────────────────
 if (hlMql) hlMql.addEventListener('change', function (e) {
-    var $inner = $('.mobile-carousel .mobile-carousel-inner');
+    var inner = document.querySelector('.mobile-carousel .mobile-carousel-inner');
+    if (!inner) return;
     if (e.matches) {
-        $inner.css('left', 0);          // → XL: reset offset for static flex row
+        inner.style.left = '0px';       // → XL: reset offset for static flex row
     } else if (!hlReady) {
         hlInit();                       // → SM/MD first time: initialise
     } else {
         hlIdx = 1;                      // → SM/MD return: show card 1
-        $inner.css('left', -hlSlot);
+        inner.style.left = -hlSlot + 'px';
         hlSetDot(1);
     }
 });
 
 // ── Initialise ────────────────────────────────────────────────────────────────
 function hlInit() {
-    var $c = $('.mobile-carousel');
-    if (!$c.length || hlReady)    return;
-    if (hlMql && hlMql.matches)   return;  // XL: static flex row, no carousel needed
+    var c = document.querySelector('.mobile-carousel');
+    if (!c || hlReady)          return;
+    if (hlMql && hlMql.matches) return;  // XL: static flex row, no carousel needed
 
-    var $inner  = $c.find('.mobile-carousel-inner');
-    var $slides = $inner.children('.highlight-slide');
-    hlN = $slides.length;
+    var inner  = c.querySelector('.mobile-carousel-inner');
+    var slides = Array.from(inner.querySelectorAll(':scope > .highlight-slide'));
+    hlN = slides.length;
     if (!hlN) return;
     hlReady = true;
 
     // Build infinite track: [cloneLast | …real cards… | cloneFirst]
-    $inner
-        .prepend($slides.last().clone().addClass('highlight-slide--clone'))
-        .append($slides.first().clone().addClass('highlight-slide--clone'));
+    var cloneLast  = slides[hlN - 1].cloneNode(true);
+    var cloneFirst = slides[0].cloneNode(true);
+    cloneLast.classList.add('highlight-slide--clone');
+    cloneFirst.classList.add('highlight-slide--clone');
+    inner.insertBefore(cloneLast, inner.firstChild);
+    inner.appendChild(cloneFirst);
 
-    hlSlot = $inner.children().first().outerWidth(true);
-    $inner.css('left', -hlSlot);   // position at real card 1
+    // Measure slot width (card + left margin + right margin)
+    var firstChild = inner.firstElementChild;
+    var cs = getComputedStyle(firstChild);
+    hlSlot = firstChild.offsetWidth + parseInt(cs.marginLeft) + parseInt(cs.marginRight);
+
+    inner.style.transition = 'left 350ms';
+    inner.style.left = -hlSlot + 'px';  // position at real card 1
 
     // Touch swipe
-    new Hammer($c[0]).on('swipeleft swiperight', function (e) {
+    new Hammer(c).on('swipeleft swiperight', function (e) {
         hlGoTo(hlIdx + (e.type === 'swipeleft' ? 1 : -1));
     });
 
     // Arrow buttons
-    $c.find('.hdx-v2-highlights__arrow--prev').on('click', function () { hlGoTo(hlIdx - 1); });
-    $c.find('.hdx-v2-highlights__arrow--next').on('click', function () { hlGoTo(hlIdx + 1); });
+    var prevBtn = c.querySelector('.hdx-v2-highlights__arrow--prev');
+    var nextBtn = c.querySelector('.hdx-v2-highlights__arrow--next');
+    if (prevBtn) prevBtn.addEventListener('click', function () { hlGoTo(hlIdx - 1); });
+    if (nextBtn) nextBtn.addEventListener('click', function () { hlGoTo(hlIdx + 1); });
 
     // Dots — one delegated listener instead of one per button
-    var $dots = $c.find('.highlight-dots');
+    var dots = c.querySelector('.highlight-dots');
     for (var i = 1; i <= hlN; i++) {
-        $dots.append('<button type="button" data-idx="' + i + '"></button>');
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.dataset.idx = i;
+        dots.appendChild(btn);
     }
-    $dots.on('click', '[data-idx]', function () { hlGoTo(+$(this).data('idx')); });
+    dots.addEventListener('click', function (e) {
+        var target = e.target.closest('[data-idx]');
+        if (target) hlGoTo(+target.dataset.idx);
+    });
     hlSetDot(1);
 }
 
@@ -68,15 +85,34 @@ function hlGoTo(target) {
     hlIdx  = target;
     hlSetDot(target <= 0 ? hlN : target > hlN ? 1 : target);
 
-    $('.mobile-carousel .mobile-carousel-inner').animate({ left: -target * hlSlot }, 350, function () {
+    var inner = document.querySelector('.mobile-carousel .mobile-carousel-inner');
+    if (!inner) { hlBusy = false; return; }
+
+    inner.style.left = (-target * hlSlot) + 'px';
+
+    inner.addEventListener('transitionend', function onEnd() {
+        inner.removeEventListener('transitionend', onEnd);
         // Silently teleport from clone to real counterpart (identical content = invisible jump)
-        if      (target === 0)       { hlIdx = hlN; $(this).css('left', -hlN  * hlSlot); }
-        else if (target === hlN + 1) { hlIdx = 1;   $(this).css('left', -hlSlot); }
+        if (target === 0 || target === hlN + 1) {
+            inner.style.transition = 'none';
+            if (target === 0) {
+                hlIdx = hlN;
+                inner.style.left = (-hlN * hlSlot) + 'px';
+            } else {
+                hlIdx = 1;
+                inner.style.left = -hlSlot + 'px';
+            }
+            inner.offsetWidth; // force reflow before re-enabling transition
+            inner.style.transition = 'left 350ms';
+        }
         hlBusy = false;
     });
 }
 
 // ── Activate dot n (1-based) ──────────────────────────────────────────────────
 function hlSetDot(n) {
-    $('.mobile-carousel .highlight-dots button').removeClass('active').eq(n - 1).addClass('active');
+    var btns = document.querySelectorAll('.mobile-carousel .highlight-dots button');
+    btns.forEach(function (btn, i) {
+        btn.classList.toggle('active', i === n - 1);
+    });
 }
