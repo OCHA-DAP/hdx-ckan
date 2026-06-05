@@ -158,9 +158,14 @@
 
 {% endblock %}
 
+{% block styles %}
+  {{ super() }}
+  {% asset 'hdx_theme/v2-home-page-styles' %}
+{% endblock %}
+
 {% block head_extras %}
   {{ super() }}
-  {% asset 'hdx_theme/v2-homepage-scripts' %}
+  {% asset 'hdx_theme/v2-home-page-scripts' %}
   {% if structured_data %}
     <script type="application/ld+json">
       {{ structured_data | safe }}
