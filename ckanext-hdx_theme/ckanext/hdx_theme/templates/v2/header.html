@@ -136,13 +136,14 @@
 
       {% if request.path != '/' %}
       {# Search — visible on XL (25rem) and MD (21.25rem via CSS); hidden on SM #}
+      {# At XL: panel drops inline. At MD/SM: JS opens the fullscreen overlay instead. #}
       <div class="hdx-v2-navbar__search">
-        <form action="{{ h.url_for('dataset.search') }}" method="get" role="search">
-          {% snippet 'v2/components/search-input.html',
-              size='m', name='q',
-              placeholder=_('Search for datasets'),
-              value=c.q if c.q is defined else '' %}
-        </form>
+        {% snippet 'v2/components/autocomplete.html',
+            size='m', name='q',
+            placeholder=_('Search for datasets'),
+            value=c.q if c.q is defined else '',
+            form_action=h.url_for('dataset.search'),
+            search_source='main-nav' %}
       </div>
       {% endif %}
 
@@ -190,8 +191,9 @@
         {# Search icon — SM only, hidden at MD/XL via navbar.less #}
         <button class="hdx-v2-navbar__search-icon" type="button"
                 aria-label="{{ _('Search') }}"
-                data-bs-toggle="offcanvas"
-                data-bs-target="#search-offcanvas">
+                aria-expanded="false"
+                aria-controls="hdx-search-autocomplete-overlay"
+                data-action="open-search-overlay">
           {% include 'v2/icons/search.svg' %}
         </button>
         {% endif %}
@@ -259,5 +261,10 @@
 
   {# ── Offcanvas (task 019) ─────────────────────────────────── #}
   {% snippet 'v2/navbar-offcanvas.html' %}
+
+  {# ── Search autocomplete overlay (task 045) — MD/SM fullscreen ─── #}
+  {# Triggered by: SM search icon (non-homepage), MD navbar input focus,  #}
+  {# or hero autocomplete input focus on the homepage (SM/MD).           #}
+  {% snippet 'v2/search-autocomplete-overlay.html' %}
 
 </header>

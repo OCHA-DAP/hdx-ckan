@@ -255,6 +255,21 @@
 
     }
 
+    // Autocomplete-overlay-specific children (search-autocomplete-overlay.html)
+    &__form {
+        display:        flex;
+        flex-direction: column;
+        gap:            var(--hdx-space-6);
+
+        .c-search-input { width: 100%; }
+    }
+
+    &__results {
+        display:        flex;
+        flex-direction: column;
+        gap:            var(--hdx-space-3);
+    }
+
     &__footer {
         display:         flex;
         align-items:     center;
@@ -262,6 +277,6 @@
         padding:         var(--hdx-space-4);  // 16
         border-top:      1px solid var(--hdx-neutral-1);
         flex-shrink:     0;
-
+        gap:             var(--hdx-space-4);
     }
 }

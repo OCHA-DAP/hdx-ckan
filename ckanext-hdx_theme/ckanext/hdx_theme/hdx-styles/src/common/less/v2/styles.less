@@ -68,6 +68,9 @@
         position:       relative;          // anchor for autocomplete panel
 
         @media (min-width: @hdx-bp-md) { flex: 1; width: auto; }
+
+        // autocomplete.html wraps c-autocomplete in a <form>; ensure it stretches
+        > form { width: 100%; }
     }
 
     // Dark-surface overrides for c-button--secondary.
