@@ -243,6 +243,7 @@ v2-components-styles:
     - v2/components/text-link.css
     - v2/components/copy-button.css
     - v2/components/highlight-card.css
+    - v2/components/overlay.css
 
 v2-components-scripts:
   <<: *common-js
