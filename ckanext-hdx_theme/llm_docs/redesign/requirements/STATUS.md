@@ -48,3 +48,4 @@
 | 042 | [v2-audit-standardization](042-v2-audit-standardization.md)                                                     | implemented | |
 | 043 | [homepage-curated-highlights](043-homepage-curated-highlights.md)                                               | implemented | |
 | 044 | [homepage-dynamic-bar-chart](044-homepage-dynamic-bar-chart.md)                                                 | implemented | |
+| 045 | [global-search-autocomplete](045-global-search-autocomplete.md)                                                 | implemented | |

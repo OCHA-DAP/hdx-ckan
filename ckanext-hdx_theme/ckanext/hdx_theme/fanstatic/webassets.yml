@@ -290,6 +290,7 @@ v2-page-scripts:
     - v2/navbar.js
     - vendor/hammer/hammer.js
     - v2/highlights-carousel.js
+    - v2/search-autocomplete.js
 
 v2-search-styles:
   output: ckanext-hdx_theme/%(version)s_v2-search-styles.css

@@ -1,0 +1,67 @@
+{#
+  Snippet: search-autocomplete-overlay.html
+
+  Full-screen search autocomplete overlay for MD and SM breakpoints.
+  Reuses the hdx-v2-search-filter-overlay pattern (CSS class, structure)
+  already defined in search.less / navbar.less.
+
+  Triggered by:
+    - SM: clicking the search icon button [data-action="open-search-overlay"]
+    - MD: focusing the navbar c-autocomplete input (JS redirects focus here)
+    - MD/SM: focusing the homepage hero c-autocomplete input
+
+  Opened/closed by v2/search-autocomplete.js via hdx-v2-search-filter-overlay--open.
+#}
+
+<div class="hdx-v2-search-filter-overlay" id="hdx-search-autocomplete-overlay">
+
+  {# ── Header ──────────────────────────────────────────────── #}
+  <div class="hdx-v2-search-filter-overlay__header">
+    <span class="hdx-v2-search-filter-overlay__title">{{ _('Search') }}</span>
+    <button type="button"
+            class="hdx-v2-search-filter-overlay__close"
+            data-action="close-search-overlay"
+            aria-label="{{ _('Close search') }}">
+      {% include h.url_for_static('v2/icons/close.svg') %}
+    </button>
+  </div>
+
+  {# ── Body ─────────────────────────────────────────────────── #}
+  <div class="hdx-v2-search-filter-overlay__body">
+    <form class="hdx-v2-search-filter-overlay__form"
+          id="hdx-search-overlay-form"
+          action="{{ h.url_for('dataset.search') }}"
+          method="get"
+          role="search">
+      <input type="hidden" name="ext_search_source" value="main-nav">
+
+      {% snippet 'v2/components/search-input.html',
+          size='l',
+          name='q',
+          id='hdx-search-overlay-input',
+          placeholder=_('Search for datasets, locations or organisations'),
+          show_clear=True,
+          autocomplete='off' %}
+
+      {# Results container — populated by JS #}
+      <div class="hdx-v2-search-filter-overlay__results c-autocomplete__results"
+           role="listbox"
+           aria-label="{{ _('Search suggestions') }}">
+      </div>
+    </form>
+  </div>
+
+  {# ── Footer ───────────────────────────────────────────────── #}
+  <div class="hdx-v2-search-filter-overlay__footer">
+    {% snippet 'v2/components/button.html',
+        style='tertiary', size='l', type='text', label=_('Clear'),
+        state='disabled',
+        attrs={'data-action': 'clear-search-overlay'} %}
+
+    {% snippet 'v2/components/button.html',
+        style='primary', size='l', type='text', label=_('View all results'),
+        button_type='submit',
+        attrs={'form': 'hdx-search-overlay-form'} %}
+  </div>
+
+</div>

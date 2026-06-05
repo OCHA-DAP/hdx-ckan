@@ -2,7 +2,7 @@
 
 **Status**: In-progress
 **Started**: 2026-04-16
-**Last Updated**: 2026-06-02
+**Last Updated**: 2026-06-05
 
 ---
 
@@ -168,7 +168,7 @@ Bundle configuration:
   - `v2/navbar.css` — main navbar styles (logo, search, nav items, actions, offcanvas)
   - `v2/styles.css` — shared global v2 styles
 - `hdx_theme/v2-components-scripts` ✅ Contains: `focus-trap.js`, `password-toggle.js`, `clamped-text.js` (show-more/less), `dropdown.js`, `page-header.js`, `anchor-links.js` (smooth scroll + mobile dropdown + active tracking), `copy-button.js`
-- `hdx_theme/v2-page-scripts` ✅ Contains `v2/navbar.js` — navbar panel and offcanvas JS (tasks 018 + 019)
+- `hdx_theme/v2-page-scripts` ✅ Contains `v2/navbar.js` (navbar panel + offcanvas, tasks 018 + 019) + `v2/search-autocomplete.js` (global search autocomplete, task 045)
 - `hdx_theme/v2-search-styles` — page-specific: preloads `v2-page-styles`, adds `v2/search.css`
 - `hdx_theme/v2-search-scripts` — page-specific: preloads `v2-page-scripts`, adds `v2/search.js`
 - `hdx_theme/v2-dataset-styles` — page-specific: preloads `v2-page-styles`, adds `v2/dataset.css`

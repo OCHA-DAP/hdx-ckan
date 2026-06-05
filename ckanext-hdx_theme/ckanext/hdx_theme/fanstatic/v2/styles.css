@@ -89,6 +89,9 @@
     width: auto;
   }
 }
+.hdx-v2-hero__search > form {
+  width: 100%;
+}
 .hdx-v2-hero .c-button--secondary {
   background-color: transparent;
   border-color: var(--hdx-neutral-2);
