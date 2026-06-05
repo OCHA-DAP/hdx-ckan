@@ -1,0 +1,50 @@
+@import "../mixins.less";
+
+// ============================================================
+// c-breadcrumb — horizontal breadcrumb trail
+// ============================================================
+// Figma source: "Navigation and Pagination"
+// ============================================================
+
+.c-breadcrumb {
+    .hdx-body-xs();                  // 12 px body regular
+    display:     flex;
+    align-items: center;
+    flex-wrap:   nowrap;             // single line — no wrapping
+    overflow:    hidden;             // clip any overflow at container level
+    width:       100%;               // always fill the full row
+    gap:         var(--hdx-space-2);
+    padding:     var(--hdx-space-2) 0;
+
+    &__item {
+        display:     flex;
+        align-items: center;
+        overflow:    hidden;
+        min-width:   0;              // allow flex item to shrink below content size
+
+        // Truncate link text only when actually squeezed — no artificial max-width cap
+        .c-text-link {
+            overflow:      hidden;
+            text-overflow: ellipsis;
+            white-space:   nowrap;
+        }
+    }
+
+    // Separator (/)
+    &__separator {
+        .hdx-body-s();               // 14 px body regular (slightly larger than crumb text)
+        color:       var(--hdx-neutral-5);
+        margin-left: var(--hdx-space-2);
+        flex-shrink: 0;              // separator is always visible
+    }
+
+    // Current (non-linked) crumb
+    &__current {
+        color:       var(--hdx-neutral-7);
+        line-height: 130%;
+        overflow:    hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        min-width:   0;              // allow last item to shrink equally
+    }
+}

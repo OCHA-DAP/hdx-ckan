@@ -1,3 +1,11 @@
+.hdx-v2-dataset-list__cards {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hdx-space-4);
+}
+.hdx-v2-dataset-list__cards .highlight {
+  background-color: var(--hdx-warning-1);
+}
 .hdx-v2-list-header {
   display: flex;
   align-items: center;

@@ -237,7 +237,11 @@ v2-components-styles:
     - v2/components/label.css
     - v2/components/letter-anchor.css
     - v2/components/list-item.css
-    - v2/components/navigation.css
+    - v2/components/nav-item.css
+    - v2/components/anchor-links.css
+    - v2/components/pagination.css
+    - v2/components/breadcrumb.css
+    - v2/components/page-header.css
     - v2/components/selection.css
     - v2/components/showcase-card.css
     - v2/components/text-link.css
@@ -249,8 +253,7 @@ v2-components-scripts:
   <<: *common-js
   output: ckanext-hdx_theme/%(version)s_v2-components-scripts.js
   contents:
-    - v2/components/focus-trap.js
-    - v2/components/password-toggle.js
+    - v2/components/input-field.js
     - v2/components/clamped-text.js
     - v2/components/dropdown.js
     - v2/components/page-header.js
@@ -269,17 +272,21 @@ v2-page-styles:
     - v2/top-bar.css
     - v2/footer.css
     - v2/navbar.css
-    - v2/styles.css
+
+v2-home-page-styles:
+  output: ckanext-hdx_theme/%(version)s_v2-home-page-styles.css
+  <<: *common-css
+  contents:
+    - v2/home-page.css
     - v2/bar-chart.css
 
-v2-homepage-scripts:
+v2-home-page-scripts:
   <<: *common-js
-  output: ckanext-hdx_theme/%(version)s_v2-homepage-scripts.js
-  extra:
-    preload:
-      - hdx_theme/v2-page-scripts
+  output: ckanext-hdx_theme/%(version)s_v2-home-page-scripts.js
   contents:
-    - homepage/bar-chart.js
+    - vendor/hammer/hammer.js
+    - v2/highlights-carousel.js
+    - v2/bar-chart.js
 
 v2-page-scripts:
   <<: *common-js
@@ -287,56 +294,50 @@ v2-page-scripts:
   extra:
     preload:
       - hdx_theme/v2-components-scripts
+      - hdx_theme/v2-search-scripts
   contents:
     - v2/navbar.js
-    - vendor/hammer/hammer.js
-    - v2/highlights-carousel.js
     - v2/search-autocomplete.js
 
-v2-search-styles:
-  output: ckanext-hdx_theme/%(version)s_v2-search-styles.css
+v2-search-page-styles:
+  output: ckanext-hdx_theme/%(version)s_v2-search-page-styles.css
   <<: *common-css
-  extra:
-    preload:
-      - hdx_theme/v2-page-styles
   contents:
-    - v2/search.css
+    - v2/search-page.css
 
-v2-dataset-styles:
-  output: ckanext-hdx_theme/%(version)s_v2-dataset-styles.css
+v2-dataset-page-styles:
+  output: ckanext-hdx_theme/%(version)s_v2-dataset-page-styles.css
   <<: *common-css
-  extra:
-    preload:
-      - hdx_theme/v2-page-styles
   contents:
-    - v2/dataset.css
+    - v2/dataset-page.css
 
-v2-resource-styles:
-  output: ckanext-hdx_theme/%(version)s_v2-resource-styles.css
+v2-resource-page-styles:
+  output: ckanext-hdx_theme/%(version)s_v2-resource-page-styles.css
   <<: *common-css
-  extra:
-    preload:
-      - hdx_theme/v2-page-styles
   contents:
     - v2/resource-page.css
+
+v2-dataset-page-scripts:
+  <<: *common-js
+  output: ckanext-hdx_theme/%(version)s_v2-dataset-page-scripts.js
+  contents:
+    - v2/dataset-page.js
 
 v2-search-scripts:
   <<: *common-js
   output: ckanext-hdx_theme/%(version)s_v2-search-scripts.js
-  extra:
-    preload:
-      - hdx_theme/v2-page-scripts
   contents:
-    - v2/search.js
+    - search_/minisearch.min.js
+    - search_/normalize.js
+    - search_/lunr/feature-index.js
 
-v2-dataset-scripts:
+v2-search-page-scripts:
   <<: *common-js
-  output: ckanext-hdx_theme/%(version)s_v2-dataset-scripts.js
-  extra:
-    preload:
-      - hdx_theme/v2-page-scripts
+  output: ckanext-hdx_theme/%(version)s_v2-search-page-scripts.js
   contents:
-    - v2/dataset.js
+    - vendor/jquery.highlight/jquery.highlight.js
+    - highlight.js
+    - v2/search-page.js
 
 hdx-signals-scripts:
   <<: *common-js

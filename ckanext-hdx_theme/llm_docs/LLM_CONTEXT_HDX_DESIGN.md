@@ -154,7 +154,7 @@ Example page-specific template (light search):
 ### Homepage (`/`)
 
 - **Template**: `ckanext-hdx_theme/ckanext/hdx_theme/templates/home/index.html`
-  - Extends `v2/page.html`. No additional asset bundles — inherits the full `v2/page.html` stack.
+  - Extends `v2/page.html`. Adds `hdx_theme/v2-home-page-styles` (hero, intro, highlights, bar-chart) and `hdx_theme/v2-home-page-scripts` (Hammer.js, highlights-carousel.js, bar-chart.js).
 
 ---
 
@@ -165,7 +165,7 @@ Example page-specific template (light search):
 - **Template**: `ckanext-hdx_theme/ckanext/hdx_theme/templates/search/search.html`
   - Extends `v2/page.html`. Uses `v2=true` gate to switch UI inside shared snippets.
   - Two-column layout: `hdx-v2-search-sidebar` (filter panel) + `hdx-v2-search-content` (results).
-- **Core assets**: `hdx_theme/v2-search-styles`, `hdx_theme/search-scripts`, `hdx_theme/v2-search-scripts`.
+- **Core assets**: `hdx_theme/v2-search-page-styles`, `hdx_theme/v2-search-page-scripts` (highlight.js + search-page.js). MiniSearch/feature-index libs auto-loaded via `v2-search-scripts` (preloaded by `v2-page-scripts`).
 
 #### Legacy desktop version
 

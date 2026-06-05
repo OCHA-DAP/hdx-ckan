@@ -123,6 +123,7 @@
   gap: var(--hdx-space-1);
   position: relative;
   width: 100%;
+  text-align: left;
 }
 .c-autocomplete .c-search-input {
   align-self: stretch;

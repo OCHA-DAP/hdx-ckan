@@ -1,0 +1,94 @@
+@import "../mixins.less";
+
+// ============================================================
+// c-pagination — numbered page control bar
+// ============================================================
+// Figma source: "Navigation and Pagination"
+// ============================================================
+
+// ── Local tokens ────────────────────────────────────────────
+@c-pager-border:        1px solid var(--hdx-neutral-2);   // #d8e0e1
+@c-pager-active-bg:     var(--hdx-neutral-0);
+@c-pager-active-color:  var(--hdx-neutral-95);            // #101212
+// ────────────────────────────────────────────────────────────
+
+.c-pagination {
+    display: inline-flex;
+
+    &__item {
+        background-color: var(--hdx-neutral-0);
+        border:           @c-pager-border;
+        box-sizing:       border-box;
+        display:          flex;
+        align-items:      center;
+        justify-content:  center;
+        cursor:           pointer;
+        .hdx-body-regular-base();        // font-family + weight + line-height, no font-size
+        color:            var(--hdx-neutral-8);
+        text-decoration:  none;
+        transition:       background-color 0.15s ease, color 0.15s ease;
+        // Collapse borders
+        margin-left:      -1px;
+        position:         relative;
+
+        &:first-child { margin-left: 0; }
+
+        &--active {
+            background-color: @c-pager-active-bg;
+            color:            @c-pager-active-color;
+            font-weight:      var(--hdx-fw-medium);
+            z-index:          1;
+
+            &:hover {
+                background-color: @c-pager-active-bg;
+                color:            @c-pager-active-color;
+            }
+        }
+
+        // Prev / next arrows
+        &--prev,
+        &--next {
+            line-height: 0;
+            color:       var(--hdx-neutral-5);
+        }
+
+        &--ellipsis {
+            cursor: default;
+            &:hover { background-color: var(--hdx-neutral-0); }
+        }
+
+        &:not(.is-disabled):hover {
+            color: var(--hdx-primary-5);
+        }
+    }
+
+    // ── Size: MD (38 px cells) ───────────────────────────────
+    &--size-md &__item {
+        width:     2.375rem;  // 38 px — Figma spec, between space-8 (32px) and space-10 (40px)
+        font-size: var(--hdx-fs-s); // 14 px
+
+        &--prev,
+        &--next { padding: var(--hdx-space-1) var(--hdx-space-13); }   // 4 6
+
+        &--page,
+        &--active,
+        &--ellipsis { padding: var(--hdx-space-1) var(--hdx-space-3); } // 4 12
+    }
+
+    // ── Size: SM (28 px cells) ───────────────────────────────
+    &--size-sm &__item {
+        width:     1.75rem;   // 28 px — Figma spec, between space-6 (24px) and space-8 (32px)
+        font-size: var(--hdx-fs-xs); // 12 px
+
+        &--prev,
+        &--next { padding: var(--hdx-space-15) var(--hdx-space-13); }   // 2 6
+
+        &--page,
+        &--active,
+        &--ellipsis { padding: var(--hdx-space-15) var(--hdx-space-3); } // 2 12
+    }
+
+    // Chevron icon inside prev/next
+    &--size-md &__item img { width: var(--hdx-space-6); }   // 24 px
+    &--size-sm &__item img { width: var(--hdx-space-4); }   // 16 px
+}
