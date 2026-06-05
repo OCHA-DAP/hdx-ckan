@@ -1,10 +1,5 @@
 {% extends "v2/page.html" %}
 
-{% block styles %}
-  {{ super() }}
-  {% asset 'hdx_theme/v2-search-styles' %}
-{% endblock %}
-
 {% block analytics_came_from %}{{ analytics.analytics_came_from }}{% endblock %}
 {% block analytics_supports_notifications %}{{ analytics.analytics_supports_notifications }}{% endblock %}
 
