@@ -46,10 +46,9 @@
   function performSearch(query) {
     if (!searchIndex) return { results: [], termList: [] };
 
-    var trimmed  = query.trim().slice(0, MAX_QUERY_LEN);
-    var termList = typeof toNormalForm !== 'undefined'
-      ? toNormalForm(trimmed.split(/\s+/).filter(function (w) { return w.length; }))
-      : trimmed.split(/\s+/).filter(function (w) { return w.length; });
+    var trimmed = query.trim().slice(0, MAX_QUERY_LEN);
+    var normalized = typeof toNormalForm !== 'undefined' ? toNormalForm(trimmed) : trimmed;
+    var termList = normalized.split(/\s+/).filter(function (w) { return w.length; });
 
     var modifiedQ = termList.join(' ');
     if (!modifiedQ) return { results: [], termList: [] };
@@ -75,7 +74,8 @@
 
   function processTitle(title, termList) {
     if (!termList || !termList.length) return title;
-    var re = new RegExp(termList.join('|'), 'gi');
+    var terms = termList.map(function (t) { return String(t).replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); });
+    var re = new RegExp(terms.join('|'), 'gi');
     return title.replace(re, '<strong>$&</strong>');
   }
 
@@ -116,9 +116,8 @@
       var a = document.createElement('a');
       a.className = 'c-text-link c-text-link--tertiary c-text-link--size-m c-autocomplete__result-label';
       a.href      = item.url;
-      a.title     = title;
+      a.title     = item.title;
       a.innerHTML = processTitle(title, termList);
-
       linkWrap.appendChild(a);
 
       var badge = document.createElement('span');
@@ -142,6 +141,23 @@
     var href = row.getAttribute('data-href');
     var type = row.getAttribute('data-type');
     if (!href) return;
+
+    var source =
+      (row.closest && row.closest('[data-hdx-v2-search-autocomplete]') &&
+        row.closest('[data-hdx-v2-search-autocomplete]').getAttribute('data-search-source')) ||
+      (ovSourceInput && ovSourceInput.value) ||
+      '';
+
+    if (source) {
+      try {
+        var u = new URL(href, window.location.origin);
+        u.searchParams.set('ext_search_source', source);
+        href = u.toString();
+      } catch (err) {
+        // Ignore URL parse errors
+      }
+    }
+
     var follow = function () { window.location.href = href; };
     if (searchTerm && type && typeof hdxUtil !== 'undefined' && hdxUtil.analytics) {
       hdxUtil.analytics.sendTopBarSearchEvents(searchTerm, type).then(follow, follow);
@@ -249,6 +265,8 @@
 
       var row = e.target.closest('.c-autocomplete__result-row[data-href]');
       if (row) {
+        e.preventDefault();
+        e.stopPropagation();
         navigateToResult(row, ovInput ? ovInput.value : '');
       }
     });
@@ -392,7 +410,10 @@
 
     results.addEventListener('mousedown', function (e) {
       var row = e.target.closest('.c-autocomplete__result-row[data-href]');
-      if (row) navigateToResult(row, input.value);
+      if (row) {
+        e.preventDefault();
+        navigateToResult(row, input.value);
+      }
     });
 
     // Set initial filled state if input has a server-provided value
