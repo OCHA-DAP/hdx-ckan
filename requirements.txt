@@ -22,7 +22,7 @@ babel==2.15.0
     # via
     #   -r requirements.in
     #   flask-babel
-bleach==6.1.0
+bleach==6.4.0
     # via -r requirements.in
 blinker==1.8.2
     # via
@@ -203,7 +203,6 @@ simplejson==3.19.2
     # via -r requirements.in
 six==1.16.0
     # via
-    #   bleach
     #   ckantoolkit
     #   python-dateutil
 sqlalchemy[mypy]==1.4.52
