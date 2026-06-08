@@ -5,6 +5,7 @@ Created on Sep 9, 2014
 '''
 import pytest
 import json
+import unittest.mock as mock
 # -*- coding: utf-8 -*-
 import logging as logging
 
@@ -462,3 +463,113 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
             "modified_package": modified_package,
             "modified_package_obj": modified_package_obj
         }
+
+
+class TestDatastoreCleanup:
+    """
+    Pure unit tests for _delete_datastore_if_no_longer_eligible.
+    No database or Solr required — all external calls are mocked.
+    """
+
+    RESOURCE_ID = 'res-001'
+    PACKAGE_ID = 'pkg-001'
+
+    def _make_context(self, resource_ids=None):
+        from ckanext.hdx_package.helpers.constants import FILE_WAS_UPLOADED
+        ids = resource_ids if resource_ids is not None else {self.RESOURCE_ID}
+        return {FILE_WAS_UPLOADED: ids}
+
+    def _make_package_dict(self, resource_format='CSV', datastore_active=True):
+        return {
+            'id': self.PACKAGE_ID,
+            'resources': [
+                {
+                    'id': self.RESOURCE_ID,
+                    'format': resource_format,
+                    'datastore_active': datastore_active,
+                }
+            ],
+        }
+
+    def _run(self, context, package_dict, get_action_mock):
+        from ckanext.hdx_package.actions.update import _delete_datastore_if_no_longer_eligible
+        with mock.patch(
+            'ckanext.hdx_package.actions.update._get_action',
+            side_effect=get_action_mock
+        ), mock.patch(
+            'ckanext.hdx_package.actions.update.tk'
+        ) as mock_tk:
+            mock_tk.config.get.side_effect = lambda key, default=None: (
+                ['csv', 'xls', 'xlsx', 'tsv'] if 'formats' in key else default
+            )
+            _delete_datastore_if_no_longer_eligible(context, package_dict)
+
+    def _make_get_action(self, hdx_allowed=True):
+        """Returns a side_effect function for _get_action that handles both
+        hdx_is_package_allowed_for_datastore and datastore_delete calls."""
+        datastore_delete_mock = mock.MagicMock()
+
+        def side_effect(action_name):
+            if action_name == 'hdx_is_package_allowed_for_datastore':
+                return lambda ctx, data: hdx_allowed
+            if action_name == 'datastore_delete':
+                return datastore_delete_mock
+            return mock.MagicMock()
+
+        return side_effect, datastore_delete_mock
+
+    def test_no_delete_when_format_supported_and_allowed(self):
+        """CSV + datastore_active=True + allowlist=True → datastore_delete NOT called."""
+        get_action_side_effect, datastore_delete_mock = self._make_get_action(hdx_allowed=True)
+        self._run(
+            self._make_context(),
+            self._make_package_dict(resource_format='CSV', datastore_active=True),
+            get_action_side_effect,
+        )
+        datastore_delete_mock.assert_not_called()
+
+    def test_delete_when_format_not_supported(self):
+        """PDF + datastore_active=True + allowlist=True → datastore_delete called once."""
+        get_action_side_effect, datastore_delete_mock = self._make_get_action(hdx_allowed=True)
+        self._run(
+            self._make_context(),
+            self._make_package_dict(resource_format='PDF', datastore_active=True),
+            get_action_side_effect,
+        )
+        datastore_delete_mock.assert_called_once_with(
+            {'ignore_auth': True},
+            {'resource_id': self.RESOURCE_ID, 'force': True},
+        )
+
+    def test_delete_when_not_hdx_allowed(self):
+        """CSV + datastore_active=True + allowlist=False → datastore_delete called once."""
+        get_action_side_effect, datastore_delete_mock = self._make_get_action(hdx_allowed=False)
+        self._run(
+            self._make_context(),
+            self._make_package_dict(resource_format='CSV', datastore_active=True),
+            get_action_side_effect,
+        )
+        datastore_delete_mock.assert_called_once_with(
+            {'ignore_auth': True},
+            {'resource_id': self.RESOURCE_ID, 'force': True},
+        )
+
+    def test_no_delete_when_datastore_not_active(self):
+        """PDF + datastore_active=False → datastore_delete NOT called."""
+        get_action_side_effect, datastore_delete_mock = self._make_get_action(hdx_allowed=True)
+        self._run(
+            self._make_context(),
+            self._make_package_dict(resource_format='PDF', datastore_active=False),
+            get_action_side_effect,
+        )
+        datastore_delete_mock.assert_not_called()
+
+    def test_no_delete_for_new_resource(self):
+        """FILE_WAS_UPLOADED = {'NEW'} → datastore_delete NOT called."""
+        get_action_side_effect, datastore_delete_mock = self._make_get_action(hdx_allowed=True)
+        self._run(
+            self._make_context(resource_ids={'NEW'}),
+            self._make_package_dict(resource_format='PDF', datastore_active=True),
+            get_action_side_effect,
+        )
+        datastore_delete_mock.assert_not_called()

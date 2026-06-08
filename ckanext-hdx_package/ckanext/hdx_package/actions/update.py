@@ -188,15 +188,55 @@ def _fetch_prev_resources_info(model, resource_ids):
     return id_to_resource_map
 
 
-def _submit_uploads_to_datapusher_plus(context: Context, data: Dict[str, Any]):
+def _submit_uploads_to_datapusher_plus(context: Context, package_dict: Dict[str, Any]):
     for uploaded_resource_id in context.get(FILE_WAS_UPLOADED, {}):
         if uploaded_resource_id != 'NEW':
             uploaded_resource_dict = next(
-                (r for r in data.get('resources', []) if r.get('id') == uploaded_resource_id), None
+                (r for r in package_dict.get('resources', []) if r.get('id') == uploaded_resource_id), None
             )
             for item in plugins.PluginImplementations(plugins.IResourceController):
                 if item.name == 'datapusher_plus':
                     item._submit_to_datapusher(uploaded_resource_dict)  # noqa
+
+
+def _delete_datastore_if_no_longer_eligible(context: Context, package_dict: Dict[str, Any]):
+    uploaded_resource_ids = context.get(FILE_WAS_UPLOADED, set())
+    if not uploaded_resource_ids:
+        return
+
+    supported_formats = (
+        tk.config.get('ckan.datapusher.formats')
+        or tk.config.get('ckanext.datapusher_plus.formats')
+        or []
+    )
+    supported_formats_lower = {f.lower() for f in supported_formats}
+
+    try:
+        hdx_allowed = _get_action('hdx_is_package_allowed_for_datastore')(
+            {'ignore_auth': True}, {'package_id': package_dict['id']}
+        )
+    except Exception:
+        log.exception('Could not determine datastore allowlist status for package %s', package_dict.get('id'))
+        hdx_allowed = False
+
+    for resource_id in uploaded_resource_ids:
+        if resource_id == 'NEW':
+            continue
+        resource_dict = next(
+            (r for r in package_dict.get('resources', []) if r.get('id') == resource_id), None
+        )
+        if not resource_dict or not resource_dict.get('datastore_active'):
+            continue
+        resource_format = (resource_dict.get('format') or '').lower()
+        if resource_format not in supported_formats_lower or not hdx_allowed:
+            try:
+                _get_action('datastore_delete')(
+                    {'ignore_auth': True}, {'resource_id': resource_id, 'force': True}
+                )
+                log.info('Deleted datastore for resource %s (format=%s, hdx_allowed=%s)',
+                         resource_id, resource_format, hdx_allowed)
+            except Exception:
+                log.exception('Failed to delete datastore for resource %s', resource_id)
 
 
 @ckanext.hdx_package.helpers.resource_triggers.common.trigger_4_resource_changes(
@@ -360,9 +400,6 @@ def package_update(
 
         item.after_dataset_update(context, data)
 
-    # Added by HDX - triggering datapusher plus on file uploads
-    _submit_uploads_to_datapusher_plus(context, data)
-
     if not context.get('defer_commit'):
         model.repo.commit()
 
@@ -376,6 +413,10 @@ def package_update(
     # we could update the dataset so we should still be able to read it.
     context['ignore_auth'] = True
     new_data_dict = _get_action('package_show')(context, {'id': data_dict['id'], "include_plugin_data": include_plugin_data})
+
+    # Added by HDX - triggering datapusher plus on file uploads (after commit so DB state is consistent)
+    _submit_uploads_to_datapusher_plus(context, new_data_dict)
+    _delete_datastore_if_no_longer_eligible(context, new_data_dict)
 
     # HDX - delete previous files if needed
     for resource_dict in new_data_dict.get('resources'):
