@@ -12,6 +12,7 @@
 #}
 
 {% set mailchimp_action = "//humdata.us14.list-manage.com/subscribe/post?u=ea3f905d50ea939780139789d&id=99796325d1" %}
+{% set docs_links = h.HDX_CONST('DOCUMENTATION_LINKS') %}
 
 <footer class="hdx-v2-footer">
   <div class="hdx-v2-container">
@@ -148,13 +149,13 @@
           <ul class="hdx-v2-footer__nav-list">
             <li>
               {% snippet 'v2/components/text-link.html',
-                  label='Documentation', href='https://docs.humdata.org',
+                  label='Documentation', href=docs_links['MAIN'],
                   style='primary', size='s',
                   attrs={'data-module': 'hdx_click_stopper', 'data-module-link_type': 'footer'} %}
             </li>
             <li>
               {% snippet 'v2/components/text-link.html',
-                  label='QA Process', href='https://docs.humdata.org/publish',
+                  label='QA Process', href=docs_links['QA_PROCESS'],
                   style='primary', size='s',
                   attrs={'data-module': 'hdx_click_stopper', 'data-module-link_type': 'footer'} %}
             </li>
@@ -169,15 +170,15 @@
             </li>
             <li>
               {% snippet 'v2/components/text-link.html',
-                  label='Resources for Developers',
-                  href='https://docs.humdata.org/build',
+                  label='Build with HDX',
+                  href=docs_links['RESOURCES_FOR_DEVELOPERS'],
                   style='primary', size='s',
                   attrs={'data-module': 'hdx_click_stopper', 'data-module-link_type': 'footer'} %}
             </li>
             <li>
               {% snippet 'v2/components/text-link.html',
                   label='Data Licenses',
-                  href='https://docs.humdata.org/about/data-licenses',
+                  href=docs_links['DATA_LICENSES'],
                   style='primary', size='s',
                   attrs={'data-module': 'hdx_click_stopper', 'data-module-link_type': 'footer'} %}
             </li>
@@ -233,7 +234,7 @@
     <div class="hdx-v2-footer__legal">
       {% snippet 'v2/components/text-link.html',
           label='Terms of Service',
-          href='https://docs.humdata.org/about/hdx-terms-of-service',
+          href=docs_links['TERMS_OF_SERVICE'],
           style='primary', size='s',
           attrs={'data-module': 'hdx_click_stopper', 'data-module-link_type': 'footer'} %}
       {% snippet 'v2/components/text-link.html',
