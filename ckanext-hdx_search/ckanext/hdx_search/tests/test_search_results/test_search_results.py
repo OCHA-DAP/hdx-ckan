@@ -47,8 +47,7 @@ class TestHDXSearchResults(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
 
         assert dataset_counts == 3, '3 datasets in total'
 
-    # TODO: update this test after implementing the search autocomplete feature
-    # def test_search_recommendations(self):
-    #     url = h.url_for('hdx_search.search', q='Nepal')
-    #     result = self.app.get(url)
-    #     assert '<div class="search-ahead"' in result.body
+    def test_search_recommendations(self):
+        url = h.url_for('hdx_search.search', q='Nepal')
+        result = self.app.get(url)
+        assert '<div class="c-autocomplete__results"' in result.body
