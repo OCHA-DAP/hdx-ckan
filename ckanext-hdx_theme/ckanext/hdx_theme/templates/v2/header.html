@@ -114,9 +114,10 @@
       {# Right: Documentation link #}
       <nav class="hdx-v2-top-bar__nav">
         {% snippet 'v2/components/text-link.html',
-            label=_('Documentation'), href='https://docs.humdata.org',
+            label=_('Documentation'), href=h.HDX_CONST('DOCUMENTATION_LINKS')['MAIN'],
             style='primary', size='s',
-            attrs={'data-module': 'hdx_click_stopper', 'data-module-link_type': 'header'} %}
+            attrs={'data-module': 'hdx_click_stopper', 'data-module-link_type': 'header',
+                   'aria-label': 'documentation link'} %}
       </nav>
 
     </div>
