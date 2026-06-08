@@ -1,3 +1,11 @@
+.hdx-v2-dataset-list__cards {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hdx-space-4);
+}
+.hdx-v2-dataset-list__cards .highlight {
+  background-color: var(--hdx-warning-1);
+}
 .hdx-v2-list-header {
   display: flex;
   align-items: center;
@@ -131,76 +139,4 @@
   justify-content: center;
   margin-top: var(--hdx-space-8);
   margin-bottom: var(--hdx-space-10);
-}
-.hdx-v2-search-filter-overlay {
-  display: none;
-  position: fixed;
-  inset: 0;
-  z-index: 1060;
-  background-color: var(--hdx-neutral-0);
-  flex-direction: column;
-}
-.hdx-v2-search-filter-overlay--open {
-  display: flex;
-}
-.hdx-v2-search-filter-overlay__header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: var(--hdx-space-6) var(--hdx-space-6) var(--hdx-space-3);
-  flex-shrink: 0;
-}
-.hdx-v2-search-filter-overlay__title {
-  font-family: var(--hdx-font-body);
-  font-size: var(--hdx-fs-l);
-  font-weight: var(--hdx-fw-semibold);
-  line-height: var(--hdx-lh-normal);
-  color: var(--hdx-neutral-95);
-}
-.hdx-v2-search-filter-overlay__close {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: var(--hdx-neutral-8);
-  flex-shrink: 0;
-}
-.hdx-v2-search-filter-overlay__close svg {
-  width: 1.5rem;
-  height: 1.5rem;
-}
-.hdx-v2-search-filter-overlay__body {
-  flex: 1;
-  overflow-y: auto;
-  padding: var(--hdx-space-6);
-}
-.hdx-v2-search-filter-overlay__body .hdx-v2-search-filters {
-  width: 100%;
-}
-.hdx-v2-search-filter-overlay__body .hdx-v2-overlay-nav-controls {
-  margin-bottom: var(--hdx-space-6);
-}
-.hdx-v2-search-filter-overlay__body .hdx-v2-overlay-nav-controls .hdx-v2-nav-controls {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  align-items: center;
-  width: 100%;
-  gap: var(--hdx-space-4);
-}
-.hdx-v2-search-filter-overlay__body .hdx-v2-overlay-nav-controls .hdx-v2-nav-ctrl-pair:last-child {
-  justify-content: flex-end;
-}
-.hdx-v2-search-filter-overlay__body .hdx-v2-overlay-nav-controls .hdx-v2-nav-ctrl-pair:last-child .c-dropdown__panel {
-  left: auto;
-  right: 0;
-}
-.hdx-v2-search-filter-overlay__footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: var(--hdx-space-4);
-  border-top: 1px solid var(--hdx-neutral-1);
-  flex-shrink: 0;
 }

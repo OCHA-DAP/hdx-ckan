@@ -1031,6 +1031,16 @@
       <br>
     </div>
 
+    <h2 class="demo-subsection__heading">Search input — Size L with clear button (show_clear=True)</h2>
+    <div class="demo-row--column demo-max-width-l">
+      {% snippet 'v2/components/search-input.html',
+          size='l', placeholder='Value', state='enabled', show_clear=True %}
+      <br>
+      {% snippet 'v2/components/search-input.html',
+          size='l', value='Sudan', state='filled', show_clear=True %}
+      <br>
+    </div>
+
     <h2 class="demo-subsection__heading">Search input — Size M</h2>
     <div class="demo-row--column demo-max-width-m">
       {% snippet 'v2/components/search-input.html',
@@ -1044,7 +1054,7 @@
       <br>
     </div>
 
-    <h2 class="demo-subsection__heading">Autocomplete (panel open — static preview)</h2>
+    <h2 class="demo-subsection__heading">Autocomplete — with chips (panel open, static preview)</h2>
     <div class="demo-max-width-xl">
       {% snippet 'v2/components/autocomplete.html',
           placeholder='Search datasets, locations, tags…',
@@ -1052,12 +1062,26 @@
           show_panel=True,
           trending_label='Trending',
           chips=['Locations', 'West Africa', 'Sudan', 'Ukraine'],
+          form_action='#',
+          search_source='demo',
+          confirm_label='View all results' %}
+    </div>
+
+    <h2 class="demo-subsection__heading">Autocomplete — with results (panel open, static preview)</h2>
+    <div class="demo-max-width-xl">
+      {% snippet 'v2/components/autocomplete.html',
+          placeholder='Search for datasets, locations or organisations',
+          value='Ukr',
+          state='filled',
+          show_panel=True,
+          form_action='#',
+          search_source='demo',
           results=[
-            {'label': 'Sudan humanitarian response plan 2024', 'url': '#', 'count': 'Dataset'},
-            {'label': 'West Africa food security data',        'url': '#', 'count': 'Dataset'},
-            {'label': 'Global displacement report',           'url': '#', 'count': 'Dataset'},
+            {'label': 'Ukraine', 'url': '#', 'count': 'Location', 'type': 'location'},
+            {'label': 'UNHCR (Ukraine)', 'url': '#', 'count': 'Organisation', 'type': 'organisation'},
+            {'label': 'Ukraine — Frontline Monitoring', 'url': '#', 'count': 'Dataset', 'type': 'dataset'},
           ],
-          confirm_label='Search all datasets' %}
+          confirm_label='View all results' %}
     </div>
   </section>
 

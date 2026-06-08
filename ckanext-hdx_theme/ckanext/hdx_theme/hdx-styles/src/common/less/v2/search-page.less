@@ -4,9 +4,34 @@
 // ============================================================
 
 @import "mixins.less";
+
+// ============================================================
+// hdx-v2-dataset-list — search results card list layout
+// Figma: llm_docs/redesign/figma_exports/dataset-list.html
+// ============================================================
+
+.hdx-v2-dataset-list {
+    &__cards {
+        display: flex;
+        flex-direction: column;
+        gap: var(--hdx-space-4);
+
+        // ============================================================
+        // Search highlight — text matched by the highlight.js module.
+        // The legacy rule lives in deprecated.css (page-styles bundle),
+        // which is not loaded on v2 pages.
+        // ============================================================
+
+        .highlight {
+            background-color: var(--hdx-warning-1);
+        }
+    }
+}
+
 // ────────────────────────────────────────────────────────────
 // hdx-v2-list-header — dataset list header (title + controls)
 // ────────────────────────────────────────────────────────────
+
 
 .hdx-v2-list-header {
     display:       flex;
@@ -174,94 +199,4 @@
     justify-content: center;
     margin-top:      var(--hdx-space-8);   // 32px
     margin-bottom:   var(--hdx-space-10);
-}
-// ────────────────────────────────────────────────────────────
-// hdx-v2-search-filter-overlay — full-screen overlay (MD/SM)
-// ────────────────────────────────────────────────────────────
-
-.hdx-v2-search-filter-overlay {
-    display:          none;
-    position:         fixed;
-    inset:            0;
-    z-index:          1060;
-    background-color: var(--hdx-neutral-0);
-    flex-direction:   column;
-
-    &--open {
-        display: flex;
-    }
-
-    &__header {
-        display:         flex;
-        align-items:     center;
-        justify-content: space-between;
-        padding:         var(--hdx-space-6) var(--hdx-space-6) var(--hdx-space-3);  // 24
-        flex-shrink:     0;
-    }
-
-    &__title {
-        .hdx-heading-h3();
-        color: var(--hdx-neutral-95);
-    }
-
-    &__close {
-        display:         flex;
-        align-items:     center;
-        justify-content: center;
-        background:      none;
-        border:          none;
-        cursor:          pointer;
-        color:           var(--hdx-neutral-8);
-        flex-shrink:     0;
-
-        svg { width: 1.5rem; height: 1.5rem; }
-    }
-
-    &__body {
-        flex:       1;
-        overflow-y: auto;
-        padding:    var(--hdx-space-6);  // 24
-
-        // Overlay inner wrapper: stretch to full overlay body width
-        .hdx-v2-search-filters {
-            width: 100%;
-        }
-
-        // ────────────────────────────────────────────────────────────
-        // hdx-v2-overlay-nav-controls — sort/limit inside the MD/SM overlay
-        // ────────────────────────────────────────────────────────────
-
-        .hdx-v2-overlay-nav-controls {
-            margin-bottom: var(--hdx-space-6);  // 24 px before filter groups
-
-            .hdx-v2-nav-controls {
-                display:               grid;
-                grid-template-columns: 1fr 1fr;
-                align-items:           center;
-                width:                 100%;
-                gap:                   var(--hdx-space-4);
-            }
-
-            // Sort by pair: right-aligned in its grid cell
-            .hdx-v2-nav-ctrl-pair:last-child {
-                justify-content: flex-end;
-                // Sort panel: right-anchored so it never overflows past the right viewport edge
-                .c-dropdown__panel {
-                    left:  auto;
-                    right: 0;
-                }
-            }
-        }
-
-    }
-
-    &__footer {
-        display:         flex;
-        align-items:     center;
-        justify-content: space-between;
-        padding:         var(--hdx-space-4);  // 16
-        border-top:      1px solid var(--hdx-neutral-1);
-        flex-shrink:     0;
-
-    }
 }

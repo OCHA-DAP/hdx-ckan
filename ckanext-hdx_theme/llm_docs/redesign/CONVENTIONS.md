@@ -162,7 +162,7 @@ Update ARIA attributes whenever state changes:
 ### Focus management
 
 Overlays that block page content (offcanvas drawer, modal, full-screen overlay) must:
-1. Move focus inside on open (use `window.FocusTrap` from `focus-trap.js`)
+1. Move focus inside on open (use `FocusTrap` — inlined in `v2/navbar.js`; copy the class if needed in future components)
 2. Trap Tab/Shift+Tab within the overlay
 3. Close on Escape
 4. Return focus to the triggering element on close
@@ -246,3 +246,79 @@ Leaving any of these unset produces an unclassed wrapper div and makes CSS targe
 ## `v2=True` gate policy
 
 Pages are gated with `{% if v2 %}` during rollout and promoted to always-v2 when v1 is retired for that page. Do not remove a gate without a deliberate, documented decision.
+
+---
+
+## Web assets — file naming
+
+Page-level LESS and JS files (non-component, non-layout) use the `-page` suffix:
+
+| Type | Pattern | Examples |
+|---|---|---|
+| Page styles | `{page-name}-page.less` | `search-page.less`, `dataset-page.less`, `home-page.less` |
+| Page scripts | `{page-name}-page.js` | `search-page.js`, `dataset-page.js` |
+| Component | `{component-name}.less/.js` | `anchor-links.less`, `dropdown.js` |
+| Layout / global | descriptive, no suffix | `layout.less`, `navbar.less`, `bar-chart.js` |
+
+---
+
+## Web assets — bundle naming
+
+Bundle keys mirror their file naming pattern: `v2-{page-name}-page-{styles|scripts}`.
+
+```
+v2-components-styles / v2-components-scripts   # design system — all v2 pages (via preload)
+v2-page-styles / v2-page-scripts               # layout + global — all v2 pages (explicit in page.html)
+v2-{page-name}-page-styles / -scripts          # page-specific — loaded only on that page
+v2-{lib-name}-scripts                          # utility libs — loaded via preload chain, no page scope
+```
+
+---
+
+## Web assets — preload chain
+
+Only the two foundational bundles may declare `extra: preload:` in `webassets.yml`:
+- `v2-page-styles` preloads `v2-components-styles`
+- `v2-page-scripts` preloads `v2-components-scripts` + `v2-search-scripts`
+
+All other page-specific bundles have **no preload**. Their dependencies are already loaded by the time they run because `v2/page.html` always loads the base bundles first. Adding redundant preloads is a no-op and just adds noise.
+
+---
+
+## Web assets — page-only code belongs in the page bundle
+
+Scripts and styles used exclusively on one page go into that page's bundle, not `v2-page-scripts`/`v2-page-styles`. Examples that were corrected: `highlights-carousel.js` + `Hammer.js` → `v2-home-page-scripts`; `search-page.js` → `v2-search-page-scripts`.
+
+---
+
+## One LESS file per component
+
+Each component gets its own file in `components/`. Do not group unrelated components in a single file (the old `navigation.less` pattern that mixed `c-nav-item`, `c-anchor-links`, `c-pagination`, `c-breadcrumb` is the anti-pattern).
+
+---
+
+## Inline single-consumer utilities
+
+If a utility class or function has exactly one consumer and no realistic reuse case, inline it into the consumer rather than maintaining a separate component file. (`FocusTrap` → inlined into `navbar.js` from `focus-trap.js`.)
+
+---
+
+## LESS — always use design tokens
+
+Use design tokens instead of raw values whenever a token exists:
+
+```less
+// Do
+width:  var(--hdx-space-1);    // 4px
+gap:    var(--hdx-space-3);    // 12px
+.hdx-body-s-medium();          // 14px medium
+
+// Don't
+width:  0.25rem;
+gap:    12px;
+font-family: var(--hdx-font-body);
+font-size: var(--hdx-fs-s);
+font-weight: var(--hdx-fw-medium);
+```
+
+Figma-specific values with no corresponding token (e.g. `7.05rem`, `11.25rem`) may stay raw — add a `// Figma spec` comment.

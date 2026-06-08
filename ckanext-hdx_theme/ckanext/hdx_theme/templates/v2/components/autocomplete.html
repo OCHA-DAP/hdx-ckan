@@ -12,9 +12,18 @@
   state           {string}  'enabled' | 'active' | 'filled'
                             default: 'enabled'
   name            {string}  input name.  default: 'q'
+  size            {string}  'l' | 'm' — passed to c-search-input. default: 'l'
   icon_src        {string}  Search icon.  default: 'v2/icons/search.svg'
 
-  show_panel      {bool}    Whether to render the suggestion panel.
+  form_action     {string}  If provided, wraps the component in a <form>
+                            with this action (GET method, role="search").
+                            default: ''
+  search_source   {string}  Value for the hidden ext_search_source param
+                            appended when form_action is set.  default: ''
+
+  show_panel      {bool}    Whether to show the panel on initial (SSR) render.
+                            The panel is always present in the DOM (hidden by
+                            default); JS removes the hidden attr to open it.
                             default: False
 
   trending_label  {string}  Section heading.  default: 'Trending'
@@ -26,48 +35,52 @@
   results         {list}    List of dicts: {label, url, count, type}.
                             default: []
 
-  confirm_label   {string}  "Search all" button label.  default: 'Search all'
+  confirm_label   {string}  "View all results" button label.  default: 'View all results'
   extra_classes   {string}  default: ''
   ─────────────────────────────────────────────────
   Example
 
-  {% snippet 'snippets/components/input-field/autocomplete.html',
+  {% snippet 'v2/components/autocomplete.html',
       placeholder='Search datasets…',
-      show_panel=True,
-      chips=['Locations', 'West Africa', 'Sudan'],
-      results=[
-        {'label': 'Sudan humanitarian response', 'url': '/dataset/abc', 'count': 'Dataset'},
-      ],
-      confirm_label='Search all datasets' %}
+      form_action=h.url_for('dataset.search'),
+      search_source='homepage-search' %}
 #}
 
 {% set placeholder    = placeholder    if placeholder    is defined else 'Search' %}
 {% set value          = value          if value          is defined else '' %}
 {% set state          = state          if state          is defined else 'enabled' %}
 {% set name           = name           if name           is defined else 'q' %}
+{% set size           = size           if size           is defined else 'l' %}
 {% set icon_src       = icon_src       if icon_src       is defined else 'v2/icons/search.svg' %}
+{% set form_action    = form_action    if form_action    is defined else '' %}
+{% set search_source  = search_source  if search_source  is defined else '' %}
 {% set show_panel     = show_panel     if show_panel     is defined else False %}
 {% set trending_label = trending_label if trending_label is defined else 'Trending' %}
 {% set chips          = chips          if chips          is defined else [] %}
 {% set location_label = location_label if location_label is defined else '' %}
 {% set results_label  = results_label  if results_label  is defined else 'Search results' %}
 {% set results        = results        if results        is defined else [] %}
-{% set confirm_label  = confirm_label  if confirm_label  is defined else 'Search all' %}
+{% set confirm_label  = confirm_label  if confirm_label  is defined else 'View all results' %}
 {% set extra_classes  = extra_classes  if extra_classes  is defined else '' %}
 
 {% set input_state = 'active' if state == 'active' else ('filled' if state == 'filled' else 'enabled') %}
 
+{% if form_action %}<form action="{{ form_action }}" method="get" role="search">
+  {% if search_source %}<input type="hidden" name="ext_search_source" value="{{ search_source }}">{% endif %}
+{% endif %}
 <div class="c-autocomplete{{ ' ' ~ extra_classes if extra_classes }}"
      role="combobox"
      aria-haspopup="listbox"
-     aria-expanded="{{ 'true' if show_panel else 'false' }}">
+     aria-expanded="{{ 'true' if show_panel else 'false' }}"
+     data-hdx-v2-search-autocomplete
+     {% if search_source %}data-search-source="{{ search_source }}"{% endif %}>
 
   {% snippet 'v2/components/search-input.html',
-      size='l', placeholder=placeholder, value=value,
-      state=input_state, name=name, icon_src=icon_src %}
+      size=size, placeholder=placeholder, value=value,
+      state=input_state, name=name, icon_src=icon_src,
+      show_clear=True %}
 
-  {% if show_panel %}
-  <div class="c-autocomplete__panel" role="listbox">
+  <div class="c-autocomplete__panel" role="listbox"{% if not show_panel %} hidden{% endif %}>
 
     {# ─ Trending chips ──────────────────────────── #}
     {% if chips %}
@@ -86,14 +99,13 @@
       </div>
     {% endif %}
 
-    {# ─ Results list ─────────────────────────────── #}
-    {% if results %}
-      <div class="c-autocomplete__results">
-        <span class="c-autocomplete__section-title"
-              style="font-size:0.875rem;color:#2f3536;">{{ results_label }}</span>
-
+    {# ─ Results list (populated by JS; server-side results shown if provided) ─ #}
+    <div class="c-autocomplete__results">
+      {% if results %}
         {% for result in results %}
-          <div class="c-autocomplete__result-row">
+          <div class="c-autocomplete__result-row"
+               data-href="{{ result.url }}"
+               data-type="{{ result.type if result.type is defined else '' }}">
             <div class="c-autocomplete__result-link">
               {% snippet 'v2/components/text-link.html',
                   label=result.label, href=result.url,
@@ -105,16 +117,17 @@
             {% endif %}
           </div>
         {% endfor %}
-      </div>
-    {% endif %}
+      {% endif %}
+    </div>
+
 
     {# ─ Confirm button ────────────────────────────── #}
     {% snippet 'v2/components/button.html',
-        style='secondary', size='m', type='text', label=confirm_label,
+        style='tertiary', size='m', type='text', label=confirm_label,
         state='enabled', button_type='submit',
         extra_classes='c-autocomplete__confirm-btn' %}
 
   </div>
-  {% endif %}
 
 </div>
+{% if form_action %}</form>{% endif %}

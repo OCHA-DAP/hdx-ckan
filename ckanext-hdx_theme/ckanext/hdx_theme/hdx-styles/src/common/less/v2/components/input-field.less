@@ -3,6 +3,8 @@
 // c-autocomplete — search input + suggestion panel
 // ============================================================
 // Figma source: "Input field / Search / Autocomplete"
+
+@import "../mixins.less";
 // Note: Figma calls these "Search" (the bar) and "Autocomplete"
 //       (the bar + dropdown panel combo).
 // ============================================================
@@ -89,6 +91,41 @@
         }
     }
 
+    // Custom clear (×) button — visible only when .c-search-input--filled
+    &__clear {
+        display:     none;    // hidden by default; shown when --filled
+        align-items: center;
+        justify-content: center;
+        background:  none;
+        border:      none;
+        padding:     0;
+        cursor:      pointer;
+        color:       @c-input-color-placeholder;
+        flex-shrink: 0;
+
+        svg {
+            width:   @c-input-icon-dim;
+            height:  @c-input-icon-dim;
+            display: block;
+        }
+
+        &:hover { color: @c-input-color-value; }
+    }
+
+    // Companion search icon when clear button is present
+    &__icon--search { display: flex; }
+
+    // When filled: show clear button, hide the search icon
+    &--filled {
+        .c-search-input__clear          { display: flex; }
+        .c-search-input__icon--search   { display: none; }
+    }
+
+    // Suppress native browser search-cancel button (replaced by custom clear)
+    input[type="search"]::-webkit-search-cancel-button {
+        -webkit-appearance: none;
+    }
+
     // ── States ──────────────────────────────────────────────
 
     &:hover {
@@ -144,14 +181,20 @@
     gap:            var(--hdx-space-1);  // 4 px between input and panel
     position:       relative;
     width:          100%;
+    text-align:     left;
 
-    // The search input inside autocomplete (always size-l)
+    // The search input inside autocomplete stretches full width
     .c-search-input { align-self: stretch; }
 
     // ── Suggestion panel ────────────────────────────────────
 
     &__panel {
-        align-self:       stretch;
+        position:         absolute;
+        top:              100%;
+        margin-top:       var(--hdx-space-1);  // 4 px gap below input
+        left:             0;
+        right:            0;
+        z-index:          100;
         background-color: var(--hdx-neutral-0);
         border:           @c-ac-panel-border;
         border-radius:    var(--hdx-radius-sm);
@@ -161,17 +204,13 @@
         align-items:      flex-start;
         padding:          var(--hdx-space-3);    // 12 px
         gap:              var(--hdx-space-3);    // 12 px
-        font-size:        var(--hdx-fs-s);       // 14 px
-        color:            var(--hdx-neutral-85);         // darkslategray-200
+        color:            var(--hdx-neutral-85);
     }
 
-    // "Trending" section label
+    // Section label ("Search results", "Trending")
     &__section-title {
-        position:    relative;
-        line-height: 130%;
-        font-size:   var(--hdx-fs-s);
-        font-family: var(--hdx-font-body);
-        color:       var(--hdx-neutral-85);
+        .hdx-body-s();
+        color: var(--hdx-neutral-85);
     }
 
     // Pill chips (tag/location suggestions)
@@ -194,9 +233,7 @@
         background-color: var(--hdx-neutral-0);
         border:           @c-input-border;
         box-shadow:       var(--hdx-shadow-sm);
-        font-size:        var(--hdx-fs-s);
-        font-weight:      var(--hdx-fw-medium);
-        line-height:      130%;
+        .hdx-body-s-medium();
         overflow:         hidden;
         text-overflow:    ellipsis;
         white-space:      nowrap;
@@ -208,13 +245,12 @@
 
     // Search results list
     &__results {
-        align-self:      stretch;
-        display:         flex;
-        flex-direction:  column;
-        align-items:     flex-start;
-        gap:             var(--hdx-space-3);   // 12 px
-        font-size:       var(--hdx-fs-m);      // 16 px
-        color:           var(--hdx-neutral-8);
+        align-self:     stretch;
+        display:        flex;
+        flex-direction: column;
+        align-items:    flex-start;
+        gap:            var(--hdx-space-3);   // 12 px
+        color:          var(--hdx-neutral-8);
     }
 
     &__result-row {
@@ -222,37 +258,44 @@
         display:         flex;
         align-items:     center;
         justify-content: space-between;
-        gap:             0;
+        gap:             var(--hdx-space-2);
+        padding:         var(--hdx-space-1) var(--hdx-space-2);
+
+        // Keyboard-focus indicator (hover intentionally omitted — c-text-link owns hover)
+        &[aria-selected="true"] {
+            background-color: var(--hdx-neutral-01);
+        }
     }
 
     &__result-link {
-        flex:            1;
-        display:         flex;
-        align-items:     center;
+        flex:     1;
+        min-width: 0;
+        overflow:  hidden;
     }
 
     &__result-label {
-        flex:            1;
-        min-width:       0;
-        display:         block;
-        line-height:     130%;
-        overflow:        hidden;
-        text-overflow:   ellipsis;
-        white-space:     nowrap;
-        font-size:       var(--hdx-fs-m);
+        display:       block;
+        min-width:     0;
+        overflow:      hidden;
+        text-overflow: ellipsis;
+        white-space:   nowrap;
     }
 
     &__result-count {
-        font-family: var(--hdx-font-body);
-        font-size:   var(--hdx-fs-s);
-        line-height: 130%;
+        .hdx-body-s();
         text-align:  right;
-        color:       var(--hdx-neutral-8);
+        color:       var(--hdx-neutral-85);
         flex-shrink: 0;
     }
 
-    // "Search all" confirm button at bottom
+    &__no-results {
+        .hdx-body-s();
+        color:   var(--hdx-neutral-5);
+        padding: var(--hdx-space-2) 0;
+    }
+
+    // "View all results" confirm button at bottom
     &__confirm-btn {
-        align-self:       end;
+        align-self: end;
     }
 }

@@ -30,12 +30,14 @@
       <div class="hdx-v2-hero__search">
         {% snippet 'v2/components/autocomplete.html',
             placeholder=_('Search for datasets, locations or organisations'),
-            value='', state='enabled' %}
+            value='', state='enabled',
+            form_action=h.url_for('dataset.search'),
+            search_source='homepage-search' %}
       </div>
 
       {% snippet 'v2/components/button.html',
           style='secondary', type='text', size='l',
-          state='enabled', icon=False,
+          state='enabled', icon=False, tag='a', href=h.url_for('dataset.search'),
           label=_('Explore data') %}
 
     </div>
@@ -156,9 +158,14 @@
 
 {% endblock %}
 
+{% block styles %}
+  {{ super() }}
+  {% asset 'hdx_theme/v2-home-page-styles' %}
+{% endblock %}
+
 {% block head_extras %}
   {{ super() }}
-  {% asset 'hdx_theme/v2-homepage-scripts' %}
+  {% asset 'hdx_theme/v2-home-page-scripts' %}
   {% if structured_data %}
     <script type="application/ld+json">
       {{ structured_data | safe }}

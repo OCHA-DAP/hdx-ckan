@@ -136,13 +136,14 @@
 
       {% if request.path != '/' %}
       {# Search — visible on XL (25rem) and MD (21.25rem via CSS); hidden on SM #}
+      {# At XL: panel drops inline. At MD/SM: JS opens the fullscreen overlay instead. #}
       <div class="hdx-v2-navbar__search">
-        <form action="{{ h.url_for('dataset.search') }}" method="get" role="search">
-          {% snippet 'v2/components/search-input.html',
-              size='m', name='q',
-              placeholder=_('Search for datasets'),
-              value=c.q if c.q is defined else '' %}
-        </form>
+        {% snippet 'v2/components/autocomplete.html',
+            size='m', name='q',
+            placeholder=_('Search for datasets'),
+            value=c.q if c.q is defined else '',
+            form_action=h.url_for('dataset.search'),
+            search_source='main-nav' %}
       </div>
       {% endif %}
 
@@ -190,8 +191,9 @@
         {# Search icon — SM only, hidden at MD/XL via navbar.less #}
         <button class="hdx-v2-navbar__search-icon" type="button"
                 aria-label="{{ _('Search') }}"
-                data-bs-toggle="offcanvas"
-                data-bs-target="#search-offcanvas">
+                aria-expanded="false"
+                aria-controls="hdx-search-autocomplete-overlay"
+                data-action="open-search-overlay">
           {% include 'v2/icons/search.svg' %}
         </button>
         {% endif %}
@@ -256,8 +258,185 @@
     </div>
   </nav>
 
+  {# ── Offcanvas — MD/SM slide-out nav panel ───────────────── #}
+  <div class="hdx-v2-offcanvas" id="hdx-v2-offcanvas" aria-hidden="true">
+    <div class="hdx-v2-offcanvas__body">
 
-  {# ── Offcanvas (task 019) ─────────────────────────────────── #}
-  {% snippet 'v2/navbar-offcanvas.html' %}
+      {# ── Primary level ─────────────────────────────────── #}
+      <div class="hdx-v2-offcanvas__primary">
+
+        {# User row (logged in) — tapping slides to second level #}
+        {% if c.userobj %}
+          {% set notif = h.hdx_get_user_notifications() %}
+          <button class="hdx-v2-offcanvas__user-row" type="button"
+                  data-hdx-v2-offcanvas-level="user-detail"
+                  aria-label="{{ _('User menu') }}">
+            <span class="hdx-v2-offcanvas__user-left">
+              {% snippet 'v2/components/avatar.html',
+                  size='sm',
+                  initials=c.userobj.display_name[0] | upper,
+                  badge=notif.count > 0 %}
+              <span class="hdx-v2-offcanvas__user-name">{{ c.userobj.display_name }}</span>
+            </span>
+            <span class="hdx-v2-offcanvas__user-chevron">{% include 'v2/icons/chevron-right.svg' %}</span>
+          </button>
+        {% endif %}
+
+        {# Primary nav links #}
+        <nav class="hdx-v2-offcanvas__nav" aria-label="{{ _('Mobile navigation') }}">
+          <a class="hdx-v2-offcanvas__nav-item" href="{{ h.url_for('home.index') }}"
+             data-module="hdx_click_stopper" data-module-link_type="main nav">
+            {{ _('Home') }}
+          </a>
+          <a class="hdx-v2-offcanvas__nav-item" href="{{ h.url_for('dataset.search') }}"
+             data-module="hdx_click_stopper" data-module-link_type="main nav">
+            {{ _('Data') }}
+          </a>
+          <a class="hdx-v2-offcanvas__nav-item" href="{{ h.url_for('group.index') }}"
+             data-module="hdx_click_stopper" data-module-link_type="main nav">
+            {{ _('Locations') }}
+          </a>
+          <a class="hdx-v2-offcanvas__nav-item" href="{{ h.url_for('organization.index') }}"
+             data-module="hdx_click_stopper" data-module-link_type="main nav">
+            {{ _('Organisations') }}
+          </a>
+
+          {# Products — inline expandable; open by default per Figma #}
+          <button class="hdx-v2-offcanvas__nav-item hdx-v2-offcanvas__nav-item--expandable"
+                  type="button"
+                  aria-expanded="true"
+                  aria-controls="offcanvas-products"
+                  data-module="hdx_click_stopper" data-module-link_type="main nav">
+            {{ _('Products') }}
+            <span class="hdx-v2-offcanvas__expand-icon">{% include 'v2/icons/chevron-down.svg' %}</span>
+          </button>
+          <ul class="hdx-v2-offcanvas__subnav" id="offcanvas-products">
+            {% for product in h.hdx_get_quick_links_list(archived=False) %}
+              <li>
+                <a href="{{ product.url }}"
+                   {% if product.newTab %}target="_blank" rel="noopener noreferrer"{% endif %}
+                   data-module="hdx_click_stopper" data-module-link_type="main nav">
+                  {{ product.title }}
+                </a>
+              </li>
+            {% endfor %}
+          </ul>
+        </nav>
+
+        {# Footer actions — pushed to bottom of panel #}
+        <div class="hdx-v2-offcanvas__footer">
+          {% if not c.userobj %}
+            {% snippet 'v2/components/button.html',
+                style='secondary', size='l', label=_('Login'),
+                tag='a', href=h.url_for('hdx_signin.login'),
+                attrs={'data-module': 'hdx_click_stopper', 'data-module-link_type': 'main nav'} %}
+          {% endif %}
+        </div>
+
+      </div>{# /.hdx-v2-offcanvas__primary #}
+
+      {# ── Second level — user account (logged in only) ──── #}
+      {% if c.userobj %}
+        <div class="hdx-v2-offcanvas__level" id="hdx-v2-offcanvas-level-user-detail" hidden>
+
+          <button class="hdx-v2-offcanvas__back" type="button" data-hdx-v2-offcanvas-back>
+            {% include 'v2/icons/chevron-left.svg' %}
+            {{ _('Back') }}
+          </button>
+
+          <div class="hdx-v2-offcanvas__user-display">
+            {% snippet 'v2/components/avatar.html',
+                size='sm',
+                initials=c.userobj.display_name[0] | upper %}
+            <span class="hdx-v2-offcanvas__user-name">{{ c.userobj.display_name }}</span>
+          </div>
+
+          {% for section in h.hdx_get_user_menu_sections() %}
+            <button class="hdx-v2-offcanvas__nav-item hdx-v2-offcanvas__nav-item--expandable"
+                    type="button"
+                    aria-expanded="true"
+                    aria-controls="offcanvas-user-{{ section.id }}">
+              {{ section.label }}
+              <span class="hdx-v2-offcanvas__expand-icon">{% include 'v2/icons/chevron-down.svg' %}</span>
+            </button>
+            <ul class="hdx-v2-offcanvas__subnav" id="offcanvas-user-{{ section.id }}">
+              {% for item in section['items'] %}
+                <li>
+                  <a href="{{ item.href }}"
+                     data-module="hdx_click_stopper" data-module-link_type="main nav">
+                    {{ item.label }}
+                  </a>
+                </li>
+              {% endfor %}
+            </ul>
+          {% endfor %}
+
+          <div class="hdx-v2-offcanvas__footer">
+            {% snippet 'v2/components/button.html',
+                style='secondary', size='l', label=_('Logout'),
+                tag='a', href=h.url_for('user.logout'),
+                attrs={'data-module': 'hdx_click_stopper', 'data-module-link_type': 'main nav'} %}
+          </div>
+
+        </div>
+      {% endif %}
+
+    </div>{# /.hdx-v2-offcanvas__body #}
+  </div>
+
+  {# Backdrop — closes the offcanvas on click #}
+  <div class="hdx-v2-offcanvas__backdrop" hidden data-hdx-v2-close="offcanvas"></div>
+
+  {# ── Search autocomplete overlay — MD/SM fullscreen ────────────── #}
+  {# Triggered by: SM search icon (non-homepage), MD navbar input focus,  #}
+  {# or hero autocomplete input focus on the homepage (SM/MD).           #}
+  {# Opened/closed by v2/search-autocomplete.js via hdx-v2-search-filter-overlay--open. #}
+  <div class="hdx-v2-search-filter-overlay" id="hdx-search-autocomplete-overlay" role="dialog" aria-modal="true" aria-label="{{ _('Search') }}">
+    <div class="hdx-v2-search-filter-overlay__header">
+      <span class="hdx-v2-search-filter-overlay__title">{{ _('Search') }}</span>
+      <button type="button"
+              class="hdx-v2-search-filter-overlay__close"
+              data-action="close-search-overlay"
+              aria-label="{{ _('Close search') }}">
+        {% include h.url_for_static('v2/icons/close.svg') %}
+      </button>
+    </div>
+
+    <div class="hdx-v2-search-filter-overlay__body">
+      <form class="hdx-v2-search-filter-overlay__form"
+            id="hdx-search-overlay-form"
+            action="{{ h.url_for('dataset.search') }}"
+            method="get"
+            role="search">
+        <input type="hidden" name="ext_search_source" value="main-nav">
+
+        {% snippet 'v2/components/search-input.html',
+            size='l',
+            name='q',
+            id='hdx-search-overlay-input',
+            placeholder=_('Search for datasets, locations or organisations'),
+            show_clear=True,
+            autocomplete='off' %}
+
+        <div class="hdx-v2-search-filter-overlay__results c-autocomplete__results"
+             role="listbox"
+             aria-label="{{ _('Search suggestions') }}">
+        </div>
+      </form>
+    </div>
+
+    <div class="hdx-v2-search-filter-overlay__footer">
+      {% snippet 'v2/components/button.html',
+          style='tertiary', size='l', type='text', label=_('Clear'),
+          state='disabled',
+          attrs={'data-action': 'clear-search-overlay'} %}
+
+      {% snippet 'v2/components/button.html',
+          style='primary', size='l', type='text', label=_('View all results'),
+          button_type='submit',
+          attrs={'form': 'hdx-search-overlay-form'} %}
+    </div>
+
+  </div>
 
 </header>

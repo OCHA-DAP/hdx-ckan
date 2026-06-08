@@ -2,7 +2,7 @@
 
 **Status**: In-progress
 **Started**: 2026-04-16
-**Last Updated**: 2026-06-02
+**Last Updated**: 2026-06-05
 
 ---
 
@@ -66,11 +66,11 @@ CSS custom property equivalents (`--hdx-*`) are defined in `v2/foundation.css` (
 | `mixins.less` | **Single compile-time entry point** — imports `breakpoints.less` + `typography.less`, then defines all mixins: layout (`.v2-sidebar-flex()`, `.v2-content-flex()`), typography cores, named type-style mixins, and base-style mixins. Import with `@import "mixins.less"` (or `"../mixins.less"` from `components/`). |
 | `breakpoints.less` | Breakpoint variables (`@hdx-bp-md`, `@hdx-bp-xl`, `@hdx-bp-xxl`); pulled in automatically by `mixins.less` |
 | `layout.less` | Container, breadcrumb row, content-columns base flex; compiled to `v2-page-styles` |
-| `search.less` | Search page sections; imports `mixins.less` |
-| `dataset.less` | Dataset page sections; imports `mixins.less` |
+| `search-page.less` | Search page layout + `.hdx-v2-dataset-list`; imports `mixins.less` |
+| `dataset-page.less` | Dataset page sections; imports `mixins.less` |
 | `resource-page.less` | Resource page sections; imports `mixins.less` |
-| `styles.less` | Hero, page-header, dataset-list, flash messages; compiled to `v2-page-styles`; imports `mixins.less` |
-| `components/divider.less` | `.c-divider` — extracted from `navigation.less`; compiled to `divider.css` and registered in `v2-components-styles` |
+| `home-page.less` | Homepage-only sections (hero, intro, highlights); compiled to `v2-home-page-styles`; imports `mixins.less` |
+| `components/divider.less` | `.c-divider` — standalone component; compiled to `divider.css` and registered in `v2-components-styles` |
 | `components/*.less` | One file per component; each imports `"../mixins.less"` for tokens and mixins |
 
 **Typography mixin usage:**
@@ -140,7 +140,7 @@ Each page below extends `page_light.html`, manually overrides `{% block styles %
 - [x] Dataset card (with shared clamped-text.js toggle)
 - [x] Resource card
 - [x] Showcase card
-- [x] Anchor links — extended with `heading`, `with_mobile_dropdown` params; mobile sticky dropdown (`c-anchor-links-mobile`) styles in `navigation.less`
+- [x] Anchor links — extended with `heading`, `with_mobile_dropdown` params; mobile sticky dropdown (`c-anchor-links-mobile`) styles in `components/anchor-links.less`
 - [x] Info icon — `info-icon.html` snippet encapsulating the `c-tooltip-anchor` + `c-info-icon` button + tooltip pattern; HTML-only (no dedicated LESS/CSS)
 
 Each component file should have:
@@ -158,7 +158,7 @@ Exception: `info-icon.html` has no dedicated LESS/CSS — it composes existing `
 
 Bundle configuration:
 - `hdx_theme/v2-components-styles` — standalone design system bundle (tokens + components), no Bootstrap
-  - Contents: `v2/foundation.css`, then 17 component CSS files: `divider`, `activity-card`, `dataset-card`, `resource-card`, `avatar-badge`, `buttons`, `checkbox`, `copy-button`, `dropdown`, `input-field`, `label`, `letter-anchor`, `list-item`, `navigation`, `selection`, `showcase-card`, `text-link`
+  - Contents: `v2/foundation.css`, then component CSS files: `divider`, `activity-card`, `dataset-card`, `resource-card`, `avatar-badge`, `buttons`, `checkbox`, `copy-button`, `dropdown`, `input-field`, `label`, `letter-anchor`, `list-item`, `nav-item`, `anchor-links`, `pagination`, `breadcrumb`, `page-header`, `selection`, `showcase-card`, `text-link`, `highlight-card`, `overlay`
   - Kept separate for non-page contexts (component previews, embedded widgets)
 - `hdx_theme/v2-page-styles` ✅ Full page bundle: preloads `v2-components-styles`, then adds:
   - `vendor/bootstrap5/css/bootstrap.css`
@@ -166,14 +166,16 @@ Bundle configuration:
   - `v2/top-bar.css` — top-bar styles (OCHA services dropdown, documentation link)
   - `v2/footer.css` — footer styles
   - `v2/navbar.css` — main navbar styles (logo, search, nav items, actions, offcanvas)
-  - `v2/styles.css` — shared global v2 styles
-- `hdx_theme/v2-components-scripts` ✅ Contains: `focus-trap.js`, `password-toggle.js`, `clamped-text.js` (show-more/less), `dropdown.js`, `page-header.js`, `anchor-links.js` (smooth scroll + mobile dropdown + active tracking), `copy-button.js`
-- `hdx_theme/v2-page-scripts` ✅ Contains `v2/navbar.js` — navbar panel and offcanvas JS (tasks 018 + 019)
-- `hdx_theme/v2-search-styles` — page-specific: preloads `v2-page-styles`, adds `v2/search.css`
-- `hdx_theme/v2-search-scripts` — page-specific: preloads `v2-page-scripts`, adds `v2/search.js`
-- `hdx_theme/v2-dataset-styles` — page-specific: preloads `v2-page-styles`, adds `v2/dataset.css`
-- `hdx_theme/v2-dataset-scripts` — page-specific: preloads `v2-page-scripts`, adds `v2/dataset.js` (section accordion)
-- `hdx_theme/v2-resource-styles` — page-specific: preloads `v2-page-styles`, adds `v2/resource-page.css` (independent of dataset styles by design)
+- `hdx_theme/v2-components-scripts` ✅ Contains: `input-field.js` (password toggle, renamed from `password-toggle.js`), `clamped-text.js` (show-more/less), `dropdown.js`, `page-header.js`, `anchor-links.js` (smooth scroll + mobile dropdown + active tracking), `copy-button.js`
+- `hdx_theme/v2-page-scripts` ✅ Contains `v2/navbar.js` (navbar + offcanvas, FocusTrap inlined) + `v2/search-autocomplete.js`; preloads `v2-search-scripts` (MiniSearch/feature-index)
+- `hdx_theme/v2-search-scripts` — global lib bundle: MiniSearch, normalize.js, feature-index; auto-loaded via `v2-page-scripts` preload
+- `hdx_theme/v2-search-page-styles` — search page: adds `v2/search-page.css`
+- `hdx_theme/v2-search-page-scripts` — search page: adds `highlight.js` + `v2/search-page.js`
+- `hdx_theme/v2-dataset-page-styles` — dataset page: adds `v2/dataset-page.css`
+- `hdx_theme/v2-dataset-page-scripts` — dataset page: adds `v2/dataset-page.js` (section accordion)
+- `hdx_theme/v2-resource-page-styles` — resource page: adds `v2/resource-page.css`
+- `hdx_theme/v2-home-page-styles` — homepage: adds `v2/home-page.css` + `v2/bar-chart.css`
+- `hdx_theme/v2-home-page-scripts` — homepage: adds Hammer.js, `v2/highlights-carousel.js`, `v2/bar-chart.js`
 
 ---
 

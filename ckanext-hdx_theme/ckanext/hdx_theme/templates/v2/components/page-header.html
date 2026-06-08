@@ -1,6 +1,6 @@
 {#
   Snippet: page-header.html
-  Path:    templates/v2/page-header.html
+  Path:    templates/v2/components/page-header.html
 
   Unified page hero header. Renders the dataset header by default.
   When resource_id is provided the resource layout is used instead.
@@ -88,27 +88,27 @@
 {% set _is_resource = resource_id %}
 
 
-<section class="hdx-v2-page-header{{ ' hdx-v2-page-header--resource' if _is_resource else '' }}">
+<section class="c-page-header{{ ' c-page-header--resource' if _is_resource else '' }}">
 
   {# ── TOP ─────────────────────────────────────────────────── #}
-  <div class="hdx-v2-page-header__top">
+  <div class="c-page-header__top">
 
-    <div class="hdx-v2-page-header__left">
-      <div class="hdx-v2-page-header__description">
+    <div class="c-page-header__left">
+      <div class="c-page-header__description">
 
         {# File format icon + label — resource #}
         {% if file_format %}
-        <div class="hdx-v2-page-header__format">
+        <div class="c-page-header__format">
           {% snippet 'v2/components/file-type-icon.html', format=file_format, aria_label=file_format_text %}
           {% if file_format_text %}
-            <span class="hdx-v2-page-header__format-label">{{ file_format_text | upper }}</span>
+            <span class="c-page-header__format-label">{{ file_format_text | upper }}</span>
           {% endif %}
         </div>
         {% endif %}
 
         {# Labels row — dataset #}
         {% if request_only or cod_dataset or links_list or (pkg_state and pkg_state.startswith('deleted')) %}
-        <div class="hdx-v2-page-header__labels">
+        <div class="c-page-header__labels">
 
           {% if pkg_state and pkg_state.startswith('deleted') %}
             {% snippet 'v2/components/label.html', text='Deleted', color='red', size='s' %}
@@ -125,7 +125,7 @@
           {% endif %}
 
           {% for link in links_list %}
-            <div class="hdx-v2-page-header__link-group">
+            <div class="c-page-header__link-group">
               {% if link.label %}
                 {% snippet 'v2/components/label.html',
                     text=link.label|replace('This dataset is part', 'Part'),
@@ -144,7 +144,7 @@
         {% endif %}
 
         {# Title — always #}
-        <h1 class="hdx-v2-page-header__title"
+        <h1 class="c-page-header__title"
             {% if edit_mode %}
               data-module="hdx-quick-edit"
               data-module-anchor="field_title"
@@ -153,8 +153,8 @@
 
         {# Description + show more — when provided #}
         {% if description %}
-        <div class="hdx-v2-page-header__desc" data-module="clamped-text">
-          <p class="hdx-v2-page-header__desc-text" data-clamped-content
+        <div class="c-page-header__desc" data-module="clamped-text">
+          <p class="c-page-header__desc-text" data-clamped-content
              {% if edit_mode %}
                data-module="hdx-quick-edit"
                data-module-anchor="field_notes"
@@ -173,9 +173,9 @@
 
       {# Org card SM — dataset only, shown when org_name is provided #}
       {% if org_name %}
-      <div class="hdx-v2-page-header__right-card hdx-v2-page-header__right-card--sm-only">
+      <div class="c-page-header__right-card c-page-header__right-card--sm-only">
         {% if org_logo_src %}
-          <img class="hdx-v2-page-header__org-logo" src="{{ org_logo_src }}" alt="{{ org_name }}">
+          <img class="c-page-header__org-logo" src="{{ org_logo_src }}" alt="{{ org_name }}">
         {% endif %}
         {% snippet 'v2/components/text-button.html',
             style='tertiary', size='m', label='Contact organisation',
@@ -200,9 +200,9 @@
 
       {# CTA block (notifications + download count) — dataset only #}
       {% if supports_notifications or download_count %}
-      <div class="hdx-v2-page-header__cta">
+      <div class="c-page-header__cta">
         {% if supports_notifications %}
-          <div class="notification-platform-opt-in-action-menu d-none hdx-v2-page-header__notify-btn">
+          <div class="notification-platform-opt-in-action-menu d-none c-page-header__notify-btn">
             {% snippet 'v2/components/button.html',
                 style='primary', size='m', label='Get notified',
                 icon=True, icon_position='left', icon_src='v2/icons/bell.svg',
@@ -210,7 +210,7 @@
           </div>
         {% endif %}
         {% if download_count %}
-          <div class="hdx-v2-page-header__downloads">
+          <div class="c-page-header__downloads">
             {% include h.url_for_static('v2/icons/trend-up.svg') %}
             <span>{{ download_count }} downloads</span>
           </div>
@@ -223,9 +223,9 @@
 
     {# Org card MD+ — dataset only, shown when org_name is provided #}
     {% if org_name %}
-    <div class="hdx-v2-page-header__right-card hdx-v2-page-header__right-card--md-up">
+    <div class="c-page-header__right-card c-page-header__right-card--md-up">
       {% if org_logo_src %}
-        <img class="hdx-v2-page-header__org-logo" src="{{ org_logo_src }}" alt="{{ org_name }}">
+        <img class="c-page-header__org-logo" src="{{ org_logo_src }}" alt="{{ org_name }}">
       {% endif %}
       {% snippet 'v2/components/text-button.html',
           style='tertiary', size='m', label='Contact organisation',
@@ -254,7 +254,7 @@
 
   {# ── DOWNLOAD + EXPORT ACTIONS — resource only ──────────── #}
   {% if can_download %}
-  <div class="hdx-v2-page-header__cta">
+  <div class="c-page-header__cta">
 
     {% set _dl_extra = 'ga-download resource-url-analytics resource-type-' ~ resource_type %}
     {% set _dl_label = _('Download') ~ ' (' ~ download_size ~ ')' if download_size else _('Download') %}
@@ -286,11 +286,11 @@
 
   {# ── DATASET METADATA STRIP ──────────────────────────────── #}
   {% if not _is_resource %}
-  <div class="hdx-v2-page-header__metadata">
+  <div class="c-page-header__metadata">
 
-    <div class="hdx-v2-page-header__meta-item">
-      <div class="hdx-v2-page-header__meta-label-row">
-        <span class="hdx-v2-page-header__meta-label">Location</span>
+    <div class="c-page-header__meta-item">
+      <div class="c-page-header__meta-label-row">
+        <span class="c-page-header__meta-label">Location</span>
         {% if location_text %}
           {% snippet 'v2/components/text-button.html',
               style='tertiary', size='s', label='View all',
@@ -298,7 +298,7 @@
               tag='a', href='#metadata-location' %}
         {% endif %}
       </div>
-      <div class="hdx-v2-page-header__meta-value">
+      <div class="c-page-header__meta-value">
         {% if location_text %}<span>{{ location_text }}</span>{% endif %}
         {% if subnational %}
           {% snippet 'v2/components/label.html', text='Sub-national', color='cyan', size='xs' %}
@@ -306,11 +306,11 @@
       </div>
     </div>
 
-    <div class="hdx-v2-page-header__meta-item">
-      <div class="hdx-v2-page-header__meta-label-row">
-        <span class="hdx-v2-page-header__meta-label">Expected update frequency</span>
+    <div class="c-page-header__meta-item">
+      <div class="c-page-header__meta-label-row">
+        <span class="c-page-header__meta-label">Expected update frequency</span>
       </div>
-      <div class="hdx-v2-page-header__meta-value">
+      <div class="c-page-header__meta-value">
         {% if update_frequency %}<span>{{ update_frequency }}</span>{% endif %}
         {% if is_up_to_date %}
           {% snippet 'v2/components/label.html', text='Up to date', color='cyan', size='xs' %}
@@ -318,9 +318,9 @@
       </div>
     </div>
 
-    <div class="hdx-v2-page-header__meta-item">
-      <div class="hdx-v2-page-header__meta-label-row">
-        <span class="hdx-v2-page-header__meta-label">Time period</span>
+    <div class="c-page-header__meta-item">
+      <div class="c-page-header__meta-label-row">
+        <span class="c-page-header__meta-label">Time period</span>
         {% if time_period_tooltip %}
           {% snippet 'v2/components/info-icon.html',
               aria_label=_('More info about time period'),
@@ -328,20 +328,20 @@
               tooltip_id='tooltip-time-period' %}
         {% endif %}
       </div>
-      <div class="hdx-v2-page-header__meta-value">
+      <div class="c-page-header__meta-value">
         {% if time_period %}<span>{{ time_period }}</span>{% endif %}
       </div>
     </div>
 
-    <div class="hdx-v2-page-header__meta-item" data-header-meta="source">
-      <div class="hdx-v2-page-header__meta-label-row">
-        <span class="hdx-v2-page-header__meta-label">Source</span>
+    <div class="c-page-header__meta-item" data-header-meta="source">
+      <div class="c-page-header__meta-label-row">
+        <span class="c-page-header__meta-label">Source</span>
         {% if source_text %}
           {% snippet 'v2/components/text-button.html',
               style='tertiary', size='s', label='View more',
               icon=True, icon_position='right', icon_src='v2/icons/arrow-down.svg',
               tag='a', href='#metadata-source',
-              extra_classes='hdx-v2-page-header__source-view-more' %}
+              extra_classes='c-page-header__source-view-more' %}
         {% endif %}
         {% if source_tooltip %}
           {% snippet 'v2/components/info-icon.html',
@@ -349,7 +349,7 @@
               tooltip_id='tooltip-source' %}
         {% endif %}
       </div>
-      <div class="hdx-v2-page-header__meta-value hdx-v2-page-header__meta-value--source">
+      <div class="c-page-header__meta-value c-page-header__meta-value--source">
         {% if source_text %}<span>{{ source_text }}</span>{% endif %}
       </div>
     </div>
@@ -359,26 +359,26 @@
 
   {# ── RESOURCE METADATA STRIP ─────────────────────────────── #}
   {% if _is_resource %}
-  <div class="hdx-v2-page-header__meta">
+  <div class="c-page-header__meta">
 
-    <div class="hdx-v2-page-header__meta-item">
-      <span class="hdx-v2-page-header__meta-label">Last modified</span>
-      <span class="hdx-v2-page-header__meta-value">{{ last_modified }}</span>
+    <div class="c-page-header__meta-item">
+      <span class="c-page-header__meta-label">Last modified</span>
+      <span class="c-page-header__meta-value">{{ last_modified }}</span>
     </div>
 
-    <div class="hdx-v2-page-header__meta-item">
-      <div class="hdx-v2-page-header__meta-label-row">
-        <span class="hdx-v2-page-header__meta-label">Resource ID</span>
+    <div class="c-page-header__meta-item">
+      <div class="c-page-header__meta-label-row">
+        <span class="c-page-header__meta-label">Resource ID</span>
         {% snippet 'v2/components/copy-button.html',
             value=resource_id, style='secondary', size='s',
             icon_position='left', label=_('Copy') %}
       </div>
-      <span class="hdx-v2-page-header__meta-value">{{ resource_id }}</span>
+      <span class="c-page-header__meta-value">{{ resource_id }}</span>
     </div>
 
-    <div class="hdx-v2-page-header__meta-item">
-      <div class="hdx-v2-page-header__meta-label-row">
-        <span class="hdx-v2-page-header__meta-label">Resource URL</span>
+    <div class="c-page-header__meta-item">
+      <div class="c-page-header__meta-label-row">
+        <span class="c-page-header__meta-label">Resource URL</span>
         {% snippet 'v2/components/copy-button.html',
             value=resource_url, style='secondary', size='s',
             icon_position='left', label=_('Copy') %}
@@ -389,7 +389,7 @@
             href=resource_url_href,
             style='tertiary', size='xs' %}
       {% else %}
-        <span class="hdx-v2-page-header__meta-value">{{ resource_url }}</span>
+        <span class="c-page-header__meta-value">{{ resource_url }}</span>
       {% endif %}
     </div>
 

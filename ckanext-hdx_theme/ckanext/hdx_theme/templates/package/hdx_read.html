@@ -2,7 +2,7 @@
 
 {% block styles %}
   {{ super() }}
-  {% asset 'hdx_theme/v2-dataset-styles' %}
+  {% asset 'hdx_theme/v2-dataset-page-styles' %}
 {#  {% asset 'hdx_theme/requestdata-styles' %}#}
 {#  {% asset 'hdx_theme/dataset-styles' %}#}
 {#  {% asset 'hdx_theme/dataset-read-styles' %}#}
@@ -103,7 +103,7 @@
       {% set contact_href = h.url_for('hdx_signin.login', came_from=h.url_for('hdx_dataset.contact_contributor', id=pkg.name or pkg.id), info_message_type='contact-contributor') %}
     {% endif %}
 
-    {% snippet 'v2/page-header.html',
+    {% snippet 'v2/components/page-header.html',
         title=pkg.title or pkg.name,
         description=pkg.notes,
         org_name=pkg.organization.title,
@@ -506,7 +506,7 @@
 
 {% block scripts %}
   {{ super() }}
-  {% asset 'hdx_theme/v2-dataset-scripts' %}
+  {% asset 'hdx_theme/v2-dataset-page-scripts' %}
 {#  {{ h.snippet('widget/onboarding/data-use-survey.html', id="dataUseSurveyPopup", pkg=pkg) }}#}
 {#  {% asset 'hdx_theme/dataset-styles' %}#}
   {% asset 'hdx_theme/dataset-scripts' %}
