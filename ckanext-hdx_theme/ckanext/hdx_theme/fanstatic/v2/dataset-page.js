@@ -55,9 +55,10 @@ function fetchActivitiesIfNeeded(section) {
         success: function (response) {
             if (response.success) {
                 $(wrapper).html(response.result);
-                var $activities = $(wrapper).find('.c-activity-stream');
-                if ($.trim($activities.text()) === '') {
-                    $activities.html('<p>' + 'No activities found.' + '</p>');
+                var $stream = $(wrapper).find('.c-activity-stream');
+                var $empty  = $(wrapper).find('.c-activity-stream__empty');
+                if ($empty.length === 0 && ($stream.length === 0 || $.trim($stream.text()) === '')) {
+                    $(wrapper).html('<p class="c-activity-stream__empty">' + 'No activities found.' + '</p>');
                 }
             }
         }

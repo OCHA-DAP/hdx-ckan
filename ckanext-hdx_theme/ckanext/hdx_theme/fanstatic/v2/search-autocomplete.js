@@ -99,6 +99,8 @@
 
     var titleEl = document.createElement('span');
     titleEl.className   = 'c-autocomplete__section-title';
+    titleEl.setAttribute('role', 'presentation');
+    titleEl.setAttribute('aria-hidden', 'true');
     titleEl.textContent = 'Search results';
     container.appendChild(titleEl);
 
