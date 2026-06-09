@@ -39,6 +39,6 @@ class TestActivityStream(object):
 
         # Check if activity stream contains entries
         assert activity_stream is not None
-        assert '"activity"' in activity_stream
+        assert '"c-activity-stream"' in activity_stream
         assert 'created the dataset' in activity_stream
         assert 'updated the dataset' in activity_stream
