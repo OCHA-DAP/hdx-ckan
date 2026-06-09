@@ -1,0 +1,107 @@
+// ============================================================
+// c-activity-item — activity stream item (v2 timeline design)
+// ============================================================
+// Figma source: llm_docs/redesign/figma_exports/activity-item.html
+// Requirement:  llm_docs/redesign/requirements/046-dataset-activity-section.md
+// ============================================================
+@import "../mixins.less";
+
+@_dot-top:  var(--hdx-space-5);
+@_dot-size: var(--hdx-space-3);
+
+.c-activity-item {
+    width:       100%;
+    display:     flex;
+    align-items: flex-start;
+    color:       var(--hdx-neutral-85);
+    gap:         var(--hdx-space-5);
+
+    &__timeline {
+        align-self:     stretch;
+        display:        flex;
+        flex-direction: column;
+        align-items:    center;
+        position:       relative;
+        isolation:      isolate;
+        flex-shrink:    0;
+        width:          @_dot-size;
+    }
+
+    &__line {
+        width:            1px;
+        flex:             1;
+        background-color: var(--hdx-neutral-3);
+        z-index:          0;
+        flex-shrink:      0;
+    }
+
+    &__dot {
+        width:            @_dot-size;
+        height:           @_dot-size;
+        position:         absolute;
+        top:              @_dot-top;
+        left:             calc(50% - (@_dot-size / 2));
+        border-radius:    50%;
+        background-color: var(--hdx-primary-5);
+        border:           0.5px solid var(--hdx-neutral-3);
+        box-sizing:       border-box;
+        z-index:          1;
+        flex-shrink:      0;
+    }
+
+    &__content {
+        flex:           1;
+        display:        flex;
+        flex-direction: column;
+        align-items:    flex-start;
+        padding:        var(--hdx-space-3) 0;
+        gap:            var(--hdx-space-2);
+        min-width:      0;
+    }
+
+    &__actor {
+        align-self: stretch;
+        .hdx-body-s-semibold();
+
+        a {
+            color:           inherit;
+            text-decoration: none;
+
+            &:hover { text-decoration: underline; }
+        }
+    }
+
+    &__action {
+        align-self:  stretch;
+        .hdx-body-s();
+
+        a {
+            color:           inherit;
+            text-decoration: underline;
+        }
+    }
+
+    &__time {
+        align-self:  stretch;
+        .hdx-body-xs();
+    }
+}
+
+// ── Stream container ─────────────────────────────────────────
+
+.c-activity-stream {
+    display:        flex;
+    flex-direction: column;
+    gap:            0;
+
+    // Terminate timeline line on the last item
+    > .c-activity-item:last-child {
+        .c-activity-item__line { display: none; }
+    }
+
+    &__empty {
+        .hdx-body-s();
+        color: var(--hdx-neutral-85);
+        margin: 0;
+    }
+}

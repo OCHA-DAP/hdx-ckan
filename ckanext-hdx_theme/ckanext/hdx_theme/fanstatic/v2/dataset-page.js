@@ -55,7 +55,7 @@ function fetchActivitiesIfNeeded(section) {
         success: function (response) {
             if (response.success) {
                 $(wrapper).html(response.result);
-                var $activities = $(wrapper).find('.activity');
+                var $activities = $(wrapper).find('.c-activity-stream');
                 if ($.trim($activities.text()) === '') {
                     $activities.html('<p>' + 'No activities found.' + '</p>');
                 }

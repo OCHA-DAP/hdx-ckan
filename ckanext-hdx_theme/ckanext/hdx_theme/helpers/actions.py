@@ -741,7 +741,7 @@ def hdx_package_activity_stream(context, data_dict):
     act_data_dict = {'id': dataset_id, 'limit': limit}
     activities = tk.get_action('package_activity_list')(context, act_data_dict)
 
-    return tk.render('package/snippets/activity_stream.html', {
+    return tk.render('package/snippets/activity_stream_v2.html', {
         'activity_stream': activities,
         'id': dataset_id,
         'object_type': 'package'
