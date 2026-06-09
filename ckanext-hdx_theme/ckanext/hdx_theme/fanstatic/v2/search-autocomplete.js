@@ -97,6 +97,11 @@
       return;
     }
 
+    var titleEl = document.createElement('span');
+    titleEl.className   = 'c-autocomplete__section-title';
+    titleEl.textContent = 'Search results';
+    container.appendChild(titleEl);
+
     hits.forEach(function (hit) {
       var item  = feature_index[hit.id];
       var title = sanitize(item.title);
