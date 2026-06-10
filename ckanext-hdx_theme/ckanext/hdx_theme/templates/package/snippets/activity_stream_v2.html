@@ -15,7 +15,7 @@
 
       {# ── Actor ── #}
       {% set _actor_href  = h.url_for('user.read', id=activity.user_id) if activity.user_id else '#' %}
-      {% set _actor_label = activity.data.actor if (activity.data.actor is defined and activity.data.actor) else activity.user_id %}
+      {% set _actor_label = activity.data.actor if (activity.data.actor is defined and activity.data.actor) else (activity.user_id if activity.user_id else _('unknown user')) %}
 
       {# ── Type dispatch ── #}
       {% set _ns = namespace(action_text='', subject_label='', subject_href='') %}

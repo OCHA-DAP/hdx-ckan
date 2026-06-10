@@ -102,7 +102,7 @@
     {# ─ Results list (populated by JS; server-side results shown if provided) ─ #}
     <div class="c-autocomplete__results">
       {% if results %}
-        <span class="c-autocomplete__section-title">{{ results_label }}</span>
+        <span class="c-autocomplete__section-title" role="presentation" aria-hidden="true">{{ results_label }}</span>
         {% for result in results %}
           <div class="c-autocomplete__result-row"
                data-href="{{ result.url }}"

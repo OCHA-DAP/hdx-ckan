@@ -613,24 +613,3 @@ All questions resolved — no open items remain.
 
 ---
 
-## 11. Verification Checklist
-
-- [ ] Activity section accordion renders on `/dataset/<name>` with `v2=true`
-- [ ] Accordion opens/closes via chevron click (pre-existing JS)
-- [ ] On page load (before accordion opened): empty-state `<p>` shown inside accordion body
-- [ ] On accordion open: AJAX fires, `dataset-page.js` calls `hdx_package_activity_stream`
-- [ ] Activity items render with timeline layout (vertical line + blue dot) — no FA icons
-- [ ] Actor name is a working link to the user profile
-- [ ] Dataset/resource subject is a working link (or plain text for deleted items)
-- [ ] Relative timestamp shown (e.g. "42 minutes ago") with absolute datetime tooltip on hover
-- [ ] Last item's timeline line is hidden (no dangling line below last dot)
-- [ ] `changed_package` items render correctly
-- [ ] `new_resource` items render correctly with resource link
-- [ ] Unknown activity type falls back gracefully (humanized type, no subject link)
-- [ ] "See more in dashboard" link is absent from the v2 accordion body
-- [ ] v1 activity pages (org, group, user, dashboard) render unchanged via `activity_stream.html`
-- [ ] `hdx_package_activity_stream` API still returns HTML for v1 callers (none exist for dataset page)
-- [ ] No console errors related to `c-activity-item.css` loading
-- [ ] `c-activity-item.css` appears in the `v2-components-styles` bundle
-- [ ] LESS compiles without errors
-- [ ] Mobile layout: items wrap correctly at SM breakpoint
