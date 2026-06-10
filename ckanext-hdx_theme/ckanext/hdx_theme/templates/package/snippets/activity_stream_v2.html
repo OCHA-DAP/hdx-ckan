@@ -20,24 +20,24 @@
       {# ── Type dispatch ── #}
       {% set _ns = namespace(action_text='', subject_label='', subject_href='') %}
 
-      {% if activity.activity_type == 'new_package' %}
+      {% if activity.activity_type == 'new package' %}
         {% set _ns.action_text   = _('created the dataset') %}
         {% set _ns.subject_label = activity.data.package.title if activity.data.package else _('unknown') %}
         {% set _pkg_type         = (activity.data.package.type if activity.data.package else 'dataset') or 'dataset' %}
         {% set _ns.subject_href  = h.url_for(_pkg_type ~ '.read', id=activity.object_id) %}
 
-      {% elif activity.activity_type == 'changed_package' %}
+      {% elif activity.activity_type == 'changed package' %}
         {% set _ns.action_text   = _('updated the dataset') %}
         {% set _ns.subject_label = activity.data.package.title if activity.data.package else _('unknown') %}
         {% set _pkg_type         = (activity.data.package.type if activity.data.package else 'dataset') or 'dataset' %}
         {% set _ns.subject_href  = h.url_for(_pkg_type ~ '.read', id=activity.object_id) %}
 
-      {% elif activity.activity_type == 'deleted_package' %}
+      {% elif activity.activity_type == 'deleted package' %}
         {% set _ns.action_text   = _('deleted the dataset') %}
         {% set _ns.subject_label = activity.data.package.title if activity.data.package else _('unknown') %}
         {% set _ns.subject_href  = '' %}
 
-      {% elif activity.activity_type == 'new_resource' %}
+      {% elif activity.activity_type == 'new resource' %}
         {% set _ns.action_text   = _('added the resource') %}
         {% set _res              = activity.data.resource if activity.data.resource else none %}
         {% set _pkg_id           = _res.package_id if _res else '' %}
@@ -45,7 +45,7 @@
         {% set _ns.subject_label = _res.name if _res else _('unknown') %}
         {% set _ns.subject_href  = h.url_for('resource.read', id=_pkg_id, resource_id=_res_id) if (_pkg_id and _res_id) else '' %}
 
-      {% elif activity.activity_type == 'changed_resource' %}
+      {% elif activity.activity_type == 'changed resource' %}
         {% set _ns.action_text   = _('updated the resource') %}
         {% set _res              = activity.data.resource if activity.data.resource else none %}
         {% set _pkg_id           = _res.package_id if _res else '' %}
@@ -53,13 +53,13 @@
         {% set _ns.subject_label = _res.name if _res else _('unknown') %}
         {% set _ns.subject_href  = h.url_for('resource.read', id=_pkg_id, resource_id=_res_id) if (_pkg_id and _res_id) else '' %}
 
-      {% elif activity.activity_type == 'deleted_resource' %}
+      {% elif activity.activity_type == 'deleted resource' %}
         {% set _ns.action_text   = _('deleted the resource') %}
         {% set _res              = activity.data.resource if activity.data.resource else none %}
         {% set _ns.subject_label = _res.name if _res else _('unknown') %}
         {% set _ns.subject_href  = '' %}
 
-      {% elif activity.activity_type == 'new_resource_view' %}
+      {% elif activity.activity_type == 'new resource view' %}
         {% set _ns.action_text   = _('created resource view') %}
         {% set _view_title       = activity.data.title if (activity.data.title is defined and activity.data.title) else _('resource view') %}
         {% set _ns.subject_label = _view_title %}
@@ -68,7 +68,7 @@
         {% set _view_id          = activity.data.id if (activity.data.id is defined and activity.data.id) else '' %}
         {% set _ns.subject_href  = h.url_for('resource.read', id=_pkg_id, resource_id=_res_id, view_id=_view_id) if (_pkg_id and _res_id) else '' %}
 
-      {% elif activity.activity_type == 'changed_resource_view' %}
+      {% elif activity.activity_type == 'changed resource view' %}
         {% set _ns.action_text   = _('updated resource view') %}
         {% set _view_title       = activity.data.title if (activity.data.title is defined and activity.data.title) else _('resource view') %}
         {% set _ns.subject_label = _view_title %}
@@ -77,68 +77,68 @@
         {% set _view_id          = activity.data.id if (activity.data.id is defined and activity.data.id) else '' %}
         {% set _ns.subject_href  = h.url_for('resource.read', id=_pkg_id, resource_id=_res_id, view_id=_view_id) if (_pkg_id and _res_id) else '' %}
 
-      {% elif activity.activity_type == 'deleted_resource_view' %}
+      {% elif activity.activity_type == 'deleted resource view' %}
         {% set _ns.action_text   = _('deleted resource view') %}
         {% set _view_title       = activity.data.title if (activity.data.title is defined and activity.data.title) else _('resource view') %}
         {% set _ns.subject_label = _view_title %}
         {% set _ns.subject_href  = '' %}
 
-      {% elif activity.activity_type == 'new_organization' %}
+      {% elif activity.activity_type == 'new organization' %}
         {% set _ns.action_text   = _('created the organization') %}
         {% set _ns.subject_label = activity.data.group.title if activity.data.group else _('unknown') %}
         {% set _ns.subject_href  = h.url_for('organization.read', id=activity.object_id) %}
 
-      {% elif activity.activity_type == 'changed_organization' %}
+      {% elif activity.activity_type == 'changed organization' %}
         {% set _ns.action_text   = _('updated the organization') %}
         {% set _ns.subject_label = activity.data.group.title if activity.data.group else _('unknown') %}
         {% set _ns.subject_href  = h.url_for('organization.read', id=activity.object_id) %}
 
-      {% elif activity.activity_type == 'deleted_organization' %}
+      {% elif activity.activity_type == 'deleted organization' %}
         {% set _ns.action_text   = _('deleted the organization') %}
         {% set _ns.subject_label = activity.data.group.title if activity.data.group else _('unknown') %}
         {% set _ns.subject_href  = '' %}
 
-      {% elif activity.activity_type == 'new_group' %}
+      {% elif activity.activity_type == 'new group' %}
         {% set _ns.action_text   = _('created the group') %}
         {% set _ns.subject_label = activity.data.group.title if activity.data.group else _('unknown') %}
         {% set _ns.subject_href  = h.url_for('group.read', id=activity.object_id) %}
 
-      {% elif activity.activity_type == 'changed_group' %}
+      {% elif activity.activity_type == 'changed group' %}
         {% set _ns.action_text   = _('updated the group') %}
         {% set _ns.subject_label = activity.data.group.title if activity.data.group else _('unknown') %}
         {% set _ns.subject_href  = h.url_for('group.read', id=activity.object_id) %}
 
-      {% elif activity.activity_type == 'deleted_group' %}
+      {% elif activity.activity_type == 'deleted group' %}
         {% set _ns.action_text   = _('deleted the group') %}
         {% set _ns.subject_label = activity.data.group.title if activity.data.group else _('unknown') %}
         {% set _ns.subject_href  = '' %}
 
-      {% elif activity.activity_type == 'new_user' %}
+      {% elif activity.activity_type == 'new user' %}
         {% set _ns.action_text   = _('signed up') %}
 
-      {% elif activity.activity_type == 'changed_user' %}
+      {% elif activity.activity_type == 'changed user' %}
         {% set _ns.action_text   = _('updated their profile') %}
 
-      {% elif activity.activity_type == 'added_tag' %}
+      {% elif activity.activity_type == 'added tag' %}
         {% set _ns.action_text   = _('added the tag') %}
         {% set _ns.subject_label = activity.data.tag.name if activity.data.tag else _('unknown') %}
 
-      {% elif activity.activity_type == 'removed_tag' %}
+      {% elif activity.activity_type == 'removed tag' %}
         {% set _ns.action_text   = _('removed the tag') %}
         {% set _ns.subject_label = activity.data.tag.name if activity.data.tag else _('unknown') %}
 
-      {% elif activity.activity_type == 'follow_dataset' %}
+      {% elif activity.activity_type == 'follow dataset' %}
         {% set _ns.action_text   = _('started following') %}
         {% set _ns.subject_label = activity.data.package.title if activity.data.package else _('unknown') %}
         {% set _pkg_type         = (activity.data.package.type if activity.data.package else 'dataset') or 'dataset' %}
         {% set _ns.subject_href  = h.url_for(_pkg_type ~ '.read', id=activity.object_id) %}
 
-      {% elif activity.activity_type == 'follow_user' %}
+      {% elif activity.activity_type == 'follow user' %}
         {% set _ns.action_text   = _('started following') %}
         {% set _ns.subject_label = activity.object_id %}
         {% set _ns.subject_href  = h.url_for('user.read', id=activity.object_id) %}
 
-      {% elif activity.activity_type == 'follow_group' %}
+      {% elif activity.activity_type == 'follow group' %}
         {% set _ns.action_text   = _('started following the group') %}
         {% set _ns.subject_label = activity.data.group.title if activity.data.group else _('unknown') %}
         {% set _ns.subject_href  = h.url_for('group.read', id=activity.object_id) %}
