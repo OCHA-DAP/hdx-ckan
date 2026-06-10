@@ -1,0 +1,45 @@
+{#
+  c-activity-item — single activity stream item (v2 timeline style)
+
+  Required:
+    actor_href    (string) — URL of actor's profile page
+    actor_label   (string) — display name of actor
+    action_text   (string) — plain-text action phrase
+    timestamp     (datetime) — activity.timestamp
+
+  Optional:
+    subject_label (string, default='') — dataset/resource/etc. title
+    subject_href  (string, default='') — subject URL; if empty, subject renders as plain text
+    extra_classes (string, default='') — additional CSS classes on the root element
+#}
+
+{% set subject_label = subject_label if subject_label is defined else '' %}
+{% set subject_href  = subject_href  if subject_href  is defined else '' %}
+{% set extra_classes = extra_classes if extra_classes is defined else '' %}
+
+<div class="c-activity-item{{ ' ' ~ extra_classes if extra_classes else '' }}">
+
+  <div class="c-activity-item__timeline" aria-hidden="true">
+    <div class="c-activity-item__line"></div>
+    <div class="c-activity-item__dot"></div>
+  </div>
+
+  <div class="c-activity-item__content">
+    <div class="c-activity-item__actor">
+      <a href="{{ actor_href }}">{{ actor_label }}</a>
+    </div>
+    <div class="c-activity-item__action">
+      <span>{{ action_text }}</span>
+      {% if subject_label and subject_href %}
+        <a href="{{ subject_href }}"><span>{{ subject_label }}</span></a>
+      {% elif subject_label %}
+        <span>{{ subject_label }}</span>
+      {% endif %}
+    </div>
+    <div class="c-activity-item__time"
+         title="{{ h.render_datetime(timestamp, with_hours=True) }}">
+      {{ h.time_ago_from_timestamp(timestamp) }}
+    </div>
+  </div>
+
+</div>

@@ -97,6 +97,17 @@
       return;
     }
 
+    var resultsLabel =
+      container.getAttribute('data-results-label') ||
+      'Search results';
+
+    var titleEl = document.createElement('span');
+    titleEl.className   = 'c-autocomplete__section-title';
+    titleEl.setAttribute('role', 'presentation');
+    titleEl.setAttribute('aria-hidden', 'true');
+    titleEl.textContent = resultsLabel;
+    container.appendChild(titleEl);
+
     hits.forEach(function (hit) {
       var item  = feature_index[hit.id];
       var title = sanitize(item.title);

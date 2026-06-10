@@ -198,7 +198,6 @@
   align-items: center;
   justify-content: space-between;
   gap: var(--hdx-space-2);
-  padding: var(--hdx-space-1) var(--hdx-space-2);
 }
 .c-autocomplete__result-row[aria-selected="true"] {
   background-color: var(--hdx-neutral-01);

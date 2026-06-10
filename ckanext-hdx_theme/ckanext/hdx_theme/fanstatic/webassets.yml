@@ -1459,6 +1459,7 @@ v2-components-styles:
   contents:
     - v2/foundation.css
     - v2/components/activity-card.css
+    - v2/components/activity-item.css
     - v2/components/anchor-links.css
     - v2/components/avatar-badge.css
     - v2/components/breadcrumb.css
