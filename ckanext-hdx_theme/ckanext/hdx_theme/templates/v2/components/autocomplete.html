@@ -100,7 +100,7 @@
     {% endif %}
 
     {# ─ Results list (populated by JS; server-side results shown if provided) ─ #}
-    <div class="c-autocomplete__results">
+    <div class="c-autocomplete__results" data-results-label="{{ results_label }}">
       {% if results %}
         <span class="c-autocomplete__section-title" role="presentation" aria-hidden="true">{{ results_label }}</span>
         {% for result in results %}
