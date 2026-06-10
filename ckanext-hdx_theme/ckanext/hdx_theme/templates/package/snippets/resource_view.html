@@ -16,22 +16,24 @@
     {% if not h.resource_view_is_iframed(resource_view) %}
       {{ h.rendered_resource_view(resource_view, resource, package) }}
     {% else %}
-      <div class="data-viewer-error js-hide">
-        <p class="text-error">
-          <i class="icon-info-sign"></i>
-          {{ _('This resource view is not available at the moment.') }}
-          <a href="#" data-bs-toggle="collapse" data-bs-target="#data-view-error">
-            {{ _('Click here for more information.') }}
-          </a>
-        </p>
-        <p id="data-view-error" class="collapse"></p>
-        {#<p>
-          <a href="{{ raw_resource_url }}" class="btn btn-large resource-url-analytics" target="_blank" tracking-type="{{resource['url_type']}}">
-            <i class="icon-large icon-download"></i>
-            {{ _('Download resource') }}
-          </a>
-        </p>#}
-      </div>
+      {% if resource_view.view_type != 'recline_view' %}
+        <div class="data-viewer-error js-hide">
+          <p class="text-error">
+            <i class="icon-info-sign"></i>
+            {{ _('This resource view is not available at the moment.') }}
+            <a href="#" data-bs-toggle="collapse" data-bs-target="#data-view-error">
+              {{ _('Click here for more information.') }}
+            </a>
+          </p>
+          <p id="data-view-error" class="collapse"></p>
+          {#<p>
+            <a href="{{ raw_resource_url }}" class="btn btn-large resource-url-analytics" target="_blank" tracking-type="{{resource['url_type']}}">
+              <i class="icon-large icon-download"></i>
+              {{ _('Download resource') }}
+            </a>
+          </p>#}
+        </div>
+      {% endif %}
       {% if not to_preview %}
         {% set current_filters = request.args.get('filters') %}
         {% if current_filters %}

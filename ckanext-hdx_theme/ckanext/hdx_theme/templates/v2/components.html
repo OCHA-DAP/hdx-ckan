@@ -1641,6 +1641,23 @@
 
   </section>
 
+
+  <section class="demo-section">
+    <h1 class="demo-section__title">Table</h1>
+    <p class="demo-section__subtitle">bordered · striped rows · truncating cells</p>
+
+    {% snippet 'v2/components/table.html',
+        headers=['Dataset', 'Format', 'Last updated', 'Downloads'],
+        rows=[
+            ['ACLED – Political violence events in Africa 2023', 'CSV', '2023-04-12', '4,231'],
+            ['UNHCR Population of concern per country 2022', 'XLSX', '2023-03-01', '8,104'],
+            ['WHO – COVID-19 global data', 'JSON', '2023-05-15', '19,502'],
+            ['FAOSTAT – Land use statistics 2021', 'CSV', '2022-11-30', '2,890'],
+            ['ReliefWeb – Humanitarian situation reports', 'PDF', '2023-06-01', '11,387']
+        ] %}
+
+  </section>
+
 </div>{# /demo-page #}
 
 {% endblock %}

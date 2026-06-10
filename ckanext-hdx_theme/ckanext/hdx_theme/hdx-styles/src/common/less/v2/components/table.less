@@ -1,0 +1,75 @@
+@import "../mixins.less";
+
+// ============================================================
+// c-table — data table component
+// ============================================================
+// Demo:    templates/v2/components/table.html
+// Used by: hdx_office_preview (DataTables preview) via LESS mixins
+// ============================================================
+
+// ── Public mixins ─────────────────────────────────────────────
+// Call these from external LESS to apply c-table look to any selector.
+
+.c-table-th-styles() {
+    .hdx-body-xs-semibold();
+    color:            var(--hdx-neutral-85);
+    background-color: var(--hdx-neutral-01);          // #fafbfb
+    padding:          var(--hdx-space-2);
+    border-bottom:    1px solid var(--hdx-neutral-0); // white — invisible separator
+    border-right:     1px solid var(--hdx-neutral-0);
+    text-align:       left;
+    white-space:      nowrap;
+
+    &:last-child { border-right: none; }
+}
+
+.c-table-td-styles() {
+    .hdx-body-xs();
+    color:         var(--hdx-neutral-85);             // #2f3536
+    padding:       var(--hdx-space-2);
+    border-bottom: 1px solid var(--hdx-neutral-0);    // white — invisible separator
+    border-right:  1px solid var(--hdx-neutral-0);
+    overflow:      hidden;
+    text-overflow: ellipsis;
+    white-space:   nowrap;
+    max-width:     200px;
+
+    &:last-child { border-right: none; }
+}
+
+.c-table-footer-styles() {
+    padding:          var(--hdx-space-15) var(--hdx-space-2);
+    display:          flex;
+    justify-content:  center;
+    border-top:       1px solid var(--hdx-neutral-1);
+    background-color: var(--hdx-neutral-0);
+}
+
+// ── Component ─────────────────────────────────────────────────
+
+.c-table-container {
+    border:        1px solid var(--hdx-neutral-1);
+    border-radius: var(--hdx-radius-sm);
+    overflow:      hidden;
+}
+
+.c-table__scroll {
+    overflow-x: auto;
+}
+
+table.c-table {
+    width:           100%;
+    border-collapse: collapse;
+
+    thead th {
+        .c-table-th-styles();
+    }
+
+    tbody td {
+        .c-table-td-styles();
+    }
+
+    tbody tr:last-child td               { border-bottom: none; }
+    tbody tr:nth-child(odd)  td          { background-color: var(--hdx-neutral-0);  }
+    tbody tr:nth-child(even) td          { background-color: var(--hdx-neutral-01); }
+}

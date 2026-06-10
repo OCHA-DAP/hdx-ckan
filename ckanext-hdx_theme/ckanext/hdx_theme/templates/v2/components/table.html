@@ -1,0 +1,61 @@
+{#
+  Snippet: table.html
+  Path:    templates/v2/components/table.html
+
+  Renders a .c-table component — bordered data table with striped rows.
+  The same visual styles are applied to DataTables previews via the LESS
+  mixins (.c-table-th-styles, .c-table-td-styles) in
+  hdx_office_preview/public/less/hdx_csv_preview.less.
+
+  Parameters
+  ──────────────────────────────────────────────────────
+  headers       {list}    Column header strings.
+                          default: []
+
+  rows          {list}    List of row arrays (each row is a list of cell values).
+                          default: []
+
+  extra_classes {string}  Additional CSS classes on the outer container.
+                          default: ''
+  ──────────────────────────────────────────────────────
+  Example
+
+  {% snippet 'v2/components/table.html',
+      headers=['Dataset', 'Format', 'Last updated', 'Downloads'],
+      rows=[
+          ['ACLED – Political violence events 2023', 'CSV', '2023-04-12', '4,231'],
+          ['UNHCR Population of concern per country', 'XLSX', '2023-03-01', '8,104'],
+      ] %}
+#}
+
+{% set headers       = headers       if headers       is defined else [] %}
+{% set rows          = rows          if rows          is defined else [] %}
+{% set extra_classes = extra_classes if extra_classes is defined else '' %}
+
+<div class="c-table-container{{ ' ' ~ extra_classes if extra_classes }}">
+  <div class="c-table__scroll">
+    <table class="c-table">
+
+      {% if headers %}
+        <thead>
+          <tr>
+            {% for col in headers %}
+              <th>{{ col }}</th>
+            {% endfor %}
+          </tr>
+        </thead>
+      {% endif %}
+
+      <tbody>
+        {% for row in rows %}
+          <tr>
+            {% for cell in row %}
+              <td>{{ cell }}</td>
+            {% endfor %}
+          </tr>
+        {% endfor %}
+      </tbody>
+
+    </table>
+  </div>
+</div>

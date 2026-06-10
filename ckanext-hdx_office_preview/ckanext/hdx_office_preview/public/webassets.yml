@@ -1,6 +1,5 @@
 main-css:
   output: hdx_office_preview/%(version)s_office_preview.css
-
   contents:
     - css/hdx_csv_preview.css
 
@@ -8,7 +7,7 @@ main:
   output: hdx_office_preview/%(version)s_office_preview.js
   extra:
     preload:
-      - base/main
-      - hdx_office_preview/main-css
+      - vendor/jquery
   contents:
-    - hdx_csv_preview.js
+    - js/dataTables.min.js
+    - js/hdx_csv_preview.js

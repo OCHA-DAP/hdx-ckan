@@ -1481,6 +1481,7 @@ v2-components-styles:
     - v2/components/resource-card.css
     - v2/components/selection.css
     - v2/components/showcase-card.css
+    - v2/components/table.css
     - v2/components/text-link.css
 
 v2-components-scripts:
