@@ -36,8 +36,10 @@
   {# Build items list for this filter #}
   {% set _ci = namespace(items=[]) %}
   {% for item in items %}
-    {% set _attrs = {'data-filter-checkbox': '', 'data-facet': filter.key, 'name': filter.key} %}
-    {% set _ci.items = _ci.items + [{'value': item.name, 'label': item.display_name, 'count': '(' ~ item.count ~ ')' if item.count else '(0)', 'checked': item.selected, 'active': item.selected, 'attrs': _attrs}] %}
+    {% if item.count or item.selected %}
+      {% set _attrs = {'data-filter-checkbox': '', 'data-facet': filter.key, 'name': filter.key} %}
+      {% set _ci.items = _ci.items + [{'value': item.name, 'label': item.display_name, 'count': '(' ~ item.count ~ ')' if item.count else '(0)', 'checked': item.selected, 'active': item.selected, 'attrs': _attrs}] %}
+    {% endif %}
   {% endfor %}
 
   <div class="hdx-v2-search-filters__item">
@@ -81,24 +83,30 @@
     {# Nested group (e.g. COD levels) — parent toggle + indented children #}
     {% set _cns = namespace(sel=0, total=0, count=0, children=[]) %}
     {% for si in ai['items'] %}
-      {% set _cns.total = _cns.total + 1 %}
-      {% set _cns.count = _cns.count + (si.count | default(0) | int) %}
-      {% if si.selected %}{% set _cns.sel = _cns.sel + 1 %}{% endif %}
-      {% set _cattrs = {'data-filter-checkbox': '', 'data-facet': si.category_key, 'name': si.category_key} %}
-      {% set _cns.children = _cns.children + [{'value': si.name, 'label': si.display_name, 'count': '(' ~ si.count ~ ')' if si.count else '(0)', 'checked': si.selected, 'active': si.selected, 'extra_classes': 'c-list-item--child', 'attrs': _cattrs}] %}
+      {% if si.count or si.selected %}
+        {% set _cns.total = _cns.total + 1 %}
+        {% set _cns.count = _cns.count + (si.count | default(0) | int) %}
+        {% if si.selected %}{% set _cns.sel = _cns.sel + 1 %}{% endif %}
+        {% set _cattrs = {'data-filter-checkbox': '', 'data-facet': si.category_key, 'name': si.category_key} %}
+        {% set _cns.children = _cns.children + [{'value': si.name, 'label': si.display_name, 'count': '(' ~ si.count ~ ')' if si.count else '(0)', 'checked': si.selected, 'active': si.selected, 'extra_classes': 'c-list-item--child', 'attrs': _cattrs}] %}
+      {% endif %}
     {% endfor %}
-    {% set _parent_all  = _cns.sel == _cns.total and _cns.total > 0 %}
-    {% set _parent_some = _cns.sel > 0 and _cns.sel < _cns.total %}
-    {% if _parent_some %}
-      {% set _pattrs = {'data-group-toggle': '', 'data-group': ai.category_key, 'data-indeterminate': ''} %}
-    {% else %}
-      {% set _pattrs = {'data-group-toggle': '', 'data-group': ai.category_key} %}
+    {% if _cns.children %}
+      {% set _parent_all  = _cns.sel == _cns.total and _cns.total > 0 %}
+      {% set _parent_some = _cns.sel > 0 and _cns.sel < _cns.total %}
+      {% if _parent_some %}
+        {% set _pattrs = {'data-group-toggle': '', 'data-group': ai.category_key, 'data-indeterminate': ''} %}
+      {% else %}
+        {% set _pattrs = {'data-group-toggle': '', 'data-group': ai.category_key} %}
+      {% endif %}
+      {% set _adv_ci.items = _adv_ci.items + [{'label': ai.display_name, 'count': '(' ~ _cns.count ~ ')' if _cns.count > 0 else '(0)', 'checked': _parent_all, 'active': _parent_all, 'extra_classes': 'c-list-item--parent', 'attrs': _pattrs, 'children': _cns.children}] %}
     {% endif %}
-    {% set _adv_ci.items = _adv_ci.items + [{'label': ai.display_name, 'count': '(' ~ _cns.count ~ ')' if _cns.count > 0 else '(0)', 'checked': _parent_all, 'active': _parent_all, 'extra_classes': 'c-list-item--parent', 'attrs': _pattrs, 'children': _cns.children}] %}
   {% else %}
     {# Flat ext_* flag #}
-    {% set _fattrs = {'data-filter-checkbox': '', 'data-facet': ai.get('category_key', 'featured'), 'name': ai.get('category_key', 'featured')} %}
-    {% set _adv_ci.items = _adv_ci.items + [{'value': ai.name, 'label': ai.display_name, 'count': '(' ~ ai.count ~ ')' if ai.count else '(0)', 'checked': ai.selected, 'active': ai.selected, 'attrs': _fattrs}] %}
+    {% if ai.count or ai.selected %}
+      {% set _fattrs = {'data-filter-checkbox': '', 'data-facet': ai.get('category_key', 'featured'), 'name': ai.get('category_key', 'featured')} %}
+      {% set _adv_ci.items = _adv_ci.items + [{'value': ai.name, 'label': ai.display_name, 'count': '(' ~ ai.count ~ ')' if ai.count else '(0)', 'checked': ai.selected, 'active': ai.selected, 'attrs': _fattrs}] %}
+    {% endif %}
   {% endif %}
 {% endfor %}
 
