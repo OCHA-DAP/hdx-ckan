@@ -3,9 +3,11 @@
   Path:    templates/v2/components/table.html
 
   Renders a .c-table component — bordered data table with striped rows.
-  The same visual styles are applied to DataTables previews via the LESS
-  mixins (.c-table-th-styles, .c-table-td-styles) in
-  hdx_office_preview/public/less/hdx_csv_preview.less.
+  Shared table styles are defined in `hdx-styles/src/common/less/v2/components/table.less`
+  and compiled into `fanstatic/v2/components/table.css` (included via the v2 components bundle).
+
+  The DataTables CSV/HXL preview in `ckanext-hdx_office_preview` duplicates these styles in
+  its own CSS to match the v2 table look inside the iframe.
 
   Parameters
   ──────────────────────────────────────────────────────

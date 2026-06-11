@@ -154,12 +154,16 @@ The snippet is NOT necessarily called for static rendering. Its primary role is 
 
 **Decision: keep iframe (Option B)** — preferred over Option C for this task.
 
-**Option B — Keep iframe, replace DataTables renderer with v2 HTML** ✅ CHOSEN
-- Drop DataTables from `hdx_csv_preview_view.html`
-- Load v2 CSS bundle inside the iframe `<head>` (explicit `<link>` tag pointing to the compiled v2 CSS)
-- Custom JS fetches `/hxl/api/data-preview.json` and renders the v2 HTML structure directly
-- Must reimplement: sorting, pagination (client-side)
+**Option B — Keep iframe, retain DataTables 2.x, and apply v2 styling** ✅ CHOSEN
+- Keep DataTables in `hdx_csv_preview_view.html` (no custom renderer)
+- Load v2 styles in the iframe via `v2/page.html` and apply custom CSS for the DataTables output
+- Sorting + pagination remain DataTables built-in
 - Change scope: `hdx_csv_preview_view.html`, `hdx_csv_preview.js`, `hdx_csv_preview.css` — all within `ckanext-hdx_office_preview`
+
+**Option C — Render inline (no iframe)** — more complex for this task
+- Would require: changing `plugin.py` (`'iframed': False`), refactoring `hdx_csv_preview_view.html` from a full page (`extends base.html`) into a Jinja snippet, moving JS initialisation to the parent resource page
+- v2 CSS would be naturally available without explicit loading
+- Rejected because it touches more files and crosses extension boundaries for no clear benefit once v2 styles are available in the iframe
 
 **Option C — Render inline (no iframe)** — more complex for this task
 - Would require: changing `plugin.py` (`'iframed': False`), refactoring `hdx_csv_preview_view.html` from a full page (`extends base.html`) into a Jinja snippet, moving JS initialisation to the parent resource page
