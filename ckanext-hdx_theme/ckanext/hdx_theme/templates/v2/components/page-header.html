@@ -184,14 +184,14 @@
         {% if edit_mode %}
           {% snippet 'v2/components/text-button.html',
               style='tertiary', size='m', label='Edit Dataset',
-              icon=True, icon_position='left', icon_src='v2/icons/placeholder.svg',
+              icon=True, icon_position='left', icon_src='v2/icons/edit.svg',
               tag='a', href='#',
               attrs={'onclick': "contributeAddDetails('" ~ pkg_id ~ "', 'dataset')"} %}
         {% endif %}
         {% if not hide_membership and membership and membership.display_group_message %}
           {% snippet 'v2/components/text-button.html',
               style='tertiary', size='m', label='Group message',
-              icon=True, icon_position='left', icon_src='v2/icons/placeholder.svg',
+              icon=True, icon_position='left', icon_src='v2/icons/message.svg',
               tag='a', href='#',
               attrs={'onclick': "closeCurrentWidget(this);$('#group-message-topics-selector').select2('val', '');spawnRecaptcha('#groupMessagePopup');showOnboardingWidget('#groupMessagePopup');"} %}
         {% endif %}
@@ -235,14 +235,14 @@
       {% if edit_mode %}
         {% snippet 'v2/components/text-button.html',
             style='tertiary', size='m', label='Edit Dataset',
-            icon=True, icon_position='left', icon_src='v2/icons/placeholder.svg',
+            icon=True, icon_position='left', icon_src='v2/icons/edit.svg',
             tag='a', href='#',
             attrs={'onclick': "contributeAddDetails('" ~ pkg_id ~ "', 'dataset')"} %}
       {% endif %}
       {% if not hide_membership and membership and membership.display_group_message %}
         {% snippet 'v2/components/text-button.html',
             style='tertiary', size='m', label='Group message',
-            icon=True, icon_position='left', icon_src='v2/icons/placeholder.svg',
+            icon=True, icon_position='left', icon_src='v2/icons/message.svg',
             tag='a', href='#',
             attrs={'id': 'contact-members', 'onclick': "closeCurrentWidget(this);$('#group-message-topics-selector').select2('val', '');spawnRecaptcha('#groupMessagePopup');showOnboardingWidget('#groupMessagePopup');"} %}
       {% endif %}

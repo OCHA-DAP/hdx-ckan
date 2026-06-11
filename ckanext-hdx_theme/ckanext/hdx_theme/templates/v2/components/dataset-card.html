@@ -178,7 +178,7 @@
             {% if fmt.type == 'private' or fmt.type == 'archived' or fmt.type == 'requestdata' %}
               {% set default_icon = 'v2/icons/lock.svg' %}
               {% if fmt.type == 'archived' %}
-                {% set default_icon = 'v2/icons/placeholder.svg' %}
+                {% set default_icon = 'v2/icons/archive.svg' %}
               {% elif fmt.type == 'requestdata' %}
                 {% set default_icon = 'v2/icons/unlock.svg' %}
               {% endif %}

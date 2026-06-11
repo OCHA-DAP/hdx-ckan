@@ -41,7 +41,7 @@
   {% set formats_val = formats_val + [{'type': 'private', 'text': '', 'icon_src': 'v2/icons/lock.svg'}] %}
 {% endif %}
 {% if package.archived %}
-  {% set formats_val = formats_val + [{'type': 'archived', 'text': '', 'icon_src': 'v2/icons/placeholder.svg'}] %}
+  {% set formats_val = formats_val + [{'type': 'archived', 'text': '', 'icon_src': 'v2/icons/archive.svg'}] %}
 {% endif %}
 {% if package.cod_level == 'cod' %}
   {% set formats_val = formats_val + [{'type': 'cod', 'text': 'COD', 'icon_src': ''}] %}
