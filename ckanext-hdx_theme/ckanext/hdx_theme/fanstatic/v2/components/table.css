@@ -1,0 +1,54 @@
+.c-table-container {
+  border: 1px solid var(--hdx-neutral-1);
+  border-radius: var(--hdx-radius-sm);
+  overflow: hidden;
+}
+.c-table__scroll {
+  overflow-x: auto;
+}
+table.c-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+table.c-table thead th {
+  font-family: var(--hdx-font-body);
+  font-size: var(--hdx-fs-xs);
+  font-weight: var(--hdx-fw-semibold);
+  line-height: var(--hdx-lh-normal);
+  color: var(--hdx-neutral-85);
+  background-color: var(--hdx-neutral-01);
+  padding: var(--hdx-space-2);
+  border-bottom: 1px solid var(--hdx-neutral-0);
+  border-right: 1px solid var(--hdx-neutral-0);
+  text-align: left;
+  white-space: nowrap;
+}
+table.c-table thead th:last-child {
+  border-right: none;
+}
+table.c-table tbody td {
+  font-family: var(--hdx-font-body);
+  font-size: var(--hdx-fs-xs);
+  font-weight: var(--hdx-fw-regular);
+  line-height: var(--hdx-lh-normal);
+  color: var(--hdx-neutral-85);
+  padding: var(--hdx-space-2);
+  border-bottom: 1px solid var(--hdx-neutral-0);
+  border-right: 1px solid var(--hdx-neutral-0);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 200px;
+}
+table.c-table tbody td:last-child {
+  border-right: none;
+}
+table.c-table tbody tr:last-child td {
+  border-bottom: none;
+}
+table.c-table tbody tr:nth-child(odd) td {
+  background-color: var(--hdx-neutral-0);
+}
+table.c-table tbody tr:nth-child(even) td {
+  background-color: var(--hdx-neutral-01);
+}

@@ -50,3 +50,4 @@
 | 044 | [homepage-dynamic-bar-chart](044-homepage-dynamic-bar-chart.md)                                                 | implemented | |
 | 045 | [global-search-autocomplete](045-global-search-autocomplete.md)                                                 | implemented | |
 | 046 | [dataset-activity-section](046-dataset-activity-section.md)                                                     | implemented | |
+| 047 | [resource-preview-table-v2](047-resource-preview-table-v2.md)                                                   | implemented | |
