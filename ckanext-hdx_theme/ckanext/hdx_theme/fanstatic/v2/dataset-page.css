@@ -125,6 +125,7 @@
   font-weight: var(--hdx-fw-regular);
   line-height: var(--hdx-lh-normal);
   color: var(--hdx-neutral-85);
+  word-break: break-word;
 }
 .hdx-v2-dataset-metadata__value--tags {
   display: flex;

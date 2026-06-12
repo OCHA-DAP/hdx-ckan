@@ -108,7 +108,6 @@ Right card moves **inside** the left column, between description and CTA. All me
 | "Up to date" label | `is_up_to_date=True` |
 | Time period tooltip icon | `time_period_tooltip=True` |
 | Source "View more" link | `source_text` non-empty AND source overflows 1 line (detected by JS) — links to `#dataset-additional-info` |
-| Source tooltip icon | `source_tooltip=True` |
 
 ---
 
@@ -183,7 +182,6 @@ The tooltip-wrap div has `margin-left: auto` to push it to the right edge of the
     time_period=h.render_date_from_concat_str(pkg.dataset_date),
     time_period_tooltip=True,
     source_text=pkg.dataset_source or '',
-    source_tooltip=True,
     edit_mode=edit_mode,
     pkg_id=pkg.id
 %}
@@ -212,7 +210,6 @@ The tooltip-wrap div has `margin-left: auto` to push it to the right edge of the
 | `time_period_tooltip` | bool | `False` | Show info-circle tooltip on time period. |
 | `source_text` | string | `''` | Source/contributor display text. Truncated to 1 line; "View more" shown by JS if overflowing. |
 | `long_source` | bool | `False` | Unused — kept for API compatibility. |
-| `source_tooltip` | bool | `False` | Show info-circle tooltip on source. |
 | `edit_mode` | bool | `False` | Adds `data-module="hdx-quick-edit"` attrs to title and description container. |
 | `pkg_id` | string | `''` | Package ID — required when `edit_mode=True`. |
 

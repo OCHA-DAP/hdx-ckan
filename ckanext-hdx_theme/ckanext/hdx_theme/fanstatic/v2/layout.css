@@ -1,4 +1,5 @@
 body.hdx-v2 {
+  font-family: var(--hdx-font-body);
   background-color: var(--hdx-neutral-01);
 }
 .hdx-v2-breadcrumb-row {

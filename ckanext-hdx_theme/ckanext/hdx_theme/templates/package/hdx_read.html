@@ -122,7 +122,6 @@
         time_period=h.render_date_from_concat_str(pkg.dataset_date),
         time_period_tooltip=True,
         source_text=pkg.dataset_source or '',
-        source_tooltip=True,
         edit_mode=edit_mode,
         pkg_id=pkg.id,
         pkg_state=pkg.state,
@@ -215,12 +214,6 @@
             <span class="hdx-v2-dataset-metadata__label">{{ _('Expected update frequency') }}</span>
             <span class="hdx-v2-dataset-metadata__value">
               {{ h.hdx_get_frequency_by_value(pkg.data_update_frequency) }}
-              {% if pkg.type == 'dataset' and pkg.data_update_frequency and pkg.is_fresh %}
-                <a href="/faq#auto-faq-Metadata_and_Data_Quality-What_does_the_green_leaf_symbol_mean_-a"
-                   target="_blank"
-                   class="humanitarianicons-Environment fresh ms-1"
-                   title="{{ _('This dataset is up to date') }}"></a>
-              {% endif %}
             </span>
           </div>
 
@@ -356,6 +349,7 @@
         {% endif %}
 
         {# ── Tags / Topics ── #}
+        {% if pkg.tags %}
         <div class="hdx-v2-dataset-metadata__full"
              {% if metadata_edit_mode %}data-module="hdx-quick-edit" data-module-anchor="field_tag_string" data-module-dataset="{{ pkg.id }}"{% endif %}>
           <span class="hdx-v2-dataset-metadata__label">{{ _('Tags') }}</span>
@@ -377,6 +371,7 @@
             {% endfor %}
           </div>
         </div>
+        {% endif %}
 
         {# ── Visibility (non-requestdata, editor-only) ── #}
         {% if not pkg.is_requestdata_type %}

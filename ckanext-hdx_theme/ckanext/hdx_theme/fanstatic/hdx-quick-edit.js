@@ -22,11 +22,7 @@ this.ckan.module('hdx-quick-edit', function (jQuery, _, i18n) {
       let dataset = this.options.dataset;
       //base template
       this.options.template.push(
-        `
-          <a class="btn btn-square quick-link" href="#" onclick="contributeAddDetails('${dataset}', 'quick-edit', '#${anchor}'); return false;">
-            Edit
-          </a>
-        `
+        `<a class="c-text-link c-text-link--secondary c-text-link--size-s quick-link" href="#" onclick="contributeAddDetails('${dataset}', 'quick-edit', '#${anchor}'); return false;">Edit</a>`
       );
 
       this.edit = jQuery(this.options.template.join('\n'));

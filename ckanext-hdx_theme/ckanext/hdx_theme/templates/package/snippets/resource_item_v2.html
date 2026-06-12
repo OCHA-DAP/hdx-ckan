@@ -21,7 +21,8 @@
 
 {% set url              = h.url_for('dataset_resource.read', id=pkg.name, resource_id=res.id) %}
 {% set in_review        = res.in_quarantine %}
-{% set faq_review_url   = '/faq#auto-faq-Metadata_and_Data_Quality-What_does_it_mean_for_a_dataset_to_be__under_review__-a' %}
+{% set docs_links       = h.HDX_CONST('DOCUMENTATION_LINKS') %}
+{% set faq_review_url   = docs_links['QA_PROCESS'] + '/publish-data/preparing-and-publishing-data#hdx-quality-assurance-qa-process' %}
 {% set hdx_connect      = pkg.is_requestdata_type %}
 {% set show_download    = h.check_access('hdx_resource_download', res) and not in_review and not hdx_connect %}
 {% set resource_grouping = h.hdx_munge_title(res.x_grouping) if pkg.x_show_grouping else '' %}

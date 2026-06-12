@@ -14,8 +14,8 @@ Example:
 {#{% resource 'hdx_theme/requestdata/modal-form.js' %}#}
 {#{% resource 'requestdata/css/main.css' %}#}
 {#{% resource 'hdx_theme/bs_tooltip.js' %}#}
-{% asset 'requestdata/main-styles' %}
-{% asset 'hdx_theme/requestdata-scripts' %}
+{#{% asset 'requestdata/main-styles' %}#}
+{#{% asset 'hdx_theme/requestdata-scripts' %}#}
 
 {{ h.snippet('widget/onboarding/data-use-survey.html', id="dataUseSurveyPopup", pkg=pkg) }}
 {% set resource_item_snippet = resource_item_snippet or 'package/snippets/resource_item.html' %}
@@ -86,9 +86,7 @@ Example:
         {% endif %}
       {% else %}
         {# Comment out "add some" as action doesn't exist yet #}
-        <p class="empty mTop20">This dataset has no data,
-          <a class="info-item-name" href="#" onclick="contributeAddDetails('{{pkg.id}}', 'resource list')" >why not add some?</a>
-        </p>
+        <p>This dataset has no data, <a href="#" onclick="contributeAddDetails('{{pkg.id}}', 'resource list')" >why not add some?</a></p>
       {% endif %}
 
 

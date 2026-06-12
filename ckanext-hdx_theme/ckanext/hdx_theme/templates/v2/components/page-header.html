@@ -25,7 +25,6 @@
   time_period_tooltip {bool}    Show time period tooltip.  default: False
   source_text         {string}  Source text.  default: ''
   long_source         {bool}    Show "Show more" for source.  default: False
-  source_tooltip      {bool}    Show source tooltip.  default: False
 
   ── Resource parameters (resource_id triggers resource layout) ──
   resource_id       {string}  res.id.  default: ''
@@ -62,7 +61,6 @@
 {% set time_period_tooltip = time_period_tooltip if time_period_tooltip is defined else False %}
 {% set source_text         = source_text         if source_text         is defined else '' %}
 {% set long_source         = long_source         if long_source         is defined else False %}
-{% set source_tooltip      = source_tooltip      if source_tooltip      is defined else False %}
 {% set edit_mode           = edit_mode           if edit_mode           is defined else False %}
 {% set pkg_id              = pkg_id              if pkg_id              is defined else '' %}
 {% set pkg_state           = pkg_state           if pkg_state           is defined else '' %}
@@ -342,11 +340,6 @@
               icon=True, icon_position='right', icon_src='v2/icons/arrow-down.svg',
               tag='a', href='#metadata-source',
               extra_classes='c-page-header__source-view-more' %}
-        {% endif %}
-        {% if source_tooltip %}
-          {% snippet 'v2/components/info-icon.html',
-              aria_label=_('More info about source'),
-              tooltip_id='tooltip-source' %}
         {% endif %}
       </div>
       <div class="c-page-header__meta-value c-page-header__meta-value--source">
