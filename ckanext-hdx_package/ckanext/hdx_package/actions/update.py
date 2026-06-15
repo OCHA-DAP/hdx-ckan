@@ -6,6 +6,7 @@ Created on Jul 07, 2015
 
 import datetime
 import logging
+import re
 
 from six import text_type
 from flask import request
@@ -188,36 +189,54 @@ def _fetch_prev_resources_info(model, resource_ids):
     return id_to_resource_map
 
 
-def _submit_uploads_to_datapusher_plus(context: Context, package_dict: Dict[str, Any]):
-    for uploaded_resource_id in context.get(FILE_WAS_UPLOADED, {}):
-        if uploaded_resource_id != 'NEW':
-            uploaded_resource_dict = next(
-                (r for r in package_dict.get('resources', []) if r.get('id') == uploaded_resource_id), None
-            )
-            for item in plugins.PluginImplementations(plugins.IResourceController):
-                if item.name == 'datapusher_plus':
-                    item._submit_to_datapusher(uploaded_resource_dict)  # noqa
+def _normalize_supported_formats(config_value: Any) -> set[str]:
+    if not config_value:
+        return set()
+    if isinstance(config_value, str):
+        return {f.strip().lower() for f in re.split(r'[\s,]+', config_value) if f.strip()}
+    normalized = set()
+    for value in config_value:
+        if value is None:
+            continue
+        if isinstance(value, str):
+            normalized.update(f.strip().lower() for f in re.split(r'[\s,]+', value) if f.strip())
+        else:
+            normalized.add(str(value).strip().lower())
+    return normalized
 
 
-def _delete_datastore_if_no_longer_eligible(context: Context, package_dict: Dict[str, Any]):
+def _datastore_table_exists(resource_id: str) -> bool:
+    try:
+        _get_action('datastore_search')(
+            {'ignore_auth': True},
+            {'resource_id': resource_id, 'limit': 0, 'include_total': False}
+        )
+        return True
+    except NotFound:
+        return False
+
+
+def _manage_datastore_for_uploads(context: Context, package_dict: Dict[str, Any]):
     uploaded_resource_ids = context.get(FILE_WAS_UPLOADED, set())
     if not uploaded_resource_ids:
         return
 
-    supported_formats = (
+    supported_formats = _normalize_supported_formats(
         tk.config.get('ckan.datapusher.formats')
         or tk.config.get('ckanext.datapusher_plus.formats')
         or []
     )
-    supported_formats_lower = {f.lower() for f in supported_formats}
 
     try:
         hdx_allowed = _get_action('hdx_is_package_allowed_for_datastore')(
             {'ignore_auth': True}, {'package_id': package_dict['id']}
         )
     except Exception:
-        log.exception('Could not determine datastore allowlist status for package %s', package_dict.get('id'))
-        hdx_allowed = False
+        log.exception(
+            'Could not determine datastore allowlist status for package %s — skipping datastore management',
+            package_dict.get('id')
+        )
+        return
 
     for resource_id in uploaded_resource_ids:
         if resource_id == 'NEW':
@@ -225,10 +244,19 @@ def _delete_datastore_if_no_longer_eligible(context: Context, package_dict: Dict
         resource_dict = next(
             (r for r in package_dict.get('resources', []) if r.get('id') == resource_id), None
         )
-        if not resource_dict or not resource_dict.get('datastore_active'):
+        if not resource_dict:
             continue
         resource_format = (resource_dict.get('format') or '').lower()
-        if resource_format not in supported_formats_lower or not hdx_allowed:
+        eligible = (
+            resource_format in supported_formats
+            and hdx_allowed
+            and resource_dict.get('url_type') != 'datapusher'
+        )
+        if eligible:
+            for item in plugins.PluginImplementations(plugins.IResourceController):
+                if item.name == 'datapusher_plus':
+                    item._submit_to_datapusher(resource_dict)  # noqa
+        elif _datastore_table_exists(resource_id):
             try:
                 _get_action('datastore_delete')(
                     {'ignore_auth': True}, {'resource_id': resource_id, 'force': True}
@@ -415,8 +443,7 @@ def package_update(
     new_data_dict = _get_action('package_show')(context, {'id': data_dict['id'], "include_plugin_data": include_plugin_data})
 
     # Added by HDX - triggering datapusher plus on file uploads (after commit so DB state is consistent)
-    _submit_uploads_to_datapusher_plus(context, new_data_dict)
-    _delete_datastore_if_no_longer_eligible(context, new_data_dict)
+    _manage_datastore_for_uploads(context, new_data_dict)
 
     # HDX - delete previous files if needed
     for resource_dict in new_data_dict.get('resources'):
