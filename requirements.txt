@@ -155,7 +155,7 @@ pyld==2.0.4
     # via
     #   -r requirements.in
     #   ckanext-dcat
-pyotp==2.6.0
+pyotp==2.10.0
     # via -r requirements.in
 pyparsing==3.1.2
     # via
