@@ -1,2 +1,0 @@
-CREATE ROLE datastore_default NOSUPERUSER NOCREATEDB NOCREATEROLE LOGIN PASSWORD 'pass';
-CREATE DATABASE datastore_default OWNER ckan_default ENCODING 'utf-8';
