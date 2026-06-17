@@ -1,7 +1,7 @@
 # 048 — All Locations List (v2)
 
 **Scope:** Migrate `/group/` (All Locations) to v2 — layout, KPI cards, alphabetical list, anchor nav sidebar, filter toggle, sort buttons.  
-**Map and search are excluded from scope.**  
+**Search is excluded from scope. Map markup is preserved from v1 but not redesigned.**  
 **Figma sources:** `all-location-xl.html`, `all-location-xl-title-kpi.html`, `all-location-xl-legend.html`, `all-location-xl-title-filter.html`, `all-location-xl-content.html`, `all-location-md.html`, `all-location-md-content.html`, `all-location-sm.html`
 
 ---
@@ -61,7 +61,7 @@ The current template renders the page shell and injects `countries` as a JSON bl
 
 ### Data Grid
 
-"Locations part of Data Grid" shown in the Figma KPI cards has no direct equivalent in the current `GroupIndexReadLogic`. Data Grid membership is managed via the `hdx_datagrid_show` action (separate from the group list). A backend change or new helper will be required for this KPI value — see Open Questions.
+"Locations part of Data Grid" shown in the Figma KPI cards has no direct equivalent in the current `GroupIndexReadLogic`. Data Grid membership is managed via the `hdx_datagrid_show` action (separate from the group list). A backend change or new helper was required for this KPI value.
 
 ### Existing JavaScript (v1 only — NOT carried forward to v2)
 
@@ -183,7 +183,7 @@ Static — no dynamic content.
         All items:   border-radius: 2px, font: 14px Roboto, color: #3f4748
 ```
 
-**No location starts with X in the data — X anchor is shown as disabled.**  
+**No location starts with X in the data. Figma showed X as disabled; the implementation excludes X entirely from `all_letters`.**  
 **"World" is NOT in the alphabetical list.**
 
 ### MD Layout (`all-location-md-content.html`)
@@ -317,7 +317,7 @@ letters_present = ['A', 'B', 'C', ...]
 
 **World:** `get_all_countries_world_first()` inserts it at index 0. In v2 the list must **exclude the "World" location** — skip it when building `grouped_countries`.
 
-**X:** No location starts with X in the data. X anchor is rendered with `state='disabled'` in the sidebar. No 'X' section in the content.
+**X:** No location starts with X in the data. X is excluded from `all_letters` in the template — no anchor entry is rendered at any breakpoint.
 
 **Items per section:** The letter heading (`<b>A</b>`) is a Merriweather Bold heading, not a `c-section-title` component. Render inline in the template.
 
@@ -339,7 +339,7 @@ Content:   "Jump to section" (16px, weight 600)
 The `.warpper` (scrollable content) scrolls while `.header-inner` (sidebar) stays in place. Implement with CSS (`position: sticky; top: 0; align-self: flex-start`) or use the scrollable-content-area pattern.
 
 **Active state:** JS `IntersectionObserver` updates the active letter as sections scroll into view.
-**Disabled state:** X (and any empty letter) rendered with `state='disabled'`.
+**Disabled state:** Any empty letter (after filtering) rendered with `state='disabled'`. X is excluded entirely — not rendered at any size.
 
 ### MD — Right vertical sidebar
 
@@ -351,9 +351,9 @@ Width:     auto (letter links: 1.5rem each)
 
 The MD sidebar is on the **right** of the content (flex `order: 1`), sticky (`position: sticky; top: 0; align-self: flex-start`), with natural content-driven width (single column of letter anchors).
 
-### SM — No anchor nav
+### SM — Right sidebar (no heading)
 
-No letter anchor bar rendered. The `data-scroll-to` attributes are present on letter sections in the Figma but scroll behavior is out of scope for the initial implementation.
+Same component as MD: right-side vertical sidebar with letter anchors. The "Jump to section" heading is hidden below XL via CSS. The sidebar renders at all breakpoints.
 
 ---
 
@@ -376,8 +376,8 @@ No letter anchor bar rendered. The `data-scroll-to` attributes are present on le
 
 ### SM filter
 
-- Toggle only (no sort buttons) — same JS logic applies
-- Sort defaults to A-Z always on SM
+- Toggle + sort buttons — same JS logic applies at all breakpoints
+- Sort buttons are rendered at SM/MD/XL; no breakpoint-specific hiding
 
 ---
 
@@ -421,9 +421,9 @@ No letter anchor bar rendered. The `data-scroll-to` attributes are present on le
 |---|---|
 | Title | No text-buttons |
 | KPI | No info icons |
-| Filter | Toggle only (no sort buttons) |
+| Filter | Toggle + sort buttons (sort visible at all breakpoints) |
 | Content | 1-column items |
-| Anchor nav | Hidden |
+| Anchor nav | Right sidebar rendered (same as MD, no heading) |
 
 ---
 
@@ -435,7 +435,7 @@ No letter anchor bar rendered. The `data-scroll-to` attributes are present on le
 |---|---|---|
 | `total_count` | Not explicitly computed | `len(all_countries_world_1st) - 1` (minus World) |
 | `hrp_count` | Not computed | `sum(1 for c in countries if c.get('activity_level') == 'active')` |
-| `datagrid_count` | Not available | See Open Questions |
+| `datagrid_count` | Not available | Implemented in `group_read_logic.py` |
 | `grouped_countries` | Not computed (done in JS) | New helper — group by first letter, exclude 'world', normalise accents |
 | `letters_present` | Not computed | Keys of `grouped_countries` |
 
@@ -476,7 +476,8 @@ No letter anchor bar rendered. The `data-scroll-to` attributes are present on le
 | Case | Expected behavior |
 |---|---|
 | No locations | Show KPIs as 0; hide alphabetical section; show empty state message |
-| Letter with no entries (X, or after HRP filter) | Hide letter section; disable corresponding anchor |
+| Letter with no entries (after HRP filter) | Hide letter section; disable corresponding anchor |
+| X letter | Excluded from `all_letters` — no anchor or section rendered at any breakpoint |
 | All filtered out by HRP toggle | Show message; all letter sections hidden |
 | Very long location name | `overflow: hidden; text-overflow: ellipsis; white-space: nowrap` — already in Figma `.title10` class |
 | Special characters (Å, É, etc.) | Normalise for grouping; display original title |
@@ -490,37 +491,11 @@ No letter anchor bar rendered. The `data-scroll-to` attributes are present on le
 | Risk | Mitigation |
 |---|---|
 | Grouping divergence | Test accent normalisation against v1 sort order |
-| `datagrid_count` KPI unavailable | Ship as `?` placeholder until backend confirmed |
-| JS filtering/sorting complexity | Define state machine clearly: toggle and sort are independent |
+| `datagrid_count` KPI unavailable | ✅ Implemented in `group_read_logic.py` |
+| JS filtering/sorting complexity | ✅ Toggle and sort are independent state; implemented in `all-locations-page.js` |
 | Sidebar sticky on XL | ✅ `position: sticky; top: 0; align-self: flex-start` — works at all breakpoints |
-| X letter in anchor shows disabled | Ensure `c-letter-anchor` disabled style is correct |
-| SM missing sort buttons | A-Z default forced — no JS sort needed on SM |
-
----
-
-## 13. Open Questions
-
-**❗ Must be resolved before implementation begins.**
-
-1. **Data Grid count**: How is `datagrid_count` computed? Is there a group-level field, or does it need a new query across all groups via `hdx_datagrid_show`?
-
-2. **"Active" item definition in v2**: Should items with `dataset_count == 0` be shown grayed-out (v1 behavior) or equal to all others?
-
-3. **Sort behavior — Z-A**: ✅ Both letter sections (Z first) and items within each section are reversed.
-
-4. **"Alphabetical order" top button (XL)**: Does clicking it scroll to the list section, or does it do nothing (purely decorative in v2 since the map is excluded)?
-
-5. **HRP toggle URL state**: Client-side only, or reflected in the URL (`?only_hrp=1`) for shareability?
-
-6. **World location**: Excluded from list? Confirmed by Figma — but verify the CKAN group exists and should be hidden.
-
-7. **KPI tooltip texts**: What copy for the info icon tooltips on Total / HRP / Data Grid cards?
-
-8. **SM sort**: Confirmed absent in Figma — always A-Z on SM. No need for sort JS on SM.
-
-9. **Breadcrumb**: Confirmed white bg, no border. Any other breadcrumb differences vs other v2 pages?
-
-10. **Sticky behavior**: ✅ `position: sticky; top: 0; align-self: flex-start` on sidebar at all breakpoints. Content area does not use `overflow-y: auto`.
+| X letter anchor | ✅ X excluded from `all_letters`; no render needed |
+| SM sort buttons | ✅ Sort buttons rendered at all breakpoints; no SM-specific hiding |
 
 ---
 
@@ -530,12 +505,12 @@ No letter anchor bar rendered. The `data-scroll-to` attributes are present on le
 |---|---|---|
 | 1 | Replace `light/group/index.html` directly | Full migration — no v1 fallback needed |
 | 2 | Server-side Jinja2 grouping | Removes JS dependency; cleaner template |
-| 3 | Left sidebar (XL) / right sidebar (MD) | Confirmed from `all-location-xl-content.html` and `all-location-md-content.html` |
+| 3 | Left sidebar (XL) / right sidebar (MD + SM) | Confirmed from `all-location-xl-content.html` and `all-location-md-content.html`; SM renders same sidebar as MD (no heading) |
 | 4 | 3-col grid (XL), 2-col grid (MD) | Confirmed from Figma CSS |
 | 5 | `c-selection-item` with `color='cyan'` for HRP items | `c-selection-item--cyan` variant matches Figma HRP bg/border; `width: 100%; min-width: 0` added to component base for grid use |
 | 6 | `c-button` for sort buttons | User confirmation + Figma button style matches |
 | 7 | `c-kpi-card` (existing) | Already on branch — reuse as-is |
-| 8 | Map and search excluded | Per task definition |
+| 8 | Map (v1 markup) preserved but not redesigned; search excluded | Template retains `<div id="map">` and Leaflet asset bundle; only the search box is absent |
 | 9 | World excluded from list | Not shown in Figma |
 | 10 | Tertiary style + `is-active` class for sort buttons | Matches `:active` pseudo-class visually; `c-button` component extended with `is-active` modifier for all three button styles |
 | 11 | Sidebar sticky at all breakpoints, 25% width at XL only | SM/MD sidebar has natural content width (letter column); 25% flex via `.v2-sidebar-flex()` applied at XL only |
