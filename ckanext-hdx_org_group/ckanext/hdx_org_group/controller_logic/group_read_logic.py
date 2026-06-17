@@ -1,3 +1,5 @@
+import unicodedata
+
 import ckan.model as model
 import ckan.plugins.toolkit as tk
 
@@ -80,6 +82,10 @@ class GroupIndexReadLogic(object):
     def __init__(self, user):
         self.user = user
         self.all_countries_world_1st = None
+        self.total_count = 0
+        self.hrp_count = 0
+        self.grouped_countries = {}
+        self.letters_present = []
 
     def read(self):
         context = {
@@ -92,10 +98,32 @@ class GroupIndexReadLogic(object):
         for country in all_countries_world_1st:
             code = country['name']
             country['dataset_count'] = dataset_count_dict.get(code, 0)
+            country['is_hrp'] = country.get('activity_level') == 'active'
 
         self.all_countries_world_1st = all_countries_world_1st
 
+        non_world = [c for c in all_countries_world_1st if c['name'] != 'world']
+        self.total_count = len(non_world)
+        self.hrp_count = sum(1 for c in non_world if c.get('activity_level') == 'active')
+        self.datagrid_count = sum(1 for c in non_world if c.get('data_completeness') == 'active')
+        self.grouped_countries = self._group_by_letter(non_world)
+        self.letters_present = sorted(self.grouped_countries.keys())
+
         return self
+
+    def _group_by_letter(self, countries):
+        grouped = {}
+        for country in countries:
+            display_name = country.get('display_name') or country.get('title', '')
+            nfd = unicodedata.normalize('NFD', display_name)
+            letter = ''
+            for ch in nfd:
+                if unicodedata.category(ch).startswith('L'):
+                    letter = ch.upper()
+                    break
+            if letter and 'A' <= letter <= 'Z':
+                grouped.setdefault(letter, []).append(country)
+        return grouped
 
     def _fetch_dataset_counts(self, context, package_type):
         search = {

@@ -1,0 +1,34 @@
+{#
+  Snippet: kpi-card.html
+  Path:    templates/v2/components/kpi-card.html
+
+  KPI card for the All Locations page. Renders a label + optional info icon + bold value.
+
+  Parameters
+  ──────────────────────────────────────────────────────
+  label        {string}  Card title.  default: ''
+  value        {string}  Bold number or placeholder.  default: ''
+  tooltip_text {string}  Tooltip body text.  default: ''
+  tooltip_id   {string}  Unique id for the tooltip (required when show_icon=True).  default: ''
+  show_icon    {bool}    Render the info icon. Hidden on SM via CSS.  default: True
+  ──────────────────────────────────────────────────────
+#}
+
+{% set label        = label        if label        is defined else '' %}
+{% set value        = value        if value        is defined else '' %}
+{% set tooltip_text = tooltip_text if tooltip_text is defined else '' %}
+{% set tooltip_id   = tooltip_id   if tooltip_id   is defined else '' %}
+{% set show_icon    = show_icon    if show_icon    is defined else True %}
+
+<div class="c-kpi-card">
+  <div class="c-kpi-card__header">
+    <span class="c-kpi-card__label">{{ label }}</span>
+    {% if show_icon and tooltip_id %}
+      {% snippet 'v2/components/info-icon.html',
+          aria_label=label,
+          tooltip_text=tooltip_text,
+          tooltip_id=tooltip_id %}
+    {% endif %}
+  </div>
+  <b class="c-kpi-card__value">{{ value }}</b>
+</div>
