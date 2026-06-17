@@ -7,7 +7,7 @@
 
   // ── Smooth scroll (delegates to shared anchor-links utility) ─────────────
   document.addEventListener('click', function (e) {
-    var anchor = e.target.closest('a[href^="#"]');
+    var anchor = e.target.closest('.hdx-v2-all-locations-sidebar a[href^="#"], .hdx-v2-all-locations-hero__top-actions a[href^="#"]');
     if (!anchor) return;
     var href = anchor.getAttribute('href');
     if (!href || href === '#') return;
