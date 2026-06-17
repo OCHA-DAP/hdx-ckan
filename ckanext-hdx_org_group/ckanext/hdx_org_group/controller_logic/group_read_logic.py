@@ -84,6 +84,7 @@ class GroupIndexReadLogic(object):
         self.all_countries_world_1st = None
         self.total_count = 0
         self.hrp_count = 0
+        self.datagrid_count = 0
         self.grouped_countries = {}
         self.letters_present = []
 
