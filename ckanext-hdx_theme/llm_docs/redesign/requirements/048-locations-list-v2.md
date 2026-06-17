@@ -225,12 +225,12 @@ Static — no dynamic content.
     .legend  (static, same square)
     .frame-wrapper
       "Show only locations with HRP" + toggle
-      (NO sort buttons in SM)
+      (NO sort buttons in SM — implementation includes them at all breakpoints)
     [search — EXCLUDED]
     .frame-parent
       letter sections with data-scroll-to attrs
       Single-column location items
-    (NO anchor nav bar)
+    (NO anchor nav bar — implementation renders right sidebar at all breakpoints)
 ```
 
 ---
@@ -243,14 +243,12 @@ Static — no dynamic content.
 |---|---|---|
 | KPI card | `c-kpi-card` → `v2/components/kpi-card.html` | **Already exists on branch** |
 | Info icon on KPI | `c-info-icon` → `v2/components/info-icon.html` | Used inside kpi-card |
-| Location item | Inline HTML (styled `<a>` with grid) | `c-selection-item` is a filter chip — does NOT match location card style; use direct grid cells |
+| Location item | `c-selection-item` → `v2/components/selection-item.html` | `color='cyan'` for HRP items, `color='light'` otherwise; `width: 100%; min-width: 0` on component base for grid sizing |
 | HRP filter toggle | `c-toggle` → `v2/components/toggle.html` | |
 | Sort buttons | `c-button` → `v2/components/button.html` | Secondary style, with active/selected modifier |
 | Top text-buttons | `c-text-button` → `v2/components/text-button.html` | `arrow-down` icon, royalblue (map) / darkslategray (alpha) |
 | Letter anchor (XL sidebar) | `c-letter-anchor` → `v2/components/letter-anchor.html` | Size `lg`, state `active`/`enabled`/`disabled` |
-| Letter anchor (MD sidebar) | `c-letter-anchor` → `v2/components/letter-anchor.html` | Size `sm` |
-
-**Why not `c-selection-item` for location items:** The Figma location cards have a `background: #d4eae4`/`#fff` split, `border`, `box-shadow`, and no close icon or count. `c-selection-item` is designed as a filter chip with optional close and count. The location grid cells are simpler `<a>` tags styled directly in the page LESS.
+| Letter anchor (MD + SM sidebar) | `c-letter-anchor` → `v2/components/letter-anchor.html` | Size `lg` (all breakpoints) |
 
 ### New Files
 
@@ -346,7 +344,7 @@ The `.warpper` (scrollable content) scrolls while `.header-inner` (sidebar) stay
 ```
 Position:  right of content, after .a-parent in flex row
 Direction: vertical (flex-direction: column), gap: 0.375rem
-Width:     auto (letter links: 1.5rem each)
+Width:     auto (letter links: 2.3125rem each — size='lg')
 ```
 
 The MD sidebar is on the **right** of the content (flex `order: 1`), sticky (`position: sticky; top: 0; align-self: flex-start`), with natural content-driven width (single column of letter anchors).
