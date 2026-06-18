@@ -1,0 +1,57 @@
+{#
+  Snippet: org-list-card.html
+  Path:    templates/v2/components/org-list-card.html
+
+  Renders a single organisation card for the All Organisations list.
+
+  Parameters
+  ──────────────────────────────────────────────────────
+  org          {dict}  Organisation dict from page.items.  required
+  member_count {int}   Pre-fetched member count.  default: 0
+  ──────────────────────────────────────────────────────
+  Responsive behaviour (CSS-only, no size param):
+    XL (≥ 80rem)  flex row: left ~45rem + right flex:1 right-aligned
+    MD (< 80rem)  flex row: left ~25.5rem + right
+    SM (< 48rem)  stack: title + date only; right col hidden; description hidden
+#}
+
+{% set member_count = member_count if member_count is defined else 0 %}
+
+{% set title       = org.title or org.display_name %}
+{% set href        = h.url_for('hdx_org.read', id=org.name) %}
+{% set description = h.markdown_extract(org.description, extract_length=0) if org.description else '' %}
+{% set created     = h.render_datetime(org.created) if org.created else _('Unknown') %}
+{% set datasets    = org.package_count or 0 %}
+
+<div class="c-org-list-card">
+  <div class="c-org-list-card__inner">
+
+    <div class="c-org-list-card__left">
+      <a class="c-org-list-card__title" href="{{ href }}">{{ title }}</a>
+      <span class="c-org-list-card__date">{{ _('Member since') }} {{ created }}</span>
+
+      {% if description %}
+        <div class="c-org-list-card__description" data-module="clamped-text">
+          <p class="c-org-list-card__desc-text" data-clamped-content>{{ description }}</p>
+          {% snippet 'v2/components/text-button.html',
+              label=_('Show more'),
+              tag='button',
+              icon=True,
+              icon_src='v2/icons/chevron-down.svg',
+              icon_position='right',
+              style='tertiary',
+              size='s' %}
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="c-org-list-card__right">
+      <span class="c-org-list-card__meta">
+        {{ h.hdx_format_number_si(datasets) }} {{ _('Datasets') }}
+        <span class="c-org-list-card__sep" aria-hidden="true">•</span>
+        {{ h.hdx_format_number_si(member_count) }} {{ _('Members') }}
+      </span>
+    </div>
+
+  </div>
+</div>

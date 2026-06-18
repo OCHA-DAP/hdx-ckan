@@ -4,6 +4,7 @@
 // ============================================================
 
 @import "mixins.less";
+@import "nav-controls.less";
 
 // ============================================================
 // hdx-v2-dataset-list — search results card list layout
@@ -93,34 +94,6 @@
     }
 }
 // ────────────────────────────────────────────────────────────
-// hdx-v2-nav-controls — sort + results-per-page pair
-// Used in both the XL header and the MD/SM filter overlay.
-// Each child is a hdx-v2-nav-ctrl-pair (label + c-dropdown side by side).
-// ────────────────────────────────────────────────────────────
-
-.hdx-v2-nav-controls {
-    display:     flex;
-    align-items: center;
-    gap:         var(--hdx-space-4);  // 16 px between the two pairs
-    // Label + trigger side by side (matches Figma .wrapper layout)
-    .hdx-v2-nav-ctrl-pair {
-        display:     flex;
-        align-items: center;
-        gap:         var(--hdx-space-3);  // 12 px label → trigger (Figma: 0.75rem)
-
-        // External label (rendered outside the c-dropdown wrapper)
-        .hdx-v2-nav-ctrl-label {
-            .hdx-body-s();
-            color:      var(--hdx-neutral-8);
-            white-space: nowrap;
-        }
-
-        .c-dropdown--size-s {
-            width: auto;  // size to trigger content, not 100% of parent
-        }
-    }
-}
-
 // ────────────────────────────────────────────────────────────
 // hdx-v2-search-sidebar — sidebar column
 // ────────────────────────────────────────────────────────────

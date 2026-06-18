@@ -11,13 +11,9 @@
 
 
   // ── URL helpers ─────────────────────────────────────────────────────────────
+  // setNavParam lives in url-nav.js (loaded as a dependency).
 
-  function setNavParam(key, value) {
-    var url = new URL(window.location.href);
-    url.searchParams.set(key, value);
-    url.searchParams.delete('page');
-    window.location.href = url.toString();
-  }
+  var setNavParam = window.hdxSetNavParam;
 
   function updateUrl(facet, value, checked) {
     var url    = new URL(window.location.href);
@@ -118,18 +114,10 @@
       }, true); // capture phase
     }
 
+    // Nav-item click (sort/page-size dropdowns) is handled by url-nav.js.
     // Dropdown open/close and outside-click-close are handled by dropdown.js.
     // This handler covers only search-specific click interactions.
     document.addEventListener('click', function (e) {
-
-      // ── Nav item click → set URL sort/pagination param ───────
-      var navItem = e.target.closest && e.target.closest('[data-nav-key] [data-nav-value]');
-      if (navItem) {
-        var dd    = navItem.closest('[data-nav-key]');
-        var value = navItem.getAttribute('data-nav-value');
-        setNavParam(dd.getAttribute('data-nav-key'), value);
-        return;
-      }
 
       // ── Clear facet / advanced filters ───────────────────────
       var clearBtn = e.target.closest && e.target.closest('[data-action="clear-filter"]');

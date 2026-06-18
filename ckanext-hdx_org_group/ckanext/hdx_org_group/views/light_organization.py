@@ -68,8 +68,16 @@ def _index(template_file, show_switch_to_desktop, show_switch_to_mobile):
     #     'q': q,
     #     # 'reset_thumbnails': reset_thumbnails,
     # }
-    all_orgs = get_action('cached_organization_list')(context, {})
-    all_orgs = helper.filter_and_sort_results_case_insensitive(all_orgs, sort_option, q=q, has_datasets=True)
+    all_orgs_unfiltered = get_action('cached_organization_list')(context, {})
+
+    # KPI: global platform stats (computed from unfiltered data, orgs with datasets only)
+    all_orgs_with_datasets = [o for o in all_orgs_unfiltered if (o.get('package_count') or 0) > 0]
+    kpi_orgs = len(all_orgs_with_datasets)
+    kpi_datasets = sum((o.get('package_count') or 0) for o in all_orgs_with_datasets)
+    all_groups = get_action('cached_group_list')(context, {})
+    kpi_locations = len([g for g in all_groups if g.get('name') != 'world'])
+
+    all_orgs = helper.filter_and_sort_results_case_insensitive(all_orgs_unfiltered, sort_option, q=q, has_datasets=True)
 
     # c.featured_orgs = helper.hdx_get_featured_orgs(context, data_dict)
     def pager_url(page=None):
@@ -96,6 +104,9 @@ def _index(template_file, show_switch_to_desktop, show_switch_to_mobile):
         'page': page,
         'page_has_desktop_version': show_switch_to_desktop,
         'page_has_mobile_version': show_switch_to_mobile,
+        'kpi_datasets': kpi_datasets,
+        'kpi_orgs': kpi_orgs,
+        'kpi_locations': kpi_locations,
     }
     return render(template_file, template_data)
 

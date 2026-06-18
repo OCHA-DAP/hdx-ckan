@@ -1476,6 +1476,7 @@ v2-components-styles:
     - v2/components/letter-anchor.css
     - v2/components/list-item.css
     - v2/components/nav-item.css
+    - v2/components/org-list-card.css
     - v2/components/overlay.css
     - v2/components/page-header.css
     - v2/components/pagination.css
@@ -1592,4 +1593,18 @@ v2-search-page-scripts:
   contents:
     - vendor/jquery.highlight/jquery.highlight.js
     - highlight.js
+    - v2/url-nav.js
     - v2/search-page.js
+
+v2-org-list-page-styles:
+  output: ckanext-hdx_theme/%(version)s_v2-org-list-page-styles.css
+  <<: *common-css
+  contents:
+    - v2/org-list-page.css
+
+v2-org-list-page-scripts:
+  <<: *common-js
+  output: ckanext-hdx_theme/%(version)s_v2-org-list-page-scripts.js
+  contents:
+    - v2/url-nav.js
+    - v2/org-list-page.js

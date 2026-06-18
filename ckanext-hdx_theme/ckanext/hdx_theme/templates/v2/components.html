@@ -1691,6 +1691,55 @@
 
 
   <section class="demo-section">
+    <h1 class="demo-section__title">Organisation List Card</h1>
+    <p class="demo-section__subtitle">responsive · description toggle · dataset + member counts</p>
+
+    {# ── Full card — long title, description, SI-formatted counts ── #}
+    <h2 class="demo-subsection__heading">Full — long title, description, counts</h2>
+    <div class="demo-row demo-row--flex-start">
+      {% snippet 'v2/components/org-list-card.html',
+          org={
+            'title': 'International Research Center of Big Data for Sustainable Development Goals (CBAS)',
+            'name': 'cbas',
+            'description': 'The Centre for Big Data Research in Sustainable Development Goals (CBAS) is a leading research institution dedicated to advancing the use of big data and artificial intelligence for sustainable development. CBAS produces open datasets covering economic indicators, environmental monitoring, and population statistics across 50+ countries.',
+            'package_count': 4800,
+            'created': '2023-10-31T00:00:00'
+          },
+          member_count=12 %}
+    </div>
+
+    {# ── No description ───────────────────────────────────────── #}
+    <h2 class="demo-subsection__heading">No description</h2>
+    <div class="demo-row demo-row--flex-start">
+      {% snippet 'v2/components/org-list-card.html',
+          org={
+            'title': 'Johns Hopkins University Center for Systems Science and Engineering',
+            'name': 'jhucsse',
+            'description': '',
+            'package_count': 293,
+            'created': '2019-03-15T00:00:00'
+          },
+          member_count=5 %}
+    </div>
+
+    {# ── Minimal — short title, no description, 0 members ──────── #}
+    <h2 class="demo-subsection__heading">Minimal — no description, 0 members</h2>
+    <div class="demo-row demo-row--flex-start">
+      {% snippet 'v2/components/org-list-card.html',
+          org={
+            'title': 'MapAction',
+            'name': 'mapaction',
+            'description': '',
+            'package_count': 17,
+            'created': '2014-06-01T00:00:00'
+          },
+          member_count=0 %}
+    </div>
+
+  </section>
+
+
+  <section class="demo-section">
     <h1 class="demo-section__title">Table</h1>
     <p class="demo-section__subtitle">bordered · striped rows · truncating cells</p>
 
