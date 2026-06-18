@@ -36,7 +36,7 @@
   display: block;
   color: var(--hdx-neutral-85);
 }
-@media (max-width: 47.99rem) {
+@media (max-width: 48rem) {
   .c-kpi-card__header .c-info-icon {
     display: none;
   }
