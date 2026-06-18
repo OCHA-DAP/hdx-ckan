@@ -182,7 +182,7 @@ Bundle configuration:
 - `hdx_theme/v2-home-page-scripts` — homepage: adds Hammer.js, `v2/highlights-carousel.js`, `v2/bar-chart.js`
 - `hdx_theme/v2-all-locations-page-styles` — All Locations page: adds `v2/all-locations-page.css`
 - `hdx_theme/v2-all-locations-page-scripts` — All Locations page: adds `v2/all-locations-page.js` (HRP filter + A-Z/Z-A sort)
-- `hdx_theme/v2-org-list-page-styles` — All Organisations page: adds `v2/org-list-page.css` + `v2/components/org-list-card.css`
+- `hdx_theme/v2-org-list-page-styles` — All Organisations page: adds `v2/org-list-page.css` (org-list-card styles come from the preloaded `v2-components-styles` bundle)
 - `hdx_theme/v2-org-list-page-scripts` — All Organisations page: adds `v2/url-nav.js` + `v2/org-list-page.js`
 
 ---

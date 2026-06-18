@@ -75,7 +75,7 @@ def _index(template_file, show_switch_to_desktop, show_switch_to_mobile):
     kpi_orgs = len(all_orgs_with_datasets)
     kpi_datasets = sum((o.get('package_count') or 0) for o in all_orgs_with_datasets)
     all_groups = get_action('cached_group_list')(context, {})
-    kpi_locations = len([g for g in all_groups if g.get('name') != 'world'])
+    kpi_locations = len([g for g in all_groups if g.get('name') != 'world' and (g.get('package_count') or 0) > 0])
 
     all_orgs = helper.filter_and_sort_results_case_insensitive(all_orgs_unfiltered, sort_option, q=q, has_datasets=True)
 

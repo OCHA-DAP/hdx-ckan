@@ -1384,10 +1384,20 @@ def hdx_format_number_si(n):
         n = int(n or 0)
     except (ValueError, TypeError):
         return str(n)
+
+    sign = '-' if n < 0 else ''
+    n = abs(n)
+
     if n >= 1_000_000:
         val = n / 1_000_000
-        return '{:.4g}M'.format(val)
+        return sign + '{:.4g}M'.format(val)
+
     if n >= 1_000:
         val = n / 1_000
-        return '{:.4g}k'.format(val)
-    return str(n)
+        out = '{:.4g}k'.format(val)
+        # Avoid values like 999,999 → "1000k" (should become "1M").
+        if out.startswith('1000'):
+            return sign + '{:.4g}M'.format(n / 1_000_000)
+        return sign + out
+
+    return sign + str(n)
