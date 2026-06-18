@@ -197,9 +197,9 @@ v2/page.html
 
 | File | Change |
 |---|---|
-| `ckanext-hdx_theme/.../templates/search/search.html` | Add `secondary` block with sidebar form; set `wrapper_secondary_class`, `wrapper_primary_class`, `wrapper_class` |
+| `ckanext-hdx_theme/.../templates/search/search.html` | Add `secondary` block with sidebar form; set `sidebar_class`, `content_class` |
 | `ckanext-hdx_theme/.../templates/search/snippets/package_list.html` | Remove `hdx-v2-search-layout` div and its sidebar form; remove `col-9` from results wrapper |
-| `ckanext-hdx_theme/.../hdx-styles/src/common/less/v2/search.less` | Remove `hdx-v2-search-layout`; add `hdx-v2-search-sidebar`, `hdx-v2-search-content`, `hdx-v2-search-page` scoping rules; update sidebar width variable |
+| `ckanext-hdx_theme/.../hdx-styles/src/common/less/v2/search.less` | Remove `hdx-v2-search-layout`; add `hdx-v2-search-sidebar`, `hdx-v2-search-content` rules; update sidebar width variable |
 
 ---
 
@@ -208,14 +208,8 @@ v2/page.html
 Add before any block definitions:
 
 ```jinja2
-{% set wrapper_secondary_class = 'hdx-v2-search-sidebar' %}
-{% set wrapper_primary_class = 'hdx-v2-search-content' %}
-```
-
-Add wrapper class block:
-
-```jinja2
-{% block wrapper_class %} hdx-v2-search-page{% endblock %}
+{% set sidebar_class = 'hdx-v2-search-sidebar' %}
+{% set content_class = 'hdx-v2-search-content' %}
 ```
 
 Add secondary block with sidebar filters:
@@ -294,22 +288,8 @@ And the corresponding close tag:
 
 ```less
 // ────────────────────────────────────────────────────────
-// hdx-v2-search-page — page-level scoping class
-// Applied via wrapper_class block in search/search.html
-// Makes the page.html container a flex row
-// ────────────────────────────────────────────────────────
-
-.hdx-v2-search-page {
-    div > div {
-        display:     flex;
-        align-items: stretch;
-    }
-}
-
-
-// ────────────────────────────────────────────────────────
-// hdx-v2-search-sidebar — sidebar column (wrapper-secondary)
-// Applied via wrapper_secondary_class in search/search.html
+// hdx-v2-search-sidebar — sidebar column
+// Applied via sidebar_class in search/search.html
 // ────────────────────────────────────────────────────────
 
 .hdx-v2-search-sidebar {
@@ -384,17 +364,7 @@ And the corresponding close tag:
 | Pagination margin-top | `margin-top` | `@hdx-space-8` (32px) — existing |
 | Pagination margin-bottom | `margin-bottom` | `@hdx-space-10` (40px) — existing |
 
-⚠️ **Container padding stacking**: At XL, `hdx-v2-container` applies `3rem` side padding and the Bootstrap `.container.mainContent` inside it may add its own padding. Verify the rendered output. If double-padding occurs, add to the scoping rule:
-
-```less
-.hdx-v2-search-page {
-    .container.mainContent {
-        padding-left:  0;
-        padding-right: 0;
-        max-width:     100%;
-    }
-}
-```
+⚠️ **Container padding stacking**: At XL, `hdx-v2-container` applies `3rem` side padding and the Bootstrap `.container.mainContent` inside it may add its own padding. Verify the rendered output and add overrides if double-padding occurs.
 
 ---
 

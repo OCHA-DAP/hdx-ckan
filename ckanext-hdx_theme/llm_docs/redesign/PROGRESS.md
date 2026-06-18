@@ -2,7 +2,7 @@
 
 **Status**: In-progress
 **Started**: 2026-04-16
-**Last Updated**: 2026-06-17
+**Last Updated**: 2026-06-18
 
 ---
 
@@ -89,6 +89,7 @@ CSS custom property equivalents (`--hdx-*`) are defined in `v2/foundation.css` (
 | Dataset page | `package/hdx_read.html` | Extends `v2/page.html`; full page implemented — see `requirements/038-dataset-page.md` |
 | Resource page | `package/resource_read.html` | Extends `v2/page.html`; full page implemented — see `requirements/040-resource-page.md` |
 | All Locations | `light/group/index.html` | Extends `v2/page.html`; sidebar + sort JS in `v2/all-locations-page.js` |
+| All Organisations | `organization/index.html` | Extends `v2/page.html`; org card with clamped-text, KPI row, url-nav.js |
 
 ### Pages in holding state (on `page_light.html`)
 
@@ -143,7 +144,8 @@ Each page below extends `page_light.html`, manually overrides `{% block styles %
 - [x] Showcase card
 - [x] Anchor links — extended with `heading`, `with_mobile_dropdown` params; mobile sticky dropdown (`c-anchor-links-mobile`) styles in `components/anchor-links.less`
 - [x] Info icon — `info-icon.html` snippet encapsulating the `c-tooltip-anchor` + `c-info-icon` button + tooltip pattern; HTML-only (no dedicated LESS/CSS)
-- [x] KPI card — `kpi-card.html` / `kpi-card.css`; label + optional info icon + bold value; used on the All Locations page
+- [x] KPI card — `kpi-card.html` / `kpi-card.css`; label + optional info icon + bold value; used on All Locations and All Organisations pages
+- [x] Org list card — `org-list-card.html` / `org-list-card.css`; title + date + expandable description + dataset/member counts; used on All Organisations page
 
 Each component file should have:
 1. **HTML template** (`templates/v2/components/component-name.html`) — reusable snippet with BEM markup
@@ -160,7 +162,7 @@ Exception: `info-icon.html` has no dedicated LESS/CSS — it composes existing `
 
 Bundle configuration:
 - `hdx_theme/v2-components-styles` — standalone design system bundle (tokens + components), no Bootstrap
-  - Contents: `v2/foundation.css`, then component CSS files: `divider`, `activity-card`, `dataset-card`, `resource-card`, `avatar-badge`, `buttons`, `checkbox`, `copy-button`, `dropdown`, `input-field`, `label`, `letter-anchor`, `list-item`, `nav-item`, `anchor-links`, `pagination`, `breadcrumb`, `page-header`, `selection`, `showcase-card`, `text-link`, `highlight-card`, `overlay`
+  - Contents: `v2/foundation.css`, then component CSS files: `divider`, `activity-card`, `dataset-card`, `resource-card`, `org-list-card`, `avatar-badge`, `buttons`, `checkbox`, `copy-button`, `dropdown`, `input-field`, `label`, `letter-anchor`, `list-item`, `nav-item`, `anchor-links`, `pagination`, `breadcrumb`, `page-header`, `selection`, `showcase-card`, `text-link`, `highlight-card`, `overlay`
   - Kept separate for non-page contexts (component previews, embedded widgets)
 - `hdx_theme/v2-page-styles` ✅ Full page bundle: preloads `v2-components-styles`, then adds:
   - `vendor/bootstrap5/css/bootstrap.css`
@@ -172,12 +174,16 @@ Bundle configuration:
 - `hdx_theme/v2-page-scripts` ✅ Contains `v2/navbar.js` (navbar + offcanvas, FocusTrap inlined) + `v2/search-autocomplete.js`; preloads `v2-search-scripts` (MiniSearch/feature-index)
 - `hdx_theme/v2-search-scripts` — global lib bundle: MiniSearch, normalize.js, feature-index; auto-loaded via `v2-page-scripts` preload
 - `hdx_theme/v2-search-page-styles` — search page: adds `v2/search-page.css`
-- `hdx_theme/v2-search-page-scripts` — search page: adds `highlight.js` + `v2/search-page.js`
+- `hdx_theme/v2-search-page-scripts` — search page: adds `highlight.js` + `v2/url-nav.js` + `v2/search-page.js` (`url-nav.js` is a shared nav-param module also used by the org list page)
 - `hdx_theme/v2-dataset-page-styles` — dataset page: adds `v2/dataset-page.css`
 - `hdx_theme/v2-dataset-page-scripts` — dataset page: adds `v2/dataset-page.js` (section accordion)
 - `hdx_theme/v2-resource-page-styles` — resource page: adds `v2/resource-page.css`
 - `hdx_theme/v2-home-page-styles` — homepage: adds `v2/home-page.css` + `v2/bar-chart.css`
 - `hdx_theme/v2-home-page-scripts` — homepage: adds Hammer.js, `v2/highlights-carousel.js`, `v2/bar-chart.js`
+- `hdx_theme/v2-all-locations-page-styles` — All Locations page: adds `v2/all-locations-page.css`
+- `hdx_theme/v2-all-locations-page-scripts` — All Locations page: adds `v2/all-locations-page.js` (HRP filter + A-Z/Z-A sort)
+- `hdx_theme/v2-org-list-page-styles` — All Organisations page: adds `v2/org-list-page.css` + `v2/components/org-list-card.css`
+- `hdx_theme/v2-org-list-page-scripts` — All Organisations page: adds `v2/url-nav.js` + `v2/org-list-page.js`
 
 ---
 
@@ -212,15 +218,18 @@ Bundle configuration:
 - [x] Create `v2-page-styles` bundle with Bootstrap + grid layout overrides ✓
 - [x] Add placeholder demo page with all components ✓
 
-### Phase 3: Page Migrations 🔲 (Sequential)
+### Phase 3: Page Migrations ✅ (Partial)
 - [ ] Signup page
 - [ ] Landing pages (signals, hapi)
 - [ ] Contact contributor page
 - [ ] Find/join org page
-- [ ] Homepage
-- [ ] Dataset list (light)
-- [ ] Dataset list (desktop)
-- [ ] Remaining pages (org, user, dataset read, etc.)
+- [x] Homepage
+- [x] Dataset list (light + desktop — unified in v2 search template)
+- [x] Dataset page
+- [x] Resource page
+- [x] All Locations page
+- [x] All Organisations page
+- [ ] Remaining pages (user pages, org join, onboarding, etc.)
 
 ### Phase 4: Cleanup 🔲 (Final)
 - [ ] Delete old layout templates (`page.html`, `page_light.html`)
@@ -233,7 +242,7 @@ Bundle configuration:
 
 ## Next Steps
 
-1. **Migrate pages** from `page_light.html` holding state to `v2/page.html` — landing pages, then signup/onboarding, then org/join.
+1. **Migrate remaining holding-state pages** from `page_light.html` — landing pages (signals, hapi), then signup/onboarding, then org/join.
 2. **Build page-specific components** as needed during individual page migrations.
 
 ---

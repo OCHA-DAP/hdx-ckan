@@ -230,7 +230,7 @@ Never use `{% include %}` for parameterised v2 templates. The only accepted `{% 
 
 ## Layout variable completeness
 
-Every template extending `v2/page.html` that uses the two-column layout MUST set all four layout variables at the top of the template:
+**Two-column pages** (sidebar + content): set all four layout variables at the top of the template:
 
 ```jinja2
 {% set outer_row_class = '...' %}
@@ -240,6 +240,23 @@ Every template extending `v2/page.html` that uses the two-column layout MUST set
 ```
 
 Leaving any of these unset produces an unclassed wrapper div and makes CSS targeting impossible.
+
+**Single-column pages** (no sidebar): set `content_class` only. `page.html` applies `content_class` whenever it is defined (the former guard `and secondary_block_output != ''` was removed). This ensures the primary content `<div>` fills the full container width via `flex:1; min-width:0`.
+
+```jinja2
+{% set content_class = 'hdx-v2-org-list-content' %}
+```
+
+Then in the page LESS:
+
+```less
+.hdx-v2-org-list-content {
+    flex:      1;
+    min-width: 0;
+}
+```
+
+Never leave a single-column page without `content_class` — without it the content div has no `flex:1` and will not fill the container width.
 
 ---
 
