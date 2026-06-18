@@ -89,7 +89,7 @@ Query param: `sort`
 |---|---|---|
 | `title` / `display_name` | str | Display name for card title |
 | `name` | str | URL slug → link to `/organization/{name}` |
-| `description` | str | Raw markdown — extract with `h.markdown_extract()` |
+| `description` | str | Raw markdown — strip to plain text with `h.markdown_extract() \| striptags` |
 | `package_count` | int | Total public datasets |
 | `created` | datetime str | Used as "Member since" date |
 | `dataset_last_updated` | datetime | Added by `org_add_last_updated_field()` |
@@ -235,7 +235,7 @@ At SM: title + date only. No description, no metadata.
 
 {% set title       = org.title or org.display_name %}
 {% set href        = h.url_for('hdx_org.read', id=org.name) %}
-{% set description = h.markdown_extract(org.description, extract_length=0) if org.description else '' %}
+{% set description = h.markdown_extract(org.description, extract_length=0) | striptags if org.description else '' %}
 {% set created     = h.render_datetime(org.created) if org.created else _('Unknown') %}
 {% set datasets    = org.package_count or 0 %}
 

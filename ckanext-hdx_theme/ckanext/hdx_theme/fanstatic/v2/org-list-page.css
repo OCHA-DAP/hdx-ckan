@@ -114,24 +114,21 @@
   display: flex;
   flex-direction: column;
   gap: var(--hdx-space-3);
+  padding-bottom: var(--hdx-space-6);
 }
 @media (min-width: 48rem) {
   .hdx-v2-org-list-cards {
     gap: var(--hdx-space-4);
+    padding-bottom: var(--hdx-space-8);
   }
 }
 .hdx-v2-org-list-pagination {
   display: flex;
   justify-content: center;
-  padding: var(--hdx-space-6) 0;
+  padding-bottom: var(--hdx-space-6);
 }
 @media (min-width: 48rem) {
   .hdx-v2-org-list-pagination {
-    padding: var(--hdx-space-8) 0;
-  }
-}
-@media (min-width: 80rem) {
-  .hdx-v2-org-list-pagination {
-    padding: var(--hdx-space-8) 0 var(--hdx-space-12);
+    padding-bottom: var(--hdx-space-8);
   }
 }
