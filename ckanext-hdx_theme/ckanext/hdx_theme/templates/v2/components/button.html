@@ -37,6 +37,7 @@
 
   state         {string}  'enabled'  — interactive (default)
                           'disabled' — adds [disabled] + .is-disabled
+                          'active'   — adds .is-active (selected/pressed state)
                           default: 'enabled'
 
   tag           {string}  'button' | 'a' — HTML element to render.
@@ -90,6 +91,7 @@
 {# ── Computed values ─────────────────────────────────────── #}
 {% set is_icon_only  = (type == 'icon-only') %}
 {% set is_disabled   = (state == 'disabled') %}
+{% set is_active     = (state == 'active') %}
 {% set has_count     = (count != '' and style in ['secondary', 'tertiary']) %}
 
 {# ── BEM class list ──────────────────────────────────────── #}
@@ -106,6 +108,9 @@
 {% endif %}
 {% if is_disabled %}
   {% set classes = classes + ['is-disabled'] %}
+{% endif %}
+{% if is_active %}
+  {% set classes = classes + ['is-active'] %}
 {% endif %}
 {% if extra_classes %}
   {% set classes = classes + [extra_classes] %}

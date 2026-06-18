@@ -16,6 +16,9 @@
         initActiveTracking();
     });
 
+    // Expose smoothScrollTo for reuse by other page scripts
+    window.hdxSmoothScrollTo = smoothScrollTo;
+
     // ── Easing ──────────────────────────────────────────────────
 
     function easeInOutCubic(t) {

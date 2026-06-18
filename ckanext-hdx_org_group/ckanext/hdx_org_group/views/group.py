@@ -43,9 +43,13 @@ def _index(template_file, show_switch_to_desktop, show_switch_to_mobile):
     user = g.user
     index_read_logic = GroupIndexReadLogic(user)
     index_read_logic.read()
-    countries = json.dumps(index_read_logic.all_countries_world_1st)
     template_data = {
-        'countries': countries,
+        'countries': json.dumps(index_read_logic.all_countries_world_1st),
+        'total_count': index_read_logic.total_count,
+        'hrp_count': index_read_logic.hrp_count,
+        'datagrid_count': index_read_logic.datagrid_count,
+        'grouped_countries': index_read_logic.grouped_countries,
+        'letters_present': index_read_logic.letters_present,
         'page_has_desktop_version': show_switch_to_desktop,
         'page_has_mobile_version': show_switch_to_mobile,
     }

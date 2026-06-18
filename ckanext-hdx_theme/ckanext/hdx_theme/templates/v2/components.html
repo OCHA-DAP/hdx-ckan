@@ -1478,7 +1478,55 @@
   <hr class="demo-divider">
 
   {# ══════════════════════════════════════════════════════
-     13. ACTIVITY CARD
+     13. KPI CARD
+  ══════════════════════════════════════════════════════ #}
+  <section class="demo-section">
+    <h1 class="demo-section__title">KPI Card</h1>
+    <p class="demo-section__subtitle">label · value · optional info icon — used in the c-kpi-row on the All Locations page</p>
+
+    <h2 class="demo-subsection__heading">Single card — with info icon (default)</h2>
+    <div class="demo-row demo-row--flex-start">
+      {% snippet 'v2/components/kpi-card.html',
+          label='Total locations',
+          value='250',
+          tooltip_text='Total number of country and territory locations on HDX.',
+          tooltip_id='demo-kpi-total' %}
+    </div>
+
+    <h2 class="demo-subsection__heading">Single card — show_icon=False</h2>
+    <div class="demo-row demo-row--flex-start">
+      {% snippet 'v2/components/kpi-card.html',
+          label='Total locations',
+          value='250',
+          show_icon=False %}
+    </div>
+
+    <h2 class="demo-subsection__heading">Full row — 3 cards (c-kpi-row)</h2>
+    <div class="c-kpi-row">
+      {% snippet 'v2/components/kpi-card.html',
+          label='Total locations',
+          value='250',
+          tooltip_text='Total number of country and territory locations on HDX.',
+          tooltip_id='demo-kpi-row-total' %}
+      {% snippet 'v2/components/kpi-card.html',
+          label='HRP locations',
+          value='21',
+          tooltip_text='Locations with an active Humanitarian Response Plan, highlighted in teal.',
+          tooltip_id='demo-kpi-row-hrp' %}
+      {% snippet 'v2/components/kpi-card.html',
+          label='Locations part of Data Grid',
+          value='23',
+          tooltip_text='Locations for which an HDX Data Grid has been published.',
+          tooltip_id='demo-kpi-row-datagrid' %}
+    </div>
+
+  </section>
+
+
+  <hr class="demo-divider">
+
+  {# ══════════════════════════════════════════════════════
+     14. ACTIVITY CARD
   ══════════════════════════════════════════════════════ #}
   <section class="demo-section">
     <h1 class="demo-section__title">Activity Card</h1>
@@ -1516,7 +1564,7 @@
   <hr class="demo-divider">
 
   {# ══════════════════════════════════════════════════════
-     14. DATASET CARD
+     15. DATASET CARD
   ══════════════════════════════════════════════════════ #}
   <section class="demo-section">
     <h1 class="demo-section__title">Dataset Card</h1>
@@ -1575,7 +1623,7 @@
   </section>
 
   {# ══════════════════════════════════════════════════════
-     15. RESOURCE CARD
+     16. RESOURCE CARD
   ══════════════════════════════════════════════════════ #}
   <section class="demo-section">
     <h1 class="demo-section__title">Resource Card</h1>

@@ -60,25 +60,25 @@
 {% set tag_open %}
   {% if tag == 'a' %}
     <a class="{{ classes | join(' ') }}" href="{{ href }}"
-       {% for key, val in attrs.items() %}{{ key }}="{{ val }}"{% endfor %}>
+       {% for key, val in attrs.items() %} {{ key }}="{{ val }}"{% endfor %}>
   {% elif tag == 'button' %}
     <button type="button" class="{{ classes | join(' ') }}"
-            {% for key, val in attrs.items() %}{{ key }}="{{ val }}"{% endfor %}>
+            {% for key, val in attrs.items() %} {{ key }}="{{ val }}"{% endfor %}>
   {% else %}
     <span class="{{ classes | join(' ') }}"
-          {% for key, val in attrs.items() %}{{ key }}="{{ val }}"{% endfor %}>
+          {% for key, val in attrs.items() %} {{ key }}="{{ val }}"{% endfor %}>
   {% endif %}
 {% endset %}
 
 {% if tag == 'a' %}
 <a class="{{ classes | join(' ') }}" href="{{ href }}"
-   {% for key, val in attrs.items() %}{{ key }}="{{ val }}"{% endfor %}>
+   {% for key, val in attrs.items() %} {{ key }}="{{ val }}"{% endfor %}>
 {% elif tag == 'button' %}
 <button type="button" class="{{ classes | join(' ') }}"
-        {% for key, val in attrs.items() %}{{ key }}="{{ val }}"{% endfor %}>
+        {% for key, val in attrs.items() %} {{ key }}="{{ val }}"{% endfor %}>
 {% else %}
 <span class="{{ classes | join(' ') }}"
-      {% for key, val in attrs.items() %}{{ key }}="{{ val }}"{% endfor %}>
+      {% for key, val in attrs.items() %} {{ key }}="{{ val }}"{% endfor %}>
 {% endif %}
 
   {% if icon %}

@@ -1471,6 +1471,7 @@ v2-components-styles:
     - v2/components/dropdown.css
     - v2/components/highlight-card.css
     - v2/components/input-field.css
+    - v2/components/kpi-card.css
     - v2/components/label.css
     - v2/components/letter-anchor.css
     - v2/components/list-item.css
@@ -1494,6 +1495,7 @@ v2-components-scripts:
     - v2/components/dropdown.js
     - v2/components/input-field.js
     - v2/components/page-header.js
+    - v2/components/toggle.js
 
 v2-page-styles:
   output: ckanext-hdx_theme/%(version)s_v2-page-styles.css
@@ -1551,6 +1553,24 @@ v2-resource-page-styles:
   <<: *common-css
   contents:
     - v2/resource-page.css
+
+v2-all-locations-page-styles:
+  output: ckanext-hdx_theme/%(version)s_v2-all-locations-page-styles.css
+  <<: *common-css
+  contents:
+    - vendor/leaflet-1.7.1/leaflet.css
+    - browse_/browse.css  # TODO: remove when map is migrated to v2
+    - v2/locations-list-page.css
+
+v2-all-locations-page-scripts:
+  <<: *common-js
+  output: ckanext-hdx_theme/%(version)s_v2-all-locations-page-scripts.js
+  contents:
+    - vendor/leaflet-1.7.1/leaflet.js
+    - map_base.js
+    - browse_/world_json.js
+    - browse_/browse.js  # TODO: remove when map is migrated to v2
+    - v2/all-locations-page.js
 
 v2-dataset-page-scripts:
   <<: *common-js

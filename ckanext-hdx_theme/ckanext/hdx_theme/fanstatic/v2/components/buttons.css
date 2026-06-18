@@ -80,7 +80,8 @@
   background-color: var(--hdx-primary-9);
   color: var(--hdx-neutral-0);
 }
-.c-button--primary:active {
+.c-button--primary:active,
+.c-button--primary.is-active {
   background-color: var(--hdx-primary-5);
   color: var(--hdx-neutral-0);
 }
@@ -101,7 +102,8 @@
   color: var(--hdx-primary-7);
   box-shadow: none;
 }
-.c-button--secondary:active {
+.c-button--secondary:active,
+.c-button--secondary.is-active {
   background-color: var(--hdx-neutral-0);
   color: var(--hdx-primary-7);
   border: 1px solid var(--hdx-primary-7);
@@ -148,10 +150,12 @@
   color: var(--hdx-neutral-8);
   border: 1.5px solid var(--hdx-neutral-8);
 }
-.c-button--tertiary:active {
+.c-button--tertiary:active,
+.c-button--tertiary.is-active {
   background-color: var(--hdx-neutral-01);
   color: var(--hdx-neutral-8);
   border: 1px solid var(--hdx-neutral-95);
+  box-shadow: var(--hdx-shadow-none);
 }
 .c-button--tertiary[disabled],
 .c-button--tertiary.is-disabled {

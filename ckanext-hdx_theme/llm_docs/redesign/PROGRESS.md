@@ -2,7 +2,7 @@
 
 **Status**: In-progress
 **Started**: 2026-04-16
-**Last Updated**: 2026-06-05
+**Last Updated**: 2026-06-17
 
 ---
 
@@ -88,6 +88,7 @@ CSS custom property equivalents (`--hdx-*`) are defined in `v2/foundation.css` (
 | Dataset search | `search/search.html` | Extends `v2/page.html`; uses `v2=true` gate for v2 UI                                     |
 | Dataset page | `package/hdx_read.html` | Extends `v2/page.html`; full page implemented — see `requirements/038-dataset-page.md` |
 | Resource page | `package/resource_read.html` | Extends `v2/page.html`; full page implemented — see `requirements/040-resource-page.md` |
+| All Locations | `light/group/index.html` | Extends `v2/page.html`; sidebar + sort JS in `v2/all-locations-page.js` |
 
 ### Pages in holding state (on `page_light.html`)
 
@@ -142,6 +143,7 @@ Each page below extends `page_light.html`, manually overrides `{% block styles %
 - [x] Showcase card
 - [x] Anchor links — extended with `heading`, `with_mobile_dropdown` params; mobile sticky dropdown (`c-anchor-links-mobile`) styles in `components/anchor-links.less`
 - [x] Info icon — `info-icon.html` snippet encapsulating the `c-tooltip-anchor` + `c-info-icon` button + tooltip pattern; HTML-only (no dedicated LESS/CSS)
+- [x] KPI card — `kpi-card.html` / `kpi-card.css`; label + optional info icon + bold value; used on the All Locations page
 
 Each component file should have:
 1. **HTML template** (`templates/v2/components/component-name.html`) — reusable snippet with BEM markup
