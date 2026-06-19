@@ -67,7 +67,7 @@ There are three active layout base templates. The goal is to maintain exactly th
 - `ckanext-hdx_theme/ckanext/hdx_theme/templates/v2/page.html`
   - New v2 layout. Extends `base.html` directly.
   - Loads Google Fonts and `hdx_theme/v2-page-styles`; legacy onboarding and `page-scripts` bundles commented out.
-  - `{% block toolbar %}` renders the breadcrumb row; pages override only `{% block breadcrumb_items %}` inside it.
+  - `{% block toolbar %}` renders the breadcrumb row; pages override only `{% block breadcrumb_items %}` inside it. Set `breadcrumb_row_class` to add modifier classes on the row div (e.g. `'hdx-v2-breadcrumb-row--white'` for white background, no bottom border).
   - Flash messages use `hdx-v2-flash {{ category }}` class (no Bootstrap `.alert`).
   - Includes `v2/header.html` and `v2/footer.html` via `{% snippet %}`.
   - Target base for all pages once the v2 redesign is complete.

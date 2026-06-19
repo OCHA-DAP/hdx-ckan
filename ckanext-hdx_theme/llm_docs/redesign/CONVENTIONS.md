@@ -258,6 +258,16 @@ Then in the page LESS:
 
 Never leave a single-column page without `content_class` — without it the content div has no `flex:1` and will not fill the container width.
 
+### `breadcrumb_row_class` — white breadcrumb variant
+
+Pages that need a white breadcrumb row (no bottom border) set:
+
+```jinja2
+{% set breadcrumb_row_class = 'hdx-v2-breadcrumb-row--white' %}
+```
+
+The `--white` modifier is defined in `layout.less`. Do **not** override `{% block toolbar %}` to hardcode the class — set this variable instead.
+
 ---
 
 ## `v2=True` gate policy
