@@ -1,0 +1,131 @@
+// ============================================================
+// org-list-page.less
+// All Organisations (/organization/) — v2 page-specific styles
+// ============================================================
+
+@import "mixins.less";
+@import "nav-controls.less";
+
+// ── Hero: title + KPI row ─────────────────────────────────────
+.hdx-v2-org-list-hero {
+    @media (min-width: @hdx-bp-xl) {
+        border-bottom: 1px solid var(--hdx-neutral-1);
+    }
+
+    &__body {
+        display:        flex;
+        flex-direction: column;
+        gap:            var(--hdx-space-6);
+        padding:        var(--hdx-space-6) 0 var(--hdx-space-3);
+
+        @media (min-width: @hdx-bp-md) {
+            gap:     var(--hdx-space-8);
+            padding: var(--hdx-space-8) 0;
+        }
+
+        @media (min-width: @hdx-bp-xl) {
+            gap:     var(--hdx-space-10);
+            padding: var(--hdx-space-10) 0;
+        }
+    }
+
+    &__title {
+        font-family: var(--hdx-font-display);
+        font-size:   var(--hdx-fs-4xl);
+        font-weight: var(--hdx-fw-bold);
+        line-height: var(--hdx-lh-normal);
+        color:       var(--hdx-neutral-95);
+        margin:      0;
+    }
+}
+
+// ── Content column (no sidebar on this page) ──────────────────
+// page.html applies content_class whenever it's set; this ensures
+// the primary content div fills the full hdx-v2-content-columns width.
+.hdx-v2-org-list-content {
+    flex:      1;
+    min-width: 0;
+}
+
+// ── Controls row: search + sort dropdowns ─────────────────────
+// DOM order: __right first, __search second.
+// SM/MD: __right on its own row, __search wraps to full-width row below.
+// XL:    __search gets order:-1 → left; __right stays right; single row.
+.hdx-v2-org-list-controls {
+    display:     flex;
+    align-items: center;
+    flex-wrap:   wrap;
+    gap:         var(--hdx-space-4);
+    padding:     var(--hdx-space-6) 0 var(--hdx-space-4);
+
+    @media (min-width: @hdx-bp-md) {
+        padding: var(--hdx-space-4) 0;
+    }
+
+    @media (min-width: @hdx-bp-xl) {
+        flex-wrap: nowrap;
+        padding:   var(--hdx-space-8) 0;
+    }
+
+    &__search {
+        flex-basis: 100%;
+        min-width:  0;
+
+        @media (min-width: @hdx-bp-xl) {
+            flex:       1;
+            flex-basis: auto;
+            order:      -1;
+        }
+    }
+
+    &__right {
+        display:     flex;
+        align-items: center;
+        gap:         var(--hdx-space-4);
+        flex-shrink: 0;
+
+        @media (max-width: @hdx-bp-xl) {
+            width: 100%;
+
+            .hdx-v2-nav-controls {
+                width:           100%;
+                justify-content: space-between;
+            }
+        }
+    }
+
+    &__sort {
+        display:     flex;
+        align-items: center;
+        gap:         var(--hdx-space-2);
+    }
+
+    &__sort-label {
+        .hdx-body-s();
+        color: var(--hdx-neutral-85);
+    }
+}
+
+// ── Card list ─────────────────────────────────────────────────
+.hdx-v2-org-list-cards {
+    display:        flex;
+    flex-direction: column;
+    gap:            var(--hdx-space-3);
+    padding-bottom: var(--hdx-space-6);
+
+    @media (min-width: @hdx-bp-md) {
+        gap: var(--hdx-space-4);
+        padding-bottom: var(--hdx-space-8);
+    }
+}
+
+// ── Pagination row ────────────────────────────────────────────
+.hdx-v2-org-list-pagination {
+    display:         flex;
+    justify-content: center;
+    padding-bottom:  var(--hdx-space-6);
+
+    @media (min-width: @hdx-bp-md) {
+        padding-bottom: var(--hdx-space-8);
+    }
+}

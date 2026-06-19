@@ -99,7 +99,7 @@
                   {{ secondary_block_output }}
                 </div>
               {% endif %}
-              <div class="{{ content_class if content_class and secondary_block_output|trim != '' else '' }}">
+              <div class="{{ content_class if content_class else '' }}">
                 {{ self.primary() }}
               </div>
             </div>

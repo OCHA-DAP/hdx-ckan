@@ -1376,3 +1376,28 @@ def hdx_format_to_icon_category(format_str):
     if fmt in document: return 'document'
     if fmt in web:      return 'web'
     return 'neutral'
+
+
+def hdx_format_number_si(n):
+    """Format a number with SI suffixes: 4800 → '4.8k', 1200000 → '1.2M'."""
+    try:
+        n = int(n or 0)
+    except (ValueError, TypeError):
+        return str(n)
+
+    sign = '-' if n < 0 else ''
+    n = abs(n)
+
+    if n >= 1_000_000:
+        val = n / 1_000_000
+        return sign + '{:.4g}M'.format(val)
+
+    if n >= 1_000:
+        val = n / 1_000
+        out = '{:.4g}k'.format(val)
+        # Avoid values like 999,999 → "1000k" (should become "1M").
+        if out.startswith('1000'):
+            return sign + '{:.4g}M'.format(n / 1_000_000)
+        return sign + out
+
+    return sign + str(n)

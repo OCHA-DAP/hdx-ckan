@@ -1,0 +1,127 @@
+// ============================================================
+// c-org-list-card — single organisation card for the All
+// Organisations list (/organization/).
+// Figma: llm_docs/redesign/figma_exports/org-list-card.html
+// ============================================================
+@import "../mixins.less";
+
+.c-org-list-card {
+    background-color: var(--hdx-neutral-0);
+    border:           1px solid var(--hdx-neutral-1);
+    border-radius:    var(--hdx-radius-sm);
+    box-shadow:       var(--hdx-shadow-sm);
+    overflow:         hidden;
+    transition:       border 0.15s ease;
+
+    &:hover {
+        border: 1.5px solid var(--hdx-neutral-8);
+    }
+
+    &__inner {
+        display:   flex;
+        flex-wrap: wrap;
+        padding:   var(--hdx-space-4);
+        gap:       var(--hdx-space-2);
+
+        @media (min-width: @hdx-bp-md) {
+            flex-wrap: nowrap;
+            gap:       var(--hdx-space-10);
+        }
+    }
+
+    &__left {
+        display:        flex;
+        flex-direction: column;
+        align-items:    flex-start;
+        gap:            var(--hdx-space-2);
+        width:          100%;
+
+        @media (min-width: @hdx-bp-md) {
+            flex:  2;
+            width: auto;
+        }
+    }
+
+    &__title {
+        .hdx-body-m-semibold();
+        display:            -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow:           hidden;
+        color:              var(--hdx-neutral-95);
+        text-decoration:    none;
+        word-break:         break-word;
+
+        @media (min-width: @hdx-bp-md) {
+            font-size: var(--hdx-fs-l);
+        }
+
+        &:hover {
+            color: var(--hdx-primary-5);
+        }
+    }
+
+    &__date {
+        .hdx-body-xs();
+        color: var(--hdx-neutral-85);
+    }
+
+    // Hidden on SM; shown as flex column on MD+.
+    &__description {
+        display: none;
+
+        @media (min-width: @hdx-bp-md) {
+            display:        flex;
+            flex-direction: column;
+            align-items:    flex-start;
+            gap:            var(--hdx-space-2);
+            align-self:     stretch;
+        }
+
+        .c-text-button { display: none; }
+        &.is-clamped .c-text-button { display: inline-flex; }
+
+        .c-text-button__icon            { transition: transform 0.15s ease; }
+        &.is-open .c-text-button__icon  { transform: rotate(180deg); }
+    }
+
+    // Fully hidden by default; clamped-text.js detects scrollHeight > 0
+    // and reveals the "Show more" button when the content overflows.
+    &__desc-text {
+        .hdx-body-xs();
+        color:      var(--hdx-neutral-8);
+        margin:     0;
+        max-height: 0;
+        overflow:   hidden;
+
+        &.is-open {
+            max-height: none;
+            overflow:   visible;
+        }
+    }
+
+    // Hidden on SM; shown as flex column on MD+.
+    &__right {
+        display: none;
+
+        @media (min-width: @hdx-bp-md) {
+            display:        flex;
+            flex:           1;
+            flex-direction: column;
+            align-items:    flex-end;
+        }
+    }
+
+    &__meta {
+        .hdx-body-s();
+        color:       var(--hdx-neutral-85);
+        display:     flex;
+        align-items: center;
+        flex-wrap:   wrap;
+        gap:         var(--hdx-space-2);
+    }
+
+    &__sep {
+        color: var(--hdx-neutral-5);
+    }
+}

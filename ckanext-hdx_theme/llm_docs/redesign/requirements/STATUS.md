@@ -52,3 +52,4 @@
 | 046 | [dataset-activity-section](046-dataset-activity-section.md)                                                     | implemented | |
 | 047 | [resource-preview-table-v2](047-resource-preview-table-v2.md)                                                   | implemented | |
 | 048 | [locations-list-v2](048-locations-list-v2.md)                                                                   | implemented | |
+| 049 | [organizations-list-v2](049-organizations-list-v2.md)                                                           | implemented | |

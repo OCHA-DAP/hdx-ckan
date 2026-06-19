@@ -1,8 +1,9 @@
-{% extends "page.html" %}
-{% set logged_in = true if c.userobj else false %}
-{% set is_sys_admin = c.userobj.sysadmin %}
+{% extends "v2/page.html" %}
+
+{% set content_class = 'hdx-v2-org-list-content' %}
 
 {% block subtitle %}{{ _('Explore Humanitarian Organizations')}} | {{_('Data Contributors ') }}{% endblock %}
+
 {% block meta %}
     {{ super() }}
     <meta name="description" content="Discover {{page.item_count}} organizations contributing reliable humanitarian data on HDX. Explore datasets from global NGOs, UN agencies, and research institutions supporting crisis response." />
@@ -14,84 +15,146 @@
   {{ super() }}
 {% endblock %}
 
-{% block breadcrumb_content %}
-{% snippet "snippets/active_breadcrumb_item.html", title=_('Organisations'), position=2 %}
+{% block styles %}
+  {{ super() }}
+  {% asset 'hdx_theme/v2-org-list-page-styles' %}
 {% endblock %}
 
+{% block breadcrumb_items %}
+  {% snippet 'v2/components/breadcrumb.html',
+      items=[{'label': _('Organisations'), 'href': ''}] %}
+{% endblock %}
 
-{% block primary_content %}
+{# No sidebar #}
+{% block secondary %}{% endblock %}
 
-    <div class="list-items search-form">
-        <h2>All Organisations</h2>
-    </div>
-
-    <a name="organisations"></a>
-    <div id="organizationsSection" class="row list-items module paddingRowHack">
-        <div class="col-12 paddingLeftHack paddingRightHack">
-            <div class="list-header crisis-list-header">
-                <span class="mL15 list-header-title">{{ _("Organisations") }} [{{page.item_count}}]</span>
-                <span class="mL30">
-                    {% set searchValue = q if q else '' %}
-                    <input id="headerSearch" class="header-search" type="text" placeholder="Search {{page.item_count}} organisations ..." value="{{searchValue}}">
-                </span>
-                {% set sorting = [(_('Name Ascending'), 'title asc'), (_('Name Descending'), 'title desc'), (_('Dataset Count Descending'), 'datasets desc'), (_('Dataset Count Ascending'), 'datasets asc')] %}
-                <div class="control-order-by float-end">
-                    <label for="field-order-by" class="uppercase">{{ _('Order by') }}</label>
-                    <div class="dropdown orderDropdown" data-module-additional="#organizationsSection">
-                        <button id="field-order-by" class="sspBold16" data-bs-toggle="dropdown">
-                            <label class="dropdown-toggle-text">
-                            {% for label, value in sorting %}
-                            {% if sorting_selected == value %} {{ label }} {% endif %}
-                            {% endfor %}
-                            </label>
-                            <i class="humanitarianicons-Down"></i>
-                        </button>
-                        <ul class="dropdown-menu" role="menu" style="max-height: 241px; overflow-y: auto;">
-                            {% for label, value in sorting %}
-                                {% if label and value %}
-                                    <li><a tabindex="-1" class="dropdown-item" val="{{ value }}">{{ label }}</a></li>
-                                {% endif %}
-                            {% endfor %}
-                        </ul>
-                    </div>
-                </div>
-                <span class="mL15 list-header-showall float-end mR45">
-                    {% set limits = [25, 50, 100] %}
-                    {% set limit_selected = limit_param if limit_param else 25 %}
-
-                    Show
-                    {% for value in limits %}
-                        {% if limit_selected|int == value %}
-                            <span>{{ value }}</span>
-                        {% else %}
-                            <span><a href="#">{{value}}</a></span>
-                        {% endif %}
-                    {% endfor %}
-                </span>
-            </div>
-            <div>
-                <ul class="hdx-bs3 list-items {{ list_class or 'dataset-list unstyled' }}">
-                    {% for organization in page.items %}
-                        {% snippet 'browse/snippets/org_item.html', organization=organization %}
-                    {% endfor %}
-                </ul>
-            </div>
-            {% block page_pagination %}
-            {{ page.pager() }}
-            {% endblock %}
+{# ── Hero: title + KPI row ─────────────────────────────────── #}
+{% block pre_primary %}
+  <div class="hdx-v2-org-list-hero">
+    <div class="hdx-v2-container">
+      <div class="hdx-v2-org-list-hero__body">
+        <h1 class="hdx-v2-org-list-hero__title">{{ _('Organisations') }}</h1>
+        <div class="c-kpi-row">
+          {% snippet 'v2/components/kpi-card.html',
+              label=_('Datasets'),
+              value=h.hdx_format_number_si(kpi_datasets),
+              tooltip_text=_('Total number of datasets shared by all organisations on HDX.'),
+              tooltip_id='kpi-datasets' %}
+          {% snippet 'v2/components/kpi-card.html',
+              label=_('Organisations'),
+              value=h.hdx_format_number_si(kpi_orgs),
+              tooltip_text=_('Number of organisations that have shared at least one dataset on HDX.'),
+              tooltip_id='kpi-orgs' %}
+          {% snippet 'v2/components/kpi-card.html',
+              label=_('Locations'),
+              value=h.hdx_format_number_si(kpi_locations),
+              tooltip_text=_('Number of country and territory locations with datasets on HDX.'),
+              tooltip_id='kpi-locations' %}
         </div>
+      </div>
     </div>
+  </div>
 {% endblock %}
 
-{% block secondary %}
+{# ── Main content: controls + cards + pagination ──────────── #}
+{% block primary %}
+
+  {# Sort dropdown items #}
+  {% set _sorting = [
+    (_('Alphabetical A-Z'), 'title asc'),
+    (_('Alphabetical Z-A'), 'title desc'),
+  ] %}
+  {% set _sort_ns = namespace(items=[], label='') %}
+  {% for label, value in _sorting %}
+    {% set _sort_ns.items = _sort_ns.items + [{'value': value, 'label': label, 'active': sorting_selected == value}] %}
+    {% if sorting_selected == value %}{% set _sort_ns.label = label %}{% endif %}
+  {% endfor %}
+  {% if not _sort_ns.label %}{% set _sort_ns.label = _sorting[0][0] %}{% endif %}
+
+  {# Page-size dropdown items #}
+  {% set _limits = [10, 25, 50] %}
+  {% set _size_ns = namespace(items=[]) %}
+  {% for v in _limits %}
+    {% set _size_ns.items = _size_ns.items + [{'value': v|string, 'label': v|string, 'active': limit_selected == v}] %}
+  {% endfor %}
+
+  {# Pagination base URL (page number appended by snippet) #}
+  {% set _pager_base = h.url_for('organizations_index', q=q, sort=sorting_selected, limit=limit_selected) ~ '&page=' %}
+
+    {# ── Controls row ────────────────────────────────── #}
+    {# __right before __search: CSS order:-1 on __search at XL moves it left #}
+    <div class="hdx-v2-org-list-controls">
+
+      <div class="hdx-v2-org-list-controls__right">
+        <div class="hdx-v2-nav-controls">
+          <div class="hdx-v2-nav-ctrl-pair">
+            <span class="hdx-v2-nav-ctrl-label">{{ _('Results per page') }}</span>
+            {% snippet 'v2/components/dropdown.html',
+                size='s',
+                selected=limit_selected|string,
+                panel_id='hdx-org-panel-size',
+                attrs={'data-nav-key': 'limit'},
+                navigate=True,
+                items=_size_ns.items %}
+          </div>
+
+          <div class="hdx-v2-nav-ctrl-pair">
+            <span class="hdx-v2-nav-ctrl-label">{{ _('Sort by') }}</span>
+            {% snippet 'v2/components/dropdown.html',
+                size='s',
+                selected=_sort_ns.label,
+                panel_id='hdx-org-panel-sort',
+                attrs={'data-nav-key': 'sort'},
+                navigate=True,
+                items=_sort_ns.items %}
+          </div>
+        </div>
+      </div>
+
+      <div class="hdx-v2-org-list-controls__search">
+        <form id="hdx-org-search-form"
+              action="{{ h.url_for('organizations_index') }}"
+              method="get">
+          <input type="hidden" name="sort"  value="{{ sorting_selected }}">
+          <input type="hidden" name="limit" value="{{ limit_selected }}">
+          {% snippet 'v2/components/search-input.html',
+              size='m',
+              name='q',
+              value=q,
+              placeholder=_('Search organisations'),
+              state='filled' if q else 'enabled' %}
+        </form>
+      </div>
+
+    </div>
+
+    {# ── Organisation cards ──────────────────────────── #}
+    <div class="hdx-v2-org-list-cards">
+      {% for org in page.items %}
+        {% snippet 'v2/components/org-list-card.html',
+            org=org,
+            member_count=h.get_group_members(org.id) %}
+      {% endfor %}
+
+      {% if not page.items %}
+        <p>{{ _('No organisations found.') }}</p>
+      {% endif %}
+    </div>
+
+    {# ── Pagination ──────────────────────────────────── #}
+    {% if page.page_count > 1 %}
+      <div class="hdx-v2-org-list-pagination">
+        {% snippet 'v2/components/pagination.html',
+            size='md',
+            current_page=page.page,
+            total_pages=page.page_count,
+            base_url=_pager_base %}
+      </div>
+    {% endif %}
+
 {% endblock %}
 
-{% block scripts2 %}
-    {{ super() }}
-{#    {% resource 'hdx_theme/search' %}#}
-{#    {% resource 'hdx_theme/organizations' %}#}
-{#    {% resource 'hdx_theme/jquery.expander' %}#}
-
-    {% asset 'hdx_theme/search-scripts' %}
-    {% asset 'hdx_theme/organizations-scripts' %}
+{% block scripts %}
+  {{ super() }}
+  {% asset 'hdx_theme/v2-org-list-page-scripts' %}
 {% endblock %}
