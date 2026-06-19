@@ -1,0 +1,121 @@
+// ============================================================
+// contact-contributor-page.less
+// Contact Contributor (/dataset/<id>/contact/) — v2 page-specific styles
+// Compiled output: fanstatic/v2/contact-contributor-page.css
+// ============================================================
+
+@import "mixins.less";
+
+
+// ── Full-bleed white background ───────────────────────────────
+// Matches the outer_row_class pattern used by dataset/resource pages.
+
+.hdx-v2-contact-row {
+    background-color: var(--hdx-neutral-0);
+}
+
+
+// ── Content column (no sidebar on this page) ──────────────────
+
+.hdx-v2-contact-content {
+    flex:           1;
+    min-width:      0;
+    display:        flex;
+    flex-direction: column;
+
+    @media (min-width: @hdx-bp-md) {
+        align-items: center;
+    }
+}
+
+
+// ── Centered page column ──────────────────────────────────────
+// Full width at SM/MD; ~50% centered at XL.
+
+.hdx-v2-contact-column {
+    padding: var(--hdx-space-6) 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--hdx-space-6);
+
+    @media (min-width: @hdx-bp-md) {
+        padding: var(--hdx-space-8) 0;
+        width: 80%;
+        gap: var(--hdx-space-8);
+    }
+
+    @media (min-width: @hdx-bp-xl) {
+        padding: var(--hdx-space-10) 0;
+        width: 50%;
+        gap: var(--hdx-space-10);
+    }
+}
+
+
+// ── Page header ───────────────────────────────────────────────
+
+.hdx-v2-contact-header {
+    display:        flex;
+    flex-direction: column;
+    gap:            var(--hdx-space-4);
+
+    &__title {
+        .hdx-display-s();
+        color:  var(--hdx-neutral-95);
+        margin: 0;
+    }
+
+    &__text {
+        .hdx-body-m-semibold();
+        color:  var(--hdx-neutral-85);
+        margin: 0;
+    }
+
+    &__notice {
+        .hdx-body-m();
+        color:  var(--hdx-neutral-85);
+        margin: 0;
+
+        a {
+            color:           var(--hdx-neutral-85);
+            text-decoration: underline;
+        }
+    }
+}
+
+
+// ── Form ──────────────────────────────────────────────────────
+
+.hdx-v2-contact-form {
+    display:        flex;
+    flex-direction: column;
+    gap:            var(--hdx-space-5);   // 20px between fields (Figma 1.25rem)
+}
+
+.hdx-v2-contact-dataset-name {
+    .hdx-body-m-semibold();
+    color:  var(--hdx-neutral-85);
+    margin: 0;
+}
+
+.hdx-v2-contact-field {
+    display:        flex;
+    flex-direction: column;
+    gap:            var(--hdx-space-2);   // 8px between label and input
+
+    &__label {
+        .hdx-body-m-medium();
+        color: var(--hdx-neutral-85);
+    }
+
+    &__required {
+        color: var(--hdx-error-5);
+    }
+}
+
+.hdx-v2-contact-buttons {
+    display:         flex;
+    align-items:     center;
+    justify-content: flex-end;
+    gap:             var(--hdx-space-4);
+}

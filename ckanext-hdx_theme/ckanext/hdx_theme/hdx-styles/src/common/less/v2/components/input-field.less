@@ -33,6 +33,9 @@
 @c-input-m-fs:   var(--hdx-fs-s);      // 14 px
 @c-input-m-pad:  var(--hdx-space-2) var(--hdx-space-3); // 8 12
 
+// Textarea (multiline) sizing — 4 rows × 1.3 line-height × 1rem + 2 × 8px padding ≈ 6.2rem
+@c-input-textarea-l-h: 6.25rem; // fixed height so border grows inward (border-box)
+
 // Autocomplete panel
 @c-ac-panel-border:  0.75px solid var(--hdx-neutral-1);  // 0.75px: hairline — visually softer than the input border
 @c-ac-panel-shadow:  var(--hdx-shadow-sm);
@@ -166,6 +169,39 @@
 
         input,
         .c-search-input__value { font-size: @c-input-m-fs; }
+    }
+
+    // ── Textarea modifier ────────────────────────────────────
+    // Fixed height so border-box keeps the outer dimensions stable when
+    // border thickness changes on hover/focus (same pattern as @c-input-l-h).
+    &--textarea {
+        height:      @c-input-textarea-l-h;
+        align-items: flex-start;
+
+        textarea {
+            flex:        1;
+            height:      100%;
+            border:      none;
+            background:  transparent;
+            font:        inherit;
+            color:       @c-input-color-placeholder;
+            line-height: var(--hdx-lh-normal);
+            outline:     none;
+            resize:      none;
+            padding:     0;
+            overflow-y:  auto;
+
+            &::placeholder        { color: @c-input-color-placeholder; }
+            &:not(:placeholder-shown) { color: @c-input-color-value; }
+        }
+    }
+
+    // ── Per-field error ──────────────────────────────────────
+    &__error {
+        display: block;
+        width:   100%;
+        .hdx-body-s();
+        color:      var(--hdx-error-6);
     }
 }
 

@@ -86,6 +86,47 @@
   box-shadow: none;
   color: var(--hdx-neutral-95);
 }
+.c-dropdown--native {
+  gap: 0;
+}
+.c-dropdown--native .c-dropdown__select {
+  align-self: stretch;
+  appearance: none;
+  -webkit-appearance: none;
+  height: 2.125rem;
+  padding: var(--hdx-space-2) var(--hdx-space-2) var(--hdx-space-2) var(--hdx-space-14);
+  padding-right: var(--hdx-space-8);
+  border-radius: var(--hdx-radius-sm);
+  background-color: var(--hdx-neutral-0);
+  border: 1px solid var(--hdx-neutral-2);
+  box-shadow: var(--hdx-shadow-sm);
+  box-sizing: border-box;
+  font-family: var(--hdx-font-body);
+  font-size: var(--hdx-fs-s);
+  font-weight: var(--hdx-fw-medium);
+  line-height: var(--hdx-lh-normal);
+  color: var(--hdx-neutral-8);
+  cursor: pointer;
+  width: 100%;
+  transition: background-color 0.15s ease, border 0.15s ease;
+}
+.c-dropdown--native .c-dropdown__select:hover {
+  background-color: var(--hdx-neutral-01);
+  border: 1.5px solid var(--hdx-neutral-8);
+}
+.c-dropdown--native .c-dropdown__chevron {
+  position: absolute;
+  right: var(--hdx-space-2);
+  top: calc(2.125rem / 2);
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: var(--hdx-neutral-8);
+}
+.c-dropdown--native .c-dropdown__chevron svg {
+  width: var(--hdx-space-4);
+  height: var(--hdx-space-4);
+  display: block;
+}
 .c-dropdown--size-m {
   gap: var(--hdx-space-2);
 }

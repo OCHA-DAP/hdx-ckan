@@ -59,7 +59,7 @@
       <div id="content">
         {% block main_content %}
       {% block toolbar %}
-        <div class="hdx-v2-breadcrumb-row">
+        <div class="hdx-v2-breadcrumb-row{{ ' ' ~ breadcrumb_row_class if breadcrumb_row_class else '' }}">
           <div class="hdx-v2-container">
             {% block breadcrumb_items %}{% endblock %}
           </div>
