@@ -75,7 +75,7 @@ timeago==1.0.16
 
 # reqs for ckanext-dcat
 rdflib==7.1.3
-pyld>=2.0.4
+pyld>=3.1.0
 geomet>=0.2.0
 ckantoolkit>=0.0.7
 # ckanext-dcat
