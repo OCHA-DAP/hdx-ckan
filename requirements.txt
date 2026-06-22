@@ -224,7 +224,7 @@ typing-extensions==4.12.2
     #   alembic
     #   mypy
     #   sqlalchemy2-stubs
-tzlocal==5.2
+tzlocal==5.4.3
     # via -r requirements.in
 ua-parser==0.18.0
     # via
