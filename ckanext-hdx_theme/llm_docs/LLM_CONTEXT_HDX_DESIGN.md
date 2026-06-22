@@ -89,7 +89,7 @@ There are three active layout base templates. The goal is to maintain exactly th
 - `ckanext-hdx_theme/ckanext/hdx_theme/templates/v2/header.html` — top-bar + responsive navbar (fully implemented)
 - `ckanext-hdx_theme/ckanext/hdx_theme/templates/v2/footer.html` — dark-teal footer panel (fully implemented)
 
-Pages in holding state on `page_light.html` (landing pages, signup, org/join, etc.) manually override `{% block header_core %}` to include the legacy `header-mobile.html`. The homepage, dataset search, dataset, and resource pages have already been migrated to `v2/page.html`. See [**redesign/PROGRESS.md**](redesign/PROGRESS.md) for the full holding-state and migrated-pages lists.
+Pages in holding state on `page_light.html` (landing pages, signup, org/join, etc.) manually override `{% block header_core %}` to include the legacy `header-mobile.html`. The following pages have been migrated to `v2/page.html`: homepage, dataset search, dataset page, resource page, all locations, all organisations, and contact contributor. See [**redesign/PROGRESS.md**](redesign/PROGRESS.md) for the full holding-state and migrated-pages lists.
 
 ## BEM components (HDX custom UI blocks)
 
@@ -181,6 +181,47 @@ Example page-specific template (light search):
 
 ---
 
+### Dataset page (`/dataset/<name>`)
+
+- **Template**: `ckanext-hdx_theme/ckanext/hdx_theme/templates/package/hdx_read.html`
+  - Extends `v2/page.html`.
+  - Includes `notification_platform/modals.html` (renders subscribe/unsubscribe drawers) and `notification_platform/buttons.html` (via `page-header.html`).
+- **Core assets**: `hdx_theme/v2-dataset-page-styles`, `hdx_theme/v2-dataset-page-scripts` (section accordion).
+
+---
+
+### Resource page (`/dataset/<name>/resource/<id>`)
+
+- **Template**: `ckanext-hdx_theme/ckanext/hdx_theme/templates/package/resource_read.html`
+  - Extends `v2/page.html`.
+- **Core assets**: `hdx_theme/v2-resource-page-styles`.
+
+---
+
+### All Locations page (`/group`)
+
+- **Template**: `ckanext-hdx_theme/ckanext/hdx_theme/templates/light/group/index.html`
+  - Extends `v2/page.html`. Single-column layout.
+- **Core assets**: `hdx_theme/v2-all-locations-page-styles`, `hdx_theme/v2-all-locations-page-scripts` (HRP filter + A-Z/Z-A sort toggle).
+
+---
+
+### All Organisations page (`/organization`)
+
+- **Template**: `ckanext-hdx_theme/ckanext/hdx_theme/templates/organization/index.html`
+  - Extends `v2/page.html`. Single-column layout (`content_class = 'hdx-v2-org-list-content'`).
+- **Core assets**: `hdx_theme/v2-org-list-page-styles`, `hdx_theme/v2-org-list-page-scripts` (`url-nav.js` + `org-list-page.js`).
+
+---
+
+### Contact Contributor page (`/dataset/<name>/contact-contributor`)
+
+- **Template**: `ckanext-hdx_theme/ckanext/hdx_theme/templates/package/contact_contributor.html`
+  - Extends `v2/page.html`.
+- **Core assets**: `hdx_theme/v2-contact-contributor-page-styles`.
+
+---
+
 ### Signals page (`/signals`)
 
 - **Template**: `ckanext-hdx_theme/ckanext/hdx_theme/templates/landing_pages/signals.html`
@@ -236,6 +277,46 @@ Example page-specific template (light search):
 - **Core assets**:
   - `hdx_theme/v2-components-styles` — all v2 component styles (loaded by `v2/page.html`).
   - `hdx_theme/v2-components-scripts` — all v2 component JS (loaded by `v2/page.html`).
+
+---
+
+## V2 JavaScript Patterns
+
+All v2 JavaScript is vanilla — no jQuery. Follow these patterns consistently.
+
+### No jQuery
+
+| jQuery | Vanilla |
+|--------|---------|
+| `$('#id')` | `document.getElementById('id')` |
+| `$('.cls')` | `document.querySelector('.cls')` / `querySelectorAll` |
+| `el.on('event', fn)` | `el.addEventListener('event', fn)` |
+| `$.ajax(...)` | `fetch(url, { method, headers, body: new URLSearchParams(data) })` |
+| `el.trigger('event')` | `el.dispatchEvent(new CustomEvent('event'))` |
+| `el.attr('hidden', '')` | `el.setAttribute('hidden', '')` |
+| `el.removeAttr('hidden')` | `el.removeAttribute('hidden')` |
+
+### Show / hide
+
+Use the `hidden` attribute, not Bootstrap `d-none`:
+```js
+element.setAttribute('hidden', '');   // hide
+element.removeAttribute('hidden');    // show
+```
+
+### Drawer factory
+
+```js
+var handle = window.hdxV2Drawer('drawerId');
+handle.open();
+handle.close();
+```
+
+The factory is in `fanstatic/javascript/v2/drawer.js` (part of `v2-components-scripts`). Drawers dispatch `drawer:close` as a `CustomEvent`; listen with `addEventListener('drawer:close', fn)`.
+
+### Form validation (v2)
+
+Add `data-hdx-v2-form-validator` to a `<form>` element. The validator auto-inits on `DOMContentLoaded`. Load `hdx_theme/v2-form-validator-scripts` on the page. Do **not** use `data-module="hdx-form-validator"` on v2 pages.
 
 ---
 
