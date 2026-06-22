@@ -4,61 +4,69 @@
 {% set logged_in = true if c.userobj else false %}
 
 {% set intro_text = CONST_NOTIFICATION_PLATFORM.SIGNUP_MODAL_TEXT_INTRO_DATASET if is_dataset_subscription else CONST_NOTIFICATION_PLATFORM.SIGNUP_MODAL_TEXT_INTRO.format(ui_object_type) %}
-{{ h.snippet('bem.blocks/paragraph.html',
-  paragraph_classes=['mb-0'],
-  text=intro_text) }}
 
-{% if not logged_in %}
-  {{ h.snippet('bem.blocks/paragraph.html',
-    text=CONST_NOTIFICATION_PLATFORM.SIGNUP_MODAL_TEXT_INTRO_SECOND.format(h.url_for('hdx_signin.login'))) }}
-{% endif %}
+<div class="c-drawer-form">
 
-<form method="post" id="notification-platform-form" novalidate data-module="hdx-form-validator">
-  <input type="hidden" name="popup_source" value="">
-
-  {{ h.snippet('bem.blocks/input_field.html',
-    type='hidden' if logged_in else 'email',
-    required=True,
-    autocomplete='new-email',
-    data_attributes={"validation": "email", "validation-error": CONST_NOTIFICATION_PLATFORM.SIGNUP_INPUT_EMAIL_ERROR},
-    name="email",
-    value=c.userobj.email if logged_in else '',
-    placeholder=CONST_NOTIFICATION_PLATFORM.SIGNUP_INPUT_EMAIL_PLACEHOLDER,
-    spacing_class="mb-2") }}
+  <p class="c-drawer-form__description">{{ intro_text|safe }}</p>
 
   {% if not logged_in %}
-    <div class="text-end">
-      {{ h.snippet('bem.blocks/paragraph.html',
-        text=CONST_NOTIFICATION_PLATFORM.SIGNUP_MODAL_TEXT_ALREADY_HAVE_ACCOUNT.format(h.url_for('hdx_signin.login')),
-        paragraph_classes=['paragraph__text_font_size-small']) }}
-    </div>
+    <p class="c-drawer-form__description">{{ CONST_NOTIFICATION_PLATFORM.SIGNUP_MODAL_TEXT_INTRO_SECOND.format(h.url_for('hdx_signin.login'))|safe }}</p>
   {% endif %}
 
-  {% if update_frequency %}
-    {{ h.snippet('bem.blocks/paragraph.html',
-      text=CONST_NOTIFICATION_PLATFORM.SIGNUP_MODAL_TEXT_UPDATE_FREQUENCY.format(update_frequency)) }}
-  {% endif %}
+  <div class="c-drawer-form__alert" role="alert"></div>
 
-  {% if num_of_datasets and num_of_datasets < 1000 and not is_dataset_subscription %}
-    {{ h.snippet('bem.blocks/paragraph.html',
-        paragraph_classes=['mb-0'],
-        text=CONST_NOTIFICATION_PLATFORM.SIGNUP_MODAL_TEXT_ALSO_NOTIFY)
-    }}
+  <form method="post" id="notification-platform-form" novalidate data-hdx-v2-form-validator>
+    <input type="hidden" name="popup_source" value="">
 
-    {{ h.snippet('bem.blocks/checkbox_field.html',
-        label=CONST_NOTIFICATION_PLATFORM.SIGNUP_CHECKBOX_DATASET_UPDATES_LABEL.format(ui_object_type),
-        name="dataset_updates",
-        checked=False,
-        value='true',
-        container_title=CONST_NOTIFICATION_PLATFORM.SIGNUP_CHECKBOX_DATASET_UPDATES_EXPLANATION.format(ui_object_type),
-        container_data_attributes={'module': "bs_tooltip", 'module-placement': 'top', 'bs-toggle': "tooltip"},
-        spacing_class="mb-3")
-    }}
-  {% endif %}
+    {% if not logged_in %}
+      <div class="c-drawer-form__field">
+        {{ h.snippet('v2/components/search-input.html',
+            type='email',
+            size='l',
+            id='notification-email',
+            name='email',
+            label=CONST_NOTIFICATION_PLATFORM.SIGNUP_INPUT_EMAIL_PLACEHOLDER,
+            required=True,
+            autocomplete='new-email',
+            placeholder=CONST_NOTIFICATION_PLATFORM.SIGNUP_INPUT_EMAIL_PLACEHOLDER,
+            show_icon=False,
+            input_attrs={
+              'data-validation': 'email',
+              'data-validation-error': CONST_NOTIFICATION_PLATFORM.SIGNUP_INPUT_EMAIL_ERROR
+            }) }}
+        <span class="c-drawer-form__field-error"></span>
+        <div class="c-drawer-form__field-hint">
+          {{ CONST_NOTIFICATION_PLATFORM.SIGNUP_MODAL_TEXT_ALREADY_HAVE_ACCOUNT.format(h.url_for('hdx_signin.login'))|safe }}
+        </div>
+      </div>
+    {% else %}
+      <input type="hidden" name="email" value="{{ c.userobj.email }}">
+    {% endif %}
 
-  {% if not logged_in and g.recaptcha_publickey %}
-      <div class="recaptcha-field mb-2">
+    {% if update_frequency %}
+      <p class="c-drawer-form__update-freq">{{ CONST_NOTIFICATION_PLATFORM.SIGNUP_MODAL_TEXT_UPDATE_FREQUENCY.format(update_frequency) }}</p>
+    {% endif %}
+
+    {% if num_of_datasets and num_of_datasets < 1000 and not is_dataset_subscription %}
+      <p class="c-drawer-form__description">{{ CONST_NOTIFICATION_PLATFORM.SIGNUP_MODAL_TEXT_ALSO_NOTIFY|safe }}</p>
+      <div class="c-drawer-form__checkbox-row">
+        {{ h.snippet('v2/components/checkbox.html',
+            id='notification-dataset-updates',
+            name='dataset_updates',
+            checked=False,
+            value='true') }}
+        <label for="notification-dataset-updates">
+          {{ CONST_NOTIFICATION_PLATFORM.SIGNUP_CHECKBOX_DATASET_UPDATES_LABEL.format(ui_object_type) }}
+        </label>
+      </div>
+    {% endif %}
+
+    {% if not logged_in and g.recaptcha_publickey %}
+      <div class="c-drawer-form__recaptcha">
         <div class="g-recaptcha" data-sitekey="{{ g.recaptcha_publickey }}"></div>
       </div>
-  {% endif %}
-</form>
+    {% endif %}
+
+  </form>
+
+</div>

@@ -1,0 +1,229 @@
+// ============================================================
+// c-drawer — BEM component
+// Implements: Slide-in drawer panel from the right edge
+// Source: Figma "Visual Redesign / 051 Subscribe Notifications"
+// ============================================================
+
+@import "../mixins.less";
+
+
+// ── c-drawer ──────────────────────────────────────────────────
+
+.c-drawer {
+    position: fixed;
+    inset: 0;
+    // z-index: sits at Bootstrap modal level; not a visual design token
+    z-index: 1050;
+    display: none;
+    align-items: stretch;
+
+    &.is-open {
+        display: flex;
+    }
+
+    // ── overlay (backdrop) ────────────────────────────────────
+
+    &__overlay {
+        flex: 1;
+        background: var(--hdx-overlay-black-40);
+        cursor: pointer;
+    }
+
+    // ── container (sliding panel) ─────────────────────────────
+
+    &__container {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        background: var(--hdx-neutral-0);
+        height: 100%;
+        overflow-y: auto;
+        box-shadow: var(--hdx-shadow-overlay);
+        transform: translateX(100%);
+        transition: transform 0.3s ease;
+
+        width: 100%;
+        @media (min-width: @hdx-bp-md) { width: 80%; }
+        @media (min-width: @hdx-bp-xl) { width: 50%; }
+
+        .c-drawer.is-open & {
+            transform: translateX(0);
+        }
+    }
+
+    // ── header (sticky title bar + close button) ──────────────
+
+    &__header {
+        position: sticky;
+        top: 0;
+        z-index: 1;
+        background: var(--hdx-neutral-0);
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: var(--hdx-space-6);
+
+        padding: var(--hdx-space-6) var(--hdx-space-4) var(--hdx-space-3);
+        @media (min-width: @hdx-bp-md) {
+            padding: var(--hdx-space-12) var(--hdx-space-8) var(--hdx-space-3);
+        }
+        @media (min-width: @hdx-bp-xl) {
+            padding: var(--hdx-space-10) var(--hdx-space-10) var(--hdx-space-3);
+        }
+    }
+
+    // ── title ─────────────────────────────────────────────────
+
+    &__title {
+        .hdx-display-l();
+        flex: 1;
+        color: var(--hdx-neutral-95);
+        margin: 0;
+    }
+
+    // ── close button ──────────────────────────────────────────
+
+    &__close {
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: var(--hdx-space-6);
+        height: var(--hdx-space-6);
+        padding: 0;
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: var(--hdx-neutral-8);
+        border-radius: var(--hdx-radius-sm);
+        transition: color 0.15s ease;
+
+        &:hover {
+            color: var(--hdx-neutral-10);
+        }
+
+        &:focus-visible {
+            outline: 2px solid var(--hdx-primary-5);
+            outline-offset: 2px;
+        }
+
+        svg {
+            width: var(--hdx-space-6);
+            height: var(--hdx-space-6);
+            display: block;
+        }
+    }
+
+    // ── body (scrollable content slot) ────────────────────────
+
+    &__body {
+        flex: 1;
+        padding: 0 var(--hdx-space-4) var(--hdx-space-6);
+
+        @media (min-width: @hdx-bp-md) {
+            padding: 0 var(--hdx-space-8) var(--hdx-space-6);
+        }
+        @media (min-width: @hdx-bp-xl) {
+            padding: 0 var(--hdx-space-10) var(--hdx-space-6);
+        }
+    }
+}
+
+body.drawer-open {
+    overflow: hidden;
+}
+
+
+// ── c-drawer-form — notification subscribe form content ───────
+// Styles for the subscribe / unsubscribe content rendered inside a drawer.
+
+.c-drawer-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--hdx-space-5);
+    padding-top: var(--hdx-space-4);
+
+    &__description {
+        .hdx-body-m();
+        color: var(--hdx-neutral-85);
+        margin: 0;
+
+        a {
+            .hdx-link-m();
+            color: inherit;
+        }
+    }
+
+    &__field {
+        display: flex;
+        flex-direction: column;
+        gap: var(--hdx-space-2);
+    }
+
+    &__field-hint {
+        .hdx-body-s();
+        color: var(--hdx-neutral-8);
+        text-align: right;
+
+        a {
+            .hdx-link-s();
+            color: var(--hdx-primary-5);
+        }
+    }
+
+    &__field-error {
+        .hdx-body-s();
+        color: var(--hdx-error-6);
+        display: none;
+    }
+
+    &__update-freq {
+        .hdx-body-s-semibold();
+        color: var(--hdx-neutral-9);
+        margin: 0;
+    }
+
+    &__recaptcha {
+        align-self: flex-start;
+        margin-top: var(--hdx-space-3);
+    }
+
+    &__alert {
+        .hdx-body-s();
+        color: var(--hdx-error-6);
+        border: 1px solid var(--hdx-error-2);
+        border-radius: var(--hdx-radius-sm);
+        padding: var(--hdx-space-2) var(--hdx-space-3);
+        background: var(--hdx-error-0);
+        display: none;
+
+        &.is-visible { display: block; }
+    }
+
+    &__buttons {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        margin-top: var(--hdx-space-3);
+        gap: var(--hdx-space-4);
+    }
+
+    &__text {
+        .hdx-body-m();
+        color: var(--hdx-neutral-8);
+        margin: 0;
+    }
+
+    &__checkbox-row {
+        display: flex;
+        align-items: center;
+        gap: var(--hdx-space-2);
+
+        label {
+            .hdx-body-m();
+            color: var(--hdx-neutral-9);
+            cursor: pointer;
+            margin: 0;
+        }
+    }
+}

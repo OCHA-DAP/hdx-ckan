@@ -200,12 +200,10 @@
       {% if supports_notifications or download_count %}
       <div class="c-page-header__cta">
         {% if supports_notifications %}
-          <div class="notification-platform-opt-in-action-menu d-none c-page-header__notify-btn">
-            {% snippet 'v2/components/button.html',
-                style='primary', size='m', label='Get notified',
-                icon=True, icon_position='left', icon_src='v2/icons/bell.svg',
-                tag='button', button_type='button' %}
-          </div>
+          {% snippet 'notification_platform/buttons.html',
+              object_type=notification_object_type if notification_object_type is defined else 'dataset',
+              object_id=notification_object_id if notification_object_id is defined else pkg_id,
+              object_dict=notification_object_dict if notification_object_dict is defined else {} %}
         {% endif %}
         {% if download_count %}
           <div class="c-page-header__downloads">
@@ -395,6 +393,7 @@
 {% if not hide_membership and membership and membership.display_group_message %}
   {% set membership_data = membership.data %}
   {% set group_topics = membership.data.group_topics %}
-  {{ h.snippet('widget/membership/group-message.html', id="groupMessagePopup", title=title, groups=group_topics, org_id=org_id, pkg_id=pkg_id, membership_data=membership_data, base_title='dataset', base_type='dataset') }}
-  {{ h.snippet('widget/membership/done.html', id="membershipDonePopup") }}
+{#  TODO: fix these#}
+{#  {{ h.snippet('widget/membership/group-message.html', id="groupMessagePopup", title=title, groups=group_topics, org_id=org_id, pkg_id=pkg_id, membership_data=membership_data, base_title='dataset', base_type='dataset') }}#}
+{#  {{ h.snippet('widget/membership/done.html', id="membershipDonePopup") }}#}
 {% endif %}

@@ -1,0 +1,39 @@
+{#
+  Snippet: v2/components/drawer.html
+  Path:    templates/v2/components/drawer.html
+
+  Reusable slide-in drawer panel (v2). Slides in from the right edge.
+  Controlled by drawer.js (fanstatic/javascript/v2/drawer.js).
+
+  Parameters
+  ─────────────────────────────────────────────────
+  drawer_id   {string}  Required. Unique HTML id for the root element.
+  title       {string}  Optional. Title text rendered in .c-drawer__header.
+  caller()    block     Content rendered inside .c-drawer__body.
+  ─────────────────────────────────────────────────
+
+  Usage
+
+  {% call h.snippet('v2/components/drawer.html', drawer_id='my-drawer', title='Drawer title') %}
+    <p>Drawer body content goes here.</p>
+  {% endcall %}
+#}
+
+{% set title = title if title is defined else '' %}
+
+<div class="c-drawer" id="{{ drawer_id }}" aria-hidden="true" role="dialog" aria-modal="true">
+  <div class="c-drawer__overlay" data-drawer-close></div>
+  <div class="c-drawer__container" tabindex="-1">
+    <div class="c-drawer__header">
+      {% if title %}
+        <span class="c-drawer__title">{{ title }}</span>
+      {% endif %}
+      <button class="c-drawer__close" aria-label="Close" data-drawer-close>
+        {% include 'v2/icons/close.svg' %}
+      </button>
+    </div>
+    <div class="c-drawer__body">
+      {{ caller() }}
+    </div>
+  </div>
+</div>

@@ -115,6 +115,9 @@
         cod_dataset=(analytics_is_cod == 'true'),
         links_list=pkg.links_list or [],
         supports_notifications=analytics_supports_notifications,
+        notification_object_type=object_type,
+        notification_object_id=object_id,
+        notification_object_dict=pkg,
         location_text=_location_text,
         subnational=(pkg.subnational|int == 1),
         update_frequency=h.hdx_get_frequency_by_value(pkg.data_update_frequency),
@@ -471,7 +474,6 @@
     </div>
   </section>
 
-  {# ── Notifications modal (always present) ── #}
   {% snippet "notification_platform/modals.html",
       object_type=object_type,
       object_id=object_id,
