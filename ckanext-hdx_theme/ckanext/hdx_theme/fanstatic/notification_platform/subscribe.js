@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   if (signupForm) {
     signupForm.addEventListener('submit', function (e) {
+      if (e.defaultPrevented) return;
       e.preventDefault();
       onSignupSubmit(subscribeObjectId, subscribeObjectName, subscribeObjectType, authenticated);
     });
@@ -17,7 +18,7 @@ document.addEventListener('DOMContentLoaded', function () {
   if (signupSubmitButton) {
     signupSubmitButton.addEventListener('click', function (e) {
       e.preventDefault();
-      onSignupSubmit(subscribeObjectId, subscribeObjectName, subscribeObjectType, authenticated);
+      signupForm.requestSubmit();
     });
   }
 
