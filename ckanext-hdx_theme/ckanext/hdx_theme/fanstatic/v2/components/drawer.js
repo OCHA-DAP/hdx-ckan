@@ -29,11 +29,12 @@
       if (!$drawer.hasClass('is-open')) return;
       $drawer.removeClass('is-open').attr('aria-hidden', 'true');
       $('body').removeClass('drawer-open');
-      $drawer.trigger('drawer:close');
+      $drawer.get(0).dispatchEvent(new CustomEvent('drawer:close'));
       if (lastFocus) lastFocus.focus();
     }
 
     // ESC key + Tab focus trap
+    $(document).off('keydown.drawer-' + drawerId);
     $(document).on('keydown.drawer-' + drawerId, function (e) {
       if (!$drawer.hasClass('is-open')) return;
 
@@ -62,6 +63,7 @@
     });
 
     // Any element with [data-drawer-close] (overlay, header X, Cancel buttons, etc.)
+    $drawer.off('click', '[data-drawer-close]');
     $drawer.on('click', '[data-drawer-close]', function () {
       close();
     });
