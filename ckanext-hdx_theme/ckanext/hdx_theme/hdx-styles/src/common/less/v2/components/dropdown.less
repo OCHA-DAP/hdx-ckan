@@ -151,6 +151,53 @@
         color:            var(--hdx-neutral-95);
     }
 
+    // ── Native <select> mode ─────────────────────────────────
+    // POST-safe select styled to match the trigger button,
+    // with an absolutely positioned chevron overlay.
+
+    &--native {
+        gap: 0;  // error span spacing comes only from .c-search-input__error margin-top
+
+        .c-dropdown__select {
+            align-self:         stretch;
+            appearance:         none;
+            -webkit-appearance: none;
+            height:             @c-dropdown-m-h;
+            padding:            @c-dropdown-m-pad;
+            padding-right:      var(--hdx-space-8);   // 32px: accounts for chevron icon
+            border-radius:      var(--hdx-radius-sm);
+            background-color:   @c-dropdown-bg;
+            border:             @c-dropdown-border;
+            box-shadow:         @c-dropdown-panel-shadow;
+            box-sizing:         border-box;
+            .hdx-body-s-medium();
+            color:              @c-dropdown-text;
+            cursor:             pointer;
+            width:              100%;
+            transition:         background-color 0.15s ease, border 0.15s ease;
+
+            &:hover {
+                background-color: @c-dropdown-bg-hover;
+                border:           @c-dropdown-border-hover;
+            }
+        }
+
+        .c-dropdown__chevron {
+            position:       absolute;
+            right:          var(--hdx-space-2);
+            top:            calc(@c-dropdown-m-h / 2);
+            transform:      translateY(-50%);
+            pointer-events: none;
+            color:          @c-dropdown-text;
+
+            svg {
+                width:   var(--hdx-space-4);
+                height:  var(--hdx-space-4);
+                display: block;
+            }
+        }
+    }
+
     // ── Size modifiers ───────────────────────────────────────
 
     &--size-m {

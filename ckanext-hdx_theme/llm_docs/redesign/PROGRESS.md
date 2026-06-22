@@ -2,7 +2,7 @@
 
 **Status**: In-progress
 **Started**: 2026-04-16
-**Last Updated**: 2026-06-18
+**Last Updated**: 2026-06-19
 
 ---
 
@@ -44,7 +44,7 @@ CSS custom property equivalents (`--hdx-*`) are defined in `v2/foundation.css` (
 - Sets `{% block bodytag %}hdx-v2{% endblock %}` for scoping v2 styles to the body class
 - Overrides `{% block page %}` with: header block → main content (toolbar + flash + two-column layout) → footer block
 - `{% block header_core %}` includes `v2/header.html` via `{% snippet %}`
-- `{% block toolbar %}` renders `<div class="hdx-v2-breadcrumb-row">` with a `{% block breadcrumb_items %}` sub-block; page templates override only `{% block breadcrumb_items %}`
+- `{% block toolbar %}` renders `<div class="hdx-v2-breadcrumb-row">` with a `{% block breadcrumb_items %}` sub-block; page templates override only `{% block breadcrumb_items %}`; set `breadcrumb_row_class` variable for modifier classes on the row div (e.g. `'hdx-v2-breadcrumb-row--white'`)
 - `{% block flash %}` renders flash messages using `hdx-v2-flash {{ category }}` class (Bootstrap `.alert` removed)
 - `secondary_right_side` feature removed; sidebar always renders on the left
 - `{% block footer %}` includes `v2/footer.html` via `{% snippet %}`
@@ -65,10 +65,11 @@ CSS custom property equivalents (`--hdx-*`) are defined in `v2/foundation.css` (
 | `typography.less` | **Variable declarations only** — font families, size scale, weights, line heights. Imported by `foundation.less` for CSS custom-property output. Do not import this directly from components. |
 | `mixins.less` | **Single compile-time entry point** — imports `breakpoints.less` + `typography.less`, then defines all mixins: layout (`.v2-sidebar-flex()`, `.v2-content-flex()`), typography cores, named type-style mixins, and base-style mixins. Import with `@import "mixins.less"` (or `"../mixins.less"` from `components/`). |
 | `breakpoints.less` | Breakpoint variables (`@hdx-bp-md`, `@hdx-bp-xl`, `@hdx-bp-xxl`); pulled in automatically by `mixins.less` |
-| `layout.less` | Container, breadcrumb row, content-columns base flex; compiled to `v2-page-styles` |
+| `layout.less` | Container, breadcrumb row (`hdx-v2-breadcrumb-row` + `--white` modifier), form error summary (`hdx-v2-form-error-summary`), content-columns base flex; compiled to `v2-page-styles` |
 | `search-page.less` | Search page layout + `.hdx-v2-dataset-list`; imports `mixins.less` |
 | `dataset-page.less` | Dataset page sections; imports `mixins.less` |
 | `resource-page.less` | Resource page sections; imports `mixins.less` |
+| `contact-contributor-page.less` | Contact Contributor page sections; imports `mixins.less` |
 | `home-page.less` | Homepage-only sections (hero, intro, highlights); compiled to `v2-home-page-styles`; imports `mixins.less` |
 | `components/divider.less` | `.c-divider` — standalone component; compiled to `divider.css` and registered in `v2-components-styles` |
 | `components/*.less` | One file per component; each imports `"../mixins.less"` for tokens and mixins |
@@ -90,6 +91,7 @@ CSS custom property equivalents (`--hdx-*`) are defined in `v2/foundation.css` (
 | Resource page | `package/resource_read.html` | Extends `v2/page.html`; full page implemented — see `requirements/040-resource-page.md` |
 | All Locations | `light/group/index.html` | Extends `v2/page.html`; sidebar + sort JS in `v2/all-locations-page.js` |
 | All Organisations | `organization/index.html` | Extends `v2/page.html`; org card with clamped-text, KPI row, url-nav.js |
+| Contact Contributor | `package/contact_contributor.html` | Extends `v2/page.html`; single-column; native dropdown + textarea; `breadcrumb_row_class` white; see `requirements/050-contact-contributor-v2.md` |
 
 ### Pages in holding state (on `page_light.html`)
 
@@ -110,7 +112,6 @@ Each page below extends `page_light.html`, manually overrides `{% block styles %
 | Org join — completed | `org/join/completed.html` | |
 | Org request — new request | `org/request/org_new_request.html` | |
 | Org request — completed | `org/request/completed_request.html` | |
-| Contact contributor | `package/contact_contributor.html` | |
 | Request access | `package/request_access.html` | |
 | Create/edit dataset | `contribute_flow/create_edit.html` | Also loads `hdx_theme/contribute-flow-styles` |
 
@@ -184,6 +185,7 @@ Bundle configuration:
 - `hdx_theme/v2-all-locations-page-scripts` — All Locations page: adds `v2/all-locations-page.js` (HRP filter + A-Z/Z-A sort)
 - `hdx_theme/v2-org-list-page-styles` — All Organisations page: adds `v2/org-list-page.css` (org-list-card styles come from the preloaded `v2-components-styles` bundle)
 - `hdx_theme/v2-org-list-page-scripts` — All Organisations page: adds `v2/url-nav.js` + `v2/org-list-page.js`
+- `hdx_theme/v2-contact-contributor-page-styles` — Contact Contributor page: adds `v2/contact-contributor-page.css`
 
 ---
 
@@ -221,7 +223,7 @@ Bundle configuration:
 ### Phase 3: Page Migrations ✅ (Partial)
 - [ ] Signup page
 - [ ] Landing pages (signals, hapi)
-- [ ] Contact contributor page
+- [x] Contact contributor page
 - [ ] Find/join org page
 - [x] Homepage
 - [x] Dataset list (light + desktop — unified in v2 search template)

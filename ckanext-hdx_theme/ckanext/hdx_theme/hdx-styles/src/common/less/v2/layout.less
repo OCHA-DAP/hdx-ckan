@@ -12,7 +12,7 @@
 // Do NOT use Bootstrap .container in v2 templates.
 // ============================================================
 
-@import "breakpoints.less";
+@import "mixins.less";
 
 @container-padding-xs:  1rem;     // 16px — SM
 @container-padding-md:  3rem;     // 48px — MD through XL
@@ -32,6 +32,11 @@ body.hdx-v2 {
 // A bottom border acts as the visual separator above the page header.
 .hdx-v2-breadcrumb-row {
     border-bottom: 1px solid var(--hdx-neutral-1);
+
+    &--white {
+        background-color: var(--hdx-neutral-0);
+        border-bottom:    none;
+    }
 }
 
 // Base flex layout used on any v2 two-column page (search, dataset page, etc.)
@@ -39,6 +44,17 @@ body.hdx-v2 {
 .hdx-v2-content-columns {
     display:     flex;
     align-items: stretch;
+}
+
+// ── Form error summary ────────────────────────────────────────
+// Shared top-level error block for form validation feedback.
+.hdx-v2-form-error-summary {
+    .hdx-body-m();
+    color:         var(--hdx-error-6);
+    background:    var(--hdx-error-05);
+    border:        1px solid var(--hdx-error-2);
+    border-radius: var(--hdx-radius-sm);
+    padding:       var(--hdx-space-3) var(--hdx-space-4);
 }
 
 .hdx-v2-container {

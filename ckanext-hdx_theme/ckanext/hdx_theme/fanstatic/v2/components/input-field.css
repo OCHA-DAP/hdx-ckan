@@ -116,6 +116,38 @@
 .c-search-input--size-m .c-search-input__value {
   font-size: var(--hdx-fs-s);
 }
+.c-search-input--textarea {
+  height: 6.25rem;
+  align-items: flex-start;
+}
+.c-search-input--textarea textarea {
+  flex: 1;
+  height: 100%;
+  border: none;
+  background: transparent;
+  font: inherit;
+  color: var(--hdx-neutral-8);
+  line-height: var(--hdx-lh-normal);
+  outline: none;
+  resize: none;
+  padding: 0;
+  overflow-y: auto;
+}
+.c-search-input--textarea textarea::placeholder {
+  color: var(--hdx-neutral-8);
+}
+.c-search-input--textarea textarea:not(:placeholder-shown) {
+  color: var(--hdx-neutral-95);
+}
+.c-search-input__error {
+  display: block;
+  width: 100%;
+  font-family: var(--hdx-font-body);
+  font-size: var(--hdx-fs-s);
+  font-weight: var(--hdx-fw-regular);
+  line-height: var(--hdx-lh-normal);
+  color: var(--hdx-error-6);
+}
 .c-autocomplete {
   display: flex;
   flex-direction: column;

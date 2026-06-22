@@ -1,8 +1,9 @@
 {% extends "v2/page.html" %}
-{% set outer_row_class = 'hdx-v2-all-locations-row' %}
-{% set columns_class   = 'hdx-v2-all-locations-columns' %}
-{% set sidebar_class   = 'hdx-v2-all-locations-sidebar' %}
-{% set content_class   = 'hdx-v2-all-locations-content' %}
+{% set outer_row_class      = 'hdx-v2-all-locations-row' %}
+{% set columns_class        = 'hdx-v2-all-locations-columns' %}
+{% set sidebar_class        = 'hdx-v2-all-locations-sidebar' %}
+{% set content_class        = 'hdx-v2-all-locations-content' %}
+{% set breadcrumb_row_class = 'hdx-v2-breadcrumb-row--white' %}
 
 {% block styles %}
   {{ super() }}
@@ -21,14 +22,9 @@
   {{ super() }}
 {% endblock %}
 
-{# Breadcrumb: white bg, no bottom border on this page #}
-{% block toolbar %}
-  <div class="hdx-v2-breadcrumb-row hdx-v2-all-locations-breadcrumb">
-    <div class="hdx-v2-container">
-      {% snippet 'v2/components/breadcrumb.html',
-          items=[{'label': _('Locations'), 'href': ''}] %}
-    </div>
-  </div>
+{% block breadcrumb_items %}
+  {% snippet 'v2/components/breadcrumb.html',
+      items=[{'label': _('Locations'), 'href': ''}] %}
 {% endblock %}
 
 {# ── Full-bleed sections: hero, map, legend, controls ─────────────────────── #}

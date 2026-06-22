@@ -120,8 +120,8 @@ class TestContactContributorView(object):
         }
         response = app.post(contact_contributor_url, data=data_dict, headers=auth_headers)
         assert response.status_code == 200
-        assert '<h1 class="heading__title">{0}</h1>'.format(CONST_CONTACT_CONTRIBUTOR['PAGE_TITLE']) not in response.body
-        assert '<h1 class="heading__title">{0}</h1>'.format(
+        assert '<h1 class="hdx-v2-contact-header__title">{0}</h1>'.format(CONST_CONTACT_CONTRIBUTOR['PAGE_TITLE']) not in response.body
+        assert '<h1 class="hdx-v2-contact-header__title">{0}</h1>'.format(
             CONST_CONTACT_CONTRIBUTOR['PAGE_TITLE_MESSAGE_SENT']) in response.body
         assert '<input type="hidden" id="message_sent" value="True">' in response.body, \
             'The hidden input indicates analytics tracking for request submission'
