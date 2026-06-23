@@ -5,7 +5,7 @@
 }
 @media (min-width: 48rem) {
   .hdx-v2-hero {
-    padding-top: 6rem;
+    padding-top: var(--hdx-space-24);
   }
 }
 @media (min-width: 80rem) {
@@ -112,8 +112,8 @@
 }
 @media (min-width: 48rem) {
   .hdx-v2-intro {
-    padding-top: 6rem;
-    padding-bottom: 6rem;
+    padding-top: var(--hdx-space-24);
+    padding-bottom: var(--hdx-space-24);
   }
 }
 @media (min-width: 80rem) {
@@ -209,8 +209,8 @@
 }
 @media (min-width: 80rem) {
   .hdx-v2-highlights {
-    padding-top: 6rem;
-    padding-bottom: 6rem;
+    padding-top: var(--hdx-space-24);
+    padding-bottom: var(--hdx-space-24);
   }
 }
 .hdx-v2-highlights__inner {

@@ -63,7 +63,7 @@
   .c-anchor-links-mobile {
     display: block;
     position: sticky;
-    top: 6rem;
+    top: var(--hdx-space-24);
     left: 0;
     right: 0;
     z-index: 200;
