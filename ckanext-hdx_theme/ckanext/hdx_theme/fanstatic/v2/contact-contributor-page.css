@@ -83,16 +83,6 @@
   flex-direction: column;
   gap: var(--hdx-space-2);
 }
-.hdx-v2-contact-field__label {
-  font-family: var(--hdx-font-body);
-  font-size: var(--hdx-fs-m);
-  font-weight: var(--hdx-fw-medium);
-  line-height: var(--hdx-lh-normal);
-  color: var(--hdx-neutral-85);
-}
-.hdx-v2-contact-field__required {
-  color: var(--hdx-error-5);
-}
 .hdx-v2-contact-buttons {
   display: flex;
   align-items: center;

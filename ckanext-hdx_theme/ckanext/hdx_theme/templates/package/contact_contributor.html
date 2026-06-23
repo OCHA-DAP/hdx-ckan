@@ -86,14 +86,13 @@
 
         {# Full name #}
         <div class="hdx-v2-contact-field">
-          <label class="hdx-v2-contact-field__label" for="contact-fullname">
-            {{ CONST.INPUT_FULLNAME_LABEL }}<span class="hdx-v2-contact-field__required" aria-hidden="true"> *</span>
-          </label>
           {% snippet 'v2/components/search-input.html',
               size='l',
               type='text',
               name='fullname',
               id='contact-fullname',
+              label=CONST.INPUT_FULLNAME_LABEL,
+              required=True,
               value=(data.get('fullname') if 'fullname' in data else c.userobj.fullname) or '',
               placeholder=CONST.INPUT_FULLNAME_PLACEHOLDER,
               show_icon=False,
@@ -102,14 +101,13 @@
 
         {# Email address #}
         <div class="hdx-v2-contact-field">
-          <label class="hdx-v2-contact-field__label" for="contact-email">
-            {{ CONST.INPUT_EMAIL_LABEL }}<span class="hdx-v2-contact-field__required" aria-hidden="true"> *</span>
-          </label>
           {% snippet 'v2/components/search-input.html',
               size='l',
               type='email',
               name='email',
               id='contact-email',
+              label=CONST.INPUT_EMAIL_LABEL,
+              required=True,
               autocomplete='new-email',
               value=(data.get('email') if 'email' in data else c.userobj.email) or '',
               placeholder=CONST.INPUT_EMAIL_PLACEHOLDER,
@@ -119,13 +117,12 @@
 
         {# Comments textarea #}
         <div class="hdx-v2-contact-field">
-          <label class="hdx-v2-contact-field__label" for="contact-msg">
-            {{ CONST.TEXTAREA_MSG_LABEL }}<span class="hdx-v2-contact-field__required" aria-hidden="true"> *</span>
-          </label>
           {% snippet 'v2/components/search-input.html',
               size='l',
               name='msg',
               id='contact-msg',
+              label=CONST.TEXTAREA_MSG_LABEL,
+              required=True,
               multiline=True,
               rows=4,
               value=data.get('msg') or '',

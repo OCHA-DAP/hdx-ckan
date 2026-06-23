@@ -2,7 +2,7 @@
 
 **Status**: In-progress
 **Started**: 2026-04-16
-**Last Updated**: 2026-06-19
+**Last Updated**: 2026-06-22
 
 ---
 
@@ -186,6 +186,7 @@ Bundle configuration:
 - `hdx_theme/v2-org-list-page-styles` — All Organisations page: adds `v2/org-list-page.css` (org-list-card styles come from the preloaded `v2-components-styles` bundle)
 - `hdx_theme/v2-org-list-page-scripts` — All Organisations page: adds `v2/url-nav.js` + `v2/org-list-page.js`
 - `hdx_theme/v2-contact-contributor-page-styles` — Contact Contributor page: adds `v2/contact-contributor-page.css`
+- `hdx_theme/v2-form-validator-scripts` — Form validation: vanilla JS validator (`v2/form-validator.js`); activated by `data-hdx-v2-form-validator` on `<form>` elements; loaded by notification platform templates
 
 ---
 
@@ -220,7 +221,7 @@ Bundle configuration:
 - [x] Create `v2-page-styles` bundle with Bootstrap + grid layout overrides ✓
 - [x] Add placeholder demo page with all components ✓
 
-### Phase 3: Page Migrations ✅ (Partial)
+### Phase 3: Page Migrations ✅ (Complete)
 - [ ] Signup page
 - [ ] Landing pages (signals, hapi)
 - [x] Contact contributor page

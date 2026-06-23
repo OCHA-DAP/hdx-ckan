@@ -32,6 +32,10 @@
                           default: 4
   errors        {list|string}  Error message(s) to display below the input.
                           Renders a .c-search-input__error span.  default: None
+  label         {string}  Label text rendered above the input as .c-search-input__label.
+                          default: None
+  required      {bool}    Appends a red asterisk inside the label (only when label is set).
+                          default: False
   ─────────────────────────────────────────────────
   Examples
 
@@ -59,6 +63,9 @@
 {% set multiline     = multiline     if multiline     is defined else False %}
 {% set rows          = rows          if rows          is defined else 4 %}
 {% set errors        = errors        if errors        is defined else None %}
+{% set input_attrs   = input_attrs   if input_attrs   is defined else {} %}
+{% set label         = label         if label         is defined else none %}
+{% set required      = required      if required      is defined else false %}
 
 {% set classes = ['c-search-input', 'c-search-input--size-' ~ size] %}
 {% if state == 'active' %}{% set classes = classes + ['c-search-input--active']    %}{% endif %}
@@ -66,6 +73,11 @@
 {% if multiline        %}{% set classes = classes + ['c-search-input--textarea']   %}{% endif %}
 {% if extra_classes    %}{% set classes = classes + [extra_classes]                %}{% endif %}
 
+{% if label %}
+<label class="c-search-input__label" {% if id %}for="{{ id }}"{% endif %}>
+  {{ label }}{% if required %}<span class="c-search-input__required" aria-hidden="true"> *</span>{% endif %}
+</label>
+{% endif %}
 <div class="{{ classes | join(' ') }}"
      {% for key, val in attrs.items() %}{{ key }}="{{ val }}"{% endfor %}>
 
@@ -80,7 +92,8 @@
            {% if id %}id="{{ id }}"{% endif %}
            placeholder="{{ placeholder }}"
            value="{{ value }}"
-           {% if autocomplete %}autocomplete="{{ autocomplete }}"{% else %}autocomplete="off"{% endif %}>
+           {% if autocomplete %}autocomplete="{{ autocomplete }}"{% else %}autocomplete="off"{% endif %}
+           {% for key, val in input_attrs.items() %}{{ key }}="{{ val }}" {% endfor %}>
 
     {% if type == 'password' %}
       <button class="c-search-input__icon c-search-input__toggle"

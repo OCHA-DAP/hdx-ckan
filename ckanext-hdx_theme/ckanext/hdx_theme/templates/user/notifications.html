@@ -4,7 +4,6 @@
   {{ super() }}
   {% asset 'hdx_theme/bem-blocks-styles' %}
   {% asset 'hdx_theme/ckan' %}
-  {% asset 'hdx_theme/notification-platform-unsubscribe-scripts' %}
 {% endblock %}
 
 {% block analytics_came_from %}{{ analytics.analytics_came_from }}{% endblock %}
@@ -44,7 +43,7 @@
         {% if subscriptions|length > 0 %}
           {% for subscription in subscriptions %}
             {% set ui_object_type = 'location' if subscription.object_type == 'group' else subscription.object_type %}
-            <div class="row hub-unsubscribe-row" data-unsubscribe-token="{{ subscription.unsubscribe_token.token }}">
+            <div class="row">
               <div class="col-8">
                 <a href="{{ subscription.object_link }}" class="fw-bold"
                    title="{{ subscription.object_dict.title }}">{{ ui_object_type|capitalize }}: {{ subscription.object_dict.title }}</a>
@@ -55,15 +54,8 @@
 {#                  <span class="separator mx-2">|</span>#}
 {#                {% endif %}#}
                 <a
-                  href="#"
-                  data-unsubscribe-token="{{ subscription.unsubscribe_token.token }}"
-                  data-unsubscribe-email="{{ subscription.unsubscribe_email }}"
-                  data-unsubscribe-source="hub"
-                  data-object-id="{{ subscription.object }}"
-                  data-object-name="{{ subscription.object_dict.name }}"
-                  data-object-type="{{ subscription.object_type }}"
-                  data-is-authenticated="True"
-                  class="fw-bold text-danger hub-unsubscribe-link"
+                  href="{{ subscription.object_link }}?_unsubscribe_token={{ subscription.unsubscribe_token.token }}"
+                  class="fw-bold text-danger"
                   title="Unsubscribe"
                 >
                   Unsubscribe <i class="fa-solid fa-trash ms-2"></i>
@@ -105,7 +97,5 @@
       </div>
     </div>
   </div>
-
-  {% snippet "notification_platform/modals.html" %}
 
 {% endblock %}

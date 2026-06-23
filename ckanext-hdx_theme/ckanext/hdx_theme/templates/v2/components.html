@@ -1054,6 +1054,16 @@
       <br>
     </div>
 
+    <h2 class="demo-subsection__heading">Search input — with label</h2>
+    <div class="demo-row--column demo-max-width-l">
+      {% snippet 'v2/components/search-input.html',
+          size='l', id='demo-label-input', label='Full name', placeholder='Value', show_icon=False %}
+      <br>
+      {% snippet 'v2/components/search-input.html',
+          size='l', id='demo-label-required-input', label='Email address', required=True, placeholder='Value', show_icon=False %}
+      <br>
+    </div>
+
     <h2 class="demo-subsection__heading">Autocomplete — with chips (panel open, static preview)</h2>
     <div class="demo-max-width-xl">
       {% snippet 'v2/components/autocomplete.html',
@@ -1754,6 +1764,113 @@
         ] %}
 
   </section>
+
+  {# ══════════════════════════════════════════════════════════════
+     Drawer
+  ══════════════════════════════════════════════════════════════ #}
+  <section class="demo-section" id="drawer">
+    <h1 class="demo-section__heading">Drawer</h1>
+
+    <h2 class="demo-subsection__heading">Basic</h2>
+    <div class="demo-row">
+      {{ h.snippet('v2/components/button.html',
+          style='primary',
+          label='Open basic drawer',
+          attrs={'onclick': "window.hdxV2Drawer('demo-drawer-basic').open()"}) }}
+    </div>
+
+    <h2 class="demo-subsection__heading">With form</h2>
+    <div class="demo-row">
+      {{ h.snippet('v2/components/button.html',
+          style='secondary',
+          label='Open form drawer',
+          attrs={'onclick': "window.hdxV2Drawer('demo-drawer-form').open()"}) }}
+    </div>
+
+    <h2 class="demo-subsection__heading">Confirm</h2>
+    <div class="demo-row">
+      {{ h.snippet('v2/components/button.html',
+          style='secondary',
+          label='Open confirm drawer',
+          attrs={'onclick': "window.hdxV2Drawer('demo-drawer-confirm').open()"}) }}
+    </div>
+  </section>
+
+  {# ── Demo drawers ─────────────────────────────────────────────── #}
+
+  {% call h.snippet('v2/components/drawer.html',
+      drawer_id='demo-drawer-basic',
+      title='Example Drawer') %}
+    <div class="c-drawer-form">
+      <p class="c-drawer-form__description">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
+        incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.
+      </p>
+      <div class="c-drawer-form__buttons">
+        {{ h.snippet('v2/components/button.html',
+            style='primary',
+            label='Close',
+            attrs={'data-drawer-close': ''}) }}
+      </div>
+    </div>
+  {% endcall %}
+
+  {% call h.snippet('v2/components/drawer.html',
+      drawer_id='demo-drawer-form',
+      title='Example Form') %}
+    <div class="c-drawer-form">
+      <p class="c-drawer-form__description">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+      </p>
+      {{ h.snippet('v2/components/search-input.html',
+          size='l',
+          id='demo-fullname',
+          name='fullname',
+          label='Full name',
+          required=True,
+          placeholder='Your full name',
+          show_icon=False) }}
+      {{ h.snippet('v2/components/search-input.html',
+          size='l',
+          type='email',
+          id='demo-form-email',
+          name='email',
+          label='Email address',
+          required=True,
+          placeholder='your@email.com',
+          show_icon=False) }}
+      <div class="c-drawer-form__buttons">
+        {{ h.snippet('v2/components/button.html',
+            style='tertiary',
+            label='Cancel',
+            attrs={'data-drawer-close': ''}) }}
+        {{ h.snippet('v2/components/button.html',
+            style='primary',
+            label='Submit') }}
+      </div>
+    </div>
+  {% endcall %}
+
+  {% call h.snippet('v2/components/drawer.html',
+      drawer_id='demo-drawer-confirm',
+      title='Confirm action') %}
+    <div class="c-drawer-form">
+      <p class="c-drawer-form__text">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Are you sure you want
+        to proceed? This action cannot be undone.
+      </p>
+      <div class="c-drawer-form__alert" role="alert"></div>
+      <div class="c-drawer-form__buttons">
+        {{ h.snippet('v2/components/button.html',
+            style='tertiary',
+            label='Cancel',
+            attrs={'data-drawer-close': ''}) }}
+        {{ h.snippet('v2/components/button.html',
+            style='primary',
+            label='Confirm') }}
+      </div>
+    </div>
+  {% endcall %}
 
 </div>{# /demo-page #}
 
