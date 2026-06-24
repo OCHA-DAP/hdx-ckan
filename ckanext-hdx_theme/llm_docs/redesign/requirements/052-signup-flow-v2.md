@@ -513,7 +513,7 @@ The `CONST.ACCOUNT_OPTIONS_*_FEATURES` lists must be updated in `value_propositi
 </div>
 ```
 
-> **Note:** `id="user-info-form"` on the `<form>`, `id="user-info-cancel-button"` and `id="user-info-submit-button"` on the respective buttons are **required** — `v2/onboarding/confirm-page-leave.js` targets these IDs.
+> **Note:** `id="user-info-form"` on the `<form>`, `id="user-info-cancel-button"` and `id="user-info-submit-button"` on the respective buttons are **required** — `onboarding/confirm-page-leave.js` targets these IDs.
 
 ### 6.3 verify-email.html (Step 2)
 
@@ -653,36 +653,39 @@ Form container LESS:
   Update `ACCOUNT_OPTIONS_*_FEATURES` from plain string lists to `[{'number': N, 'text': '...'}]` dicts.
 
 ### 8.6 Modified webassets.yml
-Add new bundles for v2 signup scripts. All v1 onboarding scripts have vanilla JS counterparts (see §8.7); the v1 jQuery originals are **not** included in v2 bundles. `toggle-password-visibility.js` is dropped entirely.
+
+New bundles added. `v2-form-validator-scripts` already existed — no changes to it needed.
+`toggle-password-visibility.js` is dropped entirely (handled by `v2/components/input-field.js`).
 
 ```yaml
+# All 5 signup pages
+v2-signup-page-styles:
+  output: v2-signup-page-styles.css
+  contents:
+    - v2/signup-page.css
+
 # Step 1 (user-info) and Step 2b (change-email) form pages
 v2-signup-scripts:
   output: v2-signup-scripts.js
   contents:
-    - v2/form-validator.js
-    - v2/components/input-field.js
-    - v2/onboarding/came-from-input.js
-    - v2/onboarding/confirm-page-leave.js
-    - hdx-onboarding-flow.js
+    - onboarding/came-from-input.js    # converted to vanilla JS in place
+    - onboarding/confirm-page-leave.js # converted to vanilla JS in place
 
-# Step 2 (verify-email) page
-v2-verify-email-scripts:
-  output: v2-verify-email-scripts.js
-  contents:
-    - v2/onboarding/verify-email.js
+# Step 2 (verify-email) page uses the pre-existing hdx-verify-email-scripts bundle unchanged
 ```
 
-### 8.7 New Vanilla JS Files (v2 onboarding scripts)
+`v2/components/input-field.js` is already in `v2-components-scripts` (loaded via the preload chain from `v2-page-scripts`).
 
-All three scripts below are vanilla JS rewrites of their `onboarding/` counterparts — jQuery `$()` wrapper replaced with `document.addEventListener('DOMContentLoaded', ...)` and `document.querySelector`/`querySelectorAll`. Calls to `hdxUtil.net.*` are **preserved as-is** (they are not jQuery).
+### 8.7 Vanilla JS conversions (onboarding scripts)
 
-| v1 (jQuery) | v2 (vanilla) | Notes |
+Two existing scripts were rewritten in place (no `v2/onboarding/` subdirectory created). `verify-email.js` was not rewritten — the legacy `hdx-verify-email-scripts` bundle is used as-is.
+
+| File | Action | Notes |
 |---|---|---|
-| `fanstatic/onboarding/came-from-input.js` | `fanstatic/v2/onboarding/came-from-input.js` | Targets `#came-from-input`; calls `hdxUtil.net.getOnboardingFlowData()` |
-| `fanstatic/onboarding/confirm-page-leave.js` | `fanstatic/v2/onboarding/confirm-page-leave.js` | Targets `#user-info-form`, `#user-info-cancel-button`, `#user-info-submit-button` |
-| `fanstatic/onboarding/verify-email.js` | `fanstatic/v2/onboarding/verify-email.js` | Uses `history.pushState`, `window.onpopstate`; calls `hdxUtil.net.removeOnboardingFlowData()` |
-| `fanstatic/onboarding/toggle-password-visibility.js` | **dropped** | Handled by `v2/components/input-field.js` via `.c-search-input` |
+| `fanstatic/onboarding/came-from-input.js` | Converted in place to vanilla JS | Targets `#came-from-input`; calls `hdxUtil.net.getOnboardingFlowData()` |
+| `fanstatic/onboarding/confirm-page-leave.js` | Converted in place to vanilla JS | Targets `#user-info-form`, `#user-info-cancel-button`, `#user-info-submit-button` |
+| `fanstatic/onboarding/verify-email.js` | Not rewritten — legacy bundle used | `hdx-verify-email-scripts` loaded on verify-email page as-is |
+| `fanstatic/onboarding/toggle-password-visibility.js` | Dropped from v2 bundles | Handled by `v2/components/input-field.js` via `.c-search-input` |
 
 ---
 
@@ -729,27 +732,9 @@ All three scripts below are vanilla JS rewrites of their `onboarding/` counterpa
 2. **Feature number badge** — **Decision: bespoke `div`, no `c-label`.**
    Style `.c-signup-tier__feature-number` entirely within `signup-tier.less`. No dependency on the `c-label` component.
 
-3. **`came-from-input.js` in v2 bundle** — **Decision: yes, include (as vanilla JS rewrite).**
-   All onboarding scripts must be rewritten in vanilla JS (jQuery removed). `came-from-input.js`, `confirm-page-leave.js`, and `verify-email.js` each get a v2 vanilla counterpart in `fanstatic/v2/onboarding/`. `toggle-password-visibility.js` is dropped — `c-search-input` handles toggling. See §8.7.
+3. **`came-from-input.js` in v2 bundle** — **Decision: yes, include (converted in place).**
+   `came-from-input.js` and `confirm-page-leave.js` were converted to vanilla JS in place (no `v2/onboarding/` subdirectory created). `verify-email.js` was not rewritten — the existing `hdx-verify-email-scripts` bundle is used as-is on the verify-email page. `toggle-password-visibility.js` is dropped — `c-search-input` handles toggling. See §8.7.
 
 4. **`verify-email.js` behaviour on v2 page** — **Decision: no BEM classes targeted; rewrite as vanilla JS.**
    The script uses only `history.pushState`, `window.onpopstate`, and `hdxUtil.net.removeOnboardingFlowData()` — no BEM or jQuery DOM selectors. The `hdxUtil.net.*` call is preserved verbatim in the vanilla rewrite (it is not jQuery). Script is used only on the verify-email page.
 
----
-
-## 12. Verification Checklist
-
-1. Browse `/signup/?v2=true` — tiers page renders 3 cards with numbered feature items; no checkmarks
-2. All three cards align to equal height at XL/MD; stack vertically at SM
-3. Click "Sign up" tier — analytics event fires in browser Network tab (`onboarding value proposition` / `individual account`)
-4. Navigate to `/signup/user-info/?v2=true` — v2 pager shows step 1 active, steps 2+3 inactive
-5. Type in name field — live validation feedback appears using `.c-form-validator__live-feedback` classes
-6. Enter invalid username — `.c-search-input--error` applied; submit button remains disabled
-7. Fill all fields correctly — submit button enables
-8. Submit form — server redirects to `/signup/verify-email/<id>/`; step 2 pager renders active at step 2
-9. Pager labels hidden at SM breakpoint; visible at MD/XL
-10. Navigate to `/signup/change-email/` — v2 email input + pager at step 2 renders
-11. Navigate to `/signup/validated-account/<id>/` — step 3 pager renders; `analytics_account_type` block present in page source
-12. Test with reCAPTCHA enabled: widget renders, response token submitted correctly
-13. Password eye toggle works on both password fields
-14. No v1 BEM classes (`.stepper`, `.input-field`, `.account-options__cell`) present in v2-gated output
