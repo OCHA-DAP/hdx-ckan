@@ -34,7 +34,7 @@
 {% set variant     = variant     if variant     is defined else '' %}
 
 <div class="c-signup-tier{% if variant == 'primary' %} c-signup-tier--primary{% endif %}"
-     {% for key, val in attrs.items() %}{{ key }}="{{ val }}"{% endfor %}>
+     {% for key, val in attrs.items() %} {{ key }}="{{ val }}"{% endfor %}>
   <div class="c-signup-tier__header-area">
     <div class="c-signup-tier__title-group">
       <h2 class="c-signup-tier__title">{{ title }}</h2>
@@ -50,9 +50,9 @@
           <span class="c-signup-tier__feature-icon">{% include h.url_for_static('v2/icons/check-circle-fill.svg') %}</span>
         {% endif %}
         {% if feature.analytics_attrs is defined %}
-          <div {% for key, val in feature.analytics_attrs.items() %}{{ key }}="{{ val }}"{% endfor %}>
+          <span class="c-signup-tier__feature-text"{% for key, val in feature.analytics_attrs.items() %} {{ key }}="{{ val }}"{% endfor %}>
             {{ feature.text|safe if feature.text_safe is defined and feature.text_safe else feature.text }}
-          </div>
+          </span>
         {% else %}
           <span class="c-signup-tier__feature-text">
             {{ feature.text|safe if feature.text_safe is defined and feature.text_safe else feature.text }}

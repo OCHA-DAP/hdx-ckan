@@ -10,9 +10,8 @@
 #}
 {% set steps        = steps        if steps        is defined else [] %}
 {% set current_step = current_step if current_step is defined else 1 %}
-{% set fill_ratio   = ((current_step - 1) / (steps|length - 1)) if steps|length > 1 else 0 %}
 
-<div class="c-step-pager" style="--pager-fill-ratio: {{ fill_ratio }}">
+<div class="c-step-pager">
   {% for step in steps %}
     {% if not loop.first %}
       <div class="c-step-pager__connector{% if loop.index <= current_step %} c-step-pager__connector--filled{% endif %}"></div>
