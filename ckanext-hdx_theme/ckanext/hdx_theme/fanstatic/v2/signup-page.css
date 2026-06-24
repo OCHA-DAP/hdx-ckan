@@ -154,9 +154,13 @@
   gap: var(--hdx-space-4);
 }
 .hdx-v2-signup-form-page__checkbox-row {
-  display: flex;
-  align-items: flex-start;
-  gap: var(--hdx-space-3);
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: var(--hdx-space-3);
+  align-items: start;
+}
+.hdx-v2-signup-form-page__checkbox-row .c-checkbox__error {
+  grid-column: 2;
 }
 .hdx-v2-signup-form-page__checkbox-label {
   font-family: var(--hdx-font-body);

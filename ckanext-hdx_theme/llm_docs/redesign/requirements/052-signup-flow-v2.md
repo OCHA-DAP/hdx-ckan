@@ -283,23 +283,17 @@ Purpose: Horizontal 3-step progress indicator shown at the top of all signup for
 
 **Jinja structure:**
 
-The connecting line is rendered via `::before`/`::after` pseudo-elements on `.c-step-pager` — no per-step connector `div`s in the HTML. A CSS custom property `--pager-fill-ratio` (0–1 unitless) drives the filled portion; it is calculated from `current_step` in the template and injected as an inline style.
+A `<div class="c-step-pager__connector">` is inserted between each step. When `loop.index <= current_step` the connector also receives the `--filled` modifier. No inline style or CSS custom property is used.
 
 ```jinja2
-{% set fill_ratio = ((current_step - 1) / (steps|length - 1)) if steps|length > 1 else 0 %}
-<div class="c-step-pager" style="--pager-fill-ratio: {{ fill_ratio }}">
+<div class="c-step-pager">
   {% for step in steps %}
-    {% set state = 'completed' if loop.index < current_step
-                   else 'active' if loop.index == current_step
-                   else '' %}
-    <div class="c-step-pager__step">
-      <div class="c-step-pager__badge {% if state %}c-step-pager__badge--{{ state }}{% endif %}">
-        {% if state == 'completed' %}
-          {# checkmark SVG #}
-        {% else %}
-          {{ loop.index }}
-        {% endif %}
-      </div>
+    {% if not loop.first %}
+      <div class="c-step-pager__connector{% if loop.index <= current_step %} c-step-pager__connector--filled{% endif %}"></div>
+    {% endif %}
+    {% set state = 'completed' if loop.index < current_step else 'active' if loop.index == current_step else '' %}
+    <div class="c-step-pager__step{% if state %} c-step-pager__step--{{ state }}{% endif %}">
+      <div class="c-step-pager__badge">{{ loop.index }}</div>
       <div class="c-step-pager__label">{{ step }}</div>
     </div>
   {% endfor %}
@@ -308,69 +302,72 @@ The connecting line is rendered via `::before`/`::after` pseudo-elements on `.c-
 
 **CSS structure:**
 
-The connecting line uses two pseudo-elements on `.c-step-pager`: `::before` is the full-width gray baseline; `::after` is the filled blue overlay whose width is driven by `--pager-fill-ratio`. Both are inset by `1rem` on each side to align with badge centres. No `.c-step-pager__connector` class exists.
+Connectors are real DOM elements that flex-grow between steps. The `--filled` modifier switches the background from neutral to primary.
 
 ```less
 .c-step-pager {
-  display: flex;
-  align-items: flex-start;
-  width: 100%;
-  position: relative;
+    display:     flex;
+    align-items: flex-start;
+    width:       100%;
 
-  // gray baseline
-  &::before {
-    content: '';
-    position: absolute;
-    top: 1rem;
-    left: 1rem;
-    right: 1rem;
-    height: 2px;
-    background: var(--hdx-neutral-2);
-  }
+    &__connector {
+        flex:       1;
+        height:     2px;
+        margin-top: calc(var(--hdx-space-8) / 2 - 1px);
+        background: var(--hdx-neutral-2);
+        min-width:  var(--hdx-space-4);
 
-  // blue fill — width is a fraction of the connector span
-  &::after {
-    content: '';
-    position: absolute;
-    top: 1rem;
-    left: 1rem;
-    width: calc(var(--pager-fill-ratio, 0) * (100% - 2rem));
-    height: 2px;
-    background: var(--hdx-primary-5);
-  }
-}
-.c-step-pager__step {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  position: relative;
-  z-index: 1; // badges render above the connector lines
-}
-.c-step-pager__badge {
-  width: 2rem; height: 2rem;
-  border-radius: 50%;
-  border: 2px solid var(--hdx-neutral-2);
-  background: var(--hdx-neutral-2);
-  .hdx-body-s-medium();
-  display: flex; align-items: center; justify-content: center;
-}
-.c-step-pager__badge--active {
-  border-color: var(--hdx-primary-6, #0162dd);
-  background: var(--hdx-neutral-0);
-  color: var(--hdx-primary-6, #0162dd);
-  font-weight: @hdx-fw-bold;
-}
-.c-step-pager__badge--completed {
-  border-color: var(--hdx-primary-5);
-  background: var(--hdx-primary-5);
-  color: var(--hdx-neutral-0);
-}
-.c-step-pager__label {
-  .hdx-body-xs();
-  text-align: center;
-  margin-top: var(--hdx-space-2);
-  @media (max-width: @hdx-bp-md) { display: none; }
+        &--filled {
+            background: var(--hdx-primary-5);
+        }
+    }
+
+    &__step {
+        display:        flex;
+        flex-direction: column;
+        align-items:    center;
+        gap:            var(--hdx-space-2);
+        flex-shrink:    0;
+    }
+
+    &__badge {
+        width:         var(--hdx-space-8);
+        height:        var(--hdx-space-8);
+        border-radius: 50%;
+        border:        2px solid var(--hdx-neutral-2);
+        background:    var(--hdx-neutral-2);
+        color:         var(--hdx-neutral-4);
+        display:       flex;
+        align-items:   center;
+        justify-content: center;
+        box-sizing:    border-box;
+        .hdx-body-m-semibold();
+
+        .c-step-pager__step--active & {
+            background:   var(--hdx-neutral-0);
+            border-color: var(--hdx-primary-5);
+            color:        var(--hdx-primary-5);
+        }
+
+        .c-step-pager__step--completed & {
+            background:   var(--hdx-primary-5);
+            border-color: var(--hdx-primary-5);
+            color:        var(--hdx-neutral-0);
+        }
+    }
+
+    &__label {
+        .hdx-body-xs();
+        color:       var(--hdx-neutral-4);
+        text-align:  center;
+        white-space: nowrap;
+        display:     none;
+
+        @media (min-width: @hdx-bp-md) { display: block; }
+
+        .c-step-pager__step--active &    { color: var(--hdx-primary-5); }
+        .c-step-pager__step--completed & { color: var(--hdx-neutral-6); }
+    }
 }
 ```
 
@@ -709,32 +706,17 @@ Two existing scripts were rewritten in place (no `v2/onboarding/` subdirectory c
 
 ---
 
-## 10. Risks
+## 10. Decisions
 
-| Risk | Severity | Mitigation |
-|---|---|---|
-| v2 form-validator not initialised | ❗ High | Initialise `initFormValidator(form)` in new `v2-signup-scripts` bundle; smoke-test live feedback in browser |
-| Analytics: `hdx_click_stopper` removed from tier buttons | ❗ High | Keep all `data-module="hdx_click_stopper"` wrapper divs; verify events fire in browser Network tab |
-| Step logic broken: field `name` changed | ❗ High | All input `name` attrs must match v1 exactly; cross-check with `onboarding_user_new_form_schema()` |
-| reCAPTCHA broken: div structure changed | ❗ High | Reproduce `<div id="recaptcha-widget">` verbatim; test submission with reCAPTCHA enabled |
-| `analytics_account_type` block missing from v2 block | ❗ High | Include `{% block analytics_account_type %}` inside the `{% if v2 %}` section of account-validated.html |
-| Password toggle not working | Medium | Confirm `v2/components/input-field.js` is in new bundle and initialises on `DOMContentLoaded` |
-| v1 pages receive v2 LESS bleed | Medium | `c-signup-tier` and `c-step-pager` are new classes, no v1 overlap; verify BEM stepper CSS unchanged |
-| Feature dict format breaks v1 constants | Medium | Update only the `ACCOUNT_OPTIONS_*_FEATURES` lists; v1 code path still uses old template and is unaffected |
+**Q1. `c-step-pager` connector layout** → **Connector `<div>` elements with `--filled` modifier.**
+One `<div class="c-step-pager__connector">` is inserted between each step in the Jinja loop. When `loop.index <= current_step` the `--filled` modifier switches the background to `var(--hdx-primary-5)`. No pseudo-elements or `--pager-fill-ratio` custom property. See §3.2.
 
----
+**Q2. Feature number badge** → **Bespoke `div`, no `c-label`.**
+Style `.c-signup-tier__feature-number` entirely within `signup-tier.less`. No dependency on the `c-label` component.
 
-## 11. Open Questions ✅ All Resolved
+**Q3. `came-from-input.js` in v2 bundle** → **Yes, include (converted in place).**
+`came-from-input.js` and `confirm-page-leave.js` were converted to vanilla JS in place (no `v2/onboarding/` subdirectory created). `verify-email.js` was not rewritten — the existing `hdx-verify-email-scripts` bundle is used as-is on the verify-email page. `toggle-password-visibility.js` is dropped — `c-search-input` handles toggling. See §8.7.
 
-1. **`c-step-pager` connector layout** — **Decision: full-width pseudo-element.**
-   Use `::before` (gray baseline) and `::after` (blue fill) on `.c-step-pager`. No per-step connector `div`s in the HTML. Fill width driven by `--pager-fill-ratio` CSS custom property set as an inline style from Jinja. See updated §3.2 for spec.
-
-2. **Feature number badge** — **Decision: bespoke `div`, no `c-label`.**
-   Style `.c-signup-tier__feature-number` entirely within `signup-tier.less`. No dependency on the `c-label` component.
-
-3. **`came-from-input.js` in v2 bundle** — **Decision: yes, include (converted in place).**
-   `came-from-input.js` and `confirm-page-leave.js` were converted to vanilla JS in place (no `v2/onboarding/` subdirectory created). `verify-email.js` was not rewritten — the existing `hdx-verify-email-scripts` bundle is used as-is on the verify-email page. `toggle-password-visibility.js` is dropped — `c-search-input` handles toggling. See §8.7.
-
-4. **`verify-email.js` behaviour on v2 page** — **Decision: no BEM classes targeted; rewrite as vanilla JS.**
-   The script uses only `history.pushState`, `window.onpopstate`, and `hdxUtil.net.removeOnboardingFlowData()` — no BEM or jQuery DOM selectors. The `hdxUtil.net.*` call is preserved verbatim in the vanilla rewrite (it is not jQuery). Script is used only on the verify-email page.
+**Q4. `verify-email.js` behaviour on v2 page** → **No BEM classes targeted; reuse as-is.**
+The script uses only `history.pushState`, `window.onpopstate`, and `hdxUtil.net.removeOnboardingFlowData()` — no BEM or jQuery DOM selectors. The `hdxUtil.net.*` call is preserved verbatim (it is not jQuery). Script is used only on the verify-email page.
 

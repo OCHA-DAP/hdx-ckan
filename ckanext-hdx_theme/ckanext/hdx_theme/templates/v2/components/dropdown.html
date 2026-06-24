@@ -106,6 +106,7 @@
     <select class="c-dropdown__select"
             name="{{ name }}"
             {% if id %}id="{{ id }}"{% endif %}
+            {% if required %}required{% endif %}
             {% if is_disabled %}disabled aria-disabled="true"{% endif %}>
       <option value="" disabled {% if not selected %}selected{% endif %}>{{ placeholder }}</option>
       {% for value, opt_label in options.items() %}

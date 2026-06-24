@@ -154,9 +154,14 @@
     }
 
     &__checkbox-row {
-        display:     flex;
-        align-items: flex-start;
-        gap:         var(--hdx-space-3);
+        display:               grid;
+        grid-template-columns: auto 1fr;
+        column-gap:            var(--hdx-space-3);
+        align-items:           start;
+
+        .c-checkbox__error {
+            grid-column: 2;
+        }
     }
 
     &__checkbox-label {
