@@ -1,46 +1,49 @@
-{% extends "page_light.html" %}
+{% extends "v2/page.html" %}
 
 {% block scripts %}
   {{ super() }}
   {% asset 'hdx_theme/hdx-verify-email-scripts' %}
-  {% asset 'hdx_theme/bem-blocks-scripts' %}
 {% endblock %}
 
 {% block styles %}
-  {% asset 'hdx_theme/page-extra-light-styles' %}
-  {% asset 'hdx_theme/bem-blocks-styles' %}
+  {{ super() }}
+  {% asset 'hdx_theme/v2-signup-page-styles' %}
 {% endblock %}
 
 {% set CONST = h.HDX_CONST('UI_CONSTANTS')['ONBOARDING']['VERIFY_EMAIL'] %}
+{% set outer_row_class      = 'hdx-v2-signup-outer-row' %}
+{% set breadcrumb_row_class = 'hdx-v2-breadcrumb-row--white' %}
+{% set content_class        = 'hdx-v2-signup-content' %}
 
 {% block subtitle %}{{ _('Verify email') }}{% endblock %}
 
-{% block header_core %}
-  {% snippet 'header-mobile.html', page_has_desktop_version=False, page_has_mobile_version=False %}
+{% block breadcrumb_items %}
+  {% snippet 'v2/components/breadcrumb.html',
+      items=[{'label': _('Sign up'), 'href': ''}] %}
 {% endblock %}
 
-{% block breadcrumb_content %}
-  {% snippet "snippets/active_breadcrumb_item.html", title=_('Sign up'), position=2 %}
-{% endblock %}
+{% block secondary %}{% endblock %}
 
-{% block content %}
+{% block primary %}
+<div class="hdx-v2-signup-form-page">
 
-  <div class="container">
+  {% snippet 'v2/components/step-pager.html',
+      steps=[CONST.STEPS_1, CONST.STEPS_2, CONST.STEPS_3],
+      current_step=2 %}
 
-    <div class="row">
-      <div class="col-12 col-md-10 col-lg-5 mx-auto">
-        {{ h.snippet('bem.blocks/stepper.html', steps=[CONST.STEPS_1, CONST.STEPS_2, CONST.STEPS_3], spacing_class="my-5", current_step=2) }}
-        <div class="text-center">
-          {{ h.snippet('bem.blocks/heading.html', title=CONST.PAGE_TITLE, spacing_class="mb-5") }}
-          {% set main_text = CONST.BODY_MAIN_TEXT.format(session.get('user_info_email')) if session.get('user_info_email') else CONST.BODY_MAIN_TEXT_WITHOUT_EMAIL %}
-          {{ h.snippet('bem.blocks/paragraph.html', text=main_text, paragraph_classes=["paragraph__text_font-size-big"], spacing_class="mb-5") }}
-          {% if session.get('user_info_id') and not h.is_user_extra_email_updated(session.get('user_info_id')) %}
-            {{ h.snippet('bem.blocks/paragraph.html', text='--', spacing_class="mb-5") }}
-            {{ h.snippet('bem.blocks/paragraph.html', text=CONST.CHANGE_EMAIL_TEXT.format(h.url_for('hdx_user_onboarding.change_email')), spacing_class="mb-5") }}
-          {% endif %}
-        </div>
-      </div>
-    </div>
+  <div class="hdx-v2-signup-form-page__card">
+    <h1 class="hdx-v2-signup-form-page__heading">{{ CONST.PAGE_TITLE }}</h1>
 
+    {% set main_text = CONST.BODY_MAIN_TEXT.format(session.get('user_info_email')) if session.get('user_info_email') else CONST.BODY_MAIN_TEXT_WITHOUT_EMAIL %}
+    <p class="hdx-v2-signup-form-page__body-text">{{ main_text }}</p>
+
+    {% if session.get('user_info_id') and not h.is_user_extra_email_updated(session.get('user_info_id')) %}
+      <div class="c-divider"></div>
+      <p class="hdx-v2-signup-form-page__body-text">
+        {{ CONST.CHANGE_EMAIL_TEXT.format(h.url_for('hdx_user_onboarding.change_email'))|safe }}
+      </p>
+    {% endif %}
   </div>
+
+</div>
 {% endblock %}

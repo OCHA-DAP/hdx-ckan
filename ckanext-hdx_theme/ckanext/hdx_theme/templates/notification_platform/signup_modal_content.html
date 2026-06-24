@@ -19,7 +19,7 @@
     <input type="hidden" name="popup_source" value="">
 
     {% if not logged_in %}
-      <div class="c-drawer-form__field">
+      <div class="c-form-field">
         {{ h.snippet('v2/components/search-input.html',
             type='email',
             size='l',
@@ -34,8 +34,7 @@
               'data-validation': 'email',
               'data-validation-error': CONST_NOTIFICATION_PLATFORM.SIGNUP_INPUT_EMAIL_ERROR
             }) }}
-        <span class="c-drawer-form__field-error"></span>
-        <div class="c-drawer-form__field-hint">
+        <div class="c-form-field__hint">
           {{ CONST_NOTIFICATION_PLATFORM.SIGNUP_MODAL_TEXT_ALREADY_HAVE_ACCOUNT.format(h.url_for('hdx_signin.login'))|safe }}
         </div>
       </div>

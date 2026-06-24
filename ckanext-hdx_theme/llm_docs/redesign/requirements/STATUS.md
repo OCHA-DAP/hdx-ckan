@@ -55,3 +55,4 @@
 | 049 | [organizations-list-v2](049-organizations-list-v2.md)                                                           | implemented | |
 | 050 | [contact-contributor-v2](050-contact-contributor-v2.md)                                                         | implemented | |
 | 051 | [subscribe-notifications-drawer-v2](051-subscribe-notifications-drawer-v2.md)                                   | implemented | |
+| 052 | [signup-flow-v2](052-signup-flow-v2.md)                                                                         | implemented | |

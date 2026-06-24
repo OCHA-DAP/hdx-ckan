@@ -316,7 +316,13 @@ The factory is in `fanstatic/javascript/v2/drawer.js` (part of `v2-components-sc
 
 ### Form validation (v2)
 
-Add `data-hdx-v2-form-validator` to a `<form>` element. The validator auto-inits on `DOMContentLoaded`. Load `hdx_theme/v2-form-validator-scripts` on the page. Do **not** use `data-module="hdx-form-validator"` on v2 pages.
+Add `data-hdx-v2-form-validator` to a `<form>` element. The validator (`fanstatic/v2/form-validator.js`) auto-inits on `DOMContentLoaded`. Load `hdx_theme/v2-form-validator-scripts` on the page. Do **not** use `data-module="hdx-form-validator"` on v2 pages.
+
+**Error display — `c-search-input` fields**: the validator adds `c-search-input--error` to the input wrapper; a sibling `<span class="c-search-input__error">` (always rendered by the snippet, empty by default) is revealed via the CSS sibling rule `&--error ~ &__error { display: block }`. Server-side errors pre-populate the span and pre-add the modifier class from the template. No `style.display` manipulation — CSS drives visibility entirely.
+
+**Error display — `c-checkbox` fields**: same pattern — `c-checkbox--error` on the `.c-checkbox` wrapper drives a sibling `<span class="c-checkbox__error">` via CSS. The snippet always renders the empty span after the label.
+
+Pass `data-validation-error="…"` (via `input_attrs` / `attrs`) for the inline error text. Fields using `data-live-feedback` use the `c-form-validator__live-feedback` panel as the primary error UI and may omit `data-validation-error`.
 
 ---
 

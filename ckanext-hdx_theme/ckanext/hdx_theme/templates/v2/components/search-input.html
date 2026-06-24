@@ -72,6 +72,7 @@
 {% if state == 'filled' %}{% set classes = classes + ['c-search-input--filled']    %}{% endif %}
 {% if multiline        %}{% set classes = classes + ['c-search-input--textarea']   %}{% endif %}
 {% if extra_classes    %}{% set classes = classes + [extra_classes]                %}{% endif %}
+{% if errors           %}{% set classes = classes + ['c-search-input--error']      %}{% endif %}
 
 {% if label %}
 <label class="c-search-input__label" {% if id %}for="{{ id }}"{% endif %}>
@@ -93,6 +94,7 @@
            placeholder="{{ placeholder }}"
            value="{{ value }}"
            {% if autocomplete %}autocomplete="{{ autocomplete }}"{% else %}autocomplete="off"{% endif %}
+           {% if required %}required="required"{% endif %}
            {% for key, val in input_attrs.items() %}{{ key }}="{{ val }}" {% endfor %}>
 
     {% if type == 'password' %}
@@ -119,6 +121,5 @@
   {% endif %}
 
 </div>
-{% if errors %}
-  <span class="c-search-input__error">{{ errors | join(', ') if errors is iterable and errors is not string else errors }}</span>
-{% endif %}
+<span class="c-search-input__error">{% if errors %}{{ errors | join(', ') if errors is iterable and errors is not string else errors }}{% endif %}</span>
+<ul class="c-form-validator__live-feedback" hidden></ul>

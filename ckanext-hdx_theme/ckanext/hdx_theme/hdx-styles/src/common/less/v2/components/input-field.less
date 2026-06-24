@@ -198,19 +198,21 @@
 
     // ── Per-field error ──────────────────────────────────────
     &__error {
-        display: block;
+        display: none;
         width:   100%;
         .hdx-body-s();
-        color:      var(--hdx-error-6);
+        color:   var(--hdx-error-6);
     }
 
-    // Error state — set by hdx-v2-form-validator on failed validation
+    // Error state — drives both the red border and the error text visibility
     &--error {
         border-color: var(--hdx-error-5);
 
         &:hover,
         &:focus-within { border-color: var(--hdx-error-5); }
     }
+
+    &--error ~ &__error { display: block; }
 
     // ── Label (rendered above the input by the snippet) ──────
     &__label {
@@ -362,7 +364,7 @@
 .c-form-validator__live-feedback {
     list-style: none;
     padding: 0;
-    margin: var(--hdx-space-1) 0 0;
+    margin: 0;
     display: flex;
     flex-direction: column;
     gap: var(--hdx-space-1);
@@ -386,13 +388,13 @@
         }
 
         &--fail {
-            color: var(--hdx-error-5);
+            color: var(--hdx-error-6);
 
             &::before { content: '–'; }
         }
 
         &--indent {
-            padding-left: var(--hdx-space-9);
+            padding-left: var(--hdx-space-8);
         }
     }
 }

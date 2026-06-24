@@ -1,0 +1,178 @@
+// ============================================================
+// Signup flow — page-level layout
+// Covers: value-proposition (tiers), user-info, verify-email,
+//         change-email, account-validated
+// Figma: llm_docs/redesign/figma_exports/signup-tier-xl.html
+//        llm_docs/redesign/figma_exports/signup-form-xl.html
+// ============================================================
+@import "mixins.less";
+
+// ── Outer page row (full-width white background) ────────────
+.hdx-v2-signup-outer-row {
+    background-color: var(--hdx-neutral-0);
+}
+
+// ── Primary content column (fills hdx-v2-content-columns) ───
+.hdx-v2-signup-content {
+    flex:      1;
+    min-width: 0;
+}
+
+
+// ── Value-proposition (tier selection) page ────────────────
+.hdx-v2-signup-tiers-page {
+    display:        flex;
+    flex-direction: column;
+    align-items:    flex-start;
+    gap:            var(--hdx-space-10);
+    background:     var(--hdx-neutral-0);
+    width:          100%;
+    box-sizing:     border-box;
+    margin-top:     var(--hdx-space-8);
+    margin-bottom:  var(--hdx-space-8);
+
+    @media (min-width: @hdx-bp-xl) {
+        margin-top: var(--hdx-space-24);
+        margin-bottom: var(--hdx-space-24);
+    }
+
+    &__heading {
+        .hdx-display-xs();
+        color:  var(--hdx-neutral-95);
+        margin: 0;
+
+        @media (min-width: @hdx-bp-md) {
+            .hdx-display-s();
+        }
+
+        @media (min-width: @hdx-bp-xl) {
+            .hdx-display-l();
+        }
+    }
+
+    &__tiers {
+        display:        flex;
+        flex-direction: column;
+        gap:            var(--hdx-space-4);
+        align-self:     stretch;
+
+        @media (min-width: @hdx-bp-md) {
+            flex-direction: row;
+            align-items:    stretch;
+        }
+
+        @media (min-width: @hdx-bp-xl) {
+            gap: var(--hdx-space-5);
+        }
+    }
+
+    &__login {
+        .hdx-body-m();
+        color: var(--hdx-neutral-8);
+        align-self: center;
+        margin-bottom: 0;
+
+        a {
+            color: inherit;
+        }
+    }
+}
+
+
+// ── Signup form pages (user-info, verify-email, etc.) ──────
+.hdx-v2-signup-form-page {
+    display:        flex;
+    flex-direction: column;
+    align-items:    center;
+    gap:            var(--hdx-space-8);
+    background:     var(--hdx-neutral-0);
+    width:          100%;
+    box-sizing:     border-box;
+    margin-top:     var(--hdx-space-8);
+    margin-bottom:  var(--hdx-space-8);
+
+    @media (min-width: @hdx-bp-xl) {
+        margin-top: var(--hdx-space-24);
+        margin-bottom: var(--hdx-space-24);
+    }
+
+    > .c-step-pager {
+        width: 80%;
+
+        @media (min-width: @hdx-bp-xl) {
+            width: 50%;
+        }
+    }
+
+    &__card {
+        width:          100%;
+        display:        flex;
+        flex-direction: column;
+        gap:            var(--hdx-space-8);
+
+        @media (min-width: @hdx-bp-md) {
+            width: 80%;
+        }
+
+        @media (min-width: @hdx-bp-xl) {
+            width: 50%;
+        }
+    }
+
+    &__heading {
+        .hdx-display-l();
+        color:  var(--hdx-neutral-95);
+        margin: 0;
+    }
+
+    &__body-text {
+        .hdx-body-m();
+        color: var(--hdx-neutral-8);
+        margin: 0;
+
+        a {
+            color: inherit;
+        }
+    }
+
+    &__mandatory-note {
+        .hdx-body-s();
+        color:  var(--hdx-error-6);
+        margin: 0;
+    }
+
+    &__fields {
+        display:        flex;
+        flex-direction: column;
+        gap:            var(--hdx-space-6);
+    }
+
+    &__checkbox-group {
+        display:        flex;
+        flex-direction: column;
+        gap:            var(--hdx-space-4);
+    }
+
+    &__checkbox-row {
+        display:     flex;
+        align-items: flex-start;
+        gap:         var(--hdx-space-3);
+    }
+
+    &__checkbox-label {
+        .hdx-body-m();
+        color:       var(--hdx-neutral-8);
+        cursor:      pointer;
+        padding-top: var(--hdx-space-1);
+
+        a {
+            color: var(--hdx-primary-5);
+        }
+    }
+
+    &__actions {
+        display:         flex;
+        justify-content: flex-end;
+        gap:             var(--hdx-space-4);
+    }
+}

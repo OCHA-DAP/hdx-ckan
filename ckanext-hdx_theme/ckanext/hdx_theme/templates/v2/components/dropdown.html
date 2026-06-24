@@ -80,6 +80,7 @@
 {% set id               = id               if id               is defined else '' %}
 {% set options          = options          if options          is defined else {} %}
 {% set errors           = errors           if errors           is defined else None %}
+{% set required         = required         if required         is defined else false %}
 
 {% set is_disabled = (state == 'disabled') %}
 {% set is_open     = (state == 'active') %}
@@ -92,6 +93,11 @@
 {% if is_disabled %}{% set classes = classes + ['c-dropdown--disabled'] %}{% endif %}
 {% if extra_classes %}{% set classes = classes + [extra_classes] %}{% endif %}
 
+{% if native and label %}
+<label class="c-form-field__label"{% if id %} for="{{ id }}"{% endif %}>
+  {{ label }}{% if required %}<span class="c-form-field__required" aria-hidden="true"> *</span>{% endif %}
+</label>
+{% endif %}
 <div class="{{ classes | join(' ') }}"
      {% for key, val in attrs.items() %}{{ key }}="{{ val }}" {% endfor %}>
 

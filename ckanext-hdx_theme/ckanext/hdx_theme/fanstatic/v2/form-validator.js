@@ -113,15 +113,21 @@
       var wrapper = input.closest('.c-search-input');
       if (wrapper) {
         wrapper.classList.add('c-search-input--error');
-        var errorEl = wrapper.parentElement ? wrapper.parentElement.querySelector('.c-drawer-form__field-error') : null;
+        var errorEl = wrapper.parentElement ? wrapper.parentElement.querySelector('.c-search-input__error') : null;
         if (errorEl) {
           errorEl.textContent = input.getAttribute('data-validation-error') || '';
-          errorEl.style.display = 'block';
         }
       } else {
-        input.classList.add('is-invalid');
-        var feedback = input.parentElement ? input.parentElement.querySelector('.invalid-feedback') : null;
-        if (feedback) feedback.textContent = input.getAttribute('data-validation-error') || '';
+        var checkboxWrapper = input.closest('.c-checkbox');
+        if (checkboxWrapper) {
+          checkboxWrapper.classList.add('c-checkbox--error');
+          var errorEl = checkboxWrapper.parentElement ? checkboxWrapper.parentElement.querySelector('.c-checkbox__error') : null;
+          if (errorEl) errorEl.textContent = input.getAttribute('data-validation-error') || '';
+        } else {
+          input.classList.add('is-invalid');
+          var feedback = input.parentElement ? input.parentElement.querySelector('.invalid-feedback') : null;
+          if (feedback) feedback.textContent = input.getAttribute('data-validation-error') || '';
+        }
       }
     }
 
@@ -129,13 +135,19 @@
       var wrapper = input.closest('.c-search-input');
       if (wrapper) {
         wrapper.classList.remove('c-search-input--error');
-        var errorEl = wrapper.parentElement ? wrapper.parentElement.querySelector('.c-drawer-form__field-error') : null;
+        var errorEl = wrapper.parentElement ? wrapper.parentElement.querySelector('.c-search-input__error') : null;
         if (errorEl) {
-          errorEl.style.display = '';
           errorEl.textContent = '';
         }
       } else {
-        input.classList.remove('is-invalid');
+        var checkboxWrapper = input.closest('.c-checkbox');
+        if (checkboxWrapper) {
+          checkboxWrapper.classList.remove('c-checkbox--error');
+          var errorEl = checkboxWrapper.parentElement ? checkboxWrapper.parentElement.querySelector('.c-checkbox__error') : null;
+          if (errorEl) errorEl.textContent = '';
+        } else {
+          input.classList.remove('is-invalid');
+        }
       }
     }
 
@@ -267,27 +279,29 @@
 
     function disableSubmitButton() {
       if (!submitButton) return;
-      submitButton.classList.add('disabled');
+      submitButton.classList.add('is-disabled');
       submitButton.setAttribute('disabled', '');
+      submitButton.setAttribute('aria-disabled', 'true');
     }
 
     function enableSubmitButton() {
       if (!submitButton) return;
-      submitButton.classList.remove('disabled');
+      submitButton.classList.remove('is-disabled');
       submitButton.removeAttribute('disabled');
+      submitButton.removeAttribute('aria-disabled');
     }
 
     // === Scroll to error ===
 
     function scrollToError() {
-      var invalidEl = form.querySelector('.c-search-input--error, .is-invalid');
+      var invalidEl = form.querySelector('.c-search-input--error, .c-checkbox--error, .is-invalid');
       if (!invalidEl) return;
       var drawerBody = form.closest('.c-drawer__body');
       if (drawerBody) {
         var elTop = invalidEl.getBoundingClientRect().top - drawerBody.getBoundingClientRect().top;
         drawerBody.scrollTo({top: elTop + drawerBody.scrollTop - 80, behavior: 'smooth'});
       } else {
-        var container = invalidEl.closest('.input-field, .c-drawer-form__field') || invalidEl;
+        var container = invalidEl.closest('.c-form-field') || invalidEl;
         var topPosition = container.getBoundingClientRect().top + window.scrollY - 100;
         if (topPosition > 0) window.scrollTo({top: topPosition, behavior: 'smooth'});
       }

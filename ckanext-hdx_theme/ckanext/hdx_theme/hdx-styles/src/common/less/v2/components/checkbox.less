@@ -4,6 +4,8 @@
 // Figma source: "Checkbox"
 // ============================================================
 
+@import "../mixins.less";
+
 // ── Local tokens ────────────────────────────────────────────
 @c-checkbox-size:            1rem;                        // 16 px
 @c-checkbox-border-radius:   var(--hdx-radius-sm);        // 2 px
@@ -22,12 +24,13 @@
 // ────────────────────────────────────────────────────────────
 
 .c-checkbox {
-    position: relative;
-    display: inline-flex;
+    position:    relative;
+    display:     inline-flex;
     align-items: center;
     justify-content: center;
-    width: @c-checkbox-size;
-    height: @c-checkbox-size;
+    width:       @c-checkbox-size;
+    height:      @c-checkbox-size;
+    flex-shrink: 0;
 
     // Hide the native input but keep it for semantics and focus
     &__input {
@@ -72,6 +75,13 @@
         }
     }
 
+    &__label {
+        .hdx-body-m();
+        color:   var(--hdx-neutral-8);
+        cursor:  pointer;
+        display: block;
+    }
+
     // ── States ──────────────────────────────────────────────
 
     // Checked state
@@ -107,4 +117,25 @@
         border-color: @c-checkbox-disabled-border;
         color: @c-checkbox-disabled-border;
     }
+
+    // Error state
+    &--error {
+        .c-checkbox__box {
+            border-color: var(--hdx-error-5);
+        }
+
+        &__input:not(:disabled):hover ~ .c-checkbox__box {
+            border-color: var(--hdx-error-5);
+        }
+    }
+
+    &__error {
+        .hdx-body-s();
+        color:      var(--hdx-error-6);
+        display:    none;
+        margin-top: var(--hdx-space-1);
+        flex-basis: 100%;
+    }
+
+    &--error ~ &__error { display: block; }
 }
