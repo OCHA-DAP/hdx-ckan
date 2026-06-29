@@ -16,7 +16,7 @@
     # via -r requirements.in
 -e git+https://github.com/OCHA-DAP/datapusher-plus.git@0.2.104#egg=datapusher-plus
     # via -r requirements.in
-alembic==1.13.2
+alembic==1.18.5
     # via -r requirements.in
 babel==2.15.0
     # via
