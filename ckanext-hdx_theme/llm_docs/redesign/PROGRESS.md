@@ -2,7 +2,7 @@
 
 **Status**: In-progress
 **Started**: 2026-04-16
-**Last Updated**: 2026-06-24
+**Last Updated**: 2026-07-01
 
 ---
 
@@ -22,7 +22,7 @@ All design tokens from Figma "Visual Redesign / Foundations":
 - **Layout**: 9-step spacing scale (4px base), 2 corner radii (sm/md), 4 elevation levels
 - **Typography**: 2 font families, 9-step size scale (xs–5xl), 4 weights, 2 line heights. Split across two files:
   - `typography.less` — **variable declarations only** (`@hdx-fs-*`, `@hdx-fw-*`, `@hdx-font-*`, `@hdx-lh-*`). Imported by `foundation.less` to emit CSS custom properties. Never import this directly for mixins.
-  - `mixins.less` — all mixin definitions: private parametric cores (`.-hdx-body`, `.-hdx-display`, etc.), named type-style mixins (`.hdx-body-m()`, `.hdx-heading-h4()`, etc.), base-style mixins, and layout mixins (`.v2-sidebar-flex()`, `.v2-content-flex()`)
+  - `mixins.less` — all mixin definitions: private parametric cores (`.-hdx-body`, `.-hdx-display`, etc.), named type-style mixins (`.hdx-body-m()`, `.hdx-heading-h4()`, etc.), base-style mixins, and layout mixins (`.v2-sidebar-flex()`, `.v2-content-flex()`, `.v2-sidebar-sticky()`)
 
 Variable naming: `@hdx-<category>-<step>` (e.g. `@hdx-brand-5`, `@hdx-space-4`). Decimals: digit-only (0.1→01).
 CSS custom property equivalents (`--hdx-*`) are defined in `v2/foundation.css` (task 001).
@@ -63,7 +63,7 @@ CSS custom property equivalents (`--hdx-*`) are defined in `v2/foundation.css` (
 |---|---|
 | `foundation.less` | Exports all design tokens as CSS custom properties (imports colors, spacing, radius, typography) |
 | `typography.less` | **Variable declarations only** — font families, size scale, weights, line heights. Imported by `foundation.less` for CSS custom-property output. Do not import this directly from components. |
-| `mixins.less` | **Single compile-time entry point** — imports `breakpoints.less` + `typography.less`, then defines all mixins: layout (`.v2-sidebar-flex()`, `.v2-content-flex()`), typography cores, named type-style mixins, and base-style mixins. Import with `@import "mixins.less"` (or `"../mixins.less"` from `components/`). |
+| `mixins.less` | **Single compile-time entry point** — imports `breakpoints.less` + `typography.less`, then defines all mixins: layout (`.v2-sidebar-flex()`, `.v2-content-flex()`, `.v2-sidebar-sticky()`), typography cores, named type-style mixins, and base-style mixins. Import with `@import "mixins.less"` (or `"../mixins.less"` from `components/`). |
 | `breakpoints.less` | Breakpoint variables (`@hdx-bp-md`, `@hdx-bp-xl`, `@hdx-bp-xxl`); pulled in automatically by `mixins.less` |
 | `layout.less` | Container, breadcrumb row (`hdx-v2-breadcrumb-row` + `--white` modifier), form error summary (`hdx-v2-form-error-summary`), content-columns base flex; compiled to `v2-page-styles` |
 | `search-page.less` | Search page layout + `.hdx-v2-dataset-list`; imports `mixins.less` |
@@ -71,6 +71,7 @@ CSS custom property equivalents (`--hdx-*`) are defined in `v2/foundation.css` (
 | `resource-page.less` | Resource page sections; imports `mixins.less` |
 | `contact-contributor-page.less` | Contact Contributor page sections; imports `mixins.less` |
 | `signup-page.less` | Signup flow page layout (tiers + form pages); imports `mixins.less` |
+| `hapi-landing-page.less` | HAPI landing page styles (hero row, sidebar, sections, iframe, cards, partner grid); imports `mixins.less` |
 | `home-page.less` | Homepage-only sections (hero, intro, highlights); compiled to `v2-home-page-styles`; imports `mixins.less` |
 | `components/divider.less` | `.c-divider` — standalone component; compiled to `divider.css` and registered in `v2-components-styles` |
 | `components/*.less` | One file per component; each imports `"../mixins.less"` for tokens and mixins |
@@ -98,6 +99,7 @@ CSS custom property equivalents (`--hdx-*`) are defined in `v2/foundation.css` (
 | Signup — verify-email | `onboarding/signup/verify-email.html` | Step 2; `c-step-pager`; legacy `hdx-verify-email-scripts` bundle kept |
 | Signup — change-email | `onboarding/signup/change-email.html` | Step 2b form; `c-step-pager`; `data-hdx-v2-form-validator` |
 | Signup — account-validated | `onboarding/signup/account-validated.html` | Step 3; `c-step-pager`; `analytics_account_type` block preserved |
+| HAPI landing page | `landing_pages/hapi.html` | Extends `v2/page.html`; `c-anchor-links` sticky sidebar; `c-accordion` FAQ; `c-content-card` Be Inspired; CSS Grid partner logos; `c-page-header` with subtitle; see `requirements/053-hdx-hapi-landing-page.md` |
 
 ### Pages in holding state (on `page_light.html`)
 
@@ -106,7 +108,6 @@ Each page below extends `page_light.html`, manually overrides `{% block styles %
 | Page | Template(s) | Notes |
 |------|-------------|-------|
 | Landing — Signals | `landing_pages/signals.html` | Also loads `hdx_theme/hdx-signals-styles` / `hdx-signals-scripts` |
-| Landing — HAPI | `landing_pages/hapi.html` | Also loads `hdx_theme/hdx-hapi-scripts` |
 | Org join — find org | `org/join/find_organisation.html` | |
 | Org join — confirm org | `org/join/confirm_organisation.html` | |
 | Org join — reason request | `org/join/reason_request.html` | |
@@ -144,12 +145,14 @@ Each page below extends `page_light.html`, manually overrides `{% block styles %
 - [x] Dataset card (with shared clamped-text.js toggle)
 - [x] Resource card
 - [x] Showcase card
-- [x] Anchor links — extended with `heading`, `with_mobile_dropdown` params; mobile sticky dropdown (`c-anchor-links-mobile`) styles in `components/anchor-links.less`
+- [x] Anchor links — extended with `heading`, `with_mobile_dropdown` params; mobile sticky dropdown (`c-anchor-links-mobile`) styles in `components/anchor-links.less`; wrapper always renders (no heading required for sticky); supports `external` flag for new-tab links with icon
 - [x] Info icon — `info-icon.html` snippet encapsulating the `c-tooltip-anchor` + `c-info-icon` button + tooltip pattern; HTML-only (no dedicated LESS/CSS)
 - [x] KPI card — `kpi-card.html` / `kpi-card.css`; label + optional info icon + bold value; used on All Locations and All Organisations pages
 - [x] Org list card — `org-list-card.html` / `org-list-card.css`; title + date + expandable description + dataset/member counts; used on All Organisations page
 - [x] Step pager — `step-pager.html` / `step-pager.css`; horizontal 3-step progress indicator; pure CSS (no JS); used on all signup form pages
 - [x] Signup tier — `signup-tier.html` / `signup-tier.css`; tier selection card for value-proposition page; default and primary (blue) variants; numbered feature badges or checkmark icons
+- [x] Content card — `content-card.html` / `content-card.less`; title + description + `c-text-link`; used in HAPI Be Inspired section
+- [x] Accordion — `accordion.html` / `accordion.less`; CSS-only `<details>`/`<summary>`; first item open by default via `open` attr; used in HAPI FAQ
 
 Each component file should have:
 1. **HTML template** (`templates/v2/components/component-name.html`) — reusable snippet with BEM markup
@@ -166,7 +169,7 @@ Exception: `info-icon.html` has no dedicated LESS/CSS — it composes existing `
 
 Bundle configuration:
 - `hdx_theme/v2-components-styles` — standalone design system bundle (tokens + components), no Bootstrap
-  - Contents: `v2/foundation.css`, then component CSS files: `divider`, `activity-card`, `dataset-card`, `resource-card`, `org-list-card`, `avatar-badge`, `buttons`, `checkbox`, `copy-button`, `dropdown`, `input-field`, `label`, `letter-anchor`, `list-item`, `nav-item`, `anchor-links`, `pagination`, `breadcrumb`, `page-header`, `selection`, `showcase-card`, `text-link`, `highlight-card`, `overlay`, `signup-tier`, `step-pager`
+  - Contents: `v2/foundation.css`, then component CSS files: `divider`, `activity-card`, `dataset-card`, `resource-card`, `org-list-card`, `avatar-badge`, `buttons`, `checkbox`, `copy-button`, `dropdown`, `input-field`, `label`, `letter-anchor`, `list-item`, `nav-item`, `anchor-links`, `pagination`, `breadcrumb`, `page-header`, `selection`, `showcase-card`, `text-link`, `highlight-card`, `overlay`, `signup-tier`, `step-pager`, `content-card`, `accordion`
   - Kept separate for non-page contexts (component previews, embedded widgets)
 - `hdx_theme/v2-page-styles` ✅ Full page bundle: preloads `v2-components-styles`, then adds:
   - `vendor/bootstrap5/css/bootstrap.css`
@@ -190,6 +193,7 @@ Bundle configuration:
 - `hdx_theme/v2-org-list-page-scripts` — All Organisations page: adds `v2/url-nav.js` + `v2/org-list-page.js`
 - `hdx_theme/v2-contact-contributor-page-styles` — Contact Contributor page: adds `v2/contact-contributor-page.css`
 - `hdx_theme/v2-signup-page-styles` — Signup flow pages: adds `v2/signup-page.css`; loaded on all 5 signup pages
+- `hdx_theme/v2-hapi-landing-page-styles` — HAPI landing page: adds `v2/hapi-landing-page.css`
 - `hdx_theme/v2-signup-scripts` — Signup scripts: `onboarding/came-from-input.js` (vanilla JS rewrite in place) + `onboarding/confirm-page-leave.js` (vanilla JS rewrite in place); loaded on user-info and change-email pages
 - `hdx_theme/v2-form-validator-scripts` — Form validation: vanilla JS validator (`v2/form-validator.js`); activated by `data-hdx-v2-form-validator` on `<form>` elements; loaded by notification platform templates and signup form pages (user-info, change-email)
 
@@ -228,7 +232,8 @@ Bundle configuration:
 
 ### Phase 3: Page Migrations ✅ (Complete)
 - [x] Signup page
-- [ ] Landing pages (signals, hapi)
+- [x] Landing page — HAPI (`/hapi/`)
+- [ ] Landing page — Signals (`/signals/`) — still on `page_light.html`
 - [x] Contact contributor page
 - [ ] Find/join org page
 - [x] Homepage
@@ -250,7 +255,7 @@ Bundle configuration:
 
 ## Next Steps
 
-1. **Migrate remaining holding-state pages** from `page_light.html` — landing pages (signals, hapi), then org/join.
+1. **Migrate remaining holding-state pages** from `page_light.html` — Signals landing page, then org/join.
 2. **Build page-specific components** as needed during individual page migrations.
 
 ---
