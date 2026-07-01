@@ -85,6 +85,14 @@
     font-size: var(--hdx-fs-3xl);
   }
 }
+.c-page-header__subtitle {
+  font-family: var(--hdx-font-body);
+  font-size: var(--hdx-fs-m);
+  font-weight: var(--hdx-fw-semibold);
+  line-height: var(--hdx-lh-normal);
+  color: var(--hdx-neutral-85);
+  margin: 0;
+}
 .c-page-header__desc {
   display: flex;
   flex-direction: column;
@@ -175,15 +183,16 @@
     width: 17.375rem;
   }
 }
-.c-page-header__org-logo {
+.c-page-header__logo {
   max-width: 7.05rem;
   height: 4rem;
   object-fit: contain;
-  object-position: left center;
+  object-position: center;
   display: block;
+  margin: 0 auto;
 }
 @media (min-width: 80rem) {
-  .c-page-header__org-logo {
+  .c-page-header__logo {
     max-width: 9.375rem;
     height: auto;
   }

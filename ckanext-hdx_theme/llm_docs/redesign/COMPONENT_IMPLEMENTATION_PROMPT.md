@@ -24,9 +24,9 @@ This is part of the v2 component library:
 - Use CKAN snippet system for rendering components
 ---
 ### 2. Styling Rules
-- Use **Bootstrap 5.2.3 as a base**, but:
-  - DO NOT rely on Bootstrap component classes for styling (no `.btn`, etc.)
-  - ONLY use Bootstrap utilities if absolutely necessary
+- **Do not** use Bootstrap component or utility classes. The v2 design system is standalone:
+  - Use `var(--hdx-*)` design tokens and `mixins.less` typography/layout mixins exclusively
+  - Bootstrap is bundled for legacy pages only and must not be relied on in new v2 components
 - Use values from **design foundations** (colors, spacing, radius, typography)
 - Match the Figma design **pixel-perfectly**
 - Do NOT introduce new styles, spacing, or assumptions

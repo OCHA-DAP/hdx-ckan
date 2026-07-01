@@ -79,7 +79,7 @@
 .c-checkbox--error .c-checkbox__box {
   border-color: var(--hdx-error-5);
 }
-z.c-checkbox--error .c-checkbox__input:not(:disabled):hover ~ .c-checkbox__box {
+.c-checkbox--error .c-checkbox__input:not(:disabled):hover ~ .c-checkbox__box {
   border-color: var(--hdx-error-5);
 }
 .c-checkbox__error {

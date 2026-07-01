@@ -203,7 +203,7 @@
   padding-top: var(--hdx-space-8);
   padding-bottom: var(--hdx-space-8);
   position: sticky;
-  top: 0;
+  top: var(--hdx-space-12);
   align-self: flex-start;
 }
 @media (min-width: 80rem) {

@@ -107,7 +107,7 @@
         title=pkg.title or pkg.name,
         description=pkg.notes,
         org_name=pkg.organization.title,
-        org_logo_src=logo_config.image_url if logo_config and logo_config.image_url else '',
+        logo_src=logo_config.image_url if logo_config and logo_config.image_url else '',
         org_href=h.url_for('organization.read', id=pkg.organization.name),
         contact_href=contact_href,
         download_count=pkg.approx_total_downloads,

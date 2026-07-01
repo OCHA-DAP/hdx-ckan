@@ -7,13 +7,13 @@
   }
 }
 .hdx-v2-dataset-sidebar {
-  flex: 0 0 25%;
-  min-width: 0;
   display: none;
 }
 @media (min-width: 80rem) {
   .hdx-v2-dataset-sidebar {
     display: block;
+    flex: 0 0 25%;
+    min-width: 0;
     padding: var(--hdx-space-12) 0;
   }
 }

@@ -157,7 +157,10 @@
     }
 
     function initActiveTracking() {
-        var sections = document.querySelectorAll('.hdx-v2-dataset-section[id]');
+        var navItems = document.querySelectorAll('.c-anchor-links__item[href^="#"]');
+        var sections = Array.prototype.map.call(navItems, function (link) {
+            return document.getElementById(link.getAttribute('href').slice(1));
+        }).filter(Boolean);
         if (!sections.length || !('IntersectionObserver' in window)) return;
 
         var observer = new IntersectionObserver(function (entries) {

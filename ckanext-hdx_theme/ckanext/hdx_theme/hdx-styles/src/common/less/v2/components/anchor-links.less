@@ -41,9 +41,20 @@
     }
 
     &__label {
-        flex:    1;
         .hdx-body-m();                   // 16 px regular
         color:   var(--hdx-neutral-95);
+    }
+
+    &__ext-icon {
+        flex-shrink: 0;
+        color:       var(--hdx-neutral-8);
+        margin-left: var(--hdx-space-2);
+
+        svg {
+            width:   var(--hdx-space-4);   // 16px
+            height:  var(--hdx-space-4);
+            display: block;
+        }
     }
 
     // ── States ──────────────────────────────────────────────
@@ -142,7 +153,9 @@
     }
 
     &__item {
-        display:         block;
+        display:         flex;
+        align-items:     center;
+        gap:             var(--hdx-space-1);
         padding:         var(--hdx-space-2) var(--hdx-space-4);
         .hdx-body-s();                   // 14 px regular
         color:           var(--hdx-neutral-85);
@@ -157,6 +170,12 @@
         &.is-active {
             font-weight: var(--hdx-fw-semibold);
             color:       var(--hdx-primary-5);
+        }
+
+        svg {
+            width:       var(--hdx-space-4);  // 16px
+            height:      var(--hdx-space-4);
+            flex-shrink: 0;
         }
     }
 }

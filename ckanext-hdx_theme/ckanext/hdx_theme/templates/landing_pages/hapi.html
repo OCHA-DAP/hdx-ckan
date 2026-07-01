@@ -1,23 +1,18 @@
-{% extends "page_light.html" %}
+{% extends "v2/page.html" %}
 
-{% block bodyclassname %}home{% endblock %}
-
-{% block header_core %}
-  {% snippet 'header-mobile.html', page_has_desktop_version=False, page_has_mobile_version=False %}
-{% endblock %}
-
-{% block styles %}
-  {% asset 'hdx_theme/page-extra-light-styles' %}
-  {% asset 'hdx_theme/bem-blocks-styles' %}
-{% endblock %}
-
-{% block scripts %}
-  {{ super() }}
-  {% asset 'hdx_theme/hdx-hapi-scripts' %}
-  {% asset 'hdx_theme/bem-blocks-scripts' %}
-{% endblock %}
+{% set outer_row_class = 'hdx-v2-hapi-row' %}
+{% set sidebar_class   = 'hdx-v2-hapi-sidebar' %}
+{% set content_class   = 'hdx-v2-hapi-content' %}
 
 {% set CONST = h.HDX_CONST('UI_CONSTANTS')['LANDING_PAGES']['HAPI_LANDING_PAGE'] %}
+
+{% set nav_items = [
+  {'label': _('Data Availability'), 'href': '#data-availability', 'active': True},
+  {'label': _('Be Inspired'),       'href': '#be-inspired',       'active': False},
+  {'label': _('FAQ'),               'href': '#faq',               'active': False},
+  {'label': _('Partners'),          'href': '#partners',          'active': False},
+  {'label': _('Documentation'),     'href': 'https://hdx-hapi.readthedocs.io/', 'active': False, 'external': True},
+] %}
 
 {% block subtitle %}{{ _('HDX HAPI Beta') }}{% endblock %}
 
@@ -25,69 +20,106 @@
   {% snippet "snippets/active_breadcrumb_item.html", title=_('HDX HAPI'), position=2 %}
 {% endblock %}
 
-{% block content %}
-  {{ h.snippet('bem.blocks/hero.html', title=CONST.HERO_SECTION_TITLE, text=CONST.HERO_SECTION_DESCRIPTION.format('mailto:hdx@un.org'), image='/images/landing_pages/logo_hdx_hapi.png', sections=sections, click_stopper_link_type='hapi jump nav', spacing_class="mb-3") }}
+{% block styles %}
+  {{ super() }}
+  {% asset 'hdx_theme/v2-hapi-landing-page-styles' %}
+{% endblock %}
 
-  <div class="container">
-
-    <div class="row" id="data-availability">
-      <div class="col-12 mx-auto my-3">
-        <div class="row">
-          <div class="col-12">
-            <div class="row">
-              <iframe
-                class="col-12"
-                height="866"
-                id="hapi-availability-iframe"
-                src="/visualization/hapi-availability/"
-              ></iframe>
-            </div>
-          </div>
-        </div>
-      </div>
+{# ── Hero ─────────────────────────────────────────────────────── #}
+{% block pre_primary %}
+  <div class="hdx-v2-hapi-hero-row">
+    <div class="hdx-v2-container">
+      {% snippet 'v2/components/page-header.html',
+          title=CONST.HERO_SHORT_TITLE,
+          subtitle=CONST.HERO_SECTION_TITLE,
+          description=h.literal(CONST.HERO_SECTION_DESCRIPTION.format('mailto:hdx@un.org')),
+          logo_src=h.url_for_static('images/landing_pages/logo_hdx_hapi.png') %}
     </div>
+  </div>
+{% endblock %}
 
-    <div class="row" id="be-inspired">
-      <div class="col-12 mx-auto my-3">
-        <div class="text-center">
-          {{ h.snippet('bem.blocks/heading.html', title=CONST.BE_INSPIRED_SECTION_TITLE, heading_type=3, spacing_class="mb-1") }}
-          {{ h.snippet('bem.blocks/paragraph.html', text=CONST.BE_INSPIRED_SECTION_DESCRIPTION, paragraph_classes=["paragraph__text_font-size-big"]) }}
-        </div>
-        <div class="row mt-4">
-          <div class="col-12 col-md-6 col-lg-3 d-md-flex align-items-md-stretch">
-            {{ h.snippet('bem.blocks/card.html', title=CONST.BE_INSPIRED_CARD_TITLE_POWER_BI, text=CONST.BE_INSPIRED_CARD_TEXT_POWER_BI, button=CONST.BE_INSPIRED_CARD_BUTTON_POWER_BI, link=CONST.BE_INSPIRED_CARD_BUTTON_LINK_POWER_BI, click_stopper_link_type='hapi tools', click_stopper_link_label=CONST.BE_INSPIRED_CARD_TITLE_POWER_BI, spacing_class="my-3") }}
-          </div>
-          <div class="col-12 col-md-6 col-lg-3 d-md-flex align-items-md-stretch">
-            {{ h.snippet('bem.blocks/card.html', title=CONST.BE_INSPIRED_CARD_TITLE_POWER_QUERY, text=CONST.BE_INSPIRED_CARD_TEXT_POWER_QUERY, button=CONST.BE_INSPIRED_CARD_BUTTON_POWER_QUERY, link=CONST.BE_INSPIRED_CARD_BUTTON_LINK_POWER_QUERY, click_stopper_link_type='hapi tools', click_stopper_link_label=CONST.BE_INSPIRED_CARD_TITLE_POWER_QUERY, spacing_class="my-3") }}
-          </div>
-          <div class="col-12 col-md-6 col-lg-3 d-md-flex align-items-md-stretch">
-            {{ h.snippet('bem.blocks/card.html', title=CONST.BE_INSPIRED_CARD_TITLE_API, text=CONST.BE_INSPIRED_CARD_TEXT_API, button=CONST.BE_INSPIRED_CARD_BUTTON_API, link=CONST.BE_INSPIRED_CARD_BUTTON_LINK_API, click_stopper_link_type='hapi tools', click_stopper_link_label=CONST.BE_INSPIRED_CARD_TITLE_API, spacing_class="my-3") }}
-          </div>
-          <div class="col-12 col-md-6 col-lg-3 d-md-flex align-items-md-stretch">
-            {{ h.snippet('bem.blocks/card.html', title=CONST.BE_INSPIRED_CARD_TITLE_VISUALIZATION, text=CONST.BE_INSPIRED_CARD_TEXT_VISUALIZATION, button=CONST.BE_INSPIRED_CARD_BUTTON_VISUALIZATION, link=CONST.BE_INSPIRED_CARD_BUTTON_LINK_VISUALIZATION, click_stopper_link_type='hapi tools', click_stopper_link_label=CONST.BE_INSPIRED_CARD_TITLE_VISUALIZATION, spacing_class="my-3") }}
-          </div>
-        </div>
-      </div>
-    </div>
+{# ── Sidebar (XL only) ────────────────────────────────────────── #}
+{% block secondary %}
+  {% snippet 'v2/components/anchor-links.html',
+      items=nav_items %}
+{% endblock %}
 
-    <div class="row" id="faq">
-      <div class="col-12 mx-auto my-3">
-        {{ h.snippet('bem.blocks/heading.html', title=CONST.FAQ_SECTION_TITLE, heading_type=3) }}
-        {{ h.snippet('bem.blocks/faq.html', data=faq_data) }}
-      </div>
+{# ── Main content ─────────────────────────────────────────────── #}
+{% block primary %}
+
+  {# Mobile nav dropdown — hidden at XL, sticky at MD/SM #}
+  {% snippet 'v2/components/anchor-links.html', items=nav_items, mobile_only=True %}
+
+  {# Data Availability ──────────────────────────────────────────── #}
+  <div id="data-availability" class="hdx-v2-hapi-section">
+    <iframe class="hdx-v2-hapi-iframe"
+            src="/visualization/hapi-availability/"
+            title="{{ _('HAPI Data Availability') }}"
+            loading="lazy"></iframe>
+  </div>
+
+  <hr class="c-divider">
+
+  {# Be Inspired ────────────────────────────────────────────────── #}
+  <div id="be-inspired" class="hdx-v2-hapi-section">
+    <h2 class="hdx-v2-hapi-section-heading">{{ CONST.BE_INSPIRED_SECTION_TITLE }}</h2>
+    <div class="hdx-v2-hapi-cards">
+      {% snippet 'v2/components/content-card.html',
+          title=CONST.BE_INSPIRED_CARD_TITLE_POWER_BI,
+          description=CONST.BE_INSPIRED_CARD_TEXT_POWER_BI,
+          link_label=CONST.BE_INSPIRED_CARD_BUTTON_POWER_BI,
+          link_href=CONST.BE_INSPIRED_CARD_BUTTON_LINK_POWER_BI,
+          link_new_tab=True %}
+      {% snippet 'v2/components/content-card.html',
+          title=CONST.BE_INSPIRED_CARD_TITLE_POWER_QUERY,
+          description=CONST.BE_INSPIRED_CARD_TEXT_POWER_QUERY,
+          link_label=CONST.BE_INSPIRED_CARD_BUTTON_POWER_QUERY,
+          link_href=CONST.BE_INSPIRED_CARD_BUTTON_LINK_POWER_QUERY,
+          link_new_tab=True %}
+      {% snippet 'v2/components/content-card.html',
+          title=CONST.BE_INSPIRED_CARD_TITLE_API,
+          description=CONST.BE_INSPIRED_CARD_TEXT_API,
+          link_label=CONST.BE_INSPIRED_CARD_BUTTON_API,
+          link_href=CONST.BE_INSPIRED_CARD_BUTTON_LINK_API,
+          link_new_tab=True %}
+      {% snippet 'v2/components/content-card.html',
+          title=CONST.BE_INSPIRED_CARD_TITLE_VISUALIZATION,
+          description=CONST.BE_INSPIRED_CARD_TEXT_VISUALIZATION,
+          link_label=CONST.BE_INSPIRED_CARD_BUTTON_VISUALIZATION,
+          link_href=CONST.BE_INSPIRED_CARD_BUTTON_LINK_VISUALIZATION,
+          link_new_tab=True %}
     </div>
   </div>
 
-  <div class="py-5 background-color-snow mt-3">
-    <div class="container">
-      <div class="row">
-        <div class="col-12 mx-auto">
-          <div class="text-center">
-            {{ h.snippet('bem.blocks/heading.html', title=CONST.PARTNERS_SECTION_TITLE, spacing_class="mb-5", heading_type=3) }}
-          </div>
-          {{ h.snippet('bem.blocks/partners.html', partners=partners) }}
-        </div>
-      </div>
+  <hr class="c-divider">
+
+  {# FAQ ────────────────────────────────────────────────────────── #}
+  {% set ns = namespace(accordion_items=[], first_done=False) %}
+  {% for category in faq_data %}
+    {% for item in category.questions %}
+      {% if not ns.first_done %}
+        {% set ns.accordion_items = ns.accordion_items + [{'question': item.q, 'answer': item.a, 'open': True}] %}
+        {% set ns.first_done = True %}
+      {% else %}
+        {% set ns.accordion_items = ns.accordion_items + [{'question': item.q, 'answer': item.a, 'open': False}] %}
+      {% endif %}
+    {% endfor %}
+  {% endfor %}
+  <div id="faq" class="hdx-v2-hapi-section">
+    <h2 class="hdx-v2-hapi-section-heading">{{ CONST.FAQ_SECTION_TITLE }}</h2>
+    {% snippet 'v2/components/accordion.html', items=ns.accordion_items %}
+  </div>
+
+  {# Partners ───────────────────────────────────────────────────── #}
+  <div id="partners" class="hdx-v2-hapi-section">
+    <h2 class="hdx-v2-hapi-section-heading">{{ CONST.PARTNERS_SECTION_TITLE }}</h2>
+    <div class="hdx-v2-hapi-partners-grid">
+      {% for slug, label in partners %}
+        <img class="hdx-v2-hapi-partner-logo"
+             src="{{ h.url_for_static('images/landing_pages/partners/' ~ slug ~ '.png') }}"
+             alt="{{ label }}"
+             loading="lazy">
+      {% endfor %}
     </div>
   </div>
 

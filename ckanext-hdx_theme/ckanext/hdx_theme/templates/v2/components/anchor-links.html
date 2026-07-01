@@ -8,12 +8,16 @@
 
   Parameters
   ─────────────────────────────────────────────────
-  items                {list}    List of dicts: {label, href, active (bool)}.
+  items                {list}    List of dicts: {label, href, active (bool),
+                                 external (bool, optional)}.
+                                 When external=True the link opens in a new
+                                 tab and shows an external-link icon.
                                  default: []
   extra_classes        {string}  Extra classes on the <nav> element.
                                  default: ''
-  heading              {string}  If set, wraps nav in .c-anchor-links-wrapper
-                                 and renders a heading above the list.
+  heading              {string}  Optional heading rendered above the nav list inside
+                                 the sticky wrapper. The wrapper always renders so the
+                                 nav is sticky regardless of whether a heading is set.
                                  default: ''
   with_mobile_dropdown {bool}    Also renders the mobile sticky dropdown
                                  (c-anchor-links-mobile) after the desktop nav.
@@ -48,7 +52,6 @@
 {# ── Desktop nav (with optional sticky wrapper + heading) ─── #}
 
 {% if not mobile_only and items %}
-{% if heading or with_mobile_dropdown %}
 <div class="c-anchor-links-wrapper">
   {% if heading %}
     <p class="c-anchor-links__heading">{{ heading }}</p>
@@ -60,31 +63,17 @@
       {% set item_class = 'c-anchor-links__item c-anchor-links__item--' ~ ('active' if item.active else 'inactive') %}
       <a class="{{ item_class }}"
          href="{{ item.href }}"
-         {% if item.active %}aria-current="true"{% endif %}>
+         {% if item.active %}aria-current="true"{% endif %}
+         {% if item.external %}target="_blank" rel="noopener"{% endif %}>
         <span class="c-anchor-links__border" aria-hidden="true"></span>
         <div class="c-anchor-links__content">
           <span class="c-anchor-links__label">{{ item.label }}</span>
+          {% if item.external %}<span class="c-anchor-links__ext-icon" aria-hidden="true">{% include 'v2/icons/open-in-new.svg' %}</span>{% endif %}
         </div>
       </a>
     {% endfor %}
   </nav>
 </div>
-{% else %}
-<nav class="c-anchor-links{{ ' ' ~ extra_classes if extra_classes }}"
-     aria-label="{{ _('Page sections') }}">
-  {% for item in items %}
-    {% set item_class = 'c-anchor-links__item c-anchor-links__item--' ~ ('active' if item.active else 'inactive') %}
-    <a class="{{ item_class }}"
-       href="{{ item.href }}"
-       {% if item.active %}aria-current="true"{% endif %}>
-      <span class="c-anchor-links__border" aria-hidden="true"></span>
-      <div class="c-anchor-links__content">
-        <span class="c-anchor-links__label">{{ item.label }}</span>
-      </div>
-    </a>
-  {% endfor %}
-</nav>
-{% endif %}
 {% endif %}{# /not mobile_only #}
 
 {# ── Mobile sticky dropdown ──────────────────────────────── #}
@@ -106,7 +95,8 @@
       {% for item in items %}
         <li>
           <a class="c-anchor-links-mobile__item{% if item.active %} is-active{% endif %}"
-             href="{{ item.href }}">{{ item.label }}</a>
+             href="{{ item.href }}"
+             {% if item.external %}target="_blank" rel="noopener"{% endif %}>{{ item.label }}{% if item.external %} <span aria-hidden="true">{% include 'v2/icons/open-in-new.svg' %}</span>{% endif %}</a>
         </li>
       {% endfor %}
     </ul>

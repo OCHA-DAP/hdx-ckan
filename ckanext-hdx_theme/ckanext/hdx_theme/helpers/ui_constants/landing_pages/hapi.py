@@ -1,4 +1,5 @@
 CONSTANTS = {
+    'HERO_SHORT_TITLE': '''HDX HAPI''',
     'HERO_SECTION_TITLE': '''The HDX Humanitarian API (HAPI) is a way to access standardised indicators from multiple sources to automate workflows and visualisations''',
     'HERO_SECTION_DESCRIPTION': '''HDX HAPI is in beta phase, and we are seeking feedback. To share your thoughts or join our slack channel, send an email to <a href="{0}" title="Contact us">hdx@un.org</a>.''',
 
@@ -25,7 +26,7 @@ CONSTANTS = {
     'BE_INSPIRED_CARD_BUTTON_VISUALIZATION': '''Learn more''',
     'BE_INSPIRED_CARD_BUTTON_LINK_VISUALIZATION': '''https://ocha-dap.github.io/hdx-hapi-example''',
 
-    'FAQ_SECTION_TITLE': '''FAQs''',
+    'FAQ_SECTION_TITLE': '''FAQ''',
 
     'PARTNERS_SECTION_TITLE': '''Partners''',
 }
@@ -109,7 +110,8 @@ SECTIONS_CONSTANTS = [
     {'name': 'Data Availability', 'url': '#data-availability'},
     {'name': 'Be Inspired', 'url': '#be-inspired'},
     {'name': 'FAQ', 'url': '#faq'},
-    {'name': 'Read the documentation', 'url': 'https://hdx-hapi.readthedocs.io/'},
+    {'name': 'Partners', 'url': '#partners'},
+    {'name': 'Documentation', 'url': 'https://hdx-hapi.readthedocs.io/', 'external': True},
 ]
 
 PARTNERS_CONSTANTS = [

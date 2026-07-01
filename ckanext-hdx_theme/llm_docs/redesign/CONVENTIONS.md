@@ -46,6 +46,20 @@ Any file that needs breakpoints, typography variables, or type-style mixins shou
 
 ---
 
+## Page-layout flex mixins
+
+Three mixins in `mixins.less` cover the standard two-column flex layout. Use these in every page LESS file instead of duplicating the properties inline.
+
+| Mixin | Properties | When to use |
+|---|---|---|
+| `.v2-sidebar-flex()` | `flex: 0 0 25%; min-width: 0` | Sidebar column at XL |
+| `.v2-content-flex()` | `flex: 1; min-width: 0` | Main content column |
+| `.v2-sidebar-sticky()` | `position: sticky; top: var(--hdx-space-12); align-self: flex-start` | Non-anchor-links sidebars (Search filters, Locations letter grid) |
+
+`.c-anchor-links-wrapper` has `position: sticky; top: var(--hdx-space-12)` built in — pages that use `c-anchor-links` for sidebar navigation (Dataset, HAPI) get stickiness through the component and do **not** need `.v2-sidebar-sticky()` on the sidebar container.
+
+---
+
 ## Breakpoints
 
 Defined **once** in `breakpoints.less`; pulled in automatically via `mixins.less`. No local redefinitions.

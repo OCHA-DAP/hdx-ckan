@@ -1,0 +1,81 @@
+@import "../mixins.less";
+
+// ============================================================
+// c-accordion — CSS-only accordion via <details> / <summary>
+// Figma source: hapi-xl.html accordion section
+// ============================================================
+
+.c-accordion {
+    border-bottom: 1px solid var(--hdx-neutral-1);
+
+    &__item {
+        border-top: 1px solid var(--hdx-neutral-1);
+        padding:    var(--hdx-space-8) 0;  // 32px top/bottom, no side padding
+    }
+
+    &__trigger {
+        display:         flex;
+        align-items:     center;
+        justify-content: space-between;
+        gap:             var(--hdx-space-8);   // 32px
+        list-style:      none;
+        cursor:          pointer;
+        width:           100%;
+        background:      none;
+        padding:         0;
+        border:          none;
+
+        // Remove browser-default disclosure triangle
+        &::-webkit-details-marker { display: none; }
+        &::marker                 { content: none; }
+
+        &:focus-visible {
+            outline:        2px solid var(--hdx-primary-5);
+            outline-offset: 2px;
+            border-radius:  2px;
+        }
+
+        &:hover .c-accordion__title {
+            color: var(--hdx-neutral-95);
+        }
+    }
+
+    &__title {
+        flex: 1;
+        .hdx-body-m-semibold();
+        color: var(--hdx-neutral-95);
+    }
+
+    &__chevron {
+        flex-shrink: 0;
+        color:       var(--hdx-neutral-85);
+        transition:  transform 0.2s ease;
+
+        svg {
+            width:   var(--hdx-space-5);   // 20px
+            height:  var(--hdx-space-5);
+            display: block;
+        }
+    }
+
+    &__item[open] &__chevron {
+        transform: rotate(180deg);
+    }
+
+    &__body {
+        overflow: hidden;
+    }
+
+    &__content {
+        padding-top: var(--hdx-space-4);   // 16px
+        .hdx-body-m();
+        color: var(--hdx-neutral-95);
+
+        a {
+            color:           var(--hdx-primary-5);
+            text-decoration: underline;
+        }
+
+        p { margin-bottom: 0; }
+    }
+}
