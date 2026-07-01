@@ -21,11 +21,11 @@ class TestLandingPages(object):
 
         assert 'src="/visualization/hapi-availability/"' in response.body
 
-        assert '<h3 class="heading__title">FAQs</h3>' in response.body
-        assert 'bem-faq__question' in response.body
-        assert 'bem-faq__answer' in response.body
+        assert '<h2 class="hdx-v2-hapi-section-heading">FAQ</h2>' in response.body
+        assert 'c-accordion__trigger' in response.body
+        assert 'c-accordion__body' in response.body
 
-        assert '<h3 class="heading__title">Partners</h3>' in response.body
+        assert '<h2 class="hdx-v2-hapi-section-heading">Partners</h2>' in response.body
         assert 'landing_pages/partners' in response.body
 
     def test_signals_landing_page_without_auth(self, app):
