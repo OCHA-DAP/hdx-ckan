@@ -63,6 +63,9 @@
 {% set time_period_tooltip = time_period_tooltip if time_period_tooltip is defined else False %}
 {% set source_text         = source_text         if source_text         is defined else '' %}
 {% set long_source         = long_source         if long_source         is defined else False %}
+{% set cta_label           = cta_label           if cta_label           is defined else '' %}
+{% set cta_href            = cta_href            if cta_href            is defined else '' %}
+{% set cta_icon_src        = cta_icon_src        if cta_icon_src        is defined else '' %}
 {% set edit_mode           = edit_mode           if edit_mode           is defined else False %}
 {% set pkg_id              = pkg_id              if pkg_id              is defined else '' %}
 {% set pkg_state           = pkg_state           if pkg_state           is defined else '' %}
@@ -173,6 +176,18 @@
               icon_src='v2/icons/chevron-down.svg',
               tag='button', button_type='button' %}
         </div>
+        {% endif %}
+
+        {# Optional CTA button — landing pages only (cta_href must be provided) #}
+        {% if cta_href %}
+          {% set cta_has_icon = cta_icon_src != '' %}
+          {% snippet 'v2/components/button.html',
+              tag='a', href=cta_href,
+              style='primary', type='text', size='m',
+              state='enabled',
+              icon=cta_has_icon,
+              icon_src=cta_icon_src if cta_icon_src else 'v2/icons/placeholder.svg',
+              label=cta_label %}
         {% endif %}
 
       </div>

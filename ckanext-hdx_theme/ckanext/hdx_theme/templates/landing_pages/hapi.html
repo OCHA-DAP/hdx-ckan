@@ -16,8 +16,12 @@
 
 {% block subtitle %}{{ _('HDX HAPI Beta') }}{% endblock %}
 
-{% block breadcrumb_content %}
-  {% snippet "snippets/active_breadcrumb_item.html", title=_('HDX HAPI'), position=2 %}
+{% block breadcrumb_items %}
+  {% snippet 'v2/components/breadcrumb.html',
+      items=[
+        {'label': _('Products'), 'href': ''},
+        {'label': _('HDX HAPI'), 'href': ''},
+      ] %}
 {% endblock %}
 
 {% block styles %}
@@ -46,9 +50,6 @@
 
 {# ── Main content ─────────────────────────────────────────────── #}
 {% block primary %}
-
-  {# Mobile nav dropdown — hidden at XL, sticky at MD/SM #}
-  {% snippet 'v2/components/anchor-links.html', items=nav_items, mobile_only=True %}
 
   {# Data Availability ──────────────────────────────────────────── #}
   <div id="data-availability" class="hdx-v2-hapi-section">

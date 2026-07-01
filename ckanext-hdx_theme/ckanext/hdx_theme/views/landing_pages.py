@@ -8,7 +8,8 @@ from ckanext.hdx_theme.helpers.ui_constants.landing_pages.hapi import \
     PARTNERS_CONSTANTS as HAPI_PARTNERS_CONSTANTS
 from ckanext.hdx_theme.helpers.ui_constants.landing_pages.signals import \
     DATA_COVERAGE_CONSTANTS as SIGNALS_DATA_COVERAGE_CONSTANTS, SECTIONS_CONSTANTS as SIGNALS_SECTIONS_CONSTANTS, \
-    PARTNERS_CONSTANTS as SIGNALS_PARTNERS_CONSTANTS
+    PARTNERS_CONSTANTS as SIGNALS_PARTNERS_CONSTANTS, \
+    SIGNAL_CARDS_CONSTANTS as SIGNALS_SIGNAL_CARDS_CONSTANTS
 
 abort = tk.abort
 g = tk.g
@@ -51,12 +52,14 @@ def signals():
     partners = SIGNALS_PARTNERS_CONSTANTS
     sections = SIGNALS_SECTIONS_CONSTANTS
     data_coverage = SIGNALS_DATA_COVERAGE_CONSTANTS
+    signal_cards = SIGNALS_SIGNAL_CARDS_CONSTANTS
 
     template_data = {
         'partners': partners,
         'sections': sections,
         'data_coverage': data_coverage,
         'faq_data': data['faq_data'],
+        'signal_cards': signal_cards,
     }
 
     return render('landing_pages/signals.html', extra_vars=template_data)

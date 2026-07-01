@@ -1,0 +1,89 @@
+{#
+  Snippet: signal-card.html
+  Path:    templates/v2/components/signal-card.html
+
+  Renders a single HDX Signals card: location label, date + type row,
+  title, chart description, chart image, and footer source/CTA links.
+
+  Parameters
+  ──────────────────────────────────────────────────────
+  location      {string}  Location name shown as cyan label.      default: ''
+  date          {string}  Pre-formatted date string.              default: ''
+  type          {string}  Signal type shown as light label.       default: ''
+  title         {string}  Card title (max 2 lines clamped).       default: ''
+  description   {string}  Short chart description.               default: ''
+  image_src     {string}  Chart image URL.                        default: ''
+  image_alt     {string}  Chart image alt text.                   default: ''
+  source_label  {string}  Footer left link label.                 default: ''
+  source_href   {string}  Footer left link URL.                   default: '#'
+  cta_label     {string}  Footer right link label.                default: ''
+  cta_href      {string}  Footer right link URL.                  default: '#'
+  ──────────────────────────────────────────────────────
+#}
+
+{% set location     = location     if location     is defined else '' %}
+{% set date         = date         if date         is defined else '' %}
+{% set type         = type         if type         is defined else '' %}
+{% set title        = title        if title        is defined else '' %}
+{% set description  = description  if description  is defined else '' %}
+{% set image_src    = image_src    if image_src    is defined else '' %}
+{% set image_alt    = image_alt    if image_alt    is defined else '' %}
+{% set source_label = source_label if source_label is defined else '' %}
+{% set source_href  = source_href  if source_href  is defined else '#' %}
+{% set cta_label    = cta_label    if cta_label    is defined else '' %}
+{% set cta_href     = cta_href     if cta_href     is defined else '#' %}
+
+<div class="c-signal-card">
+
+  {# ── Header: location → (date + type) → title ─────────────── #}
+  <div class="c-signal-card__header">
+
+    {% if location %}
+      {% snippet 'v2/components/label.html',
+          text=location, color='cyan', size='s' %}
+    {% endif %}
+
+    <div class="c-signal-card__meta">
+      <span class="c-signal-card__date">{{ date }}</span>
+      {% if type %}
+        {% snippet 'v2/components/label.html',
+            text=type, color='light', size='s' %}
+      {% endif %}
+    </div>
+
+    <p class="c-signal-card__title">{{ title }}</p>
+
+  </div>
+
+  {# ── Graph: description + chart image ──────────────────────── #}
+  <div class="c-signal-card__graph">
+    {% if description %}
+      <p class="c-signal-card__description">{{ description }}</p>
+    {% endif %}
+    {% if image_src %}
+      <img class="c-signal-card__image"
+           src="{{ image_src }}"
+           alt="{{ image_alt }}"
+           loading="lazy">
+    {% else %}
+      <div class="c-signal-card__image c-signal-card__image--placeholder"></div>
+    {% endif %}
+  </div>
+
+  {# ── Footer: source + CTA buttons ─────────────────────────── #}
+  <div class="c-signal-card__footer">
+    {% if source_label %}
+      {% snippet 'v2/components/button.html',
+          tag='a', href=source_href,
+          style='tertiary', type='text', size='s', state='enabled',
+          label=source_label %}
+    {% endif %}
+    {% if cta_label %}
+      {% snippet 'v2/components/button.html',
+          tag='a', href=cta_href,
+          style='tertiary', type='text', size='s', state='enabled',
+          label=cta_label %}
+    {% endif %}
+  </div>
+
+</div>
