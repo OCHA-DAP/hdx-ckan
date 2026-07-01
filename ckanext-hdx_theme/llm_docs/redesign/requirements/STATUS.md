@@ -56,3 +56,4 @@
 | 050 | [contact-contributor-v2](050-contact-contributor-v2.md)                                                         | implemented | |
 | 051 | [subscribe-notifications-drawer-v2](051-subscribe-notifications-drawer-v2.md)                                   | implemented | |
 | 052 | [signup-flow-v2](052-signup-flow-v2.md)                                                                         | implemented | |
+| 053 | [hdx-hapi-landing-page](053-hdx-hapi-landing-page.md)                                                          | implemented | |

@@ -1,0 +1,39 @@
+{#
+  Snippet: content-card.html
+  Path:    templates/v2/components/content-card.html
+
+  Generic content card: title (2-line clamp), description, optional link.
+
+  Parameters
+  ─────────────────────────────────────────────────
+  title        {string}  Card title (max 2 lines displayed).  default: ''
+  description  {string}  Card body text.  default: ''
+  link_label   {string}  Link text, e.g. "Learn more". When empty no link is shown.
+                         default: ''
+  link_href    {string}  Link URL.  default: '#'
+  link_new_tab {bool}    Open link in new tab.  default: False
+  ─────────────────────────────────────────────────
+#}
+
+{% set title        = title        if title        is defined else '' %}
+{% set description  = description  if description  is defined else '' %}
+{% set link_label   = link_label   if link_label   is defined else '' %}
+{% set link_href    = link_href    if link_href     is defined else '#' %}
+{% set link_new_tab = link_new_tab if link_new_tab is defined else False %}
+
+<div class="c-content-card">
+  {% if title %}
+    <p class="c-content-card__title">{{ title }}</p>
+  {% endif %}
+  {% if description %}
+    <p class="c-content-card__desc">{{ description }}</p>
+  {% endif %}
+  {% if link_label %}
+    {% snippet 'v2/components/text-link.html',
+        label=link_label,
+        href=link_href,
+        style='tertiary',
+        size='s',
+        target='_blank' if link_new_tab else '' %}
+  {% endif %}
+</div>

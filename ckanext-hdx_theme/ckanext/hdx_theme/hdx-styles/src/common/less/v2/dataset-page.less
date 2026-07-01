@@ -20,12 +20,12 @@
 }
 // ── Dataset sidebar (wrapper-secondary at XL) ──────────────────
 .hdx-v2-dataset-sidebar {
-    .v2-sidebar-flex();
     display: none;
 
     @media (min-width: @hdx-bp-xl) {
         display:  block;
-        padding:  var(--hdx-space-12) 0; // 48px top/bottom
+        .v2-sidebar-flex();
+        padding:  var(--hdx-space-12) 0;
     }
 }
 // ── Dataset content (wrapper-primary) ─────────────────────────

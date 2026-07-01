@@ -100,17 +100,16 @@
 
 .hdx-v2-search-sidebar {
     .v2-sidebar-flex();
+    display: none;
 
     @media (min-width: @hdx-bp-xl) {
+        display:      block;
+        .v2-sidebar-sticky();
         border-right: 1px solid var(--hdx-neutral-1);
         padding:      var(--hdx-space-5)   // 20px top
                       var(--hdx-space-10)  // 40px right
                       5rem                 // 80px bottom — clears sticky anchor nav
                       0;
-    }
-
-    @media (max-width: @hdx-bp-xl) {
-        display: none;
     }
 }
 // ────────────────────────────────────────────────────────────

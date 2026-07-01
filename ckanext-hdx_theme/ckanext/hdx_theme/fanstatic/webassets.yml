@@ -1458,6 +1458,7 @@ v2-components-styles:
   <<: *common-css
   contents:
     - v2/foundation.css
+    - v2/components/accordion.css
     - v2/components/activity-card.css
     - v2/components/activity-item.css
     - v2/components/anchor-links.css
@@ -1465,6 +1466,7 @@ v2-components-styles:
     - v2/components/breadcrumb.css
     - v2/components/buttons.css
     - v2/components/checkbox.css
+    - v2/components/content-card.css
     - v2/components/copy-button.css
     - v2/components/dataset-card.css
     - v2/components/divider.css
@@ -1632,6 +1634,12 @@ v2-signup-page-styles:
   <<: *common-css
   contents:
     - v2/signup-page.css
+
+v2-hapi-landing-page-styles:
+  output: ckanext-hdx_theme/%(version)s_v2-hapi-landing-page-styles.css
+  <<: *common-css
+  contents:
+    - v2/hapi-landing-page.css
 
 v2-signup-scripts:
   <<: *common-js

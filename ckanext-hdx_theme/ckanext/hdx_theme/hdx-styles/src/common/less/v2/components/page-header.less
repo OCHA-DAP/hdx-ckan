@@ -91,6 +91,13 @@
             font-size: var(--hdx-fs-3xl);  // 1.75rem XL
         }
     }
+    // ── Subtitle ─────────────────────────────────────────────
+
+    &__subtitle {
+        .hdx-body-m-semibold();
+        color:  var(--hdx-neutral-85);
+        margin: 0;
+    }
     // ── Description text + show-more ─────────────────────────
 
     &__desc {
@@ -190,12 +197,13 @@
         }
     }
 
-    &__org-logo {
+    &__logo {
         max-width:       7.05rem;           // Figma spec
         height:          4rem;              // 64 px — Figma spec
         object-fit:      contain;
-        object-position: left center;
+        object-position: center;
         display:         block;
+        margin:          0 auto;            // centre in right card (works for both org logo and standalone)
 
         @media (min-width: @hdx-bp-xl) {
             max-width: 9.375rem;            // Figma spec

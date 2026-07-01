@@ -7,9 +7,10 @@
 
   ── Dataset parameters ───────────────────────────────────────
   title               {string}  Dataset title text.  default: ''
+  subtitle            {string}  Optional subtitle rendered below title (semibold).  default: ''
   description         {string}  Full description.  default: ''
   org_name            {string}  Organisation display name.  default: ''
-  org_logo_src        {string}  Logo image URL.  default: ''
+  logo_src            {string}  Logo image URL.  default: ''
   org_href            {string}  Link to org page.  default: '#'
   contact_href        {string}  Link to contact page.  default: '#'
   download_count      {int}     Approx downloads.  default: 0
@@ -43,9 +44,10 @@
 
 {# ── Defaults ──────────────────────────────────────────────── #}
 {% set title               = title               if title               is defined else '' %}
+{% set subtitle            = subtitle            if subtitle            is defined else '' %}
 {% set description         = description         if description         is defined else '' %}
 {% set org_name            = org_name            if org_name            is defined else '' %}
-{% set org_logo_src        = org_logo_src        if org_logo_src        is defined else '' %}
+{% set logo_src            = logo_src            if logo_src            is defined else '' %}
 {% set org_href            = org_href            if org_href            is defined else '#' %}
 {% set contact_href        = contact_href        if contact_href        is defined else '#' %}
 {% set download_count      = download_count      if download_count      is defined else 0 %}
@@ -84,6 +86,8 @@
 
 {# resource_id being set switches to resource layout #}
 {% set _is_resource = resource_id %}
+{# divider + dataset metadata strip only render when there is data to show #}
+{% set _has_dataset_meta = location_text or update_frequency or time_period or source_text or is_up_to_date or subnational %}
 
 
 <section class="c-page-header{{ ' c-page-header--resource' if _is_resource else '' }}">
@@ -149,6 +153,11 @@
               data-module-dataset="{{ pkg_id }}"
             {% endif %}>{{ title }}</h1>
 
+        {# Subtitle — optional semibold paragraph below title #}
+        {% if subtitle %}
+          <p class="c-page-header__subtitle">{{ subtitle }}</p>
+        {% endif %}
+
         {# Description + show more — when provided #}
         {% if description %}
         <div class="c-page-header__desc" data-module="clamped-text">
@@ -169,29 +178,31 @@
       </div>
       {# end __description #}
 
-      {# Org card SM — dataset only, shown when org_name is provided #}
-      {% if org_name %}
+      {# Org card SM — shown when org_name or logo_src provided #}
+      {% if org_name or logo_src %}
       <div class="c-page-header__right-card c-page-header__right-card--sm-only">
-        {% if org_logo_src %}
-          <img class="c-page-header__org-logo" src="{{ org_logo_src }}" alt="{{ org_name }}">
+        {% if logo_src %}
+          <img class="c-page-header__logo" src="{{ logo_src }}" alt="{{ org_name if org_name else title }}">
         {% endif %}
-        {% snippet 'v2/components/text-button.html',
-            style='tertiary', size='m', label='Contact organisation',
-            icon=True, icon_position='left', icon_src='v2/icons/mail.svg',
-            tag='a', href=contact_href %}
-        {% if edit_mode %}
+        {% if org_name %}
           {% snippet 'v2/components/text-button.html',
-              style='tertiary', size='m', label='Edit Dataset',
-              icon=True, icon_position='left', icon_src='v2/icons/edit.svg',
-              tag='a', href='#',
-              attrs={'onclick': "contributeAddDetails('" ~ pkg_id ~ "', 'dataset')"} %}
-        {% endif %}
-        {% if not hide_membership and membership and membership.display_group_message %}
-          {% snippet 'v2/components/text-button.html',
-              style='tertiary', size='m', label='Group message',
-              icon=True, icon_position='left', icon_src='v2/icons/message.svg',
-              tag='a', href='#',
-              attrs={'onclick': "closeCurrentWidget(this);$('#group-message-topics-selector').select2('val', '');spawnRecaptcha('#groupMessagePopup');showOnboardingWidget('#groupMessagePopup');"} %}
+              style='tertiary', size='m', label='Contact organisation',
+              icon=True, icon_position='left', icon_src='v2/icons/mail.svg',
+              tag='a', href=contact_href %}
+          {% if edit_mode %}
+            {% snippet 'v2/components/text-button.html',
+                style='tertiary', size='m', label='Edit Dataset',
+                icon=True, icon_position='left', icon_src='v2/icons/edit.svg',
+                tag='a', href='#',
+                attrs={'onclick': "contributeAddDetails('" ~ pkg_id ~ "', 'dataset')"} %}
+          {% endif %}
+          {% if not hide_membership and membership and membership.display_group_message %}
+            {% snippet 'v2/components/text-button.html',
+                style='tertiary', size='m', label='Group message',
+                icon=True, icon_position='left', icon_src='v2/icons/message.svg',
+                tag='a', href='#',
+                attrs={'onclick': "closeCurrentWidget(this);$('#group-message-topics-selector').select2('val', '');spawnRecaptcha('#groupMessagePopup');showOnboardingWidget('#groupMessagePopup');"} %}
+          {% endif %}
         {% endif %}
       </div>
       {% endif %}
@@ -217,30 +228,32 @@
     </div>
     {# end __left #}
 
-    {# Org card MD+ — dataset only, shown when org_name is provided #}
-    {% if org_name %}
+    {# Org card MD+ — shown when org_name or logo_src provided #}
+    {% if org_name or logo_src %}
     <div class="c-page-header__right-card c-page-header__right-card--md-up">
-      {% if org_logo_src %}
-        <img class="c-page-header__org-logo" src="{{ org_logo_src }}" alt="{{ org_name }}">
+      {% if logo_src %}
+        <img class="c-page-header__logo" src="{{ logo_src }}" alt="{{ org_name if org_name else title }}">
       {% endif %}
-      {% snippet 'v2/components/text-button.html',
-          style='tertiary', size='m', label='Contact organisation',
-          icon=True, icon_position='left', icon_src='v2/icons/mail.svg',
-          tag='a', href=contact_href,
-          attrs={'id': 'contact-the-contributor'} %}
-      {% if edit_mode %}
+      {% if org_name %}
         {% snippet 'v2/components/text-button.html',
-            style='tertiary', size='m', label='Edit Dataset',
-            icon=True, icon_position='left', icon_src='v2/icons/edit.svg',
-            tag='a', href='#',
-            attrs={'onclick': "contributeAddDetails('" ~ pkg_id ~ "', 'dataset')"} %}
-      {% endif %}
-      {% if not hide_membership and membership and membership.display_group_message %}
-        {% snippet 'v2/components/text-button.html',
-            style='tertiary', size='m', label='Group message',
-            icon=True, icon_position='left', icon_src='v2/icons/message.svg',
-            tag='a', href='#',
-            attrs={'id': 'contact-members', 'onclick': "closeCurrentWidget(this);$('#group-message-topics-selector').select2('val', '');spawnRecaptcha('#groupMessagePopup');showOnboardingWidget('#groupMessagePopup');"} %}
+            style='tertiary', size='m', label='Contact organisation',
+            icon=True, icon_position='left', icon_src='v2/icons/mail.svg',
+            tag='a', href=contact_href,
+            attrs={'id': 'contact-the-contributor'} %}
+        {% if edit_mode %}
+          {% snippet 'v2/components/text-button.html',
+              style='tertiary', size='m', label='Edit Dataset',
+              icon=True, icon_position='left', icon_src='v2/icons/edit.svg',
+              tag='a', href='#',
+              attrs={'onclick': "contributeAddDetails('" ~ pkg_id ~ "', 'dataset')"} %}
+        {% endif %}
+        {% if not hide_membership and membership and membership.display_group_message %}
+          {% snippet 'v2/components/text-button.html',
+              style='tertiary', size='m', label='Group message',
+              icon=True, icon_position='left', icon_src='v2/icons/message.svg',
+              tag='a', href='#',
+              attrs={'id': 'contact-members', 'onclick': "closeCurrentWidget(this);$('#group-message-topics-selector').select2('val', '');spawnRecaptcha('#groupMessagePopup');showOnboardingWidget('#groupMessagePopup');"} %}
+        {% endif %}
       {% endif %}
     </div>
     {% endif %}
@@ -278,10 +291,12 @@
   {% endif %}
 
   {# ── DIVIDER ─────────────────────────────────────────────── #}
+  {% if _has_dataset_meta or _is_resource %}
   <hr class="c-divider">
+  {% endif %}
 
   {# ── DATASET METADATA STRIP ──────────────────────────────── #}
-  {% if not _is_resource %}
+  {% if not _is_resource and _has_dataset_meta %}
   <div class="c-page-header__metadata">
 
     <div class="c-page-header__meta-item">

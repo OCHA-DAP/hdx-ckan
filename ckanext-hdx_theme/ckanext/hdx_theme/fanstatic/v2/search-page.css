@@ -86,16 +86,16 @@
 .hdx-v2-search-sidebar {
   flex: 0 0 25%;
   min-width: 0;
+  display: none;
 }
 @media (min-width: 80rem) {
   .hdx-v2-search-sidebar {
+    display: block;
+    position: sticky;
+    top: var(--hdx-space-12);
+    align-self: flex-start;
     border-right: 1px solid var(--hdx-neutral-1);
     padding: var(--hdx-space-5) var(--hdx-space-10) 5rem 0;
-  }
-}
-@media (max-width: 80rem) {
-  .hdx-v2-search-sidebar {
-    display: none;
   }
 }
 .hdx-v2-search-content {

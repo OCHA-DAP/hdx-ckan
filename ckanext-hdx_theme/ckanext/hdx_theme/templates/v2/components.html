@@ -1872,6 +1872,41 @@
     </div>
   {% endcall %}
 
+  {# ── Accordion ─────────────────────────────────────────────── #}
+  <section class="demo-section" id="accordion">
+    <h1 class="demo-section__title">Accordion</h1>
+    <p class="demo-section__subtitle">CSS-only <code>details/summary</code> accordion. First item open by default.</p>
+    {% snippet 'v2/components/accordion.html', items=[
+        {'question': 'Lorem ipsum dolor sit amet?', 'answer': 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.', 'open': True},
+        {'question': 'Consectetur adipiscing elit?', 'answer': 'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.', 'open': False},
+        {'question': 'Sed do eiusmod tempor incididunt?', 'answer': 'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.', 'open': False},
+    ] %}
+  </section>
+
+  {# ── Content Card ──────────────────────────────────────────── #}
+  <section class="demo-section" id="content-card">
+    <h1 class="demo-section__title">Content Card</h1>
+    <p class="demo-section__subtitle">Generic card with title (2-line clamp), description, and an optional text-link.</p>
+    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; max-width: 48rem;">
+      {% snippet 'v2/components/content-card.html',
+          title='Lorem ipsum dolor sit amet',
+          description='Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+          link_label='Learn more',
+          link_href='#',
+          link_new_tab=True %}
+      {% snippet 'v2/components/content-card.html',
+          title='Consectetur adipiscing elit',
+          description='Ut enim ad minim veniam, quis nostrud exercitation ullamco.',
+          link_label='Learn more',
+          link_href='#' %}
+      {% snippet 'v2/components/content-card.html',
+          title='Card with a longer title that wraps across two lines',
+          description='Duis aute irure dolor in reprehenderit in voluptate velit.',
+          link_label='Read more',
+          link_href='#' %}
+    </div>
+  </section>
+
 </div>{# /demo-page #}
 
 {% endblock %}
