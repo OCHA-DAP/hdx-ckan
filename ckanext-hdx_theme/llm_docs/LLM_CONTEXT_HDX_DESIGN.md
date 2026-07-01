@@ -89,7 +89,7 @@ There are three active layout base templates. The goal is to maintain exactly th
 - `ckanext-hdx_theme/ckanext/hdx_theme/templates/v2/header.html` — top-bar + responsive navbar (fully implemented)
 - `ckanext-hdx_theme/ckanext/hdx_theme/templates/v2/footer.html` — dark-teal footer panel (fully implemented)
 
-Pages in holding state on `page_light.html` (landing pages, org/join, etc.) manually override `{% block header_core %}` to include the legacy `header-mobile.html`. The following pages have been migrated to `v2/page.html`: homepage, dataset search, dataset page, resource page, all locations, all organisations, contact contributor, and signup flow (all five pages). See [**redesign/PROGRESS.md**](redesign/PROGRESS.md) for the full holding-state and migrated-pages lists.
+Pages in holding state on `page_light.html` (org/join, etc.) manually override `{% block header_core %}` to include the legacy `header-mobile.html`. The following pages have been migrated to `v2/page.html`: homepage, dataset search, dataset page, resource page, all locations, all organisations, contact contributor, signup flow (all five pages), HAPI landing page, and Signals landing page. See [**redesign/PROGRESS.md**](redesign/PROGRESS.md) for the full holding-state and migrated-pages lists.
 
 ## BEM components (HDX custom UI blocks)
 
@@ -245,30 +245,28 @@ Example page-specific template (light search):
 ### Signals page (`/signals`)
 
 - **Template**: `ckanext-hdx_theme/ckanext/hdx_theme/templates/landing_pages/signals.html`
-  - Extends `page_light.html` directly (holding state — ready to migrate to `v2/page.html`).
-  - Overrides `{% block header_core %}` to include legacy `header-mobile.html`.
-  - Manually loads `hdx_theme/page-extra-light-styles` and `hdx_theme/bem-blocks-styles` in `{% block styles %}`.
-  - Uses BEM blocks heavily: `bem.blocks/hero.html`, `bem.blocks/card.html`, `bem.blocks/paragraph.html`.
-  - UI copy comes from `h.HDX_CONST('UI_CONSTANTS')['LANDING_PAGES']['SIGNALS_LANDING_PAGE']`.
+  - Extends `v2/page.html`. Full v2 implementation — see `requirements/054-signals-landing-page.md`.
+  - Two-column layout at XL: sticky `c-anchor-links` sidebar (5 items) + main content.
+  - Hero via `c-page-header` with bell-icon CTA (`cta_icon_src='v2/icons/bell.svg'`); off-white hero row with border-bottom at SM/MD.
+  - Featured signals carousel: 3 `c-signal-card` slides in `.hdx-v2-signals-cards`; dots-only nav; Hammer.js swipe; static 3-column flex at XL.
+  - Sections: Sign up (Mailchimp form with v2 buttons + `info-icon.html` for HRP tooltip), Data Coverage (`c-content-card` grid), Signals Map (600px iframe), Resources (`c-content-card` grid), FAQ (`c-accordion`), Partners (flex-wrap `<img>` logos).
+  - UI copy from `h.HDX_CONST('UI_CONSTANTS')['LANDING_PAGES']['SIGNALS_LANDING_PAGE']`.
 - **Core assets**:
-  - `hdx_theme/hdx-signals-scripts` — signals-specific JS (`landing_pages/hdx_signals.js`).
-  - `hdx_theme/hdx-signals-styles` — signals-specific CSS (`landing_pages/hdx_signals.css`).
-  - `hdx_theme/bem-blocks-styles` and `hdx_theme/bem-blocks-scripts` — shared BEM component styles and JS (loaded directly by this template).
+  - `hdx_theme/v2-carousel-scripts` — Hammer.js + `carousel.js`; loaded explicitly in template before page scripts.
+  - `hdx_theme/v2-signals-landing-page-scripts` — `v2/signals-landing-page.js` (carousel init) + `landing_pages/hdx_signals.js` (form logic: vanilla JS, `is-disabled` class for submit button).
+  - `hdx_theme/v2-signals-landing-page-styles` — `v2/signals-landing-page.css` + `v2/components/signal-card.css`.
 
 ---
 
 ### HAPI page (`/hapi`)
 
 - **Template**: `ckanext-hdx_theme/ckanext/hdx_theme/templates/landing_pages/hapi.html`
-  - Extends `page_light.html` directly (holding state — ready to migrate to `v2/page.html`).
-  - Overrides `{% block header_core %}` to include legacy `header-mobile.html`.
-  - Manually loads `hdx_theme/page-extra-light-styles` and `hdx_theme/bem-blocks-styles` in `{% block styles %}`.
-  - Uses BEM blocks: `bem.blocks/hero.html`, `bem.blocks/card.html`.
-  - Embeds an iframe (`/visualization/hapi-availability/`) for data-availability visualisation.
-  - UI copy comes from `h.HDX_CONST('UI_CONSTANTS')['LANDING_PAGES']['HAPI_LANDING_PAGE']`.
-- **Core assets**:
-  - `hdx_theme/hdx-hapi-scripts` — HAPI-specific JS (`landing_pages/hdx_hapi.js`).
-  - `hdx_theme/bem-blocks-styles` and `hdx_theme/bem-blocks-scripts` — shared BEM component styles and JS (loaded directly by this template).
+  - Extends `v2/page.html`. Full v2 implementation — see `requirements/053-hdx-hapi-landing-page.md`.
+  - Two-column layout at XL: sticky `c-anchor-links` sidebar + main content.
+  - Hero via `c-page-header` with `subtitle` param; grey background on hero row only (`hdx-v2-hapi-hero-row`); body row white.
+  - Sections: Data Availability (iframe), Be Inspired (`c-content-card` grid 2×2), FAQ (`c-accordion`), Partners (CSS Grid `repeat(5,1fr)` of `<img>` logos).
+  - UI copy from `h.HDX_CONST('UI_CONSTANTS')['LANDING_PAGES']['HAPI_LANDING_PAGE']`.
+- **Core assets**: `hdx_theme/v2-hapi-landing-page-styles`.
 
 ---
 
