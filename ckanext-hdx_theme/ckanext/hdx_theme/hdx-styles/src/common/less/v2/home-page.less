@@ -13,7 +13,7 @@
     background-color: @hero-bg;
     padding-top:      8rem;
 
-    @media (min-width: @hdx-bp-md) { padding-top: 6rem; }
+    @media (min-width: @hdx-bp-md) { padding-top: var(--hdx-space-24); }
     @media (min-width: @hdx-bp-xl) { padding-top: 10rem; }
 
     &__inner {
@@ -100,7 +100,7 @@
     padding-top: 4rem;
     padding-bottom: 4rem;
 
-    @media (min-width: @hdx-bp-md) { padding-top: 6rem; padding-bottom: 6rem; }
+    @media (min-width: @hdx-bp-md) { padding-top: var(--hdx-space-24); padding-bottom: var(--hdx-space-24); }
     @media (min-width: @hdx-bp-xl) { padding-top: 7rem; padding-bottom: 7rem; }
 
     &__inner {
@@ -150,8 +150,8 @@
     }
 
     @media (min-width: @hdx-bp-xl) {
-        padding-top:    6rem;
-        padding-bottom: 6rem;
+        padding-top:    var(--hdx-space-24);
+        padding-bottom: var(--hdx-space-24);
     }
 
     &__inner {

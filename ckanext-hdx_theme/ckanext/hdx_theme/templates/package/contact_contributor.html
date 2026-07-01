@@ -70,14 +70,13 @@
         {% endif %}
 
         {# Topic dropdown #}
-        <div class="hdx-v2-contact-field">
-          <label class="hdx-v2-contact-field__label" for="contact-topic">
-            {{ CONST.SELECT_INQUIRY_TYPE_LABEL }}<span class="hdx-v2-contact-field__required" aria-hidden="true"> *</span>
-          </label>
+        <div class="c-form-field">
           {% snippet 'v2/components/dropdown.html',
               native=True,
               name='topic',
               id='contact-topic',
+              label=CONST.SELECT_INQUIRY_TYPE_LABEL,
+              required=True,
               options=contact_topics,
               selected=data.get('topic') or '',
               placeholder=CONST.SELECT_INQUIRY_TYPE_PLACEHOLDER,
@@ -85,7 +84,7 @@
         </div>
 
         {# Full name #}
-        <div class="hdx-v2-contact-field">
+        <div class="c-form-field">
           {% snippet 'v2/components/search-input.html',
               size='l',
               type='text',
@@ -100,7 +99,7 @@
         </div>
 
         {# Email address #}
-        <div class="hdx-v2-contact-field">
+        <div class="c-form-field">
           {% snippet 'v2/components/search-input.html',
               size='l',
               type='email',
@@ -116,7 +115,7 @@
         </div>
 
         {# Comments textarea #}
-        <div class="hdx-v2-contact-field">
+        <div class="c-form-field">
           {% snippet 'v2/components/search-input.html',
               size='l',
               name='msg',

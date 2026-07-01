@@ -156,7 +156,9 @@
     // with an absolutely positioned chevron overlay.
 
     &--native {
-        gap: 0;  // error span spacing comes only from .c-search-input__error margin-top
+        gap: 0;
+
+        .c-search-input__error { margin-top: var(--hdx-space-2); }
 
         .c-dropdown__select {
             align-self:         stretch;

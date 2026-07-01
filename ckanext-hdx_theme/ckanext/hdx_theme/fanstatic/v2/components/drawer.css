@@ -134,35 +134,6 @@ body.drawer-open {
   text-decoration: underline;
   color: inherit;
 }
-.c-drawer-form__field {
-  display: flex;
-  flex-direction: column;
-  gap: var(--hdx-space-2);
-}
-.c-drawer-form__field-hint {
-  font-family: var(--hdx-font-body);
-  font-size: var(--hdx-fs-s);
-  font-weight: var(--hdx-fw-regular);
-  line-height: var(--hdx-lh-normal);
-  color: var(--hdx-neutral-8);
-  text-align: right;
-}
-.c-drawer-form__field-hint a {
-  font-family: var(--hdx-font-body);
-  font-size: var(--hdx-fs-s);
-  font-weight: var(--hdx-fw-medium);
-  line-height: var(--hdx-lh-normal);
-  text-decoration: underline;
-  color: var(--hdx-primary-5);
-}
-.c-drawer-form__field-error {
-  font-family: var(--hdx-font-body);
-  font-size: var(--hdx-fs-s);
-  font-weight: var(--hdx-fw-regular);
-  line-height: var(--hdx-lh-normal);
-  color: var(--hdx-error-6);
-  display: none;
-}
 .c-drawer-form__update-freq {
   font-family: var(--hdx-font-body);
   font-size: var(--hdx-fs-s);

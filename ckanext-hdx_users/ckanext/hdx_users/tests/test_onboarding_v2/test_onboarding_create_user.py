@@ -112,9 +112,9 @@ class TestOnboarding(object):
         result = app.post(url, data=data_dict)
         assert result.status_code == 200
         assert NEW_USER_EMAIL in result.body
-        assert '<div class="stepper__name">Personal details</div>' in result.body
-        assert '<div class="stepper__name">Verify email</div>' in result.body
-        assert '<div class="stepper__name">Account created</div>' in result.body
+        assert '<div class="c-step-pager__label">Personal details</div>' in result.body
+        assert '<div class="c-step-pager__label">Verify email</div>' in result.body
+        assert '<div class="c-step-pager__label">Account created</div>' in result.body
 
         assert len(_mail_recipient_html.call_args_list) == 1
         assert _mail_recipient_html.call_args_list[0][0][2][0].get('email') == NEW_USER_EMAIL

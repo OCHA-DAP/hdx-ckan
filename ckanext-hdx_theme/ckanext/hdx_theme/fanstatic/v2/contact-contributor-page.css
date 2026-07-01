@@ -78,11 +78,6 @@
   color: var(--hdx-neutral-85);
   margin: 0;
 }
-.hdx-v2-contact-field {
-  display: flex;
-  flex-direction: column;
-  gap: var(--hdx-space-2);
-}
 .hdx-v2-contact-buttons {
   display: flex;
   align-items: center;

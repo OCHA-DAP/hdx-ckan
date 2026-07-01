@@ -1,0 +1,81 @@
+{#
+  Snippet: signup-tier.html
+  Renders a c-signup-tier card for the value-proposition signup page.
+
+  Parameters
+  ─────────────────────────────────────────────────
+  title           {string}  Card heading. Required.
+  description     {string}  Card subtext. Required.
+  features        {list}    List of feature dicts:
+                              text             {string}  Feature label (required)
+                              number           {int}     If present → numbered badge; absent → checkmark icon
+                              analytics_attrs  {dict}    Extra HTML attrs on the wrapping div (e.g. data-module)
+                              text_safe        {bool}    If true, render text with |safe
+  button_label    {string}  CTA button text. Used when footer_text is not set.
+  button_style    {string}  'primary' | 'secondary' | 'tertiary'. default: 'primary'
+  button_tag      {string}  'button' | 'a'. default: 'button'
+  button_href     {string}  URL when button_tag='a'. default: '#'
+  button_attrs    {dict}    Extra HTML attrs on the button (id, data-*, etc.). default: {}
+  footer_text     {string}  Rendered with |safe instead of button (e.g. Tier 3 login text).
+  attrs           {dict}    Extra HTML attrs on the outer card div. default: {}
+  variant         {string}  'primary' → blue background. default: ''
+  ─────────────────────────────────────────────────
+#}
+{% set title          = title          if title          is defined else '' %}
+{% set description    = description    if description    is defined else '' %}
+{% set features       = features       if features       is defined else [] %}
+{% set button_label   = button_label   if button_label   is defined else '' %}
+{% set button_style   = button_style   if button_style   is defined else 'primary' %}
+{% set button_tag     = button_tag     if button_tag     is defined else 'button' %}
+{% set button_href    = button_href    if button_href    is defined else '#' %}
+{% set button_attrs   = button_attrs   if button_attrs   is defined else {} %}
+{% set footer_text = footer_text if footer_text is defined else none %}
+{% set attrs       = attrs       if attrs       is defined else {} %}
+{% set variant     = variant     if variant     is defined else '' %}
+
+<div class="c-signup-tier{% if variant == 'primary' %} c-signup-tier--primary{% endif %}"
+     {% for key, val in attrs.items() %} {{ key }}="{{ val }}"{% endfor %}>
+  <div class="c-signup-tier__header-area">
+    <div class="c-signup-tier__title-group">
+      <h2 class="c-signup-tier__title">{{ title }}</h2>
+      <p class="c-signup-tier__description">{{ description }}</p>
+    </div>
+    {% if features %}
+    <ul class="c-signup-tier__features">
+      {% for feature in features %}
+      <li class="c-signup-tier__feature">
+        {% if feature.number is defined %}
+          <span class="c-signup-tier__feature-badge">{{ feature.number }}</span>
+        {% else %}
+          <span class="c-signup-tier__feature-icon">{% include h.url_for_static('v2/icons/check-circle-fill.svg') %}</span>
+        {% endif %}
+        {% if feature.analytics_attrs is defined %}
+          <span class="c-signup-tier__feature-text"{% for key, val in feature.analytics_attrs.items() %} {{ key }}="{{ val }}"{% endfor %}>
+            {{ feature.text|safe if feature.text_safe is defined and feature.text_safe else feature.text }}
+          </span>
+        {% else %}
+          <span class="c-signup-tier__feature-text">
+            {{ feature.text|safe if feature.text_safe is defined and feature.text_safe else feature.text }}
+          </span>
+        {% endif %}
+      </li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+  </div>
+  {% if button_label or footer_text %}
+  <div class="c-signup-tier__footer-area">
+    {% if footer_text %}
+      <p class="c-signup-tier__footer">{{ footer_text|safe }}</p>
+    {% else %}
+      {% snippet 'v2/components/button.html',
+          label=button_label,
+          style=button_style,
+          size='m',
+          tag=button_tag,
+          href=button_href,
+          attrs=button_attrs %}
+    {% endif %}
+  </div>
+  {% endif %}
+</div>

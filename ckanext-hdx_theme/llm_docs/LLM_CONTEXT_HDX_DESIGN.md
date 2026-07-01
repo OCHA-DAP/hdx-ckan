@@ -89,7 +89,7 @@ There are three active layout base templates. The goal is to maintain exactly th
 - `ckanext-hdx_theme/ckanext/hdx_theme/templates/v2/header.html` — top-bar + responsive navbar (fully implemented)
 - `ckanext-hdx_theme/ckanext/hdx_theme/templates/v2/footer.html` — dark-teal footer panel (fully implemented)
 
-Pages in holding state on `page_light.html` (landing pages, signup, org/join, etc.) manually override `{% block header_core %}` to include the legacy `header-mobile.html`. The following pages have been migrated to `v2/page.html`: homepage, dataset search, dataset page, resource page, all locations, all organisations, and contact contributor. See [**redesign/PROGRESS.md**](redesign/PROGRESS.md) for the full holding-state and migrated-pages lists.
+Pages in holding state on `page_light.html` (landing pages, org/join, etc.) manually override `{% block header_core %}` to include the legacy `header-mobile.html`. The following pages have been migrated to `v2/page.html`: homepage, dataset search, dataset page, resource page, all locations, all organisations, contact contributor, and signup flow (all five pages). See [**redesign/PROGRESS.md**](redesign/PROGRESS.md) for the full holding-state and migrated-pages lists.
 
 ## BEM components (HDX custom UI blocks)
 
@@ -222,6 +222,26 @@ Example page-specific template (light search):
 
 ---
 
+### Signup flow (`/signup/`)
+
+- **Templates**: Five pages in `ckanext-hdx_theme/ckanext/hdx_theme/templates/onboarding/signup/`:
+  `value-proposition.html` (tier selection), `user-info.html` (step 1 form),
+  `verify-email.html` (step 2), `change-email.html` (step 2b), `account-validated.html` (step 3).
+  All extend `v2/page.html`. Layout vars set on every page: `outer_row_class='hdx-v2-signup-outer-row'`,
+  `breadcrumb_row_class='hdx-v2-breadcrumb-row--white'`, `content_class='hdx-v2-signup-content'`.
+- **New components**: `v2/components/signup-tier.html` (`c-signup-tier`) — tier selection card with
+  default (gray) and primary (blue) variants, numbered feature badges; `v2/components/step-pager.html`
+  (`c-step-pager`) — horizontal 3-step progress bar, pure CSS (no JS).
+- **Core assets**:
+  - `hdx_theme/v2-signup-page-styles` — page layout (`v2/signup-page.css`) — all 5 pages
+  - `hdx_theme/v2-signup-scripts` — `onboarding/came-from-input.js` + `onboarding/confirm-page-leave.js` (both converted to vanilla JS in place) — user-info and change-email pages
+  - `hdx_theme/v2-form-validator-scripts` — `v2/form-validator.js` — user-info and change-email pages
+  - Legacy `hdx-verify-email-scripts` — verify-email page only
+- **Constants**: string copy in `ckanext/hdx_theme/helpers/ui_constants/onboarding/` (one file per page).
+- **Analytics**: `hdx_click_stopper` modules on tier CTA buttons preserved; `analytics_account_type` block in account-validated preserved.
+
+---
+
 ### Signals page (`/signals`)
 
 - **Template**: `ckanext-hdx_theme/ckanext/hdx_theme/templates/landing_pages/signals.html`
@@ -316,7 +336,13 @@ The factory is in `fanstatic/javascript/v2/drawer.js` (part of `v2-components-sc
 
 ### Form validation (v2)
 
-Add `data-hdx-v2-form-validator` to a `<form>` element. The validator auto-inits on `DOMContentLoaded`. Load `hdx_theme/v2-form-validator-scripts` on the page. Do **not** use `data-module="hdx-form-validator"` on v2 pages.
+Add `data-hdx-v2-form-validator` to a `<form>` element. The validator (`fanstatic/v2/form-validator.js`) auto-inits on `DOMContentLoaded`. Load `hdx_theme/v2-form-validator-scripts` on the page. Do **not** use `data-module="hdx-form-validator"` on v2 pages.
+
+**Error display — `c-search-input` fields**: the validator adds `c-search-input--error` to the input wrapper; a sibling `<span class="c-search-input__error">` (always rendered by the snippet, empty by default) is revealed via the CSS sibling rule `&--error ~ &__error { display: block }`. Server-side errors pre-populate the span and pre-add the modifier class from the template. No `style.display` manipulation — CSS drives visibility entirely.
+
+**Error display — `c-checkbox` fields**: same pattern — `c-checkbox--error` on the `.c-checkbox` wrapper drives a sibling `<span class="c-checkbox__error">` via CSS. The snippet always renders the empty span after the label.
+
+Pass `data-validation-error="…"` (via `input_attrs` / `attrs`) for the inline error text. Fields using `data-live-feedback` use the `c-form-validator__live-feedback` panel as the primary error UI and may omit `data-validation-error`.
 
 ---
 

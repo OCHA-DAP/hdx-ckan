@@ -243,7 +243,7 @@
   flex: 1;
   min-width: 0;
   order: 0;
-  padding: var(--hdx-space-8) 0 6rem;
+  padding: var(--hdx-space-8) 0 var(--hdx-space-24);
 }
 .hdx-v2-all-locations-content .hdx-v2-all-locations-sections {
   display: flex;

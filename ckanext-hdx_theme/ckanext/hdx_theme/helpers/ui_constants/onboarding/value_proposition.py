@@ -15,11 +15,11 @@ CONSTANTS = {
 
     'COLUMN_NO_ACCOUNT_LABEL': '''Search and download data''',
     'COLUMN_NO_ACCOUNT_HELP': '''Explore and use thousands of datasets on HDX without an account''',
-    'COLUMN_NO_ACCOUNT_BUTTON': '''SEARCH DATA''',
+    'COLUMN_NO_ACCOUNT_BUTTON': '''Search Data''',
 
     'COLUMN_INDIVIDUAL_ACCOUNT_LABEL': '''Create an HDX Account''',
     'COLUMN_INDIVIDUAL_ACCOUNT_HELP': '''Access additional features with an individual HDX account''',
-    'COLUMN_INDIVIDUAL_ACCOUNT_BUTTON': '''SIGN UP''',
+    'COLUMN_INDIVIDUAL_ACCOUNT_BUTTON': '''Sign up''',
 
     'COLUMN_INDIVIDUAL_ACCOUNT_WITH_ORG_LABEL': '''Share data''',
     'COLUMN_INDIVIDUAL_ACCOUNT_WITH_ORG_HELP': '''For organisations that need to publish data on HDX''',

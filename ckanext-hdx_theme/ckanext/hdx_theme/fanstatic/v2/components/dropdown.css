@@ -89,6 +89,9 @@
 .c-dropdown--native {
   gap: 0;
 }
+.c-dropdown--native .c-search-input__error {
+  margin-top: var(--hdx-space-2);
+}
 .c-dropdown--native .c-dropdown__select {
   align-self: stretch;
   appearance: none;

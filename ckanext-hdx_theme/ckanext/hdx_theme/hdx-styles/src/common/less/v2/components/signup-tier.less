@@ -1,0 +1,139 @@
+// ============================================================
+// c-signup-tier — value-proposition tier card
+// Figma: llm_docs/redesign/figma_exports/signup-tier-xl.html
+// ============================================================
+@import "../mixins.less";
+
+.c-signup-tier {
+    display:          flex;
+    flex-direction:   column;
+    align-items:      flex-start;
+    padding:          var(--hdx-space-8);
+    gap:              var(--hdx-space-12);
+    flex:             1;
+    background-color: var(--hdx-neutral-01);
+    border:           1px solid var(--hdx-neutral-1);
+    border-radius:    var(--hdx-radius-sm);
+    box-shadow:       var(--hdx-shadow-sm);
+    overflow:         hidden;
+
+    &--primary {
+        background-color: var(--hdx-primary-5);
+        border-color:     var(--hdx-primary-5);
+    }
+
+    &__header-area {
+        display:        flex;
+        flex-direction: column;
+        gap:            var(--hdx-space-6);
+        align-self:     stretch;
+        flex:           1;
+    }
+
+    &__title-group {
+        display:        flex;
+        flex-direction: column;
+        gap:            var(--hdx-space-4);
+        align-self:     stretch;
+    }
+
+    &__title {
+        .hdx-display-m();
+        color:  var(--hdx-neutral-95);
+        margin: 0;
+
+        .c-signup-tier--primary & {
+            color: var(--hdx-neutral-0);
+        }
+    }
+
+    &__description {
+        .hdx-body-l();
+        color:  var(--hdx-neutral-8);
+        margin: 0;
+
+        .c-signup-tier--primary & {
+            color: var(--hdx-neutral-0);
+        }
+    }
+
+    &__features {
+        display:        flex;
+        flex-direction: column;
+        gap:            var(--hdx-space-3);
+        list-style:     none;
+        padding:        0;
+        margin:         0;
+        align-self:     stretch;
+
+        a {
+            color: inherit;
+        }
+    }
+
+    &__feature {
+        display:     flex;
+        align-items: flex-start;
+        gap:         var(--hdx-space-2);
+    }
+
+    &__feature-icon {
+        flex-shrink: 0;
+        width:       var(--hdx-space-5);
+        height:      var(--hdx-space-5);
+        color:       var(--hdx-neutral-8);
+
+        .c-signup-tier--primary & {
+            color: var(--hdx-neutral-0);
+        }
+
+        svg {
+            display: block;
+            width:   var(--hdx-space-5);
+            height:  var(--hdx-space-5);
+        }
+    }
+
+    &__feature-badge {
+        flex-shrink:     0;
+        width:           var(--hdx-space-5);
+        height:          var(--hdx-space-5);
+        border-radius:   50%;
+        border:          1.5px solid var(--hdx-neutral-85);
+        display:         flex;
+        align-items:     center;
+        justify-content: center;
+        box-sizing:      border-box;
+        margin-top:      var(--hdx-space-15);
+        .hdx-body-xs-semibold();
+        color:           var(--hdx-neutral-85);
+    }
+
+    &__feature-text {
+        .hdx-body-l();
+        color: var(--hdx-neutral-8);
+        flex:  1;
+
+        a {
+            color: inherit;
+        }
+
+        .c-signup-tier--primary & {
+            color: var(--hdx-neutral-0);
+        }
+    }
+
+    &__footer-area {
+        align-self: stretch;
+    }
+
+    &__footer {
+        .hdx-body-m();
+        color:  var(--hdx-neutral-8);
+        margin: 0;
+
+        a {
+            color: inherit;
+        }
+    }
+}

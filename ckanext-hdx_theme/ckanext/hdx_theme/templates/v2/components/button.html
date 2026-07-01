@@ -87,6 +87,7 @@
 {% set button_type   = button_type   if button_type   is defined else 'button' %}
 {% set extra_classes = extra_classes if extra_classes is defined else '' %}
 {% set attrs         = attrs         if attrs         is defined else {} %}
+{% set id            = id            if id            is defined else '' %}
 
 {# ── Computed values ─────────────────────────────────────── #}
 {% set is_icon_only  = (type == 'icon-only') %}
@@ -126,6 +127,7 @@
 <a
   class="{{ classes | join(' ') }}"
   href="{{ href }}"
+  {% if id %}id="{{ id }}"{% endif %}
   {% if is_disabled %}aria-disabled="true" tabindex="-1"{% endif %}
   {% if is_icon_only %}aria-label="{{ label }}"{% endif %}
   {% for key, val in attrs.items() %} {{ key }}="{{ val }}"{% endfor %}
@@ -134,6 +136,7 @@
 <button
   type="{{ button_type }}"
   class="{{ classes | join(' ') }}"
+  {% if id %}id="{{ id }}"{% endif %}
   {% if is_disabled %}disabled aria-disabled="true"{% endif %}
   {% if is_icon_only %}aria-label="{{ label }}"{% endif %}
   {% for key, val in attrs.items() %} {{ key }}="{{ val }}"{% endfor %}

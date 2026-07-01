@@ -1,166 +1,115 @@
-{% extends "page_light.html" %}
-
-{% block scripts %}
-  {{ super() }}
-  {% asset 'hdx_theme/bem-blocks-scripts' %}
-{% endblock %}
+{% extends "v2/page.html" %}
 
 {% block styles %}
-  {% asset 'hdx_theme/page-extra-light-styles' %}
-  {% asset 'hdx_theme/bem-blocks-styles' %}
+  {{ super() }}
+  {% asset 'hdx_theme/v2-signup-page-styles' %}
 {% endblock %}
 
 {% set CONST = h.HDX_CONST('UI_CONSTANTS')['ONBOARDING']['VALUE_PROPOSITION'] %}
 {% set ONBOARDING_CONST = h.HDX_CONST('ONBOARDING') %}
+{% set outer_row_class      = 'hdx-v2-signup-outer-row' %}
+{% set breadcrumb_row_class = 'hdx-v2-breadcrumb-row--white' %}
+{% set content_class        = 'hdx-v2-signup-content' %}
 
 {% block subtitle %}{{ _('Account options') }}{% endblock %}
 
-{% block header_core %}
-  {% snippet 'header-mobile.html', page_has_desktop_version=False, page_has_mobile_version=False %}
+{% block breadcrumb_items %}
+  {% snippet 'v2/components/breadcrumb.html',
+      items=[{'label': _('Sign up'), 'href': ''}] %}
 {% endblock %}
 
-{% block breadcrumb_content %}
-  {% snippet "snippets/active_breadcrumb_item.html", title=_('Sign up'), position=2 %}
-{% endblock %}
+{% block secondary %}{% endblock %}
 
-{% block content %}
+{% block primary %}
+<div class="hdx-v2-signup-tiers-page">
+  <h1 class="hdx-v2-signup-tiers-page__heading">{{ CONST.PAGE_TITLE }}</h1>
+  <div class="hdx-v2-signup-tiers-page__tiers">
 
-  <div class="container">
+    {% snippet 'v2/components/signup-tier.html',
+        title=CONST.COLUMN_NO_ACCOUNT_LABEL,
+        description=CONST.COLUMN_NO_ACCOUNT_HELP,
+        features=[
+            {'text': CONST.FEATURE_PUBLIC_DATASETS},
+            {'text': CONST.FEATURE_VIZ_TOOLS},
+            {'text': CONST.FEATURE_REGISTRATION_REQUIRED}
+        ],
+        button_label=CONST.COLUMN_NO_ACCOUNT_BUTTON,
+        button_style='primary',
+        button_tag='a',
+        button_href=h.url_for('dataset.search'),
+        button_attrs={
+            'id': 'value-proposition-no-account-button'
+        },
+        attrs={
+            'data-module': 'hdx_click_stopper',
+            'data-module-link_type': 'onboarding value proposition',
+            'data-module-label': 'no account',
+            'data-module-just_send_event': 'true',
+            'data-module-selector': '#value-proposition-no-account-button'
+        } %}
 
-  <div class="row">
-    <div class="col-12 col-md-11 col-lg-8 mx-auto">
-      <div class="text-center">
-        {{ h.snippet('bem.blocks/heading.html', title=CONST.PAGE_TITLE, heading_type=2, spacing_class="my-5") }}
-      </div>
-    </div>
+    {% snippet 'v2/components/signup-tier.html',
+        title=CONST.COLUMN_INDIVIDUAL_ACCOUNT_LABEL,
+        description=CONST.COLUMN_INDIVIDUAL_ACCOUNT_HELP,
+        features=[
+            {'text': CONST.FEATURE_CONTACT_CONTRIBUTOR},
+            {'text': CONST.FEATURE_REQUEST_DATA},
+            {'text': CONST.FEATURE_MANAGE_NOTIFICATIONS}
+        ],
+        button_label=CONST.COLUMN_INDIVIDUAL_ACCOUNT_BUTTON,
+        button_style='secondary',
+        button_tag='a',
+        button_href=h.url_for('hdx_user_onboarding.user-info'),
+        button_attrs={
+            'id': 'value-proposition-individual-account-button-below',
+            'data-module': 'hdx-onboarding-flow',
+            'data-value-proposition-page': ONBOARDING_CONST.VALUE_PROPOSITION_INDIVIDUAL_ACCOUNT
+        },
+        variant='primary',
+        attrs={
+            'data-module': 'hdx_click_stopper',
+            'data-module-link_type': 'onboarding value proposition',
+            'data-module-label': 'individual account',
+            'data-module-just_send_event': 'true',
+            'data-module-selector': '#value-proposition-individual-account-button-below'
+        } %}
 
-    <div class="col-12 col-lg-12 col-xl-11 mx-auto">
-      <div class="account-options">
-        <div class="row">
-          <div class="col-12 col-lg-4 mb-3 mb-lg-0">
-            <div class="account-options__cell account-options__cell_type_title account-options__cell_type_cozy">
-              {{ h.snippet('bem.blocks/heading.html', title=CONST.COLUMN_NO_ACCOUNT_LABEL, heading_type=5) }}
-            </div>
-            <div class="account-options__cell account-options__cell_type_cozy">
-              <div class="account-options__subtitle">{{ CONST.COLUMN_NO_ACCOUNT_HELP }}</div>
-            </div>
-            <div class="account-options__cell account-options__cell_type_features">
-              <div class="account-options__feature">
-                <i class="account-options__icon fa-solid fa-circle-check fa-fw"></i>
-                <div class="account-options__title">{{ CONST.FEATURE_PUBLIC_DATASETS }}</div>
-              </div>
-              <div class="account-options__feature">
-                <i class="account-options__icon fa-solid fa-circle-check fa-fw"></i>
-                <div class="account-options__title">{{ CONST.FEATURE_VIZ_TOOLS }}</div>
-              </div>
-              <div class="account-options__feature">
-                <i class="account-options__icon fa-solid fa-circle-check fa-fw"></i>
-                <div class="account-options__title">{{ CONST.FEATURE_REGISTRATION_REQUIRED }}</div>
-              </div>
-            </div>
-            <div class="account-options__cell account-options__cell_type_cozy" data-module="hdx_click_stopper"
-                 data-module-link_type="onboarding value proposition" data-module-label="no account"
-                 data-module-just_send_event="true" data-module-selector="#value-proposition-no-account-button">
-              {{ h.snippet('bem.blocks/form_button.html',
-                    type="href",
-                    url=h.url_for('dataset.search'),
-                    title=CONST.COLUMN_NO_ACCOUNT_BUTTON,
-                    button_id="value-proposition-no-account-button",
-                    button_classes=["form-button__btn_font-size_medium", "btn-outline-primary", "d-block"],
-                    container_classes=["w-100"]
-                  ) }}
-            </div>
-          </div>
-          <div class="col-12 col-lg-4 mb-3 mb-lg-0">
-            <div
-              class="account-options__cell account-options__cell_type_title account-options__cell_type_cozy account-options__cell_type_blue">
-              {{ h.snippet('bem.blocks/heading.html', title=CONST.COLUMN_INDIVIDUAL_ACCOUNT_LABEL, heading_type=5) }}
-            </div>
-            <div class="account-options__cell account-options__cell_type_cozy account-options__cell_type_blue">
-              <div class="account-options__subtitle">{{ CONST.COLUMN_INDIVIDUAL_ACCOUNT_HELP }}</div>
-            </div>
-            <div class="account-options__cell account-options__cell_type_features account-options__cell_type_blue">
-              <div class="account-options__feature">
-                <i class="account-options__icon fa-solid fa-circle-check fa-fw"></i>
-                <div class="account-options__title">{{ CONST.FEATURE_CONTACT_CONTRIBUTOR }}</div>
-              </div>
-              <div class="account-options__feature">
-                <i class="account-options__icon fa-solid fa-circle-check fa-fw"></i>
-                <div class="account-options__title">{{ CONST.FEATURE_REQUEST_DATA }}</div>
-              </div>
-              <div class="account-options__feature">
-                <i class="account-options__icon fa-solid fa-circle-check fa-fw"></i>
-                <div class="account-options__title">{{ CONST.FEATURE_MANAGE_NOTIFICATIONS }}</div>
-              </div>
-            </div>
-            <div class="account-options__cell account-options__cell_type_cozy account-options__cell_type_blue"
-                 data-module="hdx_click_stopper"
-                 data-module-link_type="onboarding value proposition" data-module-label="individual account"
-                 data-module-just_send_event="true"
-                 data-module-selector="#value-proposition-individual-account-button-below">
-              {{ h.snippet('bem.blocks/form_button.html',
-                    type="href",
-                    data_attributes={"module": "hdx-onboarding-flow", "value-proposition-page": ONBOARDING_CONST.VALUE_PROPOSITION_INDIVIDUAL_ACCOUNT},
-                    url=h.url_for('hdx_user_onboarding.user-info'),
-                    title=CONST.COLUMN_INDIVIDUAL_ACCOUNT_BUTTON,
-                    button_id="value-proposition-individual-account-button-below",
-                    button_classes=["form-button__btn_font-size_medium", "btn-outline-primary", "d-block"],
-                    container_classes=["w-100"]
-                   ) }}
-            </div>
-          </div>
-          <div class="col-12 col-lg-4">
-            <div
-              class="account-options__cell account-options__cell_type_title account-options__cell_type_cozy account-options__cell_type_grey">
-              {{ h.snippet('bem.blocks/heading.html', title=CONST.COLUMN_INDIVIDUAL_ACCOUNT_WITH_ORG_LABEL, heading_type=5) }}
-            </div>
-            <div class="account-options__cell account-options__cell_type_cozy account-options__cell_type_grey">
-              <div class="account-options__subtitle">{{ CONST.COLUMN_INDIVIDUAL_ACCOUNT_WITH_ORG_HELP }}</div>
-            </div>
-            <div class="account-options__cell account-options__cell_type_features account-options__cell_type_grey">
-              <div class="account-options__feature">
-                <i class="account-options__icon fa-solid fa-1 fa-fw"></i>
-                <div class="account-options__title">
-                  <div data-module="hdx_click_stopper"
-                       data-module-link_type="onboarding value proposition"
-                       data-module-label="individual account with org"
-                       data-module-just_send_event="true"
-                       data-module-selector="#value-proposition-individual-account-with-org-button-below">
-                    {{ CONST.STEP_CREATE_ACCOUNT.format(h.url_for('hdx_user_onboarding.user-info'), 'value-proposition-individual-account-with-org-button-below', "hdx-onboarding-flow", ONBOARDING_CONST.VALUE_PROPOSITION_INDIVIDUAL_ACCOUNT_WITH_ORG)|safe }}
-                  </div>
-                </div>
-              </div>
-              <div class="account-options__feature">
-                <i class="account-options__icon fa-solid fa-2 fa-fw"></i>
-                <div class="account-options__title">{{ CONST.STEP_APPLICATION_REVIEWED }}</div>
-              </div>
-              <div class="account-options__feature">
-                <i class="account-options__icon fa-solid fa-3 fa-fw"></i>
-                <div class="account-options__title">{{ CONST.STEP_SAMPLE_DATA }}</div>
-              </div>
-            </div>
-            <div class="account-options__cell account-options__cell_type_cozy account-options__cell_type_grey"
-                 data-module="hdx_click_stopper"
-                 data-module-link_type="onboarding value proposition"
-                 data-module-just_send_event="true"
-                 data-module-label="share data login"
-                 data-module-selector="#value-proposition-share-data-login-link">
-              {{ h.snippet('bem.blocks/paragraph.html', text=CONST.COLUMN_INDIVIDUAL_ACCOUNT_WITH_ORG_INFO.format(h.url_for('hdx_signin.login'), 'value-proposition-share-data-login-link')) }}
-            </div>
-          </div>
-        </div>
-
-        <div class="text-center mt-5 mb-5">
-          <div class="account-options__help">
-            <p data-module="hdx_click_stopper" data-module-link_type="onboarding value proposition"
-               data-module-just_send_event="true" data-module-selector="#value-proposition-login-link"
-               data-module-label="already have account login">
-              {{ CONST.ALREADY_HAVE_ACCOUNT_HELP.format(h.url_for('hdx_signin.login'), 'value-proposition-login-link')|safe }}
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
+    {% snippet 'v2/components/signup-tier.html',
+        title=CONST.COLUMN_INDIVIDUAL_ACCOUNT_WITH_ORG_LABEL,
+        description=CONST.COLUMN_INDIVIDUAL_ACCOUNT_WITH_ORG_HELP,
+        features=[
+            {
+                'number': 1,
+                'text': CONST.STEP_CREATE_ACCOUNT.format(h.url_for('hdx_user_onboarding.user-info'), 'value-proposition-individual-account-with-org-button-below', 'hdx-onboarding-flow', ONBOARDING_CONST.VALUE_PROPOSITION_INDIVIDUAL_ACCOUNT_WITH_ORG),
+                'text_safe': true,
+                'analytics_attrs': {
+                    'data-module': 'hdx_click_stopper',
+                    'data-module-link_type': 'onboarding value proposition',
+                    'data-module-label': 'individual account with org',
+                    'data-module-just_send_event': 'true',
+                    'data-module-selector': '#value-proposition-individual-account-with-org-button-below'
+                }
+            },
+            {'number': 2, 'text': CONST.STEP_APPLICATION_REVIEWED},
+            {'number': 3, 'text': CONST.STEP_SAMPLE_DATA}
+        ],
+        footer_text=CONST.COLUMN_INDIVIDUAL_ACCOUNT_WITH_ORG_INFO.format(h.url_for('hdx_signin.login'), 'value-proposition-share-data-login-link'),
+        attrs={
+            'data-module': 'hdx_click_stopper',
+            'data-module-link_type': 'onboarding value proposition',
+            'data-module-label': 'share data login',
+            'data-module-just_send_event': 'true',
+            'data-module-selector': '#value-proposition-share-data-login-link'
+        } %}
 
   </div>
+  <p class="hdx-v2-signup-tiers-page__login"
+     data-module="hdx_click_stopper"
+     data-module-link_type="onboarding value proposition"
+     data-module-just_send_event="true"
+     data-module-selector="#value-proposition-login-link"
+     data-module-label="already have account login">
+    {{ CONST.ALREADY_HAVE_ACCOUNT_HELP.format(h.url_for('hdx_signin.login'), 'value-proposition-login-link')|safe }}
+  </p>
+</div>
 {% endblock %}

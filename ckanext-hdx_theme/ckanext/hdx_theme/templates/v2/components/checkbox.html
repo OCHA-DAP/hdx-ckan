@@ -15,6 +15,9 @@
   attrs         {dict}    Extra attrs on <input>.  default: {}
                           Use 'data-indeterminate': '' for indeterminate state (JS sets .indeterminate=true).
   extra_classes {string}  Additional classes.  default: ''
+  label         {string}  Label text rendered after the checkbox span, using class
+                          c-checkbox__label. Supports |safe HTML (e.g. links). default: none
+  required      {bool}    Adds required="required" to the <input>. default: false
   ─────────────────────────────────────────────────────────────
   Example
 
@@ -32,6 +35,8 @@
 {% set value         = value         if value         is defined else '' %}
 {% set attrs         = attrs         if attrs         is defined else {} %}
 {% set extra_classes = extra_classes if extra_classes is defined else '' %}
+{% set label         = label         if label         is defined else none %}
+{% set required      = required      if required      is defined else false %}
 
 {% set classes = ['c-checkbox'] %}
 {% if extra_classes %}{% set classes = classes + [extra_classes] %}{% endif %}
@@ -45,8 +50,15 @@
     {% if disabled %}disabled="disabled"{% endif %}
     {% if name %}name="{{ name }}"{% endif %}
     {% if value %}value="{{ value }}"{% endif %}
+    {% if required %}required="required"{% endif %}
     {% for key, val in attrs.items() %}{{ key }}="{{ val }}" {% endfor %} />
   <span class="c-checkbox__box">
     <span class="c-checkbox__icon">{% include h.url_for_static('v2/icons/check.svg') %}</span>
   </span>
 </span>
+{% if label %}
+
+<label {% if id %}for="{{ id }}"{% endif %}
+       class="c-checkbox__label">{{ label|safe }}</label>
+{% endif %}
+<span class="c-checkbox__error"></span>
