@@ -15,7 +15,7 @@
   {% if notif.list %}
     <ul class="hdx-v2-notifications__list">
       {% for notification in notif.list %}
-        <li class="hdx-v2-notifications__item{% if notification.for_sysadmin %} hdx-v2-notifications__item--sysadmin{% endif %}">
+        <li class="hdx-v2-notifications__item">
           {% include notification.html_template %}
         </li>
       {% endfor %}

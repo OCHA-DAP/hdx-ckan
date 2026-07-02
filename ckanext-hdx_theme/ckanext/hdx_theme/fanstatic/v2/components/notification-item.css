@@ -1,0 +1,44 @@
+.c-notification-item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hdx-space-1);
+}
+.c-notification-item--sysadmin {
+  background: var(--hdx-warning-05);
+}
+.c-notification-item__title {
+  font-family: var(--hdx-font-body);
+  font-size: var(--hdx-fs-s);
+  font-weight: var(--hdx-fw-regular);
+  line-height: var(--hdx-lh-normal);
+  color: var(--hdx-neutral-95);
+}
+.c-notification-item__title a {
+  color: inherit;
+  text-decoration: underline;
+}
+.c-notification-item__tag {
+  font-weight: var(--hdx-fw-regular);
+}
+.c-notification-item__meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--hdx-space-5);
+  font-family: var(--hdx-font-body);
+  font-size: var(--hdx-fs-xs);
+  font-weight: var(--hdx-fw-regular);
+  line-height: var(--hdx-lh-normal);
+  color: var(--hdx-neutral-85);
+}
+.c-notification-item__arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: var(--hdx-neutral-8);
+}
+.c-notification-item__arrow svg {
+  width: var(--hdx-space-4);
+  height: var(--hdx-space-4);
+}

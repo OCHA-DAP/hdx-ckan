@@ -1,0 +1,47 @@
+// ============================================================
+// c-notification-item — single bell-dropdown notification row
+// ============================================================
+// Figma source: llm_docs/redesign/figma_exports/notification.html,
+//               notifications.html, notifications-xl.html
+// Requirement:  llm_docs/redesign/requirements/055-notifications-v2.md
+// ============================================================
+@import "../mixins.less";
+
+.c-notification-item {
+    display:        flex;
+    flex-direction: column;
+    gap:            var(--hdx-space-1);                 // 0.25rem
+
+    &--sysadmin { background: var(--hdx-warning-05); }
+
+    &__title {
+        .hdx-body-s();
+        color: var(--hdx-neutral-95);
+
+        a {
+            color:           inherit;
+            text-decoration: underline;
+        }
+    }
+
+    &__tag { font-weight: var(--hdx-fw-regular); }
+
+    &__meta {
+        display:         flex;
+        align-items:     center;
+        justify-content: space-between;
+        gap:             var(--hdx-space-5);            // 1.25rem
+        .hdx-body-xs();
+        color: var(--hdx-neutral-85);
+    }
+
+    &__arrow {
+        display:         flex;
+        align-items:     center;
+        justify-content: center;
+        flex-shrink:     0;
+        color:           var(--hdx-neutral-8);
+
+        svg { width: var(--hdx-space-4); height: var(--hdx-space-4); }  // 1rem
+    }
+}

@@ -394,9 +394,6 @@
   gap: var(--hdx-space-1);
   font-size: var(--hdx-fs-s);
 }
-.hdx-v2-notifications__item--sysadmin {
-  background: lightyellow;
-}
 .hdx-v2-notifications__empty {
   font-size: var(--hdx-fs-s);
   color: var(--hdx-neutral-7);

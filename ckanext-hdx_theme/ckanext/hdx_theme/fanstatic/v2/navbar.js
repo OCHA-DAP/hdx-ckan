@@ -140,6 +140,13 @@
     el.hidden = false;
     if (trigger) trigger.setAttribute('aria-expanded', 'true');
     activePanel = name;
+
+    if (name === 'notifications' && trigger && typeof hdxUtil !== 'undefined' && hdxUtil.analytics) {
+      hdxUtil.analytics.sendNotificationInteractionEvent({
+        type: 'header icon',
+        count: parseInt(trigger.getAttribute('data-notification-count'), 10) || 0
+      });
+    }
   }
 
   // Rule 1 & 2: panel toggle, close button, outside click
