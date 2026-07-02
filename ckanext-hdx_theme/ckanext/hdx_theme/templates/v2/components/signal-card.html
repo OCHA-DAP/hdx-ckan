@@ -32,8 +32,14 @@
 {% set source_href  = source_href  if source_href  is defined else '#' %}
 {% set cta_label    = cta_label    if cta_label    is defined else '' %}
 {% set cta_href     = cta_href     if cta_href     is defined else '#' %}
+{% set size         = size         if size         is defined else '' %}
 
-<div class="c-signal-card">
+{% set root_classes = ['c-signal-card'] %}
+{% if size == 'sm' %}
+  {% set root_classes = root_classes + ['c-signal-card--sm'] %}
+{% endif %}
+
+<div class="{{ root_classes | join(' ') }}">
 
   {# ── Header: location → (date + type) → title ─────────────── #}
   <div class="c-signal-card__header">
