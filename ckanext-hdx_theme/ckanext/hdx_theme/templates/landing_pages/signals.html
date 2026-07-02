@@ -454,12 +454,21 @@
     <p class="hdx-v2-signals-section-description">{{ CONST.DATA_COVERAGE_SECTION_DESCRIPTION }}</p>
     <div class="hdx-v2-signals-coverage-grid">
       {% for card in data_coverage %}
-        {% snippet 'v2/components/content-card.html',
-            title=card.title,
-            description=card.organization,
-            link_label=_('Learn more'),
-            link_href=card.link,
-            link_new_tab=True %}
+        <div class="c-content-card">
+          <p class="c-content-card__title">{{ card.title }}</p>
+          <p class="c-content-card__desc">{{ card.organization }}</p>
+          {% snippet 'v2/components/text-link.html',
+              label=_('Learn more'),
+              href=card.link,
+              style='tertiary',
+              size='s',
+              target='_blank',
+              attrs={
+                  'data-module': 'hdx_click_stopper',
+                  'data-module-link_type': 'signals data coverage',
+                  'data-module-link_label': card.title
+              } %}
+        </div>
       {% endfor %}
     </div>
   </div>
