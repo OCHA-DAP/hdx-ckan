@@ -90,12 +90,15 @@
                 goTo(idx + (e.type === 'swipeleft' ? 1 : -1));
             });
 
-            // Arrow buttons
-            var prevBtn = c.querySelector(prevSel);
-            var nextBtn = c.querySelector(nextSel);
-            if (prevBtn) prevBtn.addEventListener('click', function () { goTo(idx - 1); });
-            if (nextBtn) nextBtn.addEventListener('click', function () { goTo(idx + 1); });
-
+            // Arrow buttons (optional)
+            if (prevSel) {
+                var prevBtn = c.querySelector(prevSel);
+                if (prevBtn) prevBtn.addEventListener('click', function () { goTo(idx - 1); });
+            }
+            if (nextSel) {
+                var nextBtn = c.querySelector(nextSel);
+                if (nextBtn) nextBtn.addEventListener('click', function () { goTo(idx + 1); });
+            }
             // Dots (optional)
             if (dotsSel) {
                 var dotsEl = c.querySelector(dotsSel);
