@@ -1,0 +1,204 @@
+// ============================================================
+// signals-landing-page.less
+// HDX Signals landing page (/signals/) — v2 page-specific styles
+// Figma sources: signals-xl.html, signals-sm.html
+// ============================================================
+
+@import "mixins.less";
+@import "breakpoints.less";
+
+// ── Hero row (off-white background, includes featured cards) ──
+.hdx-v2-signals-hero-row {
+    background-color: var(--hdx-neutral-01);
+    padding-bottom:   var(--hdx-space-10);
+
+    // Separator between page-header and carousel (Figma: border-bottom on header at SM/MD)
+    .c-page-header {
+        border-bottom: 1px solid var(--hdx-neutral-10);
+
+        @media (min-width: @hdx-bp-xl) {
+            border-bottom: none;
+        }
+    }
+}
+
+// ── Body row (sidebar + content area — white) ─────────────────
+.hdx-v2-signals-row {
+    background-color: var(--hdx-neutral-0);
+}
+
+// ── Sidebar (visible at XL only) ─────────────────────────────
+.hdx-v2-signals-sidebar {
+    display: none;
+
+    @media (min-width: @hdx-bp-xl) {
+        display: block;
+        .v2-sidebar-flex();
+        padding: var(--hdx-space-10) 0;
+    }
+}
+
+// ── Content column ────────────────────────────────────────────
+.hdx-v2-signals-content {
+    .v2-content-flex();
+    padding: var(--hdx-space-10) 0 var(--hdx-space-12);
+}
+
+// ── Section heading ───────────────────────────────────────────
+.hdx-v2-signals-section-heading {
+    .hdx-display-xs();
+    color:  var(--hdx-neutral-95);
+    margin: 0 0 var(--hdx-space-8);
+}
+
+// ── Section description (intro paragraph) ────────────────────
+.hdx-v2-signals-section-description {
+    .hdx-body-m();
+    color:  var(--hdx-neutral-70);
+    margin: 0 0 var(--hdx-space-8);
+}
+
+// ── Generic section wrapper ───────────────────────────────────
+.hdx-v2-signals-section {
+    padding: var(--hdx-space-8) 0;
+}
+
+// ── Featured signals carousel ─────────────────────────────────
+.hdx-v2-signals-cards {
+    position: relative;
+
+    @media (max-width: @hdx-bp-xl) {
+        overflow: hidden;
+    }
+
+    // Inner scrolling element — flex row at all sizes
+    &__inner {
+        position: relative;  // required for JS carousel `left` animation
+        display:  flex;
+
+        @media (min-width: @hdx-bp-xl) {
+            gap: var(--hdx-space-5);
+        }
+    }
+}
+
+// ── Carousel slide wrapper (page-specific, not a component class)
+.hdx-v2-signal-slide {
+    flex-shrink: 0;
+
+    @media (min-width: @hdx-bp-xl) {
+        flex:      1;
+        min-width: 0;
+
+        &.is-carousel-clone { display: none; }  // JS adds clones at SM/MD; hide at XL
+    }
+
+    @media (max-width: @hdx-bp-xl) {
+        width:        19.938rem;
+        margin-right: var(--hdx-space-4);
+    }
+}
+
+// ── Carousel footer (dots, hidden at XL) ─────────────────────
+.hdx-v2-signals-carousel-footer {
+    display:         flex;
+    justify-content: center;
+    margin-top:      var(--hdx-space-4);
+
+    @media (min-width: @hdx-bp-xl) {
+        display: none;
+    }
+}
+
+.hdx-v2-signals-dots {
+    display:         flex;
+    justify-content: center;
+    align-items:     center;
+    gap:             var(--hdx-space-1);
+
+    button {
+        width:            var(--hdx-space-8);
+        height:           var(--hdx-space-2);
+        border-radius:    var(--hdx-radius-sm);
+        background-color: var(--hdx-neutral-1);
+        border:           none;
+        cursor:           pointer;
+        padding:          0;
+
+        &.active { background-color: var(--hdx-primary-5); }
+
+        &:focus-visible {
+            outline:        2px solid var(--hdx-primary-5);
+            outline-offset: 2px;
+        }
+    }
+}
+
+// ── Data Coverage grid (2 cols SM, 3 cols MD+) ────────────────
+.hdx-v2-signals-coverage-grid {
+    display:               grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap:                   var(--hdx-space-4);
+
+    @media (min-width: @hdx-bp-md) {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+// ── Resources grid (2 cols at all breakpoints) ────────────────
+.hdx-v2-signals-resources-grid {
+    display:               grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap:                   var(--hdx-space-4);
+}
+
+// ── Resources contact note ────────────────────────────────────
+.hdx-v2-signals-resources-note {
+    .hdx-body-m();
+    color:      var(--hdx-neutral-70);
+    margin-top: var(--hdx-space-6);
+
+    a {
+      color: inherit;
+    }
+}
+
+// ── Partner logo grid (3 cols all breakpoints → 2 rows of 3) ─
+.hdx-v2-signals-partners-grid {
+    display:               grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap:                   var(--hdx-space-8);
+}
+
+.hdx-v2-signals-map-iframe {
+    width:   100%;
+    height:  600px;
+    border:  none;
+    display: block;
+}
+
+.hdx-v2-signals-partner-logo {
+    max-width:  10rem;
+    max-height: 4rem;
+    width:      100%;
+    height:     auto;
+    object-fit: contain;
+    display:    block;
+    margin:     0 auto;
+}
+
+// ── Mailchimp signup form card ────────────────────────────────
+.hdx-v2-signals-form-card {
+    border-radius: var(--hdx-radius-sm);
+    padding:       var(--hdx-space-8);
+    background:    var(--hdx-neutral-0);
+
+    // Action-buttons row: wraps both hardcoded and dynamically added c-button elements
+    .action-buttons {
+        display:     flex;
+        flex-wrap:   wrap;
+        align-items: center;
+        gap:         var(--hdx-space-2);
+        margin:      var(--hdx-space-2) 0;
+    }
+}

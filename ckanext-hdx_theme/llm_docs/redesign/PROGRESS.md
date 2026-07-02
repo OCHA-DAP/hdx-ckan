@@ -72,6 +72,7 @@ CSS custom property equivalents (`--hdx-*`) are defined in `v2/foundation.css` (
 | `contact-contributor-page.less` | Contact Contributor page sections; imports `mixins.less` |
 | `signup-page.less` | Signup flow page layout (tiers + form pages); imports `mixins.less` |
 | `hapi-landing-page.less` | HAPI landing page styles (hero row, sidebar, sections, iframe, cards, partner grid); imports `mixins.less` |
+| `signals-landing-page.less` | Signals landing page styles (hero row, carousel, form card, map iframe, partner grid); imports `mixins.less` |
 | `home-page.less` | Homepage-only sections (hero, intro, highlights); compiled to `v2-home-page-styles`; imports `mixins.less` |
 | `components/divider.less` | `.c-divider` — standalone component; compiled to `divider.css` and registered in `v2-components-styles` |
 | `components/*.less` | One file per component; each imports `"../mixins.less"` for tokens and mixins |
@@ -100,6 +101,7 @@ CSS custom property equivalents (`--hdx-*`) are defined in `v2/foundation.css` (
 | Signup — change-email | `onboarding/signup/change-email.html` | Step 2b form; `c-step-pager`; `data-hdx-v2-form-validator` |
 | Signup — account-validated | `onboarding/signup/account-validated.html` | Step 3; `c-step-pager`; `analytics_account_type` block preserved |
 | HAPI landing page | `landing_pages/hapi.html` | Extends `v2/page.html`; `c-anchor-links` sticky sidebar; `c-accordion` FAQ; `c-content-card` Be Inspired; CSS Grid partner logos; `c-page-header` with subtitle; see `requirements/053-hdx-hapi-landing-page.md` |
+| Signals landing page | `landing_pages/signals.html` | Extends `v2/page.html`; `c-page-header` with bell-icon CTA; featured signals carousel (Hammer.js + `carousel.js`, dots-only, SM/MD); Mailchimp signup form with v2 buttons; signals map iframe; `c-accordion` FAQ; partner logos; see `requirements/054-signals-landing-page.md` |
 
 ### Pages in holding state (on `page_light.html`)
 
@@ -107,7 +109,6 @@ Each page below extends `page_light.html`, manually overrides `{% block styles %
 
 | Page | Template(s) | Notes |
 |------|-------------|-------|
-| Landing — Signals | `landing_pages/signals.html` | Also loads `hdx_theme/hdx-signals-styles` / `hdx-signals-scripts` |
 | Org join — find org | `org/join/find_organisation.html` | |
 | Org join — confirm org | `org/join/confirm_organisation.html` | |
 | Org join — reason request | `org/join/reason_request.html` | |
@@ -152,7 +153,9 @@ Each page below extends `page_light.html`, manually overrides `{% block styles %
 - [x] Step pager — `step-pager.html` / `step-pager.css`; horizontal 3-step progress indicator; pure CSS (no JS); used on all signup form pages
 - [x] Signup tier — `signup-tier.html` / `signup-tier.css`; tier selection card for value-proposition page; default and primary (blue) variants; numbered feature badges or checkmark icons
 - [x] Content card — `content-card.html` / `content-card.less`; title + description + `c-text-link`; used in HAPI Be Inspired section
-- [x] Accordion — `accordion.html` / `accordion.less`; CSS-only `<details>`/`<summary>`; first item open by default via `open` attr; used in HAPI FAQ
+- [x] Accordion — `accordion.html` / `accordion.less`; CSS-only `<details>`/`<summary>`; first item open by default via `open` attr; used in HAPI and Signals FAQ
+- [x] Page header — `page-header.html` / `page-header.less`; hero section with logo, title, subtitle, description, optional CTA button + icon; used on HAPI and Signals landing pages
+- [x] Signal card — `signal-card.html` / `signal-card.less`; featured signal with location label, date, type label, description/image, source + CTA buttons; used in Signals carousel
 
 Each component file should have:
 1. **HTML template** (`templates/v2/components/component-name.html`) — reusable snippet with BEM markup
@@ -194,6 +197,9 @@ Bundle configuration:
 - `hdx_theme/v2-contact-contributor-page-styles` — Contact Contributor page: adds `v2/contact-contributor-page.css`
 - `hdx_theme/v2-signup-page-styles` — Signup flow pages: adds `v2/signup-page.css`; loaded on all 5 signup pages
 - `hdx_theme/v2-hapi-landing-page-styles` — HAPI landing page: adds `v2/hapi-landing-page.css`
+- `hdx_theme/v2-carousel-scripts` — shared carousel lib: `vendor/hammer/hammer.js` + `v2/carousel.js`; loaded explicitly by each page template that uses the carousel (no preload)
+- `hdx_theme/v2-signals-landing-page-styles` — Signals landing page: adds `v2/signals-landing-page.css` + `v2/components/signal-card.css`
+- `hdx_theme/v2-signals-landing-page-scripts` — Signals landing page: adds `v2/signals-landing-page.js` + `landing_pages/hdx_signals.js`; requires `v2-carousel-scripts` loaded first in the template
 - `hdx_theme/v2-signup-scripts` — Signup scripts: `onboarding/came-from-input.js` (vanilla JS rewrite in place) + `onboarding/confirm-page-leave.js` (vanilla JS rewrite in place); loaded on user-info and change-email pages
 - `hdx_theme/v2-form-validator-scripts` — Form validation: vanilla JS validator (`v2/form-validator.js`); activated by `data-hdx-v2-form-validator` on `<form>` elements; loaded by notification platform templates and signup form pages (user-info, change-email)
 
@@ -233,7 +239,7 @@ Bundle configuration:
 ### Phase 3: Page Migrations ✅ (Complete)
 - [x] Signup page
 - [x] Landing page — HAPI (`/hapi/`)
-- [ ] Landing page — Signals (`/signals/`) — still on `page_light.html`
+- [x] Landing page — Signals (`/signals/`)
 - [x] Contact contributor page
 - [ ] Find/join org page
 - [x] Homepage
@@ -255,7 +261,7 @@ Bundle configuration:
 
 ## Next Steps
 
-1. **Migrate remaining holding-state pages** from `page_light.html` — Signals landing page, then org/join.
+1. **Migrate remaining holding-state pages** from `page_light.html` — org/join pages.
 2. **Build page-specific components** as needed during individual page migrations.
 
 ---

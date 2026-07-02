@@ -122,6 +122,9 @@
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+.c-page-header__desc-text a {
+  color: inherit;
+}
 .c-page-header__desc-text.is-open {
   -webkit-line-clamp: unset;
   overflow: visible;

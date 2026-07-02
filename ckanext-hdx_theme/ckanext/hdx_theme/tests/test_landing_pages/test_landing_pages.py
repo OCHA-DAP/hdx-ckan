@@ -21,6 +21,9 @@ class TestLandingPages(object):
 
         assert 'src="/visualization/hapi-availability/"' in response.body
 
+        assert '<h2 class="hdx-v2-hapi-section-heading">Be Inspired</h2>' in response.body
+        assert 'c-content-card' in response.body
+
         assert '<h2 class="hdx-v2-hapi-section-heading">FAQ</h2>' in response.body
         assert 'c-accordion__trigger' in response.body
         assert 'c-accordion__body' in response.body
@@ -38,15 +41,22 @@ class TestLandingPages(object):
 
         assert 'id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form"' in response.body
 
-        assert '<h3 class="heading__title">Data Coverage</h3>' in response.body
+        assert 'c-signal-card' in response.body
+        assert 'hdx-v2-signal-slide' in response.body
+        assert 'hdx-v2-signals-dots' in response.body
 
-        assert '<h3 class="heading__title">Resources</h3>' in response.body
+        assert '<h2 class="hdx-v2-signals-section-heading">Data Coverage</h2>' in response.body
 
-        assert '<h3 class="heading__title">FAQs</h3>' in response.body
-        assert 'bem-faq__question' in response.body
-        assert 'bem-faq__answer' in response.body
+        assert '<h2 class="hdx-v2-signals-section-heading">Signals Map</h2>' in response.body
+        assert 'src="https://data.humdata.org/visualization/signals/"' in response.body
 
-        assert '<h3 class="heading__title">Partners</h3>' in response.body
+        assert '<h2 class="hdx-v2-signals-section-heading">Resources</h2>' in response.body
+
+        assert '<h2 class="hdx-v2-signals-section-heading">FAQs</h2>' in response.body
+        assert 'c-accordion__trigger' in response.body
+        assert 'c-accordion__body' in response.body
+
+        assert '<h2 class="hdx-v2-signals-section-heading">Partners</h2>' in response.body
         assert 'landing_pages/partners' in response.body
 
     @pytest.mark.usefixtures("hdx_clean_db")

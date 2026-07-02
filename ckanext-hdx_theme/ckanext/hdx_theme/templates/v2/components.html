@@ -1907,6 +1907,37 @@
     </div>
   </section>
 
+  <section class="demo-section" id="signal-card">
+    <h1 class="demo-section__title">Signal Card</h1>
+    <p class="demo-section__subtitle">HDX Signals featured-signal card: location, date+type, title, chart, footer links.</p>
+    <div style="display: flex; gap: 1.5rem; flex-wrap: wrap;">
+      {% snippet 'v2/components/signal-card.html',
+          location='Location A',
+          date='June 2026',
+          type='Food insecurity',
+          title='Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod',
+          description='Chart description placeholder text for this signal',
+          image_src='',
+          image_alt='',
+          source_label='View dataset',
+          source_href='#',
+          cta_label='Read more',
+          cta_href='#' %}
+      {% snippet 'v2/components/signal-card.html',
+          location='Location B',
+          date='May 2026',
+          type='Conflict events',
+          title='Ut enim ad minim veniam quis nostrud exercitation ullamco laboris',
+          description='Chart description placeholder text for this signal',
+          image_src='',
+          image_alt='',
+          source_label='View dataset',
+          source_href='#',
+          cta_label='Read more',
+          cta_href='#' %}
+    </div>
+  </section>
+
 </div>{# /demo-page #}
 
 {% endblock %}

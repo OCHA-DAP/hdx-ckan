@@ -1,0 +1,85 @@
+.c-signal-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hdx-space-6);
+  padding: var(--hdx-space-6);
+  border: 1px solid var(--hdx-neutral-1);
+  border-radius: var(--hdx-radius-sm);
+  background-color: var(--hdx-neutral-0);
+  transition: border-color 150ms;
+}
+.c-signal-card:hover {
+  border-color: var(--hdx-neutral-8);
+}
+.c-signal-card__header {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--hdx-space-3);
+}
+.c-signal-card__meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--hdx-space-2);
+  width: 100%;
+}
+.c-signal-card__date {
+  font-family: var(--hdx-font-body);
+  font-size: var(--hdx-fs-s);
+  font-weight: var(--hdx-fw-regular);
+  line-height: var(--hdx-lh-normal);
+  color: var(--hdx-neutral-50);
+  flex-shrink: 0;
+}
+.c-signal-card__title {
+  font-family: var(--hdx-font-body);
+  font-size: var(--hdx-fs-l);
+  font-weight: var(--hdx-fw-semibold);
+  line-height: var(--hdx-lh-normal);
+  color: var(--hdx-neutral-95);
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  margin: 0;
+}
+.c-signal-card__graph {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hdx-space-6);
+  flex: 1;
+}
+.c-signal-card__description {
+  font-family: var(--hdx-font-body);
+  font-size: var(--hdx-fs-s);
+  font-weight: var(--hdx-fw-regular);
+  line-height: var(--hdx-lh-normal);
+  color: var(--hdx-neutral-60);
+  margin: 0;
+}
+.c-signal-card__image {
+  width: 100%;
+  aspect-ratio: 3;
+  object-fit: contain;
+  background-color: var(--hdx-neutral-2);
+  display: block;
+}
+.c-signal-card__image--placeholder {
+  aspect-ratio: 3;
+}
+.c-signal-card__footer {
+  display: flex;
+  gap: var(--hdx-space-14);
+  flex-wrap: wrap;
+}
+.c-signal-card--sm .c-signal-card__title {
+  font-family: var(--hdx-font-body);
+  font-size: var(--hdx-fs-m);
+  font-weight: var(--hdx-fw-medium);
+  line-height: var(--hdx-lh-normal);
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}

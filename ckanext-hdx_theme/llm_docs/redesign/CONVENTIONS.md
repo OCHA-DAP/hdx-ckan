@@ -311,7 +311,7 @@ Bundle keys mirror their file naming pattern: `v2-{page-name}-page-{styles|scrip
 v2-components-styles / v2-components-scripts   # design system — all v2 pages (via preload)
 v2-page-styles / v2-page-scripts               # layout + global — all v2 pages (explicit in page.html)
 v2-{page-name}-page-styles / -scripts          # page-specific — loaded only on that page
-v2-{lib-name}-scripts                          # utility libs — loaded via preload chain, no page scope
+v2-{lib-name}-scripts                          # shared utility lib — loaded explicitly in each consuming template
 ```
 
 ---
@@ -322,7 +322,17 @@ Only the two foundational bundles may declare `extra: preload:` in `webassets.ym
 - `v2-page-styles` preloads `v2-components-styles`
 - `v2-page-scripts` preloads `v2-components-scripts` + `v2-search-scripts`
 
-All other page-specific bundles have **no preload**. Their dependencies are already loaded by the time they run because `v2/page.html` always loads the base bundles first. Adding redundant preloads is a no-op and just adds noise.
+All other page-specific bundles have **no preload**. Their dependencies are already loaded by the time they run because `v2/page.html` always loads the base bundles first.
+
+Shared utility lib bundles (`v2-{lib-name}-scripts`, e.g. `v2-carousel-scripts`) are **not** declared as preloads. Load them explicitly with `{% asset %}` in the consuming template, before the page-specific bundle:
+
+```jinja2
+{% block scripts %}
+  {{ super() }}
+  {% asset 'hdx_theme/v2-carousel-scripts' %}
+  {% asset 'hdx_theme/v2-signals-landing-page-scripts' %}
+{% endblock %}
+```
 
 ---
 
