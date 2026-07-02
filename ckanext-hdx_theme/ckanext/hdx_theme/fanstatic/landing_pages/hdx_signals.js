@@ -130,11 +130,13 @@ document.addEventListener('DOMContentLoaded', function () {
     if(dataset_checked && location_checked && fields_filled) {
       button.classList.remove('is-disabled');
       button.removeAttribute('disabled');
+      button.removeAttribute('aria-disabled');
       alert.style.display = 'none';
     }
     else {
       button.classList.add('is-disabled');
       button.setAttribute('disabled', 'disabled');
+      button.setAttribute('aria-disabled', 'true');
       alert.style.display = '';
     }
   }

@@ -498,25 +498,41 @@
           description=CONST.RESOURCES_CARD_TEXT_MAP,
           link_label=CONST.RESOURCES_CARD_BUTTON_MAP,
           link_href=CONST.RESOURCES_CARD_BUTTON_LINK_MAP,
-          link_new_tab=True %}
+          link_new_tab=True,
+          link_attrs={
+              'data-module': 'hdx_click_stopper',
+              'data-module-link_type': 'signals resources',
+              'data-module-link_label': CONST.RESOURCES_CARD_TITLE_MAP} %}
       {% snippet 'v2/components/content-card.html',
           title=CONST.RESOURCES_CARD_TITLE_DATASET,
           description=CONST.RESOURCES_CARD_TEXT_DATASET,
           link_label=CONST.RESOURCES_CARD_BUTTON_DATASET,
           link_href=CONST.RESOURCES_CARD_BUTTON_LINK_DATASET,
-          link_new_tab=True %}
+          link_new_tab=True,
+          link_attrs={
+              'data-module': 'hdx_click_stopper',
+              'data-module-link_type': 'signals resources',
+              'data-module-link_label': CONST.RESOURCES_CARD_TITLE_DATASET} %}
       {% snippet 'v2/components/content-card.html',
           title=CONST.RESOURCES_CARD_TITLE_METHODOLOGY,
           description=CONST.RESOURCES_CARD_TEXT_METHODOLOGY,
           link_label=CONST.RESOURCES_CARD_BUTTON_METHODOLOGY,
           link_href=CONST.RESOURCES_CARD_BUTTON_LINK_METHODOLOGY,
-          link_new_tab=True %}
+          link_new_tab=True,
+          link_attrs={
+              'data-module': 'hdx_click_stopper',
+              'data-module-link_type': 'signals resources',
+              'data-module-link_label': CONST.RESOURCES_CARD_TITLE_METHODOLOGY} %}
       {% snippet 'v2/components/content-card.html',
           title=CONST.RESOURCES_CARD_TITLE_REPOSITORY,
           description=CONST.RESOURCES_CARD_TEXT_REPOSITORY,
           link_label=CONST.RESOURCES_CARD_BUTTON_REPOSITORY,
           link_href=CONST.RESOURCES_CARD_BUTTON_LINK_REPOSITORY,
-          link_new_tab=True %}
+          link_new_tab=True,
+          link_attrs={
+              'data-module': 'hdx_click_stopper',
+              'data-module-link_type': 'signals resources',
+              'data-module-link_label': CONST.RESOURCES_CARD_TITLE_REPOSITORY} %}
     </div>
     <p class="hdx-v2-signals-resources-note">
       {{ h.literal(CONST.RESOURCES_SECTION_PARAGRAPH.format('mailto:hdx-signals@un.org')) }}

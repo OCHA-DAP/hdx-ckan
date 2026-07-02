@@ -193,7 +193,7 @@ SECTIONS_CONSTANTS = [
 - Sidebar: **hidden** — no mobile dropdown
 - Page header: stacked (text block above, logo box full-width below; CTA button below description)
 - Featured signal cards: carousel (1 card visible at a time, `c-signal-card` size `sm`)
-- Data coverage: single-column stack
+- Data coverage: 2-col grid (same as MD)
 - Logo grid: 3 per row (same)
 
 ### Breakpoint Summary
@@ -204,8 +204,8 @@ SECTIONS_CONSTANTS = [
 | Mobile nav dropdown | Hidden | **None** | **None** |
 | Page header | Horizontal (text + button left, logo right) | Same, narrower | Stacked |
 | Featured signal cards | 3-col flex row | Carousel | Carousel (`sm` card size) |
-| Data coverage grid | 3-col | 3-col | 1-col |
-| Resources grid | 2-col | 2-col | 1-col |
+| Data coverage grid | 3-col | 3-col | 2-col |
+| Resources grid | 2-col | 2-col | 2-col |
 | Partner logos | 3-col (6 logos, 2 rows) | 3-col | 3-col |
 | Container padding | 3rem sides | 3rem sides | 1rem sides |
 
@@ -695,13 +695,13 @@ cta_href='#signup'
 ### Data Coverage Grid
 
 ```less
-.hdx-v2-signals-data-coverage {
+.hdx-v2-signals-coverage-grid {
     display:               grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap:                   var(--hdx-space-5);
+    grid-template-columns: repeat(2, 1fr);   // SM: 2 columns
+    gap:                   var(--hdx-space-4);
 
-    @media (max-width: (@hdx-bp-md - 0.0625rem)) {
-        grid-template-columns: 1fr;   // SM: single column
+    @media (min-width: @hdx-bp-md) {
+        grid-template-columns: repeat(3, 1fr);
     }
 }
 ```
@@ -709,14 +709,10 @@ cta_href='#signup'
 ### Resources Grid
 
 ```less
-.hdx-v2-signals-resources {
+.hdx-v2-signals-resources-grid {
     display:               grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, 1fr);   // 2 columns at all breakpoints
     gap:                   var(--hdx-space-4);
-
-    @media (max-width: (@hdx-bp-md - 0.0625rem)) {
-        grid-template-columns: 1fr;
-    }
 }
 ```
 

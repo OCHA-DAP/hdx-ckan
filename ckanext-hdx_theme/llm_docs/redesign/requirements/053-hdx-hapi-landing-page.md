@@ -559,9 +559,16 @@ and metadata strip when no dataset fields are passed (as on this landing page).
 
 **Q9 — Be Inspired card component**
 New `c-content-card` component created (`content-card.html` + `content-card.less`).
-Params: `title`, `description`, `link_label`, `link_href`, `link_new_tab`.
+Params: `title`, `description`, `link_label`, `link_href`, `link_new_tab`, `link_attrs`.
 The link is rendered via `c-text-link` snippet (style `tertiary`, size `s`). No bespoke
 `__link` LESS rule — the snippet handles its own styling.
+
+`link_attrs` (dict, forwarded to `c-text-link`'s `attrs`) was added after launch to fix a
+regression: v1's Be Inspired cards carried `data-module="hdx_click_stopper"` +
+`data-module-link_type="hapi tools"` + `data-module-link_label=<card title>` (see commit
+`8032c54a4c`, "add analytics"), which the v2 migration dropped because `content-card.html`
+had no way to pass attrs through to its link. Restored via `link_attrs` on all 4 Be Inspired
+card calls in `hapi.html`, matching the same fix applied to Signals' Resources cards.
 
 **Q10 — Partner logos with no container**
 Partner logos are direct `<img>` grid children — no wrapper `<div>`. CSS Grid on
