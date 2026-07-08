@@ -1480,6 +1480,7 @@ v2-components-styles:
     - v2/components/letter-anchor.css
     - v2/components/list-item.css
     - v2/components/nav-item.css
+    - v2/components/notification-item.css
     - v2/components/org-list-card.css
     - v2/components/overlay.css
     - v2/components/page-header.css

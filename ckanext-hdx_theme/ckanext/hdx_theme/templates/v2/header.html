@@ -207,7 +207,8 @@
                     aria-label="{{ _('Notifications') }}"
                     aria-expanded="false"
                     aria-controls="hdx-v2-panel-notifications"
-                    data-hdx-v2-panel="notifications">
+                    data-hdx-v2-panel="notifications"
+                    data-notification-count="{{ notif.count }}">
               <span class="hdx-v2-navbar__bell-icon">{% include 'v2/icons/bell.svg' %}</span>
               {% if notif.count > 0 %}
                 <span class="hdx-v2-navbar__bell-badge" aria-hidden="true">{{ notif.count }}</span>

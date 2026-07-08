@@ -4,28 +4,25 @@ Example:
   {% snippet 'light/notifications/org_membership_snippet.html', notification=notification %}
 
 #}
-{% if notification.is_sysadmin %} [membership] {% endif %}
-{% if notification.for_sysadmin %}
-    There
-    {{ 'are' if notification.count > 1 else 'is' }}
+{% set sysadmin_tag = '[membership]' if notification.is_sysadmin else '' %}
+{% set body %}
+  {% if notification.for_sysadmin %}
+    {{ _('There') }} {{ _('are') if notification.count > 1 else _('is') }}
     <a href="{{ notification.org_hdx_url }}"
        data-module="hdx_notifications_main" data-module-personal="false" data-module-type="item">
-
-        {{ notification.count }} membership
-        {{ 'requests' if notification.count > 1 else 'request' }}
+      {{ notification.count }} {{ _('membership') }} {{ _('requests') if notification.count > 1 else _('request') }}
     </a>
-    for {{ notification.org_title }} organisation.
-    <br />
-    <span class="date">{{ notification.last_date }}</span>
-{% else %}
-    You have
+    {{ _('for') }} {{ notification.org_title }} {{ _('organisation.') }}
+  {% else %}
+    {{ _('You have') }}
     <a href="{{ notification.org_hdx_url }}"
        data-module="hdx_notifications_main" data-module-personal="true" data-module-type="item">
-
-        {{ notification.count }} membership
-        {{ 'requests' if notification.count > 1 else 'request' }}
+      {{ notification.count }} {{ _('membership') }} {{ _('requests') if notification.count > 1 else _('request') }}
     </a>
-    for {{ notification.org_title }} organisation.
-    <br />
-    <span class="date">{{ notification.last_date }}</span>
-{% endif %}
+    {{ _('for') }} {{ notification.org_title }} {{ _('organisation.') }}
+  {% endif %}
+{% endset %}
+{% snippet 'v2/components/notification-item.html',
+    sysadmin_tag=sysadmin_tag, for_sysadmin=notification.for_sysadmin,
+    date=notification.last_date, body=body,
+    url=notification.org_hdx_url, data_personal=not notification.for_sysadmin %}

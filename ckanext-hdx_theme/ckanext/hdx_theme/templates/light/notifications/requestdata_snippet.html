@@ -5,31 +5,32 @@ Example:
 
 #}
 
-{% if notification.is_sysadmin %} [HDX connect] {% endif %}
-{% if notification.for_sysadmin %}
-    There
-    {{ 'are' if notification.count > 1 else 'is' }}
+{% set sysadmin_tag = '[HDX connect]' if notification.is_sysadmin else '' %}
+{% set body %}
+  {% if notification.for_sysadmin %}
+    {{ _('There') }} {{ _('are') if notification.count > 1 else _('is') }}
     <a href="{{ notification.my_requests_url }}"
        data-module="hdx_notifications_main" data-module-personal="false" data-module-type="item">
-        {{ notification.count }} pending HDX connect dataset
-        {{ 'requests' if notification.count > 1 else 'request' }}.
+      {{ notification.count }} {{ _('pending HDX connect dataset') }}
+      {{ _('requests') if notification.count > 1 else _('request') }}.
     </a>
-    for {{ notification.org_title }} organisation.
-    <br />
-    <span class="date">{{ notification.last_date }}</span>
-{% else %}
-    You have
+    {{ _('for') }} {{ notification.org_title }} {{ _('organisation.') }}
+  {% else %}
+    {{ _('You have') }}
     <a href="{{ notification.my_requests_url }}"
        data-module="hdx_notifications_main" data-module-personal="true" data-module-type="item">
-        {{ notification.count }} pending HDX connect dataset
-        {{ 'requests' if notification.count > 1 else 'request' }}.
+      {{ notification.count }} {{ _('pending HDX connect dataset') }}
+      {{ _('requests') if notification.count > 1 else _('request') }}.
     </a>
-    Please accept or decline the request as soon as you can by visiting the
+    {{ _('Please accept or decline the request as soon as you can by visiting the') }}
     <a href="{{ notification.my_requests_url }}"
        data-module="hdx_notifications_main" data-module-personal="true" data-module-type="item">
-        My Requests
+      {{ _('My Requests') }}
     </a>
-    page.
-    <br />
-    <span class="date">{{ notification.last_date }}</span>
-{% endif %}
+    {{ _('page.') }}
+  {% endif %}
+{% endset %}
+{% snippet 'v2/components/notification-item.html',
+    sysadmin_tag=sysadmin_tag, for_sysadmin=notification.for_sysadmin,
+    date=notification.last_date, body=body,
+    url=notification.my_requests_url, data_personal=not notification.for_sysadmin %}

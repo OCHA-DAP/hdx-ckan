@@ -156,6 +156,7 @@ Each page below extends `page_light.html`, manually overrides `{% block styles %
 - [x] Accordion — `accordion.html` / `accordion.less`; CSS-only `<details>`/`<summary>`; first item open by default via `open` attr; used in HAPI and Signals FAQ
 - [x] Page header — `page-header.html` / `page-header.less`; hero section with logo, title, subtitle, description, optional CTA button + icon; used on HAPI and Signals landing pages
 - [x] Signal card — `signal-card.html` / `signal-card.less`; featured signal with location label, date, type label, description/image, source + CTA buttons; used in Signals carousel
+- [x] Notification item — `notification-item.html` / `notification-item.less`; title + optional sysadmin bracket tag + meta row (date + arrow link); `.c-notification-item--sysadmin` highlight modifier; used in the navbar notifications dropdown
 
 Each component file should have:
 1. **HTML template** (`templates/v2/components/component-name.html`) — reusable snippet with BEM markup
@@ -172,7 +173,7 @@ Exception: `info-icon.html` has no dedicated LESS/CSS — it composes existing `
 
 Bundle configuration:
 - `hdx_theme/v2-components-styles` — standalone design system bundle (tokens + components), no Bootstrap
-  - Contents: `v2/foundation.css`, then component CSS files: `divider`, `activity-card`, `dataset-card`, `resource-card`, `org-list-card`, `avatar-badge`, `buttons`, `checkbox`, `copy-button`, `dropdown`, `input-field`, `label`, `letter-anchor`, `list-item`, `nav-item`, `anchor-links`, `pagination`, `breadcrumb`, `page-header`, `selection`, `showcase-card`, `text-link`, `highlight-card`, `overlay`, `signup-tier`, `step-pager`, `content-card`, `accordion`
+  - Contents: `v2/foundation.css`, then component CSS files: `divider`, `activity-card`, `dataset-card`, `resource-card`, `org-list-card`, `avatar-badge`, `buttons`, `checkbox`, `copy-button`, `dropdown`, `input-field`, `label`, `letter-anchor`, `list-item`, `nav-item`, `notification-item`, `anchor-links`, `pagination`, `breadcrumb`, `page-header`, `selection`, `showcase-card`, `text-link`, `highlight-card`, `overlay`, `signup-tier`, `step-pager`, `content-card`, `accordion`
   - Kept separate for non-page contexts (component previews, embedded widgets)
 - `hdx_theme/v2-page-styles` ✅ Full page bundle: preloads `v2-components-styles`, then adds:
   - `vendor/bootstrap5/css/bootstrap.css`

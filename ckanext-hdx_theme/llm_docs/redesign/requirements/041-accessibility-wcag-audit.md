@@ -39,9 +39,9 @@ The complete v2 implementation surface area across all pages, layout templates, 
 | `templates/v2/search-filters.html` | Filter sidebar and mobile overlay |
 | `templates/v2/search-nav-controls.html` | Sort and view controls for search results |
 
-#### Components (24, under `templates/v2/components/`)
+#### Components (41, under `templates/v2/components/`)
 
-`activity-card` · `anchor-links` · `autocomplete` · `avatar` · `breadcrumb` · `button` · `checkbox` · `copy-button` · `dataset-card` · `dropdown` · `dropdown-panel` · `file-type-icon` · `graph-point` · `label` · `letter-anchor` · `list-item` · `nav-item` · `pagination` · `radio` · `resource-card` · `search-input` · `selection-item` · `showcase-card` · `text-button` · `text-link` · `toggle` · `tooltip`
+`accordion` · `activity-card` · `activity-item` · `anchor-links` · `autocomplete` · `avatar` · `breadcrumb` · `button` · `checkbox` · `content-card` · `copy-button` · `dataset-card` · `drawer` · `dropdown` · `dropdown-panel` · `file-type-icon` · `graph-point` · `highlight-card` · `info-icon` · `kpi-card` · `label` · `letter-anchor` · `list-item` · `nav-item` · `notification-item` · `org-list-card` · `page-header` · `pagination` · `radio` · `resource-card` · `search-input` · `selection-item` · `showcase-card` · `signal-card` · `signup-tier` · `step-pager` · `table` · `text-button` · `text-link` · `toggle` · `tooltip`
 
 #### Data-transform snippets (2)
 
