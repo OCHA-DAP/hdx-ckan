@@ -1,13 +1,15 @@
 // ============================================================
-// org-page.less — v2 Organization page (task 056)
+// org-page.less — v2 Organization page (tasks 056, 057)
 // Compiled output: fanstatic/v2/org-page.css
 // Figma: llm_docs/redesign/figma_exports/xl-org-page.html,
-//        xl-org-members-page.html, md-org-page.html, sm-org-page.html
+//        xl-org-members-page.html, md-org-page.html, sm-org-page.html,
+//        xl-org-activity-page.html
 // ============================================================
-// The dataset list / filters / pagination body reuses the search
-// page styles verbatim (v2-search-page-styles bundle), and the
-// hero reuses c-page-header with its default metrics — this file
-// only covers the hero band and the empty state.
+// The Datasets tab's dataset list / filters / pagination body reuses
+// the search page styles verbatim (v2-search-page-styles bundle), and
+// the hero reuses c-page-header with its default metrics — this file
+// covers the hero band, the Datasets-tab empty state, and the
+// Activity-tab section (content column + activity list).
 // ============================================================
 
 @import "mixins.less";
@@ -25,5 +27,37 @@
 
     a {
         .hdx-link-m();
+    }
+}
+
+// ── Activity tab: content column (no sidebar) ──────────────────
+.hdx-v2-org-activity-content {
+    .v2-content-flex();
+}
+
+// ── Activity tab: activity list section (task 057) ─────────────
+// Full-bleed, full-width section at every breakpoint.
+.hdx-v2-org-activity {
+    align-self:     stretch;
+    display:        flex;
+    flex-direction: column;
+    gap:             var(--hdx-space-6);
+    border-top:      1px solid var(--hdx-neutral-1);
+    padding:         var(--hdx-space-6) 0;
+
+    @media (min-width: @hdx-bp-md) {
+        padding: var(--hdx-space-8) 0 var(--hdx-space-12);
+    }
+
+    &__title {
+        .hdx-display-s();
+        margin: 0;
+        color:  var(--hdx-neutral-95);
+    }
+
+    &__body {
+        display:        flex;
+        flex-direction: column;
+        gap:            var(--hdx-space-6);
     }
 }
