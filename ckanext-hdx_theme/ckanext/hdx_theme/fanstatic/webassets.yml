@@ -1491,6 +1491,7 @@ v2-components-styles:
     - v2/components/signup-tier.css
     - v2/components/step-pager.css
     - v2/components/table.css
+    - v2/components/tabs.css
     - v2/components/signal-card.css
     - v2/components/text-link.css
 
@@ -1637,6 +1638,12 @@ v2-org-list-page-scripts:
   contents:
     - v2/url-nav.js
     - v2/org-list-page.js
+
+v2-org-page-styles:
+  output: ckanext-hdx_theme/%(version)s_v2-org-page-styles.css
+  <<: *common-css
+  contents:
+    - v2/org-page.css
 
 v2-contact-contributor-page-styles:
   output: ckanext-hdx_theme/%(version)s_v2-contact-contributor-page-styles.css

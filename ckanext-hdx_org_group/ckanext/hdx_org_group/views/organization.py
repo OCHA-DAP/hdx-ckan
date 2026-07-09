@@ -64,39 +64,29 @@ def read(id):
         if read_logic.redirect_result:
             return read_logic.redirect_result
 
-        if read_logic.org_meta.is_custom:
-            template_data = _generate_template_data_for_custom_org(read_logic)
-            template_data['analytics'] = {
+        # Standard and custom orgs render the same unified v2 template (task 056)
+        org_dict = read_logic.org_meta.org_dict
+        org_dict.update({
+            'search_template_data': read_logic.search_template_data,
+            'datasets_num': read_logic.search_template_data.get('facets').get('extras_archived').get('fals'),
+            'archived_package_count': read_logic.search_template_data.get('facets').get('extras_archived').get('true'),
+            'allow_req_membership': read_logic.org_meta.allow_req_membership,
+            # 'group_message_info': read_logic.org_meta.group_message_info,
+        })
+
+        template_data = {
+            'org_dict': org_dict,
+            'org_meta': read_logic.org_meta,
+            'analytics': {
                 'analytics_came_from': analytics.came_from(request.args),
                 'analytics_supports_notifications': analytics.supports_notifications(ObjectType.ORGANIZATION,
-                                                                                     read_logic.org_meta.org_dict),
+                                                                                     org_dict),
             }
-            unsubscribe_token = request.args.get('_unsubscribe_token', None)
-            add_unsubscribe_token(unsubscribe_token, ObjectType.ORGANIZATION, read_logic.org_meta.org_dict.get('id'), template_data)
-            result = render('organization/custom/custom_org.html', template_data)
-            return result
-        else:
-            org_dict = read_logic.org_meta.org_dict
-            org_dict.update({
-                'search_template_data': read_logic.search_template_data,
-                'datasets_num': read_logic.search_template_data.get('facets').get('extras_archived').get('fals'),
-                'archived_package_count': read_logic.search_template_data.get('facets').get('extras_archived').get('true'),
-                'allow_req_membership': read_logic.org_meta.allow_req_membership,
-                # 'group_message_info': read_logic.org_meta.group_message_info,
-            })
-
-            template_data = {
-                'org_dict': org_dict,
-                'analytics': {
-                    'analytics_came_from': analytics.came_from(request.args),
-                    'analytics_supports_notifications': analytics.supports_notifications(ObjectType.ORGANIZATION,
-                                                                                         org_dict),
-                }
-            }
-            unsubscribe_token = request.args.get('_unsubscribe_token', None)
-            add_unsubscribe_token(unsubscribe_token, ObjectType.ORGANIZATION, org_dict.get('id'), template_data)
-            template_file = _get_group_template('read_template', 'organization')
-            return render(template_file, template_data)
+        }
+        unsubscribe_token = request.args.get('_unsubscribe_token', None)
+        add_unsubscribe_token(unsubscribe_token, ObjectType.ORGANIZATION, org_dict.get('id'), template_data)
+        template_file = _get_group_template('read_template', 'organization')
+        return render(template_file, template_data)
     except NotFound:
         abort(404, _('Page not found'))
     except NotAuthorized:

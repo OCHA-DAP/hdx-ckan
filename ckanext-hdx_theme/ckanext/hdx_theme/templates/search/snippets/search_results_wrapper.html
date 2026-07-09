@@ -32,7 +32,9 @@ Example:
 
     {% block page_pagination %}
       {% if v2 %}
-        {% set base_url = my_c.page._url_generator(page='') %}
+        {# the page number is concatenated after base_url, so any #fragment the url
+           generator appends (e.g. the org page's #datasets-section) must be stripped #}
+        {% set base_url = my_c.page._url_generator(page='').split('#')[0] %}
         <div class="hdx-v2-pagination-row">
           {% snippet 'v2/components/pagination.html',
               size='md',

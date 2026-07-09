@@ -1,4 +1,4 @@
-{% extends "organization/read_base.html" %}
+{% extends "v2/page.html" %}
 
 {% set org_meta = org_meta or c.org_meta %}
 {% set org_dict = org_dict or org_meta.org_dict or c.group_dict %}
@@ -15,83 +15,147 @@
 
 {% set can_create_dataset = h.check_access('package_create', {'organization_id': org_dict.id, 'owner_org': org_dict.id}) %}
 {% set can_edit = h.check_access('organization_update', {'id': org_dict.id}) %}
-{% set can_actions = can_create_dataset or can_edit %}
 
-{% set page_has_mobile_version = True %}
+{% set outer_row_class = 'hdx-v2-search-row' %}
+{% set columns_class   = 'hdx-v2-search-columns' %}
+{% set sidebar_class   = 'hdx-v2-search-sidebar' %}
+{% set content_class   = 'hdx-v2-search-content' %}
 
 {% block subtitle %}{{ org_dict.display_name }} Humanitarian Data | {% block subtitle_suffix %}{{org_dict.search_template_data.item_count}} Datasets{% endblock %}{% endblock %}
 {% block meta %}
-    {{ super() }}
+  {{ super() }}
 	{% block meta_description %}
     	<meta name="description" content="Explore {{ org_dict.search_template_data.item_count }} humanitarian datasets from the {{ org_dict.display_name }} on HDX. Access critical data supporting disaster relief, crisis response, and recovery efforts worldwide." />
 	{% endblock %}
 {% endblock %}
 
-{% block item_title_contrib %}
-	<div>
-		<ul style="list-style: none; padding: 0;" class="mTop40">
-			{% snippet 'browse/snippets/org_item_read.html', organization=org_dict %}
-		</ul>
-	</div>
-	<div class="row mTop20">
-		<div class="col-12">
-			{% snippet "organization/snippets/org_actions_menu.html", request_membership=allow_req_membership, organization=org_dict, can_create_dataset=can_create_dataset, can_edit=can_edit, classes='base-actions-menu followButtonContainer float-end' %}
-		</div>
-	</div>
+{% block links %}
+  {% set canonical_url = h.url_for('hdx_org.read', id=org_dict.name) %}
+  {% snippet "snippets/add_optional_canonical_link.html", no_params=True, canonical_url=canonical_url %}
+  {{ super() }}
 {% endblock %}
 
-{% block page_header %}
-<div>
-	<header class="module-content page-header paddingRowHack mTop20 mBottom10">
-		<ul class="nav nav-tabs paddingLeftHack paddingRightHack">
-		   {% block content_primary_nav %}
-			   	{{ h.bs5_build_nav_icon('hdx_org.read', _('Datasets'), id=org_dict.name, class_='nav-link hdx-tab-button') }}
-			   	{{ h.bs5_build_nav_icon('hdx_org.activity', _('Activity Stream'), id=org_dict.name, class_='nav-link hdx-tab-button') }}
-				{% if c.user %}
-					{{ h.bs5_build_nav_icon('hdx_members.members', _('Members'), id=org_dict.name, class_='nav-link hdx-tab-button') }}
-				{% endif %}
-				{% if h.check_access('organization_update', {'id': org_dict.id}) %}
-				  {{ h.bs5_build_nav_icon('requestdata_organization_requests.requested_data', _('Requested Data'), id=org_dict.name, class_='nav-link') }}
-				{% endif %}
-			   	{{ h.bs5_build_nav_icon('hdx_org.stats', _('Stats'), id=org_dict.name, class_='nav-link hdx-tab-button') }}
-		   {% endblock %}
-		</ul>
-	</header>
-</div>
+{% block styles %}
+  {{ super() }}
+  {% asset 'hdx_theme/v2-search-page-styles' %}
+  {% asset 'hdx_theme/v2-org-page-styles' %}
 {% endblock %}
 
-
-{% block page_primary_action %}
+{% block scripts %}
+  {{ super() }}
+  {% asset 'hdx_theme/v2-search-page-scripts' %}
 {% endblock %}
 
-{% block primary_content_inner %}
-	{% block package_notes %}
-    {% endblock %}
-    {% block groups_search_form %}
-	{% endblock %}
+{% block breadcrumb_items %}
+  {% snippet 'v2/components/breadcrumb.html',
+      items=[
+        {'label': _('Organisations'), 'href': h.url_for('organizations_index')},
+        {'label': org_dict.display_name, 'href': ''}
+      ] %}
+{% endblock %}
 
-	{% block packages_list %}
-      {% if org_dict.search_template_data.page.items %}
-		<div>
-			{% snippet 'search/snippets/search_results_wrapper.html', tracking_enabled=g.tracking_enabled, my_c=org_dict.search_template_data %}
-		</div>
-  	  {% else %}
-        <div>
-		  	<div class="big-message">
-			    <p>
-			      {{ _('There are no datasets currently uploaded to this organisation.') }}
-			    </p>
-			    <p>
-			      {% if h.check_access('package_create', {'organization_id': org_dict.id, 'owner_org': org_dict.id}) %}
-				  		<a href="javascript:void(0);" onclick="contributeAddDetails(null, 'empty org');" class="add-data">Add Data</a>
-				  {% endif %}
-			    </p>
-		    </div>
-		</div>
+{# ── Hero: org header + tabs ───────────────────────────────── #}
+{% block pre_primary %}
+
+  {# Logo: custom-org rect logo → uploaded/external org image → hidden #}
+  {% set logo_src = '' %}
+  {% if org_meta.is_custom and org_meta.customization and org_meta.customization.get('image_rect') %}
+    {% set logo_src = org_meta.custom_rect_logo_url %}
+  {% elif org_dict.image_url %}
+    {% set logo_src = org_dict.image_url if org_dict.image_url.startswith('http') else h.url_for_static('uploads/group/' ~ org_dict.image_url) %}
+  {% endif %}
+
+  {% set member_since = _('Member since') ~ ' ' ~ (h.render_datetime(org_dict.created) if org_dict.created else _('Unknown')) %}
+  {% set description = h.markdown_extract(org_dict.description, extract_length=0) | striptags if org_dict.description else '' %}
+
+  {% set header_actions = [
+    {'label': _('Visit website'),
+     'href': org_dict.org_url,
+     'icon_src': 'v2/icons/link-external.svg',
+     'attrs': {'target': '_blank', 'rel': 'noopener'},
+     'show': true if org_dict.org_url else false},
+    {'label': _('Edit org page'),
+     'href': h.url_for('organization.edit', id=org_dict.name),
+     'icon_src': 'v2/icons/edit.svg',
+     'show': can_edit},
+    {'label': _('Add dataset'),
+     'href': '#',
+     'icon_src': 'v2/icons/plus.svg',
+     'attrs': {'onclick': "contributeAddDetails(null, 'org')"},
+     'show': can_create_dataset},
+    {'label': _('Request membership'),
+     'href': h.url_for('hdx_org_join.find_organisation', selected=org_dict.id),
+     'icon_src': 'v2/icons/user-plus.svg',
+     'show': allow_req_membership},
+  ] %}
+
+  <div class="hdx-v2-org-page-hero">
+    <div class="hdx-v2-container">
+      {% snippet 'v2/components/page-header.html',
+          title=org_dict.display_name or org_dict.title or org_dict.name,
+          member_since=member_since,
+          description=description,
+          logo_src=logo_src,
+          pkg_state=org_dict.state,
+          supports_notifications=True,
+          notification_object_type='organization',
+          notification_object_id=org_dict.id,
+          notification_object_dict=org_dict,
+          header_actions=header_actions,
+          header_stats=[
+            {'label': _('Datasets'), 'value': h.hdx_format_number_si(org_dict.datasets_num or 0)},
+            {'label': _('Members'), 'value': h.hdx_format_number_si(org_meta.members_num or 0)}
+          ] %}
+
+      {% snippet 'v2/components/tabs.html',
+          aria_label=_('Organisation sections'),
+          items=[
+            {'label': _('Datasets'), 'href': h.url_for('hdx_org.read', id=org_dict.name), 'active': true},
+            {'label': _('Activity'), 'href': h.url_for('hdx_org.activity', id=org_dict.name)},
+            {'label': _('Members'), 'href': h.url_for('hdx_members.members', id=org_dict.name), 'show': true if c.user else false},
+            {'label': _('Requested Data'), 'href': h.url_for('requestdata_organization_requests.requested_data', id=org_dict.name), 'show': can_edit},
+            {'label': _('Stats'), 'href': h.url_for('hdx_org.stats', id=org_dict.name)}
+          ] %}
+    </div>
+  </div>
+{% endblock %}
+
+{# ── Filter sidebar (XL) — same contract as the search page ── #}
+{% block secondary_content %}
+  {% if org_dict.search_template_data.page.items %}
+    <form id="search-page-filters-form" autocomplete="off">
+      <aside class="hdx-v2-search-filters">
+        {% snippet 'v2/search-filters.html',
+            facet_list=org_dict.search_template_data.full_facet_info.get('facets', {}) %}
+        {% set ext_after_metadata_modified = h.hdx_get_request_param('ext_after_metadata_modified', None) %}
+        {% if ext_after_metadata_modified %}
+          <input id="ext_after_metadata_modified" type="hidden"
+                 name="ext_after_metadata_modified" value="{{ ext_after_metadata_modified }}"/>
+        {% endif %}
+        {% set ext_batch = h.hdx_get_request_param('ext_batch', None) %}
+        {% if ext_batch %}
+          <input id="ext_batch" type="hidden" name="ext_batch" value="{{ ext_batch }}"/>
+        {% endif %}
+      </aside>
+    </form>
+  {% endif %}
+{% endblock %}
+
+{# ── Org-scoped dataset list, controls and pagination ──────── #}
+{% block primary_content %}
+  {% if org_dict.search_template_data.page.items %}
+    {% snippet 'search/snippets/search_results_wrapper.html',
+        tracking_enabled=g.tracking_enabled, my_c=org_dict.search_template_data, v2=true %}
+  {% else %}
+    <div class="hdx-v2-org-page-empty">
+      <p>{{ _('There are no datasets currently uploaded to this organisation.') }}</p>
+      {% if h.check_access('package_create', {'organization_id': org_dict.id, 'owner_org': org_dict.id}) %}
+        <p>
+          <a href="javascript:void(0);" onclick="contributeAddDetails(null, 'empty org');">{{ _('Add Data') }}</a>
+        </p>
       {% endif %}
-    {% endblock %}
-  {% block page_pagination %}
-  {% endblock %}
+    </div>
+  {% endif %}
 
   {% snippet "notification_platform/modals.html",
       object_type='organization',
@@ -102,10 +166,7 @@
       unsubscribe_token=unsubscribe_token, unsubscribe_token_validated=unsubscribe_token_validated,
       unsubscribe_email=unsubscribe_email, unsubscribe_token_invalidate=unsubscribe_token_invalidate
   %}
-
 {% endblock %}
-
-{% block secondary %}{% endblock %}
 
 {% block head_extras %}
   {{ super() }}

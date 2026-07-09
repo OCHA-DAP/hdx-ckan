@@ -1,0 +1,46 @@
+// ============================================================
+// c-tabs — horizontal tab-navigation row
+// Figma: llm_docs/redesign/figma_exports/xl-org-members-page.html
+//        (.frame-group / .tabs / .tabs3)
+// ============================================================
+// The row draws no bottom border of its own — the section that
+// hosts it (e.g. c-org-page-header) provides the full-width rule;
+// the active tab paints its 4px accent on top of it.
+// ============================================================
+
+@import "../mixins.less";
+
+.c-tabs {
+    display:     flex;
+    align-items: flex-start;
+    gap:         var(--hdx-space-4);   // 16px between tabs
+    margin-bottom: var(--hdx-space-6);
+
+    // SM: five labels don't fit at ~393px — horizontal scroll (task 056, D10)
+    overflow-x: auto;
+}
+
+.c-tab {
+    .hdx-body-s-medium();              // Roboto 14px / 500 / 130% — Figma .heading-h1
+    display:         flex;
+    align-items:     center;
+    justify-content: center;
+    box-sizing:      border-box;
+    height:          4rem;                       // 64px — Figma spec
+    padding:         0 var(--hdx-space-2);       // 0 8px
+    flex-shrink:     0;                          // keep labels on one line when scrolling
+    color:           var(--hdx-neutral-8);       // #3f4748 inactive
+    text-decoration: none;
+    white-space:     nowrap;
+
+    &:hover,
+    &:focus {
+        color:           var(--hdx-neutral-95);
+        text-decoration: none;
+    }
+
+    &.is-active {
+        border-bottom: var(--hdx-space-1) solid var(--hdx-primary-5);   // 4px #1862d8
+        color:         var(--hdx-neutral-95);                           // #101212
+    }
+}

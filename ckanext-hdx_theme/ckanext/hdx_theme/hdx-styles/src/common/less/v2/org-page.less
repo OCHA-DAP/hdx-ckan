@@ -1,0 +1,29 @@
+// ============================================================
+// org-page.less — v2 Organization page (task 056)
+// Compiled output: fanstatic/v2/org-page.css
+// Figma: llm_docs/redesign/figma_exports/xl-org-page.html,
+//        xl-org-members-page.html, md-org-page.html, sm-org-page.html
+// ============================================================
+// The dataset list / filters / pagination body reuses the search
+// page styles verbatim (v2-search-page-styles bundle), and the
+// hero reuses c-page-header with its default metrics — this file
+// only covers the hero band and the empty state.
+// ============================================================
+
+@import "mixins.less";
+
+// ── Hero band: org page-header + tabs on the page background ──
+.hdx-v2-org-page-hero {
+    border-bottom: 1px solid var(--hdx-neutral-1);   // #ebeff0 — Figma hero underline
+}
+
+// ── Empty state (org has no datasets) ─────────────────────────
+.hdx-v2-org-page-empty {
+    .hdx-body-m();
+    color:   var(--hdx-neutral-85);
+    padding: var(--hdx-space-6) 0;
+
+    a {
+        .hdx-link-m();
+    }
+}

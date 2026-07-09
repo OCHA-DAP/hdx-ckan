@@ -1,0 +1,18 @@
+.hdx-v2-org-page-hero {
+  border-bottom: 1px solid var(--hdx-neutral-1);
+}
+.hdx-v2-org-page-empty {
+  font-family: var(--hdx-font-body);
+  font-size: var(--hdx-fs-m);
+  font-weight: var(--hdx-fw-regular);
+  line-height: var(--hdx-lh-normal);
+  color: var(--hdx-neutral-85);
+  padding: var(--hdx-space-6) 0;
+}
+.hdx-v2-org-page-empty a {
+  font-family: var(--hdx-font-body);
+  font-size: var(--hdx-fs-m);
+  font-weight: var(--hdx-fw-medium);
+  line-height: var(--hdx-lh-normal);
+  text-decoration: underline;
+}

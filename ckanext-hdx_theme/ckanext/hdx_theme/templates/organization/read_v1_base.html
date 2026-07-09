@@ -1,0 +1,121 @@
+{#
+  Legacy v1 base for the organization tab pages that have NOT been migrated to v2 yet
+  (members.html, stats.html, activity_stream.html, requestdata/organization_requested_data.html).
+
+  This is a verbatim copy of the pre-v2 organization/read.html (task 056). It exists only so
+  those tabs keep their v1 header/tab bar unchanged while organization/read.html itself is the
+  new v2 Datasets page. Delete the corresponding blocks here as each tab gets its own v2 migration.
+#}
+{% extends "organization/read_base.html" %}
+
+{% set org_meta = org_meta or c.org_meta %}
+{% set org_dict = org_dict or org_meta.org_dict or c.group_dict %}
+{% set allow_req_membership = org_dict.allow_req_membership if 'allow_req_membership' in org_dict else org_meta.allow_req_membership %}
+
+{# The lines below are for analytics #}
+{% block analytics_org_name %}{{ org_dict.name }}{% endblock %}
+{% block analytics_org_id %}{{ org_dict.id }}{% endblock %}
+{% set analytics = analytics or None %}
+{% if analytics %}
+  {% block analytics_came_from %}{{ analytics.analytics_came_from }}{% endblock %}
+  {% block analytics_supports_notifications %}{{ analytics.analytics_supports_notifications }}{% endblock %}
+{% endif %}
+
+{% set can_create_dataset = h.check_access('package_create', {'organization_id': org_dict.id, 'owner_org': org_dict.id}) %}
+{% set can_edit = h.check_access('organization_update', {'id': org_dict.id}) %}
+{% set can_actions = can_create_dataset or can_edit %}
+
+{% set page_has_mobile_version = True %}
+
+{% block subtitle %}{{ org_dict.display_name }} Humanitarian Data | {% block subtitle_suffix %}{{org_dict.search_template_data.item_count}} Datasets{% endblock %}{% endblock %}
+{% block meta %}
+    {{ super() }}
+	{% block meta_description %}
+    	<meta name="description" content="Explore {{ org_dict.search_template_data.item_count }} humanitarian datasets from the {{ org_dict.display_name }} on HDX. Access critical data supporting disaster relief, crisis response, and recovery efforts worldwide." />
+	{% endblock %}
+{% endblock %}
+
+{% block item_title_contrib %}
+	<div>
+		<ul style="list-style: none; padding: 0;" class="mTop40">
+			{% snippet 'browse/snippets/org_item_read.html', organization=org_dict %}
+		</ul>
+	</div>
+	<div class="row mTop20">
+		<div class="col-12">
+			{% snippet "organization/snippets/org_actions_menu.html", request_membership=allow_req_membership, organization=org_dict, can_create_dataset=can_create_dataset, can_edit=can_edit, classes='base-actions-menu followButtonContainer float-end' %}
+		</div>
+	</div>
+{% endblock %}
+
+{% block page_header %}
+<div>
+	<header class="module-content page-header paddingRowHack mTop20 mBottom10">
+		<ul class="nav nav-tabs paddingLeftHack paddingRightHack">
+		   {% block content_primary_nav %}
+			   	{{ h.bs5_build_nav_icon('hdx_org.read', _('Datasets'), id=org_dict.name, class_='nav-link hdx-tab-button') }}
+			   	{{ h.bs5_build_nav_icon('hdx_org.activity', _('Activity Stream'), id=org_dict.name, class_='nav-link hdx-tab-button') }}
+				{% if c.user %}
+					{{ h.bs5_build_nav_icon('hdx_members.members', _('Members'), id=org_dict.name, class_='nav-link hdx-tab-button') }}
+				{% endif %}
+				{% if h.check_access('organization_update', {'id': org_dict.id}) %}
+				  {{ h.bs5_build_nav_icon('requestdata_organization_requests.requested_data', _('Requested Data'), id=org_dict.name, class_='nav-link') }}
+				{% endif %}
+			   	{{ h.bs5_build_nav_icon('hdx_org.stats', _('Stats'), id=org_dict.name, class_='nav-link hdx-tab-button') }}
+		   {% endblock %}
+		</ul>
+	</header>
+</div>
+{% endblock %}
+
+
+{% block page_primary_action %}
+{% endblock %}
+
+{% block primary_content_inner %}
+	{% block package_notes %}
+    {% endblock %}
+    {% block groups_search_form %}
+	{% endblock %}
+
+	{% block packages_list %}
+      {% if org_dict.search_template_data.page.items %}
+		<div>
+			{% snippet 'search/snippets/search_results_wrapper.html', tracking_enabled=g.tracking_enabled, my_c=org_dict.search_template_data %}
+		</div>
+  	  {% else %}
+        <div>
+		  	<div class="big-message">
+			    <p>
+			      {{ _('There are no datasets currently uploaded to this organisation.') }}
+			    </p>
+			    <p>
+			      {% if h.check_access('package_create', {'organization_id': org_dict.id, 'owner_org': org_dict.id}) %}
+				  		<a href="javascript:void(0);" onclick="contributeAddDetails(null, 'empty org');" class="add-data">Add Data</a>
+				  {% endif %}
+			    </p>
+		    </div>
+		</div>
+      {% endif %}
+    {% endblock %}
+  {% block page_pagination %}
+  {% endblock %}
+
+  {% snippet "notification_platform/modals.html",
+      object_type='organization',
+      object_id=org_dict.id,
+      object_name=org_dict.name,
+      object_dict=org_dict,
+      num_of_datasets=org_dict.search_template_data.full_facet_info.get('num_of_unarchived'),
+      unsubscribe_token=unsubscribe_token, unsubscribe_token_validated=unsubscribe_token_validated,
+      unsubscribe_email=unsubscribe_email, unsubscribe_token_invalidate=unsubscribe_token_invalidate
+  %}
+
+{% endblock %}
+
+{% block secondary %}{% endblock %}
+
+{% block head_extras %}
+  {{ super() }}
+  {% snippet 'organization/snippets/org_structured_data.html', org_dict=org_dict %}
+{% endblock %}
