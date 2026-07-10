@@ -1,0 +1,38 @@
+// ============================================================
+// c-stats-card — borderless white stat card (org stats tab)
+// Semibold label + optional sublabel + large value with unit.
+// Figma: llm_docs/redesign/figma_exports/xl-org-stats-page.html (.metadata)
+// ============================================================
+@import "../mixins.less";
+
+.c-stats-card {
+    display:          flex;
+    flex-direction:   column;
+    gap:              var(--hdx-space-1);
+    padding:          var(--hdx-space-6);
+    background-color: var(--hdx-neutral-0);
+    border-radius:    var(--hdx-radius-md);
+
+    &__label {
+        .hdx-body-s-semibold();
+        color: var(--hdx-neutral-85);
+    }
+
+    &__sublabel {
+        .hdx-body-xs();
+        color: var(--hdx-neutral-8);
+    }
+
+    &__value {
+        // Figma: 24px semibold in the body font (not the display serif)
+        .hdx-body-semibold-base();
+        font-size: var(--hdx-fs-2xl);
+        color:     var(--hdx-neutral-85);
+        padding:   var(--hdx-space-1) 0;
+    }
+
+    &__unit {
+        .hdx-body-s();
+        margin-left: var(--hdx-space-1);
+    }
+}

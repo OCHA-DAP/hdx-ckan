@@ -187,6 +187,7 @@ def new_org_template_variables(data_dict):
 
 def stats(id):
     stats_logic = OrganizationStatsLogic(id, g.user, g.userobj)
+    stats_logic.org_meta_dao.fetch_dataset_info()  # datasets_num for the v2 hero stats
     org_dict = stats_logic.org_meta_dao.org_dict
     org_dict.update({
         'allow_req_membership': stats_logic.org_meta_dao.allow_req_membership,
@@ -198,10 +199,9 @@ def stats(id):
         'org_dict': org_dict,
     }
 
-    if stats_logic.is_custom():
-        return render('organization/custom_stats.html', template_data)
-    else:
-        return render('organization/stats.html', template_data)
+    # Standard and custom orgs render the same unified v2 template (task 058,
+    # mirroring the read()/activity() precedent from tasks 056/057)
+    return render('organization/stats.html', template_data)
 
 
 def restore(id):

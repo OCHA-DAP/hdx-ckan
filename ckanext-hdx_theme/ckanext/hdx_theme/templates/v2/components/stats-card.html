@@ -1,0 +1,32 @@
+{#
+  Snippet: stats-card.html
+  Path:    templates/v2/components/stats-card.html
+
+  Renders a c-stats-card — borderless white stat card with a semibold
+  label, an optional small sublabel (e.g. "Last 30 days") and a large
+  value with an optional unit suffix.
+  Figma: llm_docs/redesign/figma_exports/xl-org-stats-page.html (.metadata)
+
+  Parameters
+  ──────────────────────────────────────────────────────
+  label     {string}  Card title.  default: ''
+  sublabel  {string}  Small text under the label.  default: ''
+  value     {string}  Bold stat value.  default: ''
+  unit      {string}  Small unit suffix after the value (e.g. 'K').  default: ''
+  ──────────────────────────────────────────────────────
+#}
+
+{% set label    = label    if label    is defined else '' %}
+{% set sublabel = sublabel if sublabel is defined else '' %}
+{% set value    = value    if value    is defined else '' %}
+{% set unit     = unit     if unit     is defined else '' %}
+
+<div class="c-stats-card">
+  <span class="c-stats-card__label">{{ label }}</span>
+  {% if sublabel %}
+    <span class="c-stats-card__sublabel">{{ sublabel }}</span>
+  {% endif %}
+  <b class="c-stats-card__value">
+    {{ value }}{% if unit %}<span class="c-stats-card__unit">{{ unit }}</span>{% endif %}
+  </b>
+</div>

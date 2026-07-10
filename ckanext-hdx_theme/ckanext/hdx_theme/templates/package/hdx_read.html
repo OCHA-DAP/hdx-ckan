@@ -422,6 +422,9 @@
               <div id="dataset-downloads-chart-no-data" class="hdx-v2-dataset-metadata__no-data">
                 <div class="title">NO DATA</div>
               </div>
+              {% snippet 'v2/components/tooltip.html', variant='graph', graph_title='',
+                  extra_classes='hdx-v2-chart-tooltip',
+                  legend_items=[{'color': 'var(--hdx-primary-5)', 'label': _('Downloads'), 'value': ''}] %}
             </div>
           </div>
         {% endif %}
@@ -499,10 +502,10 @@
 
 {% block scripts %}
   {{ super() }}
+  {% asset 'hdx_theme/v2-chart-scripts' %}
   {% asset 'hdx_theme/v2-dataset-page-scripts' %}
 {#  {{ h.snippet('widget/onboarding/data-use-survey.html', id="dataUseSurveyPopup", pkg=pkg) }}#}
 {#  {% asset 'hdx_theme/dataset-styles' %}#}
-  {% asset 'hdx_theme/dataset-scripts' %}
   {% asset 'hdx_theme/dataset-quick-edit-scripts' %}
 {#  {% asset 'hdx_theme/hdx-autocomplete' %}#}
 {#  {% resource 'hdx_theme/confirm-ajax.js' %}#}

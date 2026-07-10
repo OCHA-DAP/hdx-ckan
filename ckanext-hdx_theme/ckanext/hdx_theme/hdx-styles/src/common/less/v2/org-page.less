@@ -61,3 +61,131 @@
         gap:            var(--hdx-space-6);
     }
 }
+
+// ── Stats tab: content column (no sidebar) ─────────────────────
+.hdx-v2-org-stats-content {
+    .v2-content-flex();
+}
+
+// ── Stats tab: KPI cards + charts section (task 058) ───────────
+.hdx-v2-org-stats {
+    align-self:     stretch;
+    display:        flex;
+    flex-direction: column;
+    gap:            var(--hdx-space-6);
+    border-top:     1px solid var(--hdx-neutral-1);
+    padding:        var(--hdx-space-6) 0;
+
+    @media (min-width: @hdx-bp-md) {
+        padding: var(--hdx-space-8) 0 var(--hdx-space-12);
+    }
+
+    &__header {
+        display:         flex;
+        flex-wrap:       wrap;
+        align-items:     center;
+        justify-content: space-between;
+        gap:             var(--hdx-space-4);
+    }
+
+    &__title {
+        .hdx-display-s();
+        margin: 0;
+        color:  var(--hdx-neutral-95);
+    }
+
+    // admin-only XLSX export prompt (D4) — own line below the header row
+    &__export {
+        .hdx-body-xs();
+        color: var(--hdx-neutral-8);
+
+        p { margin: 0; }
+        a { color: inherit; }
+    }
+
+    &__layout {
+        display:        flex;
+        flex-direction: column;
+        gap:            var(--hdx-space-6);
+
+        @media (min-width: @hdx-bp-xl) { flex-direction: row; }
+    }
+
+    // SM: stacked; MD: 3-up row above the charts; XL: left column (Figma)
+    &__kpis {
+        display:        flex;
+        flex-direction: column;
+        gap:            var(--hdx-space-6);
+
+        @media (min-width: @hdx-bp-md) {
+            flex-direction: row;
+            .c-stats-card { flex: 1; }
+        }
+        @media (min-width: @hdx-bp-xl) {
+            .v2-sidebar-flex();
+            flex-direction: column;
+            justify-content: center;
+            .c-stats-card { flex: none; }
+        }
+    }
+
+    &__charts {
+        .v2-content-flex();
+        display:        flex;
+        flex-direction: column;
+        gap:            var(--hdx-space-6);
+    }
+
+    &__chart-card {
+        display:          flex;
+        flex-direction:   column;
+        gap:              var(--hdx-space-6);
+        padding:          var(--hdx-space-6);
+        background-color: var(--hdx-neutral-0);
+        border-radius:    var(--hdx-radius-md);
+    }
+
+    &__chart-heading {
+        display:        flex;
+        flex-direction: column;
+        gap:            var(--hdx-space-1);
+    }
+
+    &__chart-title {
+        .hdx-body-m-semibold();
+        margin: 0;
+        color:  var(--hdx-neutral-85);
+    }
+
+    &__chart-subtitle {
+        .hdx-body-xs();
+        color: var(--hdx-neutral-8);
+    }
+
+    &__chart {
+        height: 20rem;   // Figma spec — chart area ≈ 320px, matches v1
+    }
+
+    &__legend {
+        display:     flex;
+        align-items: center;
+        gap:         var(--hdx-space-4);
+    }
+
+    &__legend-item {
+        .hdx-body-xs();
+        display:     inline-flex;
+        align-items: center;
+        gap:         var(--hdx-space-1);
+        color:       var(--hdx-neutral-8);
+    }
+
+    &__legend-swatch {
+        width:         var(--hdx-space-14);  // 10px — Figma swatch size
+        height:        var(--hdx-space-14);
+        border-radius: var(--hdx-radius-sm);
+
+        &--pageviews { background-color: var(--hdx-primary-5); }
+        &--downloads { background-color: var(--hdx-primary-2); }
+    }
+}

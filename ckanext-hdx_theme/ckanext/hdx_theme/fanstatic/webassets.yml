@@ -1489,6 +1489,7 @@ v2-components-styles:
     - v2/components/selection.css
     - v2/components/showcase-card.css
     - v2/components/signup-tier.css
+    - v2/components/stats-card.css
     - v2/components/step-pager.css
     - v2/components/table.css
     - v2/components/tabs.css
@@ -1535,6 +1536,15 @@ v2-carousel-scripts:
   contents:
     - vendor/hammer/hammer.js
     - v2/carousel.js
+
+v2-chart-scripts:
+  <<: *common-js
+  output: ckanext-hdx_theme/%(version)s_v2-chart-scripts.js
+  contents:
+    - v2/chartjs/chart.umd.min.js
+    - v2/chartjs/chartjs-adapter-date-fns.bundle.min.js
+    - v2/chartjs/chartjs-plugin-zoom.min.js
+    - v2/charts.js
 
 v2-home-page-scripts:
   <<: *common-js
@@ -1644,6 +1654,7 @@ v2-org-page-styles:
   <<: *common-css
   contents:
     - v2/org-page.css
+
 
 v2-contact-contributor-page-styles:
   output: ckanext-hdx_theme/%(version)s_v2-contact-contributor-page-styles.css

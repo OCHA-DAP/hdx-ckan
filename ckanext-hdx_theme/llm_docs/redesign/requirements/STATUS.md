@@ -61,3 +61,4 @@
 | 055 | [notifications-v2](055-notifications-v2.md)                                                                   | implemented | |
 | 056 | [organization-page-datasets-v2](056-organization-page-datasets-v2.md)                                          | implemented | |
 | 057 | [organization-page-activity-v2](057-organization-page-activity-v2.md)                                          | implemented | |
+| 058 | [organization-page-stats-v2](058-organization-page-stats-v2.md)                                                | implemented | |

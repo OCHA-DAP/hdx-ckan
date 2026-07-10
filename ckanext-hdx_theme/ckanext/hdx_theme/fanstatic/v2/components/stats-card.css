@@ -1,0 +1,37 @@
+.c-stats-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hdx-space-1);
+  padding: var(--hdx-space-6);
+  background-color: var(--hdx-neutral-0);
+  border-radius: var(--hdx-radius-md);
+}
+.c-stats-card__label {
+  font-family: var(--hdx-font-body);
+  font-size: var(--hdx-fs-s);
+  font-weight: var(--hdx-fw-semibold);
+  line-height: var(--hdx-lh-normal);
+  color: var(--hdx-neutral-85);
+}
+.c-stats-card__sublabel {
+  font-family: var(--hdx-font-body);
+  font-size: var(--hdx-fs-xs);
+  font-weight: var(--hdx-fw-regular);
+  line-height: var(--hdx-lh-normal);
+  color: var(--hdx-neutral-8);
+}
+.c-stats-card__value {
+  font-family: var(--hdx-font-body);
+  font-weight: var(--hdx-fw-semibold);
+  line-height: var(--hdx-lh-normal);
+  font-size: var(--hdx-fs-2xl);
+  color: var(--hdx-neutral-85);
+  padding: var(--hdx-space-1) 0;
+}
+.c-stats-card__unit {
+  font-family: var(--hdx-font-body);
+  font-size: var(--hdx-fs-s);
+  font-weight: var(--hdx-fw-regular);
+  line-height: var(--hdx-lh-normal);
+  margin-left: var(--hdx-space-1);
+}
