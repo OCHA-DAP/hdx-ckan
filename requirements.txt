@@ -96,7 +96,7 @@ greenlet==3.0.3
     # via sqlalchemy
 idna==3.7
     # via requests
-ijson==3.2.3
+ijson==3.5.1
     # via -r requirements.in
 ipaddress==1.0.23
     # via -r requirements.in
