@@ -112,6 +112,15 @@
         }
 
       }, true); // capture phase
+
+      // Same interception for real form submits — the search-input submit
+      // icon and the clear button (input-field.js) go through requestSubmit;
+      // a native GET here would drop the URL-held facet params.
+      searchForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var input = searchForm.querySelector('input[name="q"]');
+        setNavParam('q', input ? input.value.trim() : '');
+      });
     }
 
     // Nav-item click (sort/page-size dropdowns) is handled by url-nav.js.

@@ -446,6 +446,12 @@
       openOverlay(input, input.value, searchSource);
     });
 
+    // The icon is a submit button (icon_submit) — cancel the click's form
+    // submission at MD/SM so tapping it opens the overlay instead
+    searchInput && searchInput.addEventListener('click', function (e) {
+      e.preventDefault();
+    });
+
     // Keyboard Tab → focus; redirect to overlay
     input.addEventListener('focus', function () {
       if (!ov || !ov.classList.contains('hdx-v2-search-filter-overlay--open')) {

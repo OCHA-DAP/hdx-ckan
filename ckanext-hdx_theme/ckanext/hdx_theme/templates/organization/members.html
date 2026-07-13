@@ -1,271 +1,476 @@
-{% extends "organization/read_v1_base.html" %}
-{% import 'macros/form.html' as form %}
+{% extends "v2/page.html" %}
+
+{% set content_class = 'hdx-v2-org-members-content' %}
+{% set columns_class = 'hdx-v2-org-members-columns' %}
+{% set sidebar_class = 'hdx-v2-org-members-sidebar' %}
 
 {# The line below is for google analytics #}
 {% block analytics_org_name %}{{ group_dict.name }}{% endblock %}
 {% block analytics_org_id %}{{ group_dict.id }}{% endblock %}
 
-{#{% set is_sys_admin = userobj.sysadmin %}#}
-
-
-{% set roles=h.hdx_member_roles_list() %}
+{% set roles = h.hdx_member_roles_list() %}
 {% set authorized = allow_approve %}
 {% set is_single_admin = non_sysadmin_admins < 2 %}
 {% set current_member = current_user %}
+{% set no_admins = member_groups.get('admin', []) | length %}
+{% set selected_sorting = sort_by_selected or 'title asc' %}
+{% set gm_info = org_meta.group_message_info %}
+{% set show_group_message = gm_info and gm_info.display_group_message %}
+{% set member_sorting = [
+  (_('Name Ascending'),  'title asc',  _('Name Asc')),
+  (_('Name Descending'), 'title desc', _('Name Desc'))
+] %}
 
-{% block breadcrumb_content %}
-  {% snippet "snippets/other_breadcrumb_item.html", title=_('Organisations'), controller='organization', action='index', position=2 %}
-  {% snippet "snippets/other_breadcrumb_item.html", title=group_dict.display_name|truncate(35), controller='organization', action='read',id=group_dict.name, position=3 %}
-  {% snippet "snippets/active_breadcrumb_item.html", title=_('Members'), position=4 %}
+{% block breadcrumb_items %}
+  {% snippet 'v2/components/breadcrumb.html',
+      items=[
+        {'label': _('Organisations'), 'href': h.url_for('organizations_index')},
+        {'label': group_dict.display_name | truncate(35), 'href': h.url_for('hdx_org.read', id=group_dict.name)},
+        {'label': _('Members'), 'href': ''}
+      ] %}
 {% endblock %}
 
-{% block subtitle_suffix %}{{ _('Members') }}{% endblock %}
-{% block meta_description %}
-	<meta name="description" content="View members of the {{ org_dict.display_name }} organization on HDX." />
-{% endblock %}
-
-{% block page_primary_action %}
-{% endblock %}
-
-{% block primary_content_inner %}
-	{% block package_notes %}
-  {% endblock %}
-   {% block groups_search_form %}
-	{% endblock %}
-
-	{% block packages_list %}
-        <div class="row">
-            <div class="{% if allow_view_right_side %} col-8 {% else %} col-12 {% endif %}">
-
-                {% set selected_sorting = sort_by_selected or 'title asc' %}
-                {% snippet 'snippets/search_form_new.html', type='members', query=q, sorting=sorting, sorting_selected=selected_sorting, count=members|length, placeholder=search_text, show_empty=request.args %}
-
-                {% for role_name, member_list in member_groups.items() %}
-                    <div class="role-categ">
-                        <span class="uppercase">
-                            {{ role_name }}s [{{member_list | length}}]
-                        </span>
-                        {% if org_meta.group_message_info.display_group_message %}
-                        <div class="float-end base-actions-menu">
-                            <ul>
-                                <li>
-                                    <a href="#" onclick="closeCurrentWidget(this);$('#group-message-topics-selector').select2('val', '{{role_name}}s');spawnRecaptcha('#groupMessagePopup');showOnboardingWidget('#groupMessagePopup'); return false;" title="{{ _('Group message lets you communicate with members of your organisation. Use it to discuss, collaborate, and make announcements. ') }}" data-module="bs_tooltip" data-module-placement="top" data-bs-toggle="tooltip" id="contact-members">
-                                        <i class="icon-megahorn"></i>
-                                        Group message [?] to all {{ role_name }}s
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                        {% endif %}
-                    </div>
-                    <ul class="search-list list-items dataset-list unstyled" style="padding: 0;">
-                        {% for user_id, user, translated_role, role, user_name, sysadmin in member_list %}
-                             {% snippet 'organization/snippets/member_item.html', id=user_id,
-                                translated_role=translated_role, role=role, roles=roles, group_id=group_dict.id,
-                                authorized=authorized, group_name=group_dict.name,
-                                current_user=current_user, sysadmin=sysadmin, non_sysadmin_admins=non_sysadmin_admins, no_admins=(member_groups['admin'] | length) %}
-                        {% endfor %}
-                    </ul>
-
-                {% endfor %}
-            </div>
-            {% if allow_view_right_side %}
-                <div class="col-4">
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="role-categ uppercase no-margin">
-                                Your role for this organisation:
-                                <span class="current-role"> {{ current_member.role }} </span>
-                            </div>
-                        </div>
-                        <div class="col-12">
-                            <div class="current-user">
-                                <div class="image">{{ h.user_image(current_member.name, 70) }}</div>
-                                <div class="user-details search-list">
-                                    <div class="dataset-item">
-                                        <div class="dataset-heading">
-                                            <span>
-                                                <a href="{{ h.url_for(controller='user', action='read', id=current_member.name) }}">{{ current_member.display_name }}</a>
-                                                |
-                                                <a href="{{ h.url_for(controller='user', action='read', id=current_member.name) }}">{{ current_member.name }}</a>
-                                            </span>
-                                        </div>
-                                        <div class="dataset-updated">
-                                            <div class="updatedNameColor">
-                                                Your role: {{ current_member.role }}
-                                            </div>
-                                        </div>
-                                        <div class="dataset-updated">
-                                            <div class="updatedNameColor">
-                                                <span class="less-visible mx-member-role">{{ _('Registered') }} {{ h.render_datetime(current_member.created) }} </span>
-                                            </div>
-                                            <div class="list-items counter">
-                                                <span class="count"> {{ h.hdx_show_singular_plural(current_member.ds_num, _('Dataset'), _('Datasets')) }}</span>
-                                                -
-                                                <span class="count"> {{ h.hdx_show_singular_plural(current_member.org_num, _('Organisation'), _('Organisations')) }}</span>
-                                                -
-                                                <span class="count"> {{ h.hdx_show_singular_plural(current_member.grp_num, _('Countries'),  _('Countries')) }}</span>
-                                            </div>
-                                        </div>
-                                        <div>
-                                            {% set locale = h.dump_json({'content': _('Are you sure you want to delete this member?')}) %}
-                                            <div class="">
-                                                <a class="" href="#edit-member-div-{{current_member.name}}" data-bs-toggle="modal"
-                                                   title="{{ _('Change role') }}">
-                                                    {{ _('Edit profile') }}
-                                                </a>
-                                                {% if current_member.role %}
-                                                    <span class="mLR10">|</span>
-                                                    {% if not (current_member.role == 'admin' and is_single_admin) %}
-                                                        <a class=""
-                                                           href="#confirm-del-member-div-{{current_member.id}}"
-                                                           data-bs-toggle="modal" title="{{ _('Leave this organization') }}">
-                                                            {% block delete_button_text %}{{ _('Leave this organization') }}{% endblock %}
-                                                        </a>
-                                                        {% if current_member.role == 'editor' or  current_member.role == 'member' %}
-                                                            {% set confirm_delete_message = _('Are you sure you want to delete this member?') %}
-                                                            {% snippet 'snippets/confirmation_member_delete.html', form_url=h.url_for('hdx_members.member_delete',
-                                                            id=group_dict.id),
-                                                            user=current_member.id,
-                                                            body=confirm_delete_message, modal_div_id='confirm-del-member-div-'+current_member.id, disabled=False %}
-                                                        {%  endif %}
-                                                    {% else %}
-                                                        <small>Please add another admin to be able to leave the organisation</small>
-                                                    {% endif %}
-                                                {% endif %}
-
-                                              {#
-                                                ### Popup should've been rendered in the list already :)
-                                                {% set confirm_delete_message = _('Are you sure you want to delete this member?') %}
-                                                {% snippet 'snippets/confirmation_post.html', form_url=h.url_for(controller='organization',
-                                                action='member_delete', id=group_dict.id, user=current_member.id),
-                                                body=confirm_delete_message, modal_div_id='confirm-del-member-div-'+current_member.id %}
-                                              #}
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    {% if allow_approve and request_list | length > 0 %}
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="role-categ uppercase">
-                                    Pending approval [{{request_list | length}}]
-                                </div>
-                                {% for request in request_list %}
-                                <div class="approval-request">
-                                    <div class="image">{{ h.user_image(request.user_name, 20) }}</div>
-                                    <div class="user-details search-list">
-                                        <div class="dataset-item">
-                                            <div class="dataset-heading">
-                                                    <span>
-                                                        <a href="{{ h.url_for(controller='user', action='read', id=request.user_name) }}">{{ request.user_display_name }}</a>
-                                                        |
-                                                        <a href="{{ h.url_for(controller='user', action='read', id=request.user_name) }}">{{ request.user_name }}</a>
-                                                    </span>
-                                            </div>
-                                            <div class="dataset-updated">
-                                                <div class="updatedNameColor">
-                                                    <span class="less-visible mx-member-role">{{ _('Requested') }} {{ h.render_datetime(request.revision_last_updated) }} </span>
-                                                </div>
-                                            </div>
-                                            <div class="approval-actions">
-                                                    <span class="dropdown">
-                                                        <button class="btn hdx-btn btn-primary" type="button" data-bs-toggle="dropdown">{{_("Approve")}} <span class="caret d-inline-block"></span></button>
-                                                        <button class="btn hdx-btn btn-secondary action-decline"  data-member-id="{{request.id}}">{{_("Decline")}}</button>
-                                                        <ul class="dropdown-menu action-approve" role="menu">
-                                                            {% for role_categ in roles %}
-                                                                <li>
-                                                                    <a href="#" class="dropdown-item" data-role="{{role_categ.value}}" data-member-id="{{request.id}}">{{ role_categ.text }}</a>
-                                                                </li>
-                                                            {% endfor %}
-                                                        </ul>
-                                                    </span>
-
-
-                                                <div class="approved-message">
-                                                    User has been approved as <span class="approved-role">ROLE</span>.
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                {% endfor %}
-                            </div>
-                        </div>
-                    {% endif %}
-                    {% if allow_approve %}
-                        <div class="row">
-                            <div class="col-12">
-                                <form class="hdx-form" action="/organization/bulk_member_new/{{group_dict.id}}" method="post">
-                                    {{ h.csrf_input() }}
-                                    <div class="role-categ uppercase">
-                                        Add / invite colleagues to this organisation
-                                    </div>
-                                    <div class="invite-box">
-                                        <span>To invite your colleagues to join this organisation, please enter their email(s) below. Multiple email addresses can be entered if separated by comma ',' :</span>
-                                        {% set tag_attrs = {'data-module': 'hdx_autocomplete', 'data-module-tags': '',
-                                           'style':'width: 100% !important;',
-                                           'data-module-label': 'fullname',
-                                           'data-module-key': 'name',
-                                           'data-module-only-email-as-tags': 'true',
-                                           'data-module-include-tokenizer': 'true',
-                                           'data-module-non-email-selection-class': 'existing-user',
-                                           'data-module-source': '/util/user/hdx_autocomplete?q=?'} %}
-                                        {{ form.input('emails', id='field-tags',
-                                        placeholder=_("Enter email(s) or names or usernames"),
-                                        classes=[], attrs=tag_attrs) }}
-                                        <!--<textarea name="emails" placeholder="Enter email(s) of whom you'd like to add to this organisation. Multiple email addresses can be entered if separated by comma ',' "></textarea>-->
-                                        <p>
-                                            <strong>If you add user who is already registered on HDX</strong>, they will be automatically added to your organisation. If you invite someone who is not registered on HDX, a temporary account will be created for them and they will receive an invitation to sign up.
-                                        </p>
-
-
-                                        {% if allow_approve %}
-                                            <div class="mBottom20">
-                                                <select name="role" data-placeholder="Select a role" data-allow-clear="true">
-                                                    <option></option> <!-- needed by select 2 to show placeholder :) -->
-                                                    {% for role_categ in roles %}
-                                                        <option value="{{role_categ.value}}">{{role_categ.text}}</option>
-                                                    {% endfor %}
-                                                </select>
-                                            </div>
-                                        {% endif %}
-                                        <div class="mTop20" style="text-align: right;">
-                                            <button type="submit" class="btn hdx-btn btn-primary">Submit</button>
-                                        </div>
-
-                                    </div>
-                                </form>
-
-                            </div>
-                        </div>
-                    {% endif %}
-                </div>
-            {% endif %}
-        </div>
-    {% endblock %}
-    {% block page_pagination %}
-    {% endblock %}
-{% endblock %}
-
-{% block scripts2 %}
+{% block subtitle %}{{ group_dict.display_name }} Humanitarian Data | {% block subtitle_suffix %}{{ _('Members') }}{% endblock %}{% endblock %}
+{% block meta %}
   {{ super() }}
-{#  {% resource 'hdx_theme/jquery.expander' %}#}
-{#  {% resource 'hdx_theme/organization/members.js' %}#}
-{#  {% resource 'hdx_theme/search' %}#}
-
-  {% asset 'hdx_theme/search-scripts' %}
-  {% asset 'hdx_theme/organization-members-scripts' %}
-  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+  {% block meta_description %}
+    <meta name="description" content="View members of the {{ group_dict.display_name }} organization on HDX." />
+  {% endblock %}
 {% endblock %}
 
 {% block styles %}
-	{{ super() }}
-{#	{% resource 'hdx_theme/dashboard.css' %}#}
-{#	{% resource 'hdx_theme/hdx_dashboard.js' %}#}
-  {% asset 'hdx_theme/base-dashboard-styles' %}
+  {{ super() }}
+  {% asset 'hdx_theme/v2-org-page-styles' %}
+{% endblock %}
+
+{% block scripts %}
+  {{ super() }}
+  {% asset 'hdx_theme/v2-org-members-page-scripts' %}
+  {% if show_group_message %}
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+  {% endif %}
+{% endblock %}
+
+{# ── Hero: org header + tabs ───────────────────────────────── #}
+{% block pre_primary %}
+  {% snippet 'v2/org_hero.html',
+      org_dict=group_dict, org_meta=org_meta, active_tab='members',
+      header_stats=[
+        {'label': _('Datasets'), 'value': h.hdx_format_number_si(org_meta.datasets_num or 0)},
+        {'label': _('Members'), 'value': h.hdx_format_number_si(org_meta.members_num or 0)}
+      ] %}
+{% endblock %}
+
+{# ── Member list column ──────────────────────────────────────── #}
+{% block primary_content %}
+  <section class="hdx-v2-org-members">
+
+    {# Heading row: title + count, sort control inline at XL only #}
+    <div class="hdx-v2-org-members__header">
+      <h2 class="hdx-v2-org-members__title">{{ _('Members') }}</h2>
+      <span class="hdx-v2-org-members__count">{{ members | length }}</span>
+      <div class="hdx-v2-org-members__controls hdx-v2-org-members__controls--inline">
+        {% snippet 'v2/search-nav-controls.html',
+            show_page_size=False,
+            sorting_options=member_sorting,
+            sorting_selected=selected_sorting,
+            panel_suffix='members-hdr' %}
+      </div>
+    </div>
+
+    {# Search bar — GET reload, param q; sort preserved (no pagination, Q2) #}
+    <form class="hdx-v2-org-members__search" method="get"
+          action="{{ h.url_for('hdx_members.members', id=group_dict.name) }}">
+      {% if sort_by_selected %}
+        <input type="hidden" name="sort" value="{{ sort_by_selected }}">
+      {% endif %}
+      {% snippet 'v2/components/search-input.html',
+          size='m', name='q', value=q,
+          icon_submit=True,
+          show_clear=True,
+          state='filled' if q else 'enabled',
+          placeholder=_('Search for members'),
+          input_attrs={'aria-label': _('Search for members')} %}
+    </form>
+
+    {# Sort control below the search bar at MD/SM (Figma order) #}
+    <div class="hdx-v2-org-members__controls hdx-v2-org-members__controls--stacked">
+      {% snippet 'v2/search-nav-controls.html',
+          show_page_size=False,
+          sorting_options=member_sorting,
+          sorting_selected=selected_sorting,
+          panel_suffix='members-sub' %}
+    </div>
+
+    {% if members | length == 0 %}
+      <div class="hdx-v2-org-page-empty">
+        <p>{{ _('No members found') }}</p>
+      </div>
+    {% endif %}
+
+    {# Role-grouped list (Q6 — v1 structure kept) #}
+    {% for role_name, member_list in member_groups.items() %}
+      <div class="hdx-v2-org-members__group">
+        <div class="hdx-v2-org-members__group-header">
+          <span class="hdx-v2-org-members__group-title">{{ role_name }}s [{{ member_list | length }}]</span>
+          {% if show_group_message %}
+            <div class="hdx-v2-org-members__group-message">
+              {% snippet 'v2/components/text-button.html',
+                  style='secondary', size='m', tag='button',
+                  label=_('Group message to all') ~ ' ' ~ role_name ~ 's',
+                  icon=True, icon_src='v2/icons/message.svg', icon_position='left',
+                  attrs={'data-gm-topic': role_name ~ 's'} %}
+              {% snippet 'v2/components/info-icon.html',
+                  aria_label=_('About group messages'),
+                  tooltip_text=_('Group message lets you communicate with members of your organisation. Use it to discuss, collaborate, and make announcements.'),
+                  tooltip_id='tooltip-gm-' ~ role_name %}
+            </div>
+          {% endif %}
+        </div>
+
+        <div class="hdx-v2-org-members__group-list">
+          {% for user_id, user, translated_role, role, user_name, sysadmin in member_list %}
+            {% set member = h.hdx_get_org_member_info(user_id, group_dict.name) %}
+            {% set disable_change = (role == 'admin') and ((not sysadmin and non_sysadmin_admins < 2) or (no_admins < 2)) %}
+            {% set profile_url = h.url_for('user.read', id=member.name) %}
+            {% set meta_text = translated_role ~ ' - ' ~ _('Registered') ~ ' ' ~ h.render_datetime(member.created) %}
+            {% set stats_text = h.hdx_show_singular_plural(member.ds_num, _('Dataset'), _('Datasets')) ~ ' - '
+                ~ h.hdx_show_singular_plural(member.org_num, _('Organisation'), _('Organisations')) ~ ' - '
+                ~ h.hdx_show_singular_plural(member.grp_num, _('Countries'), _('Countries')) %}
+            {% set avatar_initials = (member.display_name or member.name or 'A')[0] %}
+
+            {% if authorized and not disable_change %}
+              {% call h.snippet('v2/components/member-list-card.html',
+                  avatar_initials=avatar_initials,
+                  name=member.display_name, username=member.name, profile_url=profile_url,
+                  meta_text=meta_text, sysadmin=sysadmin, stats_text=stats_text) %}
+
+                {# Change role — one-click role dropdown (059 decisions) #}
+                {% set _role_items = namespace(list=[]) %}
+                {% for role_categ in roles %}
+                  {% set is_maint_blocked = member.maint_orgs_pkgs and role_categ.value == 'member' %}
+                  {% set _role_items.list = _role_items.list + [{
+                      'label': role_categ.text,
+                      'active': role_categ.value == role,
+                      'extra_classes': 'is-disabled' if is_maint_blocked else '',
+                      'tooltip': _('This user cannot be set to Member while they maintain datasets in this organisation') if is_maint_blocked else '',
+                      'attrs': {'data-role-value': role_categ.value,
+                                'aria-disabled': 'true' if is_maint_blocked else 'false'}
+                  }] %}
+                {% endfor %}
+                {% snippet 'v2/components/dropdown.html',
+                    extra_classes='c-dropdown--link',
+                    placeholder=_('Change role'),
+                    panel_id='change-role-panel-' ~ member.name,
+                    navigate=True,
+                    attrs={'data-change-role-user': member.name},
+                    items=_role_items.list %}
+
+                <span class="c-member-list-card__action-sep" aria-hidden="true">|</span>
+
+                {% snippet 'v2/components/text-button.html',
+                    style='secondary', size='m', tag='button',
+                    label=_('Remove from this organisation'),
+                    attrs={'onclick': "window.hdxV2Drawer('remove-member-" ~ member.name ~ "').open()"} %}
+              {% endcall %}
+
+              {# Remove-member confirmation drawer (Q9) #}
+              {% if member.maint_orgs_pkgs %}
+                {% if current_member.name == member.name %}
+                  {% set confirm_delete_message = _("You can't leave this organisation. Please change maintainer for the following datasets: ") %}
+                {% else %}
+                  {% set confirm_delete_message = _('User cannot be removed from this organisation. Please change maintainer for the following datasets: ') %}
+                {% endif %}
+                {% set delete_disabled = True %}
+              {% else %}
+                {% set confirm_delete_message = _('Are you sure you want to delete this member?') %}
+                {% set delete_disabled = False %}
+              {% endif %}
+              {% call h.snippet('v2/components/drawer.html',
+                  drawer_id='remove-member-' ~ member.name,
+                  title=_('Remove member')) %}
+                <form class="c-drawer-form" method="post"
+                      action="{{ h.url_for('hdx_members.member_delete', id=group_dict.id) }}">
+                  {{ h.csrf_input() }}
+                  <input type="hidden" name="user" value="{{ user_id }}">
+                  <p class="c-drawer-form__text">{{ confirm_delete_message }}</p>
+                  {% if member.maint_orgs_pkgs %}
+                    <div class="hdx-v2-org-members__pkg-list">
+                      {% for m_org in member.maint_orgs_pkgs %}
+                        <p><strong>{{ m_org.title or m_org.name }}:</strong></p>
+                        <ul>
+                          {% for p in m_org.pkgs %}
+                            <li><a href="{{ h.url_for('dataset_read', id=p.name) }}" target="_blank">{{ p.title }}</a></li>
+                          {% endfor %}
+                        </ul>
+                      {% endfor %}
+                    </div>
+                  {% endif %}
+                  <div class="c-drawer-form__buttons">
+                    {% snippet 'v2/components/button.html',
+                        style='tertiary', label=_('Cancel'), attrs={'data-drawer-close': ''} %}
+                    {% snippet 'v2/components/button.html',
+                        style='primary', button_type='submit', label=_('Confirm'),
+                        state='disabled' if delete_disabled else 'enabled' %}
+                  </div>
+                </form>
+              {% endcall %}
+            {% else %}
+              {% snippet 'v2/components/member-list-card.html',
+                  avatar_initials=avatar_initials,
+                  name=member.display_name, username=member.name, profile_url=profile_url,
+                  meta_text=meta_text, sysadmin=sysadmin, stats_text=stats_text,
+                  disabled_note=_('Please add another admin to be able to change this user') if authorized else '' %}
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+    {% endfor %}
+
+    {# Hidden form the change-role dropdowns submit through (POST member_new);
+       also needed by the sidebar "Edit profile" dropdown, hence the wider gate #}
+    {% if authorized or allow_view_right_side %}
+      <form id="hdx-change-role-form" method="post"
+            action="{{ h.url_for('hdx_members.member_new', id=group_dict.id) }}" hidden>
+        {{ h.csrf_input() }}
+        <input type="hidden" name="username" value="">
+        <input type="hidden" name="role" value="">
+      </form>
+    {% endif %}
+
+    {# Group-message drawer (Q6 — replaces the v1 select2 + reCAPTCHA popup) #}
+    {% if show_group_message %}
+      {% call h.snippet('v2/components/drawer.html',
+          drawer_id='group-message-drawer',
+          title=_('Group message')) %}
+        <form class="c-drawer-form" id="group-message-form">
+          <div class="c-drawer-form__alert" role="alert" hidden></div>
+          <input type="hidden" name="source_type" value="group">
+          <input type="hidden" name="title" value="{{ group_dict.title or group_dict.display_name }}">
+          <input type="hidden" name="org_id" value="{{ group_dict.id }}">
+          <input type="hidden" name="pkg_id" value="">
+          <div class="c-form-field">
+            {% snippet 'v2/components/dropdown.html',
+                native=True, name='topic', id='group-message-topic',
+                label=_('Send message to'), required=True,
+                options=gm_info.data.group_topics,
+                placeholder=_('Select recipient group(s)') %}
+          </div>
+          <div class="c-form-field">
+            {% snippet 'v2/components/search-input.html',
+                size='m', type='text', name='fullname', id='group-message-fullname',
+                label=_('Your name'), required=True,
+                value=gm_info.data.fullname, show_icon=False %}
+          </div>
+          <div class="c-form-field">
+            {% snippet 'v2/components/search-input.html',
+                size='m', type='email', name='email', id='group-message-email',
+                label=_('Your email'), required=True,
+                value=gm_info.data.email, show_icon=False %}
+          </div>
+          <div class="c-form-field">
+            {% snippet 'v2/components/search-input.html',
+                size='m', name='msg', id='group-message-msg',
+                label=_('Comments'), required=True,
+                multiline=True, rows=4, show_icon=False %}
+          </div>
+          <p class="c-drawer-form__text hdx-v2-org-members__gm-success" id="group-message-success" hidden>
+            {{ _('Your message has been sent.') }}
+          </p>
+          {# invisible reCAPTCHA renders here (badge inline), between fields and buttons #}
+          <div class="hdx-v2-org-members__gm-recaptcha" id="group-message-recaptcha"
+               data-sitekey="{{ g.recaptcha_publickey }}"></div>
+          <div class="c-drawer-form__buttons">
+            {% snippet 'v2/components/button.html',
+                style='tertiary', label=_('Cancel'), attrs={'data-drawer-close': ''} %}
+            {% snippet 'v2/components/button.html',
+                style='primary', label=_('Submit'), state='disabled',
+                attrs={'id': 'group-message-submit'} %}
+          </div>
+        </form>
+      {% endcall %}
+    {% endif %}
+
+  </section>
+{% endblock %}
+
+{# ── Sidebar: Your role / Pending approval / Add-invite ─────── #}
+{% block secondary_content %}
+  {% if allow_view_right_side %}
+    <div class="hdx-v2-org-members-side">
+
+      {# Card 1 — "Your role" bio (borderless, Q18 + 059 decisions) #}
+      <div class="hdx-v2-org-members-side__bio">
+        <div class="hdx-v2-org-members-side__role-line">
+          {{ _('Your role for this organisation:') }}
+          <span class="hdx-v2-org-members-side__role-value">{{ current_member.role }}</span>
+        </div>
+        <div class="hdx-v2-org-members-side__bio-name">
+          {% snippet 'v2/components/avatar.html',
+              size='sm',
+              initials=(current_member.display_name or current_member.name or 'A')[0],
+              aria_label=current_member.display_name %}
+          <a class="hdx-v2-org-members-side__bio-link" href="{{ h.url_for('user.read', id=current_member.name) }}"
+             title="{{ current_member.display_name }}">{{ current_member.display_name }}</a>
+          <span class="hdx-v2-org-members-side__bio-sep" aria-hidden="true">|</span>
+          <a class="hdx-v2-org-members-side__bio-link" href="{{ h.url_for('user.read', id=current_member.name) }}"
+             title="{{ current_member.name }}">{{ current_member.name }}</a>
+        </div>
+        <div class="hdx-v2-org-members-side__bio-meta">
+          {{ _('Registered') }} {{ h.render_datetime(current_member.created) }}<br>
+          {{ h.hdx_show_singular_plural(current_member.ds_num, _('Dataset'), _('Datasets')) }} -
+          {{ h.hdx_show_singular_plural(current_member.org_num, _('Organisation'), _('Organisations')) }} -
+          {{ h.hdx_show_singular_plural(current_member.grp_num, _('Countries'), _('Countries')) }}
+        </div>
+        <div class="hdx-v2-org-members-side__bio-actions">
+          {# "Edit profile" keeps the v1 change-own-role behavior (Q8), as a role dropdown — always visible (v1 parity) #}
+          {% set self_member = h.hdx_get_org_member_info(current_member.id, group_dict.name) %}
+          {% set _self_items = namespace(list=[]) %}
+          {% for role_categ in roles %}
+            {% set is_maint_blocked = self_member.maint_orgs_pkgs and role_categ.value == 'member' %}
+            {% set _self_items.list = _self_items.list + [{
+                'label': role_categ.text,
+                'active': role_categ.value == current_member.role,
+                'extra_classes': 'is-disabled' if is_maint_blocked else '',
+                'tooltip': _('You cannot be set to Member while you maintain datasets in this organisation') if is_maint_blocked else '',
+                'attrs': {'data-role-value': role_categ.value,
+                          'aria-disabled': 'true' if is_maint_blocked else 'false'}
+            }] %}
+          {% endfor %}
+          {% snippet 'v2/components/dropdown.html',
+              extra_classes='c-dropdown--link',
+              placeholder=_('Edit profile'),
+              panel_id='change-role-panel-self',
+              navigate=True,
+              attrs={'data-change-role-user': current_member.name},
+              items=_self_items.list %}
+          {% if current_member.role %}
+            {% if not (current_member.role == 'admin' and is_single_admin) %}
+              <span class="hdx-v2-org-members-side__bio-sep" aria-hidden="true">|</span>
+              {% if authorized %}
+                {# Admin viewers reuse their own row's remove drawer (v1 parity) #}
+                {% snippet 'v2/components/text-button.html',
+                    style='secondary', size='m', tag='button',
+                    label=_('Leave this organisation'),
+                    attrs={'onclick': "window.hdxV2Drawer('remove-member-" ~ current_member.name ~ "').open()"} %}
+              {% else %}
+                {% snippet 'v2/components/text-button.html',
+                    style='secondary', size='m', tag='button',
+                    label=_('Leave this organisation'),
+                    attrs={'onclick': "window.hdxV2Drawer('leave-org-drawer').open()"} %}
+              {% endif %}
+            {% else %}
+              <span class="hdx-v2-org-members-side__bio-note">{{ _('Please add another admin to be able to leave the organisation') }}</span>
+            {% endif %}
+          {% endif %}
+        </div>
+      </div>
+
+      {# Leave-org confirmation drawer for non-admin viewers (v1 parity) #}
+      {% if current_member.role and not authorized and not (current_member.role == 'admin' and is_single_admin) %}
+        {% call h.snippet('v2/components/drawer.html',
+            drawer_id='leave-org-drawer',
+            title=_('Leave this organisation')) %}
+          <form class="c-drawer-form" method="post"
+                action="{{ h.url_for('hdx_members.member_delete', id=group_dict.id) }}">
+            {{ h.csrf_input() }}
+            <input type="hidden" name="user" value="{{ current_member.id }}">
+            <p class="c-drawer-form__text">{{ _('Are you sure you want to delete this member?') }}</p>
+            <div class="c-drawer-form__buttons">
+              {% snippet 'v2/components/button.html',
+                  style='tertiary', label=_('Cancel'), attrs={'data-drawer-close': ''} %}
+              {% snippet 'v2/components/button.html',
+                  style='primary', button_type='submit', label=_('Confirm') %}
+            </div>
+          </form>
+        {% endcall %}
+      {% endif %}
+
+      {# Card 2 — Pending approval (Q5 — kept, v1 position) #}
+      {% if allow_approve and request_list | length > 0 %}
+        <div class="hdx-v2-org-members-side__pending">
+          <span class="hdx-v2-org-members__group-title">{{ _('Pending approval') }} [{{ request_list | length }}]</span>
+          {% for request in request_list %}
+            {% set req_meta = (_('Requested') ~ ' ' ~ h.render_datetime(request.revision_last_updated)) if request.revision_last_updated else '' %}
+            {% call h.snippet('v2/components/member-list-card.html',
+                avatar_initials=(request.user_display_name or request.user_name or 'A')[0],
+                name=request.user_display_name, username=request.user_name,
+                profile_url=h.url_for('user.read', id=request.user_name),
+                meta_text=req_meta,
+                extra_classes='c-member-list-card--stacked') %}
+              <div class="hdx-v2-org-members__request-actions" data-request-id="{{ request.id }}">
+                {# Approve — one-click role dropdown; AJAX member_request_process #}
+                {% set _approve_items = namespace(list=[]) %}
+                {% for role_categ in roles %}
+                  {% set _approve_items.list = _approve_items.list + [{
+                      'label': role_categ.text,
+                      'attrs': {'data-approve-role': role_categ.value}
+                  }] %}
+                {% endfor %}
+                {% snippet 'v2/components/dropdown.html',
+                    extra_classes='c-dropdown--link',
+                    placeholder=_('Approve'),
+                    panel_id='approve-panel-' ~ request.id,
+                    navigate=True,
+                    attrs={'data-approve-request': request.id},
+                    items=_approve_items.list %}
+                <span class="c-member-list-card__action-sep" aria-hidden="true">|</span>
+                {% snippet 'v2/components/text-button.html',
+                    style='secondary', size='m', tag='button',
+                    label=_('Decline'),
+                    attrs={'data-decline-request': request.id} %}
+              </div>
+              <div class="hdx-v2-org-members__request-message" data-request-message="{{ request.id }}" hidden>
+                {{ _('User has been approved as') }} <span class="hdx-v2-org-members__request-role">ROLE</span>.
+              </div>
+            {% endcall %}
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      {# Card 3 — Add / invite colleagues (framed card, 059 decisions) #}
+      {% if allow_approve %}
+        <form class="hdx-v2-org-members-side__invite" id="invite-members-form" method="post"
+              action="{{ h.url_for('hdx_members.bulk_member_new', id=group_dict.id) }}">
+          {{ h.csrf_input() }}
+          <h3 class="hdx-v2-org-members-side__invite-title">{{ _('Add / invite colleagues to this organisation') }}</h3>
+          <p class="hdx-v2-org-members-side__invite-text">
+            {{ _("To invite your colleagues to join this organisation, please enter their email(s) below. Multiple email addresses can be entered if separated by comma ','") }}
+          </p>
+          <p class="hdx-v2-org-members-side__invite-text">
+            <strong>{{ _('If you add user who is already registered on HDX') }}</strong>{{ _(', they will be automatically added to your organisation. If you invite someone who is not registered on HDX, a temporary account will be created for them and they will receive an invitation to sign up.') }}
+          </p>
+
+          {# Tags autocomplete (Q10) — chips UI handled by org-members-page.js #}
+          <div class="hdx-v2-invite-tags" data-invite-tags data-invite-source="/util/user/hdx_autocomplete">
+            <input type="hidden" name="emails" value="">
+            <div class="hdx-v2-invite-tags__box">
+              <input type="text" class="hdx-v2-invite-tags__input" id="invite-emails-input"
+                     placeholder="{{ _('Enter HDX username or email') }}"
+                     autocomplete="off"
+                     aria-label="{{ _('Enter HDX username or email') }}">
+            </div>
+            <div class="hdx-v2-invite-tags__panel" hidden></div>
+          </div>
+
+          {% set _role_opts = namespace(options={}) %}
+          {% for role_categ in roles %}
+            {% set _role_opts.options = dict(_role_opts.options, **{role_categ.value: role_categ.text}) %}
+          {% endfor %}
+          <div class="c-form-field">
+            {% snippet 'v2/components/dropdown.html',
+                native=True, name='role', id='invite-role',
+                options=_role_opts.options,
+                placeholder=_('Select a role') %}
+          </div>
+
+          <div class="hdx-v2-org-members-side__invite-submit">
+            {% snippet 'v2/components/button.html',
+                style='primary', size='m', button_type='submit', label=_('Submit') %}
+          </div>
+        </form>
+      {% endif %}
+
+    </div>
+  {% endif %}
 {% endblock %}

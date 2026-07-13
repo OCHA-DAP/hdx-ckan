@@ -12,6 +12,15 @@
         window.hdxSetNavParam('q', input.value.trim());
       }
     });
+
+    // Same interception for real form submits — the search-input submit
+    // icon and the clear button (input-field.js) go through requestSubmit;
+    // keeps navigation on the shared nav-param path (resets `page`).
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var input = form.querySelector('input[name="q"]');
+      window.hdxSetNavParam('q', input ? input.value.trim() : '');
+    });
   });
 
 })();

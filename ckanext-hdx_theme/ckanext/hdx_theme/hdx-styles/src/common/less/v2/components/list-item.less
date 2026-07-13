@@ -54,6 +54,17 @@
               font-weight: var(--hdx-fw-medium);
             }
         }
+
+        // blocked option (e.g. maintainer guard, task 059) — kept
+        // hoverable so the explanatory title tooltip still shows
+        &.is-disabled {
+            color:  var(--hdx-neutral-5);
+            cursor: not-allowed;
+
+            &:hover {
+                color: var(--hdx-neutral-5);
+            }
+        }
     }
 
     // Checklist item (with checkbox)

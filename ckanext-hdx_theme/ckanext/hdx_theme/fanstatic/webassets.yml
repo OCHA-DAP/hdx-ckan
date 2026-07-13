@@ -1479,6 +1479,7 @@ v2-components-styles:
     - v2/components/label.css
     - v2/components/letter-anchor.css
     - v2/components/list-item.css
+    - v2/components/member-list-card.css
     - v2/components/nav-item.css
     - v2/components/notification-item.css
     - v2/components/org-list-card.css
@@ -1654,6 +1655,13 @@ v2-org-page-styles:
   <<: *common-css
   contents:
     - v2/org-page.css
+
+v2-org-members-page-scripts:
+  <<: *common-js
+  output: ckanext-hdx_theme/%(version)s_v2-org-members-page-scripts.js
+  contents:
+    - v2/url-nav.js
+    - v2/org-members-page.js
 
 
 v2-contact-contributor-page-styles:

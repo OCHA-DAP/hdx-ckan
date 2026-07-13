@@ -46,6 +46,25 @@
   height: 1rem;
   display: block;
 }
+.c-search-input__icon--btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  color: inherit;
+  flex-shrink: 0;
+}
+.c-search-input__icon--btn svg {
+  width: 1rem;
+  height: 1rem;
+  display: block;
+}
+.c-search-input__icon--btn:hover {
+  color: var(--hdx-neutral-95);
+}
 .c-search-input__clear {
   display: none;
   align-items: center;

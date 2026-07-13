@@ -996,6 +996,21 @@
             clear_facet='groups' %}
       </div>
     </div>
+
+    <h2 class="demo-subsection__heading">Link trigger (--link) — navigate panel with per-item attrs (task 059)</h2>
+    <div class="demo-row demo-row--flex-start">
+      {% snippet 'v2/components/dropdown.html',
+          extra_classes='c-dropdown--link',
+          placeholder='Change role',
+          panel_id='demo-panel-link',
+          navigate=True,
+          items=[
+            {'label': 'Admin',  'active': True,  'attrs': {'data-demo-role': 'admin'}},
+            {'label': 'Editor', 'active': False, 'attrs': {'data-demo-role': 'editor'}},
+            {'label': 'Member', 'active': False, 'attrs': {'data-demo-role': 'member', 'aria-disabled': 'true'},
+             'extra_classes': 'is-disabled', 'tooltip': 'Disabled option with explanatory tooltip'},
+          ] %}
+    </div>
   </section>
 
   <br><br><br><br><br>
@@ -1038,6 +1053,22 @@
       <br>
       {% snippet 'v2/components/search-input.html',
           size='l', value='Sudan', state='filled', show_clear=True %}
+      <br>
+    </div>
+
+    <h2 class="demo-subsection__heading">Search input — submit icon + clear (icon_submit=True, show_clear=True; live behavior)</h2>
+    <div class="demo-row--column demo-max-width-l">
+      <form action="#" onsubmit="return false;">
+        {% snippet 'v2/components/search-input.html',
+            size='l', placeholder='Type to see the ×; icon submits like Enter',
+            icon_submit=True, show_clear=True %}
+      </form>
+      <br>
+      <form action="#" onsubmit="return false;">
+        {% snippet 'v2/components/search-input.html',
+            size='l', value='Sudan', state='filled',
+            icon_submit=True, show_clear=True %}
+      </form>
       <br>
     </div>
 
@@ -1401,6 +1432,17 @@
       </div>
     </div>
 
+    <div class="demo-row">
+      <span class="demo-row__label">Disabled (is-disabled)</span>
+      <div class="demo-row__items">
+        {% snippet 'v2/components/list-item.html',
+            type='list', label='Member', size='md',
+            extra_classes='is-disabled',
+            tooltip='Blocked option — explanatory tooltip (task 059 maintainer guard)',
+            attrs={'aria-disabled': 'true'} %}
+      </div>
+    </div>
+
     <h2 class="demo-subsection__heading">Checklist items</h2>
 
     <div class="demo-row">
@@ -1744,6 +1786,83 @@
             'created': '2014-06-01T00:00:00'
           },
           member_count=0 %}
+    </div>
+
+  </section>
+
+  <section class="demo-section">
+    <h1 class="demo-section__title">Member List Card</h1>
+    <p class="demo-section__subtitle">user row (org Members tab, task 059) · caller() actions · responsive stack &lt; md</p>
+
+    {# ── With actions — caller() body: link-dropdown + text-button ── #}
+    <h2 class="demo-subsection__heading">With actions (caller body)</h2>
+    <div class="demo-row demo-row--column">
+      {% call h.snippet('v2/components/member-list-card.html',
+          avatar_initials='A',
+          name='Alberto Castillo Aroca', username='alcastaro', profile_url='#',
+          meta_text='Admin - Registered 2 August 2017', sysadmin=True,
+          stats_text='48 Datasets - 4 Organisations - 0 Countries') %}
+        {% snippet 'v2/components/dropdown.html',
+            extra_classes='c-dropdown--link',
+            placeholder='Change role',
+            panel_id='demo-member-card-roles',
+            navigate=True,
+            items=[
+              {'label': 'Admin',  'active': True,  'attrs': {'data-demo-role': 'admin'}},
+              {'label': 'Editor', 'active': False, 'attrs': {'data-demo-role': 'editor'}},
+              {'label': 'Member', 'active': False, 'attrs': {'data-demo-role': 'member'}},
+            ] %}
+        <span class="c-member-list-card__action-sep" aria-hidden="true">|</span>
+        {% snippet 'v2/components/text-button.html',
+            style='secondary', size='m', tag='button',
+            label='Remove from this organisation' %}
+      {% endcall %}
+    </div>
+
+    {# ── Disabled note replaces the actions (last-admin guard) ── #}
+    <h2 class="demo-subsection__heading">Guard note (disabled_note)</h2>
+    <div class="demo-row demo-row--column">
+      {% snippet 'v2/components/member-list-card.html',
+          avatar_initials='S',
+          name='Sarah Okoro', username='sokoro', profile_url='#',
+          meta_text='Admin - Registered 14 January 2020',
+          stats_text='3 Datasets - 1 Organisation - 0 Countries',
+          disabled_note='Please add another admin to be able to change this user' %}
+    </div>
+
+    {# ── No actions (viewer without permissions) ── #}
+    <h2 class="demo-subsection__heading">No actions</h2>
+    <div class="demo-row demo-row--column">
+      {% snippet 'v2/components/member-list-card.html',
+          avatar_initials='J',
+          name='Jean Dupont', username='jdupont', profile_url='#',
+          meta_text='Editor - Registered 3 March 2022',
+          stats_text='12 Datasets - 2 Organisations - 1 Country' %}
+    </div>
+
+    {# ── Forced-stacked variant (narrow columns, e.g. sidebar) ── #}
+    <h2 class="demo-subsection__heading">Stacked variant (--stacked)</h2>
+    <div class="demo-row demo-row--column demo-max-width-m">
+      {% call h.snippet('v2/components/member-list-card.html',
+          avatar_initials='P',
+          name='Priya Nair', username='pnair', profile_url='#',
+          meta_text='Requested 1 July 2026',
+          extra_classes='c-member-list-card--stacked') %}
+        {% snippet 'v2/components/dropdown.html',
+            extra_classes='c-dropdown--link',
+            placeholder='Approve',
+            panel_id='demo-member-card-approve',
+            navigate=True,
+            items=[
+              {'label': 'Admin',  'attrs': {'data-demo-role': 'admin'}},
+              {'label': 'Editor', 'attrs': {'data-demo-role': 'editor'}},
+              {'label': 'Member', 'attrs': {'data-demo-role': 'member'}},
+            ] %}
+        <span class="c-member-list-card__action-sep" aria-hidden="true">|</span>
+        {% snippet 'v2/components/text-button.html',
+            style='secondary', size='m', tag='button',
+            label='Decline' %}
+      {% endcall %}
     </div>
 
   </section>

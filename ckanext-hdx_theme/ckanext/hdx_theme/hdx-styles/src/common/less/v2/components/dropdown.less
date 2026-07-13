@@ -128,9 +128,9 @@
     // Open/active
     &--open &__trigger,
     &--active &__trigger {
-        background-color: @c-dropdown-bg-active !important;
-        border:           @c-dropdown-border-active !important;
-        box-shadow:       none !important;
+        //background-color: @c-dropdown-bg-active !important;
+        //border:           @c-dropdown-border-active !important;
+        //box-shadow:       none !important;
     }
 
     // Disabled
@@ -219,6 +219,55 @@
         .c-dropdown__chevron    { width: 0.875rem; }
     }
 
+    // ── Link-trigger modifier (task 059) ─────────────────────
+    // Trigger looks like an underlined text link (+ chevron) instead of a
+    // select box; the panel keeps its own width under the link.
+
+    &--link {
+        display: inline-flex;
+        width:   auto;
+
+        .c-dropdown__trigger {
+            .hdx-link-s();
+            align-self:       auto;
+            display:          inline-flex;
+            align-items:      center;
+            gap:              var(--hdx-space-1);
+            height:           auto;
+            padding:          0;
+            background:       none;
+            border:           none;
+            box-shadow:       none;
+            color:            var(--hdx-neutral-95);
+
+            &:hover,
+            &:focus-visible {
+                background: none;
+                border:     none;
+                box-shadow: none;
+                color:      var(--hdx-primary-5);   // match c-text-button hover
+            }
+        }
+
+        .c-dropdown__chevron {
+            display: inline-flex;
+            color:   inherit;   // follows the trigger's hover color
+
+            svg {
+                width:   var(--hdx-space-4);   // 16 px — Figma trailing chevron
+                height:  var(--hdx-space-4);
+                display: block;
+            }
+        }
+
+        .c-dropdown__panel {
+            left:      0;
+            right:     auto;
+            min-width: 11rem;
+            white-space: nowrap;
+        }
+    }
+
 
     // ── Overlay panel ───────────────────────────────────────
 
@@ -255,8 +304,6 @@
         display:        flex;
         flex-direction: column;
         gap:            var(--hdx-space-13); // 6 px
-        overflow-y:     auto;
-        max-height:     20rem;
         padding-left:   0;
     }
 

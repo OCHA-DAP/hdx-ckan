@@ -2,7 +2,7 @@
 
 **Status**: In-progress
 **Started**: 2026-04-16
-**Last Updated**: 2026-07-01
+**Last Updated**: 2026-07-13
 
 ---
 
@@ -102,6 +102,7 @@ CSS custom property equivalents (`--hdx-*`) are defined in `v2/foundation.css` (
 | Signup — account-validated | `onboarding/signup/account-validated.html` | Step 3; `c-step-pager`; `analytics_account_type` block preserved |
 | HAPI landing page | `landing_pages/hapi.html` | Extends `v2/page.html`; `c-anchor-links` sticky sidebar; `c-accordion` FAQ; `c-content-card` Be Inspired; CSS Grid partner logos; `c-page-header` with subtitle; see `requirements/053-hdx-hapi-landing-page.md` |
 | Signals landing page | `landing_pages/signals.html` | Extends `v2/page.html`; `c-page-header` with bell-icon CTA; featured signals carousel (Hammer.js + `carousel.js`, dots-only, SM/MD); Mailchimp signup form with v2 buttons; signals map iframe; `c-accordion` FAQ; partner logos; see `requirements/054-signals-landing-page.md` |
+| Organization page | `organization/read.html`, `organization/activity_stream.html`, `organization/stats.html`, `organization/members.html` | Extend `v2/page.html`; shared `v2/org_hero.html` (page-header + `c-tabs`); tasks 056–059 (Datasets / Activity / Stats / Members); HDX Connect tab postponed |
 
 ### Pages in holding state (on `page_light.html`)
 
@@ -157,6 +158,8 @@ Each page below extends `page_light.html`, manually overrides `{% block styles %
 - [x] Page header — `page-header.html` / `page-header.less`; hero section with logo, title, subtitle, description, optional CTA button + icon; used on HAPI and Signals landing pages
 - [x] Signal card — `signal-card.html` / `signal-card.less`; featured signal with location label, date, type label, description/image, source + CTA buttons; used in Signals carousel
 - [x] Notification item — `notification-item.html` / `notification-item.less`; title + optional sysadmin bracket tag + meta row (date + arrow link); `.c-notification-item--sysadmin` highlight modifier; used in the navbar notifications dropdown
+- [x] Stats card — `stats-card.html` / `stats-card.less`; KPI figure + label card; used on the org page Stats tab
+- [x] Member list card — `member-list-card.html` / `member-list-card.less`; avatar + profile links + role/registered line + counters, `caller()` actions body, `--stacked` variant; used on the org page Members tab
 
 Each component file should have:
 1. **HTML template** (`templates/v2/components/component-name.html`) — reusable snippet with BEM markup
@@ -173,7 +176,7 @@ Exception: `info-icon.html` has no dedicated LESS/CSS — it composes existing `
 
 Bundle configuration:
 - `hdx_theme/v2-components-styles` — standalone design system bundle (tokens + components), no Bootstrap
-  - Contents: `v2/foundation.css`, then component CSS files: `divider`, `activity-card`, `dataset-card`, `resource-card`, `org-list-card`, `avatar-badge`, `buttons`, `checkbox`, `copy-button`, `dropdown`, `input-field`, `label`, `letter-anchor`, `list-item`, `nav-item`, `notification-item`, `anchor-links`, `pagination`, `breadcrumb`, `page-header`, `selection`, `showcase-card`, `text-link`, `highlight-card`, `overlay`, `signup-tier`, `step-pager`, `content-card`, `accordion`
+  - Contents: `v2/foundation.css`, then component CSS files: `divider`, `activity-card`, `dataset-card`, `resource-card`, `org-list-card`, `member-list-card`, `avatar-badge`, `buttons`, `checkbox`, `copy-button`, `dropdown`, `input-field`, `label`, `letter-anchor`, `list-item`, `nav-item`, `notification-item`, `anchor-links`, `pagination`, `breadcrumb`, `page-header`, `selection`, `showcase-card`, `text-link`, `highlight-card`, `overlay`, `signup-tier`, `step-pager`, `content-card`, `accordion`, `stats-card`
   - Kept separate for non-page contexts (component previews, embedded widgets)
 - `hdx_theme/v2-page-styles` ✅ Full page bundle: preloads `v2-components-styles`, then adds:
   - `vendor/bootstrap5/css/bootstrap.css`
@@ -185,7 +188,7 @@ Bundle configuration:
 - `hdx_theme/v2-page-scripts` ✅ Contains `v2/navbar.js` (navbar + offcanvas, FocusTrap inlined) + `v2/search-autocomplete.js`; preloads `v2-search-scripts` (MiniSearch/feature-index)
 - `hdx_theme/v2-search-scripts` — global lib bundle: MiniSearch, normalize.js, feature-index; auto-loaded via `v2-page-scripts` preload
 - `hdx_theme/v2-search-page-styles` — search page: adds `v2/search-page.css`
-- `hdx_theme/v2-search-page-scripts` — search page: adds `highlight.js` + `v2/url-nav.js` + `v2/search-page.js` (`url-nav.js` is a shared nav-param module also used by the org list page)
+- `hdx_theme/v2-search-page-scripts` — search page: adds `highlight.js` + `v2/url-nav.js` + `v2/search-page.js` (`url-nav.js` is a shared nav-param module also used by the org list page and the org members page)
 - `hdx_theme/v2-dataset-page-styles` — dataset page: adds `v2/dataset-page.css`
 - `hdx_theme/v2-dataset-page-scripts` — dataset page: adds `v2/dataset-page.js` (section accordion)
 - `hdx_theme/v2-resource-page-styles` — resource page: adds `v2/resource-page.css`
@@ -195,6 +198,9 @@ Bundle configuration:
 - `hdx_theme/v2-all-locations-page-scripts` — All Locations page: adds `v2/all-locations-page.js` (HRP filter + A-Z/Z-A sort)
 - `hdx_theme/v2-org-list-page-styles` — All Organisations page: adds `v2/org-list-page.css` (org-list-card styles come from the preloaded `v2-components-styles` bundle)
 - `hdx_theme/v2-org-list-page-scripts` — All Organisations page: adds `v2/url-nav.js` + `v2/org-list-page.js`
+- `hdx_theme/v2-org-page-styles` — Organization page (all tabs, 056–059): adds `v2/org-page.css` (hero band, activity/stats sections, members layout incl. the invite tags widget)
+- `hdx_theme/v2-org-members-page-scripts` — Organization page Members tab: adds `v2/url-nav.js` + `v2/org-members-page.js` (change-role/approve dropdown wiring, drawers + invisible reCAPTCHA, invite tags-autocomplete)
+- `hdx_theme/v2-chart-scripts` — Chart.js lib bundle (`chartjs/*` + `v2/charts.js`); loaded by the org page Stats tab
 - `hdx_theme/v2-contact-contributor-page-styles` — Contact Contributor page: adds `v2/contact-contributor-page.css`
 - `hdx_theme/v2-signup-page-styles` — Signup flow pages: adds `v2/signup-page.css`; loaded on all 5 signup pages
 - `hdx_theme/v2-hapi-landing-page-styles` — HAPI landing page: adds `v2/hapi-landing-page.css`
@@ -249,6 +255,7 @@ Bundle configuration:
 - [x] Resource page
 - [x] All Locations page
 - [x] All Organisations page
+- [x] Organization page (Datasets / Activity / Stats / Members tabs — 056–059; HDX Connect tab postponed)
 - [ ] Remaining pages (user pages, org join, onboarding, etc.)
 
 ### Phase 4: Cleanup 🔲 (Final)
@@ -264,6 +271,7 @@ Bundle configuration:
 
 1. **Migrate remaining holding-state pages** from `page_light.html` — org/join pages.
 2. **Build page-specific components** as needed during individual page migrations.
+3. **Organization page HDX Connect tab** — postponed.
 
 ---
 
