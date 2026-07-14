@@ -1,12 +1,12 @@
-.hdx-v2-signals-hero-row {
+.hdx-v2-signals-header-section {
   background-color: var(--hdx-neutral-01);
   padding-bottom: var(--hdx-space-10);
 }
-.hdx-v2-signals-hero-row .c-page-header {
+.hdx-v2-signals-header-section .c-page-header {
   border-bottom: 1px solid var(--hdx-neutral-10);
 }
 @media (min-width: 80rem) {
-  .hdx-v2-signals-hero-row .c-page-header {
+  .hdx-v2-signals-header-section .c-page-header {
     border-bottom: none;
   }
 }

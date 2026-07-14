@@ -112,7 +112,7 @@ def _populate_template_data(page_dict, show_switch_to_mobile):
     if page_dict.get('sections'):
         sections = json.loads(page_dict['sections'])
         for section in sections:
-            page_h._compute_iframe_style(section, is_mobile=True)
+            page_h._compute_iframe_style(section, is_mobile=not show_switch_to_mobile)
             if section.get('type', '') == 'data_list':
                 try:
                     saved_filters = page_h._find_dataset_filters(section.get('data_url', ''))

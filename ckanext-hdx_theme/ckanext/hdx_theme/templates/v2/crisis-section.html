@@ -1,0 +1,50 @@
+{#
+  Snippet: crisis-section.html
+  Path:    templates/v2/crisis-section.html
+
+  Section-type dispatcher for crisis/event pages (task 060). Renders one
+  stored section from a Page's `sections` list as a full-width block.
+  The `data_list` section is NOT rendered here — it is pulled out by
+  `pages/read_page.html` and rendered as the two-column search row via
+  `search/snippets/search_results_wrapper.html` (only the first `data_list`
+  section is supported; any further one reaching this dispatcher renders
+  nothing, same as an unknown/`empty` type). Likewise, the FIRST
+  `description`-type section is pulled out by `pages/read_page.html` and
+  promoted into the page-header's description instead — a `description`
+  section reaching this dispatcher is always the 2nd+ one.
+
+  Parameters
+  ─────────────────────────────────────────────────
+  section   {dict}  One element of page_dict.sections / page_dict.title_section.
+                     Expected keys: type, data_url, style, long_description.
+  ─────────────────────────────────────────────────
+#}
+
+{% if section.type == 'description' %}
+
+  {% if section.long_description %}
+    <div class="hdx-v2-container">
+      <div class="hdx-v2-crisis-description">
+        {{ h.render_markdown(section.long_description) }}
+      </div>
+    </div>
+  {% endif %}
+
+{% elif section.type in ('map', 'key_figures', 'interactive_data') %}
+
+  <div class="hdx-v2-crisis-iframe-section">
+    <div class="hdx-v2-container">
+      <div class="hdx-v2-crisis-iframe">
+        <div class="hdx-v2-crisis-iframe__error" data-crisis-iframe-error hidden></div>
+        <iframe class="hdx-v2-crisis-iframe__frame"
+                data-crisis-iframe
+                frameborder="0"
+                style="{{ section.style }}"
+                src="{{ section.get('data_url') }}">
+        </iframe>
+      </div>
+    </div>
+  </div>
+
+{% endif %}
+{# else: data_list (beyond the first) / empty / unknown type — no output #}

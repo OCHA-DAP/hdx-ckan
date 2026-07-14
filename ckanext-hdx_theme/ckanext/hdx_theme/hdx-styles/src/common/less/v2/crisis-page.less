@@ -1,0 +1,60 @@
+// ============================================================
+// crisis-page.less — v2 Crisis / Event pages (task 060)
+// Compiled output: fanstatic/v2/crisis-page.css
+// Figma: llm_docs/redesign/figma_exports/crisis-page-sm.html,
+//        crisis-page-dataviz-maps-etc-sm.html,
+//        crisis-page-dataviz-maps-etc-md.html,
+//        crisis-page-dataviz-maps-etc-xl.html
+// ============================================================
+// The dataset-list body (filters/sidebar/cards/pagination) reuses the
+// search page styles verbatim (v2-search-page-styles bundle), and the
+// header reuses c-page-header — this file covers the hero band and the
+// full-width dataviz/description sections that sit between the header
+// and the two-column dataset results row.
+// ============================================================
+
+@import "mixins.less";
+
+// ── Hero band: crisis page-header on the page background ───────
+.hdx-v2-crisis-header-section {
+    border-bottom: 1px solid var(--hdx-neutral-1);
+}
+
+// ── Dataviz section band (map / key_figures / interactive_data) ─
+// Full-bleed white band; hdx-v2-container inside constrains width,
+// no title row (D6/D10).
+.hdx-v2-crisis-iframe-section {
+    background-color: var(--hdx-neutral-0);
+    padding-top:        var(--hdx-space-8);   // 2rem
+    padding-bottom:     var(--hdx-space-8);   // 2rem
+}
+
+.hdx-v2-crisis-iframe {
+    display:        flex;
+    flex-direction: column;
+
+    &__frame {
+        border: none;
+    }
+
+    &__error {
+        .hdx-body-s();
+        color: var(--hdx-error-6);
+
+        &[hidden] { display: none; }
+    }
+}
+
+// ── Description section (CMS text block, task 060 §7) ───────────
+// Same typography as the page-header's own description text —
+// no additional visual treatment requested.
+.hdx-v2-crisis-description {
+    .hdx-body-m();
+    color:  var(--hdx-neutral-85);
+    padding: var(--hdx-space-6) 0;
+
+    a { color: inherit; }
+
+    p, ul, ol { margin: 0 0 var(--hdx-space-4); }
+    p:last-child, ul:last-child, ol:last-child { margin-bottom: 0; }
+}

@@ -103,6 +103,7 @@ CSS custom property equivalents (`--hdx-*`) are defined in `v2/foundation.css` (
 | HAPI landing page | `landing_pages/hapi.html` | Extends `v2/page.html`; `c-anchor-links` sticky sidebar; `c-accordion` FAQ; `c-content-card` Be Inspired; CSS Grid partner logos; `c-page-header` with subtitle; see `requirements/053-hdx-hapi-landing-page.md` |
 | Signals landing page | `landing_pages/signals.html` | Extends `v2/page.html`; `c-page-header` with bell-icon CTA; featured signals carousel (Hammer.js + `carousel.js`, dots-only, SM/MD); Mailchimp signup form with v2 buttons; signals map iframe; `c-accordion` FAQ; partner logos; see `requirements/054-signals-landing-page.md` |
 | Organization page | `organization/read.html`, `organization/activity_stream.html`, `organization/stats.html`, `organization/members.html` | Extend `v2/page.html`; shared `v2/org_hero.html` (page-header + `c-tabs`); tasks 056–059 (Datasets / Activity / Stats / Members); HDX Connect tab postponed |
+| Crisis / Event pages | `pages/read_page.html` (serves `/event/<name>` + `/dashboards/<name>`) | Extends `v2/page.html`; `page-header.html` (description sourced from the first `description`-type CMS section, not the page's own keywords field); new `v2/crisis-section.html` dispatcher + `crisis-page.less`/`crisis-page.js`; dataset list reuses `search_results_wrapper.html` like the org Datasets tab; `/m/` light routes untouched; see `requirements/060-crisis-event-pages-v2.md` |
 
 ### Pages in holding state (on `page_light.html`)
 
@@ -155,7 +156,7 @@ Each page below extends `page_light.html`, manually overrides `{% block styles %
 - [x] Signup tier — `signup-tier.html` / `signup-tier.css`; tier selection card for value-proposition page; default and primary (blue) variants; numbered feature badges or checkmark icons
 - [x] Content card — `content-card.html` / `content-card.less`; title + description + `c-text-link`; used in HAPI Be Inspired section
 - [x] Accordion — `accordion.html` / `accordion.less`; CSS-only `<details>`/`<summary>`; first item open by default via `open` attr; used in HAPI and Signals FAQ
-- [x] Page header — `page-header.html` / `page-header.less`; hero section with logo, title, subtitle, description, optional CTA button + icon; used on HAPI and Signals landing pages
+- [x] Page header — `page-header.html` / `page-header.less`; hero section with logo, title (omitted when empty), optional `state_label_text`/`state_label_color` chip after the title, subtitle, description, optional CTA button + icon; used on HAPI and Signals landing pages, dataset/org/resource pages, and crisis/event pages
 - [x] Signal card — `signal-card.html` / `signal-card.less`; featured signal with location label, date, type label, description/image, source + CTA buttons; used in Signals carousel
 - [x] Notification item — `notification-item.html` / `notification-item.less`; title + optional sysadmin bracket tag + meta row (date + arrow link); `.c-notification-item--sysadmin` highlight modifier; used in the navbar notifications dropdown
 - [x] Stats card — `stats-card.html` / `stats-card.less`; KPI figure + label card; used on the org page Stats tab

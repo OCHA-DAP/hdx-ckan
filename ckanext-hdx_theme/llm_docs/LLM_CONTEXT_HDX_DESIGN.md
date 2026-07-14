@@ -275,7 +275,7 @@ Example page-specific template (light search):
 - **Template**: `ckanext-hdx_theme/ckanext/hdx_theme/templates/landing_pages/hapi.html`
   - Extends `v2/page.html`. Full v2 implementation — see `requirements/053-hdx-hapi-landing-page.md`.
   - Two-column layout at XL: sticky `c-anchor-links` sidebar + main content.
-  - Hero via `c-page-header` with `subtitle` param; grey background on hero row only (`hdx-v2-hapi-hero-row`); body row white.
+  - Hero via `c-page-header` with `subtitle` param; grey background on hero row only (`hdx-v2-hapi-header-section`); body row white.
   - Sections: Data Availability (iframe), Be Inspired (`c-content-card` grid 2×2), FAQ (`c-accordion`), Partners (CSS Grid `repeat(5,1fr)` of `<img>` logos).
   - UI copy from `h.HDX_CONST('UI_CONSTANTS')['LANDING_PAGES']['HAPI_LANDING_PAGE']`.
 - **Core assets**: `hdx_theme/v2-hapi-landing-page-styles`.
