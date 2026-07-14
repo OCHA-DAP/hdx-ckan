@@ -1479,6 +1479,7 @@ v2-components-styles:
     - v2/components/label.css
     - v2/components/letter-anchor.css
     - v2/components/list-item.css
+    - v2/components/member-list-card.css
     - v2/components/nav-item.css
     - v2/components/notification-item.css
     - v2/components/org-list-card.css
@@ -1489,8 +1490,10 @@ v2-components-styles:
     - v2/components/selection.css
     - v2/components/showcase-card.css
     - v2/components/signup-tier.css
+    - v2/components/stats-card.css
     - v2/components/step-pager.css
     - v2/components/table.css
+    - v2/components/tabs.css
     - v2/components/signal-card.css
     - v2/components/text-link.css
 
@@ -1534,6 +1537,15 @@ v2-carousel-scripts:
   contents:
     - vendor/hammer/hammer.js
     - v2/carousel.js
+
+v2-chart-scripts:
+  <<: *common-js
+  output: ckanext-hdx_theme/%(version)s_v2-chart-scripts.js
+  contents:
+    - v2/chartjs/chart.umd.min.js
+    - v2/chartjs/chartjs-adapter-date-fns.bundle.min.js
+    - v2/chartjs/chartjs-plugin-zoom.min.js
+    - v2/charts.js
 
 v2-home-page-scripts:
   <<: *common-js
@@ -1637,6 +1649,20 @@ v2-org-list-page-scripts:
   contents:
     - v2/url-nav.js
     - v2/org-list-page.js
+
+v2-org-page-styles:
+  output: ckanext-hdx_theme/%(version)s_v2-org-page-styles.css
+  <<: *common-css
+  contents:
+    - v2/org-page.css
+
+v2-org-members-page-scripts:
+  <<: *common-js
+  output: ckanext-hdx_theme/%(version)s_v2-org-members-page-scripts.js
+  contents:
+    - v2/url-nav.js
+    - v2/org-members-page.js
+
 
 v2-contact-contributor-page-styles:
   output: ckanext-hdx_theme/%(version)s_v2-contact-contributor-page-styles.css

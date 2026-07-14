@@ -1,0 +1,32 @@
+.c-tabs {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--hdx-space-4);
+  margin-bottom: var(--hdx-space-6);
+  overflow-x: auto;
+}
+.c-tab {
+  font-family: var(--hdx-font-body);
+  font-size: var(--hdx-fs-s);
+  font-weight: var(--hdx-fw-medium);
+  line-height: var(--hdx-lh-normal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  height: 4rem;
+  padding: 0 var(--hdx-space-2);
+  flex-shrink: 0;
+  color: var(--hdx-neutral-8);
+  text-decoration: none;
+  white-space: nowrap;
+}
+.c-tab:hover,
+.c-tab:focus {
+  color: var(--hdx-neutral-95);
+  text-decoration: none;
+}
+.c-tab.is-active {
+  border-bottom: var(--hdx-space-1) solid var(--hdx-primary-5);
+  color: var(--hdx-neutral-95);
+}

@@ -26,6 +26,13 @@
   color: var(--hdx-primary-5);
   font-weight: var(--hdx-fw-medium);
 }
+.c-list-item--type-list.is-disabled {
+  color: var(--hdx-neutral-5);
+  cursor: not-allowed;
+}
+.c-list-item--type-list.is-disabled:hover {
+  color: var(--hdx-neutral-5);
+}
 .c-list-item--type-checklist {
   display: flex;
   align-items: flex-start;

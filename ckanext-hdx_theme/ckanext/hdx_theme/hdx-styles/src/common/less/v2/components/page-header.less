@@ -98,6 +98,13 @@
         color:  var(--hdx-neutral-85);
         margin: 0;
     }
+    // ── Member since — muted line below title (org pages) ────
+
+    &__member-since {
+        .hdx-body-s();                      // 14 px — Figma .web-design
+        color:  var(--hdx-neutral-8);       // #3f4748
+        margin: 0;
+    }
     // ── Description text + show-more ─────────────────────────
 
     &__desc {
@@ -212,6 +219,44 @@
         @media (min-width: @hdx-bp-xl) {
             max-width: 9.375rem;            // Figma spec
             height:    auto;
+        }
+    }
+    // ── Right-card action links (org pages) ──────────────────
+
+    &__card-actions {
+        display:        flex;
+        flex-direction: column;
+        align-items:    flex-start;
+        gap:            var(--hdx-space-2);        // 8 px — Figma .text-buttons-parent
+    }
+    // ── Right-card count stats (org pages) ───────────────────
+
+    &__card-stats {
+        display:    flex;
+        align-self: stretch;
+        gap:        var(--hdx-space-4);            // 16 px — Figma .metadata-item-parent
+        color:      var(--hdx-neutral-85);         // #2f3536
+        padding-top: var(--hdx-space-3);
+        padding-bottom: var(--hdx-space-3);
+    }
+
+    &__card-stat {
+        flex:           1;
+        display:        flex;
+        flex-direction: column;
+    }
+
+    &__card-stat-label {
+        .hdx-body-s-semibold();                    // 14 px / 600 — Figma .metadata-label
+    }
+
+    &__card-stat-value {
+        .hdx-body-semibold-base();                 // Figma: 24 px / 600 / 130%
+        font-size: var(--hdx-fs-2xl);
+        padding:   var(--hdx-space-1) 0;           // 4 px 0 — Figma value wrapper
+
+        @media (max-width: @hdx-bp-md) {
+            font-size: var(--hdx-fs-xl);           // 20 px SM — Figma .metadata (compact card)
         }
     }
     // ── Metadata strip ───────────────────────────────────────

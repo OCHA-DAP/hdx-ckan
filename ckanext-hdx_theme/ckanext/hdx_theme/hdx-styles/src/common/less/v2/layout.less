@@ -75,3 +75,28 @@ body.hdx-v2 {
         margin-left:   auto;
     }
 }
+
+// ── Chart.js canvas wrapper (org stats + dataset page, task 058) ──
+// The canvas sits in an absolutely-positioned holder so Chart.js can
+// shrink as well as grow with the container; the template-rendered
+// c-tooltip--graph floats above the canvas, positioned by JS.
+.hdx-v2-chart {
+    position: relative;
+
+    &__canvas {
+        position: absolute;
+        inset:    0;
+    }
+}
+
+.hdx-v2-chart-tooltip {
+    position:       absolute;
+    top:            0;
+    left:           0;
+    max-width:      none;
+    white-space:    nowrap;
+    opacity:        0;
+    pointer-events: none;
+    z-index:        5;
+    transition:     opacity 150ms ease;
+}

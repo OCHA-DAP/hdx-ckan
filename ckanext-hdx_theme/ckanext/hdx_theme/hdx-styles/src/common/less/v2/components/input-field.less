@@ -94,6 +94,28 @@
         }
     }
 
+    // Icon rendered as a submit button (icon_submit=True) — clicking
+    // searches, same as Enter; stays visible alongside the × when filled
+    &__icon--btn {
+        display:         flex;
+        align-items:     center;
+        justify-content: center;
+        background:      none;
+        border:          none;
+        padding:         0;
+        cursor:          pointer;
+        color:           inherit;
+        flex-shrink:     0;
+
+        svg {
+            width:   @c-input-icon-dim;
+            height:  @c-input-icon-dim;
+            display: block;
+        }
+
+        &:hover { color: @c-input-color-value; }
+    }
+
     // Custom clear (×) button — visible only when .c-search-input--filled
     &__clear {
         display:     none;    // hidden by default; shown when --filled

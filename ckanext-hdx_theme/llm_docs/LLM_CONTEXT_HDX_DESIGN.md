@@ -89,7 +89,7 @@ There are three active layout base templates. The goal is to maintain exactly th
 - `ckanext-hdx_theme/ckanext/hdx_theme/templates/v2/header.html` — top-bar + responsive navbar (fully implemented)
 - `ckanext-hdx_theme/ckanext/hdx_theme/templates/v2/footer.html` — dark-teal footer panel (fully implemented)
 
-Pages in holding state on `page_light.html` (org/join, etc.) manually override `{% block header_core %}` to include the legacy `header-mobile.html`. The following pages have been migrated to `v2/page.html`: homepage, dataset search, dataset page, resource page, all locations, all organisations, contact contributor, signup flow (all five pages), HAPI landing page, and Signals landing page. See [**redesign/PROGRESS.md**](redesign/PROGRESS.md) for the full holding-state and migrated-pages lists.
+Pages in holding state on `page_light.html` (org/join, etc.) manually override `{% block header_core %}` to include the legacy `header-mobile.html`. The following pages have been migrated to `v2/page.html`: homepage, dataset search, dataset page, resource page, all locations, all organisations, organization page (Datasets / Activity / Stats / Members tabs; HDX Connect tab postponed), contact contributor, signup flow (all five pages), HAPI landing page, and Signals landing page. See [**redesign/PROGRESS.md**](redesign/PROGRESS.md) for the full holding-state and migrated-pages lists.
 
 ## BEM components (HDX custom UI blocks)
 
@@ -214,6 +214,18 @@ Example page-specific template (light search):
 
 ---
 
+### Organisation page (`/organization/<name>`)
+
+- **Templates** (one per tab, all extend `v2/page.html` and share the `v2/org_hero.html` hero — `c-page-header` + `c-tabs`):
+  - Datasets: `organization/read.html` (reuses the search-page list/filters)
+  - Activity: `organization/activity_stream.html`
+  - Stats: `organization/stats.html` (Chart.js via `hdx_theme/v2-chart-scripts`)
+  - Members: `organization/members.html` (role-grouped `c-member-list-card` list, right-side sidebar, one-click `c-dropdown--link` change-role/approve dropdowns, remove/leave + group-message drawers)
+- **Core assets**: `hdx_theme/v2-org-page-styles` on every tab; plus per tab: `v2-search-page-styles`/`-scripts` (Datasets), `v2-chart-scripts` (Stats), `hdx_theme/v2-org-members-page-scripts` (Members: `url-nav.js` + `org-members-page.js`).
+- The HDX Connect tab is postponed; the Requested Data tab remains v1.
+
+---
+
 ### Contact Contributor page (`/dataset/<name>/contact-contributor`)
 
 - **Template**: `ckanext-hdx_theme/ckanext/hdx_theme/templates/package/contact_contributor.html`
@@ -330,7 +342,7 @@ handle.open();
 handle.close();
 ```
 
-The factory is in `fanstatic/javascript/v2/drawer.js` (part of `v2-components-scripts`). Drawers dispatch `drawer:close` as a `CustomEvent`; listen with `addEventListener('drawer:close', fn)`.
+The factory is in `fanstatic/v2/components/drawer.js` (part of `v2-components-scripts`). Drawers dispatch `drawer:close` as a `CustomEvent`; listen with `addEventListener('drawer:close', fn)`.
 
 ### Form validation (v2)
 

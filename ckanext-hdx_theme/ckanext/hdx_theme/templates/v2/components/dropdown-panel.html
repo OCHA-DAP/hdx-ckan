@@ -9,7 +9,11 @@
   ─────────────────────────────────────────────────
   panel_id          {string}  id on the panel div.  default: ''
   items             {list}    Panel items.
-                              Navigate format: {value, label, active, tooltip?}.
+                              Navigate format: {value, label, active, tooltip?,
+                              attrs?, extra_classes?}. `attrs` merge into the
+                              item's attributes; `data-nav-value` is emitted only
+                              when `value` is set — omit it for action items
+                              handled by custom JS (e.g. data-role-value).
                               Checklist format: {value, label, count, checked, active,
                               attrs, extra_classes, children?}.
                               default: []
@@ -60,11 +64,19 @@
     <div class="c-dropdown__list-wrap">
       <div class="c-dropdown__list">
         {% for item in items %}
+          {% set _item_attrs = {'role': 'menuitem', 'tabindex': '-1'} %}
+          {% if item.value is defined and item.value is not none %}
+            {% set _item_attrs = dict(_item_attrs, **{'data-nav-value': item.value}) %}
+          {% endif %}
+          {% if item.get('attrs') %}
+            {% set _item_attrs = dict(_item_attrs, **item.attrs) %}
+          {% endif %}
           {% snippet 'v2/components/list-item.html',
               type='list',
               label=item.label,
               state='active' if item.active else 'default',
-              attrs={'data-nav-value': item.value, 'role': 'menuitem', 'tabindex': '-1'},
+              extra_classes=item.get('extra_classes', ''),
+              attrs=_item_attrs,
               tooltip=item.get('tooltip', '') %}
         {% endfor %}
       </div>
@@ -82,6 +94,7 @@
     {% if has_search %}
       {% snippet 'v2/components/search-input.html',
           size='m', placeholder='Search...', name='',
+          show_clear=True,
           attrs={'data-filter-search': filter_search_key} %}
     {% endif %}
     <div class="c-dropdown__list-wrap">

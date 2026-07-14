@@ -1,0 +1,511 @@
+// ============================================================
+// org-page.less — v2 Organization page (tasks 056, 057, 058, 059)
+// Compiled output: fanstatic/v2/org-page.css
+// Figma: llm_docs/redesign/figma_exports/xl-org-page.html,
+//        xl-org-members-page.html, md-org-page.html, sm-org-page.html,
+//        xl-org-activity-page.html
+// ============================================================
+// The Datasets tab's dataset list / filters / pagination body reuses
+// the search page styles verbatim (v2-search-page-styles bundle), and
+// the hero reuses c-page-header with its default metrics — this file
+// covers the hero band, the Datasets-tab empty state, and the
+// Activity-tab section (content column + activity list).
+// ============================================================
+
+@import "mixins.less";
+@import "nav-controls.less";   // sort dropdown pair — Members tab (task 059)
+
+// ── Hero band: org page-header + tabs on the page background ──
+.hdx-v2-org-page-hero {
+    border-bottom: 1px solid var(--hdx-neutral-1);   // #ebeff0 — Figma hero underline
+}
+
+// ── Empty state (org has no datasets) ─────────────────────────
+.hdx-v2-org-page-empty {
+    .hdx-body-m();
+    color:   var(--hdx-neutral-85);
+    padding: var(--hdx-space-6) 0;
+
+    a {
+        .hdx-link-m();
+    }
+}
+
+// ── Activity tab: content column (no sidebar) ──────────────────
+.hdx-v2-org-activity-content {
+    .v2-content-flex();
+}
+
+// ── Activity tab: activity list section (task 057) ─────────────
+// Full-bleed, full-width section at every breakpoint.
+.hdx-v2-org-activity {
+    align-self:     stretch;
+    display:        flex;
+    flex-direction: column;
+    gap:             var(--hdx-space-6);
+    border-top:      1px solid var(--hdx-neutral-1);
+    padding:         var(--hdx-space-6) 0;
+
+    @media (min-width: @hdx-bp-md) {
+        padding: var(--hdx-space-8) 0 var(--hdx-space-12);
+    }
+
+    &__title {
+        .hdx-display-s();
+        margin: 0;
+        color:  var(--hdx-neutral-95);
+    }
+
+    &__body {
+        display:        flex;
+        flex-direction: column;
+        gap:            var(--hdx-space-6);
+    }
+}
+
+// ── Stats tab: content column (no sidebar) ─────────────────────
+.hdx-v2-org-stats-content {
+    .v2-content-flex();
+}
+
+// ── Stats tab: KPI cards + charts section (task 058) ───────────
+.hdx-v2-org-stats {
+    align-self:     stretch;
+    display:        flex;
+    flex-direction: column;
+    gap:            var(--hdx-space-6);
+    border-top:     1px solid var(--hdx-neutral-1);
+    padding:        var(--hdx-space-6) 0;
+
+    @media (min-width: @hdx-bp-md) {
+        padding: var(--hdx-space-8) 0 var(--hdx-space-12);
+    }
+
+    &__header {
+        display:         flex;
+        flex-wrap:       wrap;
+        align-items:     center;
+        justify-content: space-between;
+        gap:             var(--hdx-space-4);
+    }
+
+    &__title {
+        .hdx-display-s();
+        margin: 0;
+        color:  var(--hdx-neutral-95);
+    }
+
+    // admin-only XLSX export prompt (D4) — own line below the header row
+    &__export {
+        .hdx-body-xs();
+        color: var(--hdx-neutral-8);
+
+        p { margin: 0; }
+        a { color: inherit; }
+    }
+
+    &__layout {
+        display:        flex;
+        flex-direction: column;
+        gap:            var(--hdx-space-6);
+
+        @media (min-width: @hdx-bp-xl) { flex-direction: row; }
+    }
+
+    // SM: stacked; MD: 3-up row above the charts; XL: left column (Figma)
+    &__kpis {
+        display:        flex;
+        flex-direction: column;
+        gap:            var(--hdx-space-6);
+
+        @media (min-width: @hdx-bp-md) {
+            flex-direction: row;
+            .c-stats-card { flex: 1; }
+        }
+        @media (min-width: @hdx-bp-xl) {
+            .v2-sidebar-flex();
+            flex-direction: column;
+            justify-content: center;
+            .c-stats-card { flex: none; }
+        }
+    }
+
+    &__charts {
+        .v2-content-flex();
+        display:        flex;
+        flex-direction: column;
+        gap:            var(--hdx-space-6);
+    }
+
+    &__chart-card {
+        display:          flex;
+        flex-direction:   column;
+        gap:              var(--hdx-space-6);
+        padding:          var(--hdx-space-6);
+        background-color: var(--hdx-neutral-0);
+        border-radius:    var(--hdx-radius-md);
+    }
+
+    &__chart-heading {
+        display:        flex;
+        flex-direction: column;
+        gap:            var(--hdx-space-1);
+    }
+
+    &__chart-title {
+        .hdx-body-m-semibold();
+        margin: 0;
+        color:  var(--hdx-neutral-85);
+    }
+
+    &__chart-subtitle {
+        .hdx-body-xs();
+        color: var(--hdx-neutral-8);
+    }
+
+    &__chart {
+        height: 20rem;   // Figma spec — chart area ≈ 320px, matches v1
+    }
+
+    &__legend {
+        display:     flex;
+        align-items: center;
+        gap:         var(--hdx-space-4);
+    }
+
+    &__legend-item {
+        .hdx-body-xs();
+        display:     inline-flex;
+        align-items: center;
+        gap:         var(--hdx-space-1);
+        color:       var(--hdx-neutral-8);
+    }
+
+    &__legend-swatch {
+        width:         var(--hdx-space-14);  // 10px — Figma swatch size
+        height:        var(--hdx-space-14);
+        border-radius: var(--hdx-radius-sm);
+
+        &--pageviews { background-color: var(--hdx-primary-5); }
+        &--downloads { background-color: var(--hdx-primary-2); }
+    }
+}
+
+// ── Members tab: two-column layout (task 059) ──────────────────
+// List column left + sidebar right at XL; sidebar stacks BELOW the
+// list at MD/SM (Q14). First right-side sidebar in v2 — page-scoped
+// classes, no hdx-v2-search-* overrides (056 precedent).
+
+.hdx-v2-org-members-columns {
+    flex-direction: column;
+    gap:            var(--hdx-space-6);
+    border-top:     1px solid var(--hdx-neutral-1);
+    padding:        var(--hdx-space-6) 0;
+
+    @media (min-width: @hdx-bp-md) {
+        padding: var(--hdx-space-8) 0 var(--hdx-space-12);
+    }
+
+    @media (min-width: @hdx-bp-xl) {
+        flex-direction: row;
+    }
+}
+
+.hdx-v2-org-members-content {
+    .v2-content-flex();
+    order: 1;
+}
+
+.hdx-v2-org-members-sidebar {
+    order:     2;
+    min-width: 0;   // flex-column child below XL
+
+    @media (min-width: @hdx-bp-xl) {
+        .v2-sidebar-flex();   // 25% right column
+    }
+}
+
+// ── Members tab: list column ────────────────────────────────────
+.hdx-v2-org-members {
+    display:        flex;
+    flex-direction: column;
+    gap:            var(--hdx-space-6);
+
+    &__header {
+        display:     flex;
+        align-items: center;
+        gap:         var(--hdx-space-2);
+    }
+
+    &__title {
+        .hdx-display-s();
+        margin: 0;
+        color:  var(--hdx-neutral-95);
+    }
+
+    &__count {
+        .hdx-body-m();
+        color: var(--hdx-neutral-8);
+    }
+
+    // sort control: inline in the heading row at XL only
+    &__controls--inline {
+        display:     none;
+        margin-left: auto;
+
+        @media (min-width: @hdx-bp-xl) { display: block; }
+    }
+
+    // sort control: own row below the search bar at MD/SM (Figma order)
+    &__controls--stacked {
+        display:         flex;
+        justify-content: flex-end;
+
+        @media (min-width: @hdx-bp-xl) { display: none; }
+    }
+
+    &__search {
+        width: 100%;
+
+        .c-search-input { width: 100%; }
+    }
+
+    &__group {
+        display:        flex;
+        flex-direction: column;
+        gap:            var(--hdx-space-4);
+    }
+
+    &__group-header {
+        display:         flex;
+        align-items:     center;
+        justify-content: space-between;
+        flex-wrap:       wrap;
+        gap:             var(--hdx-space-4);
+    }
+
+    &__group-title {
+        .hdx-body-s-semibold();
+        text-transform: uppercase;
+        color:          var(--hdx-neutral-8);
+    }
+
+    &__group-message {
+        display:     flex;
+        align-items: center;
+        gap:         var(--hdx-space-2);
+    }
+
+    &__group-list {
+        display:        flex;
+        flex-direction: column;
+        gap:            var(--hdx-space-4);   // 1rem — Figma card gap
+    }
+
+    // maintainer dataset list inside the remove drawer
+    &__pkg-list {
+        .hdx-body-s();
+        max-height: 12rem;
+        overflow-y: auto;
+        color:      var(--hdx-neutral-85);
+
+        p  { margin: 0 0 var(--hdx-space-1); }
+        ul { margin: 0 0 var(--hdx-space-3); padding-left: var(--hdx-space-5); }
+        a  { .hdx-link-s(); color: inherit; }
+    }
+
+    &__request-actions {
+        display:     flex;
+        align-items: center;
+        gap:         var(--hdx-space-4);
+    }
+
+    &__request-message {
+        .hdx-body-s();
+        color: var(--hdx-neutral-8);
+    }
+
+    &__gm-success {
+        color: var(--hdx-brand-7);
+    }
+}
+
+// ── Members tab: sidebar cards ──────────────────────────────────
+.hdx-v2-org-members-side {
+    display:        flex;
+    flex-direction: column;
+    gap:            var(--hdx-space-6);
+
+    // Card 1 — "Your role" bio: borderless (059 decision)
+    &__bio {
+        display:        flex;
+        flex-direction: column;
+        gap:            var(--hdx-space-2);
+    }
+
+    &__role-line {
+        .hdx-body-s();
+        color: var(--hdx-neutral-85);
+    }
+
+    &__role-value {
+        .hdx-body-s-medium();
+    }
+
+    &__bio-name {
+        display:     flex;
+        align-items: center;
+        gap:         var(--hdx-space-2);
+        min-width:   0;
+
+        .c-avatar { flex-shrink: 0; }
+    }
+
+    &__bio-link {
+        .hdx-body-m-semibold();
+        color:           var(--hdx-neutral-95);
+        text-decoration: none;
+        white-space:     nowrap;
+        overflow:        hidden;
+        text-overflow:   ellipsis;
+
+        &:hover,
+        &:focus-visible { text-decoration: underline; }
+    }
+
+    &__bio-sep {
+        .hdx-body-m-semibold();
+        color:       var(--hdx-neutral-5);
+        flex-shrink: 0;
+    }
+
+    &__bio-meta {
+        .hdx-body-s();
+        color: var(--hdx-neutral-85);
+    }
+
+    &__bio-actions {
+        display:     flex;
+        align-items: center;
+        flex-wrap:   wrap;
+        gap:         var(--hdx-space-2);
+    }
+
+    &__bio-note {
+        .hdx-body-xs();
+        color: var(--hdx-neutral-8);
+    }
+
+    &__pending {
+        display:        flex;
+        flex-direction: column;
+        gap:            var(--hdx-space-4);
+    }
+
+    // Card 3 — invite form: standard card chrome (059 decision);
+    // takes the sidebar column's width (.v2-sidebar-flex on the sidebar)
+    &__invite {
+        display:          flex;
+        flex-direction:   column;
+        gap:              var(--hdx-space-4);
+        padding:          var(--hdx-space-4);
+        background-color: var(--hdx-neutral-0);
+        border:           1px solid var(--hdx-neutral-1);
+        border-radius:    var(--hdx-radius-sm);
+        box-shadow:       var(--hdx-shadow-sm);
+    }
+
+    &__invite-title {
+        .hdx-body-m-semibold();
+        margin: 0;
+        color:  var(--hdx-neutral-85);
+    }
+
+    &__invite-text {
+        .hdx-body-s();
+        margin: 0;
+        color:  var(--hdx-neutral-85);
+    }
+
+    &__invite-submit {
+        align-self: flex-end;
+    }
+}
+
+// ── Members tab: invite tags-autocomplete (Q10) ─────────────────
+.hdx-v2-invite-tags {
+    position: relative;
+
+    &__box {
+        display:          flex;
+        flex-wrap:        wrap;
+        align-items:      center;
+        gap:              var(--hdx-space-1);
+        padding:          var(--hdx-space-2) var(--hdx-space-3);
+        background-color: var(--hdx-neutral-0);
+        border:           1px solid var(--hdx-neutral-2);
+        border-radius:    var(--hdx-radius-sm);
+        cursor:           text;
+
+        &:focus-within {
+            border-color: var(--hdx-primary-5);
+        }
+    }
+
+    &__input {
+        .hdx-body-s();
+        flex:       1 1 30%;   // keeps typing room next to chips; wraps below
+        min-width:  0;
+        border:     none;
+        outline:    none;
+        padding:    0;
+        background: transparent;
+        color:      var(--hdx-neutral-95);
+
+        &::placeholder { color: var(--hdx-neutral-5); }
+    }
+
+    &__chip {
+        .hdx-body-xs-medium();
+        display:          inline-flex;
+        align-items:      center;
+        gap:              var(--hdx-space-1);
+        padding:          0 var(--hdx-space-2);
+        background-color: var(--hdx-neutral-1);
+        border-radius:    var(--hdx-radius-sm);
+        color:            var(--hdx-neutral-85);
+
+        // selected existing HDX user (v1 "existing-user" treatment)
+        &--user {
+            background-color: var(--hdx-brand-15);
+            color:            var(--hdx-brand-7);
+        }
+    }
+
+    &__chip-remove {
+        border:      none;
+        background:  none;
+        cursor:      pointer;
+        padding:     0;
+        color:       inherit;
+        line-height: 1;
+        font-size:   var(--hdx-fs-s);
+    }
+
+    &__panel {
+        position:         absolute;
+        top:              calc(100% + var(--hdx-space-1));
+        left:             0;
+        right:            0;
+        z-index:          200;
+        display:          flex;
+        flex-direction:   column;
+        max-height:       20rem;   // same cap as c-dropdown__list (dropdown.less)
+        overflow-y:       auto;
+        padding:          var(--hdx-space-2);
+        background-color: var(--hdx-neutral-0);
+        border:           1px solid var(--hdx-neutral-1);
+        border-radius:    var(--hdx-radius-sm);
+        box-shadow:       var(--hdx-shadow-sm);
+    }
+}

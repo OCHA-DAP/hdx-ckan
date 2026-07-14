@@ -19,7 +19,7 @@ class TestLandingPages(object):
         assert "'pageTitle': 'HDX HAPI Beta'" in response.body
         assert "'authenticated': 'false'" in response.body
 
-        assert 'src="/visualization/hapi-availability/"' in response.body
+        assert 'src="/visualization/hapi-availability-v2/"' in response.body
 
         assert '<h2 class="hdx-v2-hapi-section-heading">Be Inspired</h2>' in response.body
         assert 'c-content-card' in response.body

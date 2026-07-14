@@ -1,156 +1,133 @@
-{% extends "organization/read.html" %}
+{% extends "v2/page.html" %}
 
-{% block subtitle_suffix %}{{ _('Stats') }}{% endblock %}
-{% block meta_description %}
-	<meta name="description" content="View stats and analytics for the {{ org_dict.display_name }} organization on HDX. Dataset downloads, total page views and user activity for the organization is available in separate sections." />
+{% set org_dict = org_dict or org_meta.org_dict %}
+
+{# The lines below are for analytics #}
+{% block analytics_org_name %}{{ org_dict.name }}{% endblock %}
+{% block analytics_org_id %}{{ org_dict.id }}{% endblock %}
+
+{% set content_class = 'hdx-v2-org-stats-content' %}
+
+{% block subtitle %}{{ org_dict.display_name }} Humanitarian Data | {% block subtitle_suffix %}{{ _('Stats') }}{% endblock %}{% endblock %}
+{% block meta %}
+  {{ super() }}
+  {% block meta_description %}
+    <meta name="description" content="View stats and analytics for the {{ org_dict.display_name }} organization on HDX. Dataset downloads, total page views and user activity for the organization is available in separate sections." />
+  {% endblock %}
 {% endblock %}
-
-{% block primary_content_inner %}
-  <div id="stats-data-single-dataset-downloads" style="display: none">
-    {{ h.json_dumps(data.stats_1_dataset_downloads_last_weeks) }}
-  </div>
-  <div id="stats-data-single-dataset-name" style="display:none">{{ data.stats_1_dataset_name }}</div>
-  <div id="stats-data-pageviews" style="display: none">
-    {{ h.json_dumps(data.stats_dw_and_pv_per_week) }}
-  </div>
-  <div id="stats-data-top-downloads" style="display: none">
-    {{ h.json_dumps(data.stats_top_dataset_downloads) }}
-  </div>
-
-  <h2 class="hide-heading">{% block page_heading %}{{ _('Stats') }}{% endblock %}</h2>
-  <div class="row">
-    <div class="col-12">
-      {% set margin_top="" %}
-      {% if h.check_access('organization_update', {'id': org_meta.org_dict.id}) %}
-        <div class="text-end mt-3">
-          <p>Monthly dataset download and page view statistics:
-{#            <span#}
-{#            title="{{ _('Number of datasets downloads and page views by month') }}" data-module="bs_tooltip"#}
-{#            data-module-placement="top" data-bs-toggle="tooltip"> [?]</span>: #}
-            <a href="{{ h.url_for('hdx_org.download_organization_stats', id=org_meta.org_dict.id) }}">XLSX</a></p>
-        </div>
-        {% set margin_top="mt0" %}
-      {% else %}
-         <div class="text-end mt-3">
-           <p>If you are an administrator of this organization, you can log in to download monthly statistics going back five years.</p>
-         </div>
-        {% set margin_top="mt0" %}
-      {% endif %}
-      <div class="{{ margin_top }} list-header crisis-list-header">
-        <span class="mL15 list-header-title">Number of Downloads (last 24 weeks)</span>
-        <a class="float-end vertically-center faq-question-mark" target="_blank"
-           href="/faq#auto-faq-Organisations-Where_can_I_see_how_popular_an_organisation_s_datasets_are_-a">
-          <div class="question-mark">?</div>
-        </a>
-      </div>
-    </div>
-    <div class="col-9">
-      <div id="chart-data-top-downloads" style="height: 320px;" class="mTop20"></div>
-    </div>
-    <div class="col-3">
-      <div class="topline">
-        <div class="row">
-          <div class="col-12 indicator-title">
-            Total number of downloads for this organisation's content
-          </div>
-          <div class="col-12 indicator-value">
-            <div class="topline-value">
-                            <span id="stats-data-total-downloads" data-module="bs_tooltip" data-bs-toggle="tooltip"
-                                  data-module-placement="right" title="" data-bs-original-title="">
-                                {{ data.stats_total_downloads.formatted_value }}
-                            </span>
-              <span class="small">{{ data.stats_total_downloads.units }}</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="col-9">
-      <div class="row">
-        <div class="col-12">
-          <div class="list-header crisis-list-header">
-            <span class="mL15 list-header-title">Downloads and Total Page Views (last 24 weeks)</span>
-            <a class="float-end vertically-center faq-question-mark" target="_blank"
-               href="/faq#auto-faq-Organisations-Where_can_I_see_how_popular_an_organisation_s_datasets_are_-a">
-              <div class="question-mark">?</div>
-            </a>
-          </div>
-        </div>
-        <div class="col-12">
-          <div id="chart-data-pageviews" style="height: 320px;" class="mTop20"></div>
-        </div>
-      </div>
-    </div>
-    <div class="col-3">
-      <div class="list-header crisis-list-header">
-        <span class="mL15 list-header-title">Users (last 30 days)</span>
-        <a class="float-end vertically-center faq-question-mark" target="_blank"
-           href="/faq#auto-faq-Organisations-Where_can_I_see_how_popular_an_organisation_s_datasets_are_-a">
-          <div class="question-mark">?</div>
-        </a>
-      </div>
-      <div class="topline">
-        <div class="row">
-          <div class="col-12 indicator-title">
-            Unique visitors who downloaded at least one dataset from this org
-          </div>
-          <div class="col-12 indicator-value">
-            <div class="topline-value">
-                            <span data-module="bs_tooltip" data-bs-toggle="tooltip" data-module-placement="right"
-                                  title="" data-bs-original-title="">
-                                {{ data.stats_downloaders.formatted_value }}
-                            </span>
-              <span class="small"> {{ data.stats_downloaders.units }} users </span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="topline">
-        <div class="row">
-          <div class="col-12 indicator-title">
-            Unique visitors to this organisation's content
-          </div>
-          <div class="col-12 indicator-value">
-            <div class="topline-value">
-                            <span data-module="bs_tooltip" data-bs-toggle="tooltip" data-module-placement="right"
-                                  title="" data-bs-original-title="">
-                                {{ data.stats_viewers.formatted_value }}
-                            </span>
-              <span class="small"> {{ data.stats_viewers.units }} users </span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-12">
-      <div class="mBottom100"></div>
-    </div>
-  </div>
-{% endblock %}
-
-{% block primary_content_module_margin %}{% endblock %}
 
 {% block styles %}
   {{ super() }}
-  {#	{% resource 'hdx_theme/dashboard.css' %}#}
-  {#	{% resource 'hdx_theme/hdx_dashboard.js' %}#}
-  {#    {% resource 'hdx_theme/crisis/topline.css' %}#}
-  {#    {% resource 'hdx_theme/organization/stats.js' %}#}
-  {#    {% resource 'hdx_theme/organization/stats.css' %}#}
-  {#    {% resource 'hdx_theme/d3' %}#}
-  {#    {% resource 'hdx_theme/c3' %}#}
-  {#    {% resource 'hdx_theme/datasets/stats-chart.js' %}#}
+  {% asset 'hdx_theme/v2-org-page-styles' %}
+{% endblock %}
 
-  {% asset 'hdx_theme/base-dashboard-styles' %}
-  {% asset 'hdx_theme/charting-scripts' %}
-  {% asset 'hdx_theme/organization-stats-scripts' %}
+{% block breadcrumb_items %}
+  {% snippet 'v2/components/breadcrumb.html',
+      items=[
+        {'label': _('Organisations'), 'href': h.url_for('organizations_index')},
+        {'label': org_dict.display_name, 'href': ''}
+      ] %}
+{% endblock %}
 
+{# ── Hero: org header + tabs ───────────────────────────────── #}
+{% block pre_primary %}
+  {% snippet 'v2/org_hero.html',
+      org_dict=org_dict, org_meta=org_meta, active_tab='stats',
+      header_stats=[
+        {'label': _('Datasets'), 'value': h.hdx_format_number_si(org_meta.datasets_num or 0)},
+        {'label': _('Members'), 'value': h.hdx_format_number_si(org_meta.members_num or 0)}
+      ] %}
+{% endblock %}
 
+{# ── Stats: KPI cards + charts ───────────────────────────────── #}
+{% block primary_content %}
+  <section class="hdx-v2-org-stats">
 
+    {# server-rendered chart data, parsed by v2/charts.js — same
+       embedded-JSON contract as v1, no data reshaping #}
+    <div id="stats-data-single-dataset-downloads" hidden>{{ h.json_dumps(data.stats_1_dataset_downloads_last_weeks) }}</div>
+    <div id="stats-data-single-dataset-name" hidden>{{ data.stats_1_dataset_name or '' }}</div>
+    <div id="stats-data-pageviews" hidden>{{ h.json_dumps(data.stats_dw_and_pv_per_week) }}</div>
+    <div id="stats-data-top-downloads" hidden>{{ h.json_dumps(data.stats_top_dataset_downloads) }}</div>
+
+    <div class="hdx-v2-org-stats__header">
+      <h2 class="hdx-v2-org-stats__title">{{ _('Stats') }}</h2>
+      {% snippet 'v2/components/text-link.html',
+          label=_('See documentation'), style='primary', size='m', target='_blank',
+          href='https://docs.humdata.org/publish/publish-data/organizations-on-hdx#understanding-how-your-data-on-hdx-is-used' %}
+    </div>
+    {# admin-only monthly XLSX export (D4) — permission gate carried over from v1 #}
+    <div class="hdx-v2-org-stats__export">
+      {% if h.check_access('organization_update', {'id': org_dict.id}) %}
+        <p>{{ _('Monthly dataset download and page view statistics:') }}
+          <a href="{{ h.url_for('hdx_org.download_organization_stats', id=org_dict.id) }}">XLSX</a></p>
+      {% else %}
+        <p>{{ _('If you are an administrator of this organization, you can log in to download monthly statistics going back five years.') }}</p>
+      {% endif %}
+    </div>
+
+    <div class="hdx-v2-org-stats__layout">
+
+      <div class="hdx-v2-org-stats__kpis">
+        {% snippet 'v2/components/stats-card.html',
+            label=_("Total number of downloads for this organisation's content"),
+            value=data.stats_total_downloads.formatted_value,
+            unit=data.stats_total_downloads.units %}
+        {% snippet 'v2/components/stats-card.html',
+            label=_('Unique visitors who downloaded at least one dataset from this organisation'),
+            sublabel=_('Last 30 days'),
+            value=data.stats_downloaders.formatted_value,
+            unit=data.stats_downloaders.units %}
+        {% snippet 'v2/components/stats-card.html',
+            label=_("Unique visitors to this organisation's content"),
+            sublabel=_('Last 30 days'),
+            value=data.stats_viewers.formatted_value,
+            unit=data.stats_viewers.units %}
+      </div>
+
+      <div class="hdx-v2-org-stats__charts">
+
+        <div class="hdx-v2-org-stats__chart-card">
+          <div class="hdx-v2-org-stats__chart-heading">
+            <h3 class="hdx-v2-org-stats__chart-title">{{ _('Number of Downloads') }}</h3>
+            <span class="hdx-v2-org-stats__chart-subtitle">{{ _('Last 24 weeks') }}</span>
+          </div>
+          <div id="chart-data-top-downloads" class="hdx-v2-org-stats__chart">
+            {% snippet 'v2/components/tooltip.html', variant='graph', graph_title='',
+                extra_classes='hdx-v2-chart-tooltip',
+                legend_items=[{'color': 'var(--hdx-primary-5)', 'label': _('Downloads'), 'value': ''}] %}
+          </div>
+        </div>
+
+        <div class="hdx-v2-org-stats__chart-card">
+          <div class="hdx-v2-org-stats__chart-heading">
+            <h3 class="hdx-v2-org-stats__chart-title">{{ _('Downloads and Total Page Views') }}</h3>
+            <span class="hdx-v2-org-stats__chart-subtitle">{{ _('Last 24 weeks') }}</span>
+          </div>
+          <div id="chart-data-pageviews" class="hdx-v2-org-stats__chart">
+            {% snippet 'v2/components/tooltip.html', variant='graph', graph_title='',
+                extra_classes='hdx-v2-chart-tooltip',
+                legend_items=[
+                  {'color': 'var(--hdx-primary-5)', 'label': _('Page views'), 'value': ''},
+                  {'color': 'var(--hdx-primary-2)', 'label': _('Downloads'), 'value': ''}
+                ] %}
+          </div>
+          <div class="hdx-v2-org-stats__legend">
+            <span class="hdx-v2-org-stats__legend-item">
+              <span class="hdx-v2-org-stats__legend-swatch hdx-v2-org-stats__legend-swatch--pageviews"></span>{{ _('Page views') }}
+            </span>
+            <span class="hdx-v2-org-stats__legend-item">
+              <span class="hdx-v2-org-stats__legend-swatch hdx-v2-org-stats__legend-swatch--downloads"></span>{{ _('Downloads') }}
+            </span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+{% endblock %}
+
+{% block scripts %}
+  {{ super() }}
+  {% asset 'hdx_theme/v2-chart-scripts' %}
 {% endblock %}

@@ -1,14 +1,21 @@
 {#
-  activity_stream_v2 — v2 activity stream for the dataset page
+  v2/activity-stream.html — type-dispatch orchestrator for the v2 activity
+  timeline (c-activity-item). Shared by the dataset page (task 046) and the
+  organisation page's Activity tab (task 057).
 
   Accepts the same params as the v1 activity_stream.html:
     activity_stream (list)   — list of activity dicts from package_activity_list
-    id              (string) — dataset id or name
-    object_type     (string) — 'package'
+                                 or organization_activity_list
+    id              (string) — dataset/org id or name
+    object_type     (string) — 'package' | 'organization'
 #}
 
 {% if not activity_stream %}
-  <p class="c-activity-stream__empty">{{ _('No recent activity for this dataset.') }}</p>
+  {% if object_type == 'organization' %}
+    <p class="c-activity-stream__empty">{{ _('No recent activity for this organization.') }}</p>
+  {% else %}
+    <p class="c-activity-stream__empty">{{ _('No recent activity for this dataset.') }}</p>
+  {% endif %}
 {% else %}
   <div class="c-activity-stream">
     {% for activity in activity_stream %}

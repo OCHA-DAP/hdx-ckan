@@ -136,7 +136,9 @@ Example:
         name='q',
         id='headerSearch',
         size='m',
-        show_icon=False,
+        icon_submit=True,
+        show_clear=True,
+        state='filled' if searchValue else 'enabled',
         placeholder=_('Search for datasets'),
         value=searchValue,
         autocomplete='off' %}

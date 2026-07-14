@@ -11,29 +11,40 @@
   ext_page_size     {int}     Current page size (10/25/50/100).  default: 10
   admin_view        {bool}    Show admin-only "Due for Update" option.  default: False
   panel_suffix      {string}  Unique suffix for panel IDs ('hdr'|'ovl').  default: 'hdr'
+  sorting_options   {list}    (label, value, short_label) tuples overriding the
+                              default dataset-search sort option set (task 059).
+                              default: the dataset-search list below
+  show_page_size    {bool}    Render the "Results per page" dropdown.
+                              default: True
   ──────────────────────────────────────────────────────────────────
 #}
 {% set sorting_selected = sorting_selected if sorting_selected is defined else h.HDX_CONST('DEFAULT_SORTING') %}
 {% set ext_page_size    = ext_page_size    if ext_page_size    is defined else 10 %}
 {% set admin_view       = admin_view       if admin_view       is defined else False %}
 {% set panel_suffix     = panel_suffix     if panel_suffix     is defined else 'hdr' %}
+{% set sorting_options  = sorting_options  if sorting_options  is defined else None %}
+{% set show_page_size   = show_page_size   if show_page_size   is defined else True %}
 
 {% set limits = [10, 25, 50, 100] %}
 {% set limit_selected = ext_page_size|int if ext_page_size else 10 %}
 
-{% set sorting = [
-  (_('Last Modified'),   h.HDX_CONST('DEFAULT_SORTING'),                   _('Last Modified')),
-  (_('Last Added'),      'metadata_created desc',                           _('Last Added')),
-  (_('Relevance'),       'score desc, ' ~ h.HDX_CONST('DEFAULT_SORTING'),  _('Relevance')),
-  (_('Name Ascending'),  'title_case_insensitive asc',                      _('Name Asc')),
-  (_('Name Descending'), 'title_case_insensitive desc',                     _('Name Desc')),
-  (_('Trending'),        'pageviews_last_14_days desc',                     _('Trending')),
-  (_('Most Downloads'),  'total_res_downloads desc',                        _('Most Downloads'))
-] %}
-{% if admin_view %}{% set nothing = sorting.insert(0, (_('Due for Update'), 'due_date asc', _('Due for Update'))) %}{% endif %}
+{% if sorting_options %}
+  {% set sorting = sorting_options %}
+{% else %}
+  {% set sorting = [
+    (_('Last Modified'),   h.HDX_CONST('DEFAULT_SORTING'),                   _('Last Modified')),
+    (_('Last Added'),      'metadata_created desc',                           _('Last Added')),
+    (_('Relevance'),       'score desc, ' ~ h.HDX_CONST('DEFAULT_SORTING'),  _('Relevance')),
+    (_('Name Ascending'),  'title_case_insensitive asc',                      _('Name Asc')),
+    (_('Name Descending'), 'title_case_insensitive desc',                     _('Name Desc')),
+    (_('Trending'),        'pageviews_last_14_days desc',                     _('Trending')),
+    (_('Most Downloads'),  'total_res_downloads desc',                        _('Most Downloads'))
+  ] %}
+  {% if admin_view %}{% set nothing = sorting.insert(0, (_('Due for Update'), 'due_date asc', _('Due for Update'))) %}{% endif %}
+{% endif %}
 
 {# Resolve the current sort short label for the trigger display #}
-{% set _ns = namespace(sort_label=_('Last Modified')) %}
+{% set _ns = namespace(sort_label=sorting[0][2] if sorting_options else _('Last Modified')) %}
 {% for label, value, short_label in sorting %}
   {% if sorting_selected == value %}{% set _ns.sort_label = short_label %}{% endif %}
 {% endfor %}
@@ -58,6 +69,7 @@
 <div class="hdx-v2-nav-controls">
 
   {# ── Results per page ────────────────────────────────────── #}
+  {% if show_page_size %}
   <div class="hdx-v2-nav-ctrl-pair">
     <span class="hdx-v2-nav-ctrl-label">{{ _('Results per page') }}</span>
     {% snippet 'v2/components/dropdown.html',
@@ -69,6 +81,7 @@
         navigate=True,
         items=_size_ns.items %}
   </div>
+  {% endif %}
 
   {# ── Sort by ─────────────────────────────────────────────── #}
   <div class="hdx-v2-nav-ctrl-pair">

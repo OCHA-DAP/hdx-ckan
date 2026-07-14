@@ -40,7 +40,7 @@ This is the first v2 landing page, so the patterns established here — custom h
 | Section | Anchor | Component |
 |---|---|---|
 | Hero | — | `bem.blocks/hero.html` — title, description (email link), HAPI logo image, jump nav links |
-| Data Availability | `#data-availability` | Full-width `<iframe src="/visualization/hapi-availability/">` (866px) |
+| Data Availability | `#data-availability` | Full-width `<iframe src="/visualization/hapi-availability-v2/">` (866px) |
 | Be Inspired | `#be-inspired` | `bem.blocks/heading.html` + `bem.blocks/paragraph.html` + 4× `bem.blocks/card.html` (Bootstrap grid) |
 | FAQ | `#faq` | `bem.blocks/heading.html` + `bem.blocks/faq.html` (Bootstrap collapse) |
 | Partners | — | `bem.blocks/heading.html` + `bem.blocks/partners.html` (v1 carousel, 10 logos) |
@@ -119,7 +119,7 @@ This is the first v2 landing page, so the patterns established here — custom h
       • Documentation       (external link, new tab)
   [content] (flex: 1)
     [data-availability]
-      <iframe src="/visualization/hapi-availability/"> (no section heading)
+      <iframe src="/visualization/hapi-availability-v2/"> (no section heading)
     [c-divider]
     [be-inspired]
       section heading

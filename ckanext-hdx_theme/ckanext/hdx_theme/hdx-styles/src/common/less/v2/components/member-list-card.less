@@ -1,0 +1,138 @@
+// ============================================================
+// c-member-list-card — user row card (task 059, org Members tab)
+// Compiled output: fanstatic/v2/components/member-list-card.css
+// Figma: llm_docs/redesign/figma_exports/xl-org-members-page.html,
+//        md-org-page.html, sm-org-page.html (Members sections)
+// ============================================================
+// Stacked (info block, then actions) below @hdx-bp-md; horizontal
+// two-column (info + right-aligned actions) from @hdx-bp-md up.
+// Card chrome + hover follow the standard card treatment (task 028).
+// ============================================================
+@import "../mixins.less";
+
+.c-member-list-card {
+    display:          flex;
+    flex-direction:   column;
+    gap:              var(--hdx-space-4);
+    padding:          var(--hdx-space-4);
+    background-color: var(--hdx-neutral-0);
+    border:           1px solid var(--hdx-neutral-1);
+    border-radius:    var(--hdx-radius-sm);
+    box-shadow:       var(--hdx-shadow-sm);
+    transition:       border 0.15s ease;
+
+    &:hover {
+        border: 1.5px solid var(--hdx-neutral-8);
+    }
+
+    @media (min-width: @hdx-bp-md) {
+        flex-direction: row;
+        align-items:    center;
+        gap:            var(--hdx-space-10);  // 2.5rem — Figma column gap
+    }
+
+    &__info {
+        display:        flex;
+        flex-direction: column;
+        gap:            var(--hdx-space-2);
+        min-width:      0;
+
+        @media (min-width: @hdx-bp-md) {
+            flex: 1 1 auto;
+        }
+    }
+
+    &__name-row {
+        display:     flex;
+        align-items: center;
+        gap:         var(--hdx-space-2);
+        min-width:   0;
+
+        .c-avatar { flex-shrink: 0; }
+    }
+
+    &__name,
+    &__username {
+        .hdx-body-m-semibold();
+        color:           var(--hdx-neutral-95);
+        text-decoration: none;
+        white-space:     nowrap;
+        overflow:        hidden;
+        text-overflow:   ellipsis;
+
+        &:hover,
+        &:focus-visible {
+            text-decoration: underline;
+        }
+    }
+
+    &__name     { flex: 0 1 auto; }
+    &__username { flex: 0 1 auto; }
+
+    &__sep {
+        .hdx-body-m-semibold();
+        color:       var(--hdx-neutral-5);
+        flex-shrink: 0;
+    }
+
+    &__meta {
+        .hdx-body-xs();
+        color:         var(--hdx-neutral-8);
+        white-space:   nowrap;
+        overflow:      hidden;
+        text-overflow: ellipsis;
+    }
+
+    &__stats {
+        .hdx-body-s();
+        color:         var(--hdx-neutral-8);
+        white-space:   nowrap;
+        overflow:      hidden;
+        text-overflow: ellipsis;
+    }
+
+    &__actions {
+        display:     flex;
+        align-items: center;
+        gap:         var(--hdx-space-4);
+
+        @media (min-width: @hdx-bp-md) {
+            margin-left:     auto;
+            flex-shrink:     0;
+            justify-content: flex-end;
+        }
+    }
+
+    &__action-sep {
+        .hdx-body-s();
+        color:       var(--hdx-neutral-5);
+        flex-shrink: 0;
+    }
+
+    // last-admin guard note — replaces the actions (task 059 §7)
+    &__note {
+        .hdx-body-xs();
+        color: var(--hdx-neutral-8);
+    }
+
+    // Forced-stacked variant — for narrow columns where the horizontal
+    // layout can't fit (Members sidebar pending list, task 059)
+    &--stacked {
+        @media (min-width: @hdx-bp-md) {
+            flex-direction: column;
+            align-items:    stretch;
+            gap:            var(--hdx-space-4);
+        }
+
+        .c-member-list-card__info {
+            @media (min-width: @hdx-bp-md) { flex: none; }
+        }
+
+        .c-member-list-card__actions {
+            @media (min-width: @hdx-bp-md) {
+                margin-left:     0;
+                justify-content: flex-start;
+            }
+        }
+    }
+}
