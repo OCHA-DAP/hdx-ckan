@@ -1,15 +1,55 @@
-{% extends "page.html" %}
-{% set page_has_mobile_version = True %}
+{% extends "v2/page.html" %}
+
 {% set data = page_dict %}
 {% set page_title = data.title if data.title and data.title!='' else data.name %}
+
+{# ── Split stored sections around the single supported data_list section ──
+   The first `description`-type section (if any) is pulled out entirely and
+   promoted into the page-header's `description` slot instead of being
+   rendered inline by crisis-section.html — see ns.header_description below.
+   Of the sections that remain: sections before the data_list section render
+   full width above the results row (pre_primary); the data_list section
+   renders as the two-column search row; anything stored after it (rare,
+   CMS-driven) renders full width below the row. #}
+{% set _sections = data.sections or [] %}
+{% if data.title_section %}
+  {% set _sections = [data.title_section] + _sections %}
+{% endif %}
+{% set ns = namespace(before=[], data_list=none, after=[], header_description=none) %}
+{% for section in _sections %}
+  {% if section.type == 'description' and ns.header_description is none %}
+    {% set ns.header_description = (section.long_description or '').strip() %}
+  {% elif section.type == 'data_list' and not ns.data_list %}
+    {% set ns.data_list = section %}
+  {% elif ns.data_list %}
+    {% set ns.after = ns.after + [section] %}
+  {% else %}
+    {% set ns.before = ns.before + [section] %}
+  {% endif %}
+{% endfor %}
+
+{# Plain-text version for page-header.html's `description` param — that slot
+   renders inside a plain <p>, auto-escaped, no markdown/HTML. Same
+   conversion v2/org_hero.html uses for org_dict.description. #}
+{% set _header_description = h.markdown_extract(ns.header_description, extract_length=0) | striptags if ns.header_description else '' %}
+
+{# The row/column classes only apply real layout CSS (bordered sidebar,
+   content padding) when there is a data_list section to fill them —
+   otherwise leave them unset so page.html's plain defaults apply. #}
+{% set outer_row_class = 'hdx-v2-search-row'     if ns.data_list else '' %}
+{% set columns_class   = 'hdx-v2-search-columns' if ns.data_list else '' %}
+{% set sidebar_class   = 'hdx-v2-search-sidebar' if ns.data_list else '' %}
+{% set content_class   = 'hdx-v2-search-content' if ns.data_list else '' %}
 
 {% block analytics_came_from %}{{ analytics.analytics_came_from }}{% endblock %}
 {% block analytics_supports_notifications %}{{ analytics.analytics_supports_notifications }}{% endblock %}
 
 {% block subtitle %}{{ data.title or data.name }} | Crisis Datasets{% endblock %}
 {% block meta %}
-    {{ super() }}
+  {{ super() }}
+  {% block meta_description %}
     <meta name="description" content="Find curated humanitarian datasets for the {{ data.title or data.name }}. Access data on affected populations, crisis response, health, and infrastructure to aid humanitarian efforts." />
+  {% endblock %}
 {% endblock %}
 
 {% block links %}
@@ -19,52 +59,69 @@
   {{ super() }}
 {% endblock %}
 
-{% block breadcrumb_content %}
-    <li class="breadcrumb-item" property="itemListElement" typeof="ListItem">
-      <span property="name">{{ data.type }}</span>
-      <meta property="position" content="2">
-    </li>
-    {% if data.type == 'event' %}
-        {% snippet "snippets/active_breadcrumb_item.html", title=data.title or data.name, position=3 %}
-    {% elif data.type == 'dashboards' %}
-        {% snippet "snippets/active_breadcrumb_item.html", title=data.title or data.name, position=3 %}
-    {% endif %}
+{% block styles %}
+  {{ super() }}
+  {% asset 'hdx_theme/v2-search-page-styles' %}
+  {% asset 'hdx_theme/v2-crisis-page-styles' %}
 {% endblock %}
-{% block secondary %}{% endblock %}
 
-{% block primary %}
-    <div class="row paddingRowHack intro-section">
-        <div class="{% if not data.title_section %} col-12  paddingLeftHack paddingRightHack {% endif %}">
-            {% if not data.title_section %}
-                <header class="mx-header">
-                <div class="row">
-                    <div class="col-8">
-                        <div class="row">
-                            <div class="col-12 mTop35 ">
-                                {% if (data.extras is not defined or data.extras.show_title is not defined) or data.extras.show_title == 'on' %}
-                                    <h1 class="itemTitle">{{ data.title }}</h1>
-                                {% endif %}
-                                {% if data.state != 'active' and data.state %}
-                                    <div><span class="label label-small label-default">{{ data.state }}</span></div>
-                                {% endif %}
-{#                                <div class="notes embedded-content">{{ data.description }}</div>#}
-                                {{ h.snippet('notification_platform/buttons.html', object_id=data.id, object_type='crisis', object_dict=data ) }}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                </header>
-             {% else %}
-                {% snippet 'pages/snippets/visualization_title.html', section=data.title_section, data=data, errors=errors, error_summary=error_summary %}
-            {% endif %}
-        </div>
-        <div class="col-12 paddingLeftHack paddingRightHack">
-            {% for section in data.sections %}
-                  {% snippet 'pages/snippets/section_item.html',
-                        section=section, data=data, errors=errors, error_summary=error_summary %}
-            {% endfor %}
-        </div>
+{% block scripts %}
+  {{ super() }}
+  {% asset 'hdx_theme/v2-search-page-scripts' %}
+  {% asset 'hdx_theme/v2-crisis-page-scripts' %}
+{% endblock %}
+
+{% block breadcrumb_items %}
+  {% snippet 'v2/components/breadcrumb.html',
+      items=[
+        {'label': _('Products'), 'href': ''},
+        {'label': data.title or data.name, 'href': ''}
+      ] %}
+{% endblock %}
+
+{% set _show_title = (data.extras is not defined or data.extras.show_title is not defined) or data.extras.show_title == 'on' %}
+
+{# ── Header + full-width sections before the dataset results ────────── #}
+{% block pre_primary %}
+  <div class="hdx-v2-crisis-header-section">
+    <div class="hdx-v2-container">
+      {% snippet 'v2/components/page-header.html',
+          title=data.title if _show_title else '',
+          description=_header_description,
+          supports_notifications=analytics.analytics_supports_notifications,
+          notification_object_type='crisis',
+          notification_object_id=data.id,
+          notification_object_dict=data,
+          state_label_text=data.state if (data.state and data.state != 'active') else '' %}
     </div>
+  </div>
+  {% for section in ns.before %}
+    {% snippet 'v2/crisis-section.html', section=section %}
+  {% endfor %}
+{% endblock %}
+
+{# ── Filter sidebar (XL) — same contract as the search page ─────────── #}
+{% block secondary_content %}
+  {% if ns.data_list %}
+    <form id="search-page-filters-form" autocomplete="off">
+      <aside class="hdx-v2-search-filters">
+        {% snippet 'v2/search-filters.html',
+            facet_list=ns.data_list.template_data.full_facet_info.get('facets', {}) %}
+      </aside>
+    </form>
+  {% endif %}
+{% endblock %}
+
+{# ── Dataset list, controls and pagination ───────────────────────────── #}
+{% block primary_content %}
+  {% if ns.data_list %}
+    {% snippet 'search/snippets/search_results_wrapper.html',
+        tracking_enabled=g.tracking_enabled, my_c=ns.data_list.template_data, v2=true %}
+  {% endif %}
+
+  {% for section in ns.after %}
+    {% snippet 'v2/crisis-section.html', section=section %}
+  {% endfor %}
 
   {% snippet "notification_platform/modals.html",
       object_type='crisis',
@@ -74,18 +131,4 @@
       unsubscribe_token=unsubscribe_token, unsubscribe_token_validated=unsubscribe_token_validated,
       unsubscribe_email=unsubscribe_email, unsubscribe_token_invalidate=unsubscribe_token_invalidate
   %}
-{% endblock %}
-
-
-{% block scripts2 %}
-    {{ super() }}
-{#    {% resource 'hdx_theme/bs_tooltip.js' %}#}
-{#    {% resource 'hdx_theme/search' %}#}
-{#    {% resource 'hdx_theme/jquery.highlight' %}#}
-{#    {% resource 'hdx_theme/jquery.expander' %}#}
-{#    {% resource 'hdx_theme/modules/data-viewer.js' %}#}
-{#    {% resource 'hdx_theme/custom_pages/custom_pages_view.css' %}#}
-
-    {% asset 'hdx_theme/search-scripts' %}
-    {% asset 'hdx_theme/custom-pages-styles' %}
 {% endblock %}

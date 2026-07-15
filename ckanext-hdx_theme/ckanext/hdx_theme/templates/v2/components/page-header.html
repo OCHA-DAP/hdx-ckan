@@ -32,6 +32,9 @@
   time_period_tooltip {bool}    Show time period tooltip.  default: False
   source_text         {string}  Source text.  default: ''
   long_source         {bool}    Show "Show more" for source.  default: False
+  state_label_text    {string}  Optional state chip text (e.g. 'draft'),
+                                 rendered right after the title.  default: ''
+  state_label_color   {string}  c-label color for state_label_text.  default: 'grey'
 
   ── Resource parameters (resource_id triggers resource layout) ──
   resource_id       {string}  res.id.  default: ''
@@ -72,6 +75,8 @@
 {% set time_period_tooltip = time_period_tooltip if time_period_tooltip is defined else False %}
 {% set source_text         = source_text         if source_text         is defined else '' %}
 {% set long_source         = long_source         if long_source         is defined else False %}
+{% set state_label_text    = state_label_text    if state_label_text    is defined else '' %}
+{% set state_label_color   = state_label_color   if state_label_color   is defined else 'grey' %}
 {% set cta_label           = cta_label           if cta_label           is defined else '' %}
 {% set cta_href            = cta_href            if cta_href            is defined else '' %}
 {% set cta_icon_src        = cta_icon_src        if cta_icon_src        is defined else '' %}
@@ -157,13 +162,21 @@
         </div>
         {% endif %}
 
-        {# Title — always #}
+        {# Title — omitted when empty (e.g. crisis page show_title=off) #}
+        {% if title %}
         <h1 class="c-page-header__title"
             {% if edit_mode %}
               data-module="hdx-quick-edit"
               data-module-anchor="field_title"
               data-module-dataset="{{ pkg_id }}"
             {% endif %}>{{ title }}</h1>
+        {% endif %}
+
+        {# State chip — optional, independent of the title (e.g. crisis page 'draft') #}
+        {% if state_label_text %}
+          {% snippet 'v2/components/label.html',
+              text=state_label_text, color=state_label_color, size='s' %}
+        {% endif %}
 
         {# Subtitle — optional semibold paragraph below title #}
         {% if subtitle %}

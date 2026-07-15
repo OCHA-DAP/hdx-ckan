@@ -63,3 +63,4 @@
 | 057 | [organization-page-activity-v2](057-organization-page-activity-v2.md)                                          | implemented | |
 | 058 | [organization-page-stats-v2](058-organization-page-stats-v2.md)                                                | implemented | |
 | 059 | [organization-page-members-v2](059-organization-page-members-v2.md)                                            | implemented | |
+| 060 | [crisis-event-pages-v2](060-crisis-event-pages-v2.md)                                                          | implemented | |
