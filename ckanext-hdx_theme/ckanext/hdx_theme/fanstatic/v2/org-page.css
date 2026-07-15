@@ -140,7 +140,6 @@
     flex: 0 0 25%;
     min-width: 0;
     flex-direction: column;
-    justify-content: center;
   }
   .hdx-v2-org-stats__kpis .c-stats-card {
     flex: none;
