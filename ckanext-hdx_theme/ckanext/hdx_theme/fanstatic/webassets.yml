@@ -1579,6 +1579,12 @@ v2-page-scripts:
     - v2/navbar.js
     - v2/search-autocomplete.js
 
+v2-error-page-styles:
+  output: ckanext-hdx_theme/%(version)s_v2-error-page-styles.css
+  <<: *common-css
+  contents:
+    - v2/error-page.css
+
 v2-search-page-styles:
   output: ckanext-hdx_theme/%(version)s_v2-search-page-styles.css
   <<: *common-css

@@ -65,3 +65,4 @@
 | 059 | [organization-page-members-v2](059-organization-page-members-v2.md)                                            | implemented | |
 | 060 | [crisis-event-pages-v2](060-crisis-event-pages-v2.md)                                                          | implemented | |
 | 061 | [hdx-connect-flow-v2](061-hdx-connect-flow-v2.md)                                                              | implemented | |
+| 062 | [error-pages-v2](062-error-pages-v2.md)                                                                        | implemented | |

@@ -74,6 +74,7 @@ CSS custom property equivalents (`--hdx-*`) are defined in `v2/foundation.css` (
 | `hapi-landing-page.less` | HAPI landing page styles (hero row, sidebar, sections, iframe, cards, partner grid); imports `mixins.less` |
 | `signals-landing-page.less` | Signals landing page styles (hero row, carousel, form card, map iframe, partner grid); imports `mixins.less` |
 | `home-page.less` | Homepage-only sections (hero, intro, highlights); compiled to `v2-home-page-styles`; imports `mixins.less` |
+| `error-page.less` | 404 / 403 / Server Error page layout (centered logo/heading/body/CTA column); compiled to `v2-error-page-styles`; imports `mixins.less` |
 | `components/divider.less` | `.c-divider` — standalone component; compiled to `divider.css` and registered in `v2-components-styles` |
 | `components/*.less` | One file per component; each imports `"../mixins.less"` for tokens and mixins |
 
@@ -104,6 +105,7 @@ CSS custom property equivalents (`--hdx-*`) are defined in `v2/foundation.css` (
 | Signals landing page | `landing_pages/signals.html` | Extends `v2/page.html`; `c-page-header` with bell-icon CTA; featured signals carousel (Hammer.js + `carousel.js`, dots-only, SM/MD); Mailchimp signup form with v2 buttons; signals map iframe; `c-accordion` FAQ; partner logos; see `requirements/054-signals-landing-page.md` |
 | Organization page | `organization/read.html`, `organization/activity_stream.html`, `organization/stats.html`, `organization/members.html` | Extend `v2/page.html`; shared `v2/org_hero.html` (page-header + `c-tabs`); tasks 056–059 (Datasets / Activity / Stats / Members); HDX Connect tab postponed |
 | Crisis / Event pages | `pages/read_page.html` (serves `/event/<name>` + `/dashboards/<name>`) | Extends `v2/page.html`; `page-header.html` (description sourced from the first `description`-type CMS section, not the page's own keywords field); new `v2/crisis-section.html` dispatcher + `crisis-page.less`/`crisis-page.js`; dataset list reuses `search_results_wrapper.html` like the org Datasets tab; `/m/` light routes untouched; see `requirements/060-crisis-event-pages-v2.md` |
+| Error page (404/403/Server Error) | `error_document_template.html` | Extends `v2/page.html` with `{% block header %}`/`{% block footer %}`/`{% block scripts %}` emptied out (no nav chrome, no JS) and `{% block main_content %}` replaced with the centered logo/heading/body/CTA layout; 500/503/anything-else collapses into one "Server Error" copy, 403 keeps its own copy; see `requirements/062-error-pages-v2.md` |
 
 ### Pages in holding state (on `page_light.html`)
 
@@ -210,6 +212,7 @@ Bundle configuration:
 - `hdx_theme/v2-signals-landing-page-scripts` — Signals landing page: adds `v2/signals-landing-page.js` + `landing_pages/hdx_signals.js`; requires `v2-carousel-scripts` loaded first in the template
 - `hdx_theme/v2-signup-scripts` — Signup scripts: `onboarding/came-from-input.js` (vanilla JS rewrite in place) + `onboarding/confirm-page-leave.js` (vanilla JS rewrite in place); loaded on user-info and change-email pages
 - `hdx_theme/v2-form-validator-scripts` — Form validation: vanilla JS validator (`v2/form-validator.js`); activated by `data-hdx-v2-form-validator` on `<form>` elements; loaded by notification platform templates and signup form pages (user-info, change-email)
+- `hdx_theme/v2-error-page-styles` — 404/403/Server Error page: adds `v2/error-page.css`; no scripts bundle (page has no interactive behavior)
 
 ---
 

@@ -1,0 +1,76 @@
+// ============================================================
+// error-page.less
+// 404 / 403 / Server Error page — v2/error_page.html base template,
+// consumed by error_document_template.html (all three collapse into
+// one layout; only heading/body copy differ).
+// Figma: xl-404.html, sm-404.html, xl-server-error.html, sm-server-error.html
+// Compiled output: fanstatic/v2/error-page.css
+// ============================================================
+
+@import "mixins.less";
+
+.hdx-v2-error-page {
+    display:           flex;
+    flex-direction:    column;
+    align-items:       center;
+    justify-content:   center;
+    box-sizing:        border-box;
+    min-height:        100vh;
+    padding:           var(--hdx-space-6) var(--hdx-space-4);
+    background-color:  var(--hdx-neutral-0);
+    text-align:        center;
+
+    // Narrow, centered column — same width-narrowing pattern as
+    // .hdx-v2-signup-form-page__card (100% -> 80% MD -> 50% XL).
+    &__content {
+        display:        flex;
+        flex-direction: column;
+        align-items:    center;
+        gap:            var(--hdx-space-6);
+        width:          100%;
+
+        @media (min-width: @hdx-bp-md) { width: 80%; }
+        @media (min-width: @hdx-bp-xl) { width: 50%; gap: var(--hdx-space-10); }
+    }
+
+    &__logo {
+        display: block;
+        width:   6.25rem;
+        color:   var(--hdx-neutral-95);
+
+        svg { display: block; width: 100%; height: auto; }
+    }
+
+    &__text {
+        display:        flex;
+        flex-direction: column;
+        align-items:    center;
+        gap:            var(--hdx-space-4);
+    }
+
+    &__heading {
+        .hdx-display-s();
+        margin: 0;
+        color:  var(--hdx-neutral-95);   // Figma: --color-gray, all breakpoints
+
+        @media (min-width: @hdx-bp-xl) { font-size: var(--hdx-fs-3xl); }
+    }
+
+    &__body {
+        .hdx-body-m();
+        margin: 0;
+        color:  var(--hdx-neutral-85);   // Figma: --color-darkslategray-200
+    }
+
+    &__link {
+        color:           inherit;
+        font-weight:     var(--hdx-fw-medium);
+        text-decoration: underline;
+    }
+
+    &__actions {
+        display:     flex;
+        align-items: flex-start;
+        gap:         var(--hdx-space-4);
+    }
+}
