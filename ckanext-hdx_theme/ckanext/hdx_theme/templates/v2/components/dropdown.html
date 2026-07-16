@@ -37,7 +37,11 @@
   id            {string}  id attr on <select>. Only used when native=True.  default: ''
   options       {dict}    {value: label} mapping for <option> elements.
                           Only used when native=True.  default: {}
-  errors        {list|string}  Error message(s). Renders .c-search-input__error.
+  option_attrs  {dict}    {value: {attr_name: attr_value}} — extra HTML attributes
+                          per <option> (e.g. a data-* attribute read by page JS).
+                          Only used when native=True.  default: {}
+  errors        {list|string}  Error message(s). Adds the c-dropdown--error modifier
+                          and renders .c-dropdown__error below the wrapper.
                           default: None
   ─────────────────────────────────────────────────
   State → wrapper class mapping:
@@ -79,6 +83,7 @@
 {% set name             = name             if name             is defined else '' %}
 {% set id               = id               if id               is defined else '' %}
 {% set options          = options          if options          is defined else {} %}
+{% set option_attrs     = option_attrs     if option_attrs     is defined else {} %}
 {% set errors           = errors           if errors           is defined else None %}
 {% set required         = required         if required         is defined else false %}
 
@@ -91,6 +96,7 @@
 {% if is_open     %}{% set classes = classes + ['c-dropdown--open']     %}{% endif %}
 {% if is_filter   %}{% set classes = classes + ['c-dropdown--filter']   %}{% endif %}
 {% if is_disabled %}{% set classes = classes + ['c-dropdown--disabled'] %}{% endif %}
+{% if errors      %}{% set classes = classes + ['c-dropdown--error']    %}{% endif %}
 {% if extra_classes %}{% set classes = classes + [extra_classes] %}{% endif %}
 
 {% if native and label %}
@@ -110,16 +116,13 @@
             {% if is_disabled %}disabled aria-disabled="true"{% endif %}>
       <option value="" disabled {% if not selected %}selected{% endif %}>{{ placeholder }}</option>
       {% for value, opt_label in options.items() %}
-        <option value="{{ value }}" {% if selected == value %}selected{% endif %}>{{ opt_label }}</option>
+        <option value="{{ value }}" {% if selected == value %}selected{% endif %}
+          {% if option_attrs.get(value) %}{% for attr_key, attr_val in option_attrs[value].items() %}{{ attr_key }}="{{ attr_val }}" {% endfor %}{% endif %}>{{ opt_label }}</option>
       {% endfor %}
     </select>
 
     {% if chevron_src %}
       <span class="c-dropdown__chevron" aria-hidden="true">{% include h.url_for_static(chevron_src) %}</span>
-    {% endif %}
-
-    {% if errors %}
-      <span class="c-search-input__error">{{ errors | join(', ') if errors is iterable and errors is not string else errors }}</span>
     {% endif %}
 
   {% else %}
@@ -163,3 +166,6 @@
   {% endif %}
 
 </div>
+{% if errors %}
+  <span class="c-dropdown__error">{{ errors | join(', ') if errors is iterable and errors is not string else errors }}</span>
+{% endif %}

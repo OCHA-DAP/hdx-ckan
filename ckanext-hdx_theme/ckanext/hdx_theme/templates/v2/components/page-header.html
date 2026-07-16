@@ -224,10 +224,12 @@
           <img class="c-page-header__logo" src="{{ logo_src }}" alt="{{ org_name if org_name else title }}">
         {% endif %}
         {% if org_name %}
-          {% snippet 'v2/components/text-button.html',
-              style='tertiary', size='m', label='Contact organisation',
-              icon=True, icon_position='left', icon_src='v2/icons/mail.svg',
-              tag='a', href=contact_href %}
+          {% if not request_only %}
+            {% snippet 'v2/components/text-button.html',
+                style='tertiary', size='m', label='Contact organisation',
+                icon=True, icon_position='left', icon_src='v2/icons/mail.svg',
+                tag='a', href=contact_href %}
+          {% endif %}
           {% if edit_mode %}
             {% snippet 'v2/components/text-button.html',
                 style='tertiary', size='m', label='Edit Dataset',
@@ -298,11 +300,13 @@
         <img class="c-page-header__logo" src="{{ logo_src }}" alt="{{ org_name if org_name else title }}">
       {% endif %}
       {% if org_name %}
-        {% snippet 'v2/components/text-button.html',
-            style='tertiary', size='m', label='Contact organisation',
-            icon=True, icon_position='left', icon_src='v2/icons/mail.svg',
-            tag='a', href=contact_href,
-            attrs={'id': 'contact-the-contributor'} %}
+        {% if not request_only %}
+          {% snippet 'v2/components/text-button.html',
+              style='tertiary', size='m', label='Contact organisation',
+              icon=True, icon_position='left', icon_src='v2/icons/mail.svg',
+              tag='a', href=contact_href,
+              attrs={'id': 'contact-the-contributor'} %}
+        {% endif %}
         {% if edit_mode %}
           {% snippet 'v2/components/text-button.html',
               style='tertiary', size='m', label='Edit Dataset',

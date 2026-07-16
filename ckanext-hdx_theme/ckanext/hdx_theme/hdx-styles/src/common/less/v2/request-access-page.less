@@ -1,0 +1,51 @@
+// ============================================================
+// request-access-page.less
+// Request Data Access / "HDX Connect" (/dataset/<id>/request-access/)
+// v2 page-specific styles — extras on top of the shared
+// message-form-page.less scaffolding (hdx-v2-message-form-*), which this
+// page loads as a separate bundle alongside this one.
+// Compiled output: fanstatic/v2/request-access-page.css
+// ============================================================
+
+@import "mixins.less";
+
+
+// ── Contributing org logo ──────────────────────────────────────
+
+.hdx-v2-request-access-logo {
+    &__img {
+        max-height: 45px; // Figma spec
+        max-width:  100%;
+    }
+}
+
+
+// ── Mandatory-fields help ──────────────────────────────────────
+
+.hdx-v2-request-access-mandatory {
+    .hdx-body-s-semibold();
+    color:  var(--hdx-error-6);
+    margin: 0;
+}
+
+
+// "Other…" conditional free-text field, toggled by request-access.js
+.hdx-v2-request-access-other {
+    &--hidden {
+        display: none;
+    }
+}
+
+// Acknowledgment checkbox row — checkbox + label side by side, error message
+// spans the label column beneath. Same grid pattern as signup-page.less's
+// __checkbox-row.
+.hdx-v2-request-access-checkbox-row {
+    display:               grid;
+    grid-template-columns: auto 1fr;
+    column-gap:            var(--hdx-space-3);
+    align-items:           start;
+
+    .c-checkbox__error {
+        grid-column: 2;
+    }
+}

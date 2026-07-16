@@ -68,6 +68,10 @@
                              (e.g. data-resource-id, tracking-type).
                              default: {}
 
+  request_attrs    {dict}    Extra HTML attributes on the "Request data" <a> element
+                             (e.g. data-module click-tracking / onboarding-flow priming).
+                             default: {}
+
   extra_classes    {string}  Additional CSS classes on the root element.
                              default: ''
 
@@ -114,6 +118,7 @@
 {% set request_href           = request_href           if request_href           is defined else '#' %}
 {% set download_extra_classes = download_extra_classes if download_extra_classes is defined else '' %}
 {% set download_attrs         = download_attrs         if download_attrs         is defined else {} %}
+{% set request_attrs          = request_attrs          if request_attrs          is defined else {} %}
 {% set extra_classes          = extra_classes          if extra_classes          is defined else '' %}
 
 {# ── BEM class list ──────────────────────────────────────── #}
@@ -203,7 +208,8 @@
             style='primary', size='m', type='text',
             label=_('Request data'),
             tag='a', href=request_href,
-            icon=False %}
+            icon=False,
+            attrs=request_attrs %}
       {% elif show_download %}
         {% set dl_label = 'Download (' ~ download_size ~ ')' if download_size else 'Download' %}
         {% snippet 'v2/components/button.html',

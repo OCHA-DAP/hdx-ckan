@@ -1,0 +1,24 @@
+.hdx-v2-request-access-logo__img {
+  max-height: 45px;
+  max-width: 100%;
+}
+.hdx-v2-request-access-mandatory {
+  font-family: var(--hdx-font-body);
+  font-size: var(--hdx-fs-s);
+  font-weight: var(--hdx-fw-semibold);
+  line-height: var(--hdx-lh-normal);
+  color: var(--hdx-error-6);
+  margin: 0;
+}
+.hdx-v2-request-access-other--hidden {
+  display: none;
+}
+.hdx-v2-request-access-checkbox-row {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: var(--hdx-space-3);
+  align-items: start;
+}
+.hdx-v2-request-access-checkbox-row .c-checkbox__error {
+  grid-column: 2;
+}

@@ -1,7 +1,14 @@
 // ============================================================
-// contact-contributor-page.less
-// Contact Contributor (/dataset/<id>/contact/) — v2 page-specific styles
-// Compiled output: fanstatic/v2/contact-contributor-page.css
+// message-form-page.less
+// Shared scaffolding for the "message the organization" v2 pages —
+// Contact Contributor (/dataset/<id>/contact/) and Request Access
+// (/dataset/<id>/request-access/). Both are a single centered column:
+// header (title + intro text/notice) + form + Cancel/Submit buttons.
+// Compiled output: fanstatic/v2/message-form-page.css, loaded via the
+// v2-message-form-page-styles bundle. Contact Contributor loads only this
+// bundle; Request Access loads this plus its own request-access-page-styles
+// bundle for its page-specific extras (org logo, mandatory-help, "Other"
+// reveal, checkbox row).
 // ============================================================
 
 @import "mixins.less";
@@ -10,14 +17,14 @@
 // ── Full-bleed white background ───────────────────────────────
 // Matches the outer_row_class pattern used by dataset/resource pages.
 
-.hdx-v2-contact-row {
+.hdx-v2-message-form-row {
     background-color: var(--hdx-neutral-0);
 }
 
 
-// ── Content column (no sidebar on this page) ──────────────────
+// ── Content column (no sidebar on these pages) ─────────────────
 
-.hdx-v2-contact-content {
+.hdx-v2-message-form-content {
     display:        flex;
     flex-direction: column;
 
@@ -30,7 +37,7 @@
 // ── Centered page column ──────────────────────────────────────
 // Full width at SM/MD; ~50% centered at XL.
 
-.hdx-v2-contact-column {
+.hdx-v2-message-form-column {
     padding: var(--hdx-space-6) 0;
     display: flex;
     flex-direction: column;
@@ -52,7 +59,7 @@
 
 // ── Page header ───────────────────────────────────────────────
 
-.hdx-v2-contact-header {
+.hdx-v2-message-form-header {
     display:        flex;
     flex-direction: column;
     gap:            var(--hdx-space-4);
@@ -84,19 +91,19 @@
 
 // ── Form ──────────────────────────────────────────────────────
 
-.hdx-v2-contact-form {
+.hdx-v2-message-form-form {
     display:        flex;
     flex-direction: column;
     gap:            var(--hdx-space-5);   // 20px between fields (Figma 1.25rem)
 }
 
-.hdx-v2-contact-dataset-name {
+.hdx-v2-message-form-dataset-name {
     .hdx-body-m-semibold();
     color:  var(--hdx-neutral-85);
     margin: 0;
 }
 
-.hdx-v2-contact-buttons {
+.hdx-v2-message-form-buttons {
     display:         flex;
     align-items:     center;
     justify-content: flex-end;

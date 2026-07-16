@@ -37,11 +37,27 @@ Example:
     {% else %}
       {% if pkg.is_requestdata_type %}
         {% if resource_item_snippet == 'package/snippets/resource_item_v2.html' %}
+          {% set request_data_modules = ['hdx_click_stopper'] %}
+          {% if not current_user.is_authenticated %}
+            {% set request_data_modules = request_data_modules + ['hdx-onboarding-flow'] %}
+          {% endif %}
+          {% set request_attrs = {
+              'data-module':          request_data_modules | join(' '),
+              'data-module-link_type': 'dataset resources',
+              'data-module-label':     'Request data'
+            } %}
+          {% if not current_user.is_authenticated %}
+            {% do request_attrs.update({
+                'data-start-page-type':              'hdx-connect',
+                'data-start-page-additional-params': h.dump_json({'dataset_id': pkg.id})
+              }) %}
+          {% endif %}
           <div class="resource-item">
             {% snippet 'v2/components/resource-card.html',
                 description=_('To access data please use the request button.'),
                 hdx_connect=True,
-                request_href=h.url_for('hdx_dataset.request_access', id=pkg.name or pkg.id) %}
+                request_href=h.url_for('hdx_dataset.request_access', id=pkg.name or pkg.id),
+                request_attrs=request_attrs %}
           </div>
         {% else %}
           {% set is_logged_in = True if g.userobj and not g.userobj.is_anonymous else False %}

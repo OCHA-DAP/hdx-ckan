@@ -25,6 +25,11 @@
   justify-content: space-between;
   gap: var(--hdx-space-3);
 }
+.hdx-v2-dataset-section__title-row {
+  display: flex;
+  align-items: center;
+  gap: var(--hdx-space-3);
+}
 .hdx-v2-dataset-section__title {
   font-family: var(--hdx-font-display);
   font-size: var(--hdx-fs-xl);

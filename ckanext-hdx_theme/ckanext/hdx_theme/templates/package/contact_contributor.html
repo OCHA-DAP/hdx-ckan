@@ -1,8 +1,8 @@
 {% extends "v2/page.html" %}
 
-{% set outer_row_class      = 'hdx-v2-contact-row' %}
+{% set outer_row_class      = 'hdx-v2-message-form-row' %}
 {% set breadcrumb_row_class = 'hdx-v2-breadcrumb-row--white' %}
-{% set content_class        = 'hdx-v2-content-columns__content hdx-v2-contact-content' %}
+{% set content_class        = 'hdx-v2-content-columns__content hdx-v2-message-form-content' %}
 
 {% block scripts %}
   {{ super() }}
@@ -13,7 +13,7 @@
 
 {% block styles %}
   {{ super() }}
-  {% asset 'hdx_theme/v2-contact-contributor-page-styles' %}
+  {% asset 'hdx_theme/v2-message-form-page-styles' %}
 {% endblock %}
 
 {% set CONST = h.HDX_CONST('UI_CONSTANTS')['CONTACT_CONTRIBUTOR'] %}
@@ -32,38 +32,37 @@
 {% block secondary %}{% endblock %}
 
 {% block primary %}
-  <div class="hdx-v2-contact-column">
+  <div class="hdx-v2-message-form-column">
 
     {# ── Page header ──────────────────────────────────────── #}
-    <div class="hdx-v2-contact-header">
+    <div class="hdx-v2-message-form-header">
       {% if message_sent %}
-        <h1 class="hdx-v2-contact-header__title">{{ CONST.PAGE_TITLE_MESSAGE_SENT }}</h1>
-        <p class="hdx-v2-contact-header__notice">
+        <h1 class="hdx-v2-message-form-header__title">{{ CONST.PAGE_TITLE_MESSAGE_SENT }}</h1>
+        <p class="hdx-v2-message-form-header__notice">
           {{ CONST.BODY_MAIN_TEXT_MESSAGE_SENT.format(h.url_for('hdx_dataset.read', id=pkg_dict.name or pkg_dict.id), pkg_dict.title) | safe }}
         </p>
         <input type="hidden" id="message_sent" value="{{ message_sent }}">
         <input type="hidden" id="message_subject" value="{{ message_subject }}">
       {% else %}
-        <h1 class="hdx-v2-contact-header__title">{{ CONST.PAGE_TITLE }}</h1>
-        <p class="hdx-v2-contact-header__text">{{ CONST.BODY_MAIN_TEXT }}</p>
-        <p class="hdx-v2-contact-header__notice">{{ CONST.FEEDBACK_NOTICE_TEXT.format('mailto:hdx@un.org') | safe }}</p>
+        <h1 class="hdx-v2-message-form-header__title">{{ CONST.PAGE_TITLE }}</h1>
+        <p class="hdx-v2-message-form-header__text">{{ CONST.BODY_MAIN_TEXT }}</p>
+        <p class="hdx-v2-message-form-header__notice">{{ CONST.FEEDBACK_NOTICE_TEXT.format('mailto:hdx@un.org') | safe }}</p>
       {% endif %}
     </div>
 
     {# ── Contact form (hidden after successful submission) ─── #}
     {% if not message_sent %}
-      <form class="hdx-v2-contact-form"
+      <form class="hdx-v2-message-form-form"
             method="post"
             action="{{ h.url_for('hdx_dataset.contact_contributor', id=pkg_dict.name or pkg_dict.id) }}"
-            id="contact-contributor-form"
-            novalidate>
+            id="contact-contributor-form">
 
         {{ h.csrf_input() }}
         <input type="hidden" name="pkg_title" value="{{ pkg_dict.title }}">
         <input type="hidden" name="pkg_owner_org" value="{{ pkg_dict.owner_org }}">
         <input type="hidden" name="pkg_id" value="{{ pkg_dict.name or pkg_dict.id }}">
 
-        <p class="hdx-v2-contact-dataset-name">{{ CONST.DATASET_NAME_TEXT.format(pkg_dict.title) }}</p>
+        <p class="hdx-v2-message-form-dataset-name">{{ CONST.DATASET_NAME_TEXT.format(pkg_dict.title) }}</p>
 
         {% if error_summary %}
           {% snippet 'v2/components/form-alert.html', message=error_summary %}
@@ -86,7 +85,7 @@
         {# Full name #}
         <div class="c-form-field">
           {% snippet 'v2/components/search-input.html',
-              size='l',
+              size='m',
               type='text',
               name='fullname',
               id='contact-fullname',
@@ -101,7 +100,7 @@
         {# Email address #}
         <div class="c-form-field">
           {% snippet 'v2/components/search-input.html',
-              size='l',
+              size='m',
               type='email',
               name='email',
               id='contact-email',
@@ -117,7 +116,7 @@
         {# Comments textarea #}
         <div class="c-form-field">
           {% snippet 'v2/components/search-input.html',
-              size='l',
+              size='m',
               name='msg',
               id='contact-msg',
               label=CONST.TEXTAREA_MSG_LABEL,
@@ -130,7 +129,7 @@
         </div>
 
         {# Buttons: Cancel (tertiary) + Submit (primary) #}
-        <div class="hdx-v2-contact-buttons">
+        <div class="hdx-v2-message-form-buttons">
           {% snippet 'v2/components/button.html',
               style='tertiary',
               size='m',

@@ -11,6 +11,10 @@
   via resource-card's download_attrs param so resource-list.js still fires
   on .resource-download-button clicks.
 
+  For hdx_connect (request-data-type) resources, request_attrs wires the same
+  click-tracking (hdx_click_stopper) and, for anonymous users, onboarding-flow
+  priming (hdx-onboarding-flow) that v1 had on the "Request data" CTA.
+
   Parameters (supplied by resources_list.html)
   ─────────────────────────────────────────────
   pkg                    {dict}  Package dict.
@@ -26,6 +30,24 @@
 {% set hdx_connect      = pkg.is_requestdata_type %}
 {% set show_download    = h.check_access('hdx_resource_download', res) and not in_review and not hdx_connect %}
 {% set resource_grouping = h.hdx_munge_title(res.x_grouping) if pkg.x_show_grouping else '' %}
+
+{% if hdx_connect %}
+  {% set request_data_modules = ['hdx_click_stopper'] %}
+  {% if not current_user.is_authenticated %}
+    {% set request_data_modules = request_data_modules + ['hdx-onboarding-flow'] %}
+  {% endif %}
+  {% set request_attrs = {
+      'data-module':                        request_data_modules | join(' '),
+      'data-module-link_type':               'dataset resources',
+      'data-module-label':                   'Request data'
+    } %}
+  {% if not current_user.is_authenticated %}
+    {% do request_attrs.update({
+        'data-start-page-type':             'hdx-connect',
+        'data-start-page-additional-params': h.dump_json({'dataset_id': pkg.id})
+      }) %}
+  {% endif %}
+{% endif %}
 
 <div class="resource-item{% if in_review %} in-review{% endif %}"
      data-grouping-id="{{ resource_grouping }}"
@@ -46,6 +68,7 @@
       in_review=in_review,
       hdx_connect=hdx_connect,
       request_href=h.url_for('hdx_dataset.request_access', id=pkg.name or pkg.id) if hdx_connect else '',
+      request_attrs=request_attrs if hdx_connect else {},
       download_extra_classes='resource-url-analytics ga-download resource-download-button',
       download_attrs={
         'data-resource-id':                    res.id,
