@@ -18,7 +18,10 @@
   label         {string}  Label text rendered after the checkbox span, using class
                           c-checkbox__label. Supports |safe HTML (e.g. links). default: none
   required      {bool}    Adds required="required" to the <input>. default: false
-  ─────────────────────────────────────────────────────────────
+  errors        {list|string}  Error message(s). Adds the c-checkbox--error modifier
+                          and renders text in the trailing .c-checkbox__error span.
+                          default: None
+  ─────────────────────────────────────────────────────────────────────────────
   Example
 
   {% snippet 'v2/components/checkbox.html',
@@ -37,8 +40,10 @@
 {% set extra_classes = extra_classes if extra_classes is defined else '' %}
 {% set label         = label         if label         is defined else none %}
 {% set required      = required      if required      is defined else false %}
+{% set errors        = errors        if errors        is defined else None %}
 
 {% set classes = ['c-checkbox'] %}
+{% if errors %}{% set classes = classes + ['c-checkbox--error'] %}{% endif %}
 {% if extra_classes %}{% set classes = classes + [extra_classes] %}{% endif %}
 
 <span class="{{ classes | join(' ') }}">
@@ -59,6 +64,6 @@
 {% if label %}
 
 <label {% if id %}for="{{ id }}"{% endif %}
-       class="c-checkbox__label">{{ label|safe }}</label>
+       class="c-checkbox__label">{{ label|safe }}{% if required %}<span class="c-checkbox__required" aria-hidden="true"> *</span>{% endif %}</label>
 {% endif %}
-<span class="c-checkbox__error"></span>
+<span class="c-checkbox__error">{% if errors %}{{ errors | join(', ') if errors is iterable and errors is not string else errors }}{% endif %}</span>

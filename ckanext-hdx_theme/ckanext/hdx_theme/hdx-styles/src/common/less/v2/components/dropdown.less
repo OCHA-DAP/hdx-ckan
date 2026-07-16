@@ -151,14 +151,26 @@
         color:            var(--hdx-neutral-95);
     }
 
+    // Error state (native mode only renders the error text today)
+    &--error &__select {
+        border-color: var(--hdx-error-5);
+    }
+
+    &__error {
+        .hdx-body-s();
+        color:      var(--hdx-error-6);
+        display:    none;
+        margin-top: var(--hdx-space-2);
+    }
+
+    &--error ~ &__error { display: block; }
+
     // ── Native <select> mode ─────────────────────────────────
     // POST-safe select styled to match the trigger button,
     // with an absolutely positioned chevron overlay.
 
     &--native {
         gap: 0;
-
-        .c-search-input__error { margin-top: var(--hdx-space-2); }
 
         .c-dropdown__select {
             align-self:         stretch;

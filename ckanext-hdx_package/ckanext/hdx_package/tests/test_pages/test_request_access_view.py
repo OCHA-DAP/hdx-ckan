@@ -121,8 +121,8 @@ class TestRequestAccessView(object):
         }
         response = app.post(request_access_url, data=data_dict, headers=auth_headers)
         assert response.status_code == 200
-        assert '<h1 class="heading__title">{0}</h1>'.format(CONST_REQUEST_ACCESS['PAGE_TITLE']) not in response.body
-        assert '<h1 class="heading__title">{0}</h1>'.format(
+        assert '<h1 class="hdx-v2-message-form-header__title">{0}</h1>'.format(CONST_REQUEST_ACCESS['PAGE_TITLE']) not in response.body
+        assert '<h1 class="hdx-v2-message-form-header__title">{0}</h1>'.format(
             CONST_REQUEST_ACCESS['PAGE_TITLE_REQUEST_SENT']) in response.body
         assert '<input type="hidden" id="request_sent" value="True">' in response.body, \
             'The hidden input indicates analytics tracking for request submission'

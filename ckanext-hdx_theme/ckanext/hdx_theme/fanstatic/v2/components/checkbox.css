@@ -52,6 +52,9 @@
   cursor: pointer;
   display: block;
 }
+.c-checkbox__required {
+  color: var(--hdx-error-5);
+}
 .c-checkbox__input:checked ~ .c-checkbox__box {
   background-color: var(--hdx-primary-5);
   border-color: var(--hdx-primary-5);

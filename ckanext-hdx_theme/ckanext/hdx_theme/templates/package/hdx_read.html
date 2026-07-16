@@ -168,9 +168,16 @@
   {# ── 1. Data & resources — always open ── #}
   <section class="hdx-v2-dataset-section" id="data-and-resources">
     <div class="hdx-v2-dataset-section__header">
-      <h2 class="hdx-v2-dataset-section__title">
-        {{ _('Data and resources') }}{% if pkg.resources %} ({{ pkg.resources | length }}){% endif %}
-      </h2>
+      <div class="hdx-v2-dataset-section__title-row">
+        <h2 class="hdx-v2-dataset-section__title">
+          {{ _('Data and resources') }}{% if pkg.resources %} ({{ pkg.resources | length }}){% endif %}
+        </h2>
+        {% if pkg.is_requestdata_type %}
+          {% snippet 'v2/components/label.html',
+              text='Request only data', color='yellow', size='s',
+              icon=True, icon_src='v2/icons/lock.svg' %}
+        {% endif %}
+      </div>
     </div>
     <div class="hdx-v2-dataset-section__body">
       {% snippet "package/snippets/resources_list.html",

@@ -1676,12 +1676,17 @@ v2-org-members-page-scripts:
     - v2/url-nav.js
     - v2/org-members-page.js
 
-
-v2-contact-contributor-page-styles:
-  output: ckanext-hdx_theme/%(version)s_v2-contact-contributor-page-styles.css
+v2-message-form-page-styles:
+  output: ckanext-hdx_theme/%(version)s_v2-message-form-page-styles.css
   <<: *common-css
   contents:
-    - v2/contact-contributor-page.css
+    - v2/message-form-page.css
+
+v2-request-access-page-styles:
+  output: ckanext-hdx_theme/%(version)s_v2-request-access-page-styles.css
+  <<: *common-css
+  contents:
+    - v2/request-access-page.css
 
 v2-form-validator-scripts:
   <<: *common-js
