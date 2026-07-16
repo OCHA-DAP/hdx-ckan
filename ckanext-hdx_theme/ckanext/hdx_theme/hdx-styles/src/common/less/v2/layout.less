@@ -44,17 +44,44 @@ body.hdx-v2 {
 .hdx-v2-content-columns {
     display:     flex;
     align-items: stretch;
-}
 
-// ── Form error summary ────────────────────────────────────────
-// Shared top-level error block for form validation feedback.
-.hdx-v2-form-error-summary {
-    .hdx-body-m();
-    color:         var(--hdx-error-6);
-    background:    var(--hdx-error-05);
-    border:        1px solid var(--hdx-error-2);
-    border-radius: var(--hdx-radius-sm);
-    padding:       var(--hdx-space-3) var(--hdx-space-4);
+    // ── Gap presets ──────────────────────────────────────────
+    &--gap {                    // small gap, larger at XL (locations)
+        gap: var(--hdx-space-3);
+
+        @media (min-width: @hdx-bp-xl) { gap: var(--hdx-space-6); }
+    }
+
+    &--gap-xl {                 // gap only at XL (dataset, resource)
+        @media (min-width: @hdx-bp-xl) { gap: var(--hdx-space-6); }
+    }
+
+    &--stack {                  // column below XL, row at XL (org members/stats)
+        flex-direction: column;
+        gap:            var(--hdx-space-6);
+
+        @media (min-width: @hdx-bp-xl) { flex-direction: row; }
+    }
+
+    // ── Sidebar column — 25% at XL ────────────────────────────
+    &__sidebar {
+        min-width: 0;
+
+        @media (min-width: @hdx-bp-xl) { .v2-sidebar-flex(); }
+
+        &--xl-only {            // hidden below XL (search, dataset, resource, landing)
+            display: none;
+
+            @media (min-width: @hdx-bp-xl) { display: block; }
+        }
+
+        &--sticky { .v2-sidebar-sticky(); }
+
+        &--right  { order: 2; } // after the content column (org members)
+    }
+
+    // ── Content column ────────────────────────────────────────
+    &__content { .v2-content-flex(); }
 }
 
 .hdx-v2-container {

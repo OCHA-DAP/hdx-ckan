@@ -29,3 +29,8 @@
   color: var(--hdx-neutral-85);
   margin: 0;
 }
+.c-content-card-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--hdx-space-4);
+}

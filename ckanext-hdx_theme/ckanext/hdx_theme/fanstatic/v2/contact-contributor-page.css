@@ -2,8 +2,6 @@
   background-color: var(--hdx-neutral-0);
 }
 .hdx-v2-contact-content {
-  flex: 1;
-  min-width: 0;
   display: flex;
   flex-direction: column;
 }

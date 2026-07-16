@@ -12,10 +12,10 @@
 // Card shell
 @c-dataset-card-bg:              var(--hdx-neutral-0);
 @c-dataset-card-border-default:  1px solid var(--hdx-neutral-1);
-@c-dataset-card-border-hover:    1.5px solid var(--hdx-neutral-8);
+@c-dataset-card-border-color-hover: var(--hdx-neutral-8);
 @c-dataset-card-shadow:          var(--hdx-shadow-sm);
 @c-dataset-card-radius:          var(--hdx-radius-sm);
-@c-dataset-card-transition:      border 0.15s ease;
+@c-dataset-card-transition:      border-color 0.15s ease;
 
 // Body layout
 @c-dataset-card-padding:         var(--hdx-space-4);   // 16px
@@ -72,7 +72,7 @@
     font-family:      var(--hdx-font-body);
 
     &:hover {
-        border: @c-dataset-card-border-hover;
+        border-color: @c-dataset-card-border-color-hover;
     }
 
     // ── __body ───────────────────────────────────────────────
@@ -264,5 +264,22 @@
         padding:     @c-dataset-card-footer-pad-v @c-dataset-card-footer-pad-h;
         display:     flex;
         align-items: center;
+    }
+}
+
+// ────────────────────────────────────────────────────────────
+// c-dataset-card-list — vertical list wrapper for dataset cards
+// ────────────────────────────────────────────────────────────
+
+.c-dataset-card-list {
+    display:        flex;
+    flex-direction: column;
+    gap:            var(--hdx-space-4);
+
+    // Search highlight — text matched by the highlight.js module.
+    // The legacy rule lives in deprecated.css (page-styles bundle),
+    // which is not loaded on v2 pages.
+    .highlight {
+        background-color: var(--hdx-warning-1);
     }
 }

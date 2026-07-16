@@ -42,11 +42,6 @@
 // ── Content column (no sidebar on this page) ──────────────────
 // page.html applies content_class whenever it's set; this ensures
 // the primary content div fills the full hdx-v2-content-columns width.
-.hdx-v2-org-list-content {
-    flex:      1;
-    min-width: 0;
-}
-
 // ── Controls row: search + sort dropdowns ─────────────────────
 // DOM order: __right first, __search second.
 // SM/MD: __right on its own row, __search wraps to full-width row below.
@@ -106,15 +101,11 @@
     }
 }
 
-// ── Card list ─────────────────────────────────────────────────
+// ── Card list (layout in c-org-list-card-list) ────────────────
 .hdx-v2-org-list-cards {
-    display:        flex;
-    flex-direction: column;
-    gap:            var(--hdx-space-3);
     padding-bottom: var(--hdx-space-6);
 
     @media (min-width: @hdx-bp-md) {
-        gap: var(--hdx-space-4);
         padding-bottom: var(--hdx-space-8);
     }
 }

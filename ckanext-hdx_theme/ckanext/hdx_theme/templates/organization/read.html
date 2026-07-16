@@ -13,9 +13,8 @@
 {% endif %}
 
 {% set outer_row_class = 'hdx-v2-search-row' %}
-{% set columns_class   = 'hdx-v2-search-columns' %}
-{% set sidebar_class   = 'hdx-v2-search-sidebar' %}
-{% set content_class   = 'hdx-v2-search-content' %}
+{% set sidebar_class   = 'hdx-v2-content-columns__sidebar hdx-v2-content-columns__sidebar--xl-only hdx-v2-content-columns__sidebar--sticky hdx-v2-search-sidebar' %}
+{% set content_class   = 'hdx-v2-content-columns__content hdx-v2-search-content' %}
 
 {% block subtitle %}{{ org_dict.display_name }} Humanitarian Data | {% block subtitle_suffix %}{{org_dict.search_template_data.item_count}} Datasets{% endblock %}{% endblock %}
 {% block meta %}

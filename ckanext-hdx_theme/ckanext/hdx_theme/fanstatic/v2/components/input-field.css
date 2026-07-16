@@ -7,7 +7,7 @@
   box-sizing: border-box;
   overflow: hidden;
   font-family: var(--hdx-font-body);
-  transition: background-color 0.15s ease, border 0.15s ease;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
 }
 .c-search-input input,
 .c-search-input__value {
@@ -98,13 +98,13 @@
 }
 .c-search-input:hover {
   background-color: var(--hdx-neutral-01);
-  border: 1.5px solid var(--hdx-neutral-8);
+  border-color: var(--hdx-neutral-8);
 }
 .c-search-input:focus-within,
 .c-search-input--active,
 .c-search-input--filled {
   background-color: var(--hdx-neutral-01);
-  border: 2px solid var(--hdx-neutral-8);
+  border-color: var(--hdx-neutral-8);
   color: var(--hdx-neutral-95);
 }
 .c-search-input:focus-within input,
@@ -114,6 +114,10 @@
 .c-search-input--active .c-search-input__value,
 .c-search-input--filled .c-search-input__value {
   color: var(--hdx-neutral-95);
+}
+.c-search-input:focus-within {
+  outline: 1px solid var(--hdx-neutral-8);
+  outline-offset: 0;
 }
 .c-search-input--size-l {
   height: 2.5rem;
@@ -174,8 +178,14 @@
 .c-search-input--error:focus-within {
   border-color: var(--hdx-error-5);
 }
+.c-search-input--error:focus-within {
+  outline-color: var(--hdx-error-5);
+}
 .c-search-input--error ~ .c-search-input__error {
   display: block;
+}
+.c-search-input--block {
+  width: 100%;
 }
 .c-search-input__label {
   font-family: var(--hdx-font-body);

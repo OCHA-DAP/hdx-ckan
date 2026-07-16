@@ -46,17 +46,34 @@ Any file that needs breakpoints, typography variables, or type-style mixins shou
 
 ---
 
-## Page-layout flex mixins
+## Page layout — generic column classes
 
-Three mixins in `mixins.less` cover the standard two-column flex layout. Use these in every page LESS file instead of duplicating the properties inline.
+Two-column (sidebar + content) layout is provided by generic classes on
+`.hdx-v2-content-columns` in `layout.less`. Pages compose them via the layout
+template variables instead of re-declaring flex rules in page LESS:
 
-| Mixin | Properties | When to use |
-|---|---|---|
-| `.v2-sidebar-flex()` | `flex: 0 0 25%; min-width: 0` | Sidebar column at XL |
-| `.v2-content-flex()` | `flex: 1; min-width: 0` | Main content column |
-| `.v2-sidebar-sticky()` | `position: sticky; top: var(--hdx-space-12); align-self: flex-start` | Non-anchor-links sidebars (Search filters, Locations letter grid) |
+| Class | Role |
+|---|---|
+| `hdx-v2-content-columns--gap` | column gap `space-3`, `space-6` at XL (Locations) |
+| `hdx-v2-content-columns--gap-xl` | column gap `space-6` at XL only (Dataset, Resource) |
+| `hdx-v2-content-columns--stack` | column below XL, row at XL (Org Members/Stats) |
+| `hdx-v2-content-columns__sidebar` | sidebar column — `flex: 0 0 25%` at XL |
+| `hdx-v2-content-columns__sidebar--xl-only` | hidden below XL (Search, Dataset, Resource, landing pages) |
+| `hdx-v2-content-columns__sidebar--sticky` | sticky sidebar (Search, Locations) |
+| `hdx-v2-content-columns__sidebar--right` | rendered after the content column (Org Members) |
+| `hdx-v2-content-columns__content` | content column — `flex: 1; min-width: 0` |
 
-`.c-anchor-links-wrapper` has `position: sticky; top: var(--hdx-space-12)` built in — pages that use `c-anchor-links` for sidebar navigation (Dataset, HAPI) get stickiness through the component and do **not** need `.v2-sidebar-sticky()` on the sidebar container.
+Page-specific classes remain **only** for genuinely page-specific extras
+(e.g. `hdx-v2-search-sidebar` keeps its border-right and padding; the
+Locations sidebar keeps its SM/MD `order` swap). Never re-declare the
+width/visibility/sticky contract in a page file.
+
+The underlying mixins in `mixins.less` (`.v2-sidebar-flex()`,
+`.v2-content-flex()`, `.v2-sidebar-sticky()`) are the primitives these classes
+are built from — reach for them only in layouts the generic classes cannot
+express.
+
+`.c-anchor-links-wrapper` has `position: sticky; top: var(--hdx-space-12)` built in — pages that use `c-anchor-links` for sidebar navigation (Dataset, HAPI) get stickiness through the component and do **not** need the `--sticky` modifier on the sidebar container.
 
 ---
 
@@ -130,6 +147,47 @@ Use `is-*` classes only for persistent states set by the server or JavaScript.
 | Expanded | `is-open` class (JS only) |
 
 Do **not** add `is-hovered`, `--hovered`, `is-focus`, or similar classes to templates or JavaScript. If a JS controller must replicate hover visuals (e.g. keyboard navigation), use a clearly named parent-class such as `c-component--keyboard-active` and add a comment in the LESS file explaining why the class exists.
+
+---
+
+## Constant border widths
+
+Border-width never changes between component states (default / hover / focus /
+active). State changes are conveyed by `border-color` only:
+
+```less
+.c-example {
+    border:     1px solid var(--hdx-neutral-1);
+    transition: border-color 0.15s ease;
+
+    &:hover { border-color: var(--hdx-neutral-8); }
+}
+```
+
+- State rules use `border-color:` — never the `border:` shorthand, which
+  silently re-declares the width. Transitions target `border-color`.
+- Extra focus emphasis uses a layout-safe `outline`
+  (`outline: 1px solid …; outline-offset: 0` reads as a 2px ring with the
+  1px border). Error variants recolor the ring.
+- Fixed component heights are Figma size specs, not border compensation.
+- Constant decorative borders of other widths are fine; reserving space for an
+  active-state border uses a `transparent` default (`.c-nav-item` underline).
+
+See [007-stable-border-width-across-states.md](requirements/007-stable-border-width-across-states.md).
+
+---
+
+## Form alerts — `c-form-alert`
+
+All form-level error/status alerts use the shared `c-form-alert` component
+(`templates/v2/components/form-alert.html` + `less/v2/components/form-alert.less`),
+whether server-rendered (Contact Contributor error summary) or JS-toggled
+(notification drawers, org-members group message).
+
+- Visibility contract: visible by default; JS-managed instances render with
+  `hidden=True` and toggle the `hidden` **attribute** (`alert.hidden = false`).
+  No `is-visible`/display classes.
+- Do not create page- or drawer-specific alert classes.
 
 ---
 
@@ -255,20 +313,13 @@ Never use `{% include %}` for parameterised v2 templates. The only accepted `{% 
 
 Leaving any of these unset produces an unclassed wrapper div and makes CSS targeting impossible.
 
-**Single-column pages** (no sidebar): set `content_class` only. `page.html` applies `content_class` whenever it is defined (the former guard `and secondary_block_output != ''` was removed). This ensures the primary content `<div>` fills the full container width via `flex:1; min-width:0`.
+**Single-column pages** (no sidebar): set `content_class` only. `page.html` applies `content_class` whenever it is defined (the former guard `and secondary_block_output != ''` was removed). Use the generic content class — it provides `flex: 1; min-width: 0`:
 
 ```jinja2
-{% set content_class = 'hdx-v2-org-list-content' %}
+{% set content_class = 'hdx-v2-content-columns__content' %}
 ```
 
-Then in the page LESS:
-
-```less
-.hdx-v2-org-list-content {
-    flex:      1;
-    min-width: 0;
-}
-```
+Append a page class after it only when the page needs extra content-column styling (padding, alignment).
 
 Never leave a single-column page without `content_class` — without it the content div has no `flex:1` and will not fill the container width.
 
@@ -345,6 +396,30 @@ Scripts and styles used exclusively on one page go into that page's bundle, not 
 ## One LESS file per component
 
 Each component gets its own file in `components/`. Do not group unrelated components in a single file (the old `navigation.less` pattern that mixed `c-nav-item`, `c-anchor-links`, `c-pagination`, `c-breadcrumb` is the anti-pattern).
+
+---
+
+## Component wrapper ownership
+
+Containers that lay out a set of `c-*` components (card lists, card grids)
+belong to the **component's own LESS file** as sibling blocks — never to page
+files:
+
+- `c-<name>-list` — vertical flex list (`c-dataset-card-list`,
+  `c-resource-card-list`, `c-org-list-card-list`, `c-member-list-card-list`,
+  `c-activity-card-list`, `c-stats-card-list`)
+- `c-<name>-grid` — grid (`c-content-card-grid`, `c-selection-item-grid`,
+  `c-showcase-card-grid`)
+
+Child sizing lives inside the wrapper, scoped with a direct-child selector
+(`> .c-stats-card { flex: 1; }`). Pages must not size or restyle `c-*`
+children directly — if a component needs a contextual variant, add a modifier
+to the component (`c-search-input--block`, `c-dropdown--inline`,
+`c-page-header--underlined`) and pass it via `extra_classes`.
+
+Page LESS keeps only page-rhythm concerns around the wrapper (e.g.
+`padding-bottom` on the org-list section) and full-bleed page bands
+(`*-header-section` wrappers), which are page-owned.
 
 ---
 

@@ -36,10 +36,9 @@
 {# The row/column classes only apply real layout CSS (bordered sidebar,
    content padding) when there is a data_list section to fill them —
    otherwise leave them unset so page.html's plain defaults apply. #}
-{% set outer_row_class = 'hdx-v2-search-row'     if ns.data_list else '' %}
-{% set columns_class   = 'hdx-v2-search-columns' if ns.data_list else '' %}
-{% set sidebar_class   = 'hdx-v2-search-sidebar' if ns.data_list else '' %}
-{% set content_class   = 'hdx-v2-search-content' if ns.data_list else '' %}
+{% set outer_row_class = 'hdx-v2-search-row' if ns.data_list else '' %}
+{% set sidebar_class   = 'hdx-v2-content-columns__sidebar hdx-v2-content-columns__sidebar--xl-only hdx-v2-content-columns__sidebar--sticky hdx-v2-search-sidebar' if ns.data_list else '' %}
+{% set content_class   = 'hdx-v2-content-columns__content hdx-v2-search-content' if ns.data_list else '' %}
 
 {% block analytics_came_from %}{{ analytics.analytics_came_from }}{% endblock %}
 {% block analytics_supports_notifications %}{{ analytics.analytics_supports_notifications }}{% endblock %}

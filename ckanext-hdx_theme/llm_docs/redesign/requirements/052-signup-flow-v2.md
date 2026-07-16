@@ -425,7 +425,7 @@ All five signup templates extend `v2/page.html` directly — no v1 fallback, no 
 {% extends "v2/page.html" %}
 {% set outer_row_class      = 'hdx-v2-signup-outer-row' %}
 {% set breadcrumb_row_class = 'hdx-v2-breadcrumb-row--white' %}
-{% set content_class        = 'hdx-v2-signup-content' %}
+{% set content_class        = 'hdx-v2-content-columns__content' %}
 ```
 
 ### 6.1 value-proposition.html

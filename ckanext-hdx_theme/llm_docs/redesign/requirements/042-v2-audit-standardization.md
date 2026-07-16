@@ -93,10 +93,10 @@ Every v2 page template that extends `v2/page.html` and uses the two-column layou
 
 | Variable | search.html | hdx_read.html | resource_read.html |
 |---|---|---|---|
-| `outer_row_class` | ❌ unset | ✅ `hdx-v2-dataset-row` | ✅ `hdx-v2-resource-row` |
-| `columns_class` | ❌ unset | ✅ `hdx-v2-dataset-columns` | ✅ `hdx-v2-resource-columns` |
-| `sidebar_class` | ✅ `hdx-v2-search-sidebar` | ✅ `hdx-v2-dataset-sidebar` | ✅ `hdx-v2-resource-sidebar` |
-| `content_class` | ✅ `hdx-v2-search-content` | ✅ `hdx-v2-dataset-content` | ✅ `hdx-v2-resource-content` |
+| `outer_row_class` | ✅ `hdx-v2-search-row` | ✅ `hdx-v2-dataset-row` | ✅ `hdx-v2-resource-row` |
+| `columns_class` | ❌ unset | ✅ `hdx-v2-content-columns--gap-xl` | ✅ `hdx-v2-content-columns--gap-xl hdx-v2-resource-columns` |
+| `sidebar_class` | ✅ generic `__sidebar --xl-only --sticky` + `hdx-v2-search-sidebar` | ✅ generic `__sidebar --xl-only` + `hdx-v2-dataset-sidebar` | ✅ generic `__sidebar --xl-only` + `hdx-v2-resource-sidebar` |
+| `content_class` | ✅ generic `__content` + `hdx-v2-search-content` | ✅ generic `__content` | ✅ generic `__content` + `hdx-v2-resource-content` |
 
 ---
 

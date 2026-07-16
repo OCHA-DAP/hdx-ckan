@@ -7,7 +7,7 @@
 ## Prerequisites
 
 Already implemented (do not re-implement):
-- `v2/page-header.html` — unified header for dataset AND resource pages; resource layout activated by passing `resource_id` (no `mode` param needed); renamed from `v2/dataset-page-header.html` in this task
+- `v2/components/page-header.html` — unified `c-page-header` for dataset AND resource pages; the resource page passes `compact_title=True` plus a 3-item `meta_items` list (3 items automatically get the `--cols-3` grid)
 - `v2/components/breadcrumb.html` — breadcrumb (task 032)
 - `v2/components/anchor-links.html` — desktop anchor nav list + mobile dropdown (task 038)
 - `v2/components/file-type-icon.html` — file format icon
@@ -27,10 +27,12 @@ Extends `v2/page.html`. No v2 feature gate — always v2, same as the dataset pa
 Layout variables set at the top of the template:
 ```jinja
 {% set outer_row_class  = 'hdx-v2-resource-row' %}
-{% set columns_class    = 'hdx-v2-resource-columns' %}
-{% set sidebar_class    = 'hdx-v2-resource-sidebar' %}
-{% set content_class    = 'hdx-v2-resource-content' %}
+{% set columns_class    = 'hdx-v2-content-columns--gap-xl hdx-v2-resource-columns' %}
+{% set sidebar_class    = 'hdx-v2-content-columns__sidebar hdx-v2-content-columns__sidebar--xl-only hdx-v2-resource-sidebar' %}
+{% set content_class    = 'hdx-v2-content-columns__content hdx-v2-resource-content' %}
 ```
+
+Layout (gap, XL-only 25% sidebar, flexible content) comes from the generic `hdx-v2-content-columns` classes in `layout.less`; the `hdx-v2-resource-*` classes hold only page-specific padding.
 
 ---
 
@@ -38,34 +40,26 @@ Layout variables set at the top of the template:
 
 ### 1. Breadcrumb
 
-**Block**: `{% block toolbar %}` — overrides the full toolbar block. Must include `hdx-v2-container` inner wrapper (same pattern as `search/search.html`).
+**Block**: `{% block breadcrumb_items %}` — `v2/page.html` provides the row + `hdx-v2-container` wrapper.
 
 ```jinja
-{% block toolbar %}
-  <div class="hdx-v2-breadcrumb-row">
-    <div class="hdx-v2-container">
-      {% snippet 'v2/components/breadcrumb.html',
-          items=[
-            {'label': pkg.organization.title, 'href': h.url_for('organization.read', id=pkg.organization.name)},
-            {'label': pkg.title or pkg.name,  'href': h.url_for('hdx_dataset.read', id=pkg.name)},
-            {'label': h.resource_display_name(res), 'href': ''}
-          ] %}
-    </div>
-  </div>
+{% block breadcrumb_items %}
+  {% snippet 'v2/components/breadcrumb.html',
+      items=[
+        {'label': pkg.organization.title, 'href': h.url_for('organization.read', id=pkg.organization.name)},
+        {'label': pkg.title or pkg.name,  'href': h.url_for('hdx_dataset.read', id=pkg.name)},
+        {'label': h.resource_display_name(res), 'href': ''}
+      ] %}
 {% endblock %}
 ```
 
 Path: **Home → [Organisation name] → [Dataset title] → [Resource title (no link)]**
 
-Remove existing `{% block breadcrumb_content %}` and `{% block breadcrumb_content_selected %}` blocks.
-
 ---
 
-### 2. Page Header (via `v2/page-header.html`)
+### 2. Page Header (via `v2/components/page-header.html`)
 
-`page-header.html` is a **unified** snippet. Passing `resource_id` activates the resource layout automatically — no `mode` param needed. The outer section uses class `hdx-v2-page-header hdx-v2-page-header--resource`.
-
-Note: `hdx-v2-dataset-header` CSS class in `styles.less` was **renamed** to `hdx-v2-page-header` as part of this task. The dataset page (`hdx_read.html`) snippet call was updated from `v2/dataset-page-header.html` to `v2/page-header.html`.
+`page-header.html` is a **unified**, param-driven snippet — no dataset/resource mode switch. The resource page passes `compact_title=True` (adds the `c-page-header--compact-title` modifier — title fixed at 1.5rem) and a 3-item `meta_items` list; 3 items automatically get the `c-page-header__metadata--cols-3` grid. The outer section uses class `c-page-header`.
 
 #### 2a. Snippet call in `resource_read.html`
 
@@ -75,50 +69,56 @@ Note: `hdx-v2-dataset-header` CSS class in `styles.less` was **renamed** to `hdx
     <div class="hdx-v2-container">
       {% set metadata_url = h.url_for('hdx_dataset.resource_metadata', id=pkg.id, resource_id=res.id) %}
       {% set can_dl = h.check_access('hdx_resource_download', res) %}
-      {% snippet 'v2/page-header.html',
-          resource_id=res.id,
+      {% set _meta_items = [
+        {'label': _('Last modified'), 'value': h.render_datetime(res.last_modified or res.created) or ''},
+        {'label': _('Resource ID'), 'value': res.id, 'copy_value': res.id},
+        {'label': _('Resource URL'), 'value': res.url or '', 'copy_value': res.url or '',
+         'value_href': res.hdx_rel_url if (res.url and h.is_url(res.url) and can_dl) else ''},
+      ] %}
+      {% snippet 'v2/components/page-header.html',
+          compact_title=True,
           file_format=h.hdx_format_to_icon_category(res.format),
           file_format_text=res.format or '',
           title=h.resource_display_name(res),
           description=res.description or '',
           download_url=res.hdx_rel_url,
-          download_size=h.filesize_format(res.Size) if res.Size else '',
           can_download=can_dl,
           ga_resource_title=res.name,
           ga_resource_id=res.id,
           export_json_url=metadata_url ~ '?format=json',
           export_csv_url=metadata_url ~ '?format=csv',
-          last_modified=h.render_datetime(res.last_modified or res.created) or '',
-          resource_url=res.url or '',
-          resource_url_href=res.hdx_rel_url if (res.url and h.is_url(res.url) and can_dl) else '',
-          resource_type=res.resource_type or '' %}
+          meta_items=_meta_items,
+          resource_type=res.resource_type or '',
+          download_size=h.filesize_format(res.Size) if res.Size else '' %}
     </div>
   </div>
 {% endblock %}
 ```
 
-#### 2b. Resource-mode parameters in `page-header.html`
+#### 2b. Parameters passed by the resource page
 
 | Param | Type | Default | Description |
 |---|---|---|---|
-| `resource_id` | string | `''` | `res.id` — presence triggers resource layout |
+| `compact_title` | bool | `False` | `True` — title fixed at 1.5rem, no XL scale-up (`c-page-header--compact-title`) |
 | `file_format` | string | `''` | Category for file-type icon (`h.hdx_format_to_icon_category(res.format)`) |
 | `file_format_text` | string | `''` | Raw format string shown next to icon (e.g. `'GEOJSON'`) |
 | `title` | string | `''` | Resource display name |
 | `description` | string | `''` | Resource description (may be empty) |
 | `download_url` | string | `''` | `res.hdx_rel_url` |
 | `download_size` | string | `''` | Human-readable size (`h.filesize_format(res.Size)`) — appended as `Download (14.2K)` |
-| `can_download` | bool | `False` | `h.check_access('hdx_resource_download', res)` — cached before snippet call |
+| `can_download` | bool | `False` | `h.check_access('hdx_resource_download', res)` — cached before snippet call; renders the `__cta--row` download + export row |
 | `ga_resource_title` | string | `''` | `res.name` — passed as `data-resource-name` on download button |
 | `ga_resource_id` | string | `''` | `res.id` — passed as `data-resource-id` on download button |
 | `export_json_url` | string | `''` | `metadata_url ~ '?format=json'` |
 | `export_csv_url` | string | `''` | `metadata_url ~ '?format=csv'` |
-| `last_modified` | string | `''` | `h.render_datetime(res.last_modified or res.created)` |
-| `resource_url` | string | `''` | `res.url` — display text |
-| `resource_url_href` | string | `''` | `res.hdx_rel_url` when downloadable; empty otherwise |
+| `meta_items` | list | `[]` | The 3 metadata strip entries (Last modified / Resource ID / Resource URL) — see 2e |
 | `resource_type` | string | `''` | `res.resource_type` — used in GA class on download button |
 
+`meta_items` item keys used here: `label`, `value`, `copy_value` (presence renders a copy-button in the label row), `value_href` (renders the value as `c-text-link`). See task 037 §4.2 for the full item schema.
+
 #### 2c. Download button (GA tracking)
+
+The download button and export dropdown render inside `<div class="c-page-header__cta c-page-header__cta--row">` when `can_download` is true.
 
 ```jinja
 {% set _dl_label = _('Download') ~ ' (' ~ download_size ~ ')' if download_size else _('Download') %}
@@ -153,15 +153,15 @@ Reuses the existing export URL pattern from `resource_item.html:92`. Uses the st
 
 #### 2e. Metadata strip (resource)
 
-Three items in a responsive layout:
+Driven by the 3-item `meta_items` list — 3 items automatically add the `c-page-header__metadata--cols-3` modifier:
 - **SM** (< 768px): stacked vertically, full-width
 - **MD** (768–1279px): Last modified + Resource ID side by side (50%/50%), Resource URL full-width below
 - **XL** (≥ 1280px): CSS Grid with `calc(25% + var(--hdx-space-6)) / 1fr / 2fr` — the extra gap offset on column 1 ensures Resource ID aligns visually with the content section headings below
 
-Resource URL uses `text-link.html` (primary, size s) — allows word-wrap, no ellipsis.
-Copy buttons use `copy-button.html` (style=secondary, size=s).
+Resource URL uses `text-link.html` (via the item's `value_href`) — allows word-wrap, no ellipsis.
+Copy buttons render from the items' `copy_value` (`copy-button.html`, style=secondary, size=s).
 
-The same alignment principle is applied to the dataset `__metadata` strip in `styles.less`:
+The same alignment principle is applied to the default 4-column `__metadata` grid in `page-header.less`:
 `grid-template-columns: calc(25% + var(--hdx-space-6)) repeat(3, 1fr)`.
 
 ---
@@ -347,8 +347,8 @@ Copy icon uses `stroke="currentColor"` / `fill="currentColor"` so the green colo
 - `{% block secondary_content %}` — was commented out
 
 ### Blocks to ADD:
-- `{% block toolbar %}` — v2 breadcrumb (Home → Org → Dataset → Resource)
-- `{% block pre_primary %}` — page header via `v2/page-header.html`
+- `{% block breadcrumb_items %}` — v2 breadcrumb (Home → Org → Dataset → Resource)
+- `{% block pre_primary %}` — page header via `v2/components/page-header.html`
 - `{% block secondary %}` — desktop anchor nav sidebar
 - `{% block primary %}` — mobile anchor dropdown + all content sections
 
@@ -379,9 +379,9 @@ Handles ALL `c-dropdown` open/close toggle and outside-click-close. Also handles
 
 Does not interfere with `search.js` which handles `[data-nav-key]` items via `setNavParam`.
 
-### `fanstatic/v2/components/page-header.js` — renamed from `dataset-page-header.js`
+### `fanstatic/v2/components/page-header.js`
 
-Source overflow detection ("View more" link visibility) + tooltip triggers for `.c-info-icon`. Export dropdown toggle logic **removed** from this file — handled by `dropdown.js`.
+Targets all `.c-page-header` instances (`querySelectorAll`). Overflow "View more" reveal on `[data-header-meta-overflow]` items + tooltip click/keyboard handling for `.c-info-icon`. Export dropdown toggle logic lives in `dropdown.js`.
 
 ### `fanstatic/v2/search.js` — modified
 
@@ -395,23 +395,22 @@ See `c-copy-button` spec above.
 
 ## CSS: `fanstatic/v2/resource-page.css`
 
-Compiled from LESS source at `hdx-styles/src/common/less/v2/resource-page.less`.
-Registered in new `v2-resource-styles` bundle.
+Compiled from LESS source at `less/v2/resource-page.less`.
+Registered in the `v2-resource-page-styles` bundle.
 
 ### Layout classes
+
+Column layout comes from the generic `hdx-v2-content-columns` classes in `layout.less` (`--gap-xl`, `__sidebar --xl-only`, `__content`). The page classes hold only page-specific extras:
 
 ```
 .hdx-v2-resource-columns
   — padding: var(--hdx-space-4) 0 5rem
-  — XL+: gap: var(--hdx-space-6)
 
 .hdx-v2-resource-sidebar
-  — XL+: flex: 0 0 25%; padding: var(--hdx-space-10) 0
+  — XL+: padding: var(--hdx-space-10) 0
   — NO border-right (resource sidebar has no divider — content fills right side directly)
-  — MD/SM: display: none
 
 .hdx-v2-resource-content
-  — flex: 1; min-width: 0
   — padding: var(--hdx-space-8) 0 at MD+
 
 .hdx-v2-resource-api
@@ -434,71 +433,57 @@ Registered in new `v2-resource-styles` bundle.
   — font: 0.875rem; word-break: break-all
 ```
 
-### Resource-mode page header additions (in `styles.less` via `hdx-v2-page-header--resource`)
+### Resource-relevant `c-page-header` styles (in `less/v2/components/page-header.less`)
 
 ```
-.hdx-v2-page-header--resource
+.c-page-header
 
-  __top
-  — display: flex; flex-direction: column; gap: var(--hdx-space-3)
+  --compact-title
+  — .c-page-header__title fixed at 1.5rem (no XL scale-up)
 
-  __title
-  — font: Merriweather, 700, 1.5rem/130%; color: var(--hdx-neutral-95)
+  __format / __format-label
+  — file-type icon + uppercase format label above the title
 
   __desc
-  — data-module="clamped-text" handles clamping
-  — -webkit-line-clamp: 3 when .is-clamped
+  — data-module="clamped-text" handles clamping (-webkit-line-clamp: 3)
 
-  __actions
-  — display: flex; gap: var(--hdx-space-3); align-items: center; flex-wrap: wrap (SM)
+  __cta--row
+  — flex-direction: row; align-items: center; gap: var(--hdx-space-3)
+  — download button + export metadata dropdown (.c-dropdown { width: fit-content })
 
-  __meta
-  — SM: flex-direction: column; gap: var(--hdx-space-4)
-  — MD: display: grid; grid-template-columns: 1fr 1fr; gap: var(--hdx-space-4)
-         last child (.hdx-v2-page-header__meta-item:last-child) spans full width
+  __metadata--cols-3            (applied automatically when meta_items|length == 3)
+  — SM: items stacked, full width
+  — MD: items 1+2 at 50%, item 3 full-width below
   — XL: grid-template-columns: calc(25% + var(--hdx-space-6)) 1fr 2fr
-
-  __meta-item
-  — display: flex; flex-direction: column; gap: var(--hdx-space-1)
-
-  __meta-label
-  — font: 600, 0.875rem, var(--hdx-neutral-95)
-
-  __meta-value
-  — font: 400, 1rem, var(--hdx-neutral-85); word-wrap: break-word
+  — __meta-value: single-line ellipsis by default; .c-text-link values wrap
 ```
-
-Note: `hdx-v2-dataset-header` is **renamed** to `hdx-v2-page-header` in `styles.less`. The dataset page uses `hdx-v2-page-header` (without the `--resource` modifier) after this rename. Update all class references in `styles.less` and `hdx_read.html` accordingly.
 
 ---
 
 ## webassets.yml changes
 
-### `v2-components-scripts` — updated order:
+### `v2-components-scripts` — includes:
 ```yaml
 v2-components-scripts:
     contents:
-        - v2/components/password-toggle.js
-        - v2/components/clamped-text.js
-        - v2/components/dropdown.js      # NEW — global dropdown behavior
-        - v2/components/page-header.js   # renamed from dataset-page-header.js
-        - v2/components/anchor-links.js
-        - v2/components/copy-button.js   # NEW
+        - v2/components/dropdown.js      # global dropdown behavior
+        - v2/components/page-header.js   # overflow "View more" + tooltips
+        - v2/components/copy-button.js
+        # ... other component scripts
 ```
 
-### `v2-components-styles` — add `copy-button.css`:
+### `v2-components-styles` — includes `copy-button.css`:
 ```yaml
 v2-components-styles:
     contents:
         - ...
-        - v2/components/copy-button.css  # NEW
+        - v2/components/copy-button.css
 ```
 
-### New `v2-resource-styles` bundle:
+### `v2-resource-page-styles` bundle:
 ```yaml
-v2-resource-styles:
-    output: %(version)s_v2-resource-styles.css
-    preload: v2-page-styles
+v2-resource-page-styles:
+    output: ckanext-hdx_theme/%(version)s_v2-resource-page-styles.css
     contents:
         - v2/resource-page.css
 ```
@@ -507,8 +492,7 @@ v2-resource-styles:
 ```jinja
 {% block styles %}
   {{ super() }}
-  {% asset 'hdx_theme/v2-dataset-styles' %}
-  {% asset 'hdx_theme/v2-resource-styles' %}
+  {% asset 'hdx_theme/v2-resource-page-styles' %}
 {% endblock %}
 ```
 
@@ -520,30 +504,25 @@ No page-specific scripts block needed — all JS is in `v2-components-scripts`, 
 
 | File | Type | Notes |
 |---|---|---|
-| `templates/v2/page-header.html` | Jinja template | Unified header (dataset + resource); renamed from `dataset-page-header.html` |
+| `templates/v2/components/page-header.html` | Jinja template | Unified `c-page-header` (dataset + resource + org/landing/crisis) |
 | `templates/v2/components/copy-button.html` | Jinja template | `c-copy-button` — green icon on copy success |
-| `fanstatic/v2/components/page-header.js` | JavaScript | Renamed from `dataset-page-header.js`; export dropdown logic removed |
+| `fanstatic/v2/components/page-header.js` | JavaScript | Overflow "View more" reveal + tooltip handling; export dropdown logic in `dropdown.js` |
 | `fanstatic/v2/components/copy-button.js` | JavaScript | Clipboard copy; `is-copied` CSS class approach (in `v2-components-scripts`) |
 | `fanstatic/v2/components/dropdown.js` | JavaScript | Global dropdown toggle + URL navigate (in `v2-components-scripts`) |
 | `fanstatic/v2/components/copy-button.css` | CSS | Copy button styles (in `v2-components-styles`) |
 | `fanstatic/v2/resource-page.css` | CSS | Resource page layout |
-| `hdx-styles/src/common/less/v2/components/copy-button.less` | LESS | Source for `copy-button.css` |
-| `hdx-styles/src/common/less/v2/resource-page.less` | LESS | Source for `resource-page.css` |
+| `less/v2/components/copy-button.less` | LESS | Source for `copy-button.css` |
+| `less/v2/resource-page.less` | LESS | Source for `resource-page.css` |
 
 ## Files to Modify
 
 | File | Change |
 |---|---|
 | `templates/package/resource_read.html` | Extends `v2/page.html`; all blocks restructured per above; analytics blocks preserved |
-| `templates/package/hdx_read.html` | Snippet call updated to `v2/page-header.html`; wrapper class `hdx-v2-page-header-section` |
-| `hdx-styles/src/common/less/v2/styles.less` | `hdx-v2-dataset-header` renamed to `hdx-v2-page-header`; `--resource` modifier added; dataset `__metadata` grid alignment updated |
+| `templates/package/hdx_read.html` | Calls `v2/components/page-header.html` with `meta_items`; wrapper class `hdx-v2-page-header-section` |
+| `less/v2/components/page-header.less` | All `.c-page-header` styles incl. `--compact-title`, `__cta--row`, `__metadata--cols-3` |
 | `fanstatic/v2/search.js` | Dropdown toggle/close code removed (moved to `dropdown.js`) |
-| `fanstatic/webassets.yml` | New bundles; `dropdown.js` + `copy-button.js/css` added; `dataset-page-header.js` reference updated |
-
-## Deleted Files
-
-- `templates/v2/dataset-page-header.html` — replaced by `v2/page-header.html`
-- `fanstatic/v2/components/dataset-page-header.js` — replaced by `page-header.js`
+| `fanstatic/webassets.yml` | `v2-resource-page-styles` bundle; `dropdown.js` + `copy-button.js/css` in component bundles |
 
 ---
 
@@ -604,5 +583,5 @@ Standard `{% set items = items + [...] %}` fails in Jinja2 due to scoping.
 - [ ] API section: 3 blocks in a row at XL, stacked at MD/SM
 - [ ] "Copy resource ID" in API section uses text-button style; clipboard still works via `copy-button.js`
 - [ ] Empty state (no preview, no API): page renders without errors; no empty sidebar content
-- [ ] Dataset page unaffected: `v2/page-header.html` in dataset mode renders correctly after rename
+- [ ] Dataset page unaffected: `v2/components/page-header.html` renders correctly with the dataset `meta_items`
 - [ ] `dropdown.js` handles all c-dropdown open/close; no regression in search page filters

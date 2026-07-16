@@ -6,7 +6,7 @@
 {% block analytics_org_name %}{{ org_dict.name }}{% endblock %}
 {% block analytics_org_id %}{{ org_dict.id }}{% endblock %}
 
-{% set content_class = 'hdx-v2-org-stats-content' %}
+{% set content_class = 'hdx-v2-content-columns__content' %}
 
 {% block subtitle %}{{ org_dict.display_name }} Humanitarian Data | {% block subtitle_suffix %}{{ _('Stats') }}{% endblock %}{% endblock %}
 {% block meta %}
@@ -66,9 +66,9 @@
       {% endif %}
     </div>
 
-    <div class="hdx-v2-org-stats__layout">
+    <div class="hdx-v2-content-columns hdx-v2-content-columns--stack">
 
-      <div class="hdx-v2-org-stats__kpis">
+      <div class="hdx-v2-content-columns__sidebar c-stats-card-list">
         {% snippet 'v2/components/stats-card.html',
             label=_("Total number of downloads for this organisation's content"),
             value=data.stats_total_downloads.formatted_value,
@@ -85,7 +85,7 @@
             unit=data.stats_viewers.units %}
       </div>
 
-      <div class="hdx-v2-org-stats__charts">
+      <div class="hdx-v2-content-columns__content hdx-v2-org-stats__charts">
 
         <div class="hdx-v2-org-stats__chart-card">
           <div class="hdx-v2-org-stats__chart-heading">

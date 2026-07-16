@@ -48,8 +48,8 @@ Create a reusable, responsive dataset card component matching the Figma design e
 | Border-radius | `var(--hdx-radius-sm)` | 2px |
 | Shadow | `var(--hdx-shadow-sm)` | 0 1px 4px rgba(0,0,0,0.04) |
 | Border (default) | `1px solid var(--hdx-neutral-1)` | #ebeff0 |
-| Border (hover) | `1.5px solid var(--hdx-neutral-8)` | #3f4748 |
-| Transition | — | `border 0.15s ease` |
+| Border (hover) | `border-color: var(--hdx-neutral-8)` (constant 1px width) | #3f4748 |
+| Transition | — | `border-color 0.15s ease` |
 | Body padding | `var(--hdx-space-4)` | 16px all sides |
 | Footer padding | `var(--hdx-space-2) var(--hdx-space-4)` | 8px top/bottom, 16px left/right |
 | Footer border-top | `1px solid var(--hdx-neutral-1)` | divider line |
@@ -139,7 +139,7 @@ No height animation required. The module does not need to run at SM breakpoint s
 
 // Component-level tokens
 @c-dataset-card-border-default: 1px solid var(--hdx-neutral-1);
-@c-dataset-card-border-hover:   1.5px solid var(--hdx-neutral-8);
+@c-dataset-card-border-color-hover: var(--hdx-neutral-8);
 @c-dataset-card-left-xl:        30.688rem;
 @c-dataset-card-left-md-max:    27.5rem;
 @c-dataset-card-right-md:       15rem;

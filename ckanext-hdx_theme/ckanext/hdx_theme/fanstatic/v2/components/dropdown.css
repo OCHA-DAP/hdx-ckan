@@ -22,12 +22,12 @@
   box-sizing: border-box;
   box-shadow: var(--hdx-shadow-sm);
   cursor: pointer;
-  transition: background-color 0.15s ease, border 0.15s ease;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
   color: var(--hdx-neutral-8);
 }
 .c-dropdown__trigger:hover {
   background-color: var(--hdx-neutral-01);
-  border: 1.5px solid var(--hdx-neutral-8);
+  border-color: var(--hdx-neutral-8);
   box-shadow: var(--hdx-shadow-sm);
 }
 .c-dropdown__trigger:focus-visible {
@@ -105,11 +105,11 @@
   color: var(--hdx-neutral-8);
   cursor: pointer;
   width: 100%;
-  transition: background-color 0.15s ease, border 0.15s ease;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
 }
 .c-dropdown--native .c-dropdown__select:hover {
   background-color: var(--hdx-neutral-01);
-  border: 1.5px solid var(--hdx-neutral-8);
+  border-color: var(--hdx-neutral-8);
 }
 .c-dropdown--native .c-dropdown__chevron {
   position: absolute;
@@ -308,14 +308,17 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  transition: background-color 0.15s ease, border 0.15s ease;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
 }
 .c-dropdown-calendar__month-btn:hover {
   background-color: var(--hdx-neutral-01);
-  border: 1.5px solid var(--hdx-neutral-8);
+  border-color: var(--hdx-neutral-8);
 }
 .c-dropdown-calendar__month-btn.is-active {
   background-color: var(--hdx-primary-5);
   border-color: var(--hdx-primary-5);
   color: var(--hdx-neutral-0);
+}
+.c-dropdown--inline {
+  width: auto;
 }

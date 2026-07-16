@@ -85,7 +85,7 @@ Add the intro section immediately after the closing `</section>` of `hdx-v2-hero
       <h2 class="hdx-v2-intro__heading">{{ _('A network of data-focused partners making data easy to find and use') }}</h2>
     </div>
 
-    <div class="hdx-v2-intro__cards">
+    <div class="c-activity-card-list">
 
       {% snippet 'v2/components/activity-card.html',
           size='responsive',
@@ -163,21 +163,10 @@ Add an `hdx-v2-intro` block after `hdx-v2-hero`. Card sizing is owned by the com
         @media (min-width: @hdx-bp-xl) { font-size: var(--hdx-fs-4xl); }
     }
 
-    &__cards {
-        align-self:     stretch;
-        display:        flex;
-        flex-direction: column;
-        gap:            0.75rem;
-
-        @media (min-width: @hdx-bp-md) {
-            flex-direction: row;
-            gap: 1.25rem;
-        }
-
-        .c-activity-card { flex: 1; }
-    }
 }
 ```
+
+The card row uses the component-owned `.c-activity-card-list` wrapper (in `less/v2/components/activity-card.less`): flex column with `gap: var(--hdx-space-3)`, row with `gap: var(--hdx-space-5)` at MD+, and `> .c-activity-card { flex: 1; }`.
 
 ---
 

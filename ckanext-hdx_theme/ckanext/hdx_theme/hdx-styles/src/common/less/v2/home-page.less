@@ -116,19 +116,6 @@
     &__label   { .hdx-section-label(); }
     &__heading { .hdx-section-heading(); }
 
-    &__cards {
-        align-self:     stretch;
-        display:        flex;
-        flex-direction: column;
-        gap:            var(--hdx-space-3);
-
-        @media (min-width: @hdx-bp-md) {
-            flex-direction: row;
-            gap: var(--hdx-space-5);
-        }
-
-        .c-activity-card { flex: 1; }
-    }
 }
 
 // ============================================================
@@ -217,7 +204,7 @@
             }
 
             // Clones added by JS at SM/MD must not appear in the XL static row.
-            .highlight-slide--clone { display: none; }
+            .highlight-slide.is-carousel-clone { display: none; }
         }
     }
 

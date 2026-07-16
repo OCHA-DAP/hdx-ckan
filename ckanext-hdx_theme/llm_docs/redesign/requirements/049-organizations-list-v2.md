@@ -164,7 +164,7 @@ These are **global platform stats**, not per-page totals.
         "[N] Datasets" · "[N] Members"
 ```
 
-**Hover state:** border becomes `1.5px solid #3f4748` (CSS only, no param)
+**Hover state:** border color becomes `#3f4748` (constant 1px width, CSS only, no param)
 
 **SM structure:**
 
@@ -485,7 +485,7 @@ documented in the `components.html` demo page.
 | File | Change |
 |---|---|
 | `ckanext-hdx_theme/…/templates/v2/page.html` | `content_class` applied whenever set (removed `and secondary_block_output` guard); enables no-sidebar pages to use a named content flex rule |
-| `ckanext-hdx_theme/…/templates/organization/index.html` | Replace v1 with v2; extends `v2/page.html`; sets `content_class = 'hdx-v2-org-list-content'` |
+| `ckanext-hdx_theme/…/templates/organization/index.html` | Replace v1 with v2; extends `v2/page.html`; sets `content_class = 'hdx-v2-content-columns__content'` |
 | `ckanext-hdx_theme/…/templates/v2/components/org-list-card.html` | New org card snippet |
 | `ckanext-hdx_theme/…/templates/v2/components.html` | Add org-list-card demo section |
 | `ckanext-hdx_theme/…/hdx-styles/src/…/v2/components/org-list-card.less` | New card LESS |

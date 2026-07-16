@@ -1,8 +1,8 @@
 {% extends "v2/page.html" %}
 {% set outer_row_class      = 'hdx-v2-all-locations-row' %}
-{% set columns_class        = 'hdx-v2-all-locations-columns' %}
-{% set sidebar_class        = 'hdx-v2-all-locations-sidebar' %}
-{% set content_class        = 'hdx-v2-all-locations-content' %}
+{% set columns_class        = 'hdx-v2-content-columns--gap hdx-v2-all-locations-columns' %}
+{% set sidebar_class        = 'hdx-v2-content-columns__sidebar hdx-v2-content-columns__sidebar--sticky hdx-v2-all-locations-sidebar' %}
+{% set content_class        = 'hdx-v2-content-columns__content hdx-v2-all-locations-content' %}
 {% set breadcrumb_row_class = 'hdx-v2-breadcrumb-row--white' %}
 
 {% block styles %}
@@ -161,7 +161,7 @@
                id="loc-letter-{{ letter }}"
                data-letter="{{ letter }}">
         <b class="hdx-v2-all-locations-section__heading">{{ letter }}</b>
-        <div class="hdx-v2-all-locations-grid">
+        <div class="c-selection-item-grid">
           {% for country in grouped_countries[letter] %}
             {% snippet 'v2/components/selection-item.html',
                 label=country.display_name or country.title,

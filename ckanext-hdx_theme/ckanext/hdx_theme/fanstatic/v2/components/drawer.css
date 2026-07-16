@@ -146,21 +146,6 @@ body.drawer-open {
   align-self: flex-start;
   margin-top: var(--hdx-space-3);
 }
-.c-drawer-form__alert {
-  font-family: var(--hdx-font-body);
-  font-size: var(--hdx-fs-s);
-  font-weight: var(--hdx-fw-regular);
-  line-height: var(--hdx-lh-normal);
-  color: var(--hdx-error-6);
-  border: 1px solid var(--hdx-error-2);
-  border-radius: var(--hdx-radius-sm);
-  padding: var(--hdx-space-2) var(--hdx-space-3);
-  background: var(--hdx-error-0);
-  display: none;
-}
-.c-drawer-form__alert.is-visible {
-  display: block;
-}
 .c-drawer-form__buttons {
   display: flex;
   align-items: center;

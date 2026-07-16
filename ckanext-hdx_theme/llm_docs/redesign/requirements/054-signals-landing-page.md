@@ -552,6 +552,12 @@ document.addEventListener('DOMContentLoaded', function () {
     @media (max-width: @hdx-bp-xl) {
         width: 19.938rem; margin-right: var(--hdx-space-4);
     }
+    // MD: percentage width (~1.8 cards visible) so dot navigation pages one
+    // card at a time — a fixed width left 2.5–3 cards on screen, so clicking
+    // a dot skipped a card. Same approach as the homepage highlights slides.
+    @media (min-width: @hdx-bp-md) and (max-width: @hdx-bp-xl) {
+        width: calc(56% - var(--hdx-space-4));
+    }
 }
 
 .hdx-v2-signals-carousel-footer {
@@ -708,13 +714,8 @@ cta_href='#signup'
 
 ### Resources Grid
 
-```less
-.hdx-v2-signals-resources-grid {
-    display:               grid;
-    grid-template-columns: repeat(2, 1fr);   // 2 columns at all breakpoints
-    gap:                   var(--hdx-space-4);
-}
-```
+Wrapped in the shared `c-content-card-grid` component class (2 columns at all
+breakpoints, `gap: var(--hdx-space-4)`) — no page-specific grid LESS.
 
 ### Signals Map iframe
 

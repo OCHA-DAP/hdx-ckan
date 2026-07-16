@@ -7,10 +7,10 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  transition: border 0.15s ease;
+  transition: border-color 0.15s ease;
 }
 .c-activity-card:hover {
-  border: 1.5px solid var(--hdx-neutral-8);
+  border-color: var(--hdx-neutral-8);
 }
 .c-activity-card__header {
   align-self: stretch;
@@ -154,4 +154,19 @@
   .c-activity-card--size-responsive .c-activity-card__subtitle {
     font-size: var(--hdx-fs-l);
   }
+}
+.c-activity-card-list {
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  gap: var(--hdx-space-3);
+}
+@media (min-width: 48rem) {
+  .c-activity-card-list {
+    flex-direction: row;
+    gap: var(--hdx-space-5);
+  }
+}
+.c-activity-card-list > .c-activity-card {
+  flex: 1;
 }

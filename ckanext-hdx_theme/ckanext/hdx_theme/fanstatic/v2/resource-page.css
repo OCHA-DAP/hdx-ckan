@@ -5,24 +5,9 @@
   padding: var(--hdx-space-4) 0 5rem;
 }
 @media (min-width: 80rem) {
-  .hdx-v2-resource-columns {
-    gap: var(--hdx-space-6);
-  }
-}
-.hdx-v2-resource-sidebar {
-  flex: 0 0 25%;
-  min-width: 0;
-  display: none;
-}
-@media (min-width: 80rem) {
   .hdx-v2-resource-sidebar {
-    display: block;
     padding: var(--hdx-space-10) 0;
   }
-}
-.hdx-v2-resource-content {
-  flex: 1;
-  min-width: 0;
 }
 @media (min-width: 48rem) {
   .hdx-v2-resource-content {

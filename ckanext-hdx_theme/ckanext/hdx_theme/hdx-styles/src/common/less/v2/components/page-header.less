@@ -318,8 +318,8 @@
         padding:     var(--hdx-space-1) 0;
         line-height: var(--hdx-lh-normal);
 
-        // Source: single truncated line
-        &--source {
+        // Single truncated line (e.g. source)
+        &--truncate {
             flex-wrap: nowrap;
             overflow:  hidden;
 
@@ -331,8 +331,8 @@
         }
     }
 
-    &__source-view-more {
-        display: none;  // JS reveals when source overflows
+    &__meta-view-more {
+        display: none;  // JS reveals when the value overflows
     }
     // ── Tooltip wrapper ──────────────────────────────────────
 
@@ -342,70 +342,64 @@
 
         .c-tooltip { width: 14rem; }        // Figma spec
     }
-    // ── Resource variant ─────────────────────────────────────
+    // ── Format icon + label row ──────────────────────────────
 
-    &--resource {
+    &__format {
+        display:     flex;
+        align-items: center;
+        gap:         var(--hdx-space-2);
+    }
 
-        // Title fixed at 1.5rem — no XL scale-up for resource
+    &__format-label {
+        .hdx-body-s-medium();
+        color: var(--hdx-neutral-85);
+    }
+    // ── Underlined — bottom separator at SM/MD (landing pages) ──
+
+    &--underlined {
+        border-bottom: 1px solid var(--hdx-neutral-10);
+
+        @media (min-width: @hdx-bp-xl) {
+            border-bottom: none;
+        }
+    }
+    // ── Compact title — fixed at 1.5rem, no XL scale-up ──────
+
+    &--compact-title {
         .c-page-header__title {
             font-size: var(--hdx-fs-2xl); // 1.5rem
         }
+    }
+    // ── CTA row variant (download + export) ──────────────────
 
-        // Top is always single column — resource has no right card
-        .c-page-header__top {
-            flex-direction: column;
-        }
+    &__cta--row {
+        flex-direction: row;
+        align-items:    center;
+        gap:            var(--hdx-space-3);
 
-        // ── Format icon + label row ──────────────────────────
+        // Dropdown must not stretch full-width in flex row
+        .c-dropdown { width: fit-content; }
+    }
+    // ── 3-column metadata strip (resource-style) ─────────────
+    // SM: stacked. MD: 2 per row (items 1+2, then item 3 below).
+    // XL: CSS grid aligned with sidebar (calc(25% + gap)) / 1fr / 2fr.
 
-        .c-page-header__format {
-            display:     flex;
-            align-items: center;
-            gap:         var(--hdx-space-2);
-        }
+    &__metadata--cols-3 {
+        gap: 0;
 
-        .c-page-header__format-label {
-            .hdx-body-s-medium();
-            color: var(--hdx-neutral-85);
-        }
-
-        // ── Download + export (reuse __cta, override to row) ──
-
-        .c-page-header__cta {
-            flex-direction: row;
-            align-items:    center;
-            gap:            var(--hdx-space-3);
-
-            // Dropdown must not stretch full-width in flex row
-            .c-dropdown { width: fit-content; }
-        }
-
-        // ── Resource metadata strip ──────────────────────────
-        // __meta distinguishes from dataset __metadata strip.
-        // SM: stacked. MD: 2 per row (last-modified + resource-ID, then URL below).
-        // XL: CSS grid aligned with sidebar (calc(25% + gap)) / 1fr / 2fr.
-
-        .c-page-header__meta {
-            display:   flex;
-            flex-wrap: wrap;
-            gap:       0;
-
-            @media (min-width: @hdx-bp-xl) {
-                display: grid;
-                grid-template-columns: calc(25% + var(--hdx-space-6)) 1fr 2fr;
-            }
+        @media (min-width: @hdx-bp-xl) {
+            grid-template-columns: calc(25% + var(--hdx-space-6)) 1fr 2fr;
         }
 
         .c-page-header__meta-item {
             // SM: full width, stacked
             width:          100%;
-            flex:           none;
             min-width:      0;
             gap:            var(--hdx-space-1);
             padding-bottom: var(--hdx-space-4);
             padding-right:  0;
 
-            // MD: two per row (last-modified + resource-ID), URL full-width below
+            // MD: two per row (items 1+2), item 3 full-width below
             @media (min-width: @hdx-bp-md) {
                 width:          50%;
                 padding-right:  var(--hdx-space-6);
@@ -427,7 +421,7 @@
             gap:     var(--hdx-space-2);
         }
 
-        // Meta value: truncated by default; URL variant allows wrapping
+        // Meta value: truncated by default; text-link values allow wrapping
         .c-page-header__meta-value {
             display:       block;
             gap:           0;
@@ -437,9 +431,8 @@
             white-space:   nowrap;
         }
 
-        // Resource URL text-link (no extra_classes — targeted via parent)
-        .c-page-header__meta-item:last-child .c-text-link {
-            word-break: break-all;
+        .c-page-header__meta-value .c-text-link {
+            word-break:  break-all;
             white-space: normal;
         }
     }

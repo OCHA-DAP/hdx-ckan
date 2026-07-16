@@ -204,7 +204,7 @@ Add a `multiline` parameter to `v2/components/search-input.html`. When `True`:
 
 **CSS:** Add `.c-search-input--textarea` modifier to `input-field.css` (same file as the
 base component). This modifier overrides the base styles for the textarea case:
-- Fixed `height: @c-input-textarea-l-h` (6.25rem — 4 rows + padding) so `border-box` keeps outer dimensions stable when border-width changes on hover/focus (matches the `@c-input-l-h` pattern for regular inputs)
+- Fixed `height: @c-input-textarea-l-h` (6.25rem — 4 rows + padding), a Figma size spec matching the `@c-input-l-h` pattern for regular inputs; border-width stays constant across states (color-only)
 - `align-items: flex-start` on the wrapper (so padding aligns to the top)
 - `height: 100%; resize: none; overflow-y: auto` on the `<textarea>` element
 - All other tokens (border, border-radius, padding, font, `:focus-within`) inherit from
@@ -272,10 +272,9 @@ The analytics JS asset is loaded unchanged — only inside the `{% if message_se
 ### Error display (v2)
 
 v1 uses a Bootstrap `.alert.alert-danger`. v2 renders:
-- **Top-level summary** above the form: a `<div class="hdx-v2-form-error-summary">` block with
-  `error_summary` text — a generic, reusable CSS class (no snippet needed) styled with
-  `--hdx-error-6` tint and red border. CSS lives in `layout.less` so other
-  pages can reuse it without copying markup.
+- **Top-level summary** above the form: the shared `c-form-alert` snippet
+  (`{% snippet 'v2/components/form-alert.html', message=error_summary %}`) styled with
+  `--hdx-error-6` tint and red border. Reused unchanged by drawer forms.
 - **Per-field errors** inside each component: `c-search-input` (and the `c-dropdown--native`
   extension) gain an `errors` parameter. When set, a `<span class="c-search-input__error">`
   is appended inside the wrapper, styled in `--hdx-error-6`. CSS goes in `input-field.css`.
@@ -326,7 +325,7 @@ At SM, buttons remain right-aligned side-by-side — matching Figma.
 | Analytics JS breaking | `#message_sent` and `#message_subject` IDs must exist in the DOM when `message_sent=True` | Keep hidden inputs in v2 success block |
 | Textarea not existing | No v2 textarea — must extend `c-search-input` before this page can be implemented | Extend `c-search-input` with `multiline=True` as a prerequisite |
 | Text input height | `c-search-input` size-l is 2.5rem vs Figma 2.313rem — minor visual delta | Accepted; size-l is the closest existing size |
-| Error display without Bootstrap | v1 `.alert.alert-danger` cannot be used in v2 | Top-level: `.form-error-summary` generic CSS; per-field: `c-search-input__error` inside component |
+| Error display without Bootstrap | v1 `.alert.alert-danger` cannot be used in v2 | Top-level: shared `c-form-alert` snippet; per-field: `c-search-input__error` inside component |
 | v1 regression | Template was fully rewritten to extend `v2/page.html` — no v1 fallback | Accepted; page_light.html version removed |
 
 ---
@@ -346,12 +345,11 @@ At SM, buttons remain right-aligned side-by-side — matching Figma.
    param (default 4). When `multiline=True` the snippet renders `<textarea>` instead of `<input>` and
    skips the icon/toggle/clear block. A new `.c-search-input--textarea` CSS modifier in
    `input-field.css` sets a fixed `height: @c-input-textarea-l-h` (6.25rem for 4 rows),
-   `align-items: flex-start`, and `height: 100%; resize: none; overflow-y: auto` on the inner `<textarea>`. Fixed height keeps the border growing inward via `border-box` (same principle as `@c-input-l-h`).
+   `align-items: flex-start`, and `height: 100%; resize: none; overflow-y: auto` on the inner `<textarea>`. Fixed height is a Figma size spec, same as `@c-input-l-h`; border state changes are color-only.
 
 4. **Error display:** Both per-field and top-level summary, matching v1 behavior.
-   - Top-level: `<div class="hdx-v2-form-error-summary">` above the form — generic reusable CSS
-     class in `layout.less` (no snippet needed) styled with `--hdx-error-6` tint and
-     red border.
+   - Top-level: the shared `c-form-alert` snippet above the form, styled with
+     `--hdx-error-6` tint and red border — reused unchanged by drawer forms.
    - Per-field: `c-search-input` and `c-dropdown--native` gain an `errors` param; when set,
      a `<span class="c-search-input__error">` is rendered inside the wrapper. CSS in
      `input-field.css`.

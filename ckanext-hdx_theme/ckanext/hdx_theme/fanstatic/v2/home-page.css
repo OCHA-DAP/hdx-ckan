@@ -180,21 +180,6 @@
     max-width: 66.67%;
   }
 }
-.hdx-v2-intro__cards {
-  align-self: stretch;
-  display: flex;
-  flex-direction: column;
-  gap: var(--hdx-space-3);
-}
-@media (min-width: 48rem) {
-  .hdx-v2-intro__cards {
-    flex-direction: row;
-    gap: var(--hdx-space-5);
-  }
-}
-.hdx-v2-intro__cards .c-activity-card {
-  flex: 1;
-}
 .hdx-v2-highlights {
   width: 100%;
   background-color: var(--hdx-neutral-0);
@@ -308,7 +293,7 @@
     flex-shrink: 1;
     margin-right: 0;
   }
-  .hdx-v2-highlights__carousel .highlight-slide--clone {
+  .hdx-v2-highlights__carousel .highlight-slide.is-carousel-clone {
     display: none;
   }
 }

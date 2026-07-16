@@ -131,13 +131,18 @@ Showcases link is added **only when `showcase_list` is non-empty**. Interactive 
     </h2>
   </div>
   <div class="hdx-v2-dataset-section__body">
-    {# existing resource cards via hdx_resources_list.html #}
-    {% snippet "package/hdx_resources_list.html", pkg=pkg %}
+    {# resource cards via resources_list.html #}
+    {% snippet "package/snippets/resources_list.html",
+        pkg=pkg,
+        resources=pkg.resources,
+        resource_item_snippet='package/snippets/resource_item_v2.html',
+        list_tag='div',
+        resource_list_classes='resource-list c-resource-card-list' %}
   </div>
 </section>
 ```
 
-**hdx_resources_list.html** renders `resource-card` (task 038) — do not change its internals.
+**resources_list.html** renders `resource-card` items (task 038) — do not change its internals. Its `resource_list_classes` param defaults to `'hdx-bs3 resource-list'`; the v2 dataset page passes `'resource-list c-resource-card-list'` (the `resource-list` class stays for `hdx_resource_grouping.js`; `c-resource-card-list` owns the layout in `components/resource-card.less`).
 
 ---
 
@@ -205,7 +210,7 @@ Field layout (v2 grid, not the old vertical list):
 - Downloads chart → `div#dataset-downloads-data` + `div#dataset-downloads-chart`
 - Export metadata links (JSON | CSV) at bottom
 
-**Metadata strip alignment at XL**: The 4 header meta-items use `flex: 0 0 25%` (no gap) with `padding-right: var(--hdx-space-6)` on items 1–3, so item 2 (Expected update frequency) starts at exactly 25% — aligning with the content column (same as `sidebar_class flex: 0 0 25%`).
+**Metadata strip alignment at XL**: The 4-item `__metadata` strip becomes a CSS grid (`grid-template-columns: calc(25% + var(--hdx-space-6)) repeat(3, 1fr)`), so item 2 (Expected update frequency) aligns with the content column (which sits after the 25% sidebar + gap).
 
 Field variables (from `pkg`):
 - `pkg.dataset_date` → `h.render_date_from_concat_str()`
@@ -241,7 +246,7 @@ Condition: `showcase_list` is non-empty. **Collapsible accordion**, default open
     <svg class="hdx-v2-dataset-section__chevron" .../>
   </div>
   <div class="hdx-v2-dataset-section__body" id="showcases-body">
-    <div class="hdx-v2-dataset-showcase-grid">
+    <div class="c-showcase-card-grid">
       {% for showcase in showcase_list %}
         {% snippet 'v2/components/showcase-card.html',
             title=showcase.title or showcase.name,
@@ -332,13 +337,13 @@ Do NOT change `package/snippets/activity_stream.html` internals. Only adapt surr
 
 ### Template variables to set (at top):
 ```jinja
+{% set sidebar_class    = 'hdx-v2-content-columns__sidebar hdx-v2-content-columns__sidebar--xl-only hdx-v2-dataset-sidebar' %}
+{% set content_class    = 'hdx-v2-content-columns__content' %}
 {% set outer_row_class  = 'hdx-v2-dataset-row' %}
-{% set columns_class    = 'hdx-v2-dataset-columns' %}
-{% set sidebar_class    = 'hdx-v2-dataset-sidebar' %}
-{% set content_class    = 'hdx-v2-dataset-content' %}
+{% set columns_class    = 'hdx-v2-content-columns--gap-xl' %}
 ```
 
-`columns_class` adds `hdx-v2-dataset-columns` to the `hdx-v2-content-columns` flex container in `page.html` — controls page-level padding and flex gap.
+`columns_class` adds the generic `--gap-xl` modifier to the `hdx-v2-content-columns` flex container in `page.html` (XL-only gap). Sidebar/content layout comes from the generic `__sidebar --xl-only` / `__content` classes in `layout.less`; `hdx-v2-dataset-sidebar` holds only page-specific padding.
 
 ### Notification modal (stays in primary block):
 ```jinja
@@ -453,21 +458,19 @@ Register in new `v2-dataset-styles` bundle (preloads `v2-page-styles`).
     align-items: stretch;
 }
 
-/* Anchor nav sidebar (wrapper-secondary) */
-.hdx-v2-dataset-sidebar {
-    /* XL+: narrow sidebar */
-    /* MD/SM: hidden */
+/* Anchor nav sidebar — generic layout classes (layout.less) */
+.hdx-v2-content-columns__sidebar.hdx-v2-content-columns__sidebar--xl-only {
+    /* XL+: 25% sidebar; MD/SM: hidden */
 }
 
-/* Main content area (wrapper-primary) */
-.hdx-v2-dataset-content {
+/* Main content area — generic layout class (layout.less) */
+.hdx-v2-content-columns__content {
     flex: 1;
     min-width: 0;
-    /* padding top/bottom per Figma */
 }
 ```
 
-At XL (≥80rem): `.hdx-v2-dataset-sidebar` is visible with `flex: 0 0 25%` (percentage, not fixed rem), `border-right: 1px solid neutral-2`, `padding: var(--hdx-space-10) 0`. At MD/SM: `display: none`. The search sidebar uses the same `flex: 0 0 25%` approach.
+At XL (≥80rem): the generic `__sidebar` class gives 25% width (percentage, not fixed rem); `--xl-only` hides it at MD/SM. `.hdx-v2-dataset-sidebar` adds only `padding: var(--hdx-space-12) 0` at XL. The search sidebar uses the same generic classes plus its page-specific border-right/padding.
 
 ### Anchor nav (desktop + mobile) — in `navigation.less`, NOT in `dataset.less`
 
@@ -493,8 +496,7 @@ Mobile dropdown:
 ### Layout wrapper
 
 ```
-.hdx-v2-dataset-columns (on .hdx-v2-content-columns)
-  — padding: var(--hdx-space-4) 0 5rem   // 1rem top, 5rem bottom
+.hdx-v2-content-columns--gap-xl (generic, layout.less)
   — XL+: gap: var(--hdx-space-6)          // 1.5rem flex gap between sidebar and content
 ```
 
@@ -504,7 +506,7 @@ Sections are separated by `<hr class="c-divider">` between adjacent sections —
 
 ```
 .hdx-v2-dataset-section
-  — padding: space-8 0 (MD+), space-6 0 (SM)   // no border-top
+  — padding: space-10 0 (MD+), space-6 0 (SM)   // no border-top
   __header — flex, space-between, align-center
            — cursor: default (always-open) or pointer (collapsible)
   __title  — h2, display font, semibold, neutral-95
@@ -519,26 +521,23 @@ Sections are separated by `<hr class="c-divider">` between adjacent sections —
 }
 ```
 
-First section (`#data-and-resources`) has `padding-top: 0` via `.hdx-v2-dataset-content > section:first-of-type`.
-
 ### Metadata grid
 
 ```
 .hdx-v2-dataset-metadata
-  __row — display: grid; grid-template-columns: repeat(3, 1fr); gap: space-6
-          SM: grid-template-columns: 1fr
-  __field — display: flex; flex-direction: column; gap: space-1
-  __field-label — font: semibold, s, neutral-95
-  __field-value — font: regular, m, neutral-85
-  __field-link  — uses c-text-link--primary
+  __grid — display: grid; grid-template-columns: repeat(3, 1fr); gap: space-6 (MD+)
+           SM: grid-template-columns: 1fr; gap: space-4
+  __cell / __full — display: flex; flex-direction: column; gap: space-1
+  __label — .hdx-heading-h4(), neutral-85
+  __label-row — flex row, gap: space-1
 ```
 
 ### Showcase grid
 
-`.hdx-v2-dataset-showcase-grid` (in `dataset.less` — page-level layout):
+`.c-showcase-card-grid` (component-owned, in `components/showcase-card.less`):
 ```
-  — display: grid
-  — grid-template-columns: repeat(2, 1fr); gap: space-6 (MD+)
+  — display: grid; gap: space-6
+  — grid-template-columns: repeat(2, 1fr) (MD+)
   — grid-template-columns: 1fr (SM < 48rem)
 ```
 
@@ -656,17 +655,17 @@ Standard `{% set items = items + [...] %}` fails in Jinja2 due to scoping — us
 |------|--------|
 | `templates/package/hdx_read.html` | Full restructure per block breakdown above; `columns_class`; inlined metadata fields; `<hr class="c-divider">` between sections |
 | `templates/v2/page.html` | Support `columns_class` on `hdx-v2-content-columns`; added `{% block mobile_sticky_nav %}` between `pre_primary` and main layout div |
-| `templates/v2/page-header.html` | Tooltip triggers: `<span class="c-info-icon">`; anchor hrefs fixed; `data-header-meta="source"` added |
+| `templates/v2/components/page-header.html` | Tooltip triggers via `info-icon.html` (`c-info-icon`); anchor hrefs fixed; overflow items marked `data-header-meta-overflow` |
 | `templates/v2/components/anchor-links.html` | Added `heading`, `with_mobile_dropdown`, and `mobile_only` params |
 | `templates/v2/components/resource-card.html` | Renamed `ga_resource_title` → `resource_title`, `ga_resource_id` → `resource_id` |
 | `templates/package/snippets/resource_item_v2.html` | Updated to use new param names |
-| `hdx-styles/src/common/less/v2/dataset.less` | Sidebar `flex: 0 0 25%`; `.hdx-v2-dataset-columns` wrapper; section `border-top` removed; tooltip hover trigger + right-anchor |
+| `hdx-styles/src/common/less/v2/dataset.less` | Sidebar padding (layout via generic `hdx-v2-content-columns` classes); section `border-top` removed; tooltip hover trigger + right-anchor |
 | `hdx-styles/src/common/less/v2/styles.less` | Header `.c-tooltip-anchor`: hover + `.is-open` trigger; `right: 0` positioning |
 | `hdx-styles/src/common/less/v2/components/label.less` | Added `.c-info-icon` and `.c-tooltip-anchor` |
 | `hdx-styles/src/common/less/v2/search.less` | `.hdx-v2-search-sidebar` at XL: `flex: 0 0 25%` |
 | `hdx-styles/src/common/less/v2/components/navigation.less` | Added `.c-anchor-links-wrapper`, `.c-anchor-links__heading`, `.c-anchor-links-mobile` blocks |
 | `hdx-styles/src/common/less/v2/components/resource-card.less` | Added `.resource-list` / `.resource-item` reset styles |
-| `fanstatic/v2/components/page-header.js` | Tooltip: target `.c-info-icon` + toggle `.is-open`; `.c-tooltip-anchor` wrapper; source overflow uses `[data-header-meta="source"]` |
+| `fanstatic/v2/components/page-header.js` | Tooltip: target `.c-info-icon` + toggle `.is-open`; `.c-tooltip-anchor` wrapper; overflow reveal uses `[data-header-meta-overflow]` |
 | `fanstatic/webassets.yml` | Added `anchor-links.js` to `v2-components-scripts`; `showcase-card.css` to `v2-components-styles`; new `v2-dataset-styles`/`v2-dataset-scripts` bundles |
 
 ---

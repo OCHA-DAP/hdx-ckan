@@ -1,8 +1,8 @@
 {% extends "v2/page.html" %}
 
 {% set outer_row_class = 'hdx-v2-hapi-row' %}
-{% set sidebar_class   = 'hdx-v2-hapi-sidebar' %}
-{% set content_class   = 'hdx-v2-hapi-content' %}
+{% set sidebar_class   = 'hdx-v2-content-columns__sidebar hdx-v2-content-columns__sidebar--xl-only hdx-v2-hapi-sidebar' %}
+{% set content_class   = 'hdx-v2-content-columns__content hdx-v2-hapi-content' %}
 
 {% set CONST = h.HDX_CONST('UI_CONSTANTS')['LANDING_PAGES']['HAPI_LANDING_PAGE'] %}
 
@@ -64,7 +64,7 @@
   {# Be Inspired ────────────────────────────────────────────────── #}
   <div id="be-inspired" class="hdx-v2-hapi-section">
     <h2 class="hdx-v2-hapi-section-heading">{{ CONST.BE_INSPIRED_SECTION_TITLE }}</h2>
-    <div class="hdx-v2-hapi-cards">
+    <div class="c-content-card-grid">
       {% snippet 'v2/components/content-card.html',
           title=CONST.BE_INSPIRED_CARD_TITLE_POWER_BI,
           description=CONST.BE_INSPIRED_CARD_TEXT_POWER_BI,

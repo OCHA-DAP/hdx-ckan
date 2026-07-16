@@ -58,7 +58,7 @@
     });
 
     sectionEls.forEach(function (section) {
-      var grid = section.querySelector('.hdx-v2-all-locations-grid');
+      var grid = section.querySelector('.c-selection-item-grid');
       if (grid) {
         var items = Array.from(grid.querySelectorAll('.c-selection-item'));
 

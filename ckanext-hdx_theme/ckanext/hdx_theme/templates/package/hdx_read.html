@@ -37,10 +37,10 @@
     <meta name="description" content="{{pkg.notes}} Access the {{ page_title }} dataset to support humanitarian efforts." />
 {% endblock %}
 
-{% set sidebar_class    = 'hdx-v2-dataset-sidebar' %}
-{% set content_class    = 'hdx-v2-dataset-content' %}
+{% set sidebar_class    = 'hdx-v2-content-columns__sidebar hdx-v2-content-columns__sidebar--xl-only hdx-v2-dataset-sidebar' %}
+{% set content_class    = 'hdx-v2-content-columns__content' %}
 {% set outer_row_class  = 'hdx-v2-dataset-row' %}
-{% set columns_class    = 'hdx-v2-dataset-columns' %}
+{% set columns_class    = 'hdx-v2-content-columns--gap-xl' %}
 
 {# The line below is for google analytics #}
 {% block analytics_org_name %}{{ pkg.organization.name }}{% endblock %}
@@ -103,12 +103,32 @@
       {% set contact_href = h.url_for('hdx_signin.login', came_from=h.url_for('hdx_dataset.contact_contributor', id=pkg.name or pkg.id), info_message_type='contact-contributor') %}
     {% endif %}
 
+    {% set _update_frequency = h.hdx_get_frequency_by_value(pkg.data_update_frequency) %}
+    {% set _time_period = h.render_date_from_concat_str(pkg.dataset_date) %}
+    {% set _source_text = pkg.dataset_source or '' %}
+    {% set _subnational = pkg.subnational|int == 1 %}
+    {% set _has_meta = _location_text or _update_frequency or _time_period or _source_text
+                       or pkg.is_fresh or _subnational %}
+    {% set _meta_items = [
+      {'label': _('Location'), 'value': _location_text,
+       'chip': {'text': _('Sub-national'), 'color': 'cyan'} if _subnational else None,
+       'link': {'label': _('View all'), 'href': '#metadata-location'} if _location_text else None},
+      {'label': _('Expected update frequency'), 'value': _update_frequency,
+       'chip': {'text': _('Up to date'), 'color': 'cyan'} if pkg.is_fresh else None},
+      {'label': _('Time period'), 'value': _time_period,
+       'tooltip': {'aria_label': _('More info about time period'),
+                   'text': _('The earliest start date and latest end date across all resources included in the dataset.'),
+                   'id': 'tooltip-time-period'}},
+      {'label': _('Source'), 'value': _source_text,
+       'link': {'label': _('View more'), 'href': '#metadata-source'} if _source_text else None,
+       'link_on_overflow': True},
+    ] if _has_meta else [] %}
+
     {% snippet 'v2/components/page-header.html',
         title=pkg.title or pkg.name,
         description=pkg.notes,
         org_name=pkg.organization.title,
         logo_src=logo_config.image_url if logo_config and logo_config.image_url else '',
-        org_href=h.url_for('organization.read', id=pkg.organization.name),
         contact_href=contact_href,
         download_count=pkg.approx_total_downloads,
         request_only=pkg.is_requestdata_type,
@@ -118,13 +138,7 @@
         notification_object_type=object_type,
         notification_object_id=object_id,
         notification_object_dict=pkg,
-        location_text=_location_text,
-        subnational=(pkg.subnational|int == 1),
-        update_frequency=h.hdx_get_frequency_by_value(pkg.data_update_frequency),
-        is_up_to_date=pkg.is_fresh,
-        time_period=h.render_date_from_concat_str(pkg.dataset_date),
-        time_period_tooltip=True,
-        source_text=pkg.dataset_source or '',
+        meta_items=_meta_items,
         edit_mode=edit_mode,
         pkg_id=pkg.id,
         pkg_state=pkg.state,
@@ -163,7 +177,8 @@
           pkg=pkg,
           resources=pkg.resources,
           resource_item_snippet='package/snippets/resource_item_v2.html',
-          list_tag='div' %}
+          list_tag='div',
+          resource_list_classes='resource-list c-resource-card-list' %}
     </div>
   </section>
 
@@ -445,7 +460,7 @@
         <span class="hdx-v2-dataset-section__chevron" aria-hidden="true">{% include 'v2/icons/chevron-down.svg' %}</span>
       </div>
       <div class="hdx-v2-dataset-section__body" id="showcases-body">
-        <div class="hdx-v2-dataset-showcase-grid">
+        <div class="c-showcase-card-grid">
           {% for showcase in showcase_list %}
             {% snippet 'v2/components/showcase-card.html',
                 title=showcase.title or showcase.name,

@@ -35,3 +35,24 @@
   line-height: var(--hdx-lh-normal);
   margin-left: var(--hdx-space-1);
 }
+.c-stats-card-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hdx-space-6);
+}
+@media (min-width: 48rem) {
+  .c-stats-card-list {
+    flex-direction: row;
+  }
+  .c-stats-card-list > .c-stats-card {
+    flex: 1;
+  }
+}
+@media (min-width: 80rem) {
+  .c-stats-card-list {
+    flex-direction: column;
+  }
+  .c-stats-card-list > .c-stats-card {
+    flex: none;
+  }
+}

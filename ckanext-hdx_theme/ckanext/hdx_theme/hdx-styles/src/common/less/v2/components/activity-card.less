@@ -9,7 +9,7 @@
 
 @c-activity-card-bg:              var(--hdx-neutral-01);
 @c-activity-card-border-enabled:  1px solid var(--hdx-neutral-1);
-@c-activity-card-border-hovered:  1.5px solid var(--hdx-neutral-8);
+@c-activity-card-border-color-hover: var(--hdx-neutral-8);
 @c-activity-card-shadow:          var(--hdx-shadow-sm);
 @c-activity-card-radius:          var(--hdx-radius-sm);
 @c-activity-card-icon-color:      var(--hdx-neutral-5);
@@ -62,11 +62,11 @@
     display:          flex;
     flex-direction:   column;
     align-items:      flex-start;
-    transition:       border 0.15s ease;
+    transition:       border-color 0.15s ease;
 
     // ── States ──────────────────────────────────────────────
     &:hover {
-        border: @c-activity-card-border-hovered;
+        border-color: @c-activity-card-border-color-hover;
     }
 
     // ── Elements ────────────────────────────────────────────
@@ -179,4 +179,22 @@
             .c-activity-card__subtitle { font-size: @c-activity-card-lg-subtitle-fs; }
         }
     }
+}
+
+// ────────────────────────────────────────────────────────────
+// c-activity-card-list — equal-width card row (column at SM)
+// ────────────────────────────────────────────────────────────
+
+.c-activity-card-list {
+    align-self:     stretch;
+    display:        flex;
+    flex-direction: column;
+    gap:            var(--hdx-space-3);
+
+    @media (min-width: @hdx-bp-md) {
+        flex-direction: row;
+        gap:            var(--hdx-space-5);
+    }
+
+    > .c-activity-card { flex: 1; }
 }

@@ -65,7 +65,7 @@ CSS custom property equivalents (`--hdx-*`) are defined in `v2/foundation.css` (
 | `typography.less` | **Variable declarations only** — font families, size scale, weights, line heights. Imported by `foundation.less` for CSS custom-property output. Do not import this directly from components. |
 | `mixins.less` | **Single compile-time entry point** — imports `breakpoints.less` + `typography.less`, then defines all mixins: layout (`.v2-sidebar-flex()`, `.v2-content-flex()`, `.v2-sidebar-sticky()`), typography cores, named type-style mixins, and base-style mixins. Import with `@import "mixins.less"` (or `"../mixins.less"` from `components/`). |
 | `breakpoints.less` | Breakpoint variables (`@hdx-bp-md`, `@hdx-bp-xl`, `@hdx-bp-xxl`); pulled in automatically by `mixins.less` |
-| `layout.less` | Container, breadcrumb row (`hdx-v2-breadcrumb-row` + `--white` modifier), form error summary (`hdx-v2-form-error-summary`), content-columns base flex; compiled to `v2-page-styles` |
+| `layout.less` | Container, breadcrumb row (`hdx-v2-breadcrumb-row` + `--white` modifier), generic sidebar/content column classes on `.hdx-v2-content-columns` (`--gap`, `--gap-xl`, `--stack`, `__sidebar` [+ `--xl-only`, `--sticky`, `--right`], `__content`); compiled to `v2-page-styles` |
 | `search-page.less` | Search page layout + `.hdx-v2-dataset-list`; imports `mixins.less` |
 | `dataset-page.less` | Dataset page sections; imports `mixins.less` |
 | `resource-page.less` | Resource page sections; imports `mixins.less` |

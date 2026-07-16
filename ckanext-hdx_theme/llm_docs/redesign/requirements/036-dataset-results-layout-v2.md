@@ -32,7 +32,7 @@ search/search.html  (extends v2/page.html)
             │    ├─ div.hdx-v2-search-filter-overlay  (fixed full-screen — MD/SM)
             │    └─ div#search-page-results
             │         └─ div.hdx-v2-dataset-list
-            │              └─ div.hdx-v2-dataset-list__cards
+            │              └─ div.c-dataset-card-list
             └─ div.hdx-v2-pagination-row
 ```
 
@@ -183,7 +183,7 @@ v2/page.html
       hdx-v2-search-bar-row
       hdx-v2-search-filter-overlay (fixed-position, stays here)
       hdx-v2-dataset-list
-        hdx-v2-dataset-list__cards
+        c-dataset-card-list
       hdx-v2-pagination-row
 ```
 

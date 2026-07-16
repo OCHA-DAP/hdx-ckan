@@ -5,9 +5,9 @@
 {% set analytics = h.hdx_compute_analytics(pkg_dict) %}
 
 {% set outer_row_class  = 'hdx-v2-resource-row' %}
-{% set columns_class    = 'hdx-v2-resource-columns' %}
-{% set sidebar_class    = 'hdx-v2-resource-sidebar' %}
-{% set content_class    = 'hdx-v2-resource-content' %}
+{% set columns_class    = 'hdx-v2-content-columns--gap-xl hdx-v2-resource-columns' %}
+{% set sidebar_class    = 'hdx-v2-content-columns__sidebar hdx-v2-content-columns__sidebar--xl-only hdx-v2-resource-sidebar' %}
+{% set content_class    = 'hdx-v2-content-columns__content hdx-v2-resource-content' %}
 
 {# Find the Data Explorer view (first non-HXL-preview view) #}
 {% set _de_ns = namespace(view=None) %}
@@ -66,8 +66,14 @@
     <div class="hdx-v2-container">
       {% set metadata_url = h.url_for('hdx_dataset.resource_metadata', id=pkg.id, resource_id=res.id) %}
       {% set can_dl = h.check_access('hdx_resource_download', res) %}
+      {% set _meta_items = [
+        {'label': _('Last modified'), 'value': h.render_datetime(res.last_modified or res.created) or ''},
+        {'label': _('Resource ID'), 'value': res.id, 'copy_value': res.id},
+        {'label': _('Resource URL'), 'value': res.url or '', 'copy_value': res.url or '',
+         'value_href': res.hdx_rel_url if (res.url and h.is_url(res.url) and can_dl) else ''},
+      ] %}
       {% snippet 'v2/components/page-header.html',
-          resource_id=res.id,
+          compact_title=True,
           file_format=h.hdx_format_to_icon_category(res.format),
           file_format_text=res.format or '',
           title=h.resource_display_name(res),
@@ -78,9 +84,7 @@
           ga_resource_id=res.id,
           export_json_url=metadata_url ~ '?format=json',
           export_csv_url=metadata_url ~ '?format=csv',
-          last_modified=h.render_datetime(res.last_modified or res.created) or '',
-          resource_url=res.url or '',
-          resource_url_href=res.hdx_rel_url if (res.url and h.is_url(res.url) and can_dl) else '',
+          meta_items=_meta_items,
           resource_type=res.resource_type or '',
           download_size=h.filesize_format(res.Size) if res.Size else '' %}
     </div>

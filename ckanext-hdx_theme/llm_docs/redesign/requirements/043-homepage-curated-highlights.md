@@ -186,7 +186,7 @@ Single carousel for all breakpoints. No separate static-grid div. CSS handles th
 {% endif %}
 ```
 
-The footer (dots + arrows) is hidden at XL via CSS. At XL the carousel becomes a plain `overflow:visible` flex row with `flex:1` on each slide and the two JS-cloned slides hidden via `.highlight-slide--clone { display:none }`.
+The footer (dots + arrows) is hidden at XL via CSS. At XL the carousel becomes a plain `overflow:visible` flex row with `flex:1` on each slide and the two JS-cloned slides hidden via `.highlight-slide.is-carousel-clone { display:none }`.
 
 ### LESS
 
@@ -206,7 +206,7 @@ Section styles are inlined directly in `hdx-styles/src/common/less/v2/styles.les
 
 - Same carousel DOM — JS skips init (`matchMedia` check). CSS makes it a static flex row.
 - `overflow: visible` on carousel, `flex: 1` + `min-width: 0` on each `.highlight-slide`
-- JS-added clones hidden via `.highlight-slide--clone { display: none }`
+- JS-added clones hidden via `.highlight-slide.is-carousel-clone { display: none }`
 - Section padding: `6rem` vertical
 - Header gap: `var(--hdx-space-10)` below header before cards
 - Heading: Merriweather bold, `var(--hdx-fs-4xl)` / line-height 130%

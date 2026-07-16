@@ -92,17 +92,12 @@ Offending value: `1px solid #ebeff0` — this corresponds to `--hdx-neutral-1`
 
 ### 5. Non-Standard Border Widths — Document or Standardize
 
-**Problem:** Several components use sub-pixel or non-standard border widths that
-are undocumented and inconsistent:
-- `1.5px` — in `dropdown.less` (hover/active states) and `navbar.less`
-- `0.75px` — in `input-field.less`
-
-**Requirements:**
-- If these are intentional design choices (e.g. sharper rendering on HiDPI), add a
-  short inline comment explaining the reason
-- If they are not intentional, replace with `1px`
-- If they should become system tokens, add them to a borders token file
-  (e.g. `@hdx-border-width-thick: 1.5px`) and export as `--hdx-border-width-thick`
+**Resolved:** border-width now stays constant across states everywhere (see
+[007](007-stable-border-width-across-states.md)); `dropdown.less` state changes
+are `border-color`-only, not width changes. Remaining sub-pixel/non-standard
+widths are static (not state-dependent) and documented in place:
+- `1.5px` — a static ring in `navbar.less` (unrelated to hover/focus states)
+- `0.75px` — a static hairline in `input-field.less`
 
 ---
 

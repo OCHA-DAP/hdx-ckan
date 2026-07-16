@@ -1,8 +1,8 @@
 {% extends "v2/page.html" %}
 
 {% set outer_row_class = 'hdx-v2-signals-row' %}
-{% set sidebar_class   = 'hdx-v2-signals-sidebar' %}
-{% set content_class   = 'hdx-v2-signals-content' %}
+{% set sidebar_class   = 'hdx-v2-content-columns__sidebar hdx-v2-content-columns__sidebar--xl-only hdx-v2-signals-sidebar' %}
+{% set content_class   = 'hdx-v2-content-columns__content hdx-v2-signals-content' %}
 
 {% block scripts %}
   {{ super() }}
@@ -48,7 +48,8 @@
           logo_src=h.url_for_static('images/landing_pages/logo_hdx_signals.png'),
           cta_label=_('Sign up'),
           cta_icon_src='v2/icons/bell.svg',
-          cta_href='#signup' %}
+          cta_href='#signup',
+          extra_classes='c-page-header--underlined' %}
       <div class="hdx-v2-signals-cards">
         <div class="hdx-v2-signals-cards__inner">
           {% for card in signal_cards %}
@@ -492,7 +493,7 @@
   <div id="resources" class="hdx-v2-signals-section">
     <h2 class="hdx-v2-signals-section-heading">{{ CONST.RESOURCES_SECTION_TITLE }}</h2>
     <p class="hdx-v2-signals-section-description">{{ CONST.RESOURCES_SECTION_DESCRIPTION }}</p>
-    <div class="hdx-v2-signals-resources-grid">
+    <div class="c-content-card-grid">
       {% snippet 'v2/components/content-card.html',
           title=CONST.RESOURCES_CARD_TITLE_MAP,
           description=CONST.RESOURCES_CARD_TEXT_MAP,

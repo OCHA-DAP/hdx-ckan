@@ -11,25 +11,6 @@
 // Figma: llm_docs/redesign/figma_exports/dataset-list.html
 // ============================================================
 
-.hdx-v2-dataset-list {
-    &__cards {
-        display: flex;
-        flex-direction: column;
-        gap: var(--hdx-space-4);
-
-        // ============================================================
-        // Search highlight — text matched by the highlight.js module.
-        // The legacy rule lives in deprecated.css (page-styles bundle),
-        // which is not loaded on v2 pages.
-        // ============================================================
-
-        .highlight {
-            background-color: var(--hdx-warning-1);
-        }
-    }
-}
-
-// ────────────────────────────────────────────────────────────
 // hdx-v2-list-header — dataset list header (title + controls)
 // ────────────────────────────────────────────────────────────
 
@@ -77,7 +58,6 @@
             display: none;
         }
 
-        .c-dropdown { width: auto; }  // don't stretch to 100%
     }
 }
 // ────────────────────────────────────────────────────────────
@@ -88,10 +68,6 @@
 .hdx-v2-search-bar-row {
     width:         100%;
     margin-bottom: var(--hdx-space-4);  // 16 px gap before the dataset layout
-
-    .c-search-input {
-        width: 100%;
-    }
 }
 // ────────────────────────────────────────────────────────────
 // ────────────────────────────────────────────────────────────
@@ -99,12 +75,7 @@
 // ────────────────────────────────────────────────────────────
 
 .hdx-v2-search-sidebar {
-    .v2-sidebar-flex();
-    display: none;
-
     @media (min-width: @hdx-bp-xl) {
-        display:      block;
-        .v2-sidebar-sticky();
         border-right: 1px solid var(--hdx-neutral-1);
         padding:      var(--hdx-space-5)   // 20px top
                       var(--hdx-space-10)  // 40px right
@@ -117,7 +88,6 @@
 // ────────────────────────────────────────────────────────────
 
 .hdx-v2-search-content {
-    .v2-content-flex();
     padding: var(--hdx-space-10)  // 40px top
              0                    // 0 right
              var(--hdx-space-10)  // 40px bottom

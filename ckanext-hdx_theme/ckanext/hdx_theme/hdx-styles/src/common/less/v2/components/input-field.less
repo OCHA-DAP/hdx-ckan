@@ -14,9 +14,9 @@
 @c-input-bg-hover:     var(--hdx-neutral-01);      // #fafbfb
 @c-input-bg-active:    var(--hdx-neutral-01);      // #fafbfb  (focus / filled)
 
-@c-input-border:        1px solid var(--hdx-neutral-2);              // #d8e0e1
-@c-input-border-hover:  1.5px solid var(--hdx-neutral-8);            // 1.5px: heavier border for stronger hover feedback
-@c-input-border-active: 2px solid var(--hdx-neutral-8);              // 2px: distinct focus ring thickness
+@c-input-border:              1px solid var(--hdx-neutral-2);        // #d8e0e1
+@c-input-border-color-hover:  var(--hdx-neutral-8);                  // darker border for hover feedback
+@c-input-border-color-active: var(--hdx-neutral-8);                  // focus/active border color (outline adds the ring)
 
 @c-input-color-placeholder: var(--hdx-neutral-8);   // #3f4748
 @c-input-color-value:       var(--hdx-neutral-95);  // #101212
@@ -24,17 +24,17 @@
 @c-input-icon-dim:     1rem;    // 16 px
 
 // L sizing
-@c-input-l-h:    2.5rem;         // 40 px — fixed height so border grows inward
+@c-input-l-h:    2.5rem;         // 40 px — Figma size spec
 @c-input-l-fs:   var(--hdx-fs-m);      // 16 px
 @c-input-l-pad:  var(--hdx-space-2) var(--hdx-space-3) var(--hdx-space-2) var(--hdx-space-4); // 8 12 8 16
 
 // M sizing
-@c-input-m-h:    2.125rem;       // 34 px — fixed height so border grows inward
+@c-input-m-h:    2.125rem;       // 34 px — Figma size spec
 @c-input-m-fs:   var(--hdx-fs-s);      // 14 px
 @c-input-m-pad:  var(--hdx-space-2) var(--hdx-space-3); // 8 12
 
 // Textarea (multiline) sizing — 4 rows × 1.3 line-height × 1rem + 2 × 8px padding ≈ 6.2rem
-@c-input-textarea-l-h: 6.25rem; // fixed height so border grows inward (border-box)
+@c-input-textarea-l-h: 6.25rem; // Figma size spec (border-box)
 
 // Autocomplete panel
 @c-ac-panel-border:  0.75px solid var(--hdx-neutral-1);  // 0.75px: hairline — visually softer than the input border
@@ -54,7 +54,7 @@
     box-sizing:       border-box;
     overflow:         hidden;
     font-family:      var(--hdx-font-body);
-    transition:       background-color 0.15s ease, border 0.15s ease;
+    transition:       background-color 0.15s ease, border-color 0.15s ease;
 
     input,
     &__value {
@@ -155,20 +155,27 @@
 
     &:hover {
         background-color: @c-input-bg-hover;
-        border:           @c-input-border-hover;
+        border-color:     @c-input-border-color-hover;
     }
 
     &:focus-within,
     &--active,
     &--filled {
         background-color: @c-input-bg-active;
-        border:           @c-input-border-active;
+        border-color:     @c-input-border-color-active;
         color:            @c-input-color-value;
 
         input,
         .c-search-input__value {
             color: @c-input-color-value;
         }
+    }
+
+    // Focus ring — layout-safe outline reads as a 2px border together
+    // with the constant 1px border (replaces the old 2px border-width).
+    &:focus-within {
+        outline:        1px solid @c-input-border-color-active;
+        outline-offset: 0;
     }
 
     // ── Size modifiers ───────────────────────────────────────
@@ -194,8 +201,7 @@
     }
 
     // ── Textarea modifier ────────────────────────────────────
-    // Fixed height so border-box keeps the outer dimensions stable when
-    // border thickness changes on hover/focus (same pattern as @c-input-l-h).
+    // Fixed height per Figma spec (same pattern as @c-input-l-h).
     &--textarea {
         height:      @c-input-textarea-l-h;
         align-items: flex-start;
@@ -232,9 +238,16 @@
 
         &:hover,
         &:focus-within { border-color: var(--hdx-error-5); }
+
+        &:focus-within { outline-color: var(--hdx-error-5); }
     }
 
     &--error ~ &__error { display: block; }
+
+    // ── Block modifier — stretch to the container width ──────
+    &--block {
+        width: 100%;
+    }
 
     // ── Label (rendered above the input by the snippet) ──────
     &__label {

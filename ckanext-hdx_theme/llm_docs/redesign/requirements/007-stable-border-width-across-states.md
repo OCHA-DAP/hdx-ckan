@@ -1,38 +1,52 @@
-# Task 007: Stable component dimensions when border width changes across states
+# Task 007: Constant border-width across component states
 
-Ensure that changing `border-width` between component states (default / hover / active / focus)
-does not shift the component's outer dimensions. The border must grow inward only.
+Every v2 component keeps a constant `border-width` (normally 1px) across all states
+(default / hover / active / focus). State changes are conveyed by `border-color` only.
 
 ## What to update
 
-For each component below, verify or add an explicit `height` / `min-height` so that
-`box-sizing: border-box` absorbs the border change inward. Do not alter border-width values.
+For each component with border states, state rules use `border-color:` — never the
+`border:` shorthand, which silently re-declares the width. Reference pattern
+(`less/v2/components/signal-card.less`):
 
-- `less/v2/components/input-field.less`
-  - `.c-search-input`: 1px → 1.5px (hover) → 2px (focus)
-  - `.c-ac-search-input`: same progression
+```less
+.c-example {
+    border:     1px solid var(--hdx-neutral-1);
+    transition: border-color 0.15s ease;
 
-- `less/v2/components/buttons.less`
-  - `.c-button--tertiary`: 1px → 1.5px (hover) → 1px (active)
-  - `.c-button--text`: 1px → varies across states
+    &:hover { border-color: var(--hdx-neutral-8); }
+}
+```
 
-Scan all other v2 component files for additional `border-width` state changes and apply
-the same fix.
+Where a state needs extra emphasis beyond a color change (e.g. `.c-search-input` focus),
+use a layout-safe `outline`:
+
+```less
+&:focus-within {
+    outline:        1px solid var(--hdx-neutral-8);  // reads as a 2px ring with the 1px border
+    outline-offset: 0;
+}
+```
+
+Error variants recolor the ring (`outline-color: var(--hdx-error-5)`).
 
 ## Rules
 
-- `box-sizing: border-box` must be set on every affected element (already in place; verify it stays).
-- Each affected element must have an explicit `height` or `min-height` that matches the
-  intended Figma height for that component. Without a fixed dimension, the browser uses
-  content height and border changes push layout outward.
+- Border-width must never change between states; transitions target `border-color`,
+  not `border`.
+- Fixed component heights (`@c-input-*-h`, `@c-sel-*-h`, `@c-dropdown-m-h`,
+  `@c-button-*-dim`, …) are Figma size specs — keep them, and describe them as such
+  in comments.
 - Do **not** use `box-shadow` to simulate or replace borders.
-- Do **not** change the Figma-specified border-width values.
+- Constant-width borders of other thicknesses are fine (e.g. `.c-step-pager`'s static
+  2px, `.c-nav-item`'s 4px underline with a `transparent` default — the correct way to
+  reserve space for an active-state border).
 - Components that use `outline` for focus states (e.g. `.c-checkbox`, `.c-text-link`) are
   already layout-safe — no changes needed.
 
 ## Why
 
-Border-width changes on auto-height elements shift surrounding layout, causing visible reflow
-on hover and focus. Anchoring the element to a fixed height makes `box-sizing: border-box`
-effective and keeps the outer box pixel-stable across all states.
+Border-width changes move the border box (uncompensated) or squeeze the content box
+(compensated), causing visible reflow or content shift on hover and focus. A constant
+width with color-only state changes keeps every box pixel-stable in all states.
 

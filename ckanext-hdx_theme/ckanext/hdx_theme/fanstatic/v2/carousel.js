@@ -49,10 +49,22 @@
                     setup();                       // SM/MD first time
                 } else {
                     idx = 1;                       // SM/MD return: show slide 1
+                    measure();
                     inner.style.left = -slot + 'px';
                     setDot(1);
                 }
             });
+        }
+
+        // ── Measure slot width (slide + margins) from the first track child ───
+        function measure() {
+            var inner = getInner();
+            if (!inner || !inner.firstElementChild) return;
+            var firstChild = inner.firstElementChild;
+            var cs = getComputedStyle(firstChild);
+            slot = firstChild.offsetWidth
+                 + parseInt(cs.marginLeft)
+                 + parseInt(cs.marginRight);
         }
 
         // ── Initialise ────────────────────────────────────────────────────────
@@ -75,12 +87,7 @@
             inner.insertBefore(cloneLast, inner.firstChild);
             inner.appendChild(cloneFirst);
 
-            // Measure slot width (slide + right margin)
-            var firstChild = inner.firstElementChild;
-            var cs = getComputedStyle(firstChild);
-            slot = firstChild.offsetWidth
-                 + parseInt(cs.marginLeft)
-                 + parseInt(cs.marginRight);
+            measure();
 
             inner.style.transition = 'left 350ms';
             inner.style.left = -slot + 'px';
@@ -118,10 +125,27 @@
             }
         }
 
+        // ── Re-measure + re-snap on resize (debounced) ────────────────────────
+        var resizeTimer = null;
+        window.addEventListener('resize', function () {
+            if (!ready) return;
+            if (mql && mql.matches) return;        // XL: static flex, nothing to snap
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(function () {
+                var inner = getInner();
+                if (!inner) return;
+                measure();
+                inner.style.transition = 'none';
+                inner.style.left = (-idx * slot) + 'px';
+                inner.offsetWidth; // force reflow before re-enabling transition
+                inner.style.transition = 'left 350ms';
+            }, 150);
+        });
+
         // ── Navigate to track index `target` ──────────────────────────────────
         function goTo(target) {
-            if (busy) return;
-            busy = true;
+            if (busy || target === idx) return;    // same-slide click: no transition would
+            busy = true;                           // fire, so bail out before locking
             idx  = target;
             setDot(target <= 0 ? n : target > n ? 1 : target);
 
@@ -130,7 +154,10 @@
 
             inner.style.left = (-target * slot) + 'px';
 
-            inner.addEventListener('transitionend', function onEnd() {
+            var settled = false;
+            function settle() {
+                if (settled) return;
+                settled = true;
                 inner.removeEventListener('transitionend', onEnd);
                 // Silently teleport from clone to real counterpart
                 if (target === 0 || target === n + 1) {
@@ -146,7 +173,14 @@
                     inner.style.transition = 'left 350ms';
                 }
                 busy = false;
-            });
+            }
+            function onEnd(e) {
+                // Ignore transitions bubbling from slide content (e.g. card hover)
+                if (e.target !== inner || e.propertyName !== 'left') return;
+                settle();
+            }
+            inner.addEventListener('transitionend', onEnd);
+            window.setTimeout(settle, 400);        // fallback > 350ms transition
         }
 
         // ── Activate dot n (1-based) ───────────────────────────────────────────

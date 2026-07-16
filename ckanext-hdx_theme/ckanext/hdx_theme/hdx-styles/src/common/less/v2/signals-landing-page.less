@@ -12,14 +12,6 @@
     background-color: var(--hdx-neutral-01);
     padding-bottom:   var(--hdx-space-10);
 
-    // Separator between page-header and carousel (Figma: border-bottom on header at SM/MD)
-    .c-page-header {
-        border-bottom: 1px solid var(--hdx-neutral-10);
-
-        @media (min-width: @hdx-bp-xl) {
-            border-bottom: none;
-        }
-    }
 }
 
 // ── Body row (sidebar + content area — white) ─────────────────
@@ -29,18 +21,13 @@
 
 // ── Sidebar (visible at XL only) ─────────────────────────────
 .hdx-v2-signals-sidebar {
-    display: none;
-
     @media (min-width: @hdx-bp-xl) {
-        display: block;
-        .v2-sidebar-flex();
         padding: var(--hdx-space-10) 0;
     }
 }
 
 // ── Content column ────────────────────────────────────────────
 .hdx-v2-signals-content {
-    .v2-content-flex();
     padding: var(--hdx-space-10) 0 var(--hdx-space-12);
 }
 
@@ -97,6 +84,12 @@
         width:        19.938rem;
         margin-right: var(--hdx-space-4);
     }
+
+    // MD: percentage width (~1.8 cards visible) so one-card-per-dot paging
+    // matches the visible track — same approach as the homepage highlights.
+    @media (min-width: @hdx-bp-md) and (max-width: @hdx-bp-xl) {
+        width: calc(56% - var(--hdx-space-4));
+    }
 }
 
 // ── Carousel footer (dots, hidden at XL) ─────────────────────
@@ -143,13 +136,6 @@
     @media (min-width: @hdx-bp-md) {
         grid-template-columns: repeat(3, 1fr);
     }
-}
-
-// ── Resources grid (2 cols at all breakpoints) ────────────────
-.hdx-v2-signals-resources-grid {
-    display:               grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap:                   var(--hdx-space-4);
 }
 
 // ── Resources contact note ────────────────────────────────────

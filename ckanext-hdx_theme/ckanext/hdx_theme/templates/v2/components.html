@@ -923,6 +923,64 @@
   <hr class="demo-divider">
 
   {# ══════════════════════════════════════════════════════
+     COPY BUTTON
+  ══════════════════════════════════════════════════════ #}
+  <section class="demo-section" id="copy-button">
+    <h1 class="demo-section__title">Copy Button</h1>
+    <p class="demo-section__subtitle">style × size × icon position — functional: click copies the value to the clipboard</p>
+
+    <h2 class="demo-subsection__heading">Size M</h2>
+    <div class="demo-row">
+      <span class="demo-row__label">Secondary</span>
+      <div class="demo-row__items">
+        {% snippet 'v2/components/copy-button.html',
+            value='Lorem ipsum sample text',
+            style='secondary', size='m', icon_position='left' %}
+        {% snippet 'v2/components/copy-button.html',
+            value='Lorem ipsum sample text',
+            style='secondary', size='m', icon_position='right' %}
+      </div>
+    </div>
+    <div class="demo-row">
+      <span class="demo-row__label">Tertiary</span>
+      <div class="demo-row__items">
+        {% snippet 'v2/components/copy-button.html',
+            value='Lorem ipsum sample text',
+            style='tertiary', size='m', icon_position='left' %}
+        {% snippet 'v2/components/copy-button.html',
+            value='Lorem ipsum sample text',
+            style='tertiary', size='m', icon_position='right' %}
+      </div>
+    </div>
+
+    <h2 class="demo-subsection__heading">Size S</h2>
+    <div class="demo-row">
+      <span class="demo-row__label">Secondary</span>
+      <div class="demo-row__items">
+        {% snippet 'v2/components/copy-button.html',
+            value='Lorem ipsum sample text',
+            style='secondary', size='s', icon_position='left' %}
+        {% snippet 'v2/components/copy-button.html',
+            value='Lorem ipsum sample text',
+            style='secondary', size='s', icon_position='right' %}
+      </div>
+    </div>
+    <div class="demo-row">
+      <span class="demo-row__label">Tertiary</span>
+      <div class="demo-row__items">
+        {% snippet 'v2/components/copy-button.html',
+            value='Lorem ipsum sample text',
+            style='tertiary', size='s', icon_position='left' %}
+        {% snippet 'v2/components/copy-button.html',
+            value='Lorem ipsum sample text',
+            style='tertiary', size='s', icon_position='right' %}
+      </div>
+    </div>
+  </section>
+
+  <hr class="demo-divider">
+
+  {# ══════════════════════════════════════════════════════
      4. AVATARS & BADGE
   ══════════════════════════════════════════════════════ #}
   <section class="demo-section">
@@ -1119,8 +1177,8 @@
           search_source='demo',
           results=[
             {'label': 'Ukraine', 'url': '#', 'count': 'Location', 'type': 'location'},
-            {'label': 'UNHCR (Ukraine)', 'url': '#', 'count': 'Organisation', 'type': 'organisation'},
-            {'label': 'Ukraine — Frontline Monitoring', 'url': '#', 'count': 'Dataset', 'type': 'dataset'},
+            {'label': 'Example Organisation (Ukraine)', 'url': '#', 'count': 'Organisation', 'type': 'organisation'},
+            {'label': 'Ukraine — Example Monitoring Dataset', 'url': '#', 'count': 'Dataset', 'type': 'dataset'},
           ],
           confirm_label='View all results' %}
     </div>
@@ -1184,8 +1242,8 @@
       {# Light / map card #}
       {% snippet 'v2/components/tooltip.html',
           variant='light',
-          title='Sudan: Humanitarian Needs Overview 2024',
-          subtitle='OCHA · Updated Jan 2024' %}
+          title='Sudan — Example Needs Overview 2024',
+          subtitle='Organisation Name · Updated Jan 2024' %}
 
       {# Light / map card with icon button #}
       {% snippet 'v2/components/tooltip.html',
@@ -1290,12 +1348,61 @@
           items=[
             {'label': 'Home',        'href': '/'},
             {'label': 'Datasets',    'href': '/dataset'},
-            {'label': 'Sudan crisis data 2024', 'href': ''},
+            {'label': 'Sudan — Example Crisis Dataset 2024', 'href': ''},
           ] %}
     </div>
 
     <h2 class="demo-subsection__heading">Divider</h2>
     <hr class="c-divider">
+  </section>
+
+  <hr class="demo-divider">
+
+  {# ══════════════════════════════════════════════════════
+     TABS
+  ══════════════════════════════════════════════════════ #}
+  <section class="demo-section" id="tabs">
+    <h1 class="demo-section__title">Tabs</h1>
+    <p class="demo-section__subtitle">horizontal tab-navigation row — items with show=False are filtered out by the component (the 'Hidden' tab below is not rendered)</p>
+
+    <div class="demo-row">
+      {% snippet 'v2/components/tabs.html',
+          aria_label='Demo sections',
+          items=[
+            {'label': 'Datasets', 'href': '#', 'active': True},
+            {'label': 'Activity', 'href': '#'},
+            {'label': 'Members',  'href': '#'},
+            {'label': 'Hidden',   'href': '#', 'show': False},
+          ] %}
+    </div>
+  </section>
+
+  <hr class="demo-divider">
+
+  {# ══════════════════════════════════════════════════════
+     STEP PAGER
+  ══════════════════════════════════════════════════════ #}
+  <section class="demo-section" id="step-pager">
+    <h1 class="demo-section__title">Step Pager</h1>
+    <p class="demo-section__subtitle">horizontal step progress indicator — completed / active / upcoming states</p>
+
+    <h2 class="demo-subsection__heading">Step 1 of 3</h2>
+    <div class="demo-row">
+      {% snippet 'v2/components/step-pager.html',
+          steps=['Account', 'Details', 'Confirmation'], current_step=1 %}
+    </div>
+
+    <h2 class="demo-subsection__heading">Step 2 of 3</h2>
+    <div class="demo-row">
+      {% snippet 'v2/components/step-pager.html',
+          steps=['Account', 'Details', 'Confirmation'], current_step=2 %}
+    </div>
+
+    <h2 class="demo-subsection__heading">Step 3 of 3</h2>
+    <div class="demo-row">
+      {% snippet 'v2/components/step-pager.html',
+          steps=['Account', 'Details', 'Confirmation'], current_step=3 %}
+    </div>
   </section>
 
   <hr class="demo-divider">
@@ -1320,7 +1427,7 @@
       {% snippet 'v2/components/selection-item.html',
           label='HDX', size='l', color='cyan', icon=True, count='(5)' %}
       {% snippet 'v2/components/selection-item.html',
-          label='OCHA', size='m', color='light', icon=True %}
+          label='Organisation', size='m', color='light', icon=True %}
       {% snippet 'v2/components/selection-item.html',
           label='CSV', size='s', color='light' %}
     </div>
@@ -1578,6 +1685,75 @@
   <hr class="demo-divider">
 
   {# ══════════════════════════════════════════════════════
+     STATS CARD
+  ══════════════════════════════════════════════════════ #}
+  <section class="demo-section" id="stats-card">
+    <h1 class="demo-section__title">Stats Card</h1>
+    <p class="demo-section__subtitle">label · optional sublabel · value with optional unit — used on the org Stats tab</p>
+
+    <h2 class="demo-subsection__heading">Single card</h2>
+    <div class="demo-row demo-row--flex-start">
+      {% snippet 'v2/components/stats-card.html',
+          label='Downloads',
+          sublabel='Last 30 days',
+          value='2.4',
+          unit='K' %}
+    </div>
+
+    <h2 class="demo-subsection__heading">Row of 3 (c-stats-card-list)</h2>
+    <div class="c-stats-card-list">
+      {% snippet 'v2/components/stats-card.html',
+          label='Downloads',
+          sublabel='Last 30 days',
+          value='2.4',
+          unit='K' %}
+      {% snippet 'v2/components/stats-card.html',
+          label='Datasets',
+          value='128' %}
+      {% snippet 'v2/components/stats-card.html',
+          label='Members',
+          value='12' %}
+    </div>
+  </section>
+
+  <hr class="demo-divider">
+
+  {# ══════════════════════════════════════════════════════
+     SIGNUP TIER
+  ══════════════════════════════════════════════════════ #}
+  <section class="demo-section" id="signup-tier">
+    <h1 class="demo-section__title">Signup Tier</h1>
+    <p class="demo-section__subtitle">value-proposition tier card — default with CTA button · primary (featured) variant with footer_text instead of a button</p>
+
+    <div class="demo-row demo-row--flex-start">
+      {% snippet 'v2/components/signup-tier.html',
+          title='Individual account',
+          description='Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+          features=[
+            {'text': 'Lorem ipsum dolor sit amet'},
+            {'text': 'Consectetur adipiscing elit'},
+            {'text': 'Sed do eiusmod tempor incididunt'}
+          ],
+          button_label='Sign up',
+          button_style='primary',
+          button_tag='a',
+          button_href='#' %}
+      {% snippet 'v2/components/signup-tier.html',
+          variant='primary',
+          title='Organisation account',
+          description='Ut enim ad minim veniam, quis nostrud exercitation ullamco.',
+          features=[
+            {'text': 'Lorem ipsum dolor sit amet', 'number': 1},
+            {'text': 'Consectetur adipiscing elit', 'number': 2},
+            {'text': 'Sed do eiusmod tempor incididunt', 'number': 3}
+          ],
+          footer_text='Already have an account? <a href="#">Log in</a>' %}
+    </div>
+  </section>
+
+  <hr class="demo-divider">
+
+  {# ══════════════════════════════════════════════════════
      14. ACTIVITY CARD
   ══════════════════════════════════════════════════════ #}
   <section class="demo-section">
@@ -1616,6 +1792,66 @@
   <hr class="demo-divider">
 
   {# ══════════════════════════════════════════════════════
+     PAGE HEADER
+  ══════════════════════════════════════════════════════ #}
+  <section class="demo-section" id="page-header">
+    <h1 class="demo-section__title">Page Header</h1>
+    <p class="demo-section__subtitle">unified page hero — dataset-style (4-column meta_items grid) and resource-style (compact title, download CTA, 3-column --cols-3 grid)</p>
+
+    <h2 class="demo-subsection__heading">Dataset-style — labels, org card, downloads, meta strip with chips / tooltip / overflow "View more"</h2>
+    <div class="demo-row--highlight">
+      {% snippet 'v2/components/page-header.html',
+          title='Sudan — Example Needs Assessment 2024',
+          description='Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+          org_name='Organisation Name',
+          contact_href='#',
+          download_count=1234,
+          request_only=True,
+          meta_items=[
+            {'label': 'Location', 'value': 'Sudan',
+             'chip': {'text': 'Sub-national', 'color': 'cyan'},
+             'link': {'label': 'View all', 'href': '#'}},
+            {'label': 'Expected update frequency', 'value': 'Every month',
+             'chip': {'text': 'Up to date', 'color': 'cyan'}},
+            {'label': 'Time period', 'value': 'Jan 2024 – Dec 2024',
+             'tooltip': {'aria_label': 'More info about time period',
+                         'text': 'The earliest start date and latest end date across all resources included in the dataset.',
+                         'id': 'demo-header-time-period'}},
+            {'label': 'Source',
+             'value': 'Example Organisation, International Example Organisation for Data Coordination (IEODC), Organisation Name, Example Field Office Sudan, Example Data Unit, Example Monitoring Partner, Example Assessment Team, Example Analysis Group',
+             'link': {'label': 'View more', 'href': '#'},
+             'link_on_overflow': True},
+          ] %}
+    </div>
+
+    <h2 class="demo-subsection__heading">Resource-style — compact title, file format, download + export metadata, 3-item meta strip with copy buttons</h2>
+    <div class="demo-row--highlight">
+      {% snippet 'v2/components/page-header.html',
+          compact_title=True,
+          title='Sudan — Example Needs Assessment Data (CSV)',
+          file_format='tabular',
+          file_format_text='CSV',
+          can_download=True,
+          download_url='#',
+          download_size='2.1M',
+          export_json_url='#json',
+          export_csv_url='#csv',
+          meta_items=[
+            {'label': 'Last modified', 'value': '12 June 2026'},
+            {'label': 'Resource ID',
+             'value': 'a1b2c3d4-e5f6-7890-abcd-ef1234567890',
+             'copy_value': 'a1b2c3d4-e5f6-7890-abcd-ef1234567890'},
+            {'label': 'Resource URL',
+             'value': 'https://example.org/data/example.csv',
+             'copy_value': 'https://example.org/data/example.csv',
+             'value_href': '#'},
+          ] %}
+    </div>
+  </section>
+
+  <hr class="demo-divider">
+
+  {# ══════════════════════════════════════════════════════
      15. DATASET CARD
   ══════════════════════════════════════════════════════ #}
   <section class="demo-section">
@@ -1626,11 +1862,11 @@
     <h2 class="demo-subsection__heading">Full card — location, subnational, description, mixed formats, overflow</h2>
     <div class="demo-row demo-row--flex-start">
       {% snippet 'v2/components/dataset-card.html',
-          org_name='Insecurity Insights',
-          title='Sanitary Pad Distribution and GBV Awareness Activities – Kassala State',
+          org_name='Example Organisation',
+          title='Sudan — Example Distribution and Awareness Activities Dataset 2024 (Kassala State)',
           title_href='#',
-          description='This dataset covers the distribution of sanitary pads and GBV awareness activities conducted in Kassala State. Data includes location, beneficiary counts, and distribution dates across all sub-districts.',
-          location='Palestine', subnational=True,
+          description='This example dataset covers distribution and awareness activities conducted in Kassala State. Data includes location, beneficiary counts, and distribution dates across all sub-districts.',
+          location='Sudan', subnational=True,
           date_range='Data from 12 Dec 2022 to 12 Dec 2025',
           formats=[
             {'type': 'private',   'text': '',     'icon_src': 'v2/icons/lock.svg'},
@@ -1647,8 +1883,8 @@
     <h2 class="demo-subsection__heading">Location only — no subnational, no description, COD label</h2>
     <div class="demo-row demo-row--flex-start">
       {% snippet 'v2/components/dataset-card.html',
-          org_name='OCHA',
-          title='Sudan: Humanitarian Needs Overview 2024',
+          org_name='Organisation Name',
+          title='Sudan — Example Needs Overview 2024',
           title_href='#',
           location='Sudan',
           date_range='Data from Jan 2024 to Dec 2024',
@@ -1665,8 +1901,8 @@
     <h2 class="demo-subsection__heading">Minimal — no description, no formats, no footer</h2>
     <div class="demo-row demo-row--flex-start">
       {% snippet 'v2/components/dataset-card.html',
-          org_name='ReliefWeb',
-          title='Democratic Republic of the Congo: Flood Response Situation Report',
+          org_name='Example Organisation',
+          title='Democratic Republic of the Congo — Example Flood Response Dataset 2024',
           title_href='#',
           location='Democratic Republic of the Congo',
           date_range='Data from 03 Apr 2024 to 15 Apr 2024' %}
@@ -1685,11 +1921,11 @@
     <h2 class="demo-subsection__heading">Full — geo format, P-coded, API available, preview, show-more</h2>
     <div class="demo-row demo-row--flex-start">
       {% snippet 'v2/components/resource-card.html',
-          title='UNHCR Population of Concern per country 2021 - ArcMap',
+          title='Zimbabwe — Example Conflict Events Dataset 2021 - ArcMap',
           title_href='#',
           format_text='GEOJSON',
           format_category='geo',
-          description='A weekly dataset providing the total number of reported political violence events and fatalities in Zimbabwe broken down by month. Political violence events include ACLED\'s battles, violence against civilians, and explosions/remote violence event types, as well as the mob violence sub-event type of the riots event type.',
+          description='A weekly example dataset providing the total number of reported political violence events and fatalities in Zimbabwe broken down by month. Event types include battles, violence against civilians, and explosions/remote violence, as well as the mob violence sub-event type of the riots event type.',
           pcoded=True,
           api_available=True,
           preview_available=True,
@@ -1701,7 +1937,7 @@
     <h2 class="demo-subsection__heading">Tabular — CSV, no labels, no preview, no show-more</h2>
     <div class="demo-row demo-row--flex-start">
       {% snippet 'v2/components/resource-card.html',
-          title='Global Food Prices Database (WFP)',
+          title='West Africa — Example Food Prices Dataset',
           title_href='#',
           format_text='CSV',
           format_category='tabular',
@@ -1726,11 +1962,11 @@
     <h2 class="demo-subsection__heading">Expanded — preview_opened=True (server-side pre-expanded)</h2>
     <div class="demo-row demo-row--flex-start">
       {% snippet 'v2/components/resource-card.html',
-          title='UNHCR Population of Concern per country 2021 - ArcGIS Pro',
+          title='Zimbabwe — Example Conflict Events Dataset 2021 - ArcGIS Pro',
           title_href='#',
           format_text='GEOJSON',
           format_category='geo',
-          description='A weekly dataset providing the total number of reported political violence events and fatalities in Zimbabwe broken down by month. Political violence events include ACLED\'s battles, violence against civilians, and explosions/remote violence event types, as well as the mob violence sub-event type of the riots event type. A weekly dataset providing the total number of reported political violence events and fatalities in Zimbabwe broken down by month.',
+          description='A weekly example dataset providing the total number of reported political violence events and fatalities in Zimbabwe broken down by month. Event types include battles, violence against civilians, and explosions/remote violence, as well as the mob violence sub-event type of the riots event type. A weekly example dataset providing the total number of reported political violence events and fatalities in Zimbabwe broken down by month.',
           preview_opened=True,
           pcoded=True,
           api_available=True,
@@ -1742,6 +1978,54 @@
   </section>
 
 
+  {# ══════════════════════════════════════════════════════
+     HIGHLIGHT CARD
+  ══════════════════════════════════════════════════════ #}
+  <section class="demo-section" id="highlight-card">
+    <h1 class="demo-section__title">Highlight Card</h1>
+    <p class="demo-section__subtitle">homepage curated-highlights card — empty image_url renders the placeholder block; entire card is a link</p>
+
+    <div class="demo-row demo-row--flex-start">
+      {% snippet 'v2/components/highlight-card.html',
+          image_url='',
+          title='Sudan — Example Data Story',
+          href='#' %}
+      {% snippet 'v2/components/highlight-card.html',
+          image_url='',
+          title='Ukraine — Example Monitoring Dataset',
+          href='#',
+          open_new_tab=True %}
+      {% snippet 'v2/components/highlight-card.html',
+          image_url='',
+          title='Democratic Republic of the Congo — Example Flood Response Story with a longer truncating title',
+          href='#' %}
+    </div>
+  </section>
+
+  <hr class="demo-divider">
+
+  {# ══════════════════════════════════════════════════════
+     SHOWCASE CARD
+  ══════════════════════════════════════════════════════ #}
+  <section class="demo-section" id="showcase-card">
+    <h1 class="demo-section__title">Showcase Card</h1>
+    <p class="demo-section__subtitle">dataset page showcases grid — full card with external View button + Read more link, and minimal card</p>
+
+    <div class="c-showcase-card-grid">
+      {% snippet 'v2/components/showcase-card.html',
+          title='Sudan — Example Data Story 2024',
+          description='Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+          img_url='',
+          url='#',
+          read_more_href='#',
+          url_is_external=True %}
+      {% snippet 'v2/components/showcase-card.html',
+          title='Ukraine — Example Monitoring Showcase' %}
+    </div>
+  </section>
+
+  <hr class="demo-divider">
+
   <section class="demo-section">
     <h1 class="demo-section__title">Organisation List Card</h1>
     <p class="demo-section__subtitle">responsive · description toggle · dataset + member counts</p>
@@ -1751,9 +2035,9 @@
     <div class="demo-row demo-row--flex-start">
       {% snippet 'v2/components/org-list-card.html',
           org={
-            'title': 'International Research Center of Big Data for Sustainable Development Goals (CBAS)',
-            'name': 'cbas',
-            'description': 'The Centre for Big Data Research in Sustainable Development Goals (CBAS) is a leading research institution dedicated to advancing the use of big data and artificial intelligence for sustainable development. CBAS produces open datasets covering economic indicators, environmental monitoring, and population statistics across 50+ countries.',
+            'title': 'International Example Organisation for Data Coordination (IEODC)',
+            'name': 'example-org',
+            'description': 'The International Example Organisation for Data Coordination (IEODC) is a placeholder organisation dedicated to demonstrating this component with a realistically long description. It produces example open datasets covering economic indicators, environmental monitoring, and population statistics across 50+ countries.',
             'package_count': 4800,
             'created': '2023-10-31T00:00:00'
           },
@@ -1765,8 +2049,8 @@
     <div class="demo-row demo-row--flex-start">
       {% snippet 'v2/components/org-list-card.html',
           org={
-            'title': 'Johns Hopkins University Center for Systems Science and Engineering',
-            'name': 'jhucsse',
+            'title': 'Example Organisation for Humanitarian Data',
+            'name': 'example-organisation',
             'description': '',
             'package_count': 293,
             'created': '2019-03-15T00:00:00'
@@ -1779,8 +2063,8 @@
     <div class="demo-row demo-row--flex-start">
       {% snippet 'v2/components/org-list-card.html',
           org={
-            'title': 'MapAction',
-            'name': 'mapaction',
+            'title': 'Organisation Name',
+            'name': 'organisation-name',
             'description': '',
             'package_count': 17,
             'created': '2014-06-01T00:00:00'
@@ -1798,8 +2082,8 @@
     <h2 class="demo-subsection__heading">With actions (caller body)</h2>
     <div class="demo-row demo-row--column">
       {% call h.snippet('v2/components/member-list-card.html',
-          avatar_initials='A',
-          name='Alberto Castillo Aroca', username='alcastaro', profile_url='#',
+          avatar_initials='J',
+          name='Jane Doe', username='jdoe', profile_url='#',
           meta_text='Admin - Registered 2 August 2017', sysadmin=True,
           stats_text='48 Datasets - 4 Organisations - 0 Countries') %}
         {% snippet 'v2/components/dropdown.html',
@@ -1823,8 +2107,8 @@
     <h2 class="demo-subsection__heading">Guard note (disabled_note)</h2>
     <div class="demo-row demo-row--column">
       {% snippet 'v2/components/member-list-card.html',
-          avatar_initials='S',
-          name='Sarah Okoro', username='sokoro', profile_url='#',
+          avatar_initials='J',
+          name='John Smith', username='jsmith', profile_url='#',
           meta_text='Admin - Registered 14 January 2020',
           stats_text='3 Datasets - 1 Organisation - 0 Countries',
           disabled_note='Please add another admin to be able to change this user' %}
@@ -1834,8 +2118,8 @@
     <h2 class="demo-subsection__heading">No actions</h2>
     <div class="demo-row demo-row--column">
       {% snippet 'v2/components/member-list-card.html',
-          avatar_initials='J',
-          name='Jean Dupont', username='jdupont', profile_url='#',
+          avatar_initials='A',
+          name='Alex Example', username='aexample', profile_url='#',
           meta_text='Editor - Registered 3 March 2022',
           stats_text='12 Datasets - 2 Organisations - 1 Country' %}
     </div>
@@ -1844,8 +2128,8 @@
     <h2 class="demo-subsection__heading">Stacked variant (--stacked)</h2>
     <div class="demo-row demo-row--column demo-max-width-m">
       {% call h.snippet('v2/components/member-list-card.html',
-          avatar_initials='P',
-          name='Priya Nair', username='pnair', profile_url='#',
+          avatar_initials='S',
+          name='Sam Sample', username='ssample', profile_url='#',
           meta_text='Requested 1 July 2026',
           extra_classes='c-member-list-card--stacked') %}
         {% snippet 'v2/components/dropdown.html',
@@ -1868,6 +2152,69 @@
   </section>
 
 
+  {# ══════════════════════════════════════════════════════
+     NOTIFICATION ITEM
+  ══════════════════════════════════════════════════════ #}
+  <section class="demo-section" id="notification-item">
+    <h1 class="demo-section__title">Notification Item</h1>
+    <p class="demo-section__subtitle">single notification row — caller-supplied HTML body · optional sysadmin tag + oversight highlight</p>
+
+    {% set demo_body %}Jane Doe added the dataset <a href="#">Sudan — Example Needs Assessment 2024</a>{% endset %}
+
+    <h2 class="demo-subsection__heading">Plain</h2>
+    <div class="demo-row demo-row--column">
+      {% snippet 'v2/components/notification-item.html',
+          body=demo_body,
+          date='12 June 2026',
+          url='#',
+          data_personal=True %}
+    </div>
+
+    <h2 class="demo-subsection__heading">Sysadmin — sysadmin_tag + for_sysadmin highlight</h2>
+    <div class="demo-row demo-row--column">
+      {% snippet 'v2/components/notification-item.html',
+          body=demo_body,
+          date='12 June 2026',
+          url='#',
+          data_personal=False,
+          sysadmin_tag='[membership]',
+          for_sysadmin=True %}
+    </div>
+  </section>
+
+  <hr class="demo-divider">
+
+  {# ══════════════════════════════════════════════════════
+     ACTIVITY ITEM
+  ══════════════════════════════════════════════════════ #}
+  <section class="demo-section" id="activity-item">
+    <h1 class="demo-section__title">Activity Item</h1>
+    <p class="demo-section__subtitle">activity stream timeline item — actor link, action text, optional subject (linked or plain), relative time</p>
+
+    <h2 class="demo-subsection__heading">With linked subject</h2>
+    <div class="demo-row demo-row--column">
+      {% snippet 'v2/components/activity-item.html',
+          actor_href='#',
+          actor_label='Jane Doe',
+          action_text='updated the dataset',
+          subject_label='Ukraine — Example Monitoring Dataset',
+          subject_href='#',
+          timestamp=h.date_str_to_datetime('2026-06-01T12:00:00') %}
+    </div>
+
+    <h2 class="demo-subsection__heading">Plain-text subject (no subject_href)</h2>
+    <div class="demo-row demo-row--column">
+      {% snippet 'v2/components/activity-item.html',
+          actor_href='#',
+          actor_label='Jane Doe',
+          action_text='deleted the dataset',
+          subject_label='Ukraine — Example Monitoring Dataset',
+          timestamp=h.date_str_to_datetime('2026-06-01T12:00:00') %}
+    </div>
+  </section>
+
+  <hr class="demo-divider">
+
   <section class="demo-section">
     <h1 class="demo-section__title">Table</h1>
     <p class="demo-section__subtitle">bordered · striped rows · truncating cells</p>
@@ -1875,11 +2222,11 @@
     {% snippet 'v2/components/table.html',
         headers=['Dataset', 'Format', 'Last updated', 'Downloads'],
         rows=[
-            ['ACLED – Political violence events in Africa 2023', 'CSV', '2023-04-12', '4,231'],
-            ['UNHCR Population of concern per country 2022', 'XLSX', '2023-03-01', '8,104'],
-            ['WHO – COVID-19 global data', 'JSON', '2023-05-15', '19,502'],
-            ['FAOSTAT – Land use statistics 2021', 'CSV', '2022-11-30', '2,890'],
-            ['ReliefWeb – Humanitarian situation reports', 'PDF', '2023-06-01', '11,387']
+            ['West Africa — Example Conflict Events dataset 2023', 'CSV', '2023-04-12', '4,231'],
+            ['Ukraine — Example Population dataset 2022', 'XLSX', '2023-03-01', '8,104'],
+            ['Afghanistan — Example Health Indicators dataset 2023', 'JSON', '2023-05-15', '19,502'],
+            ['Zimbabwe — Example Land Use dataset 2021', 'CSV', '2022-11-30', '2,890'],
+            ['Sudan — Example Situation Reports dataset 2023', 'PDF', '2023-06-01', '11,387']
         ] %}
 
   </section>
@@ -1978,7 +2325,7 @@
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Are you sure you want
         to proceed? This action cannot be undone.
       </p>
-      <div class="c-drawer-form__alert" role="alert"></div>
+      {% snippet 'v2/components/form-alert.html', hidden=True %}
       <div class="c-drawer-form__buttons">
         {{ h.snippet('v2/components/button.html',
             style='tertiary',

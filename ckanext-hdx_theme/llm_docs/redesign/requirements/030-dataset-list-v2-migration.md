@@ -32,11 +32,10 @@ Migrate the search results dataset list to the v2 layout system and replace indi
 | File | Change |
 |---|---|
 | `templates/search/search.html` | Extends `v2/page.html` |
-| `templates/search/snippets/package_list.html` | Results `<ul>` replaced with `<div class="hdx-v2-dataset-list__cards">`; routes to `package_item_v2.html` for non-admin view |
+| `templates/search/snippets/package_list.html` | Results `<ul>` replaced with `<div class="c-dataset-card-list">`; routes to `package_item_v2.html` for non-admin view |
 | `templates/search/snippets/package_item_v2.html` | **New.** Maps `package` → `c-dataset-card` params; calls `v2/components/dataset-card.html` |
 | `templates/v2/components/dataset-card.html` | Extended: `query` param for highlight support; `requestdata` format type |
-| `hdx-styles/src/common/less/v2/styles.less` | Added `.hdx-v2-dataset-list__cards` layout and `.highlight` rule |
-| `fanstatic/v2/styles.css` | Compiled output of the above |
+| `less/v2/components/dataset-card.less` | Owns the `.c-dataset-card-list` wrapper layout and its `.highlight` rule |
 | `helpers/helpers.py` | New `render_date_range_label()` helper |
 | `plugin.py` | Registered `render_date_range_label` |
 
@@ -241,28 +240,25 @@ formats_overflow = max(0, total - MAX_VISIBLE)
 ```html
 <section class="hdx-v2-dataset-list">
   <div class="hdx-v2-container">
-    <div class="hdx-v2-dataset-list__cards">
+    <div class="c-dataset-card-list">
       {# loop: package_item_v2.html per package #}
     </div>
   </div>
 </section>
 ```
 
-BEM structure:
+Structure:
 
 ```
 .hdx-v2-dataset-list
   .hdx-v2-container
-    .hdx-v2-dataset-list__cards   ← flex column, gap: var(--hdx-space-4) [1rem]
+    .c-dataset-card-list          ← flex column, gap: var(--hdx-space-4) [1rem]
       .c-dataset-card              ← repeated
       .c-dataset-card
       …
 ```
 
-LESS (define at section level):
-```less
-@hdx-v2-dataset-list-gap: var(--hdx-space-4);
-```
+The `.c-dataset-card-list` wrapper (layout + `.highlight` rule) lives in `less/v2/components/dataset-card.less`, owned by the component.
 
 Do NOT introduce Bootstrap `row`/`col-*` classes.
 

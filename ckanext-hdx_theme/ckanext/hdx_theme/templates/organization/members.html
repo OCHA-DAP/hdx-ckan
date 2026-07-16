@@ -1,8 +1,8 @@
 {% extends "v2/page.html" %}
 
-{% set content_class = 'hdx-v2-org-members-content' %}
-{% set columns_class = 'hdx-v2-org-members-columns' %}
-{% set sidebar_class = 'hdx-v2-org-members-sidebar' %}
+{% set content_class = 'hdx-v2-content-columns__content' %}
+{% set columns_class = 'hdx-v2-content-columns--stack hdx-v2-org-members-columns' %}
+{% set sidebar_class = 'hdx-v2-content-columns__sidebar hdx-v2-content-columns__sidebar--right' %}
 
 {# The line below is for google analytics #}
 {% block analytics_org_name %}{{ group_dict.name }}{% endblock %}
@@ -90,7 +90,8 @@
           show_clear=True,
           state='filled' if q else 'enabled',
           placeholder=_('Search for members'),
-          input_attrs={'aria-label': _('Search for members')} %}
+          input_attrs={'aria-label': _('Search for members')},
+          extra_classes='c-search-input--block' %}
     </form>
 
     {# Sort control below the search bar at MD/SM (Figma order) #}
@@ -128,7 +129,7 @@
           {% endif %}
         </div>
 
-        <div class="hdx-v2-org-members__group-list">
+        <div class="c-member-list-card-list">
           {% for user_id, user, translated_role, role, user_name, sysadmin in member_list %}
             {% set member = h.hdx_get_org_member_info(user_id, group_dict.name) %}
             {% set disable_change = (role == 'admin') and ((not sysadmin and non_sysadmin_admins < 2) or (no_admins < 2)) %}
@@ -244,7 +245,7 @@
           drawer_id='group-message-drawer',
           title=_('Group message')) %}
         <form class="c-drawer-form" id="group-message-form">
-          <div class="c-drawer-form__alert" role="alert" hidden></div>
+          {% snippet 'v2/components/form-alert.html', hidden=True %}
           <input type="hidden" name="source_type" value="group">
           <input type="hidden" name="title" value="{{ group_dict.title or group_dict.display_name }}">
           <input type="hidden" name="org_id" value="{{ group_dict.id }}">

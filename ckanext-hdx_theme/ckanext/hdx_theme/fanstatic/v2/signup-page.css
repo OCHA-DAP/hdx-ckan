@@ -1,10 +1,6 @@
 .hdx-v2-signup-outer-row {
   background-color: var(--hdx-neutral-0);
 }
-.hdx-v2-signup-content {
-  flex: 1;
-  min-width: 0;
-}
 .hdx-v2-signup-tiers-page {
   display: flex;
   flex-direction: column;

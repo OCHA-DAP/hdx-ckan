@@ -126,6 +126,7 @@ Example:
           icon_src='v2/icons/filter.svg',
           chevron_src='',
           panel_id='hdx-filter-overlay',
+          extra_classes='c-dropdown--inline',
           button_attrs={'data-module': 'filter-btn'} %}
     </div>
   </div>
@@ -141,7 +142,8 @@ Example:
         state='filled' if searchValue else 'enabled',
         placeholder=_('Search for datasets'),
         value=searchValue,
-        autocomplete='off' %}
+        autocomplete='off',
+        extra_classes='c-search-input--block' %}
   </form>
 
   {# ── MD/SM full-screen filter overlay ────────────────────────────────── #}
@@ -229,7 +231,7 @@ Example:
 
                     {% block package %}
                       {% if v2 %}
-                      <div class="hdx-v2-dataset-list__cards">
+                      <div class="c-dataset-card-list">
                         {% for package in packages %}
                           {% set package_item_snippet = 'search/snippets/package_item_v2.html' %}
                           {% if admin_view %}

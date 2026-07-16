@@ -98,7 +98,7 @@
 
   function gmShowError(text) {
     var form = gmForm();
-    var alertEl = form && form.querySelector('.c-drawer-form__alert');
+    var alertEl = form && form.querySelector('.c-form-alert');
     if (!alertEl) return;
     alertEl.textContent = text || 'There was an error sending your message. Please try again.';
     alertEl.hidden = false;
@@ -137,7 +137,7 @@
   window.hdxGroupMessageSubmit = function (token) {
     var form = gmForm();
     if (!form) return;
-    var alertEl = form.querySelector('.c-drawer-form__alert');
+    var alertEl = form.querySelector('.c-form-alert');
     if (alertEl) alertEl.hidden = true;
     var topic = form.querySelector('[name="topic"]');
     if (window.hdxUtil) {

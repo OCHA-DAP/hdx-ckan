@@ -442,13 +442,8 @@ column at all breakpoints.
 
 ### Be Inspired Cards
 
-```less
-.hdx-v2-hapi-cards {
-    display:               grid;
-    grid-template-columns: repeat(2, 1fr);  // 2 per row at all breakpoints
-    gap:                   var(--hdx-space-4);
-}
-```
+Wrapped in the shared `c-content-card-grid` component class (2 per row at all
+breakpoints, `gap: var(--hdx-space-4)`) — no page-specific grid LESS.
 
 4 cards → 2×2 grid at every breakpoint.
 

@@ -36,3 +36,26 @@
         margin-left: var(--hdx-space-1);
     }
 }
+
+// ────────────────────────────────────────────────────────────
+// c-stats-card-list — KPI card stack
+// SM: stacked; MD: equal-width row; XL: column again (org stats)
+// ────────────────────────────────────────────────────────────
+
+.c-stats-card-list {
+    display:        flex;
+    flex-direction: column;
+    gap:            var(--hdx-space-6);
+
+    @media (min-width: @hdx-bp-md) {
+        flex-direction: row;
+
+        > .c-stats-card { flex: 1; }
+    }
+
+    @media (min-width: @hdx-bp-xl) {
+        flex-direction: column;
+
+        > .c-stats-card { flex: none; }
+    }
+}

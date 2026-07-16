@@ -8,11 +8,11 @@
   gap: var(--hdx-space-3);
   padding: var(--hdx-space-4);
   font-family: var(--hdx-font-body);
-  transition: border 0.15s ease;
+  transition: border-color 0.15s ease;
   position: relative;
 }
 .c-resource-card:hover {
-  border: 1.5px solid var(--hdx-neutral-8);
+  border-color: var(--hdx-neutral-8);
 }
 .c-resource-card--hdx-connect {
   background-color: var(--hdx-neutral-05);
@@ -159,4 +159,9 @@
   flex-wrap: wrap;
   gap: var(--hdx-space-2);
   margin-left: auto;
+}
+.c-resource-card-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hdx-space-4);
 }

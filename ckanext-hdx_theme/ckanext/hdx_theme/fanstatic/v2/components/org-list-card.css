@@ -4,10 +4,10 @@
   border-radius: var(--hdx-radius-sm);
   box-shadow: var(--hdx-shadow-sm);
   overflow: hidden;
-  transition: border 0.15s ease;
+  transition: border-color 0.15s ease;
 }
 .c-org-list-card:hover {
-  border: 1.5px solid var(--hdx-neutral-8);
+  border-color: var(--hdx-neutral-8);
 }
 .c-org-list-card__inner {
   display: flex;
@@ -124,4 +124,14 @@
 }
 .c-org-list-card__sep {
   color: var(--hdx-neutral-5);
+}
+.c-org-list-card-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hdx-space-3);
+}
+@media (min-width: 48rem) {
+  .c-org-list-card-list {
+    gap: var(--hdx-space-4);
+  }
 }

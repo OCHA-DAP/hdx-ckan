@@ -1,6 +1,6 @@
 {% extends "v2/page.html" %}
 
-{% set content_class = 'hdx-v2-org-list-content' %}
+{% set content_class = 'hdx-v2-content-columns__content' %}
 
 {% block subtitle %}{{ _('Explore Humanitarian Organizations')}} | {{_('Data Contributors ') }}{% endblock %}
 
@@ -131,7 +131,7 @@
     </div>
 
     {# ── Organisation cards ──────────────────────────── #}
-    <div class="hdx-v2-org-list-cards">
+    <div class="hdx-v2-org-list-cards c-org-list-card-list">
       {% for org in page.items %}
         {% snippet 'v2/components/org-list-card.html',
             org=org,

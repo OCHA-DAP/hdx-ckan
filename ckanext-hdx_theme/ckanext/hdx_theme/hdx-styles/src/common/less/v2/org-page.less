@@ -31,11 +31,6 @@
     }
 }
 
-// ── Activity tab: content column (no sidebar) ──────────────────
-.hdx-v2-org-activity-content {
-    .v2-content-flex();
-}
-
 // ── Activity tab: activity list section (task 057) ─────────────
 // Full-bleed, full-width section at every breakpoint.
 .hdx-v2-org-activity {
@@ -61,11 +56,6 @@
         flex-direction: column;
         gap:            var(--hdx-space-6);
     }
-}
-
-// ── Stats tab: content column (no sidebar) ─────────────────────
-.hdx-v2-org-stats-content {
-    .v2-content-flex();
 }
 
 // ── Stats tab: KPI cards + charts section (task 058) ───────────
@@ -104,33 +94,7 @@
         a { color: inherit; }
     }
 
-    &__layout {
-        display:        flex;
-        flex-direction: column;
-        gap:            var(--hdx-space-6);
-
-        @media (min-width: @hdx-bp-xl) { flex-direction: row; }
-    }
-
-    // SM: stacked; MD: 3-up row above the charts; XL: left column (Figma)
-    &__kpis {
-        display:        flex;
-        flex-direction: column;
-        gap:            var(--hdx-space-6);
-
-        @media (min-width: @hdx-bp-md) {
-            flex-direction: row;
-            .c-stats-card { flex: 1; }
-        }
-        @media (min-width: @hdx-bp-xl) {
-            .v2-sidebar-flex();
-            flex-direction: column;
-            .c-stats-card { flex: none; }
-        }
-    }
-
     &__charts {
-        .v2-content-flex();
         display:        flex;
         flex-direction: column;
         gap:            var(--hdx-space-6);
@@ -196,31 +160,11 @@
 // classes, no hdx-v2-search-* overrides (056 precedent).
 
 .hdx-v2-org-members-columns {
-    flex-direction: column;
-    gap:            var(--hdx-space-6);
-    border-top:     1px solid var(--hdx-neutral-1);
-    padding:        var(--hdx-space-6) 0;
+    border-top: 1px solid var(--hdx-neutral-1);
+    padding:    var(--hdx-space-6) 0;
 
     @media (min-width: @hdx-bp-md) {
         padding: var(--hdx-space-8) 0 var(--hdx-space-12);
-    }
-
-    @media (min-width: @hdx-bp-xl) {
-        flex-direction: row;
-    }
-}
-
-.hdx-v2-org-members-content {
-    .v2-content-flex();
-    order: 1;
-}
-
-.hdx-v2-org-members-sidebar {
-    order:     2;
-    min-width: 0;   // flex-column child below XL
-
-    @media (min-width: @hdx-bp-xl) {
-        .v2-sidebar-flex();   // 25% right column
     }
 }
 
@@ -265,8 +209,6 @@
 
     &__search {
         width: 100%;
-
-        .c-search-input { width: 100%; }
     }
 
     &__group {
@@ -293,12 +235,6 @@
         display:     flex;
         align-items: center;
         gap:         var(--hdx-space-2);
-    }
-
-    &__group-list {
-        display:        flex;
-        flex-direction: column;
-        gap:            var(--hdx-space-4);   // 1rem — Figma card gap
     }
 
     // maintainer dataset list inside the remove drawer

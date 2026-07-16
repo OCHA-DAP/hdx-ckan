@@ -209,7 +209,7 @@ Example page-specific template (light search):
 ### All Organisations page (`/organization`)
 
 - **Template**: `ckanext-hdx_theme/ckanext/hdx_theme/templates/organization/index.html`
-  - Extends `v2/page.html`. Single-column layout (`content_class = 'hdx-v2-org-list-content'`).
+  - Extends `v2/page.html`. Single-column layout (`content_class = 'hdx-v2-content-columns__content'`).
 - **Core assets**: `hdx_theme/v2-org-list-page-styles`, `hdx_theme/v2-org-list-page-scripts` (`url-nav.js` + `org-list-page.js`).
 
 ---
@@ -240,7 +240,7 @@ Example page-specific template (light search):
   `value-proposition.html` (tier selection), `user-info.html` (step 1 form),
   `verify-email.html` (step 2), `change-email.html` (step 2b), `account-validated.html` (step 3).
   All extend `v2/page.html`. Layout vars set on every page: `outer_row_class='hdx-v2-signup-outer-row'`,
-  `breadcrumb_row_class='hdx-v2-breadcrumb-row--white'`, `content_class='hdx-v2-signup-content'`.
+  `breadcrumb_row_class='hdx-v2-breadcrumb-row--white'`, `content_class='hdx-v2-content-columns__content'`.
 - **New components**: `v2/components/signup-tier.html` (`c-signup-tier`) — tier selection card with
   default (gray) and primary (blue) variants, numbered feature badges; `v2/components/step-pager.html`
   (`c-step-pager`) — horizontal 3-step progress bar, pure CSS (no JS).

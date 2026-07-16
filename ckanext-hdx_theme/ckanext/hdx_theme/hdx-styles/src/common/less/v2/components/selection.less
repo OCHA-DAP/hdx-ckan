@@ -7,6 +7,8 @@
 // Figma source: "Selection items / Radio / Toggle / Graph point"
 // ============================================================
 
+@import "../breakpoints.less";
+
 // ── Palette ──────────────────────────────────────────────────
 @c-sel-light-bg:     var(--hdx-neutral-0);       // #fff
 @c-sel-light-border: var(--hdx-neutral-2);       // #d8e0e1
@@ -14,9 +16,8 @@
 @c-sel-cyan-border:  #a8d5c9;             // powderblue
 
 @c-sel-hover-bg:         var(--hdx-neutral-01);  // #fafbfb
-@c-sel-hover-border:     var(--hdx-neutral-8);   // #3f4748 1.5px
-@c-sel-active-border:    var(--hdx-neutral-95);  // #101212 1px
-@c-sel-active-hover-border: var(--hdx-neutral-95); // 1.5px on hover while active
+@c-sel-hover-border:     var(--hdx-neutral-8);   // #3f4748
+@c-sel-active-border:    var(--hdx-neutral-95);  // #101212
 
 // Radio
 @c-radio-dim:           1rem;              // 16 px
@@ -33,7 +34,7 @@
 @c-toggle-on-bg:   var(--hdx-primary-5);        // royalblue
 @c-toggle-thumb-bg: var(--hdx-neutral-0);       // white
 
-// Selection item heights — fixed so border-width changes grow inward
+// Selection item heights — Figma size spec
 @c-sel-l-h:        2.5rem;     // 40 px
 @c-sel-m-h:        2.125rem;   // 34 px
 @c-sel-s-h:        1.5rem;     // 24 px
@@ -64,7 +65,7 @@
     font-family:      var(--hdx-font-body);
     font-weight:      var(--hdx-fw-medium);
     color:            var(--hdx-neutral-8);
-    transition:       background-color 0.15s ease, border 0.15s ease, color 0.15s ease;
+    transition:       background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
 
     &__icon {
         line-height: 0;
@@ -106,7 +107,7 @@
 
     &:hover {
         background-color: @c-sel-hover-bg;
-        border:           1.5px solid @c-sel-hover-border;
+        border-color:     @c-sel-hover-border;
         box-shadow:       var(--hdx-shadow-sm);
 
         &.c-selection-item--cyan {
@@ -116,14 +117,14 @@
 
     // Active (selected — close icon visible, border near-black)
     &--active {
-        border:     1px solid @c-sel-active-border;
-        color:      var(--hdx-neutral-95);
-        box-shadow: none;
+        border-color: @c-sel-active-border;
+        color:        var(--hdx-neutral-95);
+        box-shadow:   none;
 
         .c-selection-item__close { display: block; }
 
         &:hover {
-            border: 1.5px solid @c-sel-active-hover-border;
+            border-color: @c-sel-active-border;
         }
 
         &.c-selection-item--cyan {
@@ -372,5 +373,21 @@
     &:hover        &__halo,
     &:focus-visible &__halo {
         opacity: 0.2;
+    }
+}
+
+// ────────────────────────────────────────────────────────────
+// c-selection-item-grid — grid wrapper for selection items
+// (2 cols SM/MD, 3 cols XL — all-locations page)
+// ────────────────────────────────────────────────────────────
+
+.c-selection-item-grid {
+    display:               grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap:                   var(--hdx-space-2);
+
+    @media (min-width: @hdx-bp-xl) {
+        grid-template-columns: repeat(3, 1fr);
+        gap:                   var(--hdx-space-3);
     }
 }

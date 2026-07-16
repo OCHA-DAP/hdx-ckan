@@ -60,8 +60,8 @@ Create a reusable activity card component with an icon, heading, subtitle, and C
 
 5. Implement state styling.
    - **enabled**: `border: 1px solid var(--hdx-neutral-1)`
-   - **hovered**: `border: 1.5px solid var(--hdx-neutral-8)`
-   - Apply `transition: border 0.15s ease`
+   - **hovered**: `border-color: var(--hdx-neutral-8)` (constant 1px width, color-only)
+   - Apply `transition: border-color 0.15s ease`
 
 6. Reuse existing button component for the footer.
    - Call `{% snippet 'v2/components/button.html', style=button_style, size='l', type='text', label=button_label, tag='a', href=button_href %}`

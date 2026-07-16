@@ -2,11 +2,13 @@
   Snippet: page-header.html
   Path:    templates/v2/components/page-header.html
 
-  Unified page hero header. Renders the dataset header by default.
-  When resource_id is provided the resource layout is used instead.
+  Unified page hero header — one generic layout for dataset, resource,
+  org, landing and crisis pages. All differences are param-driven.
 
-  ── Dataset parameters ───────────────────────────────────────
-  title               {string}  Dataset title text.  default: ''
+  ── Parameters ───────────────────────────────────────────────
+  title               {string}  Title text.  default: ''
+  compact_title       {bool}    Title fixed at 1.5rem, no XL scale-up
+                                (resource pages).  default: False
   subtitle            {string}  Optional subtitle rendered below title (semibold).  default: ''
   member_since        {string}  Optional pre-rendered "Member since {date}" line
                                 below the title (org pages).  default: ''
@@ -17,37 +19,47 @@
                                 inline action links in the right card.  default: []
   header_stats        {list}    {label, value} dicts — count pairs in the right
                                 card, below a divider (org pages).  default: []
-  org_href            {string}  Link to org page.  default: '#'
   contact_href        {string}  Link to contact page.  default: '#'
   download_count      {int}     Approx downloads.  default: 0
   request_only        {bool}    Show "Request only data" label.  default: False
   cod_dataset         {bool}    Show "COD+" label.  default: False
   links_list          {list}    {label, title, url, newTab} dicts.  default: []
   supports_notifications {bool} Show "Get notified" button.  default: False
-  location_text       {string}  Location text.  default: ''
-  subnational         {bool}    Show "Sub-national" label.  default: False
-  update_frequency    {string}  Update frequency text.  default: ''
-  is_up_to_date       {bool}    Show "Up to date" label.  default: False
-  time_period         {string}  Time period text.  default: ''
-  time_period_tooltip {bool}    Show time period tooltip.  default: False
-  source_text         {string}  Source text.  default: ''
-  long_source         {bool}    Show "Show more" for source.  default: False
   state_label_text    {string}  Optional state chip text (e.g. 'draft'),
                                  rendered right after the title.  default: ''
   state_label_color   {string}  c-label color for state_label_text.  default: 'grey'
+  extra_classes       {string}  Extra classes on the root section.  default: ''
 
-  ── Resource parameters (resource_id triggers resource layout) ──
-  resource_id       {string}  res.id.  default: ''
+  meta_items          {list}    Metadata strip entries (strip + divider render
+                                only when non-empty). 3 items get the resource-
+                                style --cols-3 grid; otherwise the 4-column
+                                dataset grid. Each item:
+    label            {string}  required — column heading
+    value            {string}  value text.  default: ''
+    value_href       {string}  render value as c-text-link (resource URL).  default: ''
+    chip             {dict}    {text, color} — c-label size xs after the value
+                               (Sub-national / Up to date).  default: None
+    tooltip          {dict}    {text, id, aria_label} — info-icon in the
+                               label row (time period).  default: None
+    copy_value       {string}  when set, a copy-button in the label row copies
+                               this text (resource ID / URL).  default: ''
+    link             {dict}    {label, href} — text-button in the label row
+                               (Location "View all", Source "View more").  default: None
+    link_on_overflow {bool}    link starts hidden; page-header.js reveals it when
+                               the value overflows one line. Implies truncate.  default: False
+    truncate         {bool}    single-line ellipsis value.  default: False
+
+  ── Download CTA / format parameters ─────────────────────────
   file_format       {string}  Format for file-type icon.  default: ''
+  file_format_text  {string}  Format label next to the icon.  default: ''
   download_url      {string}  Direct download href.  default: ''
   can_download      {bool}    Download access check.  default: False
+  download_size     {string}  Pre-formatted size shown in the label.  default: ''
+  resource_type     {string}  GA class suffix on the download button.  default: ''
   ga_resource_title {string}  GA tracking title.  default: ''
   ga_resource_id    {string}  GA tracking id.  default: ''
   export_json_url   {string}  Metadata JSON export URL.  default: ''
   export_csv_url    {string}  Metadata CSV export URL.  default: ''
-  last_modified     {string}  Pre-rendered datetime.  default: ''
-  resource_url      {string}  res.url display string.  default: ''
-  resource_url_href {string}  Actual href (empty if not accessible).  default: ''
   ─────────────────────────────────────────────────────────────
 #}
 
@@ -60,21 +72,15 @@
 {% set logo_src            = logo_src            if logo_src            is defined else '' %}
 {% set header_actions      = header_actions      if header_actions      is defined else [] %}
 {% set header_stats        = header_stats        if header_stats        is defined else [] %}
-{% set org_href            = org_href            if org_href            is defined else '#' %}
 {% set contact_href        = contact_href        if contact_href        is defined else '#' %}
 {% set download_count      = download_count      if download_count      is defined else 0 %}
 {% set request_only        = request_only        if request_only        is defined else False %}
 {% set cod_dataset         = cod_dataset         if cod_dataset         is defined else False %}
 {% set links_list          = links_list          if links_list          is defined else [] %}
 {% set supports_notifications = supports_notifications if supports_notifications is defined else False %}
-{% set location_text       = location_text       if location_text       is defined else '' %}
-{% set subnational         = subnational         if subnational         is defined else False %}
-{% set update_frequency    = update_frequency    if update_frequency    is defined else '' %}
-{% set is_up_to_date       = is_up_to_date       if is_up_to_date       is defined else False %}
-{% set time_period         = time_period         if time_period         is defined else '' %}
-{% set time_period_tooltip = time_period_tooltip if time_period_tooltip is defined else False %}
-{% set source_text         = source_text         if source_text         is defined else '' %}
-{% set long_source         = long_source         if long_source         is defined else False %}
+{% set meta_items          = meta_items          if meta_items          is defined else [] %}
+{% set compact_title       = compact_title       if compact_title       is defined else False %}
+{% set extra_classes       = extra_classes       if extra_classes       is defined else '' %}
 {% set state_label_text    = state_label_text    if state_label_text    is defined else '' %}
 {% set state_label_color   = state_label_color   if state_label_color   is defined else 'grey' %}
 {% set cta_label           = cta_label           if cta_label           is defined else '' %}
@@ -86,7 +92,6 @@
 {% set membership          = membership          if membership          is defined else None %}
 {% set hide_membership     = hide_membership     if hide_membership     is defined else True %}
 {% set org_id              = org_id              if org_id              is defined else '' %}
-{% set resource_id         = resource_id         if resource_id         is defined else '' %}
 {% set file_format         = file_format         if file_format         is defined else '' %}
 {% set download_url        = download_url        if download_url        is defined else '' %}
 {% set can_download        = can_download        if can_download        is defined else False %}
@@ -94,20 +99,12 @@
 {% set ga_resource_id      = ga_resource_id      if ga_resource_id      is defined else '' %}
 {% set export_json_url     = export_json_url     if export_json_url     is defined else '' %}
 {% set export_csv_url      = export_csv_url      if export_csv_url      is defined else '' %}
-{% set last_modified       = last_modified       if last_modified       is defined else '' %}
-{% set resource_url        = resource_url        if resource_url        is defined else '' %}
-{% set resource_url_href   = resource_url_href   if resource_url_href   is defined else '' %}
 {% set resource_type       = resource_type       if resource_type       is defined else '' %}
 {% set file_format_text    = file_format_text    if file_format_text    is defined else '' %}
 {% set download_size       = download_size       if download_size       is defined else '' %}
 
-{# resource_id being set switches to resource layout #}
-{% set _is_resource = resource_id %}
-{# divider + dataset metadata strip only render when there is data to show #}
-{% set _has_dataset_meta = location_text or update_frequency or time_period or source_text or is_up_to_date or subnational %}
 
-
-<section class="c-page-header{{ ' c-page-header--resource' if _is_resource else '' }}">
+<section class="c-page-header{{ ' c-page-header--compact-title' if compact_title else '' }}{{ ' ' ~ extra_classes if extra_classes else '' }}">
 
   {# ── TOP ─────────────────────────────────────────────────── #}
   <div class="c-page-header__top">
@@ -351,9 +348,9 @@
   </div>
   {# end __top #}
 
-  {# ── DOWNLOAD + EXPORT ACTIONS — resource only ──────────── #}
+  {# ── DOWNLOAD + EXPORT ACTIONS ───────────────────────────── #}
   {% if can_download %}
-  <div class="c-page-header__cta">
+  <div class="c-page-header__cta c-page-header__cta--row">
 
     {% set _dl_extra = 'ga-download resource-url-analytics resource-type-' ~ resource_type %}
     {% set _dl_label = _('Download') ~ ' (' ~ download_size ~ ')' if download_size else _('Download') %}
@@ -380,117 +377,50 @@
   </div>
   {% endif %}
 
-  {# ── DIVIDER ─────────────────────────────────────────────── #}
-  {% if _has_dataset_meta or _is_resource %}
+  {# ── METADATA STRIP — generic, driven by meta_items ──────── #}
+  {% if meta_items %}
   <hr class="c-divider">
-  {% endif %}
+  <div class="c-page-header__metadata{{ ' c-page-header__metadata--cols-3' if meta_items|length == 3 else '' }}">
 
-  {# ── DATASET METADATA STRIP ──────────────────────────────── #}
-  {% if not _is_resource and _has_dataset_meta %}
-  <div class="c-page-header__metadata">
-
-    <div class="c-page-header__meta-item">
+    {% for item in meta_items %}
+    <div class="c-page-header__meta-item"{% if item.link_on_overflow %} data-header-meta-overflow{% endif %}>
       <div class="c-page-header__meta-label-row">
-        <span class="c-page-header__meta-label">Location</span>
-        {% if location_text %}
+        <span class="c-page-header__meta-label">{{ item.label }}</span>
+        {% if item.copy_value %}
+          {% snippet 'v2/components/copy-button.html',
+              value=item.copy_value, style='secondary', size='s',
+              icon_position='left', label=_('Copy') %}
+        {% endif %}
+        {% if item.link %}
           {% snippet 'v2/components/text-button.html',
-              style='tertiary', size='s', label='View all',
+              style='tertiary', size='s', label=item.link.label,
               icon=True, icon_position='right', icon_src='v2/icons/arrow-down.svg',
-              tag='a', href='#metadata-location' %}
+              tag='a', href=item.link.href,
+              extra_classes='c-page-header__meta-view-more' if item.link_on_overflow else '' %}
         {% endif %}
-      </div>
-      <div class="c-page-header__meta-value">
-        {% if location_text %}<span>{{ location_text }}</span>{% endif %}
-        {% if subnational %}
-          {% snippet 'v2/components/label.html', text='Sub-national', color='cyan', size='xs' %}
-        {% endif %}
-      </div>
-    </div>
-
-    <div class="c-page-header__meta-item">
-      <div class="c-page-header__meta-label-row">
-        <span class="c-page-header__meta-label">Expected update frequency</span>
-      </div>
-      <div class="c-page-header__meta-value">
-        {% if update_frequency %}<span>{{ update_frequency }}</span>{% endif %}
-        {% if is_up_to_date %}
-          {% snippet 'v2/components/label.html', text='Up to date', color='cyan', size='xs' %}
-        {% endif %}
-      </div>
-    </div>
-
-    <div class="c-page-header__meta-item">
-      <div class="c-page-header__meta-label-row">
-        <span class="c-page-header__meta-label">Time period</span>
-        {% if time_period_tooltip %}
+        {% if item.tooltip %}
           {% snippet 'v2/components/info-icon.html',
-              aria_label=_('More info about time period'),
-              tooltip_text=_('The earliest start date and latest end date across all resources included in the dataset.'),
-              tooltip_id='tooltip-time-period' %}
+              aria_label=item.tooltip.aria_label,
+              tooltip_text=item.tooltip.text,
+              tooltip_id=item.tooltip.id %}
         {% endif %}
       </div>
-      <div class="c-page-header__meta-value">
-        {% if time_period %}<span>{{ time_period }}</span>{% endif %}
-      </div>
-    </div>
-
-    <div class="c-page-header__meta-item" data-header-meta="source">
-      <div class="c-page-header__meta-label-row">
-        <span class="c-page-header__meta-label">Source</span>
-        {% if source_text %}
-          {% snippet 'v2/components/text-button.html',
-              style='tertiary', size='s', label='View more',
-              icon=True, icon_position='right', icon_src='v2/icons/arrow-down.svg',
-              tag='a', href='#metadata-source',
-              extra_classes='c-page-header__source-view-more' %}
+      <div class="c-page-header__meta-value{{ ' c-page-header__meta-value--truncate' if item.truncate or item.link_on_overflow else '' }}">
+        {% if item.value_href %}
+          {% snippet 'v2/components/text-link.html',
+              label=item.value, href=item.value_href,
+              style='tertiary', size='xs' %}
+        {% elif item.value %}<span>{{ item.value }}</span>{% endif %}
+        {% if item.chip %}
+          {% snippet 'v2/components/label.html',
+              text=item.chip.text, color=item.chip.color or 'cyan', size='xs' %}
         {% endif %}
       </div>
-      <div class="c-page-header__meta-value c-page-header__meta-value--source">
-        {% if source_text %}<span>{{ source_text }}</span>{% endif %}
-      </div>
     </div>
+    {% endfor %}
 
   </div>
-  {% endif %}{# /not _is_resource #}
-
-  {# ── RESOURCE METADATA STRIP ─────────────────────────────── #}
-  {% if _is_resource %}
-  <div class="c-page-header__meta">
-
-    <div class="c-page-header__meta-item">
-      <span class="c-page-header__meta-label">Last modified</span>
-      <span class="c-page-header__meta-value">{{ last_modified }}</span>
-    </div>
-
-    <div class="c-page-header__meta-item">
-      <div class="c-page-header__meta-label-row">
-        <span class="c-page-header__meta-label">Resource ID</span>
-        {% snippet 'v2/components/copy-button.html',
-            value=resource_id, style='secondary', size='s',
-            icon_position='left', label=_('Copy') %}
-      </div>
-      <span class="c-page-header__meta-value">{{ resource_id }}</span>
-    </div>
-
-    <div class="c-page-header__meta-item">
-      <div class="c-page-header__meta-label-row">
-        <span class="c-page-header__meta-label">Resource URL</span>
-        {% snippet 'v2/components/copy-button.html',
-            value=resource_url, style='secondary', size='s',
-            icon_position='left', label=_('Copy') %}
-      </div>
-      {% if resource_url_href %}
-        {% snippet 'v2/components/text-link.html',
-            label=resource_url,
-            href=resource_url_href,
-            style='tertiary', size='xs' %}
-      {% else %}
-        <span class="c-page-header__meta-value">{{ resource_url }}</span>
-      {% endif %}
-    </div>
-
-  </div>
-  {% endif %}{# /_is_resource #}
+  {% endif %}{# /meta_items #}
 
 </section>
 

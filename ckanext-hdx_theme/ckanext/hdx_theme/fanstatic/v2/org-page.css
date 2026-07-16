@@ -37,10 +37,6 @@
   line-height: var(--hdx-lh-normal);
   text-decoration: underline;
 }
-.hdx-v2-org-activity-content {
-  flex: 1;
-  min-width: 0;
-}
 .hdx-v2-org-activity {
   align-self: stretch;
   display: flex;
@@ -66,10 +62,6 @@
   display: flex;
   flex-direction: column;
   gap: var(--hdx-space-6);
-}
-.hdx-v2-org-stats-content {
-  flex: 1;
-  min-width: 0;
 }
 .hdx-v2-org-stats {
   align-self: stretch;
@@ -112,42 +104,7 @@
 .hdx-v2-org-stats__export a {
   color: inherit;
 }
-.hdx-v2-org-stats__layout {
-  display: flex;
-  flex-direction: column;
-  gap: var(--hdx-space-6);
-}
-@media (min-width: 80rem) {
-  .hdx-v2-org-stats__layout {
-    flex-direction: row;
-  }
-}
-.hdx-v2-org-stats__kpis {
-  display: flex;
-  flex-direction: column;
-  gap: var(--hdx-space-6);
-}
-@media (min-width: 48rem) {
-  .hdx-v2-org-stats__kpis {
-    flex-direction: row;
-  }
-  .hdx-v2-org-stats__kpis .c-stats-card {
-    flex: 1;
-  }
-}
-@media (min-width: 80rem) {
-  .hdx-v2-org-stats__kpis {
-    flex: 0 0 25%;
-    min-width: 0;
-    flex-direction: column;
-  }
-  .hdx-v2-org-stats__kpis .c-stats-card {
-    flex: none;
-  }
-}
 .hdx-v2-org-stats__charts {
-  flex: 1;
-  min-width: 0;
   display: flex;
   flex-direction: column;
   gap: var(--hdx-space-6);
@@ -210,34 +167,12 @@
   background-color: var(--hdx-primary-2);
 }
 .hdx-v2-org-members-columns {
-  flex-direction: column;
-  gap: var(--hdx-space-6);
   border-top: 1px solid var(--hdx-neutral-1);
   padding: var(--hdx-space-6) 0;
 }
 @media (min-width: 48rem) {
   .hdx-v2-org-members-columns {
     padding: var(--hdx-space-8) 0 var(--hdx-space-12);
-  }
-}
-@media (min-width: 80rem) {
-  .hdx-v2-org-members-columns {
-    flex-direction: row;
-  }
-}
-.hdx-v2-org-members-content {
-  flex: 1;
-  min-width: 0;
-  order: 1;
-}
-.hdx-v2-org-members-sidebar {
-  order: 2;
-  min-width: 0;
-}
-@media (min-width: 80rem) {
-  .hdx-v2-org-members-sidebar {
-    flex: 0 0 25%;
-    min-width: 0;
   }
 }
 .hdx-v2-org-members {
@@ -286,9 +221,6 @@
 .hdx-v2-org-members__search {
   width: 100%;
 }
-.hdx-v2-org-members__search .c-search-input {
-  width: 100%;
-}
 .hdx-v2-org-members__group {
   display: flex;
   flex-direction: column;
@@ -313,11 +245,6 @@
   display: flex;
   align-items: center;
   gap: var(--hdx-space-2);
-}
-.hdx-v2-org-members__group-list {
-  display: flex;
-  flex-direction: column;
-  gap: var(--hdx-space-4);
 }
 .hdx-v2-org-members__pkg-list {
   font-family: var(--hdx-font-body);

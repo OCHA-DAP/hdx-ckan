@@ -10,28 +10,11 @@
   background-color: var(--hdx-neutral-0);
 }
 
-// ── Dataset page layout wrapper ───────────────────────────────
-// Applied to .hdx-v2-content-columns on the dataset page via
-// columns_class = 'hdx-v2-dataset-columns' in hdx_read.html.
-.hdx-v2-dataset-columns {
-    @media (min-width: @hdx-bp-xl) {
-        gap: var(--hdx-space-6); // 1.5rem flex gap between sidebar and content
-    }
-}
-// ── Dataset sidebar (wrapper-secondary at XL) ──────────────────
+// ── Dataset sidebar (padding only — layout via generic columns) ──
 .hdx-v2-dataset-sidebar {
-    display: none;
-
     @media (min-width: @hdx-bp-xl) {
-        display:  block;
-        .v2-sidebar-flex();
-        padding:  var(--hdx-space-12) 0;
+        padding: var(--hdx-space-12) 0;
     }
-}
-// ── Dataset content (wrapper-primary) ─────────────────────────
-// No horizontal padding — container provides 1rem/3rem sides.
-.hdx-v2-dataset-content {
-    .v2-content-flex();
 }
 // ── Section wrapper ───────────────────────────────────────────
 // Sections are separated by <hr class="c-divider"> in the template.
@@ -167,23 +150,4 @@
         margin-top: var(--hdx-space-2);
         min-height: 4rem;
     }
-}
-// ── Showcase grid ─────────────────────────────────────────────
-.hdx-v2-dataset-showcase-grid {
-    display:               grid;
-    grid-template-columns: 1fr;
-    gap:                   var(--hdx-space-6);
-
-    @media (min-width: @hdx-bp-md) {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
-// ── List wrapper context ──────────────────────────────────────
-// resources_list.html wraps cards in .resource-list > .resource-item (v2: divs).
-// These class names are also queried by hdx_resource_grouping.js.
-.resource-list {
-    display:        flex;
-    flex-direction: column;
-    gap:            var(--hdx-space-4);
 }

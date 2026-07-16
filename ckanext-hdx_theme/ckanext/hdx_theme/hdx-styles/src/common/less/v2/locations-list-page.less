@@ -199,29 +199,21 @@
     background-color: var(--hdx-neutral-0);
 }
 
-// ── Columns flex row ──────────────────────────────────────────
+// ── Columns flex row (gap via generic --gap) ──────────────────
 .hdx-v2-all-locations-columns {
     width: 100%;
-    gap:   var(--hdx-space-3);
-
-    @media (min-width: @hdx-bp-xl) {
-        gap: var(--hdx-space-6);
-    }
 }
 
 // ── Sidebar (Jump to section) ─────────────────────────────────
 // SM/MD: right side (order:1), natural/content-driven width
-// XL:    left side (order:0), 25% flex width
+// XL:    left side (order:0), 25% flex width via generic __sidebar
 .hdx-v2-all-locations-sidebar {
     flex-shrink: 0;              // natural width at SM/MD
-    display:     block;
     order:       1;
     padding-top: var(--hdx-space-8);
     padding-bottom: var(--hdx-space-8);
-    .v2-sidebar-sticky();
 
     @media (min-width: @hdx-bp-xl) {
-        .v2-sidebar-flex();     // flex: 0 0 25%; min-width: 0
         order: 0;
     }
 
@@ -251,7 +243,6 @@
 
 // ── Content area + letter sections ───────────────────────────
 .hdx-v2-all-locations-content {
-    .v2-content-flex();          // flex: 1; min-width: 0
     order:   0;
     padding: var(--hdx-space-8) 0 var(--hdx-space-24);
 
@@ -277,17 +268,6 @@
 
                 @media (min-width: @hdx-bp-xl) {
                     font-size: var(--hdx-fs-2xl);
-                }
-            }
-
-            .hdx-v2-all-locations-grid {
-                display:               grid;
-                grid-template-columns: repeat(2, 1fr);
-                gap:                   var(--hdx-space-2);
-
-                @media (min-width: @hdx-bp-xl) {
-                    grid-template-columns: repeat(3, 1fr);
-                    gap:                   var(--hdx-space-3);
                 }
             }
         }

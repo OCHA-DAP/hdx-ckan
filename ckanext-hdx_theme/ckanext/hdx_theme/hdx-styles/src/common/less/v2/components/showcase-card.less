@@ -66,3 +66,17 @@
         padding-top: var(--hdx-space-2);
     }
 }
+
+// ────────────────────────────────────────────────────────────
+// c-showcase-card-grid — grid wrapper for showcase cards
+// ────────────────────────────────────────────────────────────
+
+.c-showcase-card-grid {
+    display:               grid;
+    grid-template-columns: 1fr;
+    gap:                   var(--hdx-space-6);
+
+    @media (min-width: @hdx-bp-md) {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}

@@ -7,10 +7,10 @@
   border: 1px solid var(--hdx-neutral-1);
   border-radius: var(--hdx-radius-sm);
   box-shadow: var(--hdx-shadow-sm);
-  transition: border 0.15s ease;
+  transition: border-color 0.15s ease;
 }
 .c-member-list-card:hover {
-  border: 1.5px solid var(--hdx-neutral-8);
+  border-color: var(--hdx-neutral-8);
 }
 @media (min-width: 48rem) {
   .c-member-list-card {
@@ -135,4 +135,9 @@
     margin-left: 0;
     justify-content: flex-start;
   }
+}
+.c-member-list-card-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hdx-space-4);
 }

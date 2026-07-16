@@ -11,10 +11,10 @@
 
 @c-resource-card-bg:             var(--hdx-neutral-0);
 @c-resource-card-border-default: 1px solid var(--hdx-neutral-1);
-@c-resource-card-border-hover:   1.5px solid var(--hdx-neutral-8);
+@c-resource-card-border-color-hover: var(--hdx-neutral-8);
 @c-resource-card-shadow:         var(--hdx-shadow-sm);
 @c-resource-card-radius:         var(--hdx-radius-sm);
-@c-resource-card-transition:     border 0.15s ease;
+@c-resource-card-transition:     border-color 0.15s ease;
 
 @c-resource-card-padding:        var(--hdx-space-4);   // 16px
 @c-resource-card-gap:            var(--hdx-space-3);   // 12px
@@ -48,7 +48,7 @@
     position:         relative;
 
     &:hover {
-        border: @c-resource-card-border-hover;
+        border-color: @c-resource-card-border-color-hover;
     }
 
     // ── HDX Connect (requestdata) variant ────────────────────
@@ -231,4 +231,14 @@
         gap:           var(--hdx-space-2);
         margin-left:   auto;            // push actions to the right
     }
+}
+
+// ────────────────────────────────────────────────────────────
+// c-resource-card-list — vertical list wrapper for resource cards
+// ────────────────────────────────────────────────────────────
+
+.c-resource-card-list {
+    display:        flex;
+    flex-direction: column;
+    gap:            var(--hdx-space-4);
 }

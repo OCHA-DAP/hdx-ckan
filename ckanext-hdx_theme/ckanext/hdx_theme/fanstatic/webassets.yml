@@ -1472,6 +1472,7 @@ v2-components-styles:
     - v2/components/divider.css
     - v2/components/drawer.css
     - v2/components/dropdown.css
+    - v2/components/form-alert.css
     - v2/components/form-field.css
     - v2/components/highlight-card.css
     - v2/components/input-field.css

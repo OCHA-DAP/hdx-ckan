@@ -12,8 +12,8 @@
 @c-dropdown-bg-active:     var(--hdx-neutral-01);       // #fafbfb
 
 @c-dropdown-border:        1px solid var(--hdx-neutral-2);              // #d8e0e1
-@c-dropdown-border-hover:  1.5px solid var(--hdx-neutral-8);            // 1.5px: heavier border for stronger hover feedback
-@c-dropdown-border-active: 1.5px solid var(--hdx-primary-5);            // 1.5px: heavier border for stronger active/focus feedback
+@c-dropdown-border-color-hover:  var(--hdx-neutral-8);                  // darker border for hover feedback
+@c-dropdown-border-color-active: var(--hdx-primary-5);                  // active/focus border color
 @c-dropdown-border-filter: 1px solid var(--hdx-neutral-95);             // #101212
 
 @c-dropdown-text:          var(--hdx-neutral-8);         // #3f4748
@@ -25,7 +25,7 @@
 
 // Size M
 @c-dropdown-m-fs:   var(--hdx-fs-s);    // 14 px
-@c-dropdown-m-h:    2.125rem;           // 34 px — fixed height so border grows inward
+@c-dropdown-m-h:    2.125rem;           // 34 px — Figma size spec
 @c-dropdown-m-pad:  var(--hdx-space-2) var(--hdx-space-2) var(--hdx-space-2) var(--hdx-space-14); // 8 8 8 10
 @c-dropdown-m-gap:  var(--hdx-space-1); //  4 px
 
@@ -67,12 +67,12 @@
         box-sizing:       border-box;
         box-shadow:       @c-dropdown-panel-shadow;
         cursor:           pointer;
-        transition:       background-color 0.15s ease, border 0.15s ease;
+        transition:       background-color 0.15s ease, border-color 0.15s ease;
         color:            var(--hdx-neutral-8);
 
         &:hover {
             background-color: @c-dropdown-bg-hover;
-            border:           @c-dropdown-border-hover;
+            border-color:     @c-dropdown-border-color-hover;
             box-shadow:       @c-dropdown-panel-shadow;
         }
 
@@ -129,7 +129,7 @@
     &--open &__trigger,
     &--active &__trigger {
         //background-color: @c-dropdown-bg-active !important;
-        //border:           @c-dropdown-border-active !important;
+        //border-color:     @c-dropdown-border-color-active !important;
         //box-shadow:       none !important;
     }
 
@@ -176,11 +176,11 @@
             color:              @c-dropdown-text;
             cursor:             pointer;
             width:              100%;
-            transition:         background-color 0.15s ease, border 0.15s ease;
+            transition:         background-color 0.15s ease, border-color 0.15s ease;
 
             &:hover {
                 background-color: @c-dropdown-bg-hover;
-                border:           @c-dropdown-border-hover;
+                border-color:     @c-dropdown-border-color-hover;
             }
         }
 
@@ -393,11 +393,11 @@
         overflow:         hidden;
         text-overflow:    ellipsis;
         white-space:      nowrap;
-        transition:       background-color 0.15s ease, border 0.15s ease;
+        transition:       background-color 0.15s ease, border-color 0.15s ease;
 
         &:hover {
             background-color: var(--hdx-neutral-01);
-            border:           @c-dropdown-border-hover;
+            border-color:     @c-dropdown-border-color-hover;
         }
 
         &.is-active {
@@ -406,4 +406,9 @@
             color:            var(--hdx-neutral-0);
         }
     }
+}
+
+// ── Inline modifier — natural width instead of stretching ───
+.c-dropdown--inline {
+    width: auto;
 }

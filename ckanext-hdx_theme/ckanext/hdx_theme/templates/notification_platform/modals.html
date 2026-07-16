@@ -109,7 +109,7 @@
     title=CONST_NOTIFICATION_PLATFORM.UNSUBSCRIBE_CONFIRMATION_MODAL_TITLE) %}
   <div class="c-drawer-form">
     <p class="c-drawer-form__text">{{ confirmation_modal_text|safe }}</p>
-    <div class="c-drawer-form__alert" role="alert"></div>
+    {% snippet 'v2/components/form-alert.html', hidden=True %}
     <div class="c-drawer-form__buttons">
       {{ h.snippet('v2/components/button.html',
           style='tertiary',

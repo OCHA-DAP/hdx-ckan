@@ -4,20 +4,12 @@
 .hdx-v2-hapi-row {
   background-color: var(--hdx-neutral-0);
 }
-.hdx-v2-hapi-sidebar {
-  display: none;
-}
 @media (min-width: 80rem) {
   .hdx-v2-hapi-sidebar {
-    display: block;
-    flex: 0 0 25%;
-    min-width: 0;
     padding: var(--hdx-space-10) 0;
   }
 }
 .hdx-v2-hapi-content {
-  flex: 1;
-  min-width: 0;
   padding: var(--hdx-space-10) 0 var(--hdx-space-12);
 }
 .hdx-v2-hapi-section-heading {
@@ -41,11 +33,6 @@
   height: 1100px;
   border: none;
   display: block;
-}
-.hdx-v2-hapi-cards {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: var(--hdx-space-4);
 }
 .hdx-v2-hapi-partners-grid {
   display: grid;

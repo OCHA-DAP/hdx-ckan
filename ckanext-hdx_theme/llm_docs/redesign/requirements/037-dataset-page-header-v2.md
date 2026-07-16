@@ -7,7 +7,7 @@
 
 ## 1. Context
 
-The dataset page uses a v2 redesign hero header — `dataset-page-header` — covering the title, labels, description, organisation logo, CTA buttons, and a metadata strip (location, update frequency, time period, source).
+The dataset page uses the shared v2 hero header — `v2/components/page-header.html` (`c-page-header`) — covering the title, labels, description, organisation logo, CTA buttons, and a generic metadata strip driven by the `meta_items` list param (the dataset page passes location, update frequency, time period, source).
 
 `hdx_read.html` extends `v2/page.html` and renders the header unconditionally (no feature gate). The v1 layout block has been removed.
 
@@ -99,15 +99,16 @@ Right card moves **inside** the left column, between description and CTA. All me
 | "Request only data" label | `request_only=True` |
 | "COD+" label | `cod_dataset=True` |
 | `links_list` label+button groups | `links_list` non-empty |
-| Org logo | `org_logo_src` non-empty |
-| "Contact organisation" | Always shown |
+| Org logo | `logo_src` non-empty |
+| "Contact organisation" | Shown when `org_name` provided |
 | "Get notified" button | `supports_notifications=True` |
 | Download count | `download_count` non-zero |
-| "View all" (Location) | `location_text` non-empty — arrow-down icon, href `#metadata-location` |
-| "Sub-national" label | `subnational=True` |
-| "Up to date" label | `is_up_to_date=True` |
-| Time period tooltip icon | `time_period_tooltip=True` |
-| Source "View more" link | `source_text` non-empty AND source overflows 1 line (detected by JS) — links to `#dataset-additional-info` |
+| Metadata strip + divider | `meta_items` non-empty (`hdx_read.html` passes `[]` unless `_has_meta`) |
+| "View all" (Location) | Location item's `link` set when location text non-empty — arrow-down icon, href `#metadata-location` |
+| "Sub-national" label | Location item's `chip` set when `pkg.subnational == 1` |
+| "Up to date" label | Frequency item's `chip` set when `pkg.is_fresh` |
+| Time period tooltip icon | Time period item's `tooltip` dict |
+| Source "View more" link | Source item has `link` + `link_on_overflow: True` — rendered hidden, revealed by JS when the value overflows 1 line; links to `#metadata-source` |
 
 ---
 
@@ -133,24 +134,27 @@ All elements map to existing v2 components. **No new base components needed.**
 | "Contact organisation" | `v2/components/text-button.html` | `style='tertiary'`, `size='m'`, `icon=True`, **`icon_position='left'`**, **`icon_src='v2/icons/mail.svg'`**, `tag='a'` |
 | "View crisis page" | `v2/components/text-button.html` | `style='tertiary'`, `size='s'`, `icon=True`, `icon_position='right'`, `icon_src='v2/icons/arrow-right.svg'`, `tag='a'` |
 | "Show more" (description) | `v2/components/text-button.html` | `style='tertiary'`, `size='s'`, `icon=True`, `icon_position='right'`, `icon_src='v2/icons/chevron-down.svg'`, `tag='button'` |
-| "View all" (Location) | `v2/components/text-button.html` | `style='tertiary'`, `size='s'`, `icon=True`, `icon_position='right'`, **`icon_src='v2/icons/arrow-down.svg'`**, `tag='a'`, `href='#metadata-location'` |
-| "View more" (Source) | `v2/components/text-button.html` | `style='tertiary'`, `size='s'`, `icon=True`, `icon_position='right'`, `icon_src='v2/icons/arrow-right.svg'`, `tag='a'`, `href='#dataset-additional-info'`, `extra_classes='hdx-v2-dataset-header__source-view-more'` — hidden by default, revealed by JS when text overflows |
-| Info-circle (tooltip trigger) | `v2/components/button.html` | `style='tertiary'`, `size='s'`, `type='icon-only'`, `icon=True`, `icon_src='v2/icons/info-circle.svg'`, `attrs={'aria-expanded': 'false'}` — styled via CSS to remove button chrome |
+| "View all" (Location) | `v2/components/text-button.html` | Rendered from the meta item's `link` dict: `style='tertiary'`, `size='s'`, `icon=True`, `icon_position='right'`, **`icon_src='v2/icons/arrow-down.svg'`**, `tag='a'`, `href='#metadata-location'` |
+| "View more" (Source) | `v2/components/text-button.html` | Rendered from the meta item's `link` dict; with `link_on_overflow: True` it gets `extra_classes='c-page-header__meta-view-more'` — hidden by default, revealed by JS when text overflows. `href='#metadata-source'` |
+| Info-circle (tooltip trigger) | `v2/components/info-icon.html` | Rendered from the meta item's `tooltip` dict (`{text, id, aria_label}`) — shared `c-info-icon` + `c-tooltip-anchor` pattern |
 
 ### 3.3 Tooltip
 
-Both source and time period tooltips:
+The time period tooltip:
 ```jinja
-{% snippet 'v2/components/tooltip.html', variant='dark', arrow='', text='...' %}
+{% snippet 'v2/components/info-icon.html',
+    aria_label=item.tooltip.aria_label,
+    tooltip_text=item.tooltip.text,
+    tooltip_id=item.tooltip.id %}
 ```
 
-The tooltip-wrap div has `margin-left: auto` to push it to the right edge of the metadata label row. The `c-button` inside is overridden via CSS to remove background, border, padding and match the weight of text-button icons. JS toggles `aria-expanded` on click, and CSS shows the tooltip when `aria-expanded="true"`.
+Uses the shared `c-info-icon` / `c-tooltip-anchor` pattern. Hover/focus visibility is CSS; `page-header.js` toggles `is-open` + `aria-expanded` on click, and closes on outside click or Escape (returning focus to the trigger).
 
 ### 3.4 Structural elements
 
 | Element | Markup |
 |---------|--------|
-| Divider | `<hr class="c-divider hdx-v2-dataset-header__divider">` |
+| Divider | `<hr class="c-divider">` |
 | Org logo | `<img>` with `max-width` + `object-fit: contain` |
 | Dataset title | `<h1>` — Merriweather bold, responsive font-size; gets `data-module="hdx-quick-edit"` attrs when `edit_mode=True` |
 | Description container | `<div data-module="clamped-text">` + `<p class="...__desc-text" data-clamped-content>` + show-more button (updated task 038) |
@@ -162,56 +166,83 @@ The tooltip-wrap div has `margin-left: auto` to push it to the right edge of the
 
 ### 4.1 Snippet call (from `hdx_read.html`)
 
+The caller builds the metadata strip as a `meta_items` list via `{% set %}`, guarded by `_has_meta`:
+
 ```jinja
-{% snippet 'v2/page-header.html',
+{% set _meta_items = [
+  {'label': _('Location'), 'value': _location_text,
+   'chip': {'text': _('Sub-national'), 'color': 'cyan'} if _subnational else None,
+   'link': {'label': _('View all'), 'href': '#metadata-location'} if _location_text else None},
+  {'label': _('Expected update frequency'), 'value': _update_frequency,
+   'chip': {'text': _('Up to date'), 'color': 'cyan'} if pkg.is_fresh else None},
+  {'label': _('Time period'), 'value': _time_period,
+   'tooltip': {'aria_label': _('More info about time period'),
+               'text': _('The earliest start date and latest end date across all resources included in the dataset.'),
+               'id': 'tooltip-time-period'}},
+  {'label': _('Source'), 'value': _source_text,
+   'link': {'label': _('View more'), 'href': '#metadata-source'} if _source_text else None,
+   'link_on_overflow': True},
+] if _has_meta else [] %}
+
+{% snippet 'v2/components/page-header.html',
     title=pkg.title or pkg.name,
     description=pkg.notes,
     org_name=pkg.organization.title,
-    org_logo_src=logo_config.image_url if logo_config and logo_config.image_url else '',
-    org_href=h.url_for('organization.read', id=pkg.organization.name),
-    contact_href=h.url_for('hdx_dataset.contact_contributor', id=pkg.name or pkg.id),
+    logo_src=logo_config.image_url if logo_config and logo_config.image_url else '',
+    contact_href=contact_href,
     download_count=pkg.approx_total_downloads,
     request_only=pkg.is_requestdata_type,
     cod_dataset=(analytics_is_cod == 'true'),
     links_list=pkg.links_list or [],
     supports_notifications=analytics_supports_notifications,
-    location_text=_location_text,
-    subnational=(pkg.subnational|int == 1),
-    update_frequency=h.hdx_get_frequency_by_value(pkg.data_update_frequency),
-    is_up_to_date=pkg.is_fresh,
-    time_period=h.render_date_from_concat_str(pkg.dataset_date),
-    time_period_tooltip=True,
-    source_text=pkg.dataset_source or '',
+    notification_object_type=object_type,
+    notification_object_id=object_id,
+    notification_object_dict=pkg,
+    meta_items=_meta_items,
     edit_mode=edit_mode,
-    pkg_id=pkg.id
+    pkg_id=pkg.id,
+    pkg_state=pkg.state,
+    membership=membership,
+    hide_membership=False,
+    org_id=pkg.owner_org
 %}
 ```
 
 ### 4.2 Parameter reference
 
+Dataset-relevant params (see the docblock in `templates/v2/components/page-header.html` for the full list — org/landing/crisis and download-CTA params included):
+
 | Param | Type | Default | Description |
 |-------|------|---------|-------------|
 | `title` | string | `''` | Dataset title text. |
+| `compact_title` | bool | `False` | Title fixed at 1.5rem, no XL scale-up (`c-page-header--compact-title`, resource pages). |
 | `description` | string | `''` | Full description. Empty = section hidden. |
 | `org_name` | string | `''` | Organisation display name (used as img alt). |
-| `org_logo_src` | string | `''` | Logo image URL. Empty = logo area hidden. |
-| `org_href` | string | `'#'` | Link to org page. |
+| `logo_src` | string | `''` | Logo image URL. Empty = logo area hidden. |
 | `contact_href` | string | `'#'` | Link for "Contact organisation" button. |
 | `download_count` | int | `0` | From `pkg.approx_total_downloads`. Zero/falsy = stat hidden. |
 | `request_only` | bool | `False` | Show "Request only data" yellow label. |
 | `cod_dataset` | bool | `False` | Show "COD+" grey label. |
 | `links_list` | list | `[]` | List of `{label, title, url, newTab}` dicts from `pkg.links_list`. |
 | `supports_notifications` | bool | `False` | Show "Get notified" button (JS modal). |
-| `location_text` | string | `''` | E.g. `'Multiple locations'` or single group title. |
-| `subnational` | bool | `False` | Show "Sub-national" label in location row. |
-| `update_frequency` | string | `''` | E.g. `'Daily'`. |
-| `is_up_to_date` | bool | `False` | Show "Up to date" cyan label. |
-| `time_period` | string | `''` | E.g. `'01 January 2016 - 05 July 2025'`. |
-| `time_period_tooltip` | bool | `False` | Show info-circle tooltip on time period. |
-| `source_text` | string | `''` | Source/contributor display text. Truncated to 1 line; "View more" shown by JS if overflowing. |
-| `long_source` | bool | `False` | Unused — kept for API compatibility. |
+| `meta_items` | list | `[]` | Metadata strip entries (strip + divider render only when non-empty). 3 items get the resource-style `--cols-3` grid; otherwise the 4-column dataset grid. |
+| `extra_classes` | string | `''` | Extra classes on the root section. |
 | `edit_mode` | bool | `False` | Adds `data-module="hdx-quick-edit"` attrs to title and description container. |
 | `pkg_id` | string | `''` | Package ID — required when `edit_mode=True`. |
+
+Each `meta_items` entry:
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| `label` | string | required | Column heading. |
+| `value` | string | `''` | Value text. |
+| `value_href` | string | `''` | Render value as `c-text-link` (resource URL). |
+| `chip` | dict | `None` | `{text, color}` — `c-label` size xs after the value (Sub-national / Up to date). |
+| `tooltip` | dict | `None` | `{text, id, aria_label}` — info-icon in the label row (time period). |
+| `copy_value` | string | `''` | When set, a copy-button in the label row copies this text (resource ID / URL). |
+| `link` | dict | `None` | `{label, href}` — text-button in the label row (Location "View all", Source "View more"). |
+| `link_on_overflow` | bool | `False` | Link starts hidden; `page-header.js` reveals it when the value overflows one line. Implies `truncate`. |
+| `truncate` | bool | `False` | Single-line ellipsis value. |
 
 ### 4.3 Removed params (vs initial proposal)
 
@@ -232,35 +263,34 @@ The tooltip-wrap div has `margin-left: auto` to push it to the right edge of the
 ~~`data-module="dataset-page-header"`~~ → **updated (task 038)**: now uses shared `data-module="clamped-text"` with `data-clamped-content` on `<p>`. Handled by `clamped-text.js`.
 
 ```html
-<div class="hdx-v2-dataset-header__desc" data-module="clamped-text">
-  <p class="hdx-v2-dataset-header__desc-text" data-clamped-content>{{ description }}</p>
+<div class="c-page-header__desc" data-module="clamped-text">
+  <p class="c-page-header__desc-text" data-clamped-content>{{ description }}</p>
   <!-- c-text-button "Show more" / "Show less" -->
 </div>
 ```
 
 JS toggles `is-open` class on the `<p>` (not `is-expanded` on the container). CSS uses `-webkit-line-clamp: 3` by default; `.is-open` on `<p>` removes the clamp.
 
-### 5.2 Tooltip (time period + source)
+### 5.2 Tooltip (time period)
 
-The `__tooltip-wrap` div has `margin-left: auto` to push it to the right of the `__meta-label-row`. Inside it: a `c-button` (icon-only, aria-expanded="false") and a `c-tooltip--dark`.
+Rendered via the shared `v2/components/info-icon.html` snippet from the meta item's `tooltip` dict — a `c-info-icon` inside a `c-tooltip-anchor` with a `c-tooltip`.
 
-CSS overrides strip the `c-button` of all button chrome (background, border, padding, shadow) and size the icon to `0.875rem`. CSS shows the tooltip when `.c-button[aria-expanded="true"] ~ .c-tooltip`. JS in `page-header.js` toggles `aria-expanded` on click and closes all tooltips on outside click.
+Hover/focus visibility is pure CSS. `page-header.js` (which targets all `.c-page-header` instances via `querySelectorAll`) toggles `is-open` + `aria-expanded` on click/tap, closes all tooltips on outside click, and closes on Escape returning focus to the trigger.
 
 Tooltip copy:
 - **Time period:** `"The earliest start date and latest end date across all resources included in the dataset."`
-- **Source:** `"Source information placeholder."` *(TBD)*
 
 ### 5.3 Source truncation and "View more"
 
-Source value is always truncated to 1 line via `white-space: nowrap; overflow: hidden; text-overflow: ellipsis` on the `__meta-value--source` modifier.
+The source item sets `link_on_overflow: True`, which truncates the value to 1 line (`white-space: nowrap; overflow: hidden; text-overflow: ellipsis` via the `__meta-value--truncate` modifier) and marks the meta item with `data-header-meta-overflow`.
 
-The "View more" link (class `hdx-v2-dataset-header__source-view-more`) is always rendered in the HTML but hidden via CSS (`display: none`). On `DOMContentLoaded`, `page-header.js` checks if `sourceSpan.scrollWidth > sourceSpan.clientWidth` and if so sets `display: inline-flex` to reveal the link. Clicking "View more" scrolls to `#dataset-additional-info` (the "Additional information" section in the secondary column of `hdx_read.html`).
+The "View more" link (class `c-page-header__meta-view-more`) is always rendered in the HTML but hidden via CSS (`display: none`). On `DOMContentLoaded`, `page-header.js` checks each `[data-header-meta-overflow]` item and, if the value span's `scrollWidth > clientWidth`, sets `display: inline-flex` to reveal the link. Clicking "View more" scrolls to `#metadata-source` in the metadata section of `hdx_read.html`.
 
 ### 5.4 `links_list` rendering
 
 Each item: `{label (optional), title, url, newTab}`. Rendered as a flex `__link-group` per item in the label row:
 ```html
-<div class="hdx-v2-dataset-header__link-group">
+<div class="c-page-header__link-group">
   {% if link.label %}
     <!-- label component, text truncated "This dataset is part" → "Part" -->
   {% endif %}
@@ -299,47 +329,57 @@ All responsive logic via LESS `@media` queries nested inside element blocks.
 
 | File | Status | Role |
 |------|--------|------|
-| `templates/v2/page-header.html` | Created | Component snippet |
-| `hdx-styles/src/common/less/v2/styles.less` | Modified | Contains all `.hdx-v2-dataset-header` LESS (embedded, not a separate file) |
-| `fanstatic/v2/components/page-header.js` | Created | Show-more + tooltip JS |
+| `templates/v2/components/page-header.html` | Created | Component snippet (shared by dataset, resource, org, landing, crisis pages) |
+| `less/v2/components/page-header.less` | Created | All `.c-page-header` LESS |
+| `fanstatic/v2/components/page-header.js` | Created | Overflow "View more" reveal + tooltip click/keyboard JS |
 | `fanstatic/webassets.yml` | Modified | Adds `page-header.js` to `v2-components-scripts` bundle |
-| `templates/package/hdx_read.html` | Modified | Renders snippet unconditionally; passes `edit_mode` + `pkg_id`; `id="dataset-additional-info"` on secondary section header |
+| `templates/package/hdx_read.html` | Modified | Builds `_meta_items` (guarded by `_has_meta`), renders snippet unconditionally; passes `edit_mode` + `pkg_id` |
 
 ### 7.2 What was NOT created
 
-- No separate `dataset-page-header.less` — styles embedded in `styles.less`.
-- No new base components — all uses existing `label.html`, `button.html`, `text-button.html`, `tooltip.html`.
+- No new base components — all uses existing `label.html`, `button.html`, `text-button.html`, `text-link.html`, `info-icon.html`, `copy-button.html`.
 
 ### 7.3 BEM naming
 
-Block: `hdx-v2-dataset-header` (page section — no `c-` prefix).
+Block: `c-page-header` (shared component).
 
 ```
-hdx-v2-dataset-header
+c-page-header
+  --compact-title       title fixed at 1.5rem (resource pages)
+  --underlined          SM/MD bottom border (Signals)
   __top
   __left
   __description
+  __format              file-type icon + label (resource)
+  __format-label
   __labels
   __link-group          one per links_list item
   __title
+  __subtitle
+  __member-since
   __desc                data-module="clamped-text" (updated task 038)
   __desc-text           line-clamped <p> data-clamped-content; clamp lifted when __desc-text.is-open
   __cta
+    --row               download + export metadata row (resource)
   __notify-btn
   __downloads
   __right-card
     --sm-only           visible < 768px; row layout inside left col
     --md-up             visible ≥ 768px; sidebar col layout
-  __org-logo
-  __divider
+  __logo
+  __card-actions
+  __card-stats
+  __card-stat
+  __card-stat-label
+  __card-stat-value
   __metadata
-  __meta-item           width: 100% SM / calc(50%-12px) MD / flex:1 XL
-  __meta-label-row      flex row; tooltip-wrap gets margin-left: auto
+    --cols-3            resource-style 3-column grid (auto when meta_items|length == 3)
+  __meta-item           width: 100% SM / calc(50%-12px) MD / flex:1 XL; data-header-meta-overflow when link_on_overflow
+  __meta-label-row      flex row
   __meta-label
   __meta-value
-    --source            nowrap + text-overflow: ellipsis on inner span
-  __source-view-more    always display:none; JS sets inline-flex when overflow
-  __tooltip-wrap        margin-left: auto; c-button chrome removed via CSS
+    --truncate          nowrap + text-overflow: ellipsis on inner span
+  __meta-view-more      always display:none; JS sets inline-flex when overflow
 ```
 
 ---
@@ -367,15 +407,15 @@ hdx-v2-dataset-header
 | OQ-2 | `request_only` mapped from `pkg.is_requestdata_type`. |
 | OQ-3 | Crisis entries come from `pkg.links_list` (same mechanism as data grids). |
 | OQ-4 | Download count is `pkg.approx_total_downloads`. |
-| OQ-5 | "View all" on Location always renders when `location_text` non-empty. Uses `arrow-down.svg`. Anchor: `#metadata-location`. |
-| OQ-6 | If `org_logo_src` empty, logo area hidden entirely. |
+| OQ-5 | "View all" on Location always renders when the location text is non-empty. Uses `arrow-down.svg`. Anchor: `#metadata-location`. |
+| OQ-6 | If `logo_src` empty, logo area hidden entirely. |
 | OQ-7 | "Get notified" opens JS notification modal. "Contact organisation" is an `<a>` linking to `contact_href`. Uses `mail.svg` icon on the left. |
 | OQ-8 | Hidden text-link in Location value row (Figma only) — out of scope, skipped. |
-| OQ-9 | Tooltip copy hardcoded. Time period: defined. Source: placeholder `"Source information placeholder."` (TBD). |
+| OQ-9 | Tooltip copy hardcoded in the caller's `meta_items`. Only the time period item has a tooltip. |
 | OQ-10 | Labels flex-wrap freely with no per-line cap. |
 | OQ-11 | ~~`data-module="dataset-page-header"` handled by `page-header.js`~~ → **updated (task 038)**: uses shared `data-module="clamped-text"` + `data-clamped-content`; JS handler removed from `page-header.js`. |
 | OQ-12 | Tooltip trigger is `c-button` (icon-only) with CSS chrome removed; aria-expanded toggled by JS; outside click closes. |
-| OQ-13 | Source "View more" link is rendered but hidden; JS reveals it only when text visually overflows 1 line (scrollWidth > clientWidth). Links to `#dataset-additional-info` in the secondary block. |
+| OQ-13 | Source "View more" link is rendered but hidden; JS reveals it only when text visually overflows 1 line (scrollWidth > clientWidth). Links to `#metadata-source`. |
 | OQ-14 | `hdx_read.html` has no v2 feature gate — the new header is always rendered. v1 layout block removed. |
 | OQ-15 | MD layout: left column uses `flex: 1` (not fixed width) to avoid blank space beside org card on wide viewports. |
 | OQ-16 | Spacing and typography use CSS custom properties (`var(--hdx-space-*)`, `var(--hdx-font-*)`, etc.), not raw rem values. |

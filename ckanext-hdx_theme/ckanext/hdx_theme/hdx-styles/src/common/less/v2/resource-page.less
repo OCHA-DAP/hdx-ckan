@@ -11,30 +11,20 @@
     background-color: var(--hdx-neutral-0);
 }
 
-// ── Two-column layout wrapper ────────────────────────────────
+// ── Two-column layout wrapper (gap via generic --gap-xl) ─────
 .hdx-v2-resource-columns {
     padding: var(--hdx-space-4) 0 5rem; // 5rem bottom ensures page scrolls past last anchor section
-
-    @media (min-width: @hdx-bp-xl) {
-        gap: var(--hdx-space-6);
-    }
 }
 
-// ── Sidebar (anchor nav) ─────────────────────────────────────
+// ── Sidebar (anchor nav — padding only) ──────────────────────
 .hdx-v2-resource-sidebar {
-    .v2-sidebar-flex();
-    display: none;
-
     @media (min-width: @hdx-bp-xl) {
-        display:  block;
-        padding:  var(--hdx-space-10) 0; // 40px top/bottom
+        padding: var(--hdx-space-10) 0; // 40px top/bottom
     }
 }
 
 // ── Content area ─────────────────────────────────────────────
 .hdx-v2-resource-content {
-    .v2-content-flex();
-
     @media (min-width: @hdx-bp-md) {
         padding: var(--hdx-space-8) 0;
     }

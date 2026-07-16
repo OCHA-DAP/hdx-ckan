@@ -19,14 +19,6 @@
 .hdx-v2-nav-controls .hdx-v2-nav-ctrl-pair .c-dropdown--size-s {
   width: auto;
 }
-.hdx-v2-dataset-list__cards {
-  display: flex;
-  flex-direction: column;
-  gap: var(--hdx-space-4);
-}
-.hdx-v2-dataset-list__cards .highlight {
-  background-color: var(--hdx-warning-1);
-}
 .hdx-v2-list-header {
   display: flex;
   align-items: center;
@@ -73,34 +65,17 @@
     display: none;
   }
 }
-.hdx-v2-list-header__filter-btn .c-dropdown {
-  width: auto;
-}
 .hdx-v2-search-bar-row {
   width: 100%;
   margin-bottom: var(--hdx-space-4);
 }
-.hdx-v2-search-bar-row .c-search-input {
-  width: 100%;
-}
-.hdx-v2-search-sidebar {
-  flex: 0 0 25%;
-  min-width: 0;
-  display: none;
-}
 @media (min-width: 80rem) {
   .hdx-v2-search-sidebar {
-    display: block;
-    position: sticky;
-    top: var(--hdx-space-12);
-    align-self: flex-start;
     border-right: 1px solid var(--hdx-neutral-1);
     padding: var(--hdx-space-5) var(--hdx-space-10) 5rem 0;
   }
 }
 .hdx-v2-search-content {
-  flex: 1;
-  min-width: 0;
   padding: var(--hdx-space-10) 0 var(--hdx-space-10) var(--hdx-space-10);
 }
 @media (max-width: 80rem) {

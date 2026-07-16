@@ -5,13 +5,13 @@ var unsubscribeDrawer = document.getElementById('notificationsUnsubscribeDrawer'
 var unsubscribedDrawer = document.getElementById('notificationsUnsubscribedDrawer');
 
 // signup
-var signupDangerAlert = signupDrawer ? signupDrawer.querySelector('.c-drawer-form__alert') : null;
+var signupDangerAlert = signupDrawer ? signupDrawer.querySelector('.c-form-alert') : null;
 var signupSubmitButton = signupDrawer ? signupDrawer.querySelector('#notificationsSignupButton') : null;
 var signupForm = signupDrawer ? signupDrawer.querySelector('#notification-platform-form') : null;
 var signupFormPopupSourceInput = signupForm ? signupForm.querySelector('input[name="popup_source"]') : null;
 
 // unsubscribe
-var unsubscribeDangerAlert = unsubscribeDrawer ? unsubscribeDrawer.querySelector('.c-drawer-form__alert') : null;
+var unsubscribeDangerAlert = unsubscribeDrawer ? unsubscribeDrawer.querySelector('.c-form-alert') : null;
 var unsubscribeSubmitButton = unsubscribeDrawer ? unsubscribeDrawer.querySelector('#notificationsUnsubscribeButton') : null;
 
 // opt in buttons
@@ -130,13 +130,13 @@ var onSignupSubmit = function (objectId, objectName, objectType, authenticated) 
 var showAlert = function (alert, text) {
   if (!alert) return;
   alert.textContent = text;
-  alert.classList.add('is-visible');
+  alert.hidden = false;
 };
 
 var hideAlert = function (alert) {
   if (!alert) return;
   alert.textContent = '';
-  alert.classList.remove('is-visible');
+  alert.hidden = true;
 };
 
 var displayNotificationOptoutOption = function (objectId, objectType) {
