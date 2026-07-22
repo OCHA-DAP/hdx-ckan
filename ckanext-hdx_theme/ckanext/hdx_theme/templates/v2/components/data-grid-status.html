@@ -30,8 +30,8 @@
 
   Per-dataset row swatch (interactive):
   {% snippet 'v2/components/data-grid-status.html',
-      state='available' if dataset.is_good else 'unavailable',
-      aria_label='Available, not up to date',
+      state='available-updated' if dataset.is_good else 'available',
+      aria_label='Available and up-to-date' if dataset.is_good else 'Available, not up-to-date',
       tooltip_id='dg-tip-' ~ dataset.name,
       tooltip_text=dataset.general_comment %}
 
