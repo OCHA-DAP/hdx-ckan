@@ -13,7 +13,6 @@ Crawl-Delay: 10
 Disallow: /gis
 Disallow: /mapbox
 Disallow: /mapbox-base-tiles
-Disallow: /mapbox-base-tiles-v2
 
 # Tabular data files
 Disallow: /*.csv$
