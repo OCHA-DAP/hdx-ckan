@@ -38,6 +38,26 @@
 }
 
 // ────────────────────────────────────────────────────────────
+// c-stats-card--plain — no background/radius/padding, value above
+// label, both centered (task 063 round 4 — Figma's KPI row on the
+// location page, xl-location-page-datagrids-*.html's .metadata-item,
+// has none of the "card" chrome the org-stats variant uses).
+// ────────────────────────────────────────────────────────────
+
+.c-stats-card--plain {
+    background-color: transparent;
+    border-radius:     0;
+    padding:            0 var(--hdx-space-5);
+    align-items:        center;
+    text-align:         center;
+    gap:                var(--hdx-space-13);   // 6px, matches Figma's .metadata-item gap-6
+
+    .c-stats-card__label { .hdx-body-xs-semibold(); order: 2; }
+    .c-stats-card__sublabel { order: 3; }
+    .c-stats-card__value { order: 1; padding: 0; }
+}
+
+// ────────────────────────────────────────────────────────────
 // c-stats-card-list — KPI card stack
 // SM: stacked; MD: equal-width row; XL: column again (org stats)
 // ────────────────────────────────────────────────────────────
@@ -57,5 +77,26 @@
         flex-direction: column;
 
         > .c-stats-card { flex: none; }
+    }
+}
+
+// ────────────────────────────────────────────────────────────
+// c-stats-card-list--divided — single borderless row with vertical
+// divider lines between cards, at every breakpoint (task 063, D8).
+// Figma: llm_docs/redesign/figma_exports/xl-location-page-datagrids-*.html
+// (.line-parent / .frame-child)
+// ────────────────────────────────────────────────────────────
+
+.c-stats-card-list--divided {
+    flex-direction: row;
+    gap:            0;
+
+    > .c-stats-card {
+        flex: 1;
+        min-width: 0;
+    }
+
+    > .c-stats-card:not(:first-child) {
+        border-left: 1px solid var(--hdx-neutral-3);
     }
 }

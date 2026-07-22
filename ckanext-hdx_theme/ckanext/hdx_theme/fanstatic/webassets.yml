@@ -1468,6 +1468,7 @@ v2-components-styles:
     - v2/components/checkbox.css
     - v2/components/content-card.css
     - v2/components/copy-button.css
+    - v2/components/data-grid-status.css
     - v2/components/dataset-card.css
     - v2/components/divider.css
     - v2/components/drawer.css
@@ -1662,6 +1663,18 @@ v2-org-page-styles:
   <<: *common-css
   contents:
     - v2/org-page.css
+
+v2-location-page-styles:
+  output: ckanext-hdx_theme/%(version)s_v2-location-page-styles.css
+  <<: *common-css
+  contents:
+    - v2/location-page.css
+
+v2-location-page-scripts:
+  <<: *common-js
+  output: ckanext-hdx_theme/%(version)s_v2-location-page-scripts.js
+  contents:
+    - v2/location-page.js
 
 v2-crisis-page-styles:
   output: ckanext-hdx_theme/%(version)s_v2-crisis-page-styles.css

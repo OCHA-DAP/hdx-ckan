@@ -35,6 +35,28 @@
   line-height: var(--hdx-lh-normal);
   margin-left: var(--hdx-space-1);
 }
+.c-stats-card--plain {
+  background-color: transparent;
+  border-radius: 0;
+  padding: 0 var(--hdx-space-5);
+  align-items: center;
+  text-align: center;
+  gap: var(--hdx-space-13);
+}
+.c-stats-card--plain .c-stats-card__label {
+  font-family: var(--hdx-font-body);
+  font-size: var(--hdx-fs-xs);
+  font-weight: var(--hdx-fw-semibold);
+  line-height: var(--hdx-lh-normal);
+  order: 2;
+}
+.c-stats-card--plain .c-stats-card__sublabel {
+  order: 3;
+}
+.c-stats-card--plain .c-stats-card__value {
+  order: 1;
+  padding: 0;
+}
 .c-stats-card-list {
   display: flex;
   flex-direction: column;
@@ -55,4 +77,15 @@
   .c-stats-card-list > .c-stats-card {
     flex: none;
   }
+}
+.c-stats-card-list--divided {
+  flex-direction: row;
+  gap: 0;
+}
+.c-stats-card-list--divided > .c-stats-card {
+  flex: 1;
+  min-width: 0;
+}
+.c-stats-card-list--divided > .c-stats-card:not(:first-child) {
+  border-left: 1px solid var(--hdx-neutral-3);
 }

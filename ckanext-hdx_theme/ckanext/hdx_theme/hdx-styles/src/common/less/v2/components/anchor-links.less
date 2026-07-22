@@ -82,6 +82,7 @@
         margin: 0 0 var(--hdx-space-4) 0;
     }
 }
+
 // ── Mobile sticky dropdown ────────────────────────────────────
 // Hidden on XL+; on smaller viewports it breaks out of the sidebar
 // with position:fixed to span the full viewport below the sticky navbar.
@@ -140,6 +141,7 @@
 
     &__panel {
         position:         absolute;
+        top:              100%;
         left:             0;
         right:            0;
         z-index:          100;
@@ -177,5 +179,13 @@
             height:      var(--hdx-space-4);
             flex-shrink: 0;
         }
+    }
+}
+
+.c-anchor-links-mobile--drawer-scoped {
+    @media (max-width: (@hdx-bp-xl)) {
+        position:   relative;
+        top:        auto;
+        margin-top: 0;
     }
 }

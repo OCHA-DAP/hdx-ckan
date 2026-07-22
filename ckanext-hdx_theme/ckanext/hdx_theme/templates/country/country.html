@@ -1,5 +1,8 @@
-{% extends "crisis/crisis-base.html" %}
-{% set page_has_mobile_version = True %}
+{% extends "v2/page.html" %}
+
+{% set outer_row_class = 'hdx-v2-search-row' %}
+{% set sidebar_class   = 'hdx-v2-content-columns__sidebar hdx-v2-content-columns__sidebar--xl-only hdx-v2-content-columns__sidebar--sticky hdx-v2-search-sidebar' %}
+{% set content_class   = 'hdx-v2-content-columns__content hdx-v2-search-content' %}
 
 {# The lines below are for analytics #}
 {% block analytics_group_names %}['{{ data.country_dict.name }}']{% endblock %}
@@ -17,264 +20,299 @@
 {% endblock %}
 
 {% block links %}
-  <link rel="alternate" media="{{ h.HDX_CONST('MOBILE_MEDIA') }}" href="{{ h.hdx_switch_url_path(force=False) }}">
   {% snippet "snippets/add_optional_canonical_link.html", no_params=True %}
   {{ super() }}
 {% endblock %}
 
-{% block crisis_map %}
-    {% block crisis_actions %}
-    {% endblock %}
+{% block styles %}
+  {{ super() }}
+  {% asset 'hdx_theme/v2-search-page-styles' %}
+  {% asset 'hdx_theme/v2-location-page-styles' %}
 {% endblock %}
 
-{% block breadcrumb_content %}
-    {% snippet "snippets/other_breadcrumb_item.html", title=_('Groups'), controller='group', action='index', position=2 %}
-    {% snippet "snippets/active_breadcrumb_item.html", title=data.country_dict.display_name, position=3 %}
+{% block breadcrumb_items %}
+  {% snippet 'v2/components/breadcrumb.html',
+      items=[
+        {'label': _('Locations'), 'href': h.url_for('hdx_group.index')},
+        {'label': data.country_dict.display_name, 'href': ''}
+      ] %}
 {% endblock %}
 
-{% block crisis_data %}
-    {% set country_active = data.country_dict.activity_level == 'active' %}
-    <div id="countryMapPolygon" style="display: none;">
-        {% if data.country_dict.geojson %}
-            {{ data.country_dict.geojson | safe }}
-        {% endif %}
-    </div>
-    <div class="row">
-        <div class="list-items dataset-content mTB15">
-            <div class="col-12">
-                <h1 class="country-title">{{ data.country_dict.display_name }}</h1>
-                {{ h.snippet('notification_platform/buttons.html', object_id=data.country_dict.id, object_type='group' ) }}
-            </div>
-            <div class="row">
-              <div class="col-6 mTop8">
-                  <div class="base-actions-menu">
-                      <ul>
-                          <li>
-                              {% if num_of_pack%}
-                                  <span class="sspBold14">
-                                      <a class="sspBold14" href="?#dataset-filter-start">
-                                          {{ num_of_pack }} {% if num_of_pack != 1 %}{{ _('Datasets') }}{% else %}{{ _('Dataset') }}{% endif %}
-                                      </a>
-                                      {% if data.stats_section.num_of_cods > 0 %}
-                                          (<a href="?ext_cod=1#dataset-filter-start">{{ data.stats_section.num_of_cods }} CODs</a>)
-                                      {% endif %}
-
-                                  </span>
-                              {% else %}
-                                  <span class="sspBold14">{{ _('0 Datasets') }}</span>
-                              {% endif %}
-                          </li>
-                          <li>
-
-                              {% set num_of_followers = data.stats_section.num_of_followers %}
-                                          <span class="sspBold14">{{ num_of_followers }} {% if num_of_followers != 1 %}{{ _('Followers') }}{% else %}{{ _('Follower') }}{% endif %}</span>
-
-                          </li>
-                          <li>
-                              <span class="dropdown dropdown-on-hover">
-                                  <a href="#" data-bs-toggle="dropdown" data-bs-display="static">
-                                      <span class="sspBold14">{{ num_of_orgs }} {% if num_of_orgs != 1 %}{{ _('Organisations') }}{% else %}{{ _('Organisation') }}{% endif %}</span>
-                                  </a>
-                                  <div class="followers-list-popup dropdown-menu bottom">
-                                    <div class="hdx-arrow-wrapper">
-                                      <ul class="followers-list">
-                                        {% for org in data.stats_section.organization_list %}
-                                            <li class="follower-item">
-                                                <a href="{{ org.url }}" class="dropdown-item">{{ org.display_name }}</a>
-                                            </li>
-                                        {% endfor %}
-                                      </ul>
-                                    </div>
-                                  </div>
-                              </span>
-                          </li>
-                      </ul>
-
-                  </div>
-              </div>
-              <div class="col-6">
-                  {% snippet "country/country_actions_menu.html", country=data.country_dict, can_edit=h.check_access('group_update', {'id': data.country_dict.id}), classes='base-actions-menu followButtonContainer float-end' %}
-              </div>
-            </div>
-        </div>
-    </div>
-
-    {% if (not data.country_dict.key_figures or data.country_dict.key_figures == 'active') and data.widgets.top_line_data_list %}
-    <div class="row">
-        <div class="col-12">
-            <div class="list-header crisis-list-header">
-                <span class="mL15 list-header-title">
-                    {{ _("Key Figures") }}
-                </span>
-            </div>
-        </div>
-        {% snippet 'country/key-figures.html', country_active=country_active, data=data, embedded=false %}
-    </div>
-    {% endif %}
-
-    {% if data.widgets.show and false %}
-    <div class="row">
-        <div class="col-4">
-            <div class="row topline-numbers">
-                <div class="col-12 mTop35 mBottom35 topline-title">
-                    Overview
-                </div>
-
-                <div class="col-12">
-                    <table>
-                        {% for value in data.widgets.top_line_data_list %}
-                            <tr class="indicator">
-                                <td class="name">
-                                    {{ value.indicatorTypeName }}
-                                </td>
-                                <td class="value">
-                                    <span data-module="bs_tooltip" data-bs-toggle="tooltip" data-module-placement="left" title="{{ value.unitName }}">{{ value.formatted_value }}</span>
-                                </td>
-                            </tr>
-                            <tr class="extra-info">
-                                <td colspan="2">
-                                    <span>
-                                        {{ value.sourceName }}
-                                        {%  if value.datasetLink %}
-                                            - <a href="{{ value.datasetLink }}">Data</a>
-                                        {% endif %}
-                                        {%  if value.datasetUpdateDate %}
-                                            - {{ value.datasetUpdateDate }}
-                                        {% endif %}
-                                    </span>
-                                </td>
-                            </tr>
-                        {% endfor %}
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        {% for val in data.widgets.chart_data_list %}
-            <div class="col-4">
-                <div class="row topline-charts">
-                    <div class="col-12 mTop35 topline-title">
-                        {{ val.title }}
-                    </div>
-                    <div class="col-12 mTop10 mBottom10">
-                        <span data-module="bs_tooltip" data-bs-toggle="tooltip" data-module-placement="right" title="{{ val.unit }}" class="last-value">{{ val.lastValue }} <span class="last-date">/ {{ val.lastDate[:4] }}</span></span>
-                    </div>
-                    <div class="data d-none">
-                        {{ val.data | safe }}
-                    </div>
-                    <div class="unit-name d-none">
-                        {{ val.unit | safe }}
-                    </div>
-                    <div class="col-12">
-                        <div class="chart-item"></div>
-                    </div>
-                        {{ val.sourceName }}
-                        {%  if val.datasetLink %}
-                            - <a href="{{ val.datasetLink }}">Data</a>
-                        {% endif %}
-                        {%  if val.datasetUpdateDate %}
-                            - {{ val.datasetUpdateDate }}
-                        {% endif %}
-                    </div>
-
-                </div>
-            </div>
-        {% endfor %}
-
-    </div>
-    {% endif %}
-
-    {% if data.data_completeness %}
-    <div class="row data-completeness">
-      <div class="col-12">
-        <div class="list-header crisis-list-header">
-          <span class="mL15 mR30 list-header-title">
-              {{ _("Data Grid Availability") }}
-          </span>
-
-
-          <div class="progress-breakdown progress-header">
-            {% set dataseries_good_percentage = 100*data.data_completeness.stats.dataseries_good_percentage %}
-            <span class="progress-blue" style="width: {{ dataseries_good_percentage }}%;"
-                  data-module="bs_tooltip" data-module-placement="top"
-                  data-bs-toggle="tooltip" data-bs-html="true" data-bs-original-title="{{ dataseries_good_percentage | int }}%">
-              {% if dataseries_good_percentage > 30 %} {{ dataseries_good_percentage | int }}%&nbsp; {% endif %}
-            </span>
-            {% set dataseries_not_good_percentage = 100*data.data_completeness.stats.dataseries_not_good_percentage %}
-            <span class="progress-striped" style="width: {{ dataseries_not_good_percentage }}%;"
-                  data-module="bs_tooltip" data-module-placement="top"
-                  data-bs-toggle="tooltip" data-bs-html="true" data-bs-original-title="{{ dataseries_not_good_percentage | int }}%">
-              {% if dataseries_not_good_percentage > 30 %} {{ dataseries_not_good_percentage | int }}%&nbsp; {% endif %}
-            </span>
-            {% set dataseries_other_percentage = 100*(1 - data.data_completeness.stats.dataseries_good_percentage - data.data_completeness.stats.dataseries_not_good_percentage) %}
-            <span class="progress-empty" style="width: {{ dataseries_other_percentage }}%;"
-                  data-module="bs_tooltip" data-module-placement="top"
-                  data-bs-toggle="tooltip" data-bs-html="true" data-bs-original-title="{{ dataseries_other_percentage | int }}%">
-              {% if dataseries_other_percentage > 30 %} {{ dataseries_other_percentage | int }}%&nbsp; {% endif %}
-            </span>
-          </div>
-
-          <span class="mL45 list-header-showall list-completeness">
-            <span>{{data.data_completeness.stats.good_dataseries_num}}/{{data.data_completeness.stats.total_dataseries_num}} Core Data</span>
-            <span>{{ data.data_completeness.stats.total_datasets_num }} Datasets</span>
-            <span>{{ data.data_completeness.stats.org_num }} Organisations</span>
-          </span>
-
-          <span class="mL45 float-end completeness-header-actions">
-              <a class="show-completeness-legend">Show legend</a>
-              {% snippet 'country/completeness_legend.html' %}
-
-              <div class="d-inline-block show-filter-switch show-filter-switch--sm">
-                <div class="form-check form-switch ps-0">
-                  <input class="form-check-input float-end" type="checkbox" id="expand-data-completeness" checked>
-                  <label class="form-check-label" for="expand-data-completeness">Expand</label>
-                </div>
-              </div>
-          </span>
-
-        </div>
-      </div>
-      {% snippet 'country/completeness_list.html', data=data %}
-    </div>
-    {% endif %}
-
-
-    <div class="row">
-        <div class="col-12">
-			<div class="row">
-                {% if data.widgets.show and false %}
-                    <div class="col-12">
-                        <div class="mBottom15 mTop15" style="border-bottom: 1px solid #dddddd;"> </div>
-                    </div>
-                {% endif %}
-	        	<div class="col-12">
-                    {% snippet 'search/snippets/search_results_wrapper.html', tracking_enabled=g.tracking_enabled, my_c=data.country_dict.template_data %}
-	        	</div>
-    		</div>
-        </div>
-    </div>
-
-  {% snippet "notification_platform/modals.html",
-      object_type='group',
-      object_id=data.country_dict.id,
-      object_name=data.country_dict.name,
-      num_of_datasets=num_of_pack,
-      unsubscribe_token=unsubscribe_token, unsubscribe_token_validated=unsubscribe_token_validated,
-      unsubscribe_email=unsubscribe_email, unsubscribe_token_invalidate=unsubscribe_token_invalidate
-  %}
-
-{% endblock %}
-
-{% block page_warning_bar %}
-  {% if data.country_dict.alert_bar_url %}
-    {% snippet 'snippets/full_width_alert_bar.html', alert_bar_url=data.country_dict.alert_bar_url, alert_bar_title=data.country_dict.alert_bar_title, skip_js=True %}
+{% block secondary_content %}
+  {% if data.country_dict.template_data.page.items %}
+    <form id="search-page-filters-form" autocomplete="off">
+      <aside class="hdx-v2-search-filters">
+        {% snippet 'v2/search-filters.html',
+            facet_list=data.country_dict.template_data.full_facet_info.get('facets', {}) %}
+      </aside>
+    </form>
   {% endif %}
 {% endblock %}
 
-{% block package_search_results %}
+{% block pre_primary %}
+  {#
+  {% if data.country_dict.alert_bar_url %}
+    {% snippet 'snippets/full_width_alert_bar.html', alert_bar_url=data.country_dict.alert_bar_url, alert_bar_title=data.country_dict.alert_bar_title, skip_js=True %}
+  {% endif %}
+  #}
+
+  {% set can_edit = h.check_access('group_update', {'id': data.country_dict.id}) %}
+  {% set header_actions = [
+    {'label': _('Edit location page'),
+     'href': h.url_for('group.edit', id=data.country_dict.name),
+     'icon_src': 'v2/icons/edit.svg',
+     'show': can_edit},
+  ] %}
+  {% set header_stats = [
+    {'label': _('Datasets'), 'value': num_of_pack},
+    {'label': _('Organisations'), 'value': num_of_orgs},
+  ] %}
+
+  <div class="hdx-v2-location-header-section">
+    <div class="hdx-v2-container">
+      {% snippet 'v2/components/page-header.html',
+          title=data.country_dict.display_name,
+          supports_notifications=True,
+          notification_object_type='group',
+          notification_object_id=data.country_dict.id,
+          notification_object_dict=data.country_dict,
+          header_actions=header_actions,
+          header_stats=header_stats %}
+    </div>
+  </div>
+
+  {#
+    Out-of-scope block (task 063, D5) -- Key Figures topline carousel,
+    the permanently-dead "Overview" widgets block, and the hidden
+    countryMapPolygon div (drawMap() already no-ops on this page today
+    since #crisis-map is never emitted). Commented out for now rather
+    than migrated; re-enable verbatim (plus country-styles/country-scripts/
+    charting-scripts above and below) if/when this block comes back into
+    scope.
+
+  {% set country_active = data.country_dict.activity_level == 'active' %}
+  <div id="countryMapPolygon" style="display: none;">
+      {% if data.country_dict.geojson %}
+          {{ data.country_dict.geojson | safe }}
+      {% endif %}
+  </div>
+
+  {% if (not data.country_dict.key_figures or data.country_dict.key_figures == 'active') and data.widgets.top_line_data_list %}
+  <div class="row">
+      <div class="col-12">
+          <div class="list-header crisis-list-header">
+              <span class="mL15 list-header-title">
+                  {{ _("Key Figures") }}
+              </span>
+          </div>
+      </div>
+      {% snippet 'country/key-figures.html', country_active=country_active, data=data, embedded=false %}
+  </div>
+  {% endif %}
+
+  {% if data.widgets.show and false %}
+  <div class="row">
+      <div class="col-4">
+          <div class="row topline-numbers">
+              <div class="col-12 mTop35 mBottom35 topline-title">
+                  Overview
+              </div>
+
+              <div class="col-12">
+                  <table>
+                      {% for value in data.widgets.top_line_data_list %}
+                          <tr class="indicator">
+                              <td class="name">
+                                  {{ value.indicatorTypeName }}
+                              </td>
+                              <td class="value">
+                                  <span data-module="bs_tooltip" data-bs-toggle="tooltip" data-module-placement="left" title="{{ value.unitName }}">{{ value.formatted_value }}</span>
+                              </td>
+                          </tr>
+                          <tr class="extra-info">
+                              <td colspan="2">
+                                  <span>
+                                      {{ value.sourceName }}
+                                      {%  if value.datasetLink %}
+                                          - <a href="{{ value.datasetLink }}">Data</a>
+                                      {% endif %}
+                                      {%  if value.datasetUpdateDate %}
+                                          - {{ value.datasetUpdateDate }}
+                                      {% endif %}
+                                  </span>
+                              </td>
+                          </tr>
+                      {% endfor %}
+                  </table>
+              </div>
+          </div>
+      </div>
+
+      {% for val in data.widgets.chart_data_list %}
+          <div class="col-4">
+              <div class="row topline-charts">
+                  <div class="col-12 mTop35 topline-title">
+                      {{ val.title }}
+                  </div>
+                  <div class="col-12 mTop10 mBottom10">
+                      <span data-module="bs_tooltip" data-bs-toggle="tooltip" data-module-placement="right" title="{{ val.unit }}" class="last-value">{{ val.lastValue }} <span class="last-date">/ {{ val.lastDate[:4] }}</span></span>
+                  </div>
+                  <div class="data d-none">
+                      {{ val.data | safe }}
+                  </div>
+                  <div class="unit-name d-none">
+                      {{ val.unit | safe }}
+                  </div>
+                  <div class="col-12">
+                      <div class="chart-item"></div>
+                  </div>
+                      {{ val.sourceName }}
+                      {%  if val.datasetLink %}
+                          - <a href="{{ val.datasetLink }}">Data</a>
+                      {% endif %}
+                      {%  if val.datasetUpdateDate %}
+                          - {{ val.datasetUpdateDate }}
+                      {% endif %}
+                  </div>
+
+              </div>
+          </div>
+      {% endfor %}
+
+  </div>
+  {% endif %}
+  #}
+  {# ── End out-of-scope block ── #}
+
+  {% if data.data_completeness %}
+    {% set dc = data.data_completeness %}
+    {% set state_ns = namespace(good=0, not_good=0, empty=0, na=0) %}
+    {% for category in dc.categories %}
+      {% for subcateg in category.data_series %}
+        {% if subcateg.stats.state == 'good' %}{% set state_ns.good = state_ns.good + 1 %}
+        {% elif subcateg.stats.state == 'not_good' %}{% set state_ns.not_good = state_ns.not_good + 1 %}
+        {% elif subcateg.stats.state == 'empty' %}{% set state_ns.empty = state_ns.empty + 1 %}
+        {% elif subcateg.stats.state == 'not_applicable' %}{% set state_ns.na = state_ns.na + 1 %}
+        {% endif %}
+      {% endfor %}
+    {% endfor %}
+    {% set page_legend = [
+        {'state': 'available-updated', 'label': _('Available & up-to-date')},
+        {'state': 'available',         'label': _('Available')},
+        {'state': 'unavailable',       'label': _('Unavailable')},
+    ] %}
+    {% if state_ns.na > 0 %}
+      {% set page_legend = page_legend + [{'state': 'na', 'label': _('N/A')}] %}
+    {% endif %}
+    {% set status_order = [
+        ('available-updated', state_ns.good),
+        ('available', state_ns.not_good),
+        ('unavailable', state_ns.empty),
+        ('na', state_ns.na),
+    ] %}
+    {% set page_status_summary = state_ns.good|string ~ ' ' ~ _('available and up-to-date') ~ ', ' ~ state_ns.not_good|string ~ ' ' ~ _('available') ~ ', ' ~ state_ns.empty|string ~ ' ' ~ _('unavailable') %}
+    {% if state_ns.na > 0 %}{% set page_status_summary = page_status_summary ~ ', ' ~ state_ns.na|string ~ ' ' ~ _('not applicable') %}{% endif %}
+
+    <div class="hdx-v2-location-datagrid-section">
+      <div class="hdx-v2-container">
+        <div class="hdx-v2-location-datagrid-section__body">
+
+          <div class="hdx-v2-location-datagrid-section__top">
+            <div class="hdx-v2-location-datagrid-section__header">
+              <div class="hdx-v2-location-datagrid-section__header-text">
+                <h2 class="hdx-v2-location-datagrid-section__title">{{ _('Data Grid Availability') }}</h2>
+                <p class="hdx-v2-location-datagrid-section__subtitle">{{ _('Assessing the availability of core data across six categories') }}</p>
+              </div>
+              {% snippet 'v2/components/text-button.html',
+                  style='primary', size='m', state='enabled',
+                  label=_('Show more'), tag='button', button_type='button',
+                  icon=True, icon_position='right', icon_src='v2/icons/chevron-down.svg',
+                  extra_classes='hdx-v2-location-datagrid-section__toggle hdx-v2-location-datagrid-section__toggle--in-title',
+                  attrs={'aria-expanded': 'false'} %}
+            </div>
+
+            <div class="hdx-v2-location-datagrid-section__stats-chart">
+              <div class="c-stats-card-list c-stats-card-list--divided hdx-v2-location-datagrid-section__kpi-row">
+                {% snippet 'v2/components/stats-card.html',
+                    label=_('Total datasets in the Data Grid'), value=dc.stats.total_datasets_num, variant='plain' %}
+                {% snippet 'v2/components/stats-card.html',
+                    label=_('Organisations contributing to the Data Grid'), value=dc.stats.org_num, variant='plain' %}
+                {% snippet 'v2/components/stats-card.html',
+                    label=_('Sub-categories with available & up-to-date datasets'),
+                    value=(dc.stats.good_dataseries_num ~ '/' ~ dc.stats.total_dataseries_num), variant='plain' %}
+              </div>
+
+              <div class="hdx-v2-location-datagrid-section__chart-panel">
+                {% snippet 'v2/components/text-button.html',
+                    style='primary', size='m', state='enabled',
+                    label=_('Show more'), tag='button', button_type='button',
+                    icon=True, icon_position='right', icon_src='v2/icons/chevron-down.svg',
+                    extra_classes='hdx-v2-location-datagrid-section__toggle hdx-v2-location-datagrid-section__toggle--in-chart',
+                    attrs={'aria-expanded': 'false'} %}
+
+                <div class="hdx-v2-location-datagrid-section__chart">
+                  <div class="hdx-v2-location-datagrid-section__status-row" role="img" aria-label="{{ page_status_summary }}">
+                    {% for state, count in status_order %}
+                      {% for i in range(count) %}
+                        {% snippet 'v2/components/data-grid-status.html', state=state %}
+                      {% endfor %}
+                    {% endfor %}
+                  </div>
+                  <div class="hdx-v2-location-datagrid-section__legend">
+                    {% for item in page_legend %}
+                      <div class="hdx-v2-location-datagrid-section__legend-item">
+                        {% snippet 'v2/components/data-grid-status.html', state=item.state, aria_label=item.label %}
+                        <span class="hdx-v2-location-datagrid-section__legend-label">{{ item.label }}</span>
+                      </div>
+                    {% endfor %}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="hdx-v2-location-datagrid-section__buttons-group">
+            {% snippet 'v2/components/button.html',
+                style='tertiary', size='m', type='text', state='enabled',
+                label=_('Definitions'), tag='button', button_type='button',
+                icon=True, icon_position='left', icon_src='v2/icons/book.svg',
+                attrs={'onclick': "hdxV2Drawer('location-datagrid-drawer').open()"} %}
+            {% snippet 'v2/components/button.html',
+                style='tertiary', size='m', type='text', state='enabled',
+                label=_('Overview of Data Grids'), tag='a', href='/dashboards/overview-of-data-grids',
+                icon=True, icon_position='left', icon_src='v2/icons/link-external.svg' %}
+          </div>
+
+          <div class="hdx-v2-location-datagrid-section__grid">
+            {% for category in dc.categories %}
+              {% snippet 'v2/completeness-item.html', category=category, category_index=loop.index0 %}
+            {% endfor %}
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    {% snippet 'v2/location-datagrid-drawer.html', data=data %}
+  {% endif %}
 {% endblock %}
 
-{% block scripts2 %}
+{% block primary_content %}
+    <span id="dataset-filter-start"></span>
+    {% snippet 'search/snippets/search_results_wrapper.html', tracking_enabled=g.tracking_enabled, my_c=data.country_dict.template_data, v2=true %}
+
+    {% snippet "notification_platform/modals.html",
+        object_type='group',
+        object_id=data.country_dict.id,
+        object_name=data.country_dict.name,
+        num_of_datasets=num_of_pack,
+        unsubscribe_token=unsubscribe_token, unsubscribe_token_validated=unsubscribe_token_validated,
+        unsubscribe_email=unsubscribe_email, unsubscribe_token_invalidate=unsubscribe_token_invalidate
+    %}
+{% endblock %}
+
+{% block scripts %}
     {{ super() }}
-    {% asset 'hdx_theme/country-scripts' %}
+    {% asset 'hdx_theme/v2-search-page-scripts' %}
+    {% asset 'hdx_theme/v2-location-page-scripts' %}
 {% endblock %}
