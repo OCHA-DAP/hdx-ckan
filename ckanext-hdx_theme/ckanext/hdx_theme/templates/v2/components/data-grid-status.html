@@ -1,0 +1,71 @@
+{#
+  Snippet: data-grid-status.html
+  Path:    templates/v2/components/data-grid-status.html
+
+  Renders a c-data-grid-status — a small presentational status marker used
+  by the location page's Data Grid Availability feature (task 063). Not a
+  real checkbox/form control: role="img", not built on c-checkbox.
+
+  Parameters
+  ─────────────────────────────────────────────────
+  state         {string}  'available-updated' | 'available' | 'unavailable'
+                          | 'na' | 'complementary'
+                          default: 'available-updated'
+  aria_label    {string}  Accessible description of the state.
+                          default: ''
+  tooltip_id    {string}  When set together with tooltip_text, wraps the
+                          swatch with an aria-describedby link to a
+                          c-tooltip (dark variant) rendered right after it.
+                          Only ever passed for per-dataset row swatches.
+                          default: ''
+  tooltip_text  {string}  Tooltip body copy (e.g. dataset.general_comment).
+                          default: ''
+  extra_classes {string}  default: ''
+  ─────────────────────────────────────────────────
+  Examples
+
+  Static legend swatch (no tooltip):
+  {% snippet 'v2/components/data-grid-status.html',
+      state='na', aria_label='Not applicable' %}
+
+  Per-dataset row swatch (interactive):
+  {% snippet 'v2/components/data-grid-status.html',
+      state='available-updated' if dataset.is_good else 'available',
+      aria_label='Available and up-to-date' if dataset.is_good else 'Available, not up-to-date',
+      tooltip_id='dg-tip-' ~ dataset.name,
+      tooltip_text=dataset.general_comment %}
+
+  Decorative swatch inside a group that already carries its own summary
+  aria-label (e.g. one square per sub-category in a status row) — pass
+  aria_label='' so the swatch is hidden from screen readers instead of
+  announcing each one individually:
+  {% snippet 'v2/components/data-grid-status.html', state='available' %}
+#}
+
+{% set state         = state         if state         is defined else 'available-updated' %}
+{% set aria_label    = aria_label    if aria_label    is defined else '' %}
+{% set tooltip_id    = tooltip_id    if tooltip_id    is defined else '' %}
+{% set tooltip_text  = tooltip_text  if tooltip_text  is defined else '' %}
+{% set extra_classes = extra_classes if extra_classes is defined else '' %}
+
+{% set classes = ['c-data-grid-status', 'c-data-grid-status--' ~ state] %}
+{% if extra_classes %}{% set classes = classes + [extra_classes] %}{% endif %}
+
+{% set has_tooltip = tooltip_id and tooltip_text %}
+
+{% if has_tooltip %}<span class="c-tooltip-anchor">{% endif %}
+  <span class="{{ classes | join(' ') }}"
+        role="img"
+        {% if aria_label %}aria-label="{{ aria_label }}"{% else %}aria-hidden="true"{% endif %}
+        {% if has_tooltip %}aria-describedby="{{ tooltip_id }}" tabindex="0"{% endif %}>
+    {% if state == 'complementary' %}
+      <span class="c-data-grid-status__indent-icon" aria-hidden="true">{% include h.url_for_static('v2/icons/indent.svg') %}</span>
+    {% else %}
+      <span class="c-data-grid-status__mark" aria-hidden="true"></span>
+    {% endif %}
+  </span>
+  {% if has_tooltip %}
+    {% snippet 'v2/components/tooltip.html',
+        variant='dark', text=tooltip_text, tooltip_id=tooltip_id, arrow='below' %}
+  {% endif %}
+{% if has_tooltip %}</span>{% endif %}

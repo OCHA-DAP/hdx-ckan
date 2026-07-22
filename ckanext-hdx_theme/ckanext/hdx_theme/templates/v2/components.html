@@ -1330,6 +1330,26 @@
       </div>
     </div>
 
+    <h2 class="demo-subsection__heading">Anchor links — mobile dropdown (default label = current section)</h2>
+    <div class="demo-row demo-row--flex-start">
+      {% snippet 'v2/components/anchor-links.html',
+          items=[
+            {'label': 'Overview',      'href': '#overview',   'active': True},
+            {'label': 'Methodology',   'href': '#method',     'active': False},
+            {'label': 'Data & Files',  'href': '#data',       'active': False},
+          ], mobile_only=True %}
+    </div>
+
+    <h2 class="demo-subsection__heading">Anchor links — mobile dropdown, static label (mobile_label, no current section — task 063)</h2>
+    <div class="demo-row demo-row--flex-start">
+      {% snippet 'v2/components/anchor-links.html',
+          items=[
+            {'label': 'Affected people',            'href': '#cat-1'},
+            {'label': 'Coordination & Context',     'href': '#cat-2'},
+            {'label': 'Food Security & Nutrition',  'href': '#cat-3'},
+          ], mobile_only=True, mobile_label='Jump to sub-categories' %}
+    </div>
+
     <h2 class="demo-subsection__heading">Pagination — MD (page 3 of 12)</h2>
     <div class="demo-row">
       {% snippet 'v2/components/pagination.html',
@@ -1689,7 +1709,7 @@
   ══════════════════════════════════════════════════════ #}
   <section class="demo-section" id="stats-card">
     <h1 class="demo-section__title">Stats Card</h1>
-    <p class="demo-section__subtitle">label · optional sublabel · value with optional unit — used on the org Stats tab</p>
+    <p class="demo-section__subtitle">label · optional sublabel · value with optional unit — variant='card' (default, org Stats tab) or 'plain' (no chrome, value-first, centered — location page KPI row)</p>
 
     <h2 class="demo-subsection__heading">Single card</h2>
     <div class="demo-row demo-row--flex-start">
@@ -1713,6 +1733,70 @@
       {% snippet 'v2/components/stats-card.html',
           label='Members',
           value='12' %}
+    </div>
+
+    <h2 class="demo-subsection__heading">Row of 3, divided (c-stats-card-list--divided)</h2>
+    <div class="c-stats-card-list c-stats-card-list--divided">
+      {% snippet 'v2/components/stats-card.html',
+          label='Total datasets in the Data Grid',
+          value='15' %}
+      {% snippet 'v2/components/stats-card.html',
+          label='Organisations contributing to the Data Grid',
+          value='10' %}
+      {% snippet 'v2/components/stats-card.html',
+          label='Sub-categories with available & up-to-date datasets',
+          value='9/15' %}
+    </div>
+
+    <h2 class="demo-subsection__heading">Row of 3, divided + plain variant (location page KPI row)</h2>
+    <div class="c-stats-card-list c-stats-card-list--divided">
+      {% snippet 'v2/components/stats-card.html',
+          label='Total datasets in the Data Grid',
+          value='15', variant='plain' %}
+      {% snippet 'v2/components/stats-card.html',
+          label='Organisations contributing to the Data Grid',
+          value='10', variant='plain' %}
+      {% snippet 'v2/components/stats-card.html',
+          label='Sub-categories with available & up-to-date datasets',
+          value='9/15', variant='plain' %}
+    </div>
+  </section>
+
+  <hr class="demo-divider">
+
+  {# ══════════════════════════════════════════════════════
+     DATA GRID STATUS
+  ══════════════════════════════════════════════════════ #}
+  <section class="demo-section" id="data-grid-status">
+    <h1 class="demo-section__title">Data Grid Status</h1>
+    <p class="demo-section__subtitle">status swatch — used standalone or repeated as a status row on the location page's Data Grid Availability feature</p>
+
+    <h2 class="demo-subsection__heading">Status swatch — states</h2>
+    <div class="demo-row demo-row--highlight">
+      {% snippet 'v2/components/data-grid-status.html',
+          state='available-updated', aria_label='Available and up to date' %}
+      {% snippet 'v2/components/data-grid-status.html',
+          state='available', aria_label='Available' %}
+      {% snippet 'v2/components/data-grid-status.html',
+          state='unavailable', aria_label='Unavailable' %}
+      {% snippet 'v2/components/data-grid-status.html',
+          state='na', aria_label='Not applicable' %}
+      {% snippet 'v2/components/data-grid-status.html',
+          state='complementary', aria_label='Complementary dataset' %}
+    </div>
+
+    <h2 class="demo-subsection__heading">Status swatch — with tooltip (per-dataset row)</h2>
+    <div class="demo-row demo-row--highlight">
+      {% snippet 'v2/components/data-grid-status.html',
+          state='available', aria_label='Available, not up to date',
+          tooltip_id='demo-dg-tip', tooltip_text='Limitations: The dataset is not up-to-date.' %}
+    </div>
+
+    <h2 class="demo-subsection__heading">Status row — one swatch per sub-category, decorative (group carries the aria-label)</h2>
+    <div class="demo-row demo-row--highlight" role="img" aria-label="6 available and up-to-date, 3 available, 2 unavailable, 1 not applicable" style="gap: var(--hdx-space-15);">
+      {% for state in ['available-updated', 'available-updated', 'available', 'unavailable', 'na', 'available-updated'] %}
+        {% snippet 'v2/components/data-grid-status.html', state=state %}
+      {% endfor %}
     </div>
   </section>
 

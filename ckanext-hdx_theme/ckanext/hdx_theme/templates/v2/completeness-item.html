@@ -1,0 +1,120 @@
+{#
+  Snippet: completeness-item.html
+  Path:    templates/v2/completeness-item.html
+
+  Renders a single Data Grid category card (task 063) as a native
+  <details>/<summary> element — summary row (icon, title, one
+  c-data-grid-status swatch per sub-category at every breakpoint) always
+  visible; clicking it expands/collapses just that one card, for free,
+  via the browser's own disclosure behavior (same underlying mechanism as
+  v2/components/accordion.html). The page's single global expand/collapse
+  control (fanstatic/v2/location-page.js) drives every card's `open`
+  property at once and does not track individual per-card state.
+  Server-rendered collapsed by default; still no-JS-safe since the native
+  <details>/<summary> disclosure needs no JavaScript to open.
+
+  Category/sub-category title hover tooltips (c-tooltip) reuse the
+  already-fetched category.description/subcateg.description (§5 Interaction
+  Mapping) — distinct from the per-dataset swatch tooltip (D1/D7), which
+  reuses dataset.general_comment ("Limitations" text) and is attached to
+  the status swatch only, not the whole row.
+
+  Parameters
+  ──────────────────────────────────────────────────────
+  category       {dict}  One entry of data.data_completeness.categories.  required
+  category_index {int}   0-based index of this category in the page's
+                          category list — used for the icon lookup, the
+                          drawer jump-nav anchor id, and unique tooltip
+                          ids.                                            required
+  ──────────────────────────────────────────────────────
+#}
+
+{% set category_icons = ['affected.svg', 'coordination.svg', 'food.svg', 'location.svg', 'health.svg', 'climate.svg'] %}
+{% set icon_path = ('v2/icons/humanitarian-data-grids/' ~ category_icons[category_index]) if category_index < category_icons | length else 'v2/icons/placeholder.svg' %}
+
+{# ── Status row — one swatch per sub-category, in order (task 063 R3) ── #}
+{% set swatch_state_map = {'good': 'available-updated', 'not_good': 'available', 'empty': 'unavailable', 'not_applicable': 'na'} %}
+
+{% set category_tip_id = 'dg-cat-tip-' ~ category_index %}
+
+<div class="hdx-v2-location-datagrid-card">
+
+  <details class="hdx-v2-location-datagrid-card__details" data-datagrid-details>
+    <summary class="hdx-v2-location-datagrid-card__summary">
+      <div class="hdx-v2-location-datagrid-card__title-group">
+        <span class="hdx-v2-location-datagrid-card__icon" aria-hidden="true">
+          {% include h.url_for_static(icon_path) %}
+        </span>
+        <span class="c-tooltip-anchor">
+          <span class="hdx-v2-location-datagrid-card__title"
+                tabindex="0" aria-describedby="{{ category_tip_id }}">{{ category.title }}</span>
+          {% snippet 'v2/components/tooltip.html',
+              variant='dark', text=category.description, tooltip_id=category_tip_id, arrow='below' %}
+        </span>
+      </div>
+      <div class="hdx-v2-location-datagrid-card__status-row" role="img" aria-label="{{ category.title }} {{ _('data availability') }}">
+        {% for subcateg in category.data_series %}
+          {% snippet 'v2/components/data-grid-status.html', state=swatch_state_map[subcateg.stats.state] %}
+        {% endfor %}
+      </div>
+    </summary>
+
+    <div class="hdx-v2-location-datagrid-card__subcategs">
+    {% for subcateg in category.data_series %}
+      {% set subcateg_index = loop.index0 %}
+      {% set subcateg_tip_id = 'dg-subcat-tip-' ~ category_index ~ '-' ~ subcateg_index %}
+      <div class="hdx-v2-location-datagrid-card__subcateg">
+        <span class="c-tooltip-anchor">
+          <span class="hdx-v2-location-datagrid-card__subcateg-title"
+                tabindex="0" aria-describedby="{{ subcateg_tip_id }}">{{ subcateg.title }}</span>
+          {% snippet 'v2/components/tooltip.html',
+              variant='dark', text=subcateg.description, tooltip_id=subcateg_tip_id, arrow='below' %}
+        </span>
+
+        {% if subcateg.stats.state == 'not_applicable' %}
+          <div class="hdx-v2-location-datagrid-card__dataset-row">
+            {% snippet 'v2/components/data-grid-status.html', state='na' %}
+            <div class="hdx-v2-location-datagrid-card__flag">
+              {{ h.hdx_datagrid_org_get_display_text(subcateg) }}
+            </div>
+          </div>
+        {% elif subcateg.datasets | length > 0 %}
+          {% for dataset in subcateg.datasets %}
+            {% set dataset_tip_id = 'dg-dataset-tip-' ~ category_index ~ '-' ~ subcateg_index ~ '-' ~ loop.index0 %}
+            <div class="hdx-v2-location-datagrid-card__dataset-row{{ ' hdx-v2-location-datagrid-card__dataset-row--complementary' if dataset.is_complementary }}">
+              {% if dataset.is_complementary %}
+                {% snippet 'v2/components/data-grid-status.html',
+                    state='complementary', aria_label=_('Complementary dataset'),
+                    tooltip_id=dataset_tip_id, tooltip_text=dataset.general_comment %}
+              {% else %}
+                {% snippet 'v2/components/data-grid-status.html',
+                    state='available-updated' if dataset.is_good else 'available',
+                    aria_label=_('Available and up to date') if dataset.is_good else _('Available, not up to date'),
+                    tooltip_id=dataset_tip_id, tooltip_text=dataset.general_comment %}
+              {% endif %}
+              <div class="hdx-v2-location-datagrid-card__dataset-info">
+                <a class="hdx-v2-location-datagrid-card__dataset-name"
+                   href="{{ h.url_for('dataset_read', id=dataset.name) }}"
+                   data-module="hdx_click_stopper" data-module-link_type="data grid dataset">{{ dataset.title }}</a>
+                <span class="hdx-v2-location-datagrid-card__dataset-org">{{ dataset.organization_title }}</span>
+              </div>
+            </div>
+          {% endfor %}
+        {% else %}
+          <div class="hdx-v2-location-datagrid-card__dataset-row">
+            {% snippet 'v2/components/data-grid-status.html', state='unavailable' %}
+            {% if c.userobj %}
+              <a class="hdx-v2-location-datagrid-card__dataset-name"
+                 href="javascript:void(0);" onclick="contributeAddDetails(null, 'data grid');">{{ _('Add Data') }}</a>
+            {% else %}
+              <a class="hdx-v2-location-datagrid-card__dataset-name"
+                 href="/contribute" data-module="hdx_click_stopper" data-module-link_type="data grid add data">{{ _('Add Data') }}</a>
+            {% endif %}
+          </div>
+        {% endif %}
+      </div>
+    {% endfor %}
+    </div>
+  </details>
+
+</div>

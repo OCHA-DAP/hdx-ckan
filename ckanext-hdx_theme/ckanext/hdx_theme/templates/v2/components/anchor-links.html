@@ -27,6 +27,20 @@
                                  for use in {% block mobile_sticky_nav %} so
                                  the dropdown lives outside the hidden sidebar.
                                  default: false
+  mobile_label         {string}  Fixed label shown on the mobile dropdown's
+                                 toggle button, e.g. 'Jump to sub-categories'
+                                 as a static CTA. When unset, falls back to
+                                 the existing behavior (items[0].label) —
+                                 appropriate for a "current section" style
+                                 nav rather than a plain jump-index.
+                                 default: ''
+  mobile_wrapper_extra_classes {string}
+                                 Extra classes on the .c-anchor-links-mobile
+                                 wrapper div itself (e.g. a scoped modifier
+                                 to opt out of its built-in sticky behavior
+                                 for non-page-level use, such as inside a
+                                 drawer).
+                                 default: ''
   ─────────────────────────────────────────────────
   Examples
 
@@ -43,11 +57,13 @@
       with_mobile_dropdown=True %}
 #}
 
-{% set items                = items                if items                is defined else [] %}
-{% set extra_classes        = extra_classes        if extra_classes        is defined else '' %}
-{% set heading              = heading              if heading              is defined else '' %}
-{% set with_mobile_dropdown = with_mobile_dropdown if with_mobile_dropdown is defined else false %}
-{% set mobile_only          = mobile_only          if mobile_only          is defined else false %}
+{% set items                 = items                 if items                 is defined else [] %}
+{% set extra_classes         = extra_classes         if extra_classes         is defined else '' %}
+{% set heading               = heading               if heading               is defined else '' %}
+{% set with_mobile_dropdown  = with_mobile_dropdown  if with_mobile_dropdown  is defined else false %}
+{% set mobile_only           = mobile_only           if mobile_only           is defined else false %}
+{% set mobile_label          = mobile_label          if mobile_label          is defined else '' %}
+{% set mobile_wrapper_extra_classes = mobile_wrapper_extra_classes if mobile_wrapper_extra_classes is defined else '' %}
 
 {# ── Desktop nav (with optional sticky wrapper + heading) ─── #}
 
@@ -79,8 +95,8 @@
 {# ── Mobile sticky dropdown ──────────────────────────────── #}
 
 {% if (with_mobile_dropdown or mobile_only) and items %}
-  {% set _active_label = items[0].label if items else '' %}
-  <div class="c-anchor-links-mobile"
+  {% set _active_label = mobile_label if mobile_label else (items[0].label if items else '') %}
+  <div class="c-anchor-links-mobile{{ ' ' ~ mobile_wrapper_extra_classes if mobile_wrapper_extra_classes }}"
        data-module="anchor-dropdown">
     <button class="c-anchor-links-mobile__toggle"
             type="button"

@@ -1,0 +1,88 @@
+
+{#
+  Snippet: location-datagrid-drawer.html
+  Path:    templates/v2/location-datagrid-drawer.html
+
+  Renders the location page's Data Grid "Definitions" drawer: a pure
+  category/sub-category glossary (task 063, D2) — no color swatches, no
+  checkboxes, just the already-fetched description text (§4.2 of the
+  requirements doc) plus a per-category jump nav (desktop text-button
+  links + a mobile-only c-anchor-links dropdown with a static "Jump to
+  sub-categories" label instead of the component's usual current-section
+  label). The intro paragraph and both jump-nav variants sit inside
+  __sticky-top, which stays pinned below the drawer's own title bar while
+  only the category/sub-category list scrolls, via fanstatic/v2/location-page.js.
+
+  Only ever called from inside the same `{% if data.data_completeness %}`
+  guard as the rest of the Data Grid section — no internal guard here.
+
+  Parameters
+  ──────────────────────────────────────────────────────
+  data {dict}  The page's top-level `data` dict (data.data_completeness.categories
+               each expose .title/.description/.data_series[].title/.description,
+               already fetched by country_helper.get_template_data() — no new
+               backend fields).                                        required
+  ──────────────────────────────────────────────────────
+#}
+
+{% set categories = data.data_completeness.categories %}
+{% set category_icons = ['affected.svg', 'coordination.svg', 'food.svg', 'location.svg', 'health.svg', 'climate.svg'] %}
+
+{% set drawer_ns = namespace(subcateg_count=0, jump_items=[]) %}
+{% for category in categories %}
+  {% set drawer_ns.subcateg_count = drawer_ns.subcateg_count + (category.data_series | length) %}
+  {% set drawer_ns.jump_items = drawer_ns.jump_items + [{'label': category.title, 'href': '#datagrid-drawer-categ-' ~ loop.index}] %}
+{% endfor %}
+
+{% call h.snippet('v2/components/drawer.html',
+    drawer_id='location-datagrid-drawer',
+    title=_('Data grids legend')) %}
+
+  <div class="hdx-v2-location-datagrid-drawer__sticky-top">
+    <p class="hdx-v2-location-datagrid-drawer__intro">
+      {{ _('The Data Grid collects the most important crisis data for locations with a Humanitarian Response Plan. These core data are clustered in') }}
+      <b>{{ categories | length }} {{ _('categories') }}</b> {{ _('and') }}
+      <b>{{ drawer_ns.subcateg_count }} {{ _('sub-categories') }}.</b>
+    </p>
+
+    <div class="hdx-v2-location-datagrid-drawer__jump-nav hdx-v2-location-datagrid-drawer__jump-nav--desktop">
+      {% for category in categories %}
+        {% snippet 'v2/components/text-button.html',
+            style='tertiary', size='m', state='enabled',
+            label=category.title,
+            icon=True, icon_position='right', icon_src='v2/icons/arrow-down.svg',
+            tag='a', href='#datagrid-drawer-categ-' ~ loop.index,
+            extra_classes='hdx-v2-location-datagrid-drawer__jump-link' %}
+      {% endfor %}
+    </div>
+
+    <div class="hdx-v2-location-datagrid-drawer__jump-nav hdx-v2-location-datagrid-drawer__jump-nav--mobile">
+      {% snippet 'v2/components/anchor-links.html', items=drawer_ns.jump_items, mobile_only=True,
+          mobile_label=_('Jump to sub-categories'),
+          mobile_wrapper_extra_classes='c-anchor-links-mobile--drawer-scoped' %}
+    </div>
+  </div>
+
+  {% for category in categories %}
+    <div class="hdx-v2-location-datagrid-drawer__category"
+         id="datagrid-drawer-categ-{{ loop.index }}">
+      {% set category_icon_path = ('v2/icons/humanitarian-data-grids/' ~ category_icons[loop.index0]) if loop.index0 < category_icons | length else 'v2/icons/placeholder.svg' %}
+      <div class="hdx-v2-location-datagrid-drawer__category-header">
+        <span class="hdx-v2-location-datagrid-drawer__category-icon" aria-hidden="true">
+          {% include h.url_for_static(category_icon_path) %}
+        </span>
+        <span class="hdx-v2-location-datagrid-drawer__category-title">{{ category.title }}</span>
+      </div>
+      <p class="hdx-v2-location-datagrid-drawer__category-desc">{{ category.description }}</p>
+
+      {% for subcateg in category.data_series %}
+        <div class="hdx-v2-location-datagrid-drawer__subcateg">
+          <span class="hdx-v2-location-datagrid-drawer__subcateg-title">{{ subcateg.title }}</span>
+          <p class="hdx-v2-location-datagrid-drawer__subcateg-desc">{{ subcateg.description }}</p>
+        </div>
+      {% endfor %}
+    </div>
+    {% if not loop.last %}<hr class="c-divider hdx-v2-location-datagrid-drawer__divider">{% endif %}
+  {% endfor %}
+
+{% endcall %}

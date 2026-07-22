@@ -245,21 +245,25 @@
                 attrs={'onclick': "closeCurrentWidget(this);$('#group-message-topics-selector').select2('val', '');spawnRecaptcha('#groupMessagePopup');showOnboardingWidget('#groupMessagePopup');"} %}
           {% endif %}
         {% endif %}
-        {% if header_actions %}
+        {% set ns_actions_sm = namespace(visible=[]) %}
+        {% for action in header_actions %}
+          {% if action.show is not defined or action.show %}
+            {% set ns_actions_sm.visible = ns_actions_sm.visible + [action] %}
+          {% endif %}
+        {% endfor %}
+        {% if ns_actions_sm.visible %}
           <div class="c-page-header__card-actions">
-            {% for action in header_actions %}
-              {% if action.show is not defined or action.show %}
-                {% snippet 'v2/components/text-button.html',
-                    style='tertiary', size='m', label=action.label,
-                    icon=True, icon_position='left', icon_src=action.icon_src,
-                    tag='a', href=action.href if action.href else '#',
-                    attrs=action.attrs if action.attrs else {} %}
-              {% endif %}
+            {% for action in ns_actions_sm.visible %}
+              {% snippet 'v2/components/text-button.html',
+                  style='tertiary', size='m', label=action.label,
+                  icon=True, icon_position='left', icon_src=action.icon_src,
+                  tag='a', href=action.href if action.href else '#',
+                  attrs=action.attrs if action.attrs else {} %}
             {% endfor %}
           </div>
         {% endif %}
         {% if header_stats %}
-          <hr class="c-divider">
+          {% if ns_actions_sm.visible %}<hr class="c-divider">{% endif %}
           <div class="c-page-header__card-stats">
             {% for stat in header_stats %}
               <div class="c-page-header__card-stat">
@@ -322,21 +326,25 @@
               attrs={'id': 'contact-members', 'onclick': "closeCurrentWidget(this);$('#group-message-topics-selector').select2('val', '');spawnRecaptcha('#groupMessagePopup');showOnboardingWidget('#groupMessagePopup');"} %}
         {% endif %}
       {% endif %}
-      {% if header_actions %}
+      {% set ns_actions_md = namespace(visible=[]) %}
+      {% for action in header_actions %}
+        {% if action.show is not defined or action.show %}
+          {% set ns_actions_md.visible = ns_actions_md.visible + [action] %}
+        {% endif %}
+      {% endfor %}
+      {% if ns_actions_md.visible %}
         <div class="c-page-header__card-actions">
-          {% for action in header_actions %}
-            {% if action.show is not defined or action.show %}
-              {% snippet 'v2/components/text-button.html',
-                  style='tertiary', size='m', label=action.label,
-                  icon=True, icon_position='left', icon_src=action.icon_src,
-                  tag='a', href=action.href if action.href else '#',
-                  attrs=action.attrs if action.attrs else {} %}
-            {% endif %}
+          {% for action in ns_actions_md.visible %}
+            {% snippet 'v2/components/text-button.html',
+                style='tertiary', size='m', label=action.label,
+                icon=True, icon_position='left', icon_src=action.icon_src,
+                tag='a', href=action.href if action.href else '#',
+                attrs=action.attrs if action.attrs else {} %}
           {% endfor %}
         </div>
       {% endif %}
       {% if header_stats %}
-        <hr class="c-divider">
+        {% if ns_actions_md.visible %}<hr class="c-divider">{% endif %}
         <div class="c-page-header__card-stats">
           {% for stat in header_stats %}
             <div class="c-page-header__card-stat">

@@ -1,0 +1,49 @@
+.c-data-grid-status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--hdx-space-4);
+  height: var(--hdx-space-4);
+  flex: none;
+}
+.c-data-grid-status__mark {
+  width: 100%;
+  height: 100%;
+  border-radius: var(--hdx-radius-sm);
+}
+.c-data-grid-status--available-updated .c-data-grid-status__mark {
+  background-color: var(--hdx-primary-7);
+}
+.c-data-grid-status--available .c-data-grid-status__mark {
+  background-color: var(--hdx-primary-4);
+}
+.c-data-grid-status--unavailable .c-data-grid-status__mark {
+  background-color: var(--hdx-neutral-3);
+}
+.c-data-grid-status--na .c-data-grid-status__mark {
+  background-color: transparent;
+  border: 1px solid var(--hdx-neutral-4);
+  box-sizing: border-box;
+}
+.c-data-grid-status--complementary {
+  width: var(--hdx-space-3);
+  height: var(--hdx-space-3);
+  color: var(--hdx-neutral-6);
+}
+.c-data-grid-status__indent-icon {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.c-data-grid-status__indent-icon svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.c-data-grid-status[aria-describedby] {
+  cursor: default;
+}
+.c-tooltip-anchor .c-data-grid-status:hover ~ .c-tooltip,
+.c-tooltip-anchor .c-data-grid-status:focus-visible ~ .c-tooltip {
+  display: block;
+}

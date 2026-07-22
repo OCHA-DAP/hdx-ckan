@@ -2,7 +2,7 @@
  * anchor-links.js
  *
  * Behaviour for the c-anchor-links component:
- *   - Smooth scroll on anchor-link click (500ms, easeInOutCubic)
+ *   - Smooth scroll on anchor-link click (500ms, cubic-bezier(0.6, 0, 0.3, 1))
  *   - Mobile anchor-nav dropdown toggle
  *   - Active-section tracking via IntersectionObserver
  */
@@ -16,30 +16,63 @@
         initActiveTracking();
     });
 
-    // Expose smoothScrollTo for reuse by other page scripts
+    // Expose smoothScrollTo/closeMobileDropdown for reuse by other page scripts
     window.hdxSmoothScrollTo = smoothScrollTo;
+    window.hdxCloseAnchorDropdown = closeMobileDropdown;
+
 
     // ── Easing ──────────────────────────────────────────────────
 
-    function easeInOutCubic(t) {
-        return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+    function cubicBezier(x1, y1, x2, y2) {
+        function coord(t, a1, a2) {
+            var c = 3 * a1;
+            var b = 3 * (a2 - a1) - c;
+            var a = 1 - c - b;
+            return ((a * t + b) * t + c) * t;
+        }
+        function slope(t, a1, a2) {
+            var c = 3 * a1;
+            var b = 3 * (a2 - a1) - c;
+            var a = 1 - c - b;
+            return (3 * a * t + 2 * b) * t + c;
+        }
+        return function (x) {
+            if (x <= 0) return 0;
+            if (x >= 1) return 1;
+            var t = x;
+            for (var i = 0; i < 8; i++) {
+                var s = slope(t, x1, x2);
+                if (Math.abs(s) < 1e-6) break;
+                t -= (coord(t, x1, x2) - x) / s;
+            }
+            return coord(t, y1, y2);
+        };
     }
+
+    var ease = cubicBezier(0.6, 0, 0.3, 1);
 
     // ── Smooth scroll ────────────────────────────────────────────
     // Offset is read from the target's CSS scroll-margin-top so the same
     // value governs both native anchor navigation and smooth scroll.
+    // container defaults to the window; pass a scrollable element (e.g. a
+    // drawer's own scroll container) to animate its scrollTop instead.
 
-    function smoothScrollTo(target) {
-        // Respect the user's motion preference (V-10 / C-07)
+    function smoothScrollTo(target, container, extraOffset) {
+        var isWindow     = !container;
+        var start        = isWindow ? window.scrollY : container.scrollTop;
+        var containerTop = isWindow ? 0 : container.getBoundingClientRect().top;
+        var targetTop    = target.getBoundingClientRect().top - containerTop + start;
+        var scrollMargin = (parseFloat(getComputedStyle(target).scrollMarginTop) || 0) + (extraOffset || 0);
+        var destination  = Math.max(0, targetTop - scrollMargin);
+
+        // Respect the user's motion preference (V-10 / C-07): jump instantly,
+        // but still honor scrollMargin + extraOffset (scrollIntoView cannot).
         if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-            target.scrollIntoView({ block: 'start' });
+            if (isWindow) { window.scrollTo(0, destination); }
+            else          { container.scrollTop = destination; }
             return;
         }
 
-        var start        = window.scrollY;
-        var targetTop    = target.getBoundingClientRect().top + window.scrollY;
-        var scrollMargin = parseFloat(getComputedStyle(target).scrollMarginTop) || 0;
-        var destination  = Math.max(0, targetTop - scrollMargin);
         var distance     = destination - start;
         var duration     = 500;
         var startTime    = null;
@@ -48,11 +81,17 @@
             if (!startTime) startTime = timestamp;
             var elapsed  = timestamp - startTime;
             var progress = Math.min(elapsed / duration, 1);
-            window.scrollTo(0, start + distance * easeInOutCubic(progress));
+            var pos      = start + distance * ease(progress);
+            if (isWindow) {
+                window.scrollTo(0, pos);
+            } else {
+                container.scrollTop = pos;
+            }
             if (elapsed < duration) {
                 requestAnimationFrame(step);
             }
         }
+
 
         requestAnimationFrame(step);
     }

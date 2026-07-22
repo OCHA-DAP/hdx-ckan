@@ -2,10 +2,9 @@
   Snippet: stats-card.html
   Path:    templates/v2/components/stats-card.html
 
-  Renders a c-stats-card — borderless white stat card with a semibold
-  label, an optional small sublabel (e.g. "Last 30 days") and a large
-  value with an optional unit suffix.
-  Figma: llm_docs/redesign/figma_exports/xl-org-stats-page.html (.metadata)
+  Renders a c-stats-card — a stat display with a semibold label, an
+  optional small sublabel (e.g. "Last 30 days") and a large value with
+  an optional unit suffix.
 
   Parameters
   ──────────────────────────────────────────────────────
@@ -13,6 +12,14 @@
   sublabel  {string}  Small text under the label.  default: ''
   value     {string}  Bold stat value.  default: ''
   unit      {string}  Small unit suffix after the value (e.g. 'K').  default: ''
+  variant   {string}  'card'  — white surface, radius, padding, label
+                                 above value (default). Figma:
+                                 xl-org-stats-page.html (.metadata)
+                      'plain' — no background/radius/padding, value
+                                above label, both centered. Figma:
+                                xl-location-page-datagrids-*.html
+                                (.metadata-item)
+                      default: 'card'
   ──────────────────────────────────────────────────────
 #}
 
@@ -20,8 +27,9 @@
 {% set sublabel = sublabel if sublabel is defined else '' %}
 {% set value    = value    if value    is defined else '' %}
 {% set unit     = unit     if unit     is defined else '' %}
+{% set variant  = variant  if variant  is defined else 'card' %}
 
-<div class="c-stats-card">
+<div class="c-stats-card c-stats-card--{{ variant }}">
   <span class="c-stats-card__label">{{ label }}</span>
   {% if sublabel %}
     <span class="c-stats-card__sublabel">{{ sublabel }}</span>
