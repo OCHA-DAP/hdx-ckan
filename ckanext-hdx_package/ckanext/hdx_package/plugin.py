@@ -307,6 +307,10 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                     tk.get_validator('ignore_missing'),
                     tk.get_validator('hdx_reset_on_file_upload'),
                 ],
+                'hdx_data_dictionary': [
+                    tk.get_validator('ignore_missing'),
+                    tk.get_validator('hdx_validate_data_dictionary'),
+                ],
             }
         )
 
@@ -367,6 +371,9 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                     tk.get_validator('boolean_validator'),
                 ],
                 'qa_hapi_report': [
+                    tk.get_validator('ignore_missing'),
+                ],
+                'hdx_data_dictionary': [
                     tk.get_validator('ignore_missing'),
                 ],
             }
@@ -573,6 +580,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'hdx_resource_keep_prev_value_if_exist_unless_allow_sdd_report':
                 vd.hdx_resource_keep_prev_value_if_exist_unless_allow_sdd_report,
             'hdx_in_sensitive_values': vd.hdx_value_in_list_wrapper(SENSITIVE_FLAG_VALUES, False),
+            'hdx_validate_data_dictionary': vd.hdx_validate_data_dictionary,
         }
 
     def get_auth_functions(self):

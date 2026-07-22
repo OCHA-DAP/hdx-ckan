@@ -96,7 +96,7 @@ pyotp~=2.6.0
 # END ckanext-datapusher-plus
 
 # ckanext-sitemap (Datopian version)
--e git+https://github.com/datopian/ckanext-sitemap.git@88fb3b6#egg=ckanext-sitemap
+-e git+https://github.com/datopian/ckanext-sitemap.git@88fb3b6242a64f58fbdb0f76c089c5b5c2984bf9#egg=ckanext-sitemap
 
 python-json-logger~=2.0.7
 openpyxl==3.1.5
@@ -104,3 +104,6 @@ openpyxl==3.1.5
 # BY HDX- for datapusher plus
 semver==2.13.0
 datasize==1.0.0
+
+# BY HDX- for data catalog field/schema
+jsonschema[format-nongpl]>=4.18.0
