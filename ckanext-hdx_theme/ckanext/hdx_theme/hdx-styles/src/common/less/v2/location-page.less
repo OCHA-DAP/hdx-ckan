@@ -209,6 +209,10 @@
     border:           1px solid var(--hdx-neutral-1);
     border-radius:    var(--hdx-radius-sm);
 
+    &:hover {
+        border-color: var(--hdx-neutral-8);
+    }
+
     // Title (left) + status row (right, XL only) on one row —
     // task 063 round 2, R2-5. No dataset count is shown per-category.
     &__summary {
@@ -250,7 +254,6 @@
         text-overflow: ellipsis;
         white-space:   nowrap;
         color:         var(--hdx-neutral-95);
-        cursor:        default;
     }
 
     // Shown at every breakpoint now, per direct instruction (task 063

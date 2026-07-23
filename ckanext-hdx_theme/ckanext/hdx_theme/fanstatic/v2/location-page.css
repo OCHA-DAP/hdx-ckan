@@ -176,6 +176,9 @@
   border: 1px solid var(--hdx-neutral-1);
   border-radius: var(--hdx-radius-sm);
 }
+.hdx-v2-location-datagrid-card:hover {
+  border-color: var(--hdx-neutral-8);
+}
 .hdx-v2-location-datagrid-card__summary {
   display: flex;
   align-items: center;
@@ -212,7 +215,6 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   color: var(--hdx-neutral-95);
-  cursor: default;
 }
 .hdx-v2-location-datagrid-card__status-row {
   display: flex;
