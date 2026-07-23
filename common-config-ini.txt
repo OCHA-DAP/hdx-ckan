@@ -76,7 +76,7 @@ ckan.auth.create_user_via_web = true
 ckan.auth.roles_that_cascade_to_sub_groups = admin
 ckan.auth.public_user_details = false
 
-ckan.group_and_organization_list_all_fields_max = 400
+ckan.group_and_organization_list_all_fields_max = 1000
 
 # ckanext.powerview.allow_user_create = true
 
