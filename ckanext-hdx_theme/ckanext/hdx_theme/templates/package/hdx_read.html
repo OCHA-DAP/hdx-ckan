@@ -3,6 +3,9 @@
 {% block styles %}
   {{ super() }}
   {% asset 'hdx_theme/v2-dataset-page-styles' %}
+  {% if shapes %}
+    {% asset 'hdx_theme/crisis-base-styles' %}
+  {% endif %}
 {#  {% asset 'hdx_theme/requestdata-styles' %}#}
 {#  {% asset 'hdx_theme/dataset-styles' %}#}
 {#  {% asset 'hdx_theme/dataset-read-styles' %}#}
@@ -63,8 +66,10 @@
 {% set object_type = 'dataset' %}
 
 {# ── Build anchor nav items list (namespace allows mutation across scopes) ── #}
-{% set ns = namespace(anchor_items=[
-  {'label': _('Data and resources'), 'href': '#data-and-resources', 'active': True},
+{% set ns = namespace(anchor_items=(
+  [{'label': _('Preview'), 'href': '#preview', 'active': True}] if shapes else []
+) + [
+  {'label': _('Data and resources'), 'href': '#data-and-resources', 'active': not shapes},
 ]) %}
 {% if pkg.customviz %}
   {% set ns.anchor_items = ns.anchor_items + [{'label': _('Interactive data'), 'href': '#interactive-data', 'active': False}] %}
@@ -164,6 +169,21 @@
   {% snippet 'v2/components/anchor-links.html',
       items=ns.anchor_items,
       mobile_only=True %}
+
+  {# ── 0. Preview — conditional (GIS resource with successful shape_info), always open ── #}
+  {% if shapes %}
+    <section class="hdx-v2-dataset-section" id="preview">
+      <div class="hdx-v2-dataset-section__header">
+        <h2 class="hdx-v2-dataset-section__title">{{ _('Preview') }}</h2>
+      </div>
+      <div class="hdx-v2-dataset-section__body">
+        <div id="mapbox-baselayer-url-div" style="display: none;">{{ h.hdx_generate_basemap_config_string() }}</div>
+        <div id="shapeData" style="display: none;">{{ shapes }}</div>
+        <div id="map" style="height: 400px; margin-bottom: 15px;"></div>
+      </div>
+    </section>
+    <hr class="c-divider">
+  {% endif %}
 
   {# ── 1. Data & resources — always open ── #}
   <section class="hdx-v2-dataset-section" id="data-and-resources">
@@ -526,6 +546,9 @@
   {{ super() }}
   {% asset 'hdx_theme/v2-chart-scripts' %}
   {% asset 'hdx_theme/v2-dataset-page-scripts' %}
+  {% if shapes %}
+    {% asset 'hdx_theme/shape-view-scripts' %}
+  {% endif %}
 {#  {{ h.snippet('widget/onboarding/data-use-survey.html', id="dataUseSurveyPopup", pkg=pkg) }}#}
 {#  {% asset 'hdx_theme/dataset-styles' %}#}
   {% asset 'hdx_theme/dataset-quick-edit-scripts' %}

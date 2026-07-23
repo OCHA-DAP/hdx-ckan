@@ -94,15 +94,17 @@ The `{% block secondary %}` wraps in `.hdx-v2-dataset-sidebar` (XL+ only via CSS
 - Hidden at XL, shown and sticky (`position: fixed; top: 7rem`) at MD/SM
 - Pattern: button (`.c-anchor-links-mobile__toggle`) → toggled `<ul class="c-anchor-links-mobile__panel">` below
 
-**Anchor items** (built with Jinja2 namespace trick):
+**Anchor items** (built with Jinja2 namespace trick). "Preview" is prepended only when `shapes` (set server-side, see §0 below) is truthy:
 ```jinja
-{% set ns = namespace(anchor_items=[
-    {'label': _('Data and resources'), 'href': '#data-and-resources', 'active': True},
-    {'label': _('Metadata'),           'href': '#metadata',           'active': False},
+{% set ns = namespace(anchor_items=(
+  [{'label': _('Preview'), 'href': '#preview', 'active': True}] if shapes else []
+) + [
+  {'label': _('Data and resources'), 'href': '#data-and-resources', 'active': not shapes},
 ]) %}
 {% if pkg.customviz %}
   {% set ns.anchor_items = ns.anchor_items + [{'label': _('Interactive data'), 'href': '#interactive-data', 'active': False}] %}
 {% endif %}
+{% set ns.anchor_items = ns.anchor_items + [{'label': _('Metadata'), 'href': '#metadata', 'active': False}] %}
 {% if showcase_list %}
   {% set ns.anchor_items = ns.anchor_items + [{'label': _('Showcases'), 'href': '#showcases', 'active': False}] %}
 {% endif %}
@@ -112,10 +114,37 @@ The `{% block secondary %}` wraps in `.hdx-v2-dataset-sidebar` (XL+ only via CSS
 Showcases link is added **only when `showcase_list` is non-empty**. Interactive data link is added **only when `pkg.customviz` is truthy**.
 
 **Section IDs** (must match href values):
+- `#preview` (conditional)
 - `#data-and-resources`
 - `#metadata`
 - `#showcases` (conditional)
 - `#activity`
+
+---
+
+### 0. Preview Section (Conditional)
+
+**Condition**: dataset has a resource in GIS format (`shp`/`geojson`/`kml`/`kmz`) with successfully-processed `shape_info` — detected server-side via `dataset_view_logic.has_shape_info()` (`ckanext-hdx_package/ckanext/hdx_package/controller_logic/dataset_view_logic.py`) and surfaced to the template as the `shapes` variable (JSON string), set in `ckanext-hdx_package/ckanext/hdx_package/views/dataset.py::read()`. **Always open** — no accordion. Rendered first, before "Data and resources".
+
+```html
+{% if shapes %}
+  <section class="hdx-v2-dataset-section" id="preview">
+    <div class="hdx-v2-dataset-section__header">
+      <h2 class="hdx-v2-dataset-section__title">Preview</h2>
+    </div>
+    <div class="hdx-v2-dataset-section__body">
+      <div id="mapbox-baselayer-url-div" style="display: none;">{{ h.hdx_generate_basemap_config_string() }}</div>
+      <div id="shapeData" style="display: none;">{{ shapes }}</div>
+      <div id="map" style="height: 400px; margin-bottom: 15px;"></div>
+    </div>
+  </section>
+  <hr class="c-divider">
+{% endif %}
+```
+
+The map itself (MapLibre GL — `fanstatic/shape-view.js`), its on-map hover info panel, and its layer-toggle control are pre-existing and untouched — only the v2 section wrapper/heading and anchor-nav wiring are new. Loads `hdx_theme/crisis-base-styles` (in `{% block styles %}`) and `hdx_theme/shape-view-scripts` (in `{% block scripts %}`) only when `shapes` is truthy.
+
+Note: `package/hdx-read-shape.html` (the pre-v2 template that used to own this markup via an orphaned `pre_primary_content` block override) is no longer rendered by any controller path as of this change; kept in the repo unused.
 
 ---
 
@@ -653,7 +682,8 @@ Standard `{% set items = items + [...] %}` fails in Jinja2 due to scoping — us
 
 | File | Change |
 |------|--------|
-| `templates/package/hdx_read.html` | Full restructure per block breakdown above; `columns_class`; inlined metadata fields; `<hr class="c-divider">` between sections |
+| `templates/package/hdx_read.html` | Full restructure per block breakdown above; `columns_class`; inlined metadata fields; `<hr class="c-divider">` between sections; conditional Preview section (§0) + anchor-nav entry for GIS/geo-preview datasets |
+| `ckanext-hdx_package/ckanext/hdx_package/views/dataset.py` | `read()`: geo-preview branch now `break`s instead of `return render('package/hdx-read-shape.html', ...)`, falling through to the normal `hdx_read.html`/`custom_hdx_read.html` render with `shapes` set in `template_data` |
 | `templates/v2/page.html` | Support `columns_class` on `hdx-v2-content-columns`; added `{% block mobile_sticky_nav %}` between `pre_primary` and main layout div |
 | `templates/v2/components/page-header.html` | Tooltip triggers via `info-icon.html` (`c-info-icon`); anchor hrefs fixed; overflow items marked `data-header-meta-overflow` |
 | `templates/v2/components/anchor-links.html` | Added `heading`, `with_mobile_dropdown`, and `mobile_only` params |

@@ -231,7 +231,7 @@ def read(id):
             if _res_view.get('type') == 'hdx_geo_preview':
                 template_data['shapes'] = json.dumps(
                     dataset_view_logic.process_shapes(pkg_dict['resources'], r.get('id')))
-                return render('package/hdx-read-shape.html', template_data)
+                break
             if _res_view.get('type') == 'hdx_hxl_preview':
                 template_data['default_view'] = _res_view
                 has_modify_permission = authz.is_authorized_boolean('package_update', context, {'id': pkg_dict['id']})
