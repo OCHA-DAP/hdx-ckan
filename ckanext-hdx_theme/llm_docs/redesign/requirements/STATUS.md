@@ -67,3 +67,4 @@
 | 061 | [hdx-connect-flow-v2](061-hdx-connect-flow-v2.md)                                                              | implemented | |
 | 062 | [error-pages-v2](062-error-pages-v2.md)                                                                        | implemented | |
 | 063 | [location-page-datagrids-v2](063-location-page-datagrids-v2.md)                                                | implemented | |
+| 064 | [auth-pages-v2](064-auth-pages-v2.md)                                                                          | implemented | |

@@ -10,11 +10,21 @@
 
   Analytics: all links carry data-module="hdx_click_stopper" and
              data-module-link_type="header" (feeds Mixpanel pipeline).
+
+  Params
+  ─────────────────────────────────────────────────
+  minimal {bool}  Logo-only navbar, no top-bar/search/nav items/actions/
+                  hamburger/offcanvas. Used by the auth pages (login,
+                  forgot-password), which show only a teal logo bar per
+                  Figma. default: False
 #}
+
+{% set minimal = minimal if minimal is defined else False %}
 
 <header class="hdx-v2-header">
 
   {# ── Top-bar ─────────────────────────────────────────────── #}
+  {% if not minimal %}
   <div class="hdx-v2-top-bar">
     <div class="hdx-v2-top-bar__inner hdx-v2-container">
 
@@ -122,6 +132,7 @@
 
     </div>
   </div>
+  {% endif %}
 
   {# ── Navbar ───────────────────────────────────────────────── #}
   <nav class="hdx-v2-navbar"
@@ -135,6 +146,7 @@
         {% include 'v2/icons/hdx.svg' %}
       </a>
 
+      {% if not minimal %}
       {% if request.path != '/' %}
       {# Search — visible on XL (25rem) and MD (21.25rem via CSS); hidden on SM #}
       {# At XL: panel drops inline. At MD/SM: JS opens the fullscreen overlay instead. #}
@@ -256,10 +268,12 @@
           <span class="hdx-v2-navbar__icon-close">{% include 'v2/icons/close.svg' %}</span>
         </button>
       </div>
+      {% endif %}
 
     </div>
   </nav>
 
+  {% if not minimal %}
   {# ── Offcanvas — MD/SM slide-out nav panel ───────────────── #}
   <div class="hdx-v2-offcanvas" id="hdx-v2-offcanvas" aria-hidden="true">
     <div class="hdx-v2-offcanvas__body">
@@ -442,5 +456,6 @@
     </div>
 
   </div>
+  {% endif %}
 
 </header>

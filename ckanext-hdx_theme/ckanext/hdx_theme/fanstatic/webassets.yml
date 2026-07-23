@@ -1707,6 +1707,24 @@ v2-request-access-page-styles:
   contents:
     - v2/request-access-page.css
 
+v2-auth-page-styles:
+  output: ckanext-hdx_theme/%(version)s_v2-auth-page-styles.css
+  <<: *common-css
+  contents:
+    - v2/auth-page.css
+
+v2-login-page-scripts:
+  <<: *common-js
+  output: ckanext-hdx_theme/%(version)s_v2-login-page-scripts.js
+  contents:
+    - v2/login-page.js
+
+v2-forgot-password-page-scripts:
+  <<: *common-js
+  output: ckanext-hdx_theme/%(version)s_v2-forgot-password-page-scripts.js
+  contents:
+    - v2/forgot-password-page.js
+
 v2-form-validator-scripts:
   <<: *common-js
   output: ckanext-hdx_theme/%(version)s_v2-form-validator-scripts.js

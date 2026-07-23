@@ -1,31 +1,107 @@
-{% extends "base.html" %}
+{#
+  Login page (v2). Real page content — no popup/widget indirection.
+  View: hdx_signin.login() — ckanext-hdx_users/ckanext/hdx_users/views/signin.py
+  Figma: xl-login-filled-with-error.html, sm-login.html
+  Requirements: llm_docs/redesign/requirements/064-auth-pages-v2.md
+#}
+{% extends "v2/page.html" %}
+
+
 {% block subtitle %}{{ _('Log in') }}{% endblock %}
 
 {% block styles %}
   {{ super() }}
-  {% asset 'hdx_theme/page-styles' %}
-  {% asset 'hdx_theme/signin-styles' %}
+  {% asset 'hdx_theme/v2-auth-page-styles' %}
 {% endblock %}
 
 {% block scripts %}
   {{ super() }}
-  {% asset 'hdx_theme/signin-scripts' %}
+  {% asset 'hdx_theme/v2-login-page-scripts' %}
 {% endblock %}
 
-{%- block meta -%}
-  {{ super() }}
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-{%- endblock -%}
+{% block header %}
+  {% snippet 'v2/header.html', minimal=True %}
+{% endblock %}
 
-{#{%- block bodytag -%} {{ super() }} class="animated-gradient" {%- endblock -%}#}
+{% block main_content %}
+<div class="hdx-v2-auth-page">
+  <div class="hdx-v2-auth-card">
 
-{% block page %}
-  <div>
-    {{ h.snippet('widget/onboarding/login.html', id="loginPopup",
-        content_class="fade-in", class="popup-onboarding animated-gradient",
-        show=True, error_message=error_message, info_message=info_message, data=data) }}
+    <div class="hdx-v2-auth-card__header">
+      <h1 class="hdx-v2-auth-card__title">{{ _('Log in') }}</h1>
+    </div>
+
+    {% if info_message %}
+      {% snippet 'v2/components/form-alert.html', message=info_message %}
+    {% endif %}
+
+    <div class="hdx-v2-auth-card__returning-user" id="auth-returning-user" hidden>
+      <div id="auth-returning-avatar">
+        {% snippet 'v2/components/avatar.html', size='l', initials='' %}
+      </div>
+      <div class="hdx-v2-auth-card__returning-info">
+        <div class="hdx-v2-auth-card__returning-name" id="auth-returning-name"></div>
+        <div class="hdx-v2-auth-card__returning-email">
+          <span id="auth-returning-email"></span>
+          <button type="button" class="hdx-v2-auth-card__not-you" id="auth-not-you">{{ _('Not you?') }}</button>
+        </div>
+      </div>
+    </div>
+
+    <form id="hdx-login-form" class="hdx-v2-auth-card__form"
+          action="{{ h.url_for('hdx_signin.login', came_from=data.login_came_from) if data.login_came_from else h.url_for('hdx_signin.login') }}"
+          method="post" novalidate>
+      {{ h.csrf_input() }}
+
+      <div class="c-form-field" id="auth-login-field">
+        {% snippet 'v2/components/search-input.html',
+            type='text', name='login', id='field-login',
+            label=_('Username or Email'), required=True, show_icon=False %}
+      </div>
+
+      <div class="c-form-field">
+        {% snippet 'v2/components/search-input.html',
+            type='password', name='password', id='field-password',
+            label=_('Password'), required=True,
+            errors=error_message if error_message else none %}
+      </div>
+
+      <div class="c-form-field" id="mfa-form-field" hidden>
+        {% snippet 'v2/components/search-input.html',
+            type='number', name='mfa', id='field-mfa',
+            label=_('One Time Password'), show_icon=False,
+            input_attrs={'min': '0', 'max': '999999'} %}
+      </div>
+
+      {% snippet 'v2/components/text-link.html',
+          label=_('Forgot your password?'), href=h.url_for('hdx_user.request_reset'),
+          style='tertiary', size='s' %}
+
+      <div class="hdx-v2-auth-card__checkbox-row">
+        {% snippet 'v2/components/checkbox.html',
+            id='field-remember', name='remember', value='63072000',
+            label=_('Remember me') %}
+      </div>
+
+      <div class="hdx-v2-auth-card__submit-row">
+        {% snippet 'v2/components/button.html',
+            label=_('Log in'), style='primary', size='l',
+            button_type='submit', state='disabled', id='hdx-login-submit' %}
+      </div>
+    </form>
+
+    <div class="hdx-v2-auth-card__footer">
+      {{ _("Don't have an account?") }}
+      {% snippet 'v2/components/text-link.html',
+          label=_('Sign up'), href=h.url_for('hdx_user_onboarding.value_proposition'),
+          style='primary', size='s' %}
+    </div>
+
   </div>
+</div>
 {% endblock %}
 
-{% block mixpanel_init %} {% endblock %}
-{% block google_analytics_init %} {% endblock %}
+{% block footer %}{% endblock %}
+
+{% block mixpanel_init %}{% endblock %}
+{% block google_analytics_init %}{% endblock %}
