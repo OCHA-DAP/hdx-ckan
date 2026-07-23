@@ -389,7 +389,7 @@ collapsed KPI/chart panel looks like at any breakpoint.
 
 | Breakpoint | Delivery mechanism found in the export | Content |
 |---|---|---|
-| SM | Dedicated file `sm-location-page-datagrids-drawer.html` (≈identical to `drawer-legend-sm.html`) — a bottom-sheet/full-height drawer | Header "Data grids legend" + close (X) + intro ("...6 categories and 20 sub-categories...") + sticky "Jump to sub-categories" pill; body: all 6 categories, each icon+name+description+divider, followed by its sub-categories (name + longer description) |
+| SM | Dedicated file `sm-location-page-datagrids-drawer.html` (≈identical to `drawer-legend-sm.html`) — a bottom-sheet/full-height drawer | Header "Data Grid Definitions" + close (X) + intro ("...6 categories and 20 sub-categories...") + sticky "Jump to sub-categories" pill; body: all 6 categories, each icon+name+description+divider, followed by its sub-categories (name + longer description) |
 | MD | Same glossary content baked in as a hidden `#drawerContainer.popup-overlay` (`display:none`) — **present in the MD-collapsed export only**, absent entirely from MD-expanded (very likely an export/mock gap, not an intentional per-state difference) | Same as SM |
 | XL | **No drawer/modal markup exists in either XL export.** The `popup-overlay` instances present in the XL files are unrelated dataset-list filter dropdowns (location/date/format), not a legend target | Undefined — no content captured at all |
 
