@@ -79,7 +79,7 @@ function prepareMap(countDatasets, openNewWindow){
       opacity: 0.2,
       color: '#ccc',
       fillOpacity: 1.0,
-      fillColor: '#f5837b'
+      fillColor: '#a8d5c9'
     });
     popup.setLatLng(e.latlng);
     popup.setContent("<div class='marker-container'>" +
@@ -97,7 +97,7 @@ function prepareMap(countDatasets, openNewWindow){
       return {
         weight: 0,
         fillOpacity: 0.5,
-        fillColor: '#f5837b'
+        fillColor: '#a8d5c9'
       };
     }
 

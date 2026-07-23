@@ -42,8 +42,8 @@
   border-color: var(--hdx-neutral-2);
 }
 .c-selection-item--cyan {
-  background-color: #d4eae4;
-  border-color: #a8d5c9;
+  background-color: var(--hdx-brand-1);
+  border-color: var(--hdx-brand-2);
 }
 .c-selection-item:hover {
   background-color: var(--hdx-neutral-01);
@@ -51,7 +51,7 @@
   box-shadow: var(--hdx-shadow-sm);
 }
 .c-selection-item:hover.c-selection-item--cyan {
-  background-color: #d4eae4;
+  background-color: var(--hdx-brand-1);
 }
 .c-selection-item--active {
   border-color: var(--hdx-neutral-95);
@@ -65,7 +65,7 @@
   border-color: var(--hdx-neutral-95);
 }
 .c-selection-item--active.c-selection-item--cyan {
-  background-color: #d4eae4;
+  background-color: var(--hdx-brand-1);
 }
 .c-selection-item--has-icon .c-selection-item__icon {
   display: block;
