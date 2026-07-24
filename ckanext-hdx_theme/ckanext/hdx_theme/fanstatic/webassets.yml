@@ -1554,6 +1554,7 @@ v2-home-page-scripts:
   output: ckanext-hdx_theme/%(version)s_v2-home-page-scripts.js
   contents:
     - v2/highlights-carousel.js
+    - v2/signals-carousel.js
     - v2/bar-chart.js
 
 v2-signals-landing-page-styles:
@@ -1566,7 +1567,7 @@ v2-signals-landing-page-scripts:
   <<: *common-js
   output: ckanext-hdx_theme/%(version)s_v2-signals-landing-page-scripts.js
   contents:
-    - v2/signals-landing-page.js
+    - v2/signals-carousel.js
     - landing_pages/hdx_signals.js
 
 v2-page-scripts:

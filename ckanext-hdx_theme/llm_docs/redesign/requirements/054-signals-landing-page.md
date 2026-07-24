@@ -507,7 +507,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 ### Signals Carousel Init
 
-In `fanstatic/v2/signals-landing-page.js`:
+In `fanstatic/v2/signals-carousel.js`:
 
 ```javascript
 document.addEventListener('DOMContentLoaded', function () {
@@ -589,7 +589,7 @@ v2-signals-landing-page-scripts:
     preload:
       - hdx_theme/v2-carousel-scripts
   contents:
-    - v2/signals-landing-page.js
+    - v2/signals-carousel.js
     - landing_pages/hdx_signals.js
 ```
 
@@ -863,7 +863,7 @@ v2-signals-landing-page-scripts:
     preload:
       - hdx_theme/v2-carousel-scripts   # includes carousel.js + Hammer.js
   contents:
-    - v2/signals-landing-page.js
+    - v2/signals-carousel.js
     - landing_pages/hdx_signals.js
 ```
 
@@ -930,7 +930,7 @@ v2-signals-landing-page-scripts:
 | `less/v2/signals-landing-page.less` | Page-specific LESS |
 | `fanstatic/v2/signals-landing-page.css` | Compiled output (generated) |
 | `fanstatic/v2/carousel.js` | Generic shared carousel module |
-| `fanstatic/v2/signals-landing-page.js` | Thin init wrapper for signals carousel |
+| `fanstatic/v2/signals-carousel.js` | Thin init wrapper for signals carousel |
 
 ### Modified Files
 

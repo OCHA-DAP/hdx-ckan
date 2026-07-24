@@ -265,7 +265,7 @@ Example page-specific template (light search):
   - UI copy from `h.HDX_CONST('UI_CONSTANTS')['LANDING_PAGES']['SIGNALS_LANDING_PAGE']`.
 - **Core assets**:
   - `hdx_theme/v2-carousel-scripts` — Hammer.js + `carousel.js`; loaded explicitly in template before page scripts.
-  - `hdx_theme/v2-signals-landing-page-scripts` — `v2/signals-landing-page.js` (carousel init) + `landing_pages/hdx_signals.js` (form logic: vanilla JS, `is-disabled` class for submit button).
+  - `hdx_theme/v2-signals-landing-page-scripts` — `v2/signals-carousel.js` (carousel init) + `landing_pages/hdx_signals.js` (form logic: vanilla JS, `is-disabled` class for submit button).
   - `hdx_theme/v2-signals-landing-page-styles` — `v2/signals-landing-page.css` + `v2/components/signal-card.css`.
 
 ---
