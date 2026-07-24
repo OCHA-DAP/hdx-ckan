@@ -57,59 +57,58 @@
   {%- block content %}
     {% block maintag %}<div role="main" id="hdx-v2-main">{% endblock %}
       <div id="content">
-        {% block main_content %}
-      {% block toolbar %}
-        <div class="hdx-v2-breadcrumb-row{{ ' ' ~ breadcrumb_row_class if breadcrumb_row_class else '' }}">
-          <div class="hdx-v2-container">
-            {% block breadcrumb_items %}{% endblock %}
-          </div>
-        </div>
-      {% endblock %}
-
-      {% block flash %}
-        <div class="flash-messages">
-          <div class="hdx-v2-container">
-            {% block flash_inner %}
-              {% for category, message in h.get_flashed_messages(with_categories=true) %}
-                <div class="hdx-v2-flash {{ category }}">
-                  {{ h.literal(message) }}
-                </div>
-              {% endfor %}
-            {% endblock %}
-          </div>
-        </div>
-      {% endblock %}
-
-      {% set secondary_block_output = self.secondary() %}
-      <div class="{% if secondary_block_output|trim == '' %}no-nav{% endif %}">
-        {#
-        The pre_primary block can be used to add content before the
-        main content columns. Each page template wraps it in its own container.
-        #}
-        {% if self.pre_primary() | trim %}
-          {% block pre_primary %}
-          {% endblock %}
-        {% endif %}
-
-        <div class="{{ ' ' ~ outer_row_class if outer_row_class else '' }}">
-          <div class="hdx-v2-container">
-            <div class="hdx-v2-content-columns{{ ' ' ~ columns_class if columns_class else '' }}">
-              {% if secondary_block_output|trim != '' %}
-                <div class="{{ sidebar_class if sidebar_class else '' }}">
-                  {{ secondary_block_output }}
-                </div>
-              {% endif %}
-              <div class="{{ content_class if content_class else '' }}">
-                {{ self.primary() }}
-              </div>
+        {% block toolbar %}
+          <div class="hdx-v2-breadcrumb-row{{ ' ' ~ breadcrumb_row_class if breadcrumb_row_class else '' }}">
+            <div class="hdx-v2-container">
+              {% block breadcrumb_items %}{% endblock %}
             </div>
           </div>
-        </div>
+        {% endblock %}
 
-        {% block post_primary %}{% endblock %}
+        {% block flash %}
+          <div class="flash-messages">
+            <div class="hdx-v2-container">
+              {% block flash_inner %}
+                {% for category, message in h.get_flashed_messages(with_categories=true) %}
+                  <div class="hdx-v2-flash {{ category }}">
+                    {{ h.literal(message) }}
+                  </div>
+                {% endfor %}
+              {% endblock %}
+            </div>
+          </div>
+        {% endblock %}
 
-      </div>
+        {% block main_content %}
+          {% set secondary_block_output = self.secondary() %}
+          <div class="{% if secondary_block_output|trim == '' %}no-nav{% endif %}">
+            {#
+            The pre_primary block can be used to add content before the
+            main content columns. Each page template wraps it in its own container.
+            #}
+            {% if self.pre_primary() | trim %}
+              {% block pre_primary %}
+              {% endblock %}
+            {% endif %}
 
+            <div class="{{ ' ' ~ outer_row_class if outer_row_class else '' }}">
+              <div class="hdx-v2-container">
+                <div class="hdx-v2-content-columns{{ ' ' ~ columns_class if columns_class else '' }}">
+                  {% if secondary_block_output|trim != '' %}
+                    <div class="{{ sidebar_class if sidebar_class else '' }}">
+                      {{ secondary_block_output }}
+                    </div>
+                  {% endif %}
+                  <div class="{{ content_class if content_class else '' }}">
+                    {{ self.primary() }}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {% block post_primary %}{% endblock %}
+
+          </div>
         {% endblock %}
       </div>
     </div>

@@ -43,7 +43,7 @@ CSS custom property equivalents (`--hdx-*`) are defined in `v2/foundation.css` (
 - Loads `hdx_theme/v2-page-styles`; legacy onboarding and `page-scripts` bundles are commented out pending v1 retirement
 - Sets `{% block bodytag %}hdx-v2{% endblock %}` for scoping v2 styles to the body class
 - Overrides `{% block page %}` with: header block → main content (toolbar + flash + two-column layout) → footer block
-- `{% block header_core %}` includes `v2/header.html` via `{% snippet %}`
+- `{% block header_core %}` includes `v2/header.html` via `{% snippet %}`; `v2/header.html` takes an optional `minimal=True` param (logo-only navbar, no top-bar/search/nav items/actions/hamburger/offcanvas) used by the login/forgot-password pages
 - `{% block toolbar %}` renders `<div class="hdx-v2-breadcrumb-row">` with a `{% block breadcrumb_items %}` sub-block; page templates override only `{% block breadcrumb_items %}`; set `breadcrumb_row_class` variable for modifier classes on the row div (e.g. `'hdx-v2-breadcrumb-row--white'`)
 - `{% block flash %}` renders flash messages using `hdx-v2-flash {{ category }}` class (Bootstrap `.alert` removed)
 - `secondary_right_side` feature removed; sidebar always renders on the left
@@ -106,6 +106,8 @@ CSS custom property equivalents (`--hdx-*`) are defined in `v2/foundation.css` (
 | Organization page | `organization/read.html`, `organization/activity_stream.html`, `organization/stats.html`, `organization/members.html` | Extend `v2/page.html`; shared `v2/org_hero.html` (page-header + `c-tabs`); tasks 056–059 (Datasets / Activity / Stats / Members); HDX Connect tab postponed |
 | Crisis / Event pages | `pages/read_page.html` (serves `/event/<name>` + `/dashboards/<name>`) | Extends `v2/page.html`; `page-header.html` (description sourced from the first `description`-type CMS section, not the page's own keywords field); new `v2/crisis-section.html` dispatcher + `crisis-page.less`/`crisis-page.js`; dataset list reuses `search_results_wrapper.html` like the org Datasets tab; `/m/` light routes untouched; see `requirements/060-crisis-event-pages-v2.md` |
 | Error page (404/403/Server Error) | `error_document_template.html` | Extends `v2/page.html` with `{% block header %}`/`{% block footer %}`/`{% block scripts %}` emptied out (no nav chrome, no JS) and `{% block main_content %}` replaced with the centered logo/heading/body/CTA layout; 500/503/anything-else collapses into one "Server Error" copy, 403 keeps its own copy; see `requirements/062-error-pages-v2.md` |
+| Login | `user/signin.html` | Extends `v2/page.html`; `{% block header %}` uses `v2/header.html` with new `minimal=True` param (logo-only navbar, no top-bar/search/nav/actions/offcanvas); real page content, no popup/widget indirection (no longer renders `widget/onboarding/login.html`); "remember me" cookie prefill/gravatar-style swap now shows initials only via `c-avatar`; see `requirements/064-auth-pages-v2.md` |
+| Forgot password | `user/forgot_password.html` | Extends `v2/page.html`; same `minimal=True` header; confirmation is a same-route swap between two sibling cards toggled via the `hidden` attribute (no more `widget/onboarding/recoverSuccess.html`/loading-screen widget); invisible reCAPTCHA still bound to the submit button; see `requirements/064-auth-pages-v2.md` |
 
 ### Pages in holding state (on `page_light.html`)
 
@@ -213,6 +215,9 @@ Bundle configuration:
 - `hdx_theme/v2-signup-scripts` — Signup scripts: `onboarding/came-from-input.js` (vanilla JS rewrite in place) + `onboarding/confirm-page-leave.js` (vanilla JS rewrite in place); loaded on user-info and change-email pages
 - `hdx_theme/v2-form-validator-scripts` — Form validation: vanilla JS validator (`v2/form-validator.js`); activated by `data-hdx-v2-form-validator` on `<form>` elements; loaded by notification platform templates and signup form pages (user-info, change-email)
 - `hdx_theme/v2-error-page-styles` — 404/403/Server Error page: adds `v2/error-page.css`; no scripts bundle (page has no interactive behavior)
+- `hdx_theme/v2-auth-page-styles` — Login + forgot-password pages: adds `v2/auth-page.css` (shared card/navbar-shell styling, loaded by both templates)
+- `hdx_theme/v2-login-page-scripts` — Login page: adds `v2/login-page.js` (lockout/MFA pre-checks, required-field gating, remember-me cookie prefill)
+- `hdx_theme/v2-forgot-password-page-scripts` — Forgot-password page: adds `v2/forgot-password-page.js` (AJAX submit, invisible reCAPTCHA, recover/confirmation card swap)
 
 ---
 
