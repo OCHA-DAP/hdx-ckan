@@ -85,22 +85,35 @@ Example:
   {# Count selected items across all filters.
      HPC (vocab_Topics) children are excluded from the advanced loop — already
      captured by the main vocab_Topics facet above to avoid double-counting. #}
-  {% set _ns = namespace(total=0) %}
+  {% set _ns = namespace(total=0, pills=[]) %}
   {% for _fk in ['groups', 'organization', 'res_format', 'vocab_Topics'] %}
-    {% set _ns.total = _ns.total + (facet_list.get(_fk, {}).get('items', []) | selectattr('selected') | list | length) %}
+    {% for _fsi in facet_list.get(_fk, {}).get('items', []) | selectattr('selected') %}
+      {% set _ns.total = _ns.total + 1 %}
+      {% set _ns.pills = _ns.pills + [{'label': _fsi.display_name, 'facet': _fk, 'value': _fsi.name}] %}
+    {% endfor %}
   {% endfor %}
   {% for _fi in facet_list.get('featured', {}).get('items', []) %}
     {% if _fi.get('items') %}
       {% if _fi.get('category_key') == 'cod_level' %}
         {% for _si in _fi['items'] %}
-          {% if _si.selected %}{% set _ns.total = _ns.total + 1 %}{% endif %}
+          {% if _si.selected %}
+            {% set _ns.total = _ns.total + 1 %}
+            {% set _ns.pills = _ns.pills + [{'label': _si.display_name, 'facet': _si.category_key, 'value': _si.name}] %}
+          {% endif %}
         {% endfor %}
       {% endif %}
     {% elif _fi.selected %}
       {% set _ns.total = _ns.total + 1 %}
+      {% set _ns.pills = _ns.pills + [{'label': _fi.display_name, 'facet': _fi.get('category_key', 'featured'), 'value': _fi.name}] %}
     {% endif %}
   {% endfor %}
   {% set total_selected = _ns.total %}
+
+  {% set archived_url_helper = full_facet_info.get('archived_url_helper') %}
+  {% if archived_url_helper and archived_url_helper.on_archived_page %}
+    {% set _ns.pills = _ns.pills + [{'label': 'Archived datasets', 'facet': 'archived', 'value': '', 'url': archived_url_helper.unarchived_url}] %}
+  {% endif %}
+  {% set applied_pills = _ns.pills %}
 
   {# ── v2 dataset list header (title + count + sort/limit at XL) ───────── #}
 
@@ -146,6 +159,27 @@ Example:
         extra_classes='c-search-input--block' %}
   </form>
 
+  {% if applied_pills %}
+    <div class="hdx-v2-applied-filters">
+      {% snippet 'v2/components/text-link.html',
+          style='secondary', size='xs',
+          label='Clear all',
+          attrs={'data-action': 'clear-filters'} %}
+      <div class="hdx-v2-applied-filters__list c-selection-item-row">
+        {% for pill in applied_pills %}
+          {% snippet 'v2/components/selection-item.html',
+              label=pill.label, size='s', state='active', tag='button',
+              attrs={'data-action': 'remove-pill', 'data-facet': pill.facet, 'data-value': pill.value, 'data-url': pill.get('url', '')} %}
+        {% endfor %}
+      </div>
+      {% snippet 'v2/components/text-button.html',
+          style='tertiary', size='s', tag='button', icon=True, icon_position='right',
+          label='Show more', icon_src='v2/icons/chevron-down.svg',
+          attrs={'data-action': 'toggle-pill-overflow', 'hidden': 'hidden'},
+          extra_classes='hdx-v2-applied-filters__toggle' %}
+    </div>
+  {% endif %}
+
   {# ── MD/SM full-screen filter overlay ────────────────────────────────── #}
   <div class="hdx-v2-search-filter-overlay" id="hdx-filter-overlay">
     <div class="hdx-v2-search-filter-overlay__header">
@@ -166,7 +200,7 @@ Example:
             panel_suffix='ovl' %}
       </div>
       <div class="hdx-v2-search-filters">
-        {% snippet 'v2/search-filters.html', facet_list=facet_list %}
+        {% snippet 'v2/search-filters.html', facet_list=facet_list, archived_url_helper=archived_url_helper %}
       </div>
     </div>
     <div class="hdx-v2-search-filter-overlay__footer">

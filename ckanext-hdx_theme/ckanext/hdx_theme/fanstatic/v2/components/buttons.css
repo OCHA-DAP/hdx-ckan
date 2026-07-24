@@ -207,6 +207,9 @@
   -webkit-appearance: none;
   appearance: none;
 }
+.c-text-button[hidden] {
+  display: none;
+}
 .c-text-button:focus-visible {
   outline: 2px solid var(--hdx-primary-5);
   outline-offset: 2px;

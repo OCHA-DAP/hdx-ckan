@@ -2,19 +2,25 @@
   Snippet: search-filters.html
   Path:    templates/v2/search-filters.html
 
-  Shared filter panel — renders the "Filter by" heading and five
-  filter dropdowns (Location, Organisation, Format, Topics, Advanced filters).
-  Included in both the LG inline sidebar and the MD/SM overlay body.
+  Shared filter panel — renders the "Filter by" heading, four filter
+  dropdowns (Location, Organisation, Format, Topics), the always-expanded
+  Advanced filters chip list, and (when wired) the archived "Show only"
+  toggle. Included in both the LG inline sidebar and the MD/SM overlay body.
 
   Parameters
   ──────────────────────────────────────────────────────────────────
-  facet_list    {dict}  full_facet_info.get('facets', {}) — CKAN facet
-                        dict keyed by facet name; each value is a dict
-                        with an 'items' list of {name, display_name,
-                        count, selected}.
+  facet_list         {dict}  full_facet_info.get('facets', {}) — CKAN facet
+                             dict keyed by facet name; each value is a dict
+                             with an 'items' list of {name, display_name,
+                             count, selected}.
+  archived_url_helper {ArchivedUrlHelper}  full_facet_info.get('archived_url_helper').
+                             Optional — when omitted, no "Show only" archived
+                             toggle is rendered (e.g. no page type has wired it).
+                             default: None
   ──────────────────────────────────────────────────────────────────
 #}
 {% set facet_list = facet_list if facet_list is defined else {} %}
+{% set archived_url_helper = archived_url_helper if archived_url_helper is defined else None %}
 
 {% set filter_defs = [
   {'key': 'groups',       'label': 'Location',      'placeholder': 'All locations'},
@@ -58,67 +64,81 @@
   </div>
 {% endfor %}
 
-{# ── Advanced filters (nested COD groups + flat ext_* flags) ────── #}
+{# ── Advanced filters (nested COD/HPC groups + flat ext_* flags) ── #}
 {% set adv_items = facet_list.get('featured', {}).get('items', []) %}
-{% set _adv_ns = namespace(sel=0, names=[]) %}
-{% for ai in adv_items %}
-  {% if ai.get('items') %}
-    {% set _any_child_sel = ai['items'] | selectattr('selected') | list | length > 0 %}
-    {% if _any_child_sel %}
-      {% set _adv_ns.sel = _adv_ns.sel + (ai['items'] | selectattr('selected') | list | length) %}
-      {% set _adv_ns.names = _adv_ns.names + [ai.display_name] %}
-    {% endif %}
-  {% elif ai.selected %}
-    {% set _adv_ns.sel = _adv_ns.sel + 1 %}
-    {% set _adv_ns.names = _adv_ns.names + [ai.display_name] %}
-  {% endif %}
-{% endfor %}
-{% set adv_selected = _adv_ns.sel %}
-{% set adv_trigger_text = _adv_ns.names | join(', ') if _adv_ns.names else 'All advanced filters' %}
 
-{# Build items list for the advanced filter panel #}
 {% set _adv_ci = namespace(items=[]) %}
 {% for ai in adv_items %}
   {% if ai.get('items') %}
-    {# Nested group (e.g. COD levels) — parent toggle + indented children #}
-    {% set _cns = namespace(sel=0, total=0, count=0, children=[]) %}
+    {% set _cns = namespace(sel=0, total=0, children=[]) %}
     {% for si in ai['items'] %}
       {% if si.count or si.selected %}
         {% set _cns.total = _cns.total + 1 %}
-        {% set _cns.count = _cns.count + (si.count | default(0) | int) %}
         {% if si.selected %}{% set _cns.sel = _cns.sel + 1 %}{% endif %}
-        {% set _cattrs = {'data-filter-checkbox': '', 'data-facet': si.category_key, 'name': si.category_key} %}
-        {% set _cns.children = _cns.children + [{'value': si.name, 'label': si.display_name, 'count': '(' ~ si.count ~ ')' if si.count else '(0)', 'checked': si.selected, 'active': si.selected, 'extra_classes': 'c-list-item--child', 'attrs': _cattrs}] %}
+        {% set _cattrs = {'data-filter-checkbox': '', 'data-facet': si.category_key, 'data-value': si.name} %}
+        {% set _cns.children = _cns.children + [{'value': si.name, 'label': si.display_name, 'checked': si.selected, 'attrs': _cattrs}] %}
       {% endif %}
     {% endfor %}
     {% if _cns.children %}
-      {% set _parent_all  = _cns.sel == _cns.total and _cns.total > 0 %}
-      {% set _parent_some = _cns.sel > 0 and _cns.sel < _cns.total %}
-      {% if _parent_some %}
-        {% set _pattrs = {'data-group-toggle': '', 'data-group': ai.category_key, 'data-indeterminate': ''} %}
-      {% else %}
-        {% set _pattrs = {'data-group-toggle': '', 'data-group': ai.category_key} %}
-      {% endif %}
-      {% set _adv_ci.items = _adv_ci.items + [{'label': ai.display_name, 'count': '(' ~ _cns.count ~ ')' if _cns.count > 0 else '(0)', 'checked': _parent_all, 'active': _parent_all, 'extra_classes': 'c-list-item--parent', 'attrs': _pattrs, 'children': _cns.children}] %}
+      {% set _parent_all = _cns.sel == _cns.total and _cns.total > 0 %}
+      {% set _pattrs = {'data-group-toggle': '', 'data-group': ai.category_key} %}
+      {% set _adv_ci.items = _adv_ci.items + [{'label': ai.display_name, 'checked': _parent_all, 'attrs': _pattrs, 'children': _cns.children}] %}
     {% endif %}
   {% else %}
-    {# Flat ext_* flag #}
     {% if ai.count or ai.selected %}
-      {% set _fattrs = {'data-filter-checkbox': '', 'data-facet': ai.get('category_key', 'featured'), 'name': ai.get('category_key', 'featured')} %}
-      {% set _adv_ci.items = _adv_ci.items + [{'value': ai.name, 'label': ai.display_name, 'count': '(' ~ ai.count ~ ')' if ai.count else '(0)', 'checked': ai.selected, 'active': ai.selected, 'attrs': _fattrs}] %}
+      {% set _fattrs = {'data-filter-checkbox': '', 'data-facet': ai.get('category_key', 'featured'), 'data-value': ai.name} %}
+      {% set _adv_ci.items = _adv_ci.items + [{'value': ai.name, 'label': ai.display_name, 'checked': ai.selected, 'attrs': _fattrs}] %}
     {% endif %}
   {% endif %}
 {% endfor %}
 
-<div class="hdx-v2-search-filters__item">
-  {% snippet 'v2/components/dropdown.html',
-      size='m',
-      label='Advanced filters',
-      selected=adv_trigger_text,
-      state='filter' if adv_selected > 0 else 'enabled',
-      panel_id='hdx-filter-panel-advanced',
-      attrs={'data-filter-key': 'advanced'},
-      items=_adv_ci.items,
-      has_clear=adv_selected > 0,
-      clear_facet='advanced' %}
+<div class="hdx-v2-search-filters__item hdx-v2-advanced-filters">
+  <span class="hdx-v2-search-filters__group-label">Advanced filters</span>
+  <div class="hdx-v2-advanced-filters__list">
+    {% for item in _adv_ci.items %}
+      {% if item.get('children') %}
+        <div class="hdx-v2-advanced-filters__group">
+          {% snippet 'v2/components/selection-item.html',
+              label=item.label, size='m', tag='button',
+              state='active' if item.checked else 'enabled',
+              attrs=item.attrs %}
+          <div class="hdx-v2-advanced-filters__children">
+            {% for child in item.children %}
+              <div class="hdx-v2-advanced-filters__child">
+                <span class="hdx-v2-advanced-filters__indent-icon">{% include h.url_for_static('v2/icons/indent.svg') %}</span>
+                {% snippet 'v2/components/selection-item.html',
+                    label=child.label, size='m', tag='button',
+                    state='active' if child.checked else 'enabled',
+                    attrs=child.attrs %}
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      {% else %}
+        {% snippet 'v2/components/selection-item.html',
+            label=item.label, size='m', tag='button',
+            state='active' if item.checked else 'enabled',
+            attrs=item.attrs %}
+      {% endif %}
+    {% endfor %}
+  </div>
 </div>
+
+{% if archived_url_helper %}
+<div class="hdx-v2-search-filters__item">
+  <span class="hdx-v2-search-filters__group-label">Show only</span>
+  <div class="hdx-v2-search-filters__radio-group">
+    {% snippet 'v2/components/radio.html',
+        name='show_only', value='active', label='Actively maintained datasets',
+        checked=not archived_url_helper.on_archived_page,
+        state='disabled' if archived_url_helper.unarchived_disabled else 'enabled',
+        attrs={'data-archived-toggle': '', 'data-url': archived_url_helper.unarchived_url or ''} %}
+    {% snippet 'v2/components/radio.html',
+        name='show_only', value='archived', label='Archived datasets',
+        checked=archived_url_helper.on_archived_page,
+        state='disabled' if archived_url_helper.archived_disabled else 'enabled',
+        hint=True, hint_text=archived_url_helper.archived_explanation,
+        attrs={'data-archived-toggle': '', 'data-url': archived_url_helper.archived_url or ''} %}
+  </div>
+</div>
+{% endif %}

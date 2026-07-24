@@ -68,3 +68,4 @@
 | 062 | [error-pages-v2](062-error-pages-v2.md)                                                                        | implemented | |
 | 063 | [location-page-datagrids-v2](063-location-page-datagrids-v2.md)                                                | implemented | |
 | 064 | [auth-pages-v2](064-auth-pages-v2.md)                                                                          | implemented | |
+| 065 | [advanced-filters-v2](065-advanced-filters-v2.md)                                                              | implemented | |
