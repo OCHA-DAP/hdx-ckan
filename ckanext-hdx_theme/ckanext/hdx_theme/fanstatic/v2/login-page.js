@@ -91,11 +91,13 @@
             updateSubmitState();
           } else {
             lockoutCleared = true;
+            setButtonDisabled(submitButton, false);
             if (form.requestSubmit) { form.requestSubmit(); } else { form.submit(); }
           }
         })
         .catch(function () {
           lockoutCleared = true;
+          setButtonDisabled(submitButton, false);
           if (form.requestSubmit) { form.requestSubmit(); } else { form.submit(); }
         });
     });

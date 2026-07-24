@@ -58,13 +58,14 @@
       <div class="c-form-field" id="auth-login-field">
         {% snippet 'v2/components/search-input.html',
             type='text', name='login', id='field-login',
-            label=_('Username or Email'), required=True, show_icon=False %}
+            label=_('Username or Email'), required=True, show_icon=False,
+            autocomplete='username' %}
       </div>
 
       <div class="c-form-field">
         {% snippet 'v2/components/search-input.html',
             type='password', name='password', id='field-password',
-            label=_('Password'), required=True,
+            label=_('Password'), required=True, autocomplete='current-password',
             errors=error_message if error_message else none %}
       </div>
 
@@ -72,6 +73,7 @@
         {% snippet 'v2/components/search-input.html',
             type='number', name='mfa', id='field-mfa',
             label=_('One Time Password'), show_icon=False,
+            autocomplete='one-time-code',
             input_attrs={'min': '0', 'max': '999999'} %}
       </div>
 
