@@ -1725,6 +1725,12 @@ v2-forgot-password-page-scripts:
   contents:
     - v2/forgot-password-page.js
 
+v2-perform-reset-page-scripts:
+  <<: *common-js
+  output: ckanext-hdx_theme/%(version)s_v2-perform-reset-page-scripts.js
+  contents:
+    - v2/perform-reset-page.js
+
 v2-form-validator-scripts:
   <<: *common-js
   output: ckanext-hdx_theme/%(version)s_v2-form-validator-scripts.js

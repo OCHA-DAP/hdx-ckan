@@ -1,19 +1,19 @@
-# 064 — Auth Pages (Login / Forgot Password / Confirmation) v2 Migration
+# 064 — Auth Pages (Login / Forgot Password / Confirmation / Perform Reset) v2 Migration
 
-**Scope:** Visual migration of the login page, the forgot-password ("request reset") page, and its
-confirmation state to v2 — layout, spacing, typography, colors, responsive behavior (SM/MD/XL), and
-component reuse. Existing validation logic, submission mechanics (full POST vs AJAX/JSON), analytics
-(none today), and backend/API contracts are preserved. One narrow, explicitly-scoped exception: adding
-a missing CSRF hidden field to the login form (see §12, Decision 6).
+**Scope:** Visual migration of the login page, the forgot-password ("request reset") page and its
+confirmation state, and the perform-reset ("set new password") page reached via the emailed reset
+link, to v2 — layout, spacing, typography, colors, responsive behavior (SM/MD/XL), and component
+reuse. Existing validation logic, submission mechanics (full POST vs AJAX/JSON), analytics (none
+today), and backend/API contracts are preserved. Two narrow, explicitly-scoped exceptions: adding a
+missing CSRF hidden field to the login form (see §12, Decision 6), and folding in the perform-reset
+page after the fact with no Figma source (see §12, Decision 5).
 
-**Excluded:** authentication logic, backend/API changes beyond the scoped CSRF addition, the
-`/user/reset/<id>` ("set new password") page reached via the emailed reset link — no Figma source
-exists for it and it isn't part of the task's flow overview; it is a candidate for its own future
-numbered task.
+**Excluded:** authentication logic, backend/API changes beyond the scoped CSRF addition.
 
 **Figma sources:** `xl-login-filled-with-error.html`, `xl-forgot-password.html`,
 `xl-forgot-password-confirmation.html`, `md-login-filled-with-error.html`, `sm-login.html`,
-`sm-forgot-password.html`, `sm-forgot-password-confirmation.html`
+`sm-forgot-password.html`, `sm-forgot-password-confirmation.html`. None for perform-reset — it
+reuses the `hdx-v2-auth-card` shell verbatim (§1.4, §12 Decision 5).
 
 ---
 
@@ -30,7 +30,7 @@ blueprints in `ckanext-hdx_users`:
 |---|---|---|
 | `/login`, `/sign-in`, `/user/login` | `hdx_signin.login()` — `ckanext-hdx_users/ckanext/hdx_users/views/signin.py:73-150` | `user/signin.html` → `widget/onboarding/login.html` |
 | `/user/reset` | `HDXRequestResetView` — `ckanext-hdx_users/ckanext/hdx_users/views/user.py:50-125` | `user/forgot_password.html` → `widget/onboarding/recover.html` + `recoverSuccess.html` (JS popup-swap on the same route) |
-| `/user/reset/<id>` (emailed link — **excluded**) | `HDXPerformResetView` — `user.py:128-160` | `user/perform_reset.html` → `widget/onboarding/password-reset.html` |
+| `/user/reset/<id>` (emailed link) | `HDXPerformResetView` — `user.py:128-160` | `user/perform_reset.html` → `v2/page.html` (`hdx-v2-auth-card`) |
 
 None of these three templates have any `{% if v2 %}` gating today — this is a **net-new v2 build**,
 not a toggle-on of hidden v2 markup. Decisions confirmed with the requester are listed in §12.
@@ -134,12 +134,35 @@ popup swap:
   this intentionally never discloses whether an account exists, matching core CKAN's own
   `RequestResetView.post()` behavior. This contract must not change.
 
-### 1.4 Perform Reset (`/user/reset/<id>`) — excluded from this task
+### 1.4 Perform Reset (`/user/reset/<id>`)
 
 Reached only via the emailed token link, and structurally its own screen: full-page POST (not AJAX),
 core CKAN flash-message error handling (`post()` is inherited unmodified from
-`ckan/views/user.py:828-877`), and its own copy about password rules. No Figma export exists for it and
-it isn't in the task's flow overview — see §12 Decision 5.
+`ckan/views/user.py:828-877`), and its own copy about password rules. No Figma export exists for it —
+folded into this task after the initial migration per §12 Decision 5, reusing the login/forgot-password
+`hdx-v2-auth-card` shell verbatim rather than following a design export.
+
+- Template: `user/perform_reset.html` now extends `v2/page.html` directly (same shell as
+  `user/signin.html`) instead of `base.html` + the old `widget/onboarding/password-reset.html` popup.
+- Fields: `password1`/`password2`, rendered via `v2/components/search-input.html` (`type='password'`),
+  labels "Password" / "Confirm password" (the latter changed from the old widget's "Confirm" for
+  consistency with the signup page's `password2` label — §12 Decision 15). Field `name`s, CSRF
+  (`h.csrf_input()`), and the empty-`action` full-page POST are all unchanged, so
+  `HDXPerformResetView`'s inherited `_get_form_password()`/`post()` keep working with no view changes.
+- Client-side validation: kept at today's level — required-field-only submit gating (new
+  `fanstatic/v2/perform-reset-page.js`, bundle `v2-perform-reset-page-scripts`), mirroring the old
+  widget's `requiredFieldsFormValidator`. The signup page's live password-strength/match checklist
+  (`v2/form-validator.js`) is deliberately **not** reused here — see §12 Decision 14.
+- Error handling: `HDXPerformResetView.post()` is inherited unmodified from core and never passes an
+  `errors`/`error_summary` context var — it only calls `h.flash_error(...)`/`h.flash_success(...)` and
+  re-renders the same template. The new template does not override `{% block flash %}`, so the
+  inherited `v2/page.html` flash block (existing `hdx-v2-flash {category}` + legacy
+  `.alert-danger`/`.alert-error` CSS) is the sole error/success surface, same as it already is for the
+  forgot-password page's own expired-link redirect.
+- Analytics: kept untracked — `mixpanel_init`/`google_analytics_init`/`hotjar_init` all blanked, same
+  as before and as the sibling pages (§1.5, §11).
+- Styling: reuses `hdx_theme/v2-auth-page-styles` (`auth-page.less`'s `hdx-v2-auth-card` BEM elements)
+  as-is; no new LESS.
 
 ### 1.5 Analytics (today)
 
@@ -147,7 +170,7 @@ All three live pages explicitly blank the base template's tracking blocks:
 
 - `user/signin.html:30-31` → `mixpanel_init`, `google_analytics_init` both empty.
 - `user/forgot_password.html:36-38` → same two, plus `hotjar_init` empty.
-- `user/perform_reset.html:31-33` → same three, empty (informational only — out of scope page).
+- `user/perform_reset.html` → same three, empty.
 
 GTM (`GTM-MFNPQ7K`) and Mixpanel are otherwise injected globally by `base.html`'s
 `google_analytics_init`/`mixpanel_init` blocks — every other page gets this for free by not blanking
@@ -272,6 +295,10 @@ close glyph as the XL `[X]`, per context).
 | Forgot password — user | `#field-recover-id`, plain `<input required>`, mislabeled `for` attribute (§1.2 bug) | `search-input.html` (`type='text'`), `errors` prop wired to `result.error.message` from the existing AJAX response — same JSON contract, only the rendering target changes. Label/input association bug fixed here |
 | Forgot password — submit/status | JSON success/error handled by hand-rolled JS (`recover.js`) toggling `.error-message`/`.error` classes | Same AJAX call and JSON shape; JS updates `c-search-input--error` state and a `c-form-alert` (or the field-level error span) instead of legacy classes — no change to the request/response contract |
 | reCAPTCHA | Invisible v2, bound to submit button | Unchanged (§12 Decision 2) — Figma's visible checkbox mock is not implemented |
+| Perform reset — new password | `#field-password` (`password1`), plain `<input required>`, label "Password" | `search-input.html` with `type='password'` — same eye toggle as login's password field |
+| Perform reset — confirm password | `#field-confirm-password` (`password2`), plain `<input required>`, label "Confirm" | `search-input.html` with `type='password'`, label changed to "Confirm password" (Decision 15) |
+| Perform reset — submit gating | `requiredFieldsFormValidator` (required-only) | New `v2/perform-reset-page.js`, same required-only gating — signup's live strength/match checklist deliberately not adopted (Decision 14) |
+| Perform reset — server error | `h.flash_error(...)`/`h.flash(..., category='alert-error')` only, no `errors` dict | Unchanged — surfaced via the inherited `v2/page.html` flash block (§1.4), no per-field `errors` prop wired since core never passes one |
 
 No validation *logic* changes anywhere in this table — every row is a rendering-target change onto
 existing v2 components, using the same field names, the same required-ness, and the same
@@ -425,8 +452,9 @@ context passed into templates) is the established precedent to follow — not ap
    exists at all for forgot-password/confirmation, MD is derived from SM's stacked-flow layout (card
    in normal document flow below the mobile navbar), scaled to MD sizing — not from XL's
    absolutely-positioned card.
-5. **`/user/reset/<id>` ("set new password") page.** Excluded/deferred — not in this task's flow
-   overview, no Figma source exists for it. Candidate for its own future numbered task.
+5. **`/user/reset/<id>` ("set new password") page.** Folded into this task despite no Figma source
+   existing for it — reuses the login/forgot-password `hdx-v2-auth-card` shell verbatim (§1.4). No
+   view/backend changes; only the template/CSS/JS shell was replaced.
 6. **CSRF gap on the login form.** Approved for fixing as part of this rebuild (`widget/onboarding/login.html`
    has no `h.csrf_input()`, unlike the other two forms), conditioned on verifying it doesn't break the
    live login POST flow (§8) before considering the change complete.
@@ -448,6 +476,12 @@ context passed into templates) is the established precedent to follow — not ap
 13. **SM card padding.** Standardize on `2.5rem` for all three SM cards (login, forgot-password,
     confirmation), overriding `sm-login.html`'s exported `3rem`. This also matches the `2.5rem` used
     across all three XL card types.
+14. **Perform-reset password validation.** Keep today's client-side behavior — required-field-only
+    submit gating. Do not adopt the signup page's live password-strength/match checklist
+    (`v2/form-validator.js`); that would be new user-facing behavior, not a reskin. Server-side
+    validation (via `user_update`'s schema) and flash-message error surfacing are unchanged.
+15. **Perform-reset confirm-password label.** Adopt "Confirm password" (was "Confirm" in the old
+    widget), for consistency with the signup page's `password2` label.
 
 ---
 
