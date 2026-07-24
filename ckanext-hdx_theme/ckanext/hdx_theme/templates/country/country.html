@@ -43,7 +43,8 @@
     <form id="search-page-filters-form" autocomplete="off">
       <aside class="hdx-v2-search-filters">
         {% snippet 'v2/search-filters.html',
-            facet_list=data.country_dict.template_data.full_facet_info.get('facets', {}) %}
+            facet_list=data.country_dict.template_data.full_facet_info.get('facets', {}),
+            archived_url_helper=data.country_dict.template_data.full_facet_info.get('archived_url_helper') %}
       </aside>
     </form>
   {% endif %}

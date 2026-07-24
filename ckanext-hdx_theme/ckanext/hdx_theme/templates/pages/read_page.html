@@ -105,7 +105,8 @@
     <form id="search-page-filters-form" autocomplete="off">
       <aside class="hdx-v2-search-filters">
         {% snippet 'v2/search-filters.html',
-            facet_list=ns.data_list.template_data.full_facet_info.get('facets', {}) %}
+            facet_list=ns.data_list.template_data.full_facet_info.get('facets', {}),
+            archived_url_helper=ns.data_list.template_data.full_facet_info.get('archived_url_helper') %}
       </aside>
     </form>
   {% endif %}

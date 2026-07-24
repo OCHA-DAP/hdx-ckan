@@ -65,7 +65,8 @@
     <form id="search-page-filters-form" autocomplete="off">
       <aside class="hdx-v2-search-filters">
         {% snippet 'v2/search-filters.html',
-            facet_list=org_dict.search_template_data.full_facet_info.get('facets', {}) %}
+            facet_list=org_dict.search_template_data.full_facet_info.get('facets', {}),
+            archived_url_helper=org_dict.search_template_data.full_facet_info.get('archived_url_helper') %}
         {% set ext_after_metadata_modified = h.hdx_get_request_param('ext_after_metadata_modified', None) %}
         {% if ext_after_metadata_modified %}
           <input id="ext_after_metadata_modified" type="hidden"

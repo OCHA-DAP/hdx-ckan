@@ -242,6 +242,8 @@
   flex-direction: column;
   gap: var(--hdx-space-13);
   padding-left: 0;
+  max-height: 20rem;
+  overflow-y: auto;
 }
 .c-dropdown__footer {
   align-self: stretch;

@@ -2,7 +2,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 100%;
+  width: auto;
   max-width: none;
   min-width: 0;
   border-radius: var(--hdx-radius-sm);
@@ -154,34 +154,6 @@
   position: relative;
   line-height: 130%;
 }
-.c-radio__hint-wrap {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-}
-.c-radio__hint-wrap .c-tooltip {
-  position: absolute;
-  bottom: calc(100% + 0.375rem);
-  left: 50%;
-  transform: translateX(-50%);
-  white-space: nowrap;
-  display: none;
-  z-index: 10;
-}
-.c-radio__hint-wrap:hover .c-tooltip {
-  display: block;
-}
-.c-radio__hint {
-  width: 1rem;
-  flex-shrink: 0;
-  display: block;
-  color: inherit;
-}
-.c-radio__hint svg {
-  width: 1rem;
-  height: 1rem;
-  display: block;
-}
 .c-radio--checked .c-radio__ring {
   border: 1px solid var(--hdx-primary-5);
   background: transparent;
@@ -203,6 +175,9 @@
 }
 .c-radio--disabled.c-radio--checked .c-radio__dot {
   background-color: var(--hdx-neutral-2);
+}
+.c-radio--disabled .c-tooltip-anchor {
+  pointer-events: auto;
 }
 .c-toggle {
   display: inline-block;
@@ -278,4 +253,15 @@
     grid-template-columns: repeat(3, 1fr);
     gap: var(--hdx-space-3);
   }
+}
+.c-selection-item-grid .c-selection-item {
+  width: 100%;
+}
+.c-selection-item-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--hdx-space-2);
+}
+.c-selection-item-row .c-selection-item {
+  max-width: 12.5rem;
 }

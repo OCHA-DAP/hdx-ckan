@@ -3,12 +3,13 @@
 
   var FILTER_PARAMS = ['groups', 'organization', 'res_format', 'vocab_Topics'];
 
+  // vocab_Topics is included here too (as well as in FILTER_PARAMS) because
+  // nested HPC advanced-filter items share the vocab_Topics facet key.
   var ADVANCED_FILTER_PARAMS = [
     'ext_subnational', 'ext_geodata', 'ext_p_coded',
     'ext_tabular_data', 'ext_hdx_hapi',
-    'cod_level'
+    'cod_level', 'vocab_Topics'
   ];
-
 
   // ── URL helpers ─────────────────────────────────────────────────────────────
   // setNavParam lives in url-nav.js (loaded as a dependency).
@@ -40,13 +41,6 @@
     window.location.href = url.toString();
   }
 
-  function clearAdvancedFilters() {
-    var url = new URL(window.location.href);
-    ADVANCED_FILTER_PARAMS.forEach(function (param) { url.searchParams.delete(param); });
-    url.searchParams.delete('page');
-    window.location.href = url.toString();
-  }
-
   function clearAllFilters() {
     var url = new URL(window.location.href);
     FILTER_PARAMS.forEach(function (param) { url.searchParams.delete(param); });
@@ -61,39 +55,18 @@
 
   document.addEventListener('DOMContentLoaded', function () {
 
-    // Set indeterminate state on parent group-toggle checkboxes
-    document.querySelectorAll('[data-indeterminate]').forEach(function (input) {
-      input.indeterminate = true;
-    });
-
     // Delegated: regular checkbox change → URL update
     document.addEventListener('change', function (e) {
-      var cb = e.target;
+      var el = e.target;
 
-      if (cb.hasAttribute('data-filter-checkbox')) {
-        var facet   = cb.getAttribute('data-facet');
-        var value   = cb.value;
-        var checked = cb.checked;
-        updateUrl(facet, value, checked);
+      if (el.hasAttribute('data-filter-checkbox')) {
+        updateUrl(el.getAttribute('data-facet'), el.value, el.checked);
         return;
       }
 
-      // Group "select all" parent toggle
-      if (cb.hasAttribute('data-group-toggle')) {
-        var group   = cb.getAttribute('data-group');
-        var checked = cb.checked;
-        var panel   = cb.closest('.c-dropdown__panel');
-        if (!panel) return;
-        var children = panel.querySelectorAll('[data-filter-checkbox][data-facet="' + group + '"]');
-        var url = new URL(window.location.href);
-        url.searchParams.delete(group);
-        if (checked) {
-          children.forEach(function (child) {
-            url.searchParams.append(group, child.value);
-          });
-        }
-        url.searchParams.set('page', '1');
-        window.location.href = url.toString();
+      if (el.hasAttribute('data-archived-toggle')) {
+        var url = el.getAttribute('data-url');
+        if (url) window.location.href = url;
       }
     });
 
@@ -128,16 +101,60 @@
     // This handler covers only search-specific click interactions.
     document.addEventListener('click', function (e) {
 
-      // ── Clear facet / advanced filters ───────────────────────
+      // ── Clear facet ───────────────────────────────────────────
       var clearBtn = e.target.closest && e.target.closest('[data-action="clear-filter"]');
       if (clearBtn) {
-        var facet = clearBtn.getAttribute('data-facet');
-        if (facet === 'advanced') {
-          clearAdvancedFilters();
+        clearFacet(clearBtn.getAttribute('data-facet'));
+        return;
+      }
+
+      // ── Advanced filters: group "select all" chip ─────────────
+      var groupChip = e.target.closest && e.target.closest('button[data-group-toggle]');
+      if (groupChip) {
+        var group     = groupChip.getAttribute('data-group');
+        var selectAll = !groupChip.classList.contains('c-selection-item--active');
+        var wrapper   = groupChip.closest('.hdx-v2-advanced-filters__group');
+        var groupUrl  = new URL(window.location.href);
+        groupUrl.searchParams.delete(group);
+        if (selectAll && wrapper) {
+          wrapper.querySelectorAll('[data-facet="' + group + '"][data-value]').forEach(function (child) {
+            groupUrl.searchParams.append(group, child.getAttribute('data-value'));
+          });
+        }
+        groupUrl.searchParams.delete('page');
+        window.location.href = groupUrl.toString();
+        return;
+      }
+
+      // ── Advanced filters: flat / child chip ───────────────────
+      var chip = e.target.closest && e.target.closest('button[data-filter-checkbox]');
+      if (chip) {
+        var chipChecked = !chip.classList.contains('c-selection-item--active');
+        updateUrl(chip.getAttribute('data-facet'), chip.getAttribute('data-value'), chipChecked);
+        return;
+      }
+
+      // ── Applied filters: remove pill ──────────────────────────
+      var pillBtn = e.target.closest && e.target.closest('[data-action="remove-pill"]');
+      if (pillBtn) {
+        var pillUrl = pillBtn.getAttribute('data-url');
+        if (pillUrl) {
+          window.location.href = pillUrl;
         } else {
-          clearFacet(facet);
+          updateUrl(pillBtn.getAttribute('data-facet'), pillBtn.getAttribute('data-value'), false);
         }
         return;
+      }
+
+      // ── Applied filters: show more / show less ────────────────
+      var toggleBtn = e.target.closest && e.target.closest('[data-action="toggle-pill-overflow"]');
+      if (toggleBtn) {
+        var list = document.querySelector('.hdx-v2-applied-filters__list');
+        if (!list) return;
+        var expanded = list.classList.toggle('hdx-v2-applied-filters__list--expanded');
+        toggleBtn.classList.toggle('hdx-v2-applied-filters__toggle--expanded', expanded);
+        var label = toggleBtn.querySelector('.c-text-button__label');
+        if (label) label.textContent = expanded ? 'Show less' : 'Show more';
       }
 
     });
@@ -224,11 +241,37 @@
         return;
       }
       if (e.target.closest('[data-action="clear-filters"]')) {
+        e.preventDefault();
         clearAllFilters();
         return;
       }
     });
 
+  });
+
+  // ── Applied filters: pill row overflow detection ─────────────────────────────
+
+  document.addEventListener('DOMContentLoaded', function () {
+    var list   = document.querySelector('.hdx-v2-applied-filters__list');
+    var toggle = document.querySelector('[data-action="toggle-pill-overflow"]');
+    if (!list || !toggle) return;
+
+    function checkOverflow() {
+      var wasExpanded = list.classList.contains('hdx-v2-applied-filters__list--expanded');
+      list.classList.remove('hdx-v2-applied-filters__list--expanded');
+      var overflows = list.scrollHeight > list.clientHeight + 1;
+      toggle.hidden = !overflows;
+      if (wasExpanded && overflows) list.classList.add('hdx-v2-applied-filters__list--expanded');
+    }
+
+    checkOverflow();
+    window.addEventListener('load', checkOverflow);
+
+    var resizeTimer;
+    window.addEventListener('resize', function () {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(checkOverflow, 150);
+    });
   });
 
 })();

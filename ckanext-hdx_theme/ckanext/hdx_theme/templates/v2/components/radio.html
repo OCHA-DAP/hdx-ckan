@@ -14,13 +14,12 @@
   state         {string}  'enabled' | 'disabled'  default: 'enabled'
   hint          {bool}    Show an info-circle icon to the right of the label.
                           default: False
-  hint_text     {string}  Tooltip text shown on icon hover. When empty, the
-                          icon renders without a tooltip.  default: ''
-  hint_src      {string}  Hint icon path (inline SVG).
-                          default: 'v2/icons/info-circle.svg'
+  hint_text     {string}  Tooltip text shown on icon hover/focus. When empty,
+                          the icon renders without a tooltip.  default: ''
   id            {string}  Input id (generated from name+value if omitted).
                           default: ''
   extra_classes {string}  default: ''
+  attrs         {dict}    Extra attrs on the <input>.  default: {}
   ─────────────────────────────────────────────────
   Examples
 
@@ -42,9 +41,9 @@
 {% set state         = state         if state         is defined else 'enabled' %}
 {% set hint          = hint          if hint          is defined else False %}
 {% set hint_text     = hint_text     if hint_text     is defined else '' %}
-{% set hint_src      = hint_src      if hint_src      is defined else 'v2/icons/info-circle.svg' %}
 {% set id            = id            if id            is defined else (name ~ '-' ~ value) %}
 {% set extra_classes = extra_classes if extra_classes is defined else '' %}
+{% set attrs         = attrs         if attrs         is defined else {} %}
 
 {% set is_disabled = (state == 'disabled') %}
 
@@ -62,6 +61,7 @@
          value="{{ value }}"
          {% if checked     %}checked{% endif %}
          {% if is_disabled %}disabled{% endif %}
+         {% for key, val in attrs.items() %}{{ key }}="{{ val }}" {% endfor %}
          style="position:absolute;opacity:0;width:0;height:0;pointer-events:none;">
 
   {# Visual radio circle #}
@@ -78,17 +78,9 @@
       {% endif %}
 
       {% if hint %}
-        <span class="c-radio__hint-wrap">
-          <span class="c-radio__hint" aria-hidden="true">
-
-            {% include h.url_for_static(hint_src) %}
-          </span>
-          {% if hint_text %}
-            {% snippet 'v2/components/tooltip.html',
-
-                variant='dark', text=hint_text, arrow='' %}
-          {% endif %}
-        </span>
+        {% snippet 'v2/components/info-icon.html',
+            aria_label='More information about ' ~ label,
+            tooltip_text=hint_text, tooltip_id=id ~ '-tooltip' %}
       {% endif %}
 
     </span>
