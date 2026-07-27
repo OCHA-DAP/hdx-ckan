@@ -108,6 +108,7 @@ CSS custom property equivalents (`--hdx-*`) are defined in `v2/foundation.css` (
 | Error page (404/403/Server Error) | `error_document_template.html` | Extends `v2/page.html` with `{% block header %}`/`{% block footer %}`/`{% block scripts %}` emptied out (no nav chrome, no JS) and `{% block main_content %}` replaced with the centered logo/heading/body/CTA layout; 500/503/anything-else collapses into one "Server Error" copy, 403 keeps its own copy; see `requirements/062-error-pages-v2.md` |
 | Login | `user/signin.html` | Extends `v2/page.html`; `{% block header %}` uses `v2/header.html` with new `minimal=True` param (logo-only navbar, no top-bar/search/nav/actions/offcanvas); real page content, no popup/widget indirection (no longer renders `widget/onboarding/login.html`); "remember me" cookie prefill/gravatar-style swap now shows initials only via `c-avatar`; see `requirements/064-auth-pages-v2.md` |
 | Forgot password | `user/forgot_password.html` | Extends `v2/page.html`; same `minimal=True` header; confirmation is a same-route swap between two sibling cards toggled via the `hidden` attribute (no more `widget/onboarding/recoverSuccess.html`/loading-screen widget); invisible reCAPTCHA still bound to the submit button; see `requirements/064-auth-pages-v2.md` |
+| Archived Dataviz | `archived_quick_links/main.html` | Extends `v2/page.html`; single-column; title+count header, outbound-link row list via `text-button.html` + `c-divider`; see `requirements/066-archived-dataviz-v2.md` |
 
 ### Pages in holding state (on `page_light.html`)
 
@@ -218,6 +219,7 @@ Bundle configuration:
 - `hdx_theme/v2-auth-page-styles` — Login + forgot-password pages: adds `v2/auth-page.css` (shared card/navbar-shell styling, loaded by both templates)
 - `hdx_theme/v2-login-page-scripts` — Login page: adds `v2/login-page.js` (lockout/MFA pre-checks, required-field gating, remember-me cookie prefill)
 - `hdx_theme/v2-forgot-password-page-scripts` — Forgot-password page: adds `v2/forgot-password-page.js` (AJAX submit, invisible reCAPTCHA, recover/confirmation card swap)
+- `hdx_theme/v2-archived-dataviz-page-styles` — Archived Dataviz page: adds `v2/archived-dataviz-page.css`; no scripts bundle (page has no interactive behavior)
 
 ---
 
