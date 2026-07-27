@@ -1749,6 +1749,12 @@ v2-hapi-landing-page-styles:
   contents:
     - v2/hapi-landing-page.css
 
+v2-archived-dataviz-page-styles:
+  output: ckanext-hdx_theme/%(version)s_v2-archived-dataviz-page-styles.css
+  <<: *common-css
+  contents:
+    - v2/archived-dataviz-page.css
+
 v2-signup-scripts:
   <<: *common-js
   output: ckanext-hdx_theme/%(version)s_v2-signup-scripts.js

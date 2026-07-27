@@ -856,6 +856,27 @@
       </div>
     </div>
 
+    {# ── Row list with divider (outbound links) ──────── #}
+    <hr class="demo-divider">
+    <h2 class="demo-subsection__heading">Row list with divider (outbound links)</h2>
+
+    <div class="demo-row demo-row--column demo-max-width-l">
+      {% snippet 'v2/components/text-button.html',
+          style='tertiary', size='m', label='Placeholder link 1',
+          icon=True, icon_position='right', icon_src='v2/icons/link-external.svg',
+          tag='a', href='#' %}
+      <hr class="c-divider">
+      {% snippet 'v2/components/text-button.html',
+          style='tertiary', size='m', label='Placeholder link 2',
+          icon=True, icon_position='right', icon_src='v2/icons/link-external.svg',
+          tag='a', href='#' %}
+      <hr class="c-divider">
+      {% snippet 'v2/components/text-button.html',
+          style='tertiary', size='m', label='Placeholder link 3',
+          icon=True, icon_position='right', icon_src='v2/icons/link-external.svg',
+          tag='a', href='#' %}
+    </div>
+
   </section>
 
   <hr class="demo-divider">
@@ -1369,6 +1390,15 @@
             {'label': 'Home',        'href': '/'},
             {'label': 'Datasets',    'href': '/dataset'},
             {'label': 'Sudan — Example Crisis Dataset 2024', 'href': ''},
+          ] %}
+    </div>
+
+    <h2 class="demo-subsection__heading">Breadcrumb — non-linked middle crumb</h2>
+    <div class="demo-row">
+      {% snippet 'v2/components/breadcrumb.html',
+          items=[
+            {'label': 'Products',        'href': ''},
+            {'label': 'Archived Dataviz', 'href': ''},
           ] %}
     </div>
 
