@@ -871,3 +871,89 @@ def hdx_comma_separated_validator(value):
         return value
     else:
         raise tk.ValidationError('Value must be a string or a list.')
+
+
+_COLUMN_DEFINITIONS_SCHEMA = {
+    '$schema': 'https://json-schema.org/draft/2020-12/schema',
+    '$id': 'https://data.humdata.org/schemas/column-definitions.json',
+    'title': 'Column Definitions',
+    'description': 'A list of column definitions describing datastore fields.',
+    'type': 'array',
+    'minItems': 1,
+    'items': {
+        'type': 'object',
+        'examples': [
+            {
+                'field': 'col_name',
+                'label': 'Column Label',
+                'description': 'Human-readable description.',
+            }
+        ],
+        'properties': {
+            'field': {
+                'type': 'string',
+                'description': 'Column name from csv file',
+                'minLength': 1,
+            },
+            'label': {
+                'type': 'string',
+                'description': 'Human-readable column label.',
+                'minLength': 1,
+            },
+            'description': {
+                'type': 'string',
+                'description': 'Human-readable description of the column.',
+                'minLength': 1,
+            },
+        },
+        'required': ['field', 'label', 'description'],
+        'additionalProperties': True,
+    },
+}
+
+
+def hdx_validate_data_dictionary(key, data, errors, context):
+    """
+    Validator for the ``hdx_data_dictionary`` resource field.
+
+    Accepts either:
+    - a JSON string representing the array, or
+    - a Python list (already parsed).
+
+    Validates the value against the Column Definitions JSON schema and stores
+    the result back as a JSON string.
+    """
+    try:
+        from jsonschema import Draft202012Validator
+    except ImportError:
+        raise Invalid(_('Server configuration error: jsonschema package is not installed.'))
+
+    value = data.get(key)
+    if value is None or value is missing:
+        return
+
+    # Parse from JSON string if necessary
+    if isinstance(value, str):
+        try:
+            parsed = json.loads(value)
+        except (ValueError, TypeError):
+            errors[key].append(_('hdx_data_dictionary must be a valid JSON array.'))
+            raise StopOnError
+    elif isinstance(value, list):
+        parsed = value
+    else:
+        errors[key].append(_('hdx_data_dictionary must be a JSON array.'))
+        raise StopOnError
+
+    # Validate against the JSON schema
+    validator = Draft202012Validator(_COLUMN_DEFINITIONS_SCHEMA)
+    schema_errors = sorted(validator.iter_errors(parsed), key=lambda e: list(e.path))
+    if schema_errors:
+        for schema_err in schema_errors:
+            loc = '/'.join(str(p) for p in schema_err.path) or '(root)'
+            errors[key].append(_('hdx_data_dictionary[{}]: {}').format(loc, schema_err.message))
+        raise StopOnError
+
+    # Persist as JSON string
+    data[key] = json.dumps(parsed)
+

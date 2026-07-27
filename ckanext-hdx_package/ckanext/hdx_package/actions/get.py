@@ -567,6 +567,12 @@ def _additional_hdx_resource_show_processing(context, resource_dict, just_for_re
             if 'qa_hapi_report' in resource_dict:
                 del resource_dict['qa_hapi_report']
 
+        try:
+            _check_access('resource_update', context, {'id': resource_dict.get('id')})
+        except NotAuthorized:
+            if 'hdx_data_dictionary' in resource_dict:
+                del resource_dict['hdx_data_dictionary']
+
 
 # process urls for resource in case of in quarantine
 def _process_url(context, resource_dict):
