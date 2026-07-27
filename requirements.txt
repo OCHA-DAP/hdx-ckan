@@ -172,7 +172,7 @@ python-json-logger==2.0.7
     # via -r requirements.in
 python-magic==0.4.27
     # via -r requirements.in
-pytz==2024.1
+pytz==2026.3.post1
     # via
     #   -r requirements.in
     #   flask-babel
