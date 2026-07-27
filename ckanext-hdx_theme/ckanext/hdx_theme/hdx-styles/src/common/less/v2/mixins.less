@@ -163,3 +163,27 @@
     @media (min-width: @hdx-bp-md) { font-size: var(--hdx-fs-3xl); }
     @media (min-width: @hdx-bp-xl) { font-size: var(--hdx-fs-4xl); max-width: 66.67%; }
 }
+
+// ── List header pattern ────────────────────────────────────────
+// Shared title + count + empty-state structure for page-owned list
+// headers (search page, Archived Dataviz, Dataviz Gallery).
+
+.hdx-list-header-title() {
+    .hdx-display-l();
+    color: var(--hdx-neutral-95);
+
+    @media (max-width: @hdx-bp-xl) { font-size: var(--hdx-fs-3xl); }  // 1.75rem MD
+    @media (max-width: @hdx-bp-md) { font-size: var(--hdx-fs-2xl); }  // 1.5rem SM
+}
+
+.hdx-list-header-count() {
+    .hdx-body-m();
+    color: var(--hdx-neutral-8);
+}
+
+.hdx-list-header-empty() {
+    .hdx-body-m();
+    color:      var(--hdx-neutral-8);
+    text-align: center;
+    padding:    var(--hdx-space-10) 0;
+}

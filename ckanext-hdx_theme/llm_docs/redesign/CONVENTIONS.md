@@ -199,6 +199,18 @@ Exceptions: global container cap (1320px), fixed-height elements (buttons, input
 
 ---
 
+## List header pattern — `.hdx-list-header-title()` / `-count()` / `-empty()`
+
+Pages listing items with a title, item count, and (optionally) an empty state own their own small
+BEM header block (`hdx-v2-list-header` on the search page, `hdx-v2-archived-dataviz`,
+`hdx-v2-dataviz-gallery`) rather than a shared `c-*` component — each page's surrounding controls
+differ too much for a shared component to be worth it. The title/count/empty-state styling itself
+*was* verbatim-duplicated across all three, so it's factored into shared mixins in `mixins.less`
+(`.hdx-list-header-title()`, `.hdx-list-header-count()`, `.hdx-list-header-empty()`) — call these
+from each page's own `__title`/`__count`/`__empty` blocks instead of re-declaring the rules.
+
+---
+
 ## Design tokens
 
 - CSS custom properties: `--hdx-<category>-<step>` (e.g. `--hdx-brand-5`, `--hdx-space-3`)
@@ -350,7 +362,7 @@ Page-level LESS and JS files (non-component, non-layout) use the `-page` suffix:
 | Page styles | `{page-name}-page.less` | `search-page.less`, `dataset-page.less`, `home-page.less` |
 | Page scripts | `{page-name}-page.js` | `search-page.js`, `dataset-page.js` |
 | Component | `{component-name}.less/.js` | `anchor-links.less`, `dropdown.js` |
-| Layout / global | descriptive, no suffix | `layout.less`, `navbar.less`, `bar-chart.js` |
+| Layout / global | descriptive, no suffix | `layout.less`, `navbar.less`, `bar-chart.js`, `nav-controls.less` |
 
 ---
 
@@ -409,7 +421,7 @@ files:
   `c-resource-card-list`, `c-org-list-card-list`, `c-member-list-card-list`,
   `c-activity-card-list`, `c-stats-card-list`)
 - `c-<name>-grid` — grid (`c-content-card-grid`, `c-selection-item-grid`,
-  `c-showcase-card-grid`)
+  `c-showcase-card-grid`, `c-dataviz-card-grid`)
 
 Child sizing lives inside the wrapper, scoped with a direct-child selector
 (`> .c-stats-card { flex: 1; }`). Pages must not size or restyle `c-*`

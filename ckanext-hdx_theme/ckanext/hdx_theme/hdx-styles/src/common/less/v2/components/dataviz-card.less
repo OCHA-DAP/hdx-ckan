@@ -1,0 +1,120 @@
+// ============================================================
+// c-dataviz-card
+// Card component for the Dataviz Gallery grid.
+// Figma: llm_docs/redesign/figma_exports/xl-dataviz-gallery.html
+// Compiled output: fanstatic/v2/components/dataviz-card.css
+// ============================================================
+@import "../mixins.less";
+
+.c-dataviz-card {
+    display:          flex;
+    flex-direction:   column;
+    border:           1px solid var(--hdx-neutral-2);
+    border-radius:    var(--hdx-radius-md);
+    box-shadow:       var(--hdx-shadow-sm);
+    overflow:         hidden;
+    background-color: var(--hdx-neutral-0);
+
+    &__image {
+        display:          block;
+        width:            100%;
+        height:           10rem;
+        overflow:         hidden;
+        background-color: var(--hdx-neutral-1);
+        flex-shrink:      0;
+    }
+
+    &__img {
+        width:      100%;
+        height:     100%;
+        object-fit: cover;
+        display:    block;
+    }
+
+    &__image-placeholder {
+        width:            100%;
+        height:           100%;
+        background-color: var(--hdx-neutral-1);
+    }
+
+    &__body {
+        display:        flex;
+        flex-direction: column;
+        gap:            var(--hdx-space-2);
+        padding:        var(--hdx-space-4);
+        flex:           1;
+    }
+
+    &__title {
+        .hdx-body-m-semibold();
+        display:          block;
+        color:            var(--hdx-neutral-95);
+        text-decoration:  none;
+        white-space:      nowrap;
+        overflow:         hidden;
+        text-overflow:    ellipsis;
+
+        &:hover {
+            color: var(--hdx-primary-5);
+        }
+    }
+
+    &__desc {
+        align-self: stretch;
+
+        // Show-more button: hidden until JS confirms content is actually clamped
+        .c-text-button { display: none; }
+        &.is-clamped .c-text-button { display: inline-flex; }
+
+        &.is-open .c-text-button__icon {
+            transform: rotate(180deg);
+        }
+    }
+
+    &__desc-text {
+        .hdx-body-s();
+        color:              var(--hdx-neutral-85);
+        margin:             0;
+        display:            -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow:           hidden;
+
+        &.is-open {
+            -webkit-line-clamp: unset;
+            overflow:           visible;
+        }
+    }
+
+    &__footer {
+        display:     flex;
+        align-items: center;
+        flex-wrap:   wrap;
+        gap:         var(--hdx-space-3);
+        margin-top:  auto;
+        padding-top: var(--hdx-space-2);
+    }
+
+    &__updated {
+        .hdx-body-xs();
+        color: var(--hdx-neutral-8);
+    }
+}
+
+// ────────────────────────────────────────────────────────────
+// c-dataviz-card-grid — grid wrapper for dataviz cards
+// ────────────────────────────────────────────────────────────
+
+.c-dataviz-card-grid {
+    display:               grid;
+    grid-template-columns: 1fr;
+    gap:                   var(--hdx-space-6);
+
+    @media (min-width: @hdx-bp-md) {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media (min-width: @hdx-bp-xl) {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}

@@ -1,179 +1,117 @@
-{% extends "page_light.html" %}
-{% import 'macros/form.html' as form %}
-{% block subtitle %}{{ _("Dataviz Gallery") }}{% endblock %}
+{% extends "v2/page.html" %}
 
-{% block breadcrumb_content %}
-  {% snippet "snippets/active_breadcrumb_item.html", title=_('Dataviz Gallery'), position=2 %}
+
+{% set content_class = 'hdx-v2-content-columns__content' %}
+
+{% block subtitle %}{{ _('Dataviz Gallery') }}{% endblock %}
+
+{% block styles %}
+  {{ super() }}
+  {% asset 'hdx_theme/v2-dataviz-gallery-page-styles' %}
 {% endblock %}
-
-{% block meta %}
-    {{ super() }}
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-{% endblock %}
-
-{% block primary_content %}
-{% endblock %}
-
-{% block header_core %}
-  {% set page_has_desktop_version = False %}
-  {% set page_has_mobile_version = False  %}
-  {% snippet "header-mobile.html", page_has_desktop_version=page_has_desktop_version, page_has_mobile_version=page_has_mobile_version %}
-{% endblock %}
-
-{% block content %}
-  {% set facet_list = data.full_facet_info.get('facets') %}
-  {# set searchValue = request.args.get('q') if request.args.get('q') else '' #}
-  <div class="mobile-facets" style="display: none;">
-    <div class="actions">
-      <a class="back-button" href="#" onclick="$('.mobile-facets').hide();"><i class="humanitarianicons-Return"></i> Back</a>
-    </div>
-    <div>
-      <div class="">
-        {% set searchValue = h.hdx_get_request_param('q', query) %}
-        <input class="text-search headerSearchBox" autocomplete="off" id="headerSearchMobile" name="q" class="header-search" type="text" placeholder="{{placeholder}}" value="{{searchValue}}" placeholder="Search all dataviz ..." value="{{searchValue}}">
-      </div>
-      {% set sort_param = request.args.get('sort') %}
-      {% snippet 'search/snippets/package_search_order.html', sort_param = sort_param, class='mobile-order-by' %}
-
-      {%  set current_page_url = data.other_links.get('current_page_url') if 'current_page_url' in data.other_links else '' %}
-      <div class="filter-title">
-        Refine your search: <a href="{{current_page_url}}" class="filter-clear float-end">Clear all</a>
-      </div>
-
-      {# snippet 'search/snippets/package_search_facets.html', facet_list=facet_list  #}
-    </div>
-
-  </div>
-
-  <div class="container search-light dataviz-light">
-    {% if data.carousel_items | length > 0 %}
-      <div class="row">
-        <div class="col-12">
-          <h1 class="mTop20">{{ _("Dataviz Gallery") }}</h1>
-        </div>
-        <div class="col-12">
-          <div id="dataviz-carousel" class="carousel slide" data-bs-ride="carousel2">
-            <!-- Indicators -->
-            <ol class="carousel-indicators">
-              {% for hero in data.carousel_items %}
-                <li data-bs-target="#dataviz-carousel" data-bs-slide-to="{{ loop.index - 1 }}" {% if loop.index == 1 %} class="active"{% endif %}></li>
-              {% endfor %}
-            </ol>
-
-             <!-- Wrapper for slides -->
-            <div class="carousel-inner" role="listbox">
-              {% for hero in data.carousel_items %}
-                <div class="carousel-item {% if loop.index == 1 %}active{% endif %}">
-                  <div class="hero-item">
-                    <div class="hero-content">
-                      <div class="content-group">
-                        <div class="hero-title">
-                          {{ hero.title }}
-                        </div>
-                        <div class="description">
-                          {{ hero.notes}}
-                        </div>
-                        <div>
-                          <a href="{{ hero.url }}" target="_blank" class="btn btn-primary">Explore</a>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="hero-image-container {% if hero.image_frame_mode %}frame-mode{% endif %}">
-                      <div class="hero-image" style="background-image: url('{{ hero.image_display_url }}')"></div>
-                    </div>
-                  </div>
-                </div>
-              {% endfor %}
-            </div>
-
-            <!-- Controls -->
-            <button class="carousel-control-prev" type="button" data-bs-target="#dataviz-carousel"
-                    data-bs-slide="prev">
-              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-              <span class="visually-hidden">Previous</span>
-            </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#dataviz-carousel"
-                    data-bs-slide="next">
-              <span class="carousel-control-next-icon" aria-hidden="true"></span>
-              <span class="visually-hidden">Next</span>
-            </button>
-          </div>
-        </div>
-      </div>
-    {% endif %}
-    <div class="row">
-
-    </div>
-    <div class="row">
-      <div class="col-12">
-        <div class="dataset-filter-start list-header">
-          <span class="mL15 list-header-title">{{ _("Dataviz") }} [{{ data.page.item_count }}]</span>
-          <span class="">
-              {% set searchValue = h.hdx_get_request_param('q', query) %}
-              <input id="headerSearch" class="header-search headerSearchBox text-search search mL30" type="text" name="q" placeholder="{{placeholder}}" value="{{searchValue}}">
-          </span>
-          {% set limits = [9, 18, 27] %}
-          {% set limit_param = request.args.get('ext_page_size') %}
-          {% set sort_param = request.args.get('sort') %}
-          {% set limit_selected = limit_param if limit_param else 9 %}
-          <span class="mL45 list-header-showall filter-pagination">
-              Show
-              {% for value in limits %}
-                  <span>
-                    <input id="ext_page_size_{{value}}" type="radio" name="ext_page_size" value="{{value}}" {% if limit_selected|int == value %}checked{% endif %}>
-                    <label for="ext_page_size_{{value}}">{{value}}</label>
-                  </span>
-              {% endfor %}
-          </span>
-          {% snippet 'search/snippets/package_search_order.html', sort_param = sort_param, admin_view=admin_view, used_default_sort_by='metadata_created%20desc' %}
-          <div class="show-filters">
-            <a href="#" onclick="$('.mobile-facets').show();">
-              <div class="d-inline-block show-filter-switch show-filter-switch--sm">
-                <div class="form-check form-switch ps-0">
-                  <input class="form-check-input form-check-input--always-closed float-end" type="checkbox" id="show-filter-toggle" {% if data.full_facet_info.filters_selected %}checked="checked"{% endif %}>
-                  <label class="form-check-label" for="show-filter-toggle">Filters {% if data.full_facet_info.num_of_selected_filters > 0 %}[{{data.full_facet_info.num_of_selected_filters}}]{% endif %}</label>
-                </div>
-              </div>
-            </a>
-          </div>
-        </div>
-
-        <div class="search-list">
-          <ul class="hdx-bs3 list-items dataset-list unstyled dataviz-list">
-            {% for dataviz in data.page.items %}
-              {% snippet 'dataviz/dataviz_item.html', dataviz=dataviz %}
-            {% endfor %}
-
-            {% if data.page.items | length == 0 %}
-              <div class="search-empty">
-                <h3>Sorry no dataviz found for current filter selection</h3>
-              </div>
-            {% endif %}
-          </ul>
-        </div>
-      </div>
-    </div>
-
-  </div>
-  <div class="container">
-    {% block page_pagination %}
-      {{ data.page.pager(q=data.q) }}
-    {% endblock %}
-  </div>
-{% endblock %}
-
-{% block secondary %}
-{% endblock %}
-
 
 {% block scripts %}
   {{ super() }}
-  {% asset 'vendor/select2-css' %}
-  {% asset 'hdx_theme/vendor-select2-js' %}
-  {% asset 'hdx_theme/search-light-styles' %}
-  {% asset 'hdx_theme/dataviz-styles' %}
-  {% asset 'hdx_theme/dataset-search-scripts' %}
-  {% asset 'hdx_theme/search-scripts' %}
-  {#  {% resource 'hdx_theme/jquery.highlight' %}#}
+  {% asset 'hdx_theme/v2-dataviz-gallery-page-scripts' %}
+{% endblock %}
 
+{% block breadcrumb_items %}
+  {% snippet 'v2/components/breadcrumb.html',
+      items=[
+        {'label': _('Products'), 'href': ''},
+        {'label': _('Dataviz Gallery'), 'href': ''},
+      ] %}
+{% endblock %}
+
+{# No sidebar #}
+{% block secondary %}{% endblock %}
+
+{% block primary %}
+  {% set search_action = h.url_for('hdx_dataviz_gallery.index') %}
+
+  <div class="hdx-v2-dataviz-gallery">
+
+    <div class="hdx-v2-dataviz-gallery__header">
+      <h1 class="hdx-v2-dataviz-gallery__title">{{ _('Dataviz Gallery') }}</h1>
+      <span class="hdx-v2-dataviz-gallery__count">{{ h.localised_number(data.page.item_count) }}</span>
+    </div>
+
+    {# ── XL/MD: search box, then sort/page-size controls ─────────────── #}
+    <div class="hdx-v2-dataviz-gallery__row hdx-v2-dataviz-gallery__row--before-search">
+      <form class="hdx-v2-dataviz-gallery__search" method="get" action="{{ search_action }}">
+        {% if data.sort_by_selected %}<input type="hidden" name="sort" value="{{ data.sort_by_selected }}">{% endif %}
+        {% if data.ext_page_size %}<input type="hidden" name="ext_page_size" value="{{ data.ext_page_size }}">{% endif %}
+        {% snippet 'v2/components/search-input.html',
+            size='m', name='q', id='headerSearch', value=data.q,
+            icon_submit=True, show_clear=True,
+            state='filled' if data.q else 'enabled',
+            placeholder=_('Search for dataviz'),
+            input_attrs={'aria-label': _('Search for dataviz')},
+            autocomplete='off',
+            extra_classes='c-search-input--block' %}
+      </form>
+      <div class="hdx-v2-dataviz-gallery__controls">
+        {% snippet 'v2/search-nav-controls.html',
+            sorting_selected=data.sort_by_selected,
+            ext_page_size=data.ext_page_size,
+            page_size_options=[12, 24, 36],
+            panel_suffix='hdr' %}
+      </div>
+    </div>
+
+    {# ── SM: sort/page-size controls, then search box (Figma order) ──── #}
+    <div class="hdx-v2-dataviz-gallery__row hdx-v2-dataviz-gallery__row--after-search">
+      <div class="hdx-v2-dataviz-gallery__controls">
+        {% snippet 'v2/search-nav-controls.html',
+            sorting_selected=data.sort_by_selected,
+            ext_page_size=data.ext_page_size,
+            page_size_options=[12, 24, 36],
+            panel_suffix='sm' %}
+      </div>
+      <form class="hdx-v2-dataviz-gallery__search" method="get" action="{{ search_action }}">
+        {% if data.sort_by_selected %}<input type="hidden" name="sort" value="{{ data.sort_by_selected }}">{% endif %}
+        {% if data.ext_page_size %}<input type="hidden" name="ext_page_size" value="{{ data.ext_page_size }}">{% endif %}
+        {% snippet 'v2/components/search-input.html',
+            size='m', name='q', id='headerSearchSm', value=data.q,
+            icon_submit=True, show_clear=True,
+            state='filled' if data.q else 'enabled',
+            placeholder=_('Search for dataviz'),
+            input_attrs={'aria-label': _('Search for dataviz')},
+            autocomplete='off',
+            extra_classes='c-search-input--block' %}
+      </form>
+    </div>
+
+    {% if data.page.items %}
+      <div class="c-dataviz-card-grid">
+        {% for dataviz in data.page.items %}
+          {% set updated_on = _('Updated on') ~ ' ' ~ h.render_datetime(dataviz.metadata_modified) if dataviz.metadata_modified else '' %}
+          {% snippet 'v2/components/dataviz-card.html',
+              title=dataviz.dataviz_label or dataviz.title,
+              description=dataviz.notes,
+              img_url=dataviz.image_display_url,
+              url=dataviz.url,
+              updated_on=updated_on,
+              data_url=dataviz.data_url,
+              edit_href=h.url_for('showcase_blueprint.edit', id=dataviz.name) if h.has_dataviz_gallery_permission() else '' %}
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="hdx-v2-dataviz-gallery__empty">
+        <p>{{ _('Sorry, no dataviz found for the current search.') }}</p>
+      </div>
+    {% endif %}
+
+    {% if data.page.page_count > 1 %}
+      {% set base_url = data.page._url_generator(page='').split('#')[0] %}
+      <div class="hdx-v2-dataviz-gallery__pagination">
+        {% snippet 'v2/components/pagination.html',
+            size='md',
+            current_page=data.page.page,
+            total_pages=data.page.page_count,
+            base_url=base_url %}
+      </div>
+    {% endif %}
+
+  </div>
 {% endblock %}

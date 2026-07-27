@@ -70,3 +70,4 @@
 | 064 | [auth-pages-v2](064-auth-pages-v2.md)                                                                          | implemented | |
 | 065 | [advanced-filters-v2](065-advanced-filters-v2.md)                                                              | implemented | |
 | 066 | [archived-dataviz-v2](066-archived-dataviz-v2.md)                                                              | implemented | |
+| 067 | [dataviz-gallery-v2](067-dataviz-gallery-v2.md)                                                                | implemented | |

@@ -16,6 +16,10 @@
                               default: the dataset-search list below
   show_page_size    {bool}    Render the "Results per page" dropdown.
                               default: True
+
+  page_size_options {list}    Overrides the default results-per-page value set
+                              (task 067 — dataviz gallery uses [12, 24, 36]).
+                              default: [10, 25, 50, 100]
   ──────────────────────────────────────────────────────────────────
 #}
 {% set sorting_selected = sorting_selected if sorting_selected is defined else h.HDX_CONST('DEFAULT_SORTING') %}
@@ -24,8 +28,9 @@
 {% set panel_suffix     = panel_suffix     if panel_suffix     is defined else 'hdr' %}
 {% set sorting_options  = sorting_options  if sorting_options  is defined else None %}
 {% set show_page_size   = show_page_size   if show_page_size   is defined else True %}
+{% set page_size_options = page_size_options if page_size_options is defined else None %}
 
-{% set limits = [10, 25, 50, 100] %}
+{% set limits = page_size_options if page_size_options else [10, 25, 50, 100] %}
 {% set limit_selected = ext_page_size|int if ext_page_size else 10 %}
 
 {% if sorting_options %}
