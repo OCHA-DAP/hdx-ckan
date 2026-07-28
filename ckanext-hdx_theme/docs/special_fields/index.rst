@@ -62,3 +62,13 @@ The exceptions to this are:
   :code:`update package_extra set value='-1' where key='data_update_frequency' and value='0' and state='active';`
 - *Live* has value 0
 
+
+Resource Fields
++++++++++++++++
+
+.. toctree::
+   :maxdepth: 1
+
+   data_dictionary
+
+
