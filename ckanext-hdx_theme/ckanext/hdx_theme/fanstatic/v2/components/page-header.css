@@ -325,9 +325,6 @@
 .c-page-header .c-tooltip-anchor {
   margin-left: auto;
 }
-.c-page-header .c-tooltip-anchor .c-tooltip {
-  width: 14rem;
-}
 .c-page-header__format {
   display: flex;
   align-items: center;

@@ -46,7 +46,7 @@
           {% include h.url_for_static(icon_path) %}
         </span>
         <span class="c-tooltip-anchor">
-          <span class="hdx-v2-location-datagrid-card__title"
+          <span class="hdx-v2-location-datagrid-card__title c-tooltip-trigger"
                 tabindex="0" aria-describedby="{{ category_tip_id }}">{{ category.title }}</span>
           {% snippet 'v2/components/tooltip.html',
               variant='dark', text=category.description, tooltip_id=category_tip_id, arrow='below' %}
@@ -65,7 +65,7 @@
       {% set subcateg_tip_id = 'dg-subcat-tip-' ~ category_index ~ '-' ~ subcateg_index %}
       <div class="hdx-v2-location-datagrid-card__subcateg">
         <span class="c-tooltip-anchor">
-          <span class="hdx-v2-location-datagrid-card__subcateg-title"
+          <span class="hdx-v2-location-datagrid-card__subcateg-title c-tooltip-trigger"
                 tabindex="0" aria-describedby="{{ subcateg_tip_id }}">{{ subcateg.title }}</span>
           {% snippet 'v2/components/tooltip.html',
               variant='dark', text=subcateg.description, tooltip_id=subcateg_tip_id, arrow='below' %}
