@@ -152,6 +152,7 @@
   flex-direction: column;
   align-items: flex-start;
   padding: var(--hdx-space-2) var(--hdx-space-3);
+  min-width: 12.5rem;
   max-width: 18.75rem;
   isolation: isolate;
   position: relative;
@@ -320,16 +321,22 @@
 }
 .c-tooltip-anchor .c-tooltip {
   position: absolute;
-  bottom: calc(100% + var(--hdx-space-1));
-  right: 0;
-  left: auto;
-  transform: none;
   z-index: 100;
-  display: none;
   white-space: normal;
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+.c-tooltip-anchor .c-tooltip[data-popper-placement^="bottom"] .c-tooltip__arrow {
+  top: -1px;
+  bottom: auto;
+  left: 50%;
+  transform: translateX(-50%) rotate(180deg);
 }
 .c-tooltip-anchor .c-info-icon:hover ~ .c-tooltip,
 .c-tooltip-anchor .c-info-icon:focus-visible ~ .c-tooltip,
 .c-tooltip-anchor .c-info-icon.is-open ~ .c-tooltip {
-  display: block;
+  visibility: visible;
+  opacity: 1;
+  pointer-events: auto;
 }

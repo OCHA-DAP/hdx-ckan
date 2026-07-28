@@ -218,6 +218,7 @@
 @c-tooltip-light-color:  var(--hdx-neutral-95); // #101212
 @c-tooltip-light-shadow: 0px 8px 35px rgba(0, 0, 0, 0.16);
 
+@c-tooltip-min-w: 12.5rem;    // 200 px
 @c-tooltip-max-w: 18.75rem;   // 300 px
 @c-tooltip-arrow-h: 0.5rem;   //  8 px
 
@@ -228,6 +229,7 @@
     flex-direction: column;
     align-items:    flex-start;
     padding:        var(--hdx-space-2) var(--hdx-space-3);  // 8 12
+    min-width:      @c-tooltip-min-w;
     max-width:      @c-tooltip-max-w;
     isolation:      isolate;
     position:       relative;
@@ -419,9 +421,12 @@
 
 
 // ────────────────────────────────────────────────────────────
-// 5. c-tooltip-anchor — positions an absolute tooltip above
-//    the trigger icon; used wherever an info icon + tooltip
-//    pair needs right-anchored, above-positioned behaviour.
+// 5. c-tooltip-anchor — pairs a trigger icon with a tooltip
+//    whose position is computed by tooltip.js (Popper.js) so
+//    it always fits the viewport, flipping/shifting as needed
+//    instead of a fixed side. Popper writes its own top/left
+//    via inline styles; the position:absolute here is only a
+//    pre-JS fallback.
 // ────────────────────────────────────────────────────────────
 
 .c-tooltip-anchor {
@@ -430,19 +435,28 @@
     align-items: center;
 
     .c-tooltip {
-        position:    absolute;
-        bottom:      calc(100% + var(--hdx-space-1));
-        right:       0;
-        left:        auto;
-        transform:   none;
-        z-index:     100;
-        display:     none;
-        white-space: normal;
+        position:       absolute;
+        z-index:        100;
+        white-space:    normal;
+        visibility:     hidden;
+        opacity:        0;
+        pointer-events: none;
+
+        // Flipped case: Popper placed the box below the anchor, so the
+        // arrow needs to point up instead of down.
+        &[data-popper-placement^="bottom"] .c-tooltip__arrow {
+            top:       -1px;
+            bottom:    auto;
+            left:      50%;
+            transform: translateX(-50%) rotate(180deg);
+        }
     }
 
     .c-info-icon:hover ~ .c-tooltip,
     .c-info-icon:focus-visible ~ .c-tooltip,
     .c-info-icon.is-open ~ .c-tooltip {
-        display: block;
+        visibility:     visible;
+        opacity:        1;
+        pointer-events: auto;
     }
 }
