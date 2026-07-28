@@ -1470,6 +1470,7 @@ v2-components-styles:
     - v2/components/copy-button.css
     - v2/components/data-grid-status.css
     - v2/components/dataset-card.css
+    - v2/components/dataviz-card.css
     - v2/components/divider.css
     - v2/components/drawer.css
     - v2/components/dropdown.css
@@ -1754,6 +1755,19 @@ v2-archived-dataviz-page-styles:
   <<: *common-css
   contents:
     - v2/archived-dataviz-page.css
+
+
+v2-dataviz-gallery-page-styles:
+  output: ckanext-hdx_theme/%(version)s_v2-dataviz-gallery-page-styles.css
+  <<: *common-css
+  contents:
+    - v2/dataviz-gallery-page.css
+
+v2-dataviz-gallery-page-scripts:
+  <<: *common-js
+  output: ckanext-hdx_theme/%(version)s_v2-dataviz-gallery-page-scripts.js
+  contents:
+    - v2/url-nav.js
 
 v2-signup-scripts:
   <<: *common-js

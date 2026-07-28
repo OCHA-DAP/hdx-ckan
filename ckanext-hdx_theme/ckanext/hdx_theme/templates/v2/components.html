@@ -2140,6 +2140,29 @@
 
   <hr class="demo-divider">
 
+  {# ══════════════════════════════════════════════════════
+     DATAVIZ CARD
+  ══════════════════════════════════════════════════════ #}
+  <section class="demo-section" id="dataviz-card">
+    <h1 class="demo-section__title">Dataviz Card</h1>
+    <p class="demo-section__subtitle">Dataviz Gallery grid — full card with clamped description + Edit link, and minimal card</p>
+
+    <div class="c-dataviz-card-grid">
+      {% snippet 'v2/components/dataviz-card.html',
+          title='Sudan — Example Data Story 2024',
+          description='Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.',
+          img_url='',
+          url='#',
+          updated_on='Updated on 12 Dec 2025',
+          data_url='#',
+          edit_href='#' %}
+      {% snippet 'v2/components/dataviz-card.html',
+          title='Ukraine — Example Monitoring Dataviz' %}
+    </div>
+  </section>
+
+  <hr class="demo-divider">
+
   <section class="demo-section">
     <h1 class="demo-section__title">Organisation List Card</h1>
     <p class="demo-section__subtitle">responsive · description toggle · dataset + member counts</p>

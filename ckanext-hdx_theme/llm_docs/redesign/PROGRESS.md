@@ -2,7 +2,7 @@
 
 **Status**: In-progress
 **Started**: 2026-04-16
-**Last Updated**: 2026-07-24
+**Last Updated**: 2026-07-27
 
 ---
 
@@ -109,6 +109,7 @@ CSS custom property equivalents (`--hdx-*`) are defined in `v2/foundation.css` (
 | Login | `user/signin.html` | Extends `v2/page.html`; `{% block header %}` uses `v2/header.html` with new `minimal=True` param (logo-only navbar, no top-bar/search/nav/actions/offcanvas); real page content, no popup/widget indirection (no longer renders `widget/onboarding/login.html`); "remember me" cookie prefill/gravatar-style swap now shows initials only via `c-avatar`; see `requirements/064-auth-pages-v2.md` |
 | Forgot password | `user/forgot_password.html` | Extends `v2/page.html`; same `minimal=True` header; confirmation is a same-route swap between two sibling cards toggled via the `hidden` attribute (no more `widget/onboarding/recoverSuccess.html`/loading-screen widget); invisible reCAPTCHA still bound to the submit button; see `requirements/064-auth-pages-v2.md` |
 | Archived Dataviz | `archived_quick_links/main.html` | Extends `v2/page.html`; single-column; title+count header, outbound-link row list via `text-button.html` + `c-divider`; see `requirements/066-archived-dataviz-v2.md` |
+| Dataviz Gallery | `dataviz/index.html` | Extends `v2/page.html`; single-column; `c-dataviz-card` grid, `search-nav-controls.html` reused for sort/page-size (12/24/36); see `requirements/067-dataviz-gallery-v2.md` |
 
 ### Pages in holding state (on `page_light.html`)
 
@@ -166,6 +167,8 @@ Each page below extends `page_light.html`, manually overrides `{% block styles %
 - [x] Notification item — `notification-item.html` / `notification-item.less`; title + optional sysadmin bracket tag + meta row (date + arrow link); `.c-notification-item--sysadmin` highlight modifier; used in the navbar notifications dropdown
 - [x] Stats card — `stats-card.html` / `stats-card.less`; KPI figure + label card; used on the org page Stats tab
 - [x] Member list card — `member-list-card.html` / `member-list-card.less`; avatar + profile links + role/registered line + counters, `caller()` actions body, `--stacked` variant; used on the org page Members tab
+- [x] Data grid status — `data-grid-status.html` / `data-grid-status.less`; presentational availability swatch (not a real checkbox); used by the location page Data Grid Availability feature (task 063)
+- [x] Dataviz card — `dataviz-card.html` / `dataviz-card.less`; thumbnail + title + clamped description + date/DATA-link footer + gated Edit link; own `c-dataviz-card-grid` wrapper; used on the Dataviz Gallery page (task 067)
 
 Each component file should have:
 1. **HTML template** (`templates/v2/components/component-name.html`) — reusable snippet with BEM markup
@@ -182,7 +185,7 @@ Exception: `info-icon.html` has no dedicated LESS/CSS — it composes existing `
 
 Bundle configuration:
 - `hdx_theme/v2-components-styles` — standalone design system bundle (tokens + components), no Bootstrap
-  - Contents: `v2/foundation.css`, then component CSS files: `divider`, `activity-card`, `dataset-card`, `resource-card`, `org-list-card`, `member-list-card`, `avatar-badge`, `buttons`, `checkbox`, `copy-button`, `dropdown`, `input-field`, `label`, `letter-anchor`, `list-item`, `nav-item`, `notification-item`, `anchor-links`, `pagination`, `breadcrumb`, `page-header`, `selection`, `showcase-card`, `text-link`, `highlight-card`, `overlay`, `signup-tier`, `step-pager`, `content-card`, `accordion`, `stats-card`
+  - Contents: `v2/foundation.css`, then component CSS files: `divider`, `activity-card`, `data-grid-status`, `dataset-card`, `dataviz-card`, `resource-card`, `org-list-card`, `member-list-card`, `avatar-badge`, `buttons`, `checkbox`, `copy-button`, `dropdown`, `input-field`, `label`, `letter-anchor`, `list-item`, `nav-item`, `notification-item`, `anchor-links`, `pagination`, `breadcrumb`, `page-header`, `selection`, `showcase-card`, `text-link`, `highlight-card`, `overlay`, `signup-tier`, `step-pager`, `content-card`, `accordion`, `stats-card`
   - Kept separate for non-page contexts (component previews, embedded widgets)
 - `hdx_theme/v2-page-styles` ✅ Full page bundle: preloads `v2-components-styles`, then adds:
   - `vendor/bootstrap5/css/bootstrap.css`
@@ -220,6 +223,7 @@ Bundle configuration:
 - `hdx_theme/v2-login-page-scripts` — Login page: adds `v2/login-page.js` (lockout/MFA pre-checks, required-field gating, remember-me cookie prefill)
 - `hdx_theme/v2-forgot-password-page-scripts` — Forgot-password page: adds `v2/forgot-password-page.js` (AJAX submit, invisible reCAPTCHA, recover/confirmation card swap)
 - `hdx_theme/v2-archived-dataviz-page-styles` — Archived Dataviz page: adds `v2/archived-dataviz-page.css`; no scripts bundle (page has no interactive behavior)
+- `hdx_theme/v2-dataviz-gallery-page-styles` / `-scripts` — Dataviz Gallery page: adds `v2/dataviz-gallery-page.css` / `v2/url-nav.js`
 
 ---
 
@@ -267,6 +271,8 @@ Bundle configuration:
 - [x] All Locations page
 - [x] All Organisations page
 - [x] Organization page (Datasets / Activity / Stats / Members tabs — 056–059; HDX Connect tab postponed)
+- [x] Archived Dataviz page
+- [x] Dataviz Gallery page
 - [ ] Remaining pages (user pages, org join, onboarding, etc.)
 
 ### Phase 4: Cleanup 🔲 (Final)

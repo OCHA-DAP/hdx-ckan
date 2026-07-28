@@ -1,0 +1,89 @@
+// ============================================================
+// dataviz-gallery-page.less
+// Dataviz Gallery (/dataviz-gallery) — v2 page-specific styles
+// ============================================================
+
+@import "mixins.less";
+@import "nav-controls.less";
+
+.hdx-v2-dataviz-gallery {
+    padding: var(--hdx-space-6) 0 var(--hdx-space-10);
+
+    @media (min-width: @hdx-bp-md) {
+        padding: var(--hdx-space-8) 0 var(--hdx-space-10);
+    }
+
+    @media (min-width: @hdx-bp-xl) {
+        padding: var(--hdx-space-10) 0;
+    }
+
+    &__header {
+        display:       flex;
+        align-items:   center;
+        gap:           var(--hdx-space-2);
+        margin-bottom: var(--hdx-space-6);
+    }
+
+    &__title {
+        .hdx-list-header-title();
+        margin: 0;
+    }
+
+    &__count {
+        .hdx-list-header-count();
+    }
+
+    // Search + nav-controls, search-first order — shown MD+ (Figma XL/MD order).
+    // Stacked column at MD, single inline row at XL (search grows via flex).
+    &__row--before-search {
+        display:       none;
+        margin-bottom: var(--hdx-space-6);
+
+        @media (min-width: @hdx-bp-md) {
+            display:        flex;
+            flex-direction: column;
+            gap:            var(--hdx-space-4);
+        }
+
+        @media (min-width: @hdx-bp-xl) {
+            flex-direction:  row;
+            align-items:     center;
+            justify-content: space-between;
+        }
+    }
+
+    // Search + nav-controls, controls-first order — shown SM only (Figma SM order).
+    &__row--after-search {
+        display:        flex;
+        flex-direction: column;
+        gap:            var(--hdx-space-4);
+        margin-bottom:  var(--hdx-space-6);
+
+        @media (min-width: @hdx-bp-md) { display: none; }
+    }
+
+    &__search {
+        width: 100%;
+
+        @media (min-width: @hdx-bp-xl) {
+            flex:      1;
+            min-width: 0;
+        }
+    }
+
+    &__controls {
+        @media (min-width: @hdx-bp-xl) {
+            flex-shrink: 0;
+        }
+    }
+
+    &__empty {
+        .hdx-list-header-empty();
+    }
+
+    &__pagination {
+        display:         flex;
+        justify-content: center;
+        margin-top:      var(--hdx-space-8);
+    }
+}
