@@ -29,6 +29,36 @@
         padding: var(--hdx-space-8) 0;
     }
 }
+
+// ── Section wrapper (Resource preview / Data dictionary / API access) ──
+.hdx-v2-resource-section {
+    padding: var(--hdx-space-6) 0;
+
+    @media (min-width: @hdx-bp-md) {
+        padding: var(--hdx-space-10) 0;
+    }
+
+    @media (max-width: @hdx-bp-xl) {
+        scroll-margin-top: 8rem;
+    }
+
+    &__header {
+        display:         flex;
+        align-items:     center;
+        justify-content: space-between;
+        gap:             var(--hdx-space-3);
+    }
+
+    &__title {
+        .hdx-display-xs-semibold();
+        color:  var(--hdx-neutral-95);
+        margin: 0;
+    }
+
+    &__body {
+        padding-top: var(--hdx-space-8);
+    }
+}
 // ============================================================
 // API access section
 // SM/MD: blocks stack vertically; XL: three blocks side by side.

@@ -8,10 +8,14 @@
 {% block page %}
   <div id="hdx-csv-preview">
     <div id="resource-url" hidden>{{ h.url_for('resource.download', id=res.package_id, resource_id=res.id, qualified=True) }}</div>
+
+    <div id="resource-id" hidden>{{ res.id }}</div>
+    <div id="datastore-active" hidden>{{ 'true' if res.datastore_active else 'false' }}</div>
     <table id="hdx-csv-table"></table>
   </div>
 {% endblock %}
 
 {%- block scripts %}
+  {{ super() }}
   {% asset 'hdx_office_preview/main' %}
 {% endblock -%}

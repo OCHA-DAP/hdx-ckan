@@ -1,4 +1,6 @@
 import logging
+import flask
+from flask_wtf.csrf import validate_csrf
 import ckan.authz as new_authz
 import ckan.logic.auth.create as create
 import ckan.logic.auth.update as update
@@ -187,9 +189,10 @@ def hdx_request_access(context: Context, data_dict: DataDict):
 # @tk.auth_disallow_anonymous_access
 def datastore_info(next_auth: AuthFunction, context: Context, data_dict: DataDict) -> AuthResult:
     """
-    Override the default authorization for the datastore_info action, so that anonymous users cannot access it.
+    Override the default authorization for the datastore_info action, so that anonymous users cannot access it
+    unless they hold a valid CSRF token (see _datastore_search_for_authenticated_users_or_valid_csrf).
     """
-    return _datastore_search_only_for_authenticated_users(
+    return _datastore_search_for_authenticated_users_or_valid_csrf(
         'datastore_info', next_auth, context, data_dict)
 
 
@@ -197,9 +200,10 @@ def datastore_info(next_auth: AuthFunction, context: Context, data_dict: DataDic
 # @tk.auth_disallow_anonymous_access
 def datastore_search(next_auth: AuthFunction, context: Context, data_dict: DataDict) -> AuthResult:
     """
-    Override the default authorization for the datastore_search action, so that anonymous users cannot access it.
+    Override the default authorization for the datastore_search action, so that anonymous users cannot access it
+    unless they hold a valid CSRF token (see _datastore_search_for_authenticated_users_or_valid_csrf).
     """
-    return _datastore_search_only_for_authenticated_users(
+    return _datastore_search_for_authenticated_users_or_valid_csrf(
         'datastore_search', next_auth, context, data_dict)
 
 
@@ -227,6 +231,35 @@ def _datastore_search_only_for_authenticated_users(
         return next_auth(context, data_dict)
     else:
         return {'success': False, 'msg': f'Action {datastore_action_name} requires an authenticated user'}
+
+
+def _datastore_search_for_authenticated_users_or_valid_csrf(
+    datastore_action_name: str,
+    next_auth: AuthFunction,
+    context: Context,
+    data_dict: DataDict) -> AuthResult:
+    """
+    Same restriction as _datastore_search_only_for_authenticated_users, except an anonymous caller is also
+    let through if the request carries a valid CSRF token. This is a deliberate, narrower exception to
+    HDX-10974 (used only for datastore_search/datastore_info, not datastore_search_sql) so the resource
+    page's Data Dictionary and TDE preview can call these two actions directly from client JS for
+    anonymous visitors, who are issued a CSRF token on every page load regardless of login state.
+    """
+    if context.get('auth_user_obj').is_authenticated or _request_has_valid_csrf_token():
+        return next_auth(context, data_dict)
+    else:
+        return {'success': False, 'msg': f'Action {datastore_action_name} requires an authenticated user'}
+
+
+def _request_has_valid_csrf_token() -> bool:
+    token = flask.request.headers.get('X-CSRFToken') or flask.request.headers.get('X-CSRF-Token')
+    if not token:
+        return False
+    try:
+        validate_csrf(token)
+        return True
+    except Exception:
+        return False
 
 
 def hdx_manage_resource_sdd_report(context: Context, data_dict: DataDict):
