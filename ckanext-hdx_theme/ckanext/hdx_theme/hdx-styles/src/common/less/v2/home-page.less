@@ -256,3 +256,46 @@
         }
     }
 }
+
+// ============================================================
+// hdx-v2-signals — homepage v2 HDX Signals section
+// Figma: llm_docs/redesign/figma_exports/xl-home.html
+// ============================================================
+
+.hdx-v2-signals {
+    width:            100%;
+    background-color: var(--hdx-neutral-05);
+    padding-top:      4rem;
+    padding-bottom:   4rem;
+
+    @media (min-width: @hdx-bp-md) {
+        padding-top:    5rem;
+        padding-bottom: 5rem;
+    }
+
+    @media (min-width: @hdx-bp-xl) {
+        padding-top:    6rem;
+        padding-bottom: 6rem;
+    }
+
+    &__inner {
+        display:        flex;
+        flex-direction: column;
+        align-items:    flex-start;
+        gap:            var(--hdx-space-8);
+
+        @media (min-width: @hdx-bp-xl) {
+            gap: var(--hdx-space-10);
+        }
+    }
+
+    &__header  { .hdx-section-header(); }
+    &__label   { .hdx-section-label(); }
+    &__heading { .hdx-section-heading(); }
+
+    &__actions {
+        display:   flex;
+        flex-wrap: wrap;
+        gap:       var(--hdx-space-4);
+    }
+}
