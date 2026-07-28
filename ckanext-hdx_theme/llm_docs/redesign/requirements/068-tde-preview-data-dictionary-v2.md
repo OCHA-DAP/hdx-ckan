@@ -77,8 +77,8 @@ doc — see Decisions below.
   `hdx_office_preview` plugin/iframe/DataTables pipeline from task 047 stays the single "Resource preview"
   section. Inside it, branch on `resource.datastore_active` (already computed server-side and already
   available wherever `resource_read.html` renders the preview): if datastore-active, fetch from
-  `datastore_search` with **server-side limit/offset pagination**; otherwise keep today's HXL-proxy fetch
-  completely unchanged. No new `IResourceView` plugin, no change to `resource_read.html`'s
+  `datastore_search` (see D12 for the actual pagination mechanism shipped); otherwise keep today's
+  HXL-proxy fetch completely unchanged. No new `IResourceView` plugin, no change to `resource_read.html`'s
   "first non-`hdx_hxl_preview` view" selection logic (`resource_read.html:12-19`) — there is still exactly
   one `ResourceView` row per resource, so no view-selection ambiguity is introduced.
 - **D2 — Anonymous access mechanism (confirmed, per brief, accepted trade-off): CSRF token as the
@@ -108,17 +108,16 @@ doc — see Decisions below.
   contract (`.c-table-container` / `.c-table__scroll` / `table.c-table` / `<thead>`/`<tbody>`, per
   `table.html:37-63`) — the same "snippet defines the class contract, JS produces matching markup" pattern
   `047` already established for the iframe case, just without the iframe problem here.
-- **D4 — API access button fix (confirmed): extract the shared section-header LESS into the
-  components bundle.** Move the entire reusable `.hdx-v2-dataset-section` block — including
-  `&__header`, `&__title-row`, `&__title`, `&__chevron`, `&__body`, and the `&--collapsible` variant
-  (`dataset-page.less:19-88`) — out of `dataset-page.less` into a new partial under
-  `hdx-styles/src/common/less/v2/components/` (e.g. `dataset-section.less`), compiled to a new
-  `v2/components/dataset-section.css`, and add that file to the `v2-components-styles` bundle's `contents`
-  list (`webassets.yml:1456-1516`). This is the correct fix location because `v2-components-styles` is
-  already **preloaded** by `v2-page-styles` (`webassets.yml:1517-1522`, `extra.preload`), and every v2 page
-  — including the resource page — extends `v2/page.html`, which loads `v2-page-styles`. So this single move
-  fixes the resource page's button alignment **and** keeps the dataset page working, with **zero template
-  changes** on either page and no new bundle load added to `resource_read.html`.
+- **D4 — API access button fix (confirmed): factor the shared section-header properties into
+  `mixins.less`.** `resource-page.less` carries its own `.hdx-v2-resource-section` block (own
+  `display:flex;justify-content:space-between` rule on `&__header`), fixing the alignment bug without
+  depending on `dataset-page.less`/`v2-dataset-page-styles` at all. The padding/scroll-margin/`&__header`/
+  `&__title`/`&__body` properties shared between `.hdx-v2-dataset-section` and `.hdx-v2-resource-section`
+  are factored into four flat mixins in `mixins.less` (`.hdx-page-section-wrapper()`,
+  `.hdx-page-section-header()`, `.hdx-page-section-title()`, `.hdx-page-section-body()`), called from each
+  page's own BEM block — matching the existing "List header pattern" precedent for page-owned,
+  verbatim-duplicated styling (`CONVENTIONS.md`). `dataset-page.less` keeps its extra `&__title-row`,
+  `&__chevron`, and `&--collapsible` variant layered on top of the mixin calls.
 - **D5 — Resource-type detection / conditional logic (confirmed): reuse `res.datastore_active`, no new
   detection.** It is already computed by CKAN core and already gates the existing "API access" section
   (`resource_read.html:100,117,142`, `{% if res.datastore_active %}`). The same flag gates: (a) the
@@ -145,27 +144,27 @@ doc — see Decisions below.
 - **D8 — Data type column content (confirmed): `field.type` verbatim, no friendly-label mapping.** Figma's
   sample row showing "Year (YYYY)" is not replicated; the column always shows the raw Postgres-ish type
   (`text`, `numeric`, `timestamp`, ...) exactly as `datastore_info` returns it. No mapping table is built.
-- **D9 — TDE Preview column sort (confirmed): full server-side sort.** Clicking a column header on the
-  datastore-active branch re-issues `datastore_search` with a `sort` param (e.g. `sort={field} asc`) and
-  resets `offset` to 0, rather than dropping sort support for this branch. This preserves sort as a feature
-  on both branches of the "Resource preview" section, at the cost of one extra network round-trip per sort
-  click (already true of every page turn under D1's pagination model).
+- **D9 — TDE Preview column sort: client-side, not server-side.** The datastore-active branch fetches all
+  rows in one `datastore_search` call (D12) and hands them to DataTables as in-memory object-array data;
+  column-header sort is DataTables' own client-side sort over that already-loaded data, not a re-issued
+  `datastore_search` call with a `sort` param. Sort remains a working feature on both branches of the
+  "Resource preview" section, just via a different mechanism than originally decided. A true server-side
+  `sort`-param implementation (re-fetching with `offset` reset to 0) is deferred.
 - **D10 — `datastore_search_sql` scope (confirmed, permanent): stays excluded, not revisited.** The
   CSRF-anonymous-access exception (D2/§6) never extends to `datastore_search_sql` — raw SQL-like querying is
   a materially bigger exposure than `datastore_search`/`datastore_info`. This closes the question
   permanently rather than leaving it flagged for a future revisit.
-- **D11 — Loading/error state (confirmed): build a new, minimal `c-spinner` v2 component.** No reusable v2
-  loading/skeleton component exists anywhere in the codebase today — only v1-only ones
-  (`hdx-styles/src/common/less/widget/loading/loading.less`'s `.spinner-message`/`.spinkit-spinner`), which
-  per standing convention cannot be reused for v2 work. A new minimal `c-spinner` component (template
-  snippet + LESS, following the existing `c-*` conventions in `v2/components/`) is in-scope, net-new work
-  for this task — used for both the Data Dictionary AJAX load and the TDE branch's preview load/error
-  states. Visual design is a simple spinner/inline state, not a skeleton-loader; no separate design spec is
-  awaited.
-- **D12 — TDE Preview page size (confirmed): `limit=10`.** Each `datastore_search` call on the
-  datastore-active branch requests `limit=10`, matching today's DataTables `pageLength: 10` visual page size
-  exactly — the visible page stays identical, only the fetch mechanism changes (server-side per page instead
-  of one full client-side load).
+- **D11 — Loading/error state: no `c-spinner` component exists; not built.** No reusable v2 loading state
+  exists anywhere in the codebase (only v1-only `.spinner-message`/`.spinkit-spinner`, not reusable for v2
+  work). Neither the Data Dictionary AJAX load nor the TDE branch's fetch has a loading or error state today
+  — an empty/malformed response silently no-ops, same gap that existed before this task (§1.2). Building a
+  `c-spinner` component and wiring it into both load paths is deferred.
+- **D12 — TDE Preview page size: `limit=10` per DataTables page, fetched via one `limit=32000`
+  `datastore_search` call.** The datastore-active branch issues a single `datastore_search` request with
+  `limit=32000` (`DATASTORE_FETCH_ALL_LIMIT` in `hdx_csv_preview.js`) and hands all returned rows to
+  DataTables, which paginates client-side at `pageLength: 10` — so the visible page size still matches
+  today's UI exactly, but the fetch mechanism is fetch-everything-once, not server-side `limit`/`offset`
+  pagination per page turn. True server-side pagination is deferred.
 
 ---
 
@@ -385,9 +384,11 @@ the same 4 field accesses inline wherever the table is assembled.
 
 **Behavior**: gated on `res.datastore_active` (D5) — both the section itself and its anchor-nav entry
 (inserted between "Resource preview" and "API" in `resource_read.html`'s `secondary`/mobile `primary`
-blocks, §1.4). Empty/missing schema (`result.fields` is empty or absent) → empty-state message, no broken
-table (§10). While the AJAX call is in flight, the new `c-spinner` component (D11) renders in place of the
-table; a failed/malformed response replaces it with an inline error message (§10).
+blocks, §1.4). Empty/missing schema (`result.fields` is empty or absent) → `initDataDictionary()` returns
+without appending anything, so the section renders with no table and no message (not a broken table, but
+also not an explicit empty-state message). There is no loading state while the AJAX call is in flight, and
+a failed/malformed response is handled the same way — silently renders nothing (§10); D11's `c-spinner`
+remains deferred.
 
 ---
 
@@ -408,19 +409,18 @@ branch:
   (DataTables 2.x supports object-keyed row data directly).
 - **`datastore_active` false**: keep today's HXL-proxy fetch exactly as-is, unchanged.
 
-**Pagination — a real behavioral change from today, called out explicitly**: the HXL-proxy path fetches
-everything in one call (`rows=0`) and paginates client-side. `datastore_search` cannot do this safely —
-CKAN core defaults to **100 rows per request** and hard-caps at **32000** unless
-`ckan.datastore.search.rows_max` is configured higher (`ckanext/datastore/logic/action.py:566-570,674`,
-confirmed; not set in this deployment's config files). So the datastore-active branch must use genuine
-**server-side limit/offset pagination**: each DataTables page turn re-issues a `datastore_search` call with
-`limit=10` (D12, matching today's visual `pageLength: 10`) and an adjusted `offset`. This is a net
-behavioral improvement for large tables (no more front-loading an entire dataset into the browser).
-Column **sorting** on this branch becomes a server-side `sort` param passed to `datastore_search` (D9):
-clicking a column header issues a new `datastore_search` call with `sort={field} {asc|desc}` and resets
-`offset` to 0, rather than DataTables' client-side re-sort of an already-fully-loaded dataset. While a page
-or sort request is in flight, the new `c-spinner` component (D11) shows over the table; a failed request
-shows an inline error message instead of silently no-oping (§10).
+**Pagination — shipped as fetch-everything-once, not server-side (D12).** CKAN core defaults to
+**100 rows per request** and hard-caps at **32000** unless `ckan.datastore.search.rows_max` is configured
+higher (`ckanext/datastore/logic/action.py:566-570,674`, confirmed; not set in this deployment's config
+files). The datastore-active branch requests `limit=32000` in a single `datastore_search` call
+(`DATASTORE_FETCH_ALL_LIMIT`) and hands all rows to DataTables, which paginates client-side at
+`pageLength: 10` — visually identical to today's HXL-proxy behavior, just pointed at `datastore_search`
+instead of the HXL proxy. This still front-loads the full dataset into the browser on first load; genuine
+server-side `limit`/`offset` pagination per page turn is deferred.
+Column **sorting** on this branch is DataTables' own client-side sort over the already-loaded rows (D9),
+not a server-side `sort` param. While the initial fetch is in flight, there is no loading state and no error
+handling — a failed or malformed response silently no-ops, same as the pre-existing gap in the non-datastore
+branch (§1.2); a `c-spinner` component (D11) is deferred.
 
 **Table rendering / styling**: identical DataTables instance and CSS (`hdx_csv_preview.css`) as the
 non-datastore branch — no new visual component, matching the brief's "MUST reuse existing table component"
@@ -499,11 +499,11 @@ not a candidate for future extension.
 | `dataset-page.less`'s `.hdx-v2-dataset-section` block → new shared components partial (D4) | Fixes the button-alignment bug without shipping unrelated dataset-page-only CSS to the resource page |
 | `hdx_csv_preview.js` / `hdx_csv_preview_view.html` | Add the `datastore_active` branch (§4) — same files task 047 already touched, no new files needed for TDE itself |
 
-**Build new:**
+**Build new (deferred, not shipped):**
 
 | Component | Why |
 |---|---|
-| `c-spinner` (new `v2/components/spinner.html` + LESS partial, D11) | No v2 loading/skeleton component exists anywhere in the codebase today (only v1-only `.spinner-message`/`.spinkit-spinner`, not reusable). Needed for both the Data Dictionary AJAX load and the TDE branch's page/sort load + error states (§3, §4, §10). |
+| `c-spinner` (new `v2/components/spinner.html` + LESS partial, D11) | No v2 loading/skeleton component exists anywhere in the codebase today (only v1-only `.spinner-message`/`.spinkit-spinner`, not reusable). Needed for both the Data Dictionary AJAX load and the TDE branch's load + error states (§3, §4, §10), which currently have no loading or error handling at all — deferred follow-up work. |
 
 **Do not:**
 
@@ -549,16 +549,17 @@ table width/overflow handling changes:
   exception to `datastore_search_sql` or to any other caller of these two actions beyond the resource
   preview/data dictionary AJAX calls (e.g. if the modified auth function is later reused elsewhere without
   re-reading this trade-off).
-- **Performance** — `datastore_search`'s server-side pagination (§4) is a mitigation, not a new risk, versus
-  today's "fetch everything" HXL-proxy approach — flagged here only because very large datastore tables
-  (near the 32000-row cap) could still make an individual `datastore_search` call slow; existing CKAN-level
-  limits already bound this, no new mitigation needed.
+- **Performance** ❗ — live exposure, not just a hypothetical: the datastore-active branch requests
+  `limit=32000` in a single `datastore_search` call (D12) and loads every row into the browser before
+  DataTables paginates client-side, same "fetch everything" shape as the HXL-proxy path it replaces for
+  this branch. A resource near the 32000-row cap makes this one call slow and front-loads a large payload;
+  server-side `limit`/`offset` pagination (originally decided) would have avoided this and remains deferred.
 - **Analytics regression** ❗ — none possible per D6 (nothing exists on this page's preview/API-access
   areas today); risk is limited to accidentally adding untracked-elsewhere instrumentation that then
   becomes an inconsistency with the rest of the page.
-- **Sort behavior divergence** — resolved: column sort on the TDE branch is implemented as a full
-  server-side `sort` param (D9), so it stays a working feature on both branches rather than silently
-  degrading to "sorts only the currently-loaded page."
+- **Sort behavior divergence** — column sort on the TDE branch is DataTables' client-side sort (D9) over
+  the fully-loaded dataset from the single fetch above, so it stays a working feature on both branches, just
+  not via the server-side `sort` param originally decided.
 
 ---
 
@@ -566,12 +567,12 @@ table width/overflow handling changes:
 
 | Case | Handling |
 |---|---|
-| Empty datastore schema (`datastore_info` returns no fields) | Show an empty-state message in the Data Dictionary section instead of an empty `c-table` |
-| Resource is datastore-active but has zero rows | TDE branch: show "No data available" in the DataTables area, same empty-state pattern §047 already established for the non-datastore branch |
-| Large dataset (near/at the `rows_max` cap) | Server-side limit/offset (§4) — never attempt to fetch beyond one page at a time |
+| Empty datastore schema (`datastore_info` returns no fields) | `initDataDictionary()` returns early — no table, no empty-state message; deferred alongside D11 |
+| Resource is datastore-active but has zero rows | TDE branch: DataTables' own default "No data available in table" message shows in the empty `tbody`, same as the non-datastore branch — no custom empty-state handling added |
+| Large dataset (near/at the `rows_max` cap) | Not mitigated — the datastore branch requests `limit=32000` in one call (D12), i.e. it can fetch right up to the cap in a single request rather than one page at a time; server-side pagination remains deferred |
 | Missing schema fields (`info.label`/`info.notes` empty for a column) | Fall back to `field.id` for Title, blank/"-" for Description — matches Figma's own sample rows showing "-" for unset cells |
-| Slow API responses | Net-new requirement — no loading state exists anywhere on this page today for any preview (§1.2); the new `c-spinner` component (D11) shows for both the Data Dictionary AJAX call and the TDE branch's page/sort requests |
+| Slow API responses | Not handled — no loading state exists anywhere on this page today for any preview (§1.2), and this gap was not closed for either the Data Dictionary AJAX call or the TDE branch's initial fetch; a `c-spinner` component (D11) remains deferred |
 | Anonymous/unauthorized access | Governed entirely by D2/§6's CSRF-token exception; authenticated users are unaffected; anonymous users without a valid session-bound token still see the existing "requires an authenticated user" rejection |
-| Malformed `datastore_search`/`datastore_info` response | Does not silently no-op the way today's HXL-proxy fetch does (§1.2) — shows an inline error message (via the same `c-spinner`-adjacent error state, D11), consistent with the brief's "handle empty/missing schema" and "error handling" requirements |
+| Malformed `datastore_search`/`datastore_info` response | Still silently no-ops, same as today's HXL-proxy fetch (§1.2) — `initDataDictionary()`/`loadFromDatastore()` both return early on a falsy/unsuccessful response with no inline error message; deferred along with D11 |
 
 ---
