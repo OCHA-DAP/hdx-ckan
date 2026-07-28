@@ -327,15 +327,20 @@
   opacity: 0;
   pointer-events: none;
 }
+.c-tooltip-anchor .c-tooltip:not([data-popper-placement]) {
+  bottom: calc(100% + var(--hdx-space-1));
+  right: 0;
+  left: auto;
+}
 .c-tooltip-anchor .c-tooltip[data-popper-placement^="bottom"] .c-tooltip__arrow {
   top: -1px;
   bottom: auto;
   left: 50%;
   transform: translateX(-50%) rotate(180deg);
 }
-.c-tooltip-anchor .c-info-icon:hover ~ .c-tooltip,
-.c-tooltip-anchor .c-info-icon:focus-visible ~ .c-tooltip,
-.c-tooltip-anchor .c-info-icon.is-open ~ .c-tooltip {
+.c-tooltip-anchor .c-tooltip-trigger:hover ~ .c-tooltip,
+.c-tooltip-anchor .c-tooltip-trigger:focus-visible ~ .c-tooltip,
+.c-tooltip-anchor .c-tooltip-trigger.is-open ~ .c-tooltip {
   visibility: visible;
   opacity: 1;
   pointer-events: auto;

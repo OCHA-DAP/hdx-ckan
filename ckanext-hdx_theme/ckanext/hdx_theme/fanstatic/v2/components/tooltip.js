@@ -2,11 +2,11 @@
  * tooltip.js
  *
  * Site-wide positioning + open/close behaviour for every `.c-tooltip-anchor`
- * (icon + tooltip pair). Visibility itself stays CSS-driven (hover /
- * focus-visible / .is-open toggle opacity+visibility in label.less) — this
- * module only computes WHERE the tooltip goes, via Popper.js's flip +
- * preventOverflow modifiers, so it always stays inside the viewport instead
- * of the old fixed right-anchored-above-icon default.
+ * (trigger + tooltip pair, trigger marked with `.c-tooltip-trigger`).
+ * Visibility itself stays CSS-driven (hover / focus-visible / .is-open
+ * toggle opacity+visibility in label.less) — this module only computes
+ * WHERE the tooltip goes, via Popper.js's flip + preventOverflow modifiers,
+ * so it always stays inside the viewport instead of a fixed side.
  *
  * Requires window.Popper (vendor/popperjs.js, loaded on every page via
  * hdx_theme/vendor-vendor — see fanstatic/webassets.yml).
@@ -21,35 +21,27 @@
 
     if (!window.Popper) return;
 
-    var rootStyle = null;
-
-    function tokenPx(name) {
-        if (!rootStyle) rootStyle = getComputedStyle(document.documentElement);
-        var value = parseFloat(rootStyle.getPropertyValue(name));
-        return isNaN(value) ? 0 : value * 16;
-    }
-
     document.addEventListener('DOMContentLoaded', function () {
         var anchorEls = document.querySelectorAll('.c-tooltip-anchor');
         if (!anchorEls.length) return;
 
-        var gap = tokenPx('--hdx-space-1') || 4;
+        var gap = window.hdxV2.tokenPx('--hdx-space-1') || 4;
         var instances = [];
 
         anchorEls.forEach(function (anchor) {
-            var icon = anchor.querySelector('.c-info-icon');
+            var trigger = anchor.querySelector('.c-tooltip-trigger');
             var tooltip = anchor.querySelector('.c-tooltip');
-            if (!icon || !tooltip) return;
+            if (!trigger || !tooltip) return;
 
             var arrow = tooltip.querySelector('.c-tooltip__arrow');
             var popper = null;
 
             var instance = {
-                icon: icon,
+                trigger: trigger,
                 isWanted: function () {
-                    return icon.classList.contains('is-open') ||
-                        icon.matches(':hover') ||
-                        document.activeElement === icon;
+                    return trigger.classList.contains('is-open') ||
+                        trigger.matches(':hover') ||
+                        document.activeElement === trigger;
                 },
                 show: function () {
                     if (popper) {
@@ -62,7 +54,7 @@
                         { name: 'preventOverflow', options: { altAxis: true, rootBoundary: 'viewport', padding: 8 } }
                     ];
                     if (arrow) modifiers.push({ name: 'arrow', options: { element: arrow, padding: 8 } });
-                    popper = window.Popper.createPopper(icon, tooltip, {
+                    popper = window.Popper.createPopper(trigger, tooltip, {
                         placement: 'top',
                         modifiers: modifiers
                     });
@@ -78,18 +70,18 @@
             };
             instances.push(instance);
 
-            icon.addEventListener('mouseenter', function () { instance.refresh(); });
-            icon.addEventListener('mouseleave', function () { instance.refresh(); });
-            icon.addEventListener('focusin', function () { instance.refresh(); });
-            icon.addEventListener('focusout', function () { instance.refresh(); });
+            trigger.addEventListener('mouseenter', function () { instance.refresh(); });
+            trigger.addEventListener('mouseleave', function () { instance.refresh(); });
+            trigger.addEventListener('focusin', function () { instance.refresh(); });
+            trigger.addEventListener('focusout', function () { instance.refresh(); });
 
-            icon.addEventListener('click', function (e) {
+            trigger.addEventListener('click', function (e) {
                 e.stopPropagation();
-                var isOpen = icon.classList.contains('is-open');
+                var isOpen = trigger.classList.contains('is-open');
                 closeAllTooltips();
                 if (!isOpen) {
-                    icon.classList.add('is-open');
-                    icon.setAttribute('aria-expanded', 'true');
+                    trigger.classList.add('is-open');
+                    trigger.setAttribute('aria-expanded', 'true');
                     instance.refresh();
                 }
             });
@@ -97,8 +89,8 @@
 
         function closeAllTooltips() {
             instances.forEach(function (instance) {
-                instance.icon.classList.remove('is-open');
-                instance.icon.setAttribute('aria-expanded', 'false');
+                instance.trigger.classList.remove('is-open');
+                instance.trigger.setAttribute('aria-expanded', 'false');
                 instance.refresh();
             });
         }
@@ -106,10 +98,10 @@
         // Escape closes any open tooltip and returns focus to its trigger.
         document.addEventListener('keydown', function (e) {
             if (e.key !== 'Escape') return;
-            var openIcon = document.querySelector('.c-tooltip-anchor .c-info-icon.is-open');
-            if (openIcon) {
+            var openTrigger = document.querySelector('.c-tooltip-anchor .c-tooltip-trigger.is-open');
+            if (openTrigger) {
                 closeAllTooltips();
-                openIcon.focus();
+                openTrigger.focus();
             }
         });
 

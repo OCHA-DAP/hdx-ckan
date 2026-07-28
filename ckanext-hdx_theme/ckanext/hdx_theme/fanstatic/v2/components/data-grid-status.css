@@ -43,7 +43,3 @@
 .c-data-grid-status[aria-describedby] {
   cursor: default;
 }
-.c-tooltip-anchor .c-data-grid-status:hover ~ .c-tooltip,
-.c-tooltip-anchor .c-data-grid-status:focus-visible ~ .c-tooltip {
-  display: block;
-}

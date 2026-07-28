@@ -421,12 +421,12 @@
 
 
 // ────────────────────────────────────────────────────────────
-// 5. c-tooltip-anchor — pairs a trigger icon with a tooltip
-//    whose position is computed by tooltip.js (Popper.js) so
-//    it always fits the viewport, flipping/shifting as needed
-//    instead of a fixed side. Popper writes its own top/left
-//    via inline styles; the position:absolute here is only a
-//    pre-JS fallback.
+// 5. c-tooltip-anchor — pairs a trigger (.c-tooltip-trigger) with
+//    a tooltip whose position is computed by tooltip.js (Popper.js)
+//    so it always fits the viewport, flipping/shifting as needed
+//    instead of a fixed side. Popper writes its own top/left via
+//    inline styles once attached; the &:not([data-popper-placement])
+//    fallback below covers the pre-JS / no-JS state.
 // ────────────────────────────────────────────────────────────
 
 .c-tooltip-anchor {
@@ -442,6 +442,12 @@
         opacity:        0;
         pointer-events: none;
 
+        &:not([data-popper-placement]) {
+            bottom: calc(100% + var(--hdx-space-1));
+            right:  0;
+            left:   auto;
+        }
+
         // Flipped case: Popper placed the box below the anchor, so the
         // arrow needs to point up instead of down.
         &[data-popper-placement^="bottom"] .c-tooltip__arrow {
@@ -452,9 +458,9 @@
         }
     }
 
-    .c-info-icon:hover ~ .c-tooltip,
-    .c-info-icon:focus-visible ~ .c-tooltip,
-    .c-info-icon.is-open ~ .c-tooltip {
+    .c-tooltip-trigger:hover ~ .c-tooltip,
+    .c-tooltip-trigger:focus-visible ~ .c-tooltip,
+    .c-tooltip-trigger.is-open ~ .c-tooltip {
         visibility:     visible;
         opacity:        1;
         pointer-events: auto;
