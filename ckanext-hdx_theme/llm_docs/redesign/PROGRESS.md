@@ -201,6 +201,8 @@ Bundle configuration:
 - `hdx_theme/v2-dataset-page-styles` — dataset page: adds `v2/dataset-page.css`
 - `hdx_theme/v2-dataset-page-scripts` — dataset page: adds `v2/dataset-page.js` (section accordion)
 - `hdx_theme/v2-resource-page-styles` — resource page: adds `v2/resource-page.css`
+- `hdx_theme/v2-resource-page-scripts` — resource page: adds `v2/resource-page.js` (Data dictionary AJAX
+  load via `datastore_info`; loaded only when `res.datastore_active`)
 - `hdx_theme/v2-home-page-styles` — homepage: adds `v2/home-page.css` + `v2/bar-chart.css`
 - `hdx_theme/v2-home-page-scripts` — homepage: adds Hammer.js, `v2/highlights-carousel.js`, `v2/bar-chart.js`
 - `hdx_theme/v2-all-locations-page-styles` — All Locations page: adds `v2/all-locations-page.css`

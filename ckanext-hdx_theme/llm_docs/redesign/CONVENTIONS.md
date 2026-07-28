@@ -211,6 +211,19 @@ from each page's own `__title`/`__count`/`__empty` blocks instead of re-declarin
 
 ---
 
+## Page-section pattern — `.hdx-page-section-wrapper()` / `-header()` / `-title()` / `-body()`
+
+Pages with their own anchor-linked content sections (`hdx-v2-dataset-section` on the dataset page,
+`hdx-v2-resource-section` on the resource page) own their own BEM block rather than a shared `c-*`
+component — each page has its own extra variants (the dataset page adds `&__title-row`, `&__chevron`,
+and a `&--collapsible` modifier the resource page doesn't need). The padding/scroll-margin/header/title/
+body styling itself *was* verbatim-duplicated between the two, so it's factored into shared mixins in
+`mixins.less` (`.hdx-page-section-wrapper()`, `.hdx-page-section-header()`, `.hdx-page-section-title()`,
+`.hdx-page-section-body()`) — call these from each page's own `&`/`__header`/`__title`/`__body` blocks
+instead of re-declaring the rules.
+
+---
+
 ## Design tokens
 
 - CSS custom properties: `--hdx-<category>-<step>` (e.g. `--hdx-brand-5`, `--hdx-space-3`)
