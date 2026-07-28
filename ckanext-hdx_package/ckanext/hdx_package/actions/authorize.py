@@ -245,21 +245,29 @@ def _datastore_search_for_authenticated_users_or_valid_csrf(
     page's Data Dictionary and TDE preview can call these two actions directly from client JS for
     anonymous visitors, who are issued a CSRF token on every page load regardless of login state.
     """
-    if context.get('auth_user_obj').is_authenticated or _request_has_valid_csrf_token():
+    user_obj = context.get('auth_user_obj') or context.get('user_obj')
+    is_authenticated = bool(getattr(user_obj, 'is_authenticated', False))
+
+    if is_authenticated or _request_has_valid_csrf_token():
         return next_auth(context, data_dict)
     else:
         return {'success': False, 'msg': f'Action {datastore_action_name} requires an authenticated user'}
 
 
 def _request_has_valid_csrf_token() -> bool:
+    if not flask.has_request_context():
+        return False
+
     token = flask.request.headers.get('X-CSRFToken') or flask.request.headers.get('X-CSRF-Token')
     if not token:
         return False
+
     try:
         validate_csrf(token)
-        return True
     except Exception:
         return False
+
+    return True
 
 
 def hdx_manage_resource_sdd_report(context: Context, data_dict: DataDict):
