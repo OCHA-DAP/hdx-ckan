@@ -936,10 +936,14 @@ def hdx_get_carousel_list():
     return logic.get_action('hdx_carousel_settings_show')({'max_items': 3}, {})
 
 
-def hdx_get_quick_links_list(archived=None):
+def hdx_get_quick_links_list(archived=None, exclude_crisis=False):
     result = logic.get_action('hdx_quick_links_settings_show')({}, {})
     if archived in (True, False):
         result = [item for item in result if item.get('archived',False) == archived]
+    if exclude_crisis:
+        result = [item for item in result
+                  if 'crisis' not in item.get('title', '').lower()
+                  and 'crisis' not in item.get('url', '').lower()]
     return result
 
 
