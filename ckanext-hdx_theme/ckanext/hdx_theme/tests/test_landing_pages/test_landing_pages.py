@@ -1,7 +1,10 @@
+from unittest import mock
+
 import pytest
 
 import ckan.plugins.toolkit as tk
 import ckan.tests.factories as factories
+import ckanext.hdx_theme.tests.mock_helper as mh
 
 h = tk.h
 ValidationError = tk.ValidationError
@@ -31,7 +34,9 @@ class TestLandingPages(object):
         assert '<h2 class="hdx-v2-hapi-section-heading">Partners</h2>' in response.body
         assert 'landing_pages/partners' in response.body
 
-    def test_signals_landing_page_without_auth(self, app):
+    @mock.patch('ckanext.hdx_theme.views.landing_pages.cached_last_three_signal_cards',
+                return_value=mh.mock_signal_cards())
+    def test_signals_landing_page_without_auth(self, mock_cards, app):
         url = h.url_for('hdx_landing_pages.signals')
         response = app.get(url)
 
