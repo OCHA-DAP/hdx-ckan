@@ -137,7 +137,7 @@
             id='user_info_accept_terms',
             name='user_info_accept_terms',
             required=True,
-            label=CONST.CHECKBOX_TERMS_OF_SERVICE.format(h.url_for('hdx_faqs.read', category='terms')),
+            label=CONST.CHECKBOX_TERMS_OF_SERVICE.format(h.HDX_CONST('DOCUMENTATION_LINKS')['TERMS_OF_SERVICE']),
             attrs={'data-validation': 'checkbox', 'data-validation-error': CONST.CHECKBOX_TERMS_OF_SERVICE_ERROR} %}
       </div>
 

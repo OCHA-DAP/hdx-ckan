@@ -26,25 +26,8 @@
     var MAX_VISIBLE_BARS = 7;      // v1 zoom window: MAX_NUMBER_OF_VALUES = 7.5
     var MAX_LABEL_WIDTH = 174;     // px — Figma: 10.875rem dataset-name column
 
-    var rootStyle = null;
-
-    function token(name) {
-        if (!rootStyle) rootStyle = getComputedStyle(document.documentElement);
-        return rootStyle.getPropertyValue(name).trim();
-    }
-
-    // Reads a rem-based token and converts to a plain px number, for the
-    // places Chart.js needs a number rather than a CSS length string.
-    function tokenPx(name) {
-        var raw = token(name);
-        var value = parseFloat(raw);
-        if (isNaN(value)) return 0;
-        if (raw.indexOf('rem') !== -1) {
-            var rootFontSize = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
-            return value * rootFontSize;
-        }
-        return value;
-    }
+    var token = window.hdxV2.token;
+    var tokenPx = window.hdxV2.tokenPx;
 
     function tickFont() {
         return { family: token('--hdx-font-body'), size: tokenPx('--hdx-fs-xs') };

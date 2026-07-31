@@ -50,6 +50,13 @@
   {% asset 'hdx_theme/v2-resource-page-styles' %}
 {% endblock %}
 
+{% block scripts %}
+  {{ super() }}
+  {% if res.datastore_active %}
+    {% asset 'hdx_theme/v2-resource-page-scripts' %}
+  {% endif %}
+{% endblock %}
+
 {# ── Breadcrumb ──────────────────────────────────────────── #}
 {% block breadcrumb_items %}
   {% snippet 'v2/components/breadcrumb.html',
@@ -98,7 +105,8 @@
     {% set ns.anchor_items = ns.anchor_items + [{'label': _('Resource preview'), 'href': '#resource-preview', 'active': True}] %}
   {% endif %}
   {% if res.datastore_active %}
-    {% set ns.anchor_items = ns.anchor_items + [{'label': _('API'), 'href': '#api-access', 'active': not _data_explorer}] %}
+    {% set ns.anchor_items = ns.anchor_items + [{'label': _('Data dictionary'), 'href': '#data-dictionary', 'active': not _data_explorer}] %}
+    {% set ns.anchor_items = ns.anchor_items + [{'label': _('API'), 'href': '#api-access', 'active': False}] %}
   {% endif %}
   {% snippet 'v2/components/anchor-links.html',
       items=ns.anchor_items,
@@ -115,7 +123,8 @@
     {% set ns.anchor_items = ns.anchor_items + [{'label': _('Resource preview'), 'href': '#resource-preview', 'active': True}] %}
   {% endif %}
   {% if res.datastore_active %}
-    {% set ns.anchor_items = ns.anchor_items + [{'label': _('API'), 'href': '#api-access', 'active': not _data_explorer}] %}
+    {% set ns.anchor_items = ns.anchor_items + [{'label': _('Data dictionary'), 'href': '#data-dictionary', 'active': not _data_explorer}] %}
+    {% set ns.anchor_items = ns.anchor_items + [{'label': _('API'), 'href': '#api-access', 'active': False}] %}
   {% endif %}
   {% snippet 'v2/components/anchor-links.html',
       items=ns.anchor_items,
@@ -123,11 +132,11 @@
 
   {# ── Resource preview (Data Explorer only, no tab nav) ─── #}
   {% if _data_explorer and h.check_access('hdx_resource_download', res) %}
-  <section class="hdx-v2-dataset-section" id="resource-preview">
-    <div class="hdx-v2-dataset-section__header">
-      <h2 class="hdx-v2-dataset-section__title">{{ _('Resource preview') }}</h2>
+  <section class="hdx-v2-resource-section" id="resource-preview">
+    <div class="hdx-v2-resource-section__header">
+      <h2 class="hdx-v2-resource-section__title">{{ _('Resource preview') }}</h2>
     </div>
-    <div class="hdx-v2-dataset-section__body">
+    <div class="hdx-v2-resource-section__body">
       <div class="resource-view">
         {% snippet 'package/snippets/resource_view.html',
            resource_view=_data_explorer,
@@ -138,11 +147,27 @@
   </section>
   {% endif %}
 
+  {% if _data_explorer and res.datastore_active %}<hr class="c-divider">{% endif %}
+
+  {# ── Data dictionary (conditional) ─── #}
+  {% if res.datastore_active %}
+  <section class="hdx-v2-resource-section" id="data-dictionary" data-module="data-dictionary" data-resource-id="{{ res.id }}">
+    <div class="hdx-v2-resource-section__header">
+      <h2 class="hdx-v2-resource-section__title">{{ _('Data dictionary') }}</h2>
+    </div>
+    <div class="hdx-v2-resource-section__body">
+      <div class="hdx-v2-data-dictionary-container"></div>
+    </div>
+  </section>
+
+  <hr class="c-divider">
+  {% endif %}
+
   {# ── API access (conditional) ─── #}
   {% if res.datastore_active %}
-  <section class="hdx-v2-dataset-section" id="api-access">
-    <div class="hdx-v2-dataset-section__header">
-      <h2 class="hdx-v2-dataset-section__title">{{ _('API access') }}</h2>
+  <section class="hdx-v2-resource-section" id="api-access">
+    <div class="hdx-v2-resource-section__header">
+      <h2 class="hdx-v2-resource-section__title">{{ _('API access') }}</h2>
       {% snippet 'v2/components/button.html',
           style='tertiary', size='m',
           label=_('See documentation'),
@@ -152,7 +177,7 @@
           href='https://un-ocha-centre-for-humanitarian.gitbook.io/hdx-docs/build-with-hdx/build-with-hdx/hdx-api/tabular-data-endpoints',
           attrs={'target': '_blank', 'rel': 'noopener'} %}
     </div>
-    <div class="hdx-v2-dataset-section__body">
+    <div class="hdx-v2-resource-section__body">
       <div class="hdx-v2-resource-api">
 
         {# Block 1: API token #}

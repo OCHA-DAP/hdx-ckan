@@ -1,0 +1,42 @@
+// ============================================================
+// archived-dataviz-page.less
+// Archived Dataviz (/archive) — v2 page-specific styles
+// ============================================================
+
+@import "mixins.less";
+
+.hdx-v2-archived-dataviz {
+    padding: var(--hdx-space-6) 0 var(--hdx-space-10);
+
+    @media (min-width: @hdx-bp-md) {
+        padding: var(--hdx-space-8) 0 var(--hdx-space-10);
+    }
+
+    @media (min-width: @hdx-bp-xl) {
+        padding: var(--hdx-space-10) 0;
+    }
+
+    &__header {
+        display:      flex;
+        align-items:  center;
+        gap:          var(--hdx-space-2);
+        margin-bottom: var(--hdx-space-6);
+    }
+
+    &__title {
+        .hdx-list-header-title();
+        margin: 0;
+    }
+
+    &__count {
+        .hdx-list-header-count();
+    }
+
+    &__row {
+        padding: var(--hdx-space-6) 0;
+    }
+
+    &__empty {
+        .hdx-list-header-empty();
+    }
+}

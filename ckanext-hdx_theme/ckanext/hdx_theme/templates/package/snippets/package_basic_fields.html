@@ -198,7 +198,7 @@
                     {% trans %}
                         What are the Terms of Use for this dataset ? How can others re-use it?
                     {% endtrans %}
-                    {% link_for _('Read More.'), named_route='hdx_faqs.read', category='licenses' %}
+                    <a href="{{ h.HDX_CONST('DOCUMENTATION_LINKS')['DATA_LICENSES'] }}" target="_blank">{{ _('Read More.') }}</a>
                 </div>
             </div>
         {% endif %}
