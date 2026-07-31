@@ -452,3 +452,10 @@ groups:
         default:
         example: "https://docs.google.com/spreadsheets/d/e/2PACX-123456/pub?gid=1&single=true&output=csv"
         description: "URL to a CSV file of approved tags. Must have one column: 'approved tags'"
+
+  - annotation: HDX Signals
+    options:
+      - key: hdx.signals.csv
+        default:
+        example: "https://data.humdata.org/dataset/464950af-0d57-47ae-a1fa-b4413b0adaf7/resource/49056751-af41-430e-92e8-81c4b0e5b38f/download/hdx_signals.csv"
+        description: "URL to the HDX Signals CSV. Must have columns: location, indicator_id, date, campaign_date, summary_short, plot, hdx_url, campaign_url"

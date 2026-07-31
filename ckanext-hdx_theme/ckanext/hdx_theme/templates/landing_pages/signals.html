@@ -50,26 +50,30 @@
           cta_icon_src='v2/icons/bell.svg',
           cta_href='#signup',
           extra_classes='c-page-header--underlined' %}
-      <div class="hdx-v2-signals-cards">
-        <div class="hdx-v2-signals-cards__inner">
-          {% for card in signal_cards %}
-            <div class="hdx-v2-signal-slide">
-              {% snippet 'v2/components/signal-card.html',
-                  location=card.location,
-                  date=card.date,
-                  type=card.type,
-                  image_src=(card.image_src if card.image_src and card.image_src.startswith('http') else (h.url_for_static(card.image_src) if card.image_src else '')),
-                  source_label=card.source_label,
-                  source_href=card.source_href,
-                  cta_label=card.cta_label,
-                  cta_href=card.cta_href %}
-            </div>
-          {% endfor %}
+      {% if signal_cards %}
+        <div class="hdx-v2-signals-cards">
+          <div class="hdx-v2-signals-cards__inner">
+            {% for card in signal_cards %}
+              <div class="hdx-v2-signal-slide">
+                {% snippet 'v2/components/signal-card.html',
+                    location=card.location,
+                    date=card.date,
+                    type=card.type,
+                    title=card.title,
+                    description=card.description,
+                    image_src=(card.image_src if card.image_src and card.image_src.startswith('http') else (h.url_for_static(card.image_src) if card.image_src else '')),
+                    source_label=card.source_label,
+                    source_href=card.source_href,
+                    cta_label=card.cta_label,
+                    cta_href=card.cta_href %}
+              </div>
+            {% endfor %}
+          </div>
+          <div class="hdx-v2-signals-carousel-footer">
+            <div class="hdx-v2-signals-dots"></div>
+          </div>
         </div>
-        <div class="hdx-v2-signals-carousel-footer">
-          <div class="hdx-v2-signals-dots"></div>
-        </div>
-      </div>
+      {% endif %}
     </div>
   </div>
 {% endblock %}

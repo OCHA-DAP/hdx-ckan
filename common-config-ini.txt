@@ -378,6 +378,7 @@ hdx.notifications.disabled_objects_csv = https://docs.google.com/spreadsheets/d/
 
 hdx.approved_tags.csv = https://docs.google.com/spreadsheets/d/e/2PACX-1vQJKjr25NZAIQELrFnUhVnL-7SxC8SwW9I6usm5Xvwyw00zRC-DhlLh74EVniX732w_BDFoQLrNDKKL/pub?gid=1261258630&single=true&output=csv
 
+hdx.signals.csv = https://data.humdata.org/dataset/464950af-0d57-47ae-a1fa-b4413b0adaf7/resource/49056751-af41-430e-92e8-81c4b0e5b38f/download/hdx_signals.csv
 
 # Datapusher Plus - HDX specific settings
 hdx.datastore.enabled_objects_csv = https://docs.google.com/spreadsheets/d/e/2PACX-1vStS317Pew-MCRc-6qYJN6nMEGGO2-XvLd7ihvVbXUZX-Nj_0k7HTIekCQicrXI_NUqMTLvf3fGSv8s/pub?gid=0&single=true&output=csv

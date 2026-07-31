@@ -192,3 +192,33 @@ def cache_only_if_truthy_wrapper(region: CacheRegion, *args, **kwargs):
         return wrapper
 
     return decorator
+
+
+_SIGNALS_CACHE_KEY = 'signals_data:last_three_cards'
+_SIGNALS_CACHE_TTL = 60 * 10
+
+
+def cached_last_three_signal_cards():
+    from ckanext.hdx_theme.helpers.helpers import hdx_fetch_last_three_signal_cards
+
+    cached = dogpile_requests_region.get(_SIGNALS_CACHE_KEY, expiration_time=_SIGNALS_CACHE_TTL)
+    if cached is not NO_VALUE:
+        return cached
+
+    try:
+        result = hdx_fetch_last_three_signal_cards()
+    except Exception as e:
+        log.error(f'Failed to refresh HDX Signals cards: {e}')
+        result = None
+
+    if result:
+        log.info('Creating cache for last three HDX Signals cards')
+        dogpile_requests_region.set(_SIGNALS_CACHE_KEY, result)
+        return result
+
+    stale = dogpile_requests_region.get(_SIGNALS_CACHE_KEY, ignore_expiration=True)
+    if stale is not NO_VALUE:
+        log.warning('Serving stale HDX Signals cards after failed refresh')
+        return stale
+
+    return []
