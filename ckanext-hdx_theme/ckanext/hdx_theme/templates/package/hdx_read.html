@@ -45,6 +45,9 @@
   {{ super() }}
   <meta property="og:title" content="{{ h.dataset_display_name(pkg) }} - {{ g.site_title }}">
   <meta property="og:description" content="{{ page_description }}">
+  <script type="application/ld+json">
+    {{ h.structured_data(pkg, ['hdx_schemaorg'])|safe }}
+  </script>
 {% endblock -%}
 
 {% set sidebar_class    = 'hdx-v2-content-columns__sidebar hdx-v2-content-columns__sidebar--xl-only hdx-v2-dataset-sidebar' %}
@@ -540,13 +543,6 @@
 
 {% block post_primary %}
 
-{% endblock %}
-
-{% block head_extras %}
-  {{ super() }}
-  <script type="application/ld+json">
-    {{ h.structured_data(pkg, ['hdx_schemaorg'])|safe }}
-  </script>
 {% endblock %}
 
 {% block scripts %}
