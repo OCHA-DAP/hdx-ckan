@@ -1,7 +1,9 @@
+import csv
 import json
 import datetime
 import logging
 import re
+import requests
 import six
 import six.moves.urllib.parse as urlparse
 
@@ -945,6 +947,63 @@ def hdx_get_quick_links_list(archived=None, exclude_crisis=False):
         result = [item for item in result
                   if not item.get('url', '').lower().startswith(crisis_prefixes)]
     return result
+
+
+def hdx_fetch_last_three_signal_cards():
+    from ckanext.hdx_theme.helpers.ui_constants.landing_pages.signals import \
+        SIGNAL_CARD_INDICATOR_CATEGORIES
+
+    url = config.get('hdx.signals.csv')
+    if not url:
+        raise Exception('No URL configured for hdx.signals.csv')
+
+    response = requests.get(url, timeout=10)
+    response.raise_for_status()
+
+    csv_reader = csv.DictReader(response.text.splitlines())
+    required_columns = ['location', 'indicator_id', 'date', 'campaign_date',
+                         'summary_short', 'plot', 'hdx_url', 'campaign_url']
+    if csv_reader.fieldnames is None or not all(col in csv_reader.fieldnames for col in required_columns):
+        raise Exception('HDX Signals CSV is missing one or more required columns: {}'.format(required_columns))
+
+    rows = list(csv_reader)
+    rows.sort(key=lambda r: (r.get('campaign_date', ''), r.get('date', ''), r.get('location', '')),
+              reverse=True)
+
+    def _safe_href(value):
+        if not value:
+            return '#'
+        parts = urlparse.urlparse(value)
+        if parts.scheme in ('http', 'https') or (parts.scheme == '' and value.startswith('/')):
+            return value
+        return '#'
+
+    def _safe_img_src(value):
+        if not value:
+            return ''
+        parts = urlparse.urlparse(value)
+        return value if parts.scheme in ('http', 'https') else ''
+
+    cards = []
+    for row in rows[:3]:
+        try:
+            campaign_date = datetime.datetime.strptime(row.get('campaign_date', ''), '%Y-%m-%d').strftime('%b %d, %Y')
+        except ValueError:
+            campaign_date = row.get('campaign_date', '')
+        cards.append({
+            'location': row.get('location', ''),
+            'date': campaign_date,
+            'type': SIGNAL_CARD_INDICATOR_CATEGORIES.get(row.get('indicator_id'), ''),
+            'title': row.get('summary_short', ''),
+            'description': '',
+            'image_src': _safe_img_src(row.get('plot', '')),
+            'image_alt': row.get('summary_short', ''),
+            'source_label': 'Source',
+            'source_href': _safe_href(row.get('hdx_url', '')),
+            'cta_label': 'See this signal',
+            'cta_href': _safe_href(row.get('campaign_url', '')),
+        })
+    return cards
 
 
 def _get_context():

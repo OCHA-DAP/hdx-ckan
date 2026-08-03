@@ -217,7 +217,7 @@ Bundle configuration:
 - `hdx_theme/v2-hapi-landing-page-styles` — HAPI landing page: adds `v2/hapi-landing-page.css`
 - `hdx_theme/v2-carousel-scripts` — shared carousel lib: `vendor/hammer/hammer.js` + `v2/carousel.js`; loaded explicitly by each page template that uses the carousel (no preload)
 - `hdx_theme/v2-signals-landing-page-styles` — Signals landing page: adds `v2/signals-landing-page.css` + `v2/components/signal-card.css`
-- `hdx_theme/v2-signals-landing-page-scripts` — Signals landing page: adds `v2/signals-landing-page.js` + `landing_pages/hdx_signals.js`; requires `v2-carousel-scripts` loaded first in the template
+- `hdx_theme/v2-signals-landing-page-scripts` — Signals landing page: adds `v2/signals-carousel.js` + `landing_pages/hdx_signals.js`; requires `v2-carousel-scripts` loaded first in the template
 - `hdx_theme/v2-signup-scripts` — Signup scripts: `onboarding/came-from-input.js` (vanilla JS rewrite in place) + `onboarding/confirm-page-leave.js` (vanilla JS rewrite in place); loaded on user-info and change-email pages
 - `hdx_theme/v2-form-validator-scripts` — Form validation: vanilla JS validator (`v2/form-validator.js`); activated by `data-hdx-v2-form-validator` on `<form>` elements; loaded by notification platform templates and signup form pages (user-info, change-email)
 - `hdx_theme/v2-error-page-styles` — 404/403/Server Error page: adds `v2/error-page.css`; no scripts bundle (page has no interactive behavior)

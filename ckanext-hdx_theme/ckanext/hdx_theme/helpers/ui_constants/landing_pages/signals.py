@@ -91,44 +91,12 @@ PARTNERS_CONSTANTS = [
     ('wfp', 'WFP'),
 ]
 
-SIGNAL_CARDS_CONSTANTS = [
-    {
-        'location': 'Location A',
-        'date': 'June 2026',
-        'type': 'Signal type',
-        'title': 'Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod',
-        'description': 'Chart description placeholder text',
-        'image_src': '',
-        'image_alt': '',
-        'source_label': 'Source',
-        'source_href': '#',
-        'cta_label': 'See this signal',
-        'cta_href': '#',
-    },
-    {
-        'location': 'Location B',
-        'date': 'May 2026',
-        'type': 'Signal type',
-        'title': 'Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod',
-        'description': 'Chart description placeholder text',
-        'image_src': '',
-        'image_alt': '',
-        'source_label': 'Source',
-        'source_href': '#',
-        'cta_label': 'See this signal',
-        'cta_href': '#',
-    },
-    {
-        'location': 'Location C',
-        'date': 'April 2026',
-        'type': 'Signal type',
-        'title': 'Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod',
-        'description': 'Chart description placeholder text',
-        'image_src': '',
-        'image_alt': '',
-        'source_label': 'Source',
-        'source_href': '#',
-        'cta_label': 'See this signal',
-        'cta_href': '#',
-    },
-]
+SIGNAL_CARD_INDICATOR_CATEGORIES = {
+    'acled_conflict': 'Conflict events',
+    'jrc_agricultural_hotspots': 'Agricultural hotspots',
+    'idmc_displacement_conflict': 'Internal displacement',
+    'idmc_displacement_disaster': 'Internal displacement',
+    'acaps_inform_severity': 'INFORM Severity',
+    'ipc_food_insecurity': 'Food insecurity',
+    'wfp_market_monitor': 'Market monitoring',
+}

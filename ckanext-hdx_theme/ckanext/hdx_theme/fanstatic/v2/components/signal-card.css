@@ -60,13 +60,12 @@
 }
 .c-signal-card__image {
   width: 100%;
-  aspect-ratio: 3;
-  object-fit: contain;
-  background-color: var(--hdx-neutral-2);
+  height: auto;
   display: block;
 }
 .c-signal-card__image--placeholder {
-  aspect-ratio: 3;
+  aspect-ratio: 1.5;
+  background-color: var(--hdx-neutral-2);
 }
 .c-signal-card__footer {
   display: flex;

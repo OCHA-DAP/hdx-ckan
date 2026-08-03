@@ -4,8 +4,7 @@ import ckan.plugins.toolkit as tk
 import ckanext.hdx_package.helpers.analytics as analytics
 import ckanext.hdx_theme.views.count as count
 from ckan.common import config
-from ckanext.hdx_theme.helpers.ui_constants.landing_pages.signals import \
-    SIGNAL_CARDS_CONSTANTS
+from ckanext.hdx_theme.helpers.caching import cached_last_three_signal_cards
 import json
 
 _ = tk._
@@ -121,7 +120,7 @@ def index():
         'analytics': {
             'analytics_came_from': analytics.came_from(request.args)
         },
-        'signal_cards': SIGNAL_CARDS_CONSTANTS,
+        'signal_cards': cached_last_three_signal_cards(),
     }
     return render('home/index.html', template_data)
 
