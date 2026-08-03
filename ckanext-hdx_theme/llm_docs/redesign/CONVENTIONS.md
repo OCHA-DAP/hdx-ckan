@@ -11,6 +11,8 @@ Single source of truth for general rules. Update here; do not duplicate in task 
 | `c-` | Reusable components | `c-button`, `c-autocomplete` |
 | `hdx-v2-` | Non-reusable v2 sections and layouts | `hdx-v2-hero`, `hdx-v2-grid` |
 
+Size modifiers use `--size-{xs,s,m,l}` (`c-button--size-m`, `c-copy-button--size-s`) — never a bare `--{s,m}` or a two-letter shorthand like `--sm`.
+
 ---
 
 ## Media queries — nest inside element blocks
@@ -145,6 +147,7 @@ Use `is-*` classes only for persistent states set by the server or JavaScript.
 | Selected / current | `is-active` class (server or JS) |
 | Unavailable | `is-disabled` class (server or JS) |
 | Expanded | `is-open` class (JS only) |
+| Scroll lock (body) while an overlay is open | `is-<component>-open` class on `<body>` (JS only), e.g. `is-drawer-open` |
 
 Do **not** add `is-hovered`, `--hovered`, `is-focus`, or similar classes to templates or JavaScript. If a JS controller must replicate hover visuals (e.g. keyboard navigation), use a clearly named parent-class such as `c-component--keyboard-active` and add a comment in the LESS file explaining why the class exists.
 
@@ -230,6 +233,7 @@ instead of re-declaring the rules.
 - LESS variables: same name with `@` (e.g. `@hdx-brand-5`) — LESS-only, not used in media queries
 - No hardcoded hex colors, `rgba(...)` overlays, or box-shadow values in component LESS — use the corresponding token (`var(--hdx-neutral-1)`, `var(--hdx-overlay-white-10)`, `var(--hdx-shadow-md)`)
 - Component-level LESS variables use `@c-*` prefix and are **not** exported as CSS custom properties
+- **Only declare a file-local LESS variable if it's referenced 2+ times in that file** (this applies to any local variable, not just `@c-*` ones — e.g. a page file's one-off `@hero-bg`). A value used exactly once is written inline at its call site instead, carrying over the declaration's trailing comment if the call site doesn't already have one. Remove the "Local tokens" header comment block entirely once every token under it has been inlined.
 
 ---
 
@@ -435,6 +439,7 @@ files:
   `c-activity-card-list`, `c-stats-card-list`)
 - `c-<name>-grid` — grid (`c-content-card-grid`, `c-selection-item-grid`,
   `c-showcase-card-grid`, `c-dataviz-card-grid`)
+- `c-<name>-row` — inline flex-wrap row (`c-kpi-card-row`, `c-selection-item-row`)
 
 Child sizing lives inside the wrapper, scoped with a direct-child selector
 (`> .c-stats-card { flex: 1; }`). Pages must not size or restyle `c-*`

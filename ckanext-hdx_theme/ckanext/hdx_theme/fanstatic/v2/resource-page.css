@@ -2,7 +2,7 @@
   background-color: var(--hdx-neutral-0);
 }
 .hdx-v2-resource-columns {
-  padding: var(--hdx-space-4) 0 5rem;
+  padding: var(--hdx-space-4) 0 var(--hdx-space-20);
 }
 @media (min-width: 80rem) {
   .hdx-v2-resource-sidebar {

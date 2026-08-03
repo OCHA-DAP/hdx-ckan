@@ -8,52 +8,6 @@
 
 @import "../mixins.less";
 
-// ── Local colour palette (label colours) ────────────────────
-// Each colour maps to: background, text-colour
-@c-label-light-bg:    var(--hdx-neutral-05);   // whitesmoke-100  → var(--hdx-neutral-05)
-@c-label-light-color: var(--hdx-neutral-95);   // #101212
-
-@c-label-grey-bg:     var(--hdx-neutral-1);   // whitesmoke-200
-@c-label-grey-color:  var(--hdx-neutral-95);
-
-@c-label-dark-bg:     var(--hdx-neutral-2);    // gainsboro #d8e0e1
-@c-label-dark-color:  var(--hdx-neutral-95);
-
-@c-label-cyan-bg:     var(--hdx-brand-1);   // lightcyan
-@c-label-cyan-color:  var(--hdx-brand-85);   // darkslategray-300
-
-@c-label-yellow-bg:   var(--hdx-warning-1);   // antiquewhite
-@c-label-yellow-color: var(--hdx-warning-8);;  // saddlebrown
-
-@c-label-blue-bg:     var(--hdx-primary-1);   // lavender
-@c-label-blue-color:  var(--hdx-primary-9);;   // var(--hdx-primary-9)
-
-// ── Sizing ───────────────────────────────────────────────────
-// M — 29 px (text+icon) or pill
-@c-label-m-fs:   var(--hdx-fs-m);      // 16 px
-@c-label-m-pad:  var(--hdx-space-1) var(--hdx-space-2); // 4 8
-@c-label-m-gap:  var(--hdx-space-13);  //  6 px
-@c-label-m-icon: 1rem;           // 16 px
-
-// S
-@c-label-s-fs:   var(--hdx-fs-s);      // 14 px
-@c-label-s-pad:  var(--hdx-space-15) var(--hdx-space-13); // 2 6
-@c-label-s-gap:  var(--hdx-space-1);   //  4 px
-@c-label-s-icon: 0.875rem;       // 14 px
-
-// XS
-@c-label-xs-fs:   var(--hdx-fs-xs);    // 12 px
-@c-label-xs-pad:  var(--hdx-space-15) var(--hdx-space-1); // 2 4
-@c-label-xs-gap:  var(--hdx-space-1);  //  4 px
-@c-label-xs-icon: 0.75rem;       // 12 px
-@c-label-xs-min-h: 1.25rem;      // 20 px min-height
-
-// Icon-only square sizes
-@c-label-icon-m-dim: 1.8125rem;  // 29 px
-@c-label-icon-s-dim: 1.5rem;     // 24 px
-@c-label-icon-xs-dim: 1.25rem;   // 20 px
-
-
 // ────────────────────────────────────────────────────────────
 // 1. c-label — tag / chip
 // ────────────────────────────────────────────────────────────
@@ -81,62 +35,50 @@
     // ── Size modifiers ───────────────────────────────────────
 
     &--size-m {
-        padding:   @c-label-m-pad;
-        gap:       @c-label-m-gap;
-        font-size: @c-label-m-fs;
-        .c-label__icon { width: @c-label-m-icon; }
+        padding:   var(--hdx-space-1) var(--hdx-space-2);  // 4 8
+        gap:       var(--hdx-space-13);  //  6 px
+        font-size: var(--hdx-fs-m);  // 16 px
+        .c-label__icon { width: 1rem; }  // 16 px
     }
 
     &--size-s {
-        padding:   @c-label-s-pad;
-        gap:       @c-label-s-gap;
-        font-size: @c-label-s-fs;
-        .c-label__icon { width: @c-label-s-icon; }
+        padding:   var(--hdx-space-15) var(--hdx-space-13);  // 2 6
+        gap:       var(--hdx-space-1);  //  4 px
+        font-size: var(--hdx-fs-s);  // 14 px
+        .c-label__icon { width: 0.875rem; }  // 14 px
     }
 
     &--size-xs {
-        padding:    @c-label-xs-pad;
-        gap:        @c-label-xs-gap;
-        font-size:  @c-label-xs-fs;
-        min-height: @c-label-xs-min-h;
-        .c-label__icon { width: @c-label-xs-icon; }
+        padding:    var(--hdx-space-15) var(--hdx-space-1);  // 2 4
+        gap:        var(--hdx-space-1);  //  4 px
+        font-size:  var(--hdx-fs-xs);  // 12 px
+        min-height: 1.25rem;  // 20 px min-height
+        .c-label__icon { width: 0.75rem; }  // 12 px
     }
 
     // Icon-only square — no text, fixed dimensions
     &--icon-only {
         padding: 0;
 
-        &.c-label--size-m  { width: @c-label-icon-m-dim;  height: @c-label-icon-m-dim;  }
-        &.c-label--size-s  { width: @c-label-icon-s-dim;  height: @c-label-icon-s-dim;  border-radius: var(--hdx-radius-sm); }
-        &.c-label--size-xs { width: @c-label-icon-xs-dim; height: @c-label-icon-xs-dim; border-radius: var(--hdx-radius-sm); min-width: @c-label-icon-xs-dim; }
+        &.c-label--size-m  { width: 1.8125rem;  height: 1.8125rem;  }  // 29 px
+        &.c-label--size-s  { width: 1.5rem;  height: 1.5rem;  border-radius: var(--hdx-radius-sm); }  // 24 px
+        &.c-label--size-xs { width: 1.25rem; height: 1.25rem; border-radius: var(--hdx-radius-sm); min-width: 1.25rem; }  // 20 px
     }
 
     // ── Colour modifiers ─────────────────────────────────────
 
-    &--light  { background-color: @c-label-light-bg;  color: @c-label-light-color;  }
-    &--grey   { background-color: @c-label-grey-bg;   color: @c-label-grey-color;   }
-    &--dark   { background-color: @c-label-dark-bg;   color: @c-label-dark-color;   }
-    &--cyan   { background-color: @c-label-cyan-bg;   color: @c-label-cyan-color;   }
-    &--yellow { background-color: @c-label-yellow-bg; color: @c-label-yellow-color; }
-    &--blue   { background-color: @c-label-blue-bg;   color: @c-label-blue-color;   }
+    &--light  { background-color: var(--hdx-neutral-05);  color: var(--hdx-neutral-95);  }  // whitesmoke-100  → var(--hdx-neutral-05)
+    &--grey   { background-color: var(--hdx-neutral-1);   color: var(--hdx-neutral-95);   }  // whitesmoke-200
+    &--dark   { background-color: var(--hdx-neutral-2);   color: var(--hdx-neutral-95);   }  // gainsboro #d8e0e1
+    &--cyan   { background-color: var(--hdx-brand-1);   color: var(--hdx-brand-85);   }  // lightcyan
+    &--yellow { background-color: var(--hdx-warning-1); color: var(--hdx-warning-8);; }  // antiquewhite
+    &--blue   { background-color: var(--hdx-primary-1);   color: var(--hdx-primary-9);;   }  // lavender
 }
 
 
 // ────────────────────────────────────────────────────────────
 // 2. c-file-type — square file-format icon badge
 // ────────────────────────────────────────────────────────────
-
-// Format → background colour
-@c-ft-neutral:     var(--hdx-neutral-8);
-@c-ft-neutral-bg:  var(--hdx-neutral-1);   // whitesmoke-200
-@c-ft-geo:         var(--hdx-warning-8);
-@c-ft-geo-bg:      var(--hdx-warning-1);   // antiquewhite
-@c-ft-tabular:     var(--hdx-brand-7);
-@c-ft-tabular-bg:  var(--hdx-brand-1);   // lightcyan
-@c-ft-document:    var(--hdx-primary-7);
-@c-ft-document-bg: var(--hdx-primary-1);   // lavender
-@c-ft-web:         var(--hdx-error-8);
-@c-ft-web-bg:      var(--hdx-error-1);   // mistyrose
 
 .c-file-type {
     display:         inline-flex;
@@ -178,30 +120,30 @@
         border-radius: var(--hdx-radius-sm);
         padding:       var(--hdx-space-1);
 
-        .c-file-type__icon { width: var(--hdx-space-16); }
+        .c-file-type__icon { width: var(--hdx-space-17); }
     }
 
     // ── Format colours ───────────────────────────────────────
 
     &--neutral  {
-      color: @c-ft-neutral;
-      background-color: @c-ft-neutral-bg;
+      color: var(--hdx-neutral-8);
+      background-color: var(--hdx-neutral-1);  // whitesmoke-200
     }
     &--geo      {
-      color: @c-ft-geo;
-      background-color: @c-ft-geo-bg;
+      color: var(--hdx-warning-8);
+      background-color: var(--hdx-warning-1);  // antiquewhite
     }
     &--tabular  {
-      color: @c-ft-tabular;
-      background-color: @c-ft-tabular-bg;
+      color: var(--hdx-brand-7);
+      background-color: var(--hdx-brand-1);  // lightcyan
     }
     &--document {
-      color: @c-ft-document;
-      background-color: @c-ft-document-bg;
+      color: var(--hdx-primary-7);
+      background-color: var(--hdx-primary-1);  // lavender
     }
     &--web      {
-      color: @c-ft-web;
-      background-color: @c-ft-web-bg;
+      color: var(--hdx-error-8);
+      background-color: var(--hdx-error-1);  // mistyrose
     }
 }
 
@@ -210,27 +152,18 @@
 // 3. c-tooltip — dark (text) and light (rich) variants
 // ────────────────────────────────────────────────────────────
 
-@c-tooltip-dark-bg:    var(--hdx-brand-85);   // darkslategray-300
-@c-tooltip-dark-color: var(--hdx-neutral-0);
-@c-tooltip-dark-shadow: 0px 8px 35px rgba(0, 0, 0, 0.16);
-
-@c-tooltip-light-bg:     var(--hdx-neutral-0);  // #fff
-@c-tooltip-light-color:  var(--hdx-neutral-95); // #101212
-@c-tooltip-light-shadow: 0px 8px 35px rgba(0, 0, 0, 0.16);
-
-@c-tooltip-min-w: 12.5rem;    // 200 px
-@c-tooltip-max-w: 18.75rem;   // 300 px
-@c-tooltip-arrow-h: 0.5rem;   //  8 px
+@c-tooltip-dark-bg:  var(--hdx-brand-85);   // darkslategray-300
+@c-tooltip-light-bg: var(--hdx-neutral-0);  // #fff
 
 .c-tooltip {
     border-radius:  var(--hdx-radius-sm);  // 2 px
-    box-shadow:     @c-tooltip-dark-shadow;
+    box-shadow:     var(--hdx-shadow-lg);
     display:        inline-flex;
     flex-direction: column;
     align-items:    flex-start;
     padding:        var(--hdx-space-2) var(--hdx-space-3);  // 8 12
-    min-width:      @c-tooltip-min-w;
-    max-width:      @c-tooltip-max-w;
+    min-width:      12.5rem;  // 200 px
+    max-width:      18.75rem;  // 300 px
     isolation:      isolate;
     position:       relative;
     font-family:    var(--hdx-font-body);
@@ -238,7 +171,7 @@
     // Arrow pointer (SVG img)
     &__arrow {
         width:      1rem;  // 16 px
-        height:     @c-tooltip-arrow-h;
+        height:     0.5rem;  //  8 px
         position:   absolute;
         object-fit: contain;
         z-index:    0;
@@ -261,7 +194,7 @@
 
     &--dark {
         background-color: @c-tooltip-dark-bg;
-        color:            @c-tooltip-dark-color;
+        color:            var(--hdx-neutral-0);
         font-size:        var(--hdx-fs-s);  // 14 px
 
         .c-tooltip__text { align-self: stretch; }
@@ -274,7 +207,7 @@
 
     &--light {
         background-color: @c-tooltip-light-bg;
-        color:            @c-tooltip-light-color;
+        color:            var(--hdx-neutral-95);  // #101212
         padding:          var(--hdx-space-2);   // 8 px
         gap:              var(--hdx-space-13);  // 6 px
         font-size:        var(--hdx-fs-s);
@@ -367,7 +300,7 @@
             display:         flex;
             align-items:     center;
             justify-content: space-between;
-            gap:             1.25rem;
+            gap:             var(--hdx-space-5);
         }
 
         .c-tooltip__legend-key {

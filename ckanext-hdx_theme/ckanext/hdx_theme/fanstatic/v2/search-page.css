@@ -72,7 +72,7 @@
 @media (min-width: 80rem) {
   .hdx-v2-search-sidebar {
     border-right: 1px solid var(--hdx-neutral-1);
-    padding: var(--hdx-space-5) var(--hdx-space-10) 5rem 0;
+    padding: var(--hdx-space-5) var(--hdx-space-10) var(--hdx-space-20) 0;
   }
 }
 .hdx-v2-search-content {

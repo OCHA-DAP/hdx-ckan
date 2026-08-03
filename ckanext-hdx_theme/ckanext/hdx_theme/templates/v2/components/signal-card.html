@@ -35,8 +35,8 @@
 {% set size         = size         if size         is defined else '' %}
 
 {% set root_classes = ['c-signal-card'] %}
-{% if size == 'sm' %}
-  {% set root_classes = root_classes + ['c-signal-card--sm'] %}
+{% if size == 's' %}
+  {% set root_classes = root_classes + ['c-signal-card--size-s'] %}
 {% endif %}
 
 <div class="{{ root_classes | join(' ') }}">

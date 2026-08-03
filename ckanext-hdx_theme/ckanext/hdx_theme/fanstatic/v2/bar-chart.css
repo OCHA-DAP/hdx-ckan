@@ -4,7 +4,7 @@
 }
 .hdx-v2-barchart__inner {
   position: relative;
-  padding-top: 5rem;
+  padding-top: var(--hdx-space-20);
 }
 .hdx-v2-barchart__bars {
   display: flex;

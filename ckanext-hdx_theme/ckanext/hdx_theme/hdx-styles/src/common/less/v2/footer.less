@@ -11,21 +11,18 @@
 
 @import "breakpoints.less";
 
-@hdx-footer-bg: #0b2d24;   // dark teal — brand-9 area
-
-
 // ── Root ─────────────────────────────────────────────────────
 
 .hdx-v2-footer {
-    background-color: @hdx-footer-bg;
+    background-color: var(--hdx-brand-85);  // dark teal
     color:            var(--hdx-neutral-0);
     font-family:      var(--hdx-font-body);
     font-size:        var(--hdx-fs-s);
     padding-top:    3.5rem;
     padding-bottom: 3.5rem;
 
-    @media (min-width: @hdx-bp-md) { padding-top: 4rem; padding-bottom: 4rem; }
-    @media (min-width: @hdx-bp-xl) { padding-top: 5rem; padding-bottom: 5rem; }
+    @media (min-width: @hdx-bp-md) { padding-top: var(--hdx-space-16); padding-bottom: var(--hdx-space-16); }
+    @media (min-width: @hdx-bp-xl) { padding-top: var(--hdx-space-20); padding-bottom: var(--hdx-space-20); }
 
     // Override c-text-link colours for dark background
     .c-text-link {
@@ -40,12 +37,12 @@
     &__top {
         display:        flex;
         flex-direction: column;
-        gap:            2rem;
+        gap:            var(--hdx-space-8);
 
         @media (min-width: @hdx-bp-xl) {
             flex-direction: row;
             align-items:    stretch;
-            gap:            1.5rem;
+            gap:            var(--hdx-space-6);
         }
     }
 
@@ -55,7 +52,7 @@
     &__branding {
         display:        flex;
         flex-direction: column;
-        gap:            1.5rem;
+        gap:            var(--hdx-space-6);
 
         @media (min-width: @hdx-bp-xl) {
             flex:            1;
@@ -66,7 +63,7 @@
     &__logo-wrap {
         display:        flex;
         flex-direction: column;
-        gap:            1.5rem;
+        gap:            var(--hdx-space-6);
     }
 
     &__logo {
@@ -93,7 +90,7 @@
     &__actions {
         display:        flex;
         flex-direction: column;
-        gap:            1.5rem;
+        gap:            var(--hdx-space-6);
 
         @media (min-width: @hdx-bp-md) {
             flex-direction: row;
@@ -103,7 +100,7 @@
 
         @media (min-width: @hdx-bp-xl) {
             flex-direction: column;
-            gap:            1.5rem;
+            gap:            var(--hdx-space-6);
         }
     }
 
@@ -166,7 +163,7 @@
     &__social {
         display:     flex;
         align-items: flex-end;
-        gap:         1.5rem;
+        gap:         var(--hdx-space-6);
 
         @media (min-width: @hdx-bp-md) {
             flex: 0 0 25%;
@@ -238,11 +235,11 @@
     &__nav {
         display:        flex;
         flex-direction: column;
-        gap:            1.5rem;
+        gap:            var(--hdx-space-6);
 
         @media (min-width: @hdx-bp-md) {
             flex-direction: row;
-            gap:            1.5rem;
+            gap:            var(--hdx-space-6);
         }
 
         @media (min-width: @hdx-bp-xl) {
@@ -254,7 +251,7 @@
         display:        flex;
         flex-direction: column;
         align-items:    flex-start;
-        gap:            1.5rem;
+        gap:            var(--hdx-space-6);
 
         @media (min-width: @hdx-bp-md) {
             flex: 1 1 0;
@@ -313,7 +310,7 @@
     &__service-detail {
         display:        flex;
         flex-direction: column;
-        gap:            0.75rem;
+        gap:            var(--hdx-space-3);
 
         @media (min-width: @hdx-bp-md) {
             flex-direction: row;
@@ -376,7 +373,7 @@
         display:         flex;
         align-items:     center;
         justify-content: flex-start;
-        gap:             0.75rem;
+        gap:             var(--hdx-space-3);
 
         @media (min-width: @hdx-bp-md) {
             justify-content: flex-end;

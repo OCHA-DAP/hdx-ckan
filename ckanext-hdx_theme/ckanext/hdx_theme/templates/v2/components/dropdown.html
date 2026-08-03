@@ -39,7 +39,7 @@
   ─────────────────────────────────────────────────
   State → wrapper class mapping:
     'enabled'  → (no extra class)
-    'active'   → c-dropdown--open
+    'active'   → is-open
     'disabled' → c-dropdown--disabled  (also sets disabled attr on button)
     'filter'   → c-dropdown--filter
 
@@ -78,7 +78,7 @@
 {% set is_filter   = (state == 'filter') %}
 
 {% set classes = ['c-dropdown', 'c-dropdown--size-' ~ size] %}
-{% if is_open     %}{% set classes = classes + ['c-dropdown--open']     %}{% endif %}
+{% if is_open     %}{% set classes = classes + ['is-open']     %}{% endif %}
 {% if is_filter   %}{% set classes = classes + ['c-dropdown--filter']   %}{% endif %}
 {% if is_disabled %}{% set classes = classes + ['c-dropdown--disabled'] %}{% endif %}
 {% if extra_classes %}{% set classes = classes + [extra_classes] %}{% endif %}

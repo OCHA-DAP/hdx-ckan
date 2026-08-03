@@ -4,7 +4,7 @@
   align-items: center;
   justify-content: center;
   border-radius: 100%;
-  background-color: #bee0d6;
+  background-color: var(--hdx-brand-15);
   font-family: var(--hdx-font-body);
   color: var(--hdx-brand-7);
   user-select: none;
@@ -59,11 +59,11 @@
   font-size: var(--hdx-fs-xs);
 }
 .c-avatar--enabled {
-  background-color: #bee0d6;
+  background-color: var(--hdx-brand-15);
   color: var(--hdx-brand-7);
 }
 .c-avatar:hover {
-  background-color: #bee0d6;
+  background-color: var(--hdx-brand-15);
   color: var(--hdx-brand-7);
 }
 .c-avatar:active,

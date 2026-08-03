@@ -19,41 +19,22 @@
 @c-button-l-dim:       2.5rem;    // 40 px — height + icon-only width
 @c-button-l-icon:      1.25rem;   // 20 px
 @c-button-l-pad-v:     var(--hdx-space-2);   //  8 px
-@c-button-l-pad-h:     var(--hdx-space-3);   // 12 px
-@c-button-l-gap:       var(--hdx-space-2);   //  8 px
 @c-button-l-fs:        var(--hdx-fs-m);      // 16 px
 
 // Sizing — M (34 px)
 @c-button-m-dim:       2.125rem;  // 34 px
 @c-button-m-icon:      1rem;      // 16 px
-@c-button-m-pad-v:     var(--hdx-space-2);   //  8 px
-@c-button-m-pad-h:     var(--hdx-space-2);   //  8 px
-@c-button-m-gap:       var(--hdx-space-13);  //  6 px
 @c-button-m-fs:        var(--hdx-fs-s);      // 14 px
 
 // Sizing — S (24 px)
 @c-button-s-dim:       1.5rem;    // 24 px
 @c-button-s-icon:      0.875rem;  // 14 px
-@c-button-s-pad-v:     var(--hdx-space-1);   //  4 px
-@c-button-s-pad-h:     var(--hdx-space-2);   //  8 px
-@c-button-s-gap:       var(--hdx-space-13);  //  6 px
 @c-button-s-fs:        var(--hdx-fs-xs);     // 12 px
 
 // Shared
 @c-button-radius:      var(--hdx-radius-sm); //  2 px
 @c-button-transition:  background-color 0.15s ease, border-color 0.15s ease,
                        color 0.15s ease, box-shadow 0.15s ease;
-
-// Text-button icon sizes (match button icon sizes per size)
-@c-text-button-l-icon: @c-button-l-icon;   // 20 px
-@c-text-button-m-icon: @c-button-m-icon;   // 16 px
-@c-text-button-s-icon: @c-button-s-icon;   // 14 px
-
-// Text-button gap per size
-@c-text-button-l-gap:  var(--hdx-space-2);       //  8 px
-@c-text-button-m-gap:  var(--hdx-space-1);       //  4 px
-@c-text-button-s-gap:  var(--hdx-space-15);      //  2 px
-
 
 // ────────────────────────────────────────────────────────────
 // 2. c-button — filled / outlined / ghost button
@@ -107,8 +88,8 @@
 
     &--size-l {
         height:      @c-button-l-dim;
-        padding:     @c-button-l-pad-v @c-button-l-pad-h;
-        gap:         @c-button-l-gap;
+        padding:     @c-button-l-pad-v var(--hdx-space-3);  // 12 px
+        gap:         var(--hdx-space-2);  //  8 px
         font-size:   @c-button-l-fs;
 
         .c-button__icon { width: @c-button-l-icon; }
@@ -116,8 +97,8 @@
 
     &--size-m {
         height:      @c-button-m-dim;
-        padding:     @c-button-m-pad-v @c-button-m-pad-h;
-        gap:         @c-button-m-gap;
+        padding:     var(--hdx-space-2) var(--hdx-space-2);  //  8 px
+        gap:         var(--hdx-space-13);  //  6 px
         font-size:   @c-button-m-fs;
 
         .c-button__icon { width: @c-button-m-icon; }
@@ -125,8 +106,8 @@
 
     &--size-s {
         height:      @c-button-s-dim;
-        padding:     @c-button-s-pad-v @c-button-s-pad-h;
-        gap:         @c-button-s-gap;
+        padding:     var(--hdx-space-1) var(--hdx-space-2);  //  4 px
+        gap:         var(--hdx-space-13);  //  6 px
         font-size:   @c-button-s-fs;
 
         .c-button__icon { width: @c-button-s-icon; }
@@ -354,24 +335,24 @@
     // ── Size modifiers ───────────────────────────────────────
 
     &--size-l {
-        gap:       @c-text-button-l-gap;
+        gap:       var(--hdx-space-2);  //  8 px
         font-size: @c-button-l-fs;     // 16 px
 
-        .c-text-button__icon { width: @c-text-button-l-icon; }
+        .c-text-button__icon { width: @c-button-l-icon; }  // 20 px
     }
 
     &--size-m {
-        gap:       @c-text-button-m-gap;
+        gap:       var(--hdx-space-1);  //  4 px
         font-size: @c-button-m-fs;     // 14 px
 
-        .c-text-button__icon { width: @c-text-button-m-icon; }
+        .c-text-button__icon { width: @c-button-m-icon; }  // 16 px
     }
 
     &--size-s {
-        gap:       @c-text-button-s-gap;
+        gap:       var(--hdx-space-15);  //  2 px
         font-size: @c-button-s-fs;     // 12 px
 
-        .c-text-button__icon { width: @c-text-button-s-icon; }
+        .c-text-button__icon { width: @c-button-s-icon; }  // 14 px
     }
 
 

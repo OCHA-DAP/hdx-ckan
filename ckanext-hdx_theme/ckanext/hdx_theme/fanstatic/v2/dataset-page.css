@@ -89,7 +89,7 @@
 @media (max-width: 80rem) {
   .hdx-v2-dataset-metadata__cell,
   .hdx-v2-dataset-metadata__full {
-    scroll-margin-top: 9rem;
+    scroll-margin-top: 8rem;
   }
 }
 .hdx-v2-dataset-metadata__label {

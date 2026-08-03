@@ -109,7 +109,7 @@
     padding: 0 var(--hdx-space-10) var(--hdx-space-6);
   }
 }
-body.drawer-open {
+body.is-drawer-open {
   overflow: hidden;
 }
 .c-drawer-form {

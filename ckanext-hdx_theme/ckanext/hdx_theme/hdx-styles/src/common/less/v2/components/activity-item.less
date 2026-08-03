@@ -6,7 +6,6 @@
 // ============================================================
 @import "../mixins.less";
 
-@_dot-top:  var(--hdx-space-5);
 @_dot-size: var(--hdx-space-3);
 
 .c-activity-item {
@@ -39,7 +38,7 @@
         width:            @_dot-size;
         height:           @_dot-size;
         position:         absolute;
-        top:              @_dot-top;
+        top:              var(--hdx-space-5);
         left:             calc(50% - (@_dot-size / 2));
         border-radius:    50%;
         background-color: var(--hdx-primary-5);

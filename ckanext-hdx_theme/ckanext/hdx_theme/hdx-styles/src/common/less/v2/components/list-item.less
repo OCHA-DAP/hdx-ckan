@@ -5,16 +5,10 @@
 // ============================================================
 
 // ── Local tokens ────────────────────────────────────────────
-@c-list-item-text-color:     var(--hdx-neutral-95);           // #101212
 @c-list-item-text-hover:     var(--hdx-primary-5);            // #1862d8
-@c-list-item-count-color:    var(--hdx-neutral-8);
-@c-list-item-gap:            var(--hdx-space-13);             // 6 px (between checkbox and content)
-@c-list-item-count-gap:      var(--hdx-space-1);              // 4 px (between label and count)
 
-@c-list-item-font-body:      var(--hdx-font-body);
 @c-list-item-fs-md:          var(--hdx-fs-s);                 // 14 px
 @c-list-item-fs-sm:          var(--hdx-fs-xs);                // 12 px
-@c-list-item-lh:             130%;
 
 
 // ────────────────────────────────────────────────────────────
@@ -22,9 +16,9 @@
 // ────────────────────────────────────────────────────────────
 
 .c-list-item {
-    font-family: @c-list-item-font-body;
-    line-height: @c-list-item-lh;
-    color: @c-list-item-text-color;
+    font-family: var(--hdx-font-body);
+    line-height: 130%;
+    color: var(--hdx-neutral-95);  // #101212
     transition: color 0.15s ease;
     padding: var(--hdx-space-15) 0;
 
@@ -71,7 +65,7 @@
     &--type-checklist {
         display: flex;
         align-items: flex-start;
-        gap: @c-list-item-gap;
+        gap: var(--hdx-space-13);  // 6 px (between checkbox and content)
         font-size: @c-list-item-fs-md;  // 14 px
         cursor: pointer;
 
@@ -99,7 +93,7 @@
     &__content {
         display: flex;
         align-items: center;
-        gap: @c-list-item-count-gap;
+        gap: var(--hdx-space-1);  // 4 px (between label and count)
         flex: 1;
         min-width: 0;  // allow overflow of long labels
     }
@@ -113,7 +107,7 @@
 
     &__count {
         font-size: @c-list-item-fs-sm;                // 12 px
-        color: @c-list-item-count-color;
+        color: var(--hdx-neutral-8);
         font-weight: var(--hdx-fw-regular);
         flex-shrink: 0;
         text-transform: uppercase;

@@ -4,15 +4,6 @@
 // Figma source: "Letter anchor links"
 // ============================================================
 
-// ── Local tokens ────────────────────────────────────────────
-@c-letter-color:        var(--hdx-neutral-8);             // #3f4748
-@c-letter-active-color: var(--hdx-primary-5);             // #1862d8
-@c-letter-hover-color:  var(--hdx-primary-5);
-@c-letter-disabled-color: var(--hdx-neutral-3);           // #c4d0d1
-
-@c-letter-border-radius: var(--hdx-radius-sm);            // 2 px
-
-
 // ────────────────────────────────────────────────────────────
 // c-letter-anchor
 // ────────────────────────────────────────────────────────────
@@ -21,13 +12,13 @@
     display:         inline-flex;
     align-items:     center;
     justify-content: center;
-    border-radius:   @c-letter-border-radius;
+    border-radius:   var(--hdx-radius-sm);  // 2 px
     cursor:          pointer;
     font-family:     var(--hdx-font-body);
     font-weight:     var(--hdx-fw-regular);
     text-decoration: none;
     transition:      color 0.15s ease;
-    color:           @c-letter-color;
+    color:           var(--hdx-neutral-8);  // #3f4748
     overflow:        hidden;
     text-overflow:   ellipsis;
     white-space:     nowrap;
@@ -52,15 +43,15 @@
     // ── States ──────────────────────────────────────────────
 
     &.is-active {
-        color:       @c-letter-active-color;
+        color:       var(--hdx-primary-5);  // #1862d8
     }
 
     &:hover:not(&.is-disabled) {
-        color: @c-letter-hover-color;
+        color: var(--hdx-primary-5);
     }
 
     &.is-disabled {
-        color:          @c-letter-disabled-color;
+        color:          var(--hdx-neutral-3);  // #c4d0d1
         cursor:         not-allowed;
         pointer-events: none;
     }

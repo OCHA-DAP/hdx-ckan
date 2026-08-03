@@ -108,7 +108,7 @@ grid, with no explanation of why they were added:
 - `@hdx-space-13: 0.375rem` (6px) — on-grid ✓
 - `@hdx-space-14: 0.625rem` (10px) — off-grid
 - `@hdx-space-15: 0.125rem` (2px) — on-grid ✓
-- `@hdx-space-16: 0.875rem` (14px) — off-grid
+- `@hdx-space-17: 0.875rem` (14px) — off-grid
 
 **Requirements:**
 - Add a comment above tokens 14 and 16 referencing the Figma spec or component that

@@ -161,9 +161,9 @@
 .c-radio--checked .c-radio__dot {
   background-color: var(--hdx-primary-5);
 }
-.c-radio--checked.c-radio--focused .c-radio__ring {
-  background-color: transparent;
-  border-color: var(--hdx-primary-7);
+input:focus-visible ~ .c-radio__input .c-radio__ring {
+  outline: 2px solid var(--hdx-primary-5);
+  outline-offset: 2px;
 }
 .c-radio--disabled {
   cursor: not-allowed;
@@ -188,7 +188,7 @@
   background-color: var(--hdx-neutral-2);
   overflow: hidden;
   cursor: pointer;
-  padding: 0.125rem;
+  padding: var(--hdx-space-15);
   box-sizing: border-box;
   transition: background-color 0.2s ease;
   flex-shrink: 0;

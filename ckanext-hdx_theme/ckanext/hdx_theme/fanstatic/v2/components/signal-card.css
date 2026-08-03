@@ -72,7 +72,7 @@
   gap: var(--hdx-space-14);
   flex-wrap: wrap;
 }
-.c-signal-card--sm .c-signal-card__title {
+.c-signal-card--size-s .c-signal-card__title {
   font-family: var(--hdx-font-body);
   font-size: var(--hdx-fs-m);
   font-weight: var(--hdx-fw-medium);
@@ -148,7 +148,7 @@
   cursor: pointer;
   padding: 0;
 }
-.hdx-v2-signals-dots button.active {
+.hdx-v2-signals-dots button.is-active {
   background-color: var(--hdx-primary-5);
 }
 .hdx-v2-signals-dots button:focus-visible {

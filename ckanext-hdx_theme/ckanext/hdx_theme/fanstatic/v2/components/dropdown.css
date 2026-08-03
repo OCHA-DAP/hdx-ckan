@@ -63,7 +63,7 @@
   transition: transform 0.2s ease;
   line-height: 0;
 }
-.c-dropdown--open .c-dropdown__chevron {
+.c-dropdown.is-open .c-dropdown__chevron {
   transform: rotate(180deg);
 }
 .c-dropdown--disabled .c-dropdown__trigger {

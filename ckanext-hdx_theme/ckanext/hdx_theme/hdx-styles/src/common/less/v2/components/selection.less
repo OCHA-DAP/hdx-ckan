@@ -13,31 +13,17 @@
 @c-sel-light-bg:     var(--hdx-neutral-0);       // #fff
 @c-sel-light-border: var(--hdx-neutral-2);       // #d8e0e1
 @c-sel-cyan-bg:      var(--hdx-brand-1);              // lightcyan
-@c-sel-cyan-border:  var(--hdx-brand-2);             // powderblue
 
-@c-sel-hover-bg:         var(--hdx-neutral-01);  // #fafbfb
-@c-sel-hover-border:     var(--hdx-neutral-8);   // #3f4748
 @c-sel-active-border:    var(--hdx-neutral-95);  // #101212
 
 // Radio
 @c-radio-dim:           1rem;              // 16 px
 @c-radio-inner-dim:     0.5rem;            // 8 px
 @c-radio-checked-color: var(--hdx-primary-5);   // royalblue
-@c-radio-border:        var(--hdx-neutral-2);   // #d8e0e1
-@c-radio-disabled-inner: var(--hdx-neutral-2);  // gainsboro
 
 // Toggle
-@c-toggle-w:       2rem;       // 32 px
-@c-toggle-h:       1rem;       // 16 px
 @c-toggle-thumb:   0.75rem;    // 12 px
 @c-toggle-off-bg:  var(--hdx-neutral-2);        // #d8e0e1
-@c-toggle-on-bg:   var(--hdx-primary-5);        // royalblue
-@c-toggle-thumb-bg: var(--hdx-neutral-0);       // white
-
-// Selection item heights — Figma size spec
-@c-sel-l-h:        2.5rem;     // 40 px
-@c-sel-m-h:        2.125rem;   // 34 px
-@c-sel-s-h:        1.5rem;     // 24 px
 
 // Graph point
 @c-gp-dim:         0.5rem;     //  8 px
@@ -100,14 +86,14 @@
 
     &--cyan {
         background-color: @c-sel-cyan-bg;
-        border-color:     @c-sel-cyan-border;
+        border-color:     var(--hdx-brand-2);  // powderblue
     }
 
     // ── State modifiers ──────────────────────────────────────
 
     &:hover {
-        background-color: @c-sel-hover-bg;
-        border-color:     @c-sel-hover-border;
+        background-color: var(--hdx-neutral-01);  // #fafbfb
+        border-color:     var(--hdx-neutral-8);  // #3f4748
         box-shadow:       var(--hdx-shadow-sm);
 
         &.c-selection-item--cyan {
@@ -139,7 +125,7 @@
 
     // Large
     &--size-l {
-        height:    @c-sel-l-h;
+        height:    2.5rem;  // 40 px
         padding:   var(--hdx-space-2) var(--hdx-space-3);  // 8 12
         gap:       var(--hdx-space-13);              //  6 px
         font-size: var(--hdx-fs-m);                  // 16 px
@@ -150,7 +136,7 @@
 
     // Medium
     &--size-m {
-        height:    @c-sel-m-h;
+        height:    2.125rem;  // 34 px
         padding:   var(--hdx-space-2);               // 8 px
         gap:       var(--hdx-space-1);               // 4 px
         font-size: var(--hdx-fs-s);                  // 14 px
@@ -161,7 +147,7 @@
 
     // Small
     &--size-s {
-        height:    @c-sel-s-h;
+        height:    1.5rem;  // 24 px
         padding:   var(--hdx-space-13);             //  6 px
         gap:       var(--hdx-space-1);              //  4 px
         font-size: var(--hdx-fs-xs);               // 12 px
@@ -198,7 +184,7 @@
         position:      absolute;
         inset:         0;
         border-radius: 100%;
-        border:        1px solid @c-radio-border;
+        border:        1px solid var(--hdx-neutral-2);  // #d8e0e1
         box-sizing:    border-box;
         background:    var(--hdx-neutral-0);
         transition:    border-color 0.15s ease;
@@ -236,10 +222,10 @@
         background-color: @c-radio-checked-color;
     }
 
-    // Focus (keyboard nav) — shown as themed ring
-    &--checked.c-radio--focused &__ring {
-        background-color: transparent;
-        border-color:     var(--hdx-primary-7);  // darkslateblue
+    // Focus state (keyboard accessibility) — mirrors c-checkbox's pattern
+    input:focus-visible ~ &__input &__ring {
+        outline:        2px solid var(--hdx-primary-5);
+        outline-offset: 2px;
     }
 
     &--disabled {
@@ -269,13 +255,13 @@
 .c-toggle {
     display:         inline-block;
     position:        relative;
-    width:           @c-toggle-w;
-    height:          @c-toggle-h;
+    width:           2rem;  // 32 px
+    height:          1rem;  // 16 px
     border-radius:   0.5rem;    // 8 px
     background-color: @c-toggle-off-bg;
     overflow:        hidden;
     cursor:          pointer;
-    padding:         0.125rem;  // 2 px inner inset
+    padding:         var(--hdx-space-15);  // 2 px inner inset
     box-sizing:      border-box;
     transition:      background-color 0.2s ease;
     flex-shrink:     0;
@@ -284,7 +270,7 @@
         width:         @c-toggle-thumb;
         height:        @c-toggle-thumb;
         border-radius: 66.67px;
-        background-color: @c-toggle-thumb-bg;
+        background-color: var(--hdx-neutral-0);  // white
         position:      relative;
         transition:    transform 0.2s ease;
         overflow:      hidden;
@@ -294,7 +280,7 @@
     // ── States ──────────────────────────────────────────────
 
     &--on {
-        background-color: @c-toggle-on-bg;
+        background-color: var(--hdx-primary-5);  // royalblue
         display:          flex;
         align-items:      flex-start;
         justify-content:  flex-end;

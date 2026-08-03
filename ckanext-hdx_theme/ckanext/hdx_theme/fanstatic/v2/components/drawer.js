@@ -16,7 +16,7 @@
       if ($drawer.hasClass('is-open')) return;
       lastFocus = document.activeElement;
       $drawer.addClass('is-open').attr('aria-hidden', 'false');
-      $('body').addClass('drawer-open');
+      $('body').addClass('is-drawer-open');
       var focusable = getFocusable();
       if (focusable.length) {
         focusable[0].focus();
@@ -28,7 +28,7 @@
     function close() {
       if (!$drawer.hasClass('is-open')) return;
       $drawer.removeClass('is-open').attr('aria-hidden', 'true');
-      $('body').removeClass('drawer-open');
+      $('body').removeClass('is-drawer-open');
       $drawer.get(0).dispatchEvent(new CustomEvent('drawer:close'));
       if (lastFocus) lastFocus.focus();
     }

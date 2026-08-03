@@ -13,12 +13,8 @@
 
 @c-dropdown-border:        1px solid var(--hdx-neutral-2);              // #d8e0e1
 @c-dropdown-border-color-hover:  var(--hdx-neutral-8);                  // darker border for hover feedback
-@c-dropdown-border-color-active: var(--hdx-primary-5);                  // active/focus border color
-@c-dropdown-border-filter: 1px solid var(--hdx-neutral-95);             // #101212
 
 @c-dropdown-text:          var(--hdx-neutral-8);         // #3f4748
-@c-dropdown-text-disabled: var(--hdx-neutral-7);         // #9db1b3
-@c-dropdown-border-disabled: 1px solid var(--hdx-neutral-1);
 
 @c-dropdown-panel-border:  0.75px solid var(--hdx-neutral-1);  // 0.8px: hairline — visually lighter than the trigger border
 @c-dropdown-panel-shadow:  var(--hdx-shadow-sm);
@@ -27,13 +23,9 @@
 @c-dropdown-m-fs:   var(--hdx-fs-s);    // 14 px
 @c-dropdown-m-h:    2.125rem;           // 34 px — Figma size spec
 @c-dropdown-m-pad:  var(--hdx-space-2) var(--hdx-space-2) var(--hdx-space-2) var(--hdx-space-14); // 8 8 8 10
-@c-dropdown-m-gap:  var(--hdx-space-1); //  4 px
 
 // Size S
 @c-dropdown-s-fs:   var(--hdx-fs-xs);   // 12 px
-@c-dropdown-s-h:    1.75rem;
-@c-dropdown-s-pad:  var(--hdx-space-13) var(--hdx-space-2) var(--hdx-space-13) var(--hdx-space-14); // 6 8 6 10
-@c-dropdown-s-gap:  var(--hdx-space-1); //  4 px
 
 
 // ────────────────────────────────────────────────────────────
@@ -118,7 +110,7 @@
         transition: transform 0.2s ease;
         line-height: 0;
 
-        .c-dropdown--open & {
+        .c-dropdown.is-open & {
             transform: rotate(180deg);
         }
     }
@@ -126,27 +118,27 @@
     // ── State modifiers on trigger ───────────────────────────
 
     // Open/active
-    &--open &__trigger,
+    &.is-open &__trigger,
     &--active &__trigger {
         //background-color: @c-dropdown-bg-active !important;
-        //border-color:     @c-dropdown-border-color-active !important;
+        //border-color:     var(--hdx-primary-5) !important;
         //box-shadow:       none !important;
     }
 
     // Disabled
     &--disabled &__trigger {
         background-color: @c-dropdown-bg;
-        border:           @c-dropdown-border-disabled;
+        border:           1px solid var(--hdx-neutral-1);
         box-shadow:       none;
         cursor:           not-allowed;
         pointer-events:   none;
-        color:            @c-dropdown-text-disabled;
+        color:            var(--hdx-neutral-7);  // #9db1b3
     }
 
     // Filter-active: near-black border to signal active selection
     &--filter &__trigger {
         background-color: @c-dropdown-bg-active;
-        border:           @c-dropdown-border-filter;
+        border:           1px solid var(--hdx-neutral-95);  // #101212
         box-shadow:       none;
         color:            var(--hdx-neutral-95);
     }
@@ -218,7 +210,7 @@
         gap: var(--hdx-space-2);   // 8 px between label and trigger
 
         .c-dropdown__label      { font-size: @c-dropdown-m-fs; }
-        .c-dropdown__trigger    { height: @c-dropdown-m-h; padding: @c-dropdown-m-pad; gap: @c-dropdown-m-gap; font-size: @c-dropdown-m-fs; }
+        .c-dropdown__trigger    { height: @c-dropdown-m-h; padding: @c-dropdown-m-pad; gap: var(--hdx-space-1); font-size: @c-dropdown-m-fs; }  //  4 px
         .c-dropdown__trigger-value { font-size: @c-dropdown-m-fs; }
     }
 
@@ -226,7 +218,7 @@
         gap: var(--hdx-space-1);   // 4 px between label and trigger
 
         .c-dropdown__label      { font-size: @c-dropdown-s-fs; }
-        .c-dropdown__trigger    { height: @c-dropdown-s-h; padding: @c-dropdown-s-pad; gap: @c-dropdown-s-gap; font-size: @c-dropdown-s-fs; }
+        .c-dropdown__trigger    { height: 1.75rem; padding: var(--hdx-space-13) var(--hdx-space-2) var(--hdx-space-13) var(--hdx-space-14); gap: var(--hdx-space-1); font-size: @c-dropdown-s-fs; }  // 6 8 6 10
         .c-dropdown__trigger-value { font-size: @c-dropdown-s-fs; }
         .c-dropdown__chevron    { width: 0.875rem; }
     }

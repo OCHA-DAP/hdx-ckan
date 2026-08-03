@@ -123,7 +123,7 @@
   padding: var(--hdx-space-1);
 }
 .c-file-type--size-xs .c-file-type__icon {
-  width: var(--hdx-space-16);
+  width: var(--hdx-space-17);
 }
 .c-file-type--neutral {
   color: var(--hdx-neutral-8);
@@ -147,7 +147,7 @@
 }
 .c-tooltip {
   border-radius: var(--hdx-radius-sm);
-  box-shadow: 0px 8px 35px rgba(0, 0, 0, 0.16);
+  box-shadow: var(--hdx-shadow-lg);
   display: inline-flex;
   flex-direction: column;
   align-items: flex-start;
@@ -277,7 +277,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 1.25rem;
+  gap: var(--hdx-space-5);
 }
 .c-tooltip--graph .c-tooltip__legend-key {
   display: flex;

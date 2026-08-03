@@ -123,10 +123,6 @@
           checkboxWrapper.classList.add('c-checkbox--error');
           var errorEl = checkboxWrapper.parentElement ? checkboxWrapper.parentElement.querySelector('.c-checkbox__error') : null;
           if (errorEl) errorEl.textContent = input.getAttribute('data-validation-error') || '';
-        } else {
-          input.classList.add('is-invalid');
-          var feedback = input.parentElement ? input.parentElement.querySelector('.invalid-feedback') : null;
-          if (feedback) feedback.textContent = input.getAttribute('data-validation-error') || '';
         }
       }
     }
@@ -145,8 +141,6 @@
           checkboxWrapper.classList.remove('c-checkbox--error');
           var errorEl = checkboxWrapper.parentElement ? checkboxWrapper.parentElement.querySelector('.c-checkbox__error') : null;
           if (errorEl) errorEl.textContent = '';
-        } else {
-          input.classList.remove('is-invalid');
         }
       }
     }
@@ -294,7 +288,7 @@
     // === Scroll to error ===
 
     function scrollToError() {
-      var invalidEl = form.querySelector('.c-search-input--error, .c-checkbox--error, .is-invalid');
+      var invalidEl = form.querySelector('.c-search-input--error, .c-checkbox--error');
       if (!invalidEl) return;
       var drawerBody = form.closest('.c-drawer__body');
       if (drawerBody) {

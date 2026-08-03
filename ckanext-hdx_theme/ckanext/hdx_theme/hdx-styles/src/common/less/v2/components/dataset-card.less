@@ -9,82 +9,38 @@
 
 // ── Local tokens ─────────────────────────────────────────────
 
-// Card shell
-@c-dataset-card-bg:              var(--hdx-neutral-0);
-@c-dataset-card-border-default:  1px solid var(--hdx-neutral-1);
-@c-dataset-card-border-color-hover: var(--hdx-neutral-8);
-@c-dataset-card-shadow:          var(--hdx-shadow-sm);
-@c-dataset-card-radius:          var(--hdx-radius-sm);
-@c-dataset-card-transition:      border-color 0.15s ease;
-
-// Body layout
-@c-dataset-card-padding:         var(--hdx-space-4);   // 16px
-@c-dataset-card-body-gap-sm:     var(--hdx-space-14);  // 10px  (row gap when stacked)
-@c-dataset-card-col-gap:         var(--hdx-space-10);  // 40px  (column gap at MD+)
-
-// Internal column gaps
-@c-dataset-card-left-gap:        var(--hdx-space-13);  // 6px
-@c-dataset-card-right-gap:       var(--hdx-space-3);   // 12px
-@c-dataset-card-right-gap-sm:    var(--hdx-space-14);  // 10px  (SM: row direction)
-
-// Footer
-@c-dataset-card-footer-border:   1px solid var(--hdx-neutral-1);
-@c-dataset-card-footer-pad-v:    var(--hdx-space-2);   // 8px
-@c-dataset-card-footer-pad-h:    var(--hdx-space-4);   // 16px
-
-// Typography — org name
-@c-dataset-card-org-fs:          var(--hdx-fs-s);      // 14px
-@c-dataset-card-org-color:       var(--hdx-neutral-9);
-
-// Typography — title
-@c-dataset-card-title-fs-sm:     var(--hdx-fs-m);      // 16px  (SM)
-@c-dataset-card-title-fs:        var(--hdx-fs-l);      // 18px  (MD+)
-@c-dataset-card-title-color:     var(--hdx-neutral-95);
-@c-dataset-card-title-fw:        var(--hdx-fw-semibold);
-
-// Typography — description
-@c-dataset-card-desc-fs:         var(--hdx-fs-xs);     // 12px
-@c-dataset-card-desc-color:      var(--hdx-neutral-85);
-
-// Typography — date
-@c-dataset-card-date-fs:         var(--hdx-fs-xs);     // 12px
-@c-dataset-card-date-color:      var(--hdx-neutral-85);
-
-// Typography — formats overflow (+N)
-@c-dataset-card-more-fs:         var(--hdx-fs-xs);     // 12px
-@c-dataset-card-more-color:      var(--hdx-neutral-85);
-
+@c-dataset-card-desc-color: var(--hdx-neutral-85);  // Typography — description
 
 // ────────────────────────────────────────────────────────────
 // c-dataset-card — base
 // ────────────────────────────────────────────────────────────
 
 .c-dataset-card {
-    background-color: @c-dataset-card-bg;
-    border:           @c-dataset-card-border-default;
-    border-radius:    @c-dataset-card-radius;
-    box-shadow:       @c-dataset-card-shadow;
+    background-color: var(--hdx-neutral-0);
+    border:           1px solid var(--hdx-neutral-1);
+    border-radius:    var(--hdx-radius-sm);
+    box-shadow:       var(--hdx-shadow-sm);
     overflow:         hidden;
     display:          flex;
     flex-direction:   column;
     align-items:      stretch;
-    transition:       @c-dataset-card-transition;
+    transition:       border-color 0.15s ease;
     font-family:      var(--hdx-font-body);
 
     &:hover {
-        border-color: @c-dataset-card-border-color-hover;
+        border-color: var(--hdx-neutral-8);
     }
 
     // ── __body ───────────────────────────────────────────────
     &__body {
         display:   flex;
         flex-wrap: wrap;             // SM: left + right stack vertically
-        padding:   @c-dataset-card-padding;
-        gap:       @c-dataset-card-body-gap-sm;
+        padding:   var(--hdx-space-4);  // 16px
+        gap:       var(--hdx-space-14);  // 10px  (row gap when stacked)
 
         @media (min-width: @hdx-bp-md) {
             flex-wrap: nowrap;
-            gap:       @c-dataset-card-col-gap;
+            gap:       var(--hdx-space-10);  // 40px  (column gap at MD+)
         }
     }
 
@@ -93,7 +49,7 @@
         display:        flex;
         flex-direction: column;
         align-items:    flex-start;
-        gap:            @c-dataset-card-left-gap;
+        gap:            var(--hdx-space-13);  // 6px
         width:          100%;        // SM: full width
 
         @media (min-width: @hdx-bp-md) {
@@ -104,8 +60,8 @@
 
     // ── __org ────────────────────────────────────────────────
     &__org {
-        font-size:   @c-dataset-card-org-fs;
-        color:       @c-dataset-card-org-color;
+        font-size:   var(--hdx-fs-s);  // 14px
+        color:       var(--hdx-neutral-9);
         line-height: var(--hdx-lh-normal);
         margin:      0;
 
@@ -123,9 +79,9 @@
     // ── __title ──────────────────────────────────────────────
     &__title {
         align-self:         stretch;
-        font-size:          @c-dataset-card-title-fs-sm;
-        font-weight:        @c-dataset-card-title-fw;
-        color:              @c-dataset-card-title-color;
+        font-size:          var(--hdx-fs-m);  // 16px  (SM)
+        font-weight:        var(--hdx-fw-semibold);
+        color:              var(--hdx-neutral-95);
         line-height:        var(--hdx-lh-normal);
         text-decoration:    none;
         // 2-line clamp (SM)
@@ -141,7 +97,7 @@
         }
 
         @media (min-width: @hdx-bp-md) {
-            font-size: @c-dataset-card-title-fs;
+            font-size: var(--hdx-fs-l);  // 18px  (MD+)
         }
     }
 
@@ -174,7 +130,7 @@
 
     &__desc-text {
         display:     none;
-        font-size:   @c-dataset-card-desc-fs;
+        font-size:   var(--hdx-fs-xs);  // 12px
         color:       @c-dataset-card-desc-color;
         line-height: var(--hdx-lh-normal);
         margin:      0;
@@ -195,14 +151,14 @@
         flex-direction: row;        // SM: location + date side by side
         align-items:    center;
         flex-wrap:      wrap;
-        gap:            @c-dataset-card-right-gap-sm;
+        gap:            var(--hdx-space-14);  // 10px  (SM: row direction)
         width:          100%;
 
         @media (min-width: @hdx-bp-md) {
             flex-direction: column;
             align-items:    flex-start;
             flex-wrap:      nowrap;
-            gap:            @c-dataset-card-right-gap;
+            gap:            var(--hdx-space-3);  // 12px
             flex:           1;
             width:          auto;
         }
@@ -227,8 +183,8 @@
 
     // ── __date ───────────────────────────────────────────────
     &__date {
-        font-size:   @c-dataset-card-date-fs;
-        color:       @c-dataset-card-date-color;
+        font-size:   var(--hdx-fs-xs);  // 12px
+        color:       var(--hdx-neutral-85);
         line-height: var(--hdx-lh-normal);
         margin:      0;
         white-space: nowrap;
@@ -252,16 +208,16 @@
     }
 
     &__formats-more {
-        font-size:   @c-dataset-card-more-fs;
-        color:       @c-dataset-card-more-color;
+        font-size:   var(--hdx-fs-xs);  // 12px
+        color:       var(--hdx-neutral-85);
         line-height: var(--hdx-lh-normal);
         align-self:  center;
     }
 
     // ── __footer ─────────────────────────────────────────────
     &__footer {
-        border-top:  @c-dataset-card-footer-border;
-        padding:     @c-dataset-card-footer-pad-v @c-dataset-card-footer-pad-h;
+        border-top:  1px solid var(--hdx-neutral-1);
+        padding:     var(--hdx-space-2) var(--hdx-space-4);  // 8px
         display:     flex;
         align-items: center;
     }

@@ -192,7 +192,7 @@
             if (!dotsEl) return;
             var btns = dotsEl.querySelectorAll('button');
             btns.forEach(function (btn, i) {
-                btn.classList.toggle('active', i === dotIdx - 1);
+                btn.classList.toggle('is-active', i === dotIdx - 1);
             });
         }
 

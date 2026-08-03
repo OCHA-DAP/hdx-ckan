@@ -8,12 +8,10 @@
 
 // ── Local tokens ────────────────────────────────────────────
 // Avatar background colours
-@c-avatar-bg-default:  #bee0d6;   // powderblue — enabled / hovered
-@c-avatar-bg-active:   var(--hdx-neutral-0);  // #fff — active/selected state
+@c-avatar-bg-default:  var(--hdx-brand-15);   // powderblue — enabled / hovered
 
 // Avatar text (initials)
 @c-avatar-color:       var(--hdx-brand-7);   // teal — darkest contrast on powderblue bg
-@c-avatar-color-active: var(--hdx-neutral-8); // #3f4748 — on white bg
 
 // Badge (status dot)
 @c-badge-color:        var(--hdx-error-5);   // firebrick — online / active status
@@ -21,13 +19,9 @@
 
 // Sizing map
 @c-avatar-l-dim:   4rem;       // 48 px
-@c-avatar-l-fs:    var(--hdx-fs-xl);  // 20 px
 @c-avatar-md-dim:  2.5rem;     // 40 px
-@c-avatar-md-fs:   var(--hdx-fs-m);  // 16 px
 @c-avatar-sm-dim:  2rem;       // 32 px
-@c-avatar-sm-fs:   var(--hdx-fs-s);  // 14 px
 @c-avatar-xs-dim:  1.5rem;     // 24 px
-@c-avatar-xs-fs:   var(--hdx-fs-xs); // 12 px
 
 
 // ────────────────────────────────────────────────────────────
@@ -85,26 +79,26 @@
     &--size-l {
         width:       @c-avatar-l-dim;
         height:      @c-avatar-l-dim;
-        font-size:   @c-avatar-l-fs;
+        font-size:   var(--hdx-fs-xl);  // 20 px
         font-weight: var(--hdx-fw-medium);
     }
 
     &--size-md {
         width:     @c-avatar-md-dim;
         height:    @c-avatar-md-dim;
-        font-size: @c-avatar-md-fs;
+        font-size: var(--hdx-fs-m);  // 16 px
     }
 
     &--size-sm {
         width:     @c-avatar-sm-dim;
         height:    @c-avatar-sm-dim;
-        font-size: @c-avatar-sm-fs;
+        font-size: var(--hdx-fs-s);  // 14 px
     }
 
     &--size-xs {
         width:     @c-avatar-xs-dim;
         height:    @c-avatar-xs-dim;
-        font-size: @c-avatar-xs-fs;
+        font-size: var(--hdx-fs-xs);  // 12 px
     }
 
 
@@ -123,8 +117,8 @@
     // Active / selected: white background
     &:active,
     &--active {
-        background-color: @c-avatar-bg-active;
-        color:            @c-avatar-color-active;
+        background-color: var(--hdx-neutral-0);  // #fff — active/selected state
+        color:            var(--hdx-neutral-8);  // #3f4748 — on white bg
     }
 }
 

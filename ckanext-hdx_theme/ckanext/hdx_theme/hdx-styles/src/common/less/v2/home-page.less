@@ -6,11 +6,9 @@
 // ============================================================
 @import "mixins.less";
 
-@hero-bg: var(--hdx-brand-7);
-
 .hdx-v2-hero {
     width:            100%;
-    background-color: @hero-bg;
+    background-color: var(--hdx-brand-7);
     padding-top:      8rem;
 
     @media (min-width: @hdx-bp-md) { padding-top: var(--hdx-space-24); }
@@ -24,7 +22,7 @@
         gap:            var(--hdx-space-10);
 
         @media (min-width: @hdx-bp-md) { gap: var(--hdx-space-12); }
-        @media (min-width: @hdx-bp-xl) { gap: 5rem; }
+        @media (min-width: @hdx-bp-xl) { gap: var(--hdx-space-20); }
     }
 
     &__header {
@@ -97,8 +95,8 @@
 
 .hdx-v2-intro {
     background-color: var(--hdx-neutral-0);
-    padding-top: 4rem;
-    padding-bottom: 4rem;
+    padding-top: var(--hdx-space-16);
+    padding-bottom: var(--hdx-space-16);
 
     @media (min-width: @hdx-bp-md) { padding-top: var(--hdx-space-24); padding-bottom: var(--hdx-space-24); }
     @media (min-width: @hdx-bp-xl) { padding-top: 7rem; padding-bottom: 7rem; }
@@ -128,12 +126,12 @@
 .hdx-v2-highlights {
     width:            100%;
     background-color: var(--hdx-neutral-0);
-    padding-top:      4rem;
-    padding-bottom:   4rem;
+    padding-top:      var(--hdx-space-16);
+    padding-bottom:   var(--hdx-space-16);
 
     @media (min-width: @hdx-bp-md) {
-        padding-top:    5rem;
-        padding-bottom: 5rem;
+        padding-top:    var(--hdx-space-20);
+        padding-bottom: var(--hdx-space-20);
     }
 
     @media (min-width: @hdx-bp-xl) {
@@ -247,7 +245,7 @@
             cursor:           pointer;
             padding:          0;
 
-            &.active         { background-color: var(--hdx-primary-5); }
+            &.is-active      { background-color: var(--hdx-primary-5); }
 
             &:focus-visible {
                 outline:        2px solid var(--hdx-primary-5);
@@ -265,17 +263,17 @@
 .hdx-v2-signals {
     width:            100%;
     background-color: var(--hdx-neutral-05);
-    padding-top:      4rem;
-    padding-bottom:   4rem;
+    padding-top:      var(--hdx-space-16);
+    padding-bottom:   var(--hdx-space-16);
 
     @media (min-width: @hdx-bp-md) {
-        padding-top:    5rem;
-        padding-bottom: 5rem;
+        padding-top:    var(--hdx-space-20);
+        padding-bottom: var(--hdx-space-20);
     }
 
     @media (min-width: @hdx-bp-xl) {
-        padding-top:    6rem;
-        padding-bottom: 6rem;
+        padding-top:    var(--hdx-space-24);
+        padding-bottom: var(--hdx-space-24);
     }
 
     &__inner {

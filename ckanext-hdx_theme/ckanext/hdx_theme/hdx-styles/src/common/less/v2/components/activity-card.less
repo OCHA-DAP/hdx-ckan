@@ -7,25 +7,6 @@
 
 // ── Local tokens ────────────────────────────────────────────
 
-@c-activity-card-bg:              var(--hdx-neutral-01);
-@c-activity-card-border-enabled:  1px solid var(--hdx-neutral-1);
-@c-activity-card-border-color-hover: var(--hdx-neutral-8);
-@c-activity-card-shadow:          var(--hdx-shadow-sm);
-@c-activity-card-radius:          var(--hdx-radius-sm);
-@c-activity-card-icon-color:      var(--hdx-neutral-5);
-@c-activity-card-icon-size:       1.5rem;              // 24px
-
-@c-activity-card-heading-font:    var(--hdx-font-display);
-@c-activity-card-heading-color:   var(--hdx-neutral-95);
-@c-activity-card-heading-fw:      var(--hdx-fw-bold);
-@c-activity-card-heading-lh:      var(--hdx-lh-normal);
-
-@c-activity-card-subtitle-font:   var(--hdx-font-body);
-@c-activity-card-subtitle-color:  var(--hdx-neutral-8);
-@c-activity-card-subtitle-lh:     var(--hdx-lh-normal);
-
-@c-activity-card-footer-max-w:    12.5rem;             // 200px
-
 // Size: lg
 @c-activity-card-lg-padding:      var(--hdx-space-8);  // 32px
 @c-activity-card-lg-gap:          var(--hdx-space-12); // 48px
@@ -54,10 +35,10 @@
 // ────────────────────────────────────────────────────────────
 
 .c-activity-card {
-    background-color: @c-activity-card-bg;
-    border:           @c-activity-card-border-enabled;
-    border-radius:    @c-activity-card-radius;
-    box-shadow:       @c-activity-card-shadow;
+    background-color: var(--hdx-neutral-01);
+    border:           1px solid var(--hdx-neutral-1);
+    border-radius:    var(--hdx-radius-sm);
+    box-shadow:       var(--hdx-shadow-sm);
     overflow:         hidden;
     display:          flex;
     flex-direction:   column;
@@ -66,7 +47,7 @@
 
     // ── States ──────────────────────────────────────────────
     &:hover {
-        border-color: @c-activity-card-border-color-hover;
+        border-color: var(--hdx-neutral-8);
     }
 
     // ── Elements ────────────────────────────────────────────
@@ -82,8 +63,8 @@
         display:     block;
         line-height: 0;
         flex-shrink: 0;
-        color:       @c-activity-card-icon-color;
-        width:       @c-activity-card-icon-size;
+        color:       var(--hdx-neutral-5);
+        width:       1.5rem;  // 24px
 
         svg {
             width:   100%;
@@ -102,20 +83,20 @@
     &__heading {
         align-self:  stretch;
         .hdx-display-bold-base();
-        color:       @c-activity-card-heading-color;
+        color:       var(--hdx-neutral-95);
         margin:      0;
     }
 
     &__subtitle {
         align-self:  stretch;
-        font-family: @c-activity-card-subtitle-font;
-        line-height: @c-activity-card-subtitle-lh;
-        color:       @c-activity-card-subtitle-color;
+        font-family: var(--hdx-font-body);
+        line-height: var(--hdx-lh-normal);
+        color:       var(--hdx-neutral-8);
         margin:      0;
     }
 
     &__footer {
-        max-width: @c-activity-card-footer-max-w;
+        max-width: 12.5rem;  // 200px
     }
 
     // ── Size modifiers ──────────────────────────────────────

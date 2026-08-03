@@ -31,19 +31,19 @@
 .c-copy-button--icon-right {
   flex-direction: row-reverse;
 }
-.c-copy-button--m {
+.c-copy-button--size-m {
   gap: var(--hdx-space-13);
   font-size: var(--hdx-fs-s);
 }
-.c-copy-button--m .c-copy-button__icon svg {
+.c-copy-button--size-m .c-copy-button__icon svg {
   width: 1rem;
   height: 1rem;
 }
-.c-copy-button--s {
+.c-copy-button--size-s {
   gap: var(--hdx-space-15);
   font-size: var(--hdx-fs-xs);
 }
-.c-copy-button--s .c-copy-button__icon svg {
+.c-copy-button--size-s .c-copy-button__icon svg {
   width: 0.875rem;
   height: 0.875rem;
 }

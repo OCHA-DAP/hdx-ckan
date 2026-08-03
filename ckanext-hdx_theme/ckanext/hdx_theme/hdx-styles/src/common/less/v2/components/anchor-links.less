@@ -6,12 +6,6 @@
 // Figma source: "Navigation and Pagination"
 // ============================================================
 
-// ── Local tokens ────────────────────────────────────────────
-@c-anchor-border-w:     var(--hdx-space-1);    // 4 px left border
-@c-anchor-active-color: var(--hdx-primary-5);
-@c-anchor-color:        var(--hdx-neutral-8);
-// ────────────────────────────────────────────────────────────
-
 .c-anchor-links {
     display:        flex;
     flex-direction: column;
@@ -27,7 +21,7 @@
 
     &__border {
         align-self:       stretch;
-        width:            @c-anchor-border-w;
+        width:            var(--hdx-space-1);  // 4 px left border
         background-color: transparent;
         flex-shrink:      0;
         transition:       background-color 0.15s ease;
@@ -59,7 +53,7 @@
 
     // ── States ──────────────────────────────────────────────
 
-    &__item--active &__border  { background-color: @c-anchor-active-color; }
+    &__item--active &__border  { background-color: var(--hdx-primary-5); }
     &__item--active &__label   { font-weight: var(--hdx-fw-medium); color: var(--hdx-neutral-95); }
 
     &__item--inactive &__border { background-color: transparent; }

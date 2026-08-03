@@ -27,7 +27,7 @@
 }
 @media (min-width: 80rem) {
   .hdx-v2-hero__inner {
-    gap: 5rem;
+    gap: var(--hdx-space-20);
   }
 }
 .hdx-v2-hero__header {
@@ -107,8 +107,8 @@
 }
 .hdx-v2-intro {
   background-color: var(--hdx-neutral-0);
-  padding-top: 4rem;
-  padding-bottom: 4rem;
+  padding-top: var(--hdx-space-16);
+  padding-bottom: var(--hdx-space-16);
 }
 @media (min-width: 48rem) {
   .hdx-v2-intro {
@@ -183,13 +183,13 @@
 .hdx-v2-highlights {
   width: 100%;
   background-color: var(--hdx-neutral-0);
-  padding-top: 4rem;
-  padding-bottom: 4rem;
+  padding-top: var(--hdx-space-16);
+  padding-bottom: var(--hdx-space-16);
 }
 @media (min-width: 48rem) {
   .hdx-v2-highlights {
-    padding-top: 5rem;
-    padding-bottom: 5rem;
+    padding-top: var(--hdx-space-20);
+    padding-bottom: var(--hdx-space-20);
   }
 }
 @media (min-width: 80rem) {
@@ -330,7 +330,7 @@
   cursor: pointer;
   padding: 0;
 }
-.hdx-v2-highlights .highlight-dots button.active {
+.hdx-v2-highlights .highlight-dots button.is-active {
   background-color: var(--hdx-primary-5);
 }
 .hdx-v2-highlights .highlight-dots button:focus-visible {
@@ -340,19 +340,19 @@
 .hdx-v2-signals {
   width: 100%;
   background-color: var(--hdx-neutral-05);
-  padding-top: 4rem;
-  padding-bottom: 4rem;
+  padding-top: var(--hdx-space-16);
+  padding-bottom: var(--hdx-space-16);
 }
 @media (min-width: 48rem) {
   .hdx-v2-signals {
-    padding-top: 5rem;
-    padding-bottom: 5rem;
+    padding-top: var(--hdx-space-20);
+    padding-bottom: var(--hdx-space-20);
   }
 }
 @media (min-width: 80rem) {
   .hdx-v2-signals {
-    padding-top: 6rem;
-    padding-bottom: 6rem;
+    padding-top: var(--hdx-space-24);
+    padding-bottom: var(--hdx-space-24);
   }
 }
 .hdx-v2-signals__inner {

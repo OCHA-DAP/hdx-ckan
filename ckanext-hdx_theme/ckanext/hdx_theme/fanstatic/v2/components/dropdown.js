@@ -12,7 +12,7 @@
     if (!dd) return;
     var panel   = dd.querySelector('.c-dropdown__panel');
     var trigger = dd.querySelector('.c-dropdown__trigger');
-    dd.classList.remove('c-dropdown--open');
+    dd.classList.remove('is-open');
     if (panel) { panel.hidden = true; resetSearch(panel); }
     if (trigger) trigger.setAttribute('aria-expanded', 'false');
     if (returnFocus && trigger) trigger.focus();
@@ -20,7 +20,7 @@
 
   // Closes all open dropdowns except `except` (pass null to close all).
   function closeAll(except) {
-    document.querySelectorAll('.c-dropdown--open').forEach(function (dd) {
+    document.querySelectorAll('.c-dropdown.is-open').forEach(function (dd) {
       if (dd === except) return;
       closeDropdown(dd, false);
     });
@@ -32,7 +32,7 @@
     var panel   = dd.querySelector('.c-dropdown__panel');
     var trigger = dd.querySelector('.c-dropdown__trigger');
     closeAll(dd);
-    dd.classList.add('c-dropdown--open');
+    dd.classList.add('is-open');
     if (panel) panel.hidden = false;
     if (trigger) trigger.setAttribute('aria-expanded', 'true');
     // For navigate panels (role="menu"), always move focus to first menuitem.
@@ -55,7 +55,7 @@
       var trigger = e.target.closest && e.target.closest('.c-dropdown__trigger');
       if (!trigger) return;
       var dd     = trigger.closest('.c-dropdown');
-      var isOpen = dd && dd.classList.contains('c-dropdown--open');
+      var isOpen = dd && dd.classList.contains('is-open');
       if (!dd) return;
       if (isOpen) { closeDropdown(dd, false); } else { openDropdown(dd, false); }
     });
@@ -67,7 +67,7 @@
       if (!trigger) return;
       e.preventDefault();
       var dd     = trigger.closest('.c-dropdown');
-      var isOpen = dd && dd.classList.contains('c-dropdown--open');
+      var isOpen = dd && dd.classList.contains('is-open');
       if (!dd) return;
       if (isOpen) { closeDropdown(dd, true); } else { openDropdown(dd, true); }
     });
@@ -75,7 +75,7 @@
     // ── Escape — close open dropdown and return focus (V-04, V-06) ──
     document.addEventListener('keydown', function (e) {
       if (e.key !== 'Escape') return;
-      var dd = document.querySelector('.c-dropdown--open');
+      var dd = document.querySelector('.c-dropdown.is-open');
       if (dd) closeDropdown(dd, true);
     });
 

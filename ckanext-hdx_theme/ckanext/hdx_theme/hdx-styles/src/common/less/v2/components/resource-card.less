@@ -9,46 +9,27 @@
 
 // ── Local tokens ─────────────────────────────────────────────
 
-@c-resource-card-bg:             var(--hdx-neutral-0);
-@c-resource-card-border-default: 1px solid var(--hdx-neutral-1);
-@c-resource-card-border-color-hover: var(--hdx-neutral-8);
-@c-resource-card-shadow:         var(--hdx-shadow-sm);
-@c-resource-card-radius:         var(--hdx-radius-sm);
-@c-resource-card-transition:     border-color 0.15s ease;
-
-@c-resource-card-padding:        var(--hdx-space-4);   // 16px
-@c-resource-card-gap:            var(--hdx-space-3);   // 12px
-
-// Typography
-@c-resource-card-format-fs:      var(--hdx-fs-s);     // 14px
-@c-resource-card-format-color:   var(--hdx-neutral-85);
-@c-resource-card-title-fs-sm:    var(--hdx-fs-m);      // 16px
-@c-resource-card-title-fs:       var(--hdx-fs-l);      // 18px
-@c-resource-card-title-color:    var(--hdx-neutral-95);
-@c-resource-card-title-fw:       var(--hdx-fw-semibold);
-@c-resource-card-desc-fs:        var(--hdx-fs-s);      // 14px
-@c-resource-card-desc-color:     var(--hdx-neutral-85);
-
+@c-resource-card-desc-color: var(--hdx-neutral-85);  // Typography
 
 // ────────────────────────────────────────────────────────────
 // c-resource-card — base
 // ────────────────────────────────────────────────────────────
 
 .c-resource-card {
-    background-color: @c-resource-card-bg;
-    border:           @c-resource-card-border-default;
-    border-radius:    @c-resource-card-radius;
-    box-shadow:       @c-resource-card-shadow;
+    background-color: var(--hdx-neutral-0);
+    border:           1px solid var(--hdx-neutral-1);
+    border-radius:    var(--hdx-radius-sm);
+    box-shadow:       var(--hdx-shadow-sm);
     display:          flex;
     flex-direction:   column;
-    gap:              @c-resource-card-gap;
-    padding:          @c-resource-card-padding;
+    gap:              var(--hdx-space-3);  // 12px
+    padding:          var(--hdx-space-4);  // 16px
     font-family:      var(--hdx-font-body);
-    transition:       @c-resource-card-transition;
+    transition:       border-color 0.15s ease;
     position:         relative;
 
     &:hover {
-        border-color: @c-resource-card-border-color-hover;
+        border-color: var(--hdx-neutral-8);
     }
 
     // ── HDX Connect (requestdata) variant ────────────────────
@@ -132,9 +113,9 @@
 
     // ── __format-text ────────────────────────────────────────
     &__format-text {
-        font-size:   @c-resource-card-format-fs;
+        font-size:   var(--hdx-fs-s);  // 14px
         font-weight: var(--hdx-fw-medium);
-        color:       @c-resource-card-format-color;
+        color:       var(--hdx-neutral-85);
         line-height: var(--hdx-lh-normal);
     }
 
@@ -149,9 +130,9 @@
     // ── __title ──────────────────────────────────────────────
     &__title {
         align-self:         stretch;
-        font-size:          @c-resource-card-title-fs-sm;
-        font-weight:        @c-resource-card-title-fw;
-        color:              @c-resource-card-title-color;
+        font-size:          var(--hdx-fs-m);  // 16px
+        font-weight:        var(--hdx-fw-semibold);
+        color:              var(--hdx-neutral-95);
         line-height:        var(--hdx-lh-normal);
         text-decoration:    none;
         margin:             0;
@@ -162,7 +143,7 @@
         }
 
         @media (min-width: @hdx-bp-md) {
-            font-size: @c-resource-card-title-fs;
+            font-size: var(--hdx-fs-l);  // 18px
         }
     }
 
@@ -173,7 +154,7 @@
 
     // ── __desc-text ──────────────────────────────────────────
     &__desc-text {
-        font-size:          @c-resource-card-desc-fs;
+        font-size:          var(--hdx-fs-s);  // 14px
         color:              @c-resource-card-desc-color;
         line-height:        var(--hdx-lh-normal);
         margin:             0;

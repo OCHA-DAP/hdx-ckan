@@ -10,24 +10,6 @@
 
 @import "../mixins.less";
 
-// ── Colours ──────────────────────────────────────────────────
-// Primary: royalblue → near-black on hover/active
-// Secondary: near-black → royalblue on hover/active
-// Tertiary: darkslategray → royalblue on hover/active
-
-@c-text-link-primary-color:        var(--hdx-primary-5);   // #1862d8
-@c-text-link-primary-hover-color:  var(--hdx-neutral-95);  // #101212
-@c-text-link-primary-active-color: var(--hdx-primary-5);   // back to blue on active
-
-@c-text-link-secondary-color:        var(--hdx-neutral-95); // #101212
-@c-text-link-secondary-hover-color:  var(--hdx-primary-5);  // #1862d8
-@c-text-link-secondary-active-color: var(--hdx-primary-5);
-
-@c-text-link-tertiary-color:        var(--hdx-neutral-8);   // #3f4748
-@c-text-link-tertiary-hover-color:  var(--hdx-primary-5);
-@c-text-link-tertiary-active-color: var(--hdx-primary-5);
-
-
 // ────────────────────────────────────────────────────────────
 // c-text-link
 // ────────────────────────────────────────────────────────────
@@ -61,13 +43,13 @@
     // ── Style: primary ───────────────────────────────────────
 
     &--primary {
-        color: @c-text-link-primary-color;
+        color: var(--hdx-primary-5);  // #1862d8
 
         &:hover  {
-          color: @c-text-link-primary-hover-color;
+          color: var(--hdx-neutral-95);  // #101212
           text-decoration: underline; // overwrites page-extra-light-styles
         }
-        &:active { color: @c-text-link-primary-active-color; }
+        &:active { color: var(--hdx-primary-5); }  // back to blue on active
 
         &[disabled],
         &.is-disabled {
@@ -81,13 +63,13 @@
     // ── Style: secondary ─────────────────────────────────────
 
     &--secondary {
-        color: @c-text-link-secondary-color;
+        color: var(--hdx-neutral-95);  // #101212
 
         &:hover  {
-          color: @c-text-link-secondary-hover-color;
+          color: var(--hdx-primary-5);  // #1862d8
           text-decoration: underline; // overwrites page-extra-light-styles
         }
-        &:active { color: @c-text-link-secondary-active-color; }
+        &:active { color: var(--hdx-primary-5); }
 
         &[disabled],
         &.is-disabled {
@@ -101,13 +83,13 @@
     // ── Style: tertiary ──────────────────────────────────────
 
     &--tertiary {
-        color: @c-text-link-tertiary-color;
+        color: var(--hdx-neutral-8);  // #3f4748
 
         &:hover  {
-          color: @c-text-link-tertiary-hover-color;
+          color: var(--hdx-primary-5);
           text-decoration: underline; // overwrites page-extra-light-styles
         }
-        &:active { color: @c-text-link-tertiary-active-color; }
+        &:active { color: var(--hdx-primary-5); }
 
         &[disabled],
         &.is-disabled {
