@@ -2,8 +2,12 @@
   Snippet: dropdown.html
   Path:    templates/v2/components/dropdown.html
 
-  Renders a complete c-dropdown — wrapper div + optional label + trigger button
-  + optional panel (navigate-on-select or checklist).
+  Renders a c-dropdown nav-style menu — wrapper div + optional label +
+  trigger button + optional panel (navigate-on-select or checklist).
+
+  For a native <select>-backed form field, use select.html instead —
+  this component split in two because they served unrelated purposes
+  (menu navigation vs. form input) through one flag.
 
   Parameters
   ─────────────────────────────────────────────────
@@ -24,25 +28,14 @@
                           Checklist format: {value, label, count, checked, active,
                           attrs, extra_classes, children?}.
                           When non-empty a c-dropdown__panel is rendered.  default: []
-  navigate      {bool}    True → navigate-on-select panel.
-                          False → multi-select checklist panel.  default: False
+  navigate      {bool}    True → navigate-on-select panel (single choice, e.g. sort,
+                          page size, role change). False → multi-select checklist
+                          panel with checkboxes (e.g. facet filters).  default: False
   has_search    {bool}    Show search input inside checklist panel.  default: False
   filter_search_key {string} Value for data-filter-search attribute.  default: ''
   has_clear     {bool}    Show clear-selection footer in checklist panel.  default: False
   clear_facet   {string}  Facet key for the clear button (data-facet attr).
                           Pass 'advanced' to clear all advanced filters.  default: ''
-  native        {bool}    When True, renders a <select> element (POST-safe, no JS).
-                          Adds .c-dropdown--native modifier.  default: False
-  name          {string}  name attr on <select>. Only used when native=True.  default: ''
-  id            {string}  id attr on <select>. Only used when native=True.  default: ''
-  options       {dict}    {value: label} mapping for <option> elements.
-                          Only used when native=True.  default: {}
-  option_attrs  {dict}    {value: {attr_name: attr_value}} — extra HTML attributes
-                          per <option> (e.g. a data-* attribute read by page JS).
-                          Only used when native=True.  default: {}
-  errors        {list|string}  Error message(s). Adds the c-dropdown--error modifier
-                          and renders .c-dropdown__error below the wrapper.
-                          default: None
   ─────────────────────────────────────────────────
   State → wrapper class mapping:
     'enabled'  → (no extra class)
@@ -79,93 +72,54 @@
 {% set filter_search_key = filter_search_key if filter_search_key is defined else '' %}
 {% set has_clear        = has_clear        if has_clear        is defined else False %}
 {% set clear_facet      = clear_facet      if clear_facet      is defined else '' %}
-{% set native           = native           if native           is defined else False %}
-{% set name             = name             if name             is defined else '' %}
-{% set id               = id               if id               is defined else '' %}
-{% set options          = options          if options          is defined else {} %}
-{% set option_attrs     = option_attrs     if option_attrs     is defined else {} %}
-{% set errors           = errors           if errors           is defined else None %}
-{% set required         = required         if required         is defined else false %}
 
 {% set is_disabled = (state == 'disabled') %}
 {% set is_open     = (state == 'active') %}
 {% set is_filter   = (state == 'filter') %}
 
 {% set classes = ['c-dropdown', 'c-dropdown--size-' ~ size] %}
-{% if native      %}{% set classes = classes + ['c-dropdown--native']   %}{% endif %}
 {% if is_open     %}{% set classes = classes + ['c-dropdown--open']     %}{% endif %}
 {% if is_filter   %}{% set classes = classes + ['c-dropdown--filter']   %}{% endif %}
 {% if is_disabled %}{% set classes = classes + ['c-dropdown--disabled'] %}{% endif %}
-{% if errors      %}{% set classes = classes + ['c-dropdown--error']    %}{% endif %}
 {% if extra_classes %}{% set classes = classes + [extra_classes] %}{% endif %}
 
-{% if native and label %}
-<label class="c-form-field__label"{% if id %} for="{{ id }}"{% endif %}>
-  {{ label }}{% if required %}<span class="c-form-field__required" aria-hidden="true"> *</span>{% endif %}
-</label>
-{% endif %}
 <div class="{{ classes | join(' ') }}"
      {% for key, val in attrs.items() %}{{ key }}="{{ val }}" {% endfor %}>
 
-  {% if native %}
+  {% if label %}<span class="c-dropdown__label">{{ label }}</span>{% endif %}
 
-    <select class="c-dropdown__select"
-            name="{{ name }}"
-            {% if id %}id="{{ id }}"{% endif %}
-            {% if required %}required{% endif %}
-            {% if is_disabled %}disabled aria-disabled="true"{% endif %}>
-      <option value="" disabled {% if not selected %}selected{% endif %}>{{ placeholder }}</option>
-      {% for value, opt_label in options.items() %}
-        <option value="{{ value }}" {% if selected == value %}selected{% endif %}
-          {% if option_attrs.get(value) %}{% for attr_key, attr_val in option_attrs[value].items() %}{{ attr_key }}="{{ attr_val }}" {% endfor %}{% endif %}>{{ opt_label }}</option>
-      {% endfor %}
-    </select>
+  <button type="button"
+          class="c-dropdown__trigger"
+          {% if is_disabled %}disabled aria-disabled="true"{% endif %}
+          {% if panel_id %}aria-controls="{{ panel_id }}" aria-expanded="{{ 'true' if is_open else 'false' }}"{% endif %}
+          {% for key, val in button_attrs.items() %}{{ key }}="{{ val }}" {% endfor %}>
+
+    {% if icon %}
+      <span class="c-dropdown__trigger-icon">{% include h.url_for_static(icon_src) %}</span>
+    {% endif %}
+
+    <span class="c-dropdown__trigger-value">
+      {{ selected if selected else placeholder }}
+    </span>
+
+    {% if count %}
+      <span class="c-dropdown__trigger-count">{{ count }}</span>
+    {% endif %}
 
     {% if chevron_src %}
-      <span class="c-dropdown__chevron" aria-hidden="true">{% include h.url_for_static(chevron_src) %}</span>
+      <span class="c-dropdown__chevron">{% include h.url_for_static(chevron_src) %}</span>
     {% endif %}
+  </button>
 
-  {% else %}
-
-    {% if label %}<span class="c-dropdown__label">{{ label }}</span>{% endif %}
-
-    <button type="button"
-            class="c-dropdown__trigger"
-            {% if is_disabled %}disabled aria-disabled="true"{% endif %}
-            {% if panel_id %}aria-controls="{{ panel_id }}" aria-expanded="{{ 'true' if is_open else 'false' }}"{% endif %}
-            {% for key, val in button_attrs.items() %}{{ key }}="{{ val }}" {% endfor %}>
-
-      {% if icon %}
-        <span class="c-dropdown__trigger-icon">{% include h.url_for_static(icon_src) %}</span>
-      {% endif %}
-
-      <span class="c-dropdown__trigger-value">
-        {{ selected if selected else placeholder }}
-      </span>
-
-      {% if count %}
-        <span class="c-dropdown__trigger-count">{{ count }}</span>
-      {% endif %}
-
-      {% if chevron_src %}
-        <span class="c-dropdown__chevron">{% include h.url_for_static(chevron_src) %}</span>
-      {% endif %}
-    </button>
-
-    {% if items %}
-      {% snippet 'v2/components/dropdown-panel.html',
-          panel_id=panel_id,
-          items=items,
-          navigate=navigate,
-          has_search=has_search,
-          filter_search_key=filter_search_key,
-          has_clear=has_clear,
-          clear_facet=clear_facet %}
-    {% endif %}
-
+  {% if items %}
+    {% snippet 'v2/components/dropdown-panel.html',
+        panel_id=panel_id,
+        items=items,
+        navigate=navigate,
+        has_search=has_search,
+        filter_search_key=filter_search_key,
+        has_clear=has_clear,
+        clear_facet=clear_facet %}
   {% endif %}
 
 </div>
-{% if errors %}
-  <span class="c-dropdown__error">{{ errors | join(', ') if errors is iterable and errors is not string else errors }}</span>
-{% endif %}

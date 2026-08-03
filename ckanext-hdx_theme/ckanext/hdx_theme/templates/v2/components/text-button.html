@@ -19,7 +19,7 @@
                           default: ''
 
   icon          {bool}    Whether to render an icon.
-                          default: False
+                          default: True
 
   icon_src      {string}  Path to the SVG icon, resolved via h.url_for_static().
                           default: 'v2/icons/placeholder.svg'
@@ -54,18 +54,18 @@
 
   {% snippet 'snippets/components/buttons/text-button.html',
       style='secondary', size='l', label='Download',
-      icon=True, icon_position='left' %}
+      icon_position='left' %}
 
   {% snippet 'snippets/components/buttons/text-button.html',
       style='tertiary', size='s', label='See all',
-      icon=True, icon_position='right', state='disabled' %}
+      icon=False, state='disabled' %}
 #}
 
 {# ── Defaults ────────────────────────────────────────────── #}
 {% set style         = style         if style         is defined else 'primary' %}
 {% set size          = size          if size          is defined else 'm' %}
 {% set label         = label         if label         is defined else '' %}
-{% set icon          = icon          if icon          is defined else False %}
+{% set icon          = icon          if icon          is defined else True %}
 {% set icon_src      = icon_src      if icon_src      is defined else 'v2/icons/placeholder.svg' %}
 {% set icon_position = icon_position if icon_position is defined else 'left' %}
 {% set state         = state         if state         is defined else 'enabled' %}

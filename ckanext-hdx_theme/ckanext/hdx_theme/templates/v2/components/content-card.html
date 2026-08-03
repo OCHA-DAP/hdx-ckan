@@ -11,7 +11,6 @@
   link_label   {string}  Link text, e.g. "Learn more". When empty no link is shown.
                          default: ''
   link_href    {string}  Link URL.  default: '#'
-  link_new_tab {bool}    Open link in new tab.  default: False
   link_attrs   {dict}    Extra HTML attrs on the link (data-*, aria-*, etc.).
                          default: {}
   ─────────────────────────────────────────────────
@@ -21,7 +20,6 @@
 {% set description  = description  if description  is defined else '' %}
 {% set link_label   = link_label   if link_label   is defined else '' %}
 {% set link_href    = link_href    if link_href     is defined else '#' %}
-{% set link_new_tab = link_new_tab if link_new_tab is defined else False %}
 {% set link_attrs   = link_attrs   if link_attrs   is defined else {} %}
 
 <div class="c-content-card">
@@ -37,7 +35,7 @@
         href=link_href,
         style='tertiary',
         size='s',
-        target='_blank' if link_new_tab else '',
+        target='_blank',
         attrs=link_attrs %}
   {% endif %}
 </div>

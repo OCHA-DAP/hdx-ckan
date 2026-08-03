@@ -78,7 +78,7 @@
   {% snippet 'v2/components/search-input.html',
       size=size, placeholder=placeholder, value=value,
       state=input_state, name=name, icon_src=icon_src,
-      show_clear=True, icon_submit=True,
+      icon_submit=True,
       attrs={'data-search-managed': ''} %}
 
   <div class="c-autocomplete__panel" role="listbox"{% if not show_panel %} hidden{% endif %}>

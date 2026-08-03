@@ -70,8 +70,7 @@
 
         {# Topic dropdown #}
         <div class="c-form-field">
-          {% snippet 'v2/components/dropdown.html',
-              native=True,
+          {% snippet 'v2/components/select.html',
               name='topic',
               id='contact-topic',
               label=CONST.SELECT_INQUIRY_TYPE_LABEL,
@@ -84,7 +83,7 @@
 
         {# Full name #}
         <div class="c-form-field">
-          {% snippet 'v2/components/search-input.html',
+          {% snippet 'v2/components/text-field.html',
               size='m',
               type='text',
               name='fullname',
@@ -93,13 +92,12 @@
               required=True,
               value=(data.get('fullname') if 'fullname' in data else c.userobj.fullname) or '',
               placeholder=CONST.INPUT_FULLNAME_PLACEHOLDER,
-              show_icon=False,
               errors=errors.get('fullname') %}
         </div>
 
         {# Email address #}
         <div class="c-form-field">
-          {% snippet 'v2/components/search-input.html',
+          {% snippet 'v2/components/text-field.html',
               size='m',
               type='email',
               name='email',
@@ -109,13 +107,12 @@
               autocomplete='new-email',
               value=(data.get('email') if 'email' in data else c.userobj.email) or '',
               placeholder=CONST.INPUT_EMAIL_PLACEHOLDER,
-              show_icon=False,
               errors=errors.get('email') %}
         </div>
 
         {# Comments textarea #}
         <div class="c-form-field">
-          {% snippet 'v2/components/search-input.html',
+          {% snippet 'v2/components/text-field.html',
               size='m',
               name='msg',
               id='contact-msg',

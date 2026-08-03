@@ -1105,7 +1105,7 @@
 
     <h2 class="demo-subsection__heading">Password input</h2>
     <div class="demo-row--column demo-max-width-l">
-      {% snippet 'v2/components/search-input.html',
+      {% snippet 'v2/components/text-field.html',
           type='password',
           name='password',
           placeholder='Enter password',
@@ -1164,13 +1164,13 @@
       <br>
     </div>
 
-    <h2 class="demo-subsection__heading">Search input — with label</h2>
+    <h2 class="demo-subsection__heading">Text field — with label</h2>
     <div class="demo-row--column demo-max-width-l">
-      {% snippet 'v2/components/search-input.html',
-          size='l', id='demo-label-input', label='Full name', placeholder='Value', show_icon=False %}
+      {% snippet 'v2/components/text-field.html',
+          size='l', id='demo-label-input', label='Full name', placeholder='Value' %}
       <br>
-      {% snippet 'v2/components/search-input.html',
-          size='l', id='demo-label-required-input', label='Email address', required=True, placeholder='Value', show_icon=False %}
+      {% snippet 'v2/components/text-field.html',
+          size='l', id='demo-label-required-input', label='Email address', required=True, placeholder='Value' %}
       <br>
     </div>
 
@@ -2425,23 +2425,21 @@
       <p class="c-drawer-form__description">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit.
       </p>
-      {{ h.snippet('v2/components/search-input.html',
+      {{ h.snippet('v2/components/text-field.html',
           size='l',
           id='demo-fullname',
           name='fullname',
           label='Full name',
           required=True,
-          placeholder='Your full name',
-          show_icon=False) }}
-      {{ h.snippet('v2/components/search-input.html',
+          placeholder='Your full name') }}
+      {{ h.snippet('v2/components/text-field.html',
           size='l',
           type='email',
           id='demo-form-email',
           name='email',
           label='Email address',
           required=True,
-          placeholder='your@email.com',
-          show_icon=False) }}
+          placeholder='your@email.com') }}
       <div class="c-drawer-form__buttons">
         {{ h.snippet('v2/components/button.html',
             style='tertiary',
@@ -2495,8 +2493,7 @@
           title='Lorem ipsum dolor sit amet',
           description='Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
           link_label='Learn more',
-          link_href='#',
-          link_new_tab=True %}
+          link_href='#' %}
       {% snippet 'v2/components/content-card.html',
           title='Consectetur adipiscing elit',
           description='Ut enim ad minim veniam, quis nostrud exercitation ullamco.',

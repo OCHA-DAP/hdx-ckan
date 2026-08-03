@@ -41,7 +41,6 @@
                 label=_('Interactive map'),
                 tag='a',
                 href='#hdx-v2-all-locations-map',
-                icon=True,
                 icon_src='v2/icons/arrow-down.svg',
                 icon_position='right',
                 style='primary',
@@ -51,7 +50,6 @@
                 label=_('Alphabetical order'),
                 tag='a',
                 href='#hdx-v2-all-locations-list',
-                icon=True,
                 icon_src='v2/icons/arrow-down.svg',
                 icon_position='right',
                 style='secondary',
@@ -119,11 +117,11 @@
             <div class="hdx-v2-all-locations-controls__sort-btns">
               {% snippet 'v2/components/button.html',
                   style='tertiary', size='m', label=_('Alphabetical A-Z'),
-                  button_type='button', state='active',
+                  tag='button', button_type='button', state='active',
                   attrs={'data-sort': 'az', 'aria-pressed': 'true'} %}
               {% snippet 'v2/components/button.html',
                   style='tertiary', size='m', label=_('Alphabetical Z-A'),
-                  button_type='button',
+                  tag='button', button_type='button',
                   attrs={'data-sort': 'za', 'aria-pressed': 'false'} %}
             </div>
           </div>

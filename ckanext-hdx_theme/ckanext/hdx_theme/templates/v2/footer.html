@@ -38,11 +38,10 @@
                   name="mc-embedded-subscribe-form"
                   class="validate" target="_blank" novalidate>
               <div class="hdx-v2-footer__newsletter-row">
-                {% snippet 'v2/components/search-input.html',
+                {% snippet 'v2/components/text-field.html',
                     size='m', state='enabled',
                     type='email', name='EMAIL', id='mce-EMAIL',
-                    placeholder=_('Enter your email'), value='',
-                    show_icon=False %}
+                    placeholder=_('Enter your email'), value='' %}
                 {% snippet 'v2/components/button.html',
                     style='secondary', type='text', size='m',
                     state='enabled', icon=False,

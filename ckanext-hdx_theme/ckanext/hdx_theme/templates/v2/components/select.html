@@ -1,0 +1,86 @@
+{#
+  Snippet: select.html
+  Path:    templates/v2/components/select.html
+
+  Renders a native <select>-backed form field (split out of dropdown.html,
+  which now only covers the nav-style trigger+panel use).
+
+  Parameters
+  ─────────────────────────────────────────────────
+  size          {string}  'm' | 's'  default: 'm'
+  label         {string}  Label text above the select.  default: '' (hidden)
+  placeholder   {string}  Text shown for the disabled empty option.  default: 'Dropdown'
+  selected      {string}  Current selected value (if any).  default: ''
+  state         {string}  'enabled' | 'disabled'  default: 'enabled'
+  chevron_src   {string}  Chevron icon path.  default: 'v2/icons/chevron-down.svg'
+  extra_classes {string}  Additional classes on the wrapper div.  default: ''
+  attrs         {dict}    Extra HTML attrs on the wrapper div.  default: {}
+  name          {string}  name attr on <select>.  default: ''
+  id            {string}  id attr on <select>.  default: ''
+  options       {dict}    {value: label} mapping for <option> elements.  default: {}
+  option_attrs  {dict}    {value: {attr_name: attr_value}} — extra HTML attributes
+                          per <option> (e.g. a data-* attribute read by page JS).
+                          default: {}
+  errors        {list|string}  Error message(s). Adds the c-dropdown--error modifier
+                          and renders .c-dropdown__error below the wrapper.
+                          default: None
+  required      {bool}    Appends a red asterisk inside the label.  default: False
+  ─────────────────────────────────────────────────
+
+  Example
+
+  {% snippet 'v2/components/select.html',
+      label='Country', placeholder='Select a country',
+      name='country', options={'sd': 'Sudan', 'td': 'Chad'} %}
+#}
+
+{% set size             = size             if size             is defined else 'm' %}
+{% set label            = label            if label            is defined else '' %}
+{% set placeholder      = placeholder      if placeholder      is defined else 'Dropdown' %}
+{% set selected         = selected         if selected         is defined else '' %}
+{% set state            = state            if state            is defined else 'enabled' %}
+{% set chevron_src      = chevron_src      if chevron_src      is defined else 'v2/icons/chevron-down.svg' %}
+{% set extra_classes    = extra_classes    if extra_classes    is defined else '' %}
+{% set attrs            = attrs            if attrs            is defined else {} %}
+{% set name             = name             if name             is defined else '' %}
+{% set id               = id               if id               is defined else '' %}
+{% set options          = options          if options          is defined else {} %}
+{% set option_attrs     = option_attrs     if option_attrs     is defined else {} %}
+{% set errors           = errors           if errors           is defined else None %}
+{% set required         = required         if required         is defined else false %}
+
+{% set is_disabled = (state == 'disabled') %}
+
+{% set classes = ['c-dropdown', 'c-dropdown--size-' ~ size, 'c-dropdown--native'] %}
+{% if is_disabled %}{% set classes = classes + ['c-dropdown--disabled'] %}{% endif %}
+{% if errors      %}{% set classes = classes + ['c-dropdown--error']    %}{% endif %}
+{% if extra_classes %}{% set classes = classes + [extra_classes] %}{% endif %}
+
+{% if label %}
+<label class="c-form-field__label"{% if id %} for="{{ id }}"{% endif %}>
+  {{ label }}{% if required %}<span class="c-form-field__required" aria-hidden="true"> *</span>{% endif %}
+</label>
+{% endif %}
+<div class="{{ classes | join(' ') }}"
+     {% for key, val in attrs.items() %}{{ key }}="{{ val }}" {% endfor %}>
+
+  <select class="c-dropdown__select"
+          name="{{ name }}"
+          {% if id %}id="{{ id }}"{% endif %}
+          {% if required %}required{% endif %}
+          {% if is_disabled %}disabled aria-disabled="true"{% endif %}>
+    <option value="" disabled {% if not selected %}selected{% endif %}>{{ placeholder }}</option>
+    {% for value, opt_label in options.items() %}
+      <option value="{{ value }}" {% if selected == value %}selected{% endif %}
+        {% if option_attrs.get(value) %}{% for attr_key, attr_val in option_attrs[value].items() %}{{ attr_key }}="{{ attr_val }}" {% endfor %}{% endif %}>{{ opt_label }}</option>
+    {% endfor %}
+  </select>
+
+  {% if chevron_src %}
+    <span class="c-dropdown__chevron" aria-hidden="true">{% include h.url_for_static(chevron_src) %}</span>
+  {% endif %}
+
+</div>
+{% if errors %}
+  <span class="c-dropdown__error">{{ errors | join(', ') if errors is iterable and errors is not string else errors }}</span>
+{% endif %}
