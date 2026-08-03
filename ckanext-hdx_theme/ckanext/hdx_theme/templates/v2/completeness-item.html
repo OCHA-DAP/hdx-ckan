@@ -49,7 +49,7 @@
           <span class="hdx-v2-location-datagrid-card__title"
                 tabindex="0" aria-describedby="{{ category_tip_id }}">{{ category.title }}</span>
           {% snippet 'v2/components/tooltip.html',
-              variant='dark', text=category.description, tooltip_id=category_tip_id, arrow='below' %}
+              variant='dark', text=category.description, tooltip_id=category_tip_id %}
         </span>
       </div>
       <div class="hdx-v2-location-datagrid-card__status-row" role="img" aria-label="{{ category.title }} {{ _('data availability') }}">
@@ -68,7 +68,7 @@
           <span class="hdx-v2-location-datagrid-card__subcateg-title"
                 tabindex="0" aria-describedby="{{ subcateg_tip_id }}">{{ subcateg.title }}</span>
           {% snippet 'v2/components/tooltip.html',
-              variant='dark', text=subcateg.description, tooltip_id=subcateg_tip_id, arrow='below' %}
+              variant='dark', text=subcateg.description, tooltip_id=subcateg_tip_id %}
         </span>
 
         {% if subcateg.stats.state == 'not_applicable' %}

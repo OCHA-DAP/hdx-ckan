@@ -9,39 +9,25 @@
   items         {list}    Ordered list of dicts: {label, href}.
                           The LAST item is rendered as the current (non-linked) crumb.
                           All previous items are rendered as links.
+                          A Home link is always prepended as the first crumb.
                           default: []
-  show_home     {bool}    When true (default), prepend a Home link as the first crumb.
-                          Set to false on pages that manage the first crumb themselves.
-                          default: true
   separator     {string}  Separator character between crumbs.  default: '/'
   extra_classes {string}  default: ''
   ─────────────────────────────────────────────────
-  Example (Home prepended automatically)
+  Example
 
   {% snippet 'v2/components/breadcrumb.html',
       items=[
         {'label': 'Sudan',             'href': '/dataset?location=sd'},
         {'label': 'Humanitarian data', 'href': ''},
       ] %}
-
-  Example (Home omitted)
-
-  {% snippet 'v2/components/breadcrumb.html',
-      show_home=false,
-      items=[
-        {'label': 'Datasets', 'href': '/dataset'},
-        {'label': 'My title', 'href': ''},
-      ] %}
 #}
 
 {% set items         = items         if items         is defined else [] %}
-{% set show_home     = show_home     if show_home     is defined else true %}
 {% set separator     = separator     if separator     is defined else '/' %}
 {% set extra_classes = extra_classes if extra_classes is defined else '' %}
 
-{% if show_home %}
-  {% set items = [{'label': _('Home'), 'href': '/'}] + items %}
-{% endif %}
+{% set items = [{'label': _('Home'), 'href': '/'}] + items %}
 
 <nav class="c-breadcrumb{{ ' ' ~ extra_classes if extra_classes }}"
      aria-label="Breadcrumb"

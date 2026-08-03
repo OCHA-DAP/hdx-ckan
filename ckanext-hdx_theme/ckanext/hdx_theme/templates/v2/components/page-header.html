@@ -149,7 +149,7 @@
               {% endif %}
               {% snippet 'v2/components/text-button.html',
                   style='tertiary', size='s', label=link.title,
-                  icon=True, icon_position='right',
+                  icon_position='right',
                   icon_src='v2/icons/arrow-right.svg',
                   tag='a', href=link.url,
                   attrs={'target': '_blank' if link.newTab else '_self'} %}
@@ -196,7 +196,7 @@
              {% endif %}>{{ description }}</p>
           {% snippet 'v2/components/text-button.html',
               style='tertiary', size='s', label='Show more',
-              icon=True, icon_position='right',
+              icon_position='right',
               icon_src='v2/icons/chevron-down.svg',
               tag='button', button_type='button' %}
         </div>
@@ -227,20 +227,20 @@
           {% if not request_only %}
             {% snippet 'v2/components/text-button.html',
                 style='tertiary', size='m', label='Contact organisation',
-                icon=True, icon_position='left', icon_src='v2/icons/mail.svg',
+                icon_position='left', icon_src='v2/icons/mail.svg',
                 tag='a', href=contact_href %}
           {% endif %}
           {% if edit_mode %}
             {% snippet 'v2/components/text-button.html',
                 style='tertiary', size='m', label='Edit Dataset',
-                icon=True, icon_position='left', icon_src='v2/icons/edit.svg',
+                icon_position='left', icon_src='v2/icons/edit.svg',
                 tag='a', href='#',
                 attrs={'onclick': "contributeAddDetails('" ~ pkg_id ~ "', 'dataset')"} %}
           {% endif %}
           {% if not hide_membership and membership and membership.display_group_message %}
             {% snippet 'v2/components/text-button.html',
                 style='tertiary', size='m', label='Group message',
-                icon=True, icon_position='left', icon_src='v2/icons/message.svg',
+                icon_position='left', icon_src='v2/icons/message.svg',
                 tag='a', href='#',
                 attrs={'onclick': "closeCurrentWidget(this);$('#group-message-topics-selector').select2('val', '');spawnRecaptcha('#groupMessagePopup');showOnboardingWidget('#groupMessagePopup');"} %}
           {% endif %}
@@ -256,7 +256,7 @@
             {% for action in ns_actions_sm.visible %}
               {% snippet 'v2/components/text-button.html',
                   style='tertiary', size='m', label=action.label,
-                  icon=True, icon_position='left', icon_src=action.icon_src,
+                  icon_position='left', icon_src=action.icon_src,
                   tag='a', href=action.href if action.href else '#',
                   attrs=action.attrs if action.attrs else {} %}
             {% endfor %}
@@ -307,21 +307,21 @@
         {% if not request_only %}
           {% snippet 'v2/components/text-button.html',
               style='tertiary', size='m', label='Contact organisation',
-              icon=True, icon_position='left', icon_src='v2/icons/mail.svg',
+              icon_position='left', icon_src='v2/icons/mail.svg',
               tag='a', href=contact_href,
               attrs={'id': 'contact-the-contributor'} %}
         {% endif %}
         {% if edit_mode %}
           {% snippet 'v2/components/text-button.html',
               style='tertiary', size='m', label='Edit Dataset',
-              icon=True, icon_position='left', icon_src='v2/icons/edit.svg',
+              icon_position='left', icon_src='v2/icons/edit.svg',
               tag='a', href='#',
               attrs={'onclick': "contributeAddDetails('" ~ pkg_id ~ "', 'dataset')"} %}
         {% endif %}
         {% if not hide_membership and membership and membership.display_group_message %}
           {% snippet 'v2/components/text-button.html',
               style='tertiary', size='m', label='Group message',
-              icon=True, icon_position='left', icon_src='v2/icons/message.svg',
+              icon_position='left', icon_src='v2/icons/message.svg',
               tag='a', href='#',
               attrs={'id': 'contact-members', 'onclick': "closeCurrentWidget(this);$('#group-message-topics-selector').select2('val', '');spawnRecaptcha('#groupMessagePopup');showOnboardingWidget('#groupMessagePopup');"} %}
         {% endif %}
@@ -337,7 +337,7 @@
           {% for action in ns_actions_md.visible %}
             {% snippet 'v2/components/text-button.html',
                 style='tertiary', size='m', label=action.label,
-                icon=True, icon_position='left', icon_src=action.icon_src,
+                icon_position='left', icon_src=action.icon_src,
                 tag='a', href=action.href if action.href else '#',
                 attrs=action.attrs if action.attrs else {} %}
           {% endfor %}
@@ -406,7 +406,7 @@
         {% if item.link %}
           {% snippet 'v2/components/text-button.html',
               style='tertiary', size='s', label=item.link.label,
-              icon=True, icon_position='right', icon_src='v2/icons/arrow-down.svg',
+              icon_position='right', icon_src='v2/icons/arrow-down.svg',
               tag='a', href=item.link.href,
               extra_classes='c-page-header__meta-view-more' if item.link_on_overflow else '' %}
         {% endif %}

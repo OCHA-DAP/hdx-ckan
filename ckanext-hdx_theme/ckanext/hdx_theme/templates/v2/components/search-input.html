@@ -2,8 +2,10 @@
   Snippet: search-input.html
   Path:    templates/snippets/components/input-field/search-input.html
 
-  Renders a c-search-input — a standalone search/text input bar.
-  Pass type='password' to enable the eye / eye-off toggle (requires v2-components-scripts).
+  Renders a c-search-input — a standalone search bar (always type='search').
+  For a generic text/email/password form field, use text-field.html instead —
+  this component split in two because they served unrelated purposes (search
+  box vs. form input) through the same set of flags.
 
   Parameters
   ─────────────────────────────────────────────────
@@ -14,44 +16,26 @@
                           default: 'enabled'
   name          {string}  input name attr.  default: 'q'
   id            {string}  input id attr.   default: ''
-  type          {string}  input type attr. 'search' | 'password' | 'text' …
-                          default: 'search'. When 'password', renders an
-                          interactive eye toggle instead of a static icon.
   autocomplete  {string}  autocomplete attr value.  default: ''
-  icon_src      {string}  Right icon path (ignored when type='password').
-                          default: 'v2/icons/search.svg'
+  icon_src      {string}  Right icon path.  default: 'v2/icons/search.svg'
   show_icon     {bool}   Whether to render the right icon. default: True
   icon_submit   {bool}   Renders the icon as a real <button type="submit">
                           so clicking it submits the enclosing form (same as
-                          Enter). Ignored when multiline or type='password'.
-                          With show_clear, the icon stays visible alongside
-                          the × when filled. default: False
+                          Enter). With show_clear, the icon stays visible
+                          alongside the × when filled. default: False
   show_clear    {bool}   Whether to render the × clear button (shown only
                           when .c-search-input--filled is present; kept in
                           sync by input-field.js, which also clears the term
                           and resets an active search on click).
-                          Hides the native browser cancel button. default: False
+                          Hides the native browser cancel button. default: True
   extra_classes {string}  default: ''
   attrs         {dict}    Extra HTML attrs on the wrapper div.  default: {}
-  multiline     {bool}    When True, renders a <textarea> instead of <input>.
-                          Skips icon/toggle/clear entirely.  default: False
-  rows          {int}     Number of textarea rows. Only used when multiline=True.
-                          default: 4
-  errors        {list|string}  Error message(s) to display below the input.
-                          Renders a .c-search-input__error span.  default: None
-  label         {string}  Label text rendered above the input as .c-search-input__label.
-                          default: None
-  required      {bool}    Appends a red asterisk inside the label (only when label is set).
-                          default: False
+  input_attrs   {dict}    Extra HTML attrs on the <input> itself.  default: {}
   ─────────────────────────────────────────────────
   Examples
 
   {% snippet 'v2/components/search-input.html',
       size='l', placeholder='Search datasets…', name='q' %}
-
-  {% snippet 'v2/components/search-input.html',
-      type='password', name='password',
-      placeholder='Enter password', autocomplete='current-password' %}
 #}
 
 {% set size          = size          if size          is defined else 'l' %}
@@ -60,83 +44,49 @@
 {% set state         = state         if state         is defined else 'enabled' %}
 {% set name          = name          if name          is defined else 'q' %}
 {% set id            = id            if id            is defined else '' %}
-{% set type          = type          if type          is defined else 'search' %}
 {% set autocomplete  = autocomplete  if autocomplete  is defined else '' %}
 {% set icon_src      = icon_src      if icon_src      is defined else 'v2/icons/search.svg' %}
 {% set show_icon     = show_icon     if show_icon     is defined else True %}
 {% set icon_submit   = icon_submit   if icon_submit   is defined else False %}
-{% set show_clear    = show_clear    if show_clear    is defined else False %}
+{% set show_clear    = show_clear    if show_clear    is defined else True %}
 {% set extra_classes = extra_classes if extra_classes is defined else '' %}
 {% set attrs         = attrs         if attrs         is defined else {} %}
-{% set multiline     = multiline     if multiline     is defined else False %}
-{% set rows          = rows          if rows          is defined else 4 %}
-{% set errors        = errors        if errors        is defined else None %}
 {% set input_attrs   = input_attrs   if input_attrs   is defined else {} %}
-{% set label         = label         if label         is defined else none %}
-{% set required      = required      if required      is defined else false %}
 
 {% set classes = ['c-search-input', 'c-search-input--size-' ~ size] %}
 {% if state == 'active' %}{% set classes = classes + ['c-search-input--active']    %}{% endif %}
 {% if state == 'filled' %}{% set classes = classes + ['c-search-input--filled']    %}{% endif %}
-{% if multiline        %}{% set classes = classes + ['c-search-input--textarea']   %}{% endif %}
 {% if extra_classes    %}{% set classes = classes + [extra_classes]                %}{% endif %}
-{% if errors           %}{% set classes = classes + ['c-search-input--error']      %}{% endif %}
 
-{% if label %}
-<label class="c-search-input__label" {% if id %}for="{{ id }}"{% endif %}>
-  {{ label }}{% if required %}<span class="c-search-input__required" aria-hidden="true"> *</span>{% endif %}
-</label>
-{% endif %}
 <div class="{{ classes | join(' ') }}"
      {% for key, val in attrs.items() %}{{ key }}="{{ val }}"{% endfor %}>
 
-  {% if multiline %}
-    <textarea name="{{ name }}"
-              {% if id %}id="{{ id }}"{% endif %}
-              placeholder="{{ placeholder }}"
-              rows="{{ rows }}">{{ value }}</textarea>
-  {% else %}
-    <input type="{{ type }}"
-           name="{{ name }}"
-           {% if id %}id="{{ id }}"{% endif %}
-           placeholder="{{ placeholder }}"
-           value="{{ value }}"
-           {% if autocomplete %}autocomplete="{{ autocomplete }}"{% else %}autocomplete="off"{% endif %}
-           {% if required %}required="required"{% endif %}
-           {% for key, val in input_attrs.items() %}{{ key }}="{{ val }}" {% endfor %}>
+  <input type="search"
+         name="{{ name }}"
+         {% if id %}id="{{ id }}"{% endif %}
+         placeholder="{{ placeholder }}"
+         value="{{ value }}"
+         {% if autocomplete %}autocomplete="{{ autocomplete }}"{% else %}autocomplete="off"{% endif %}
+         {% for key, val in input_attrs.items() %}{{ key }}="{{ val }}" {% endfor %}>
 
-    {% if type == 'password' %}
-      <button class="c-search-input__icon c-search-input__toggle"
-              type="button"
-              aria-label="Show password">
-        <span class="c-search-input__toggle-eye">
-          {% include h.url_for_static('v2/icons/eye.svg') %}
-        </span>
-        <span class="c-search-input__toggle-eye-off" hidden>
-          {% include h.url_for_static('v2/icons/eye-off.svg') %}
-        </span>
-      </button>
-    {% elif show_clear %}
-      <button class="c-search-input__clear" type="button" aria-label="{{ _('Clear search') }}">
-        {% include h.url_for_static('v2/icons/close.svg') %}
-      </button>
-      {% if show_icon and icon_submit %}
-        {# no --search modifier: the submit icon stays visible alongside the × #}
-        <button class="c-search-input__icon c-search-input__icon--btn" type="submit" aria-label="{{ _('Search') }}">
-          {% include h.url_for_static(icon_src) %}
-        </button>
-      {% elif show_icon %}
-        <span class="c-search-input__icon c-search-input__icon--search">{% include h.url_for_static(icon_src) %}</span>
-      {% endif %}
-    {% elif show_icon and icon_submit %}
+  {% if show_clear %}
+    <button class="c-search-input__clear" type="button" aria-label="{{ _('Clear search') }}">
+      {% include h.url_for_static('v2/icons/close.svg') %}
+    </button>
+    {% if show_icon and icon_submit %}
+      {# no --search modifier: the submit icon stays visible alongside the × #}
       <button class="c-search-input__icon c-search-input__icon--btn" type="submit" aria-label="{{ _('Search') }}">
         {% include h.url_for_static(icon_src) %}
       </button>
     {% elif show_icon %}
-      <span class="c-search-input__icon">{% include h.url_for_static(icon_src) %}</span>
+      <span class="c-search-input__icon c-search-input__icon--search">{% include h.url_for_static(icon_src) %}</span>
     {% endif %}
+  {% elif show_icon and icon_submit %}
+    <button class="c-search-input__icon c-search-input__icon--btn" type="submit" aria-label="{{ _('Search') }}">
+      {% include h.url_for_static(icon_src) %}
+    </button>
+  {% elif show_icon %}
+    <span class="c-search-input__icon">{% include h.url_for_static(icon_src) %}</span>
   {% endif %}
 
 </div>
-<span class="c-search-input__error">{% if errors %}{{ errors | join(', ') if errors is iterable and errors is not string else errors }}{% endif %}</span>
-<ul class="c-form-validator__live-feedback" hidden></ul>

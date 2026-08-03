@@ -151,7 +151,6 @@ Example:
         id='headerSearch',
         size='m',
         icon_submit=True,
-        show_clear=True,
         state='filled' if searchValue else 'enabled',
         placeholder=_('Search for datasets'),
         value=searchValue,
@@ -173,7 +172,7 @@ Example:
         {% endfor %}
       </div>
       {% snippet 'v2/components/text-button.html',
-          style='tertiary', size='s', tag='button', icon=True, icon_position='right',
+          style='tertiary', size='s', tag='button', icon_position='right',
           label='Show more', icon_src='v2/icons/chevron-down.svg',
           attrs={'data-action': 'toggle-pill-overflow', 'hidden': 'hidden'},
           extra_classes='hdx-v2-applied-filters__toggle' %}

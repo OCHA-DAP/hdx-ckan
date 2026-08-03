@@ -84,10 +84,9 @@
       {% if sort_by_selected %}
         <input type="hidden" name="sort" value="{{ sort_by_selected }}">
       {% endif %}
-      {% snippet 'v2/components/search-input.html',
+      {% snippet 'v2/components/text-field.html',
           size='m', name='q', value=q,
           icon_submit=True,
-          show_clear=True,
           state='filled' if q else 'enabled',
           placeholder=_('Search for members'),
           input_attrs={'aria-label': _('Search for members')},
@@ -119,7 +118,7 @@
               {% snippet 'v2/components/text-button.html',
                   style='secondary', size='m', tag='button',
                   label=_('Group message to all') ~ ' ' ~ role_name ~ 's',
-                  icon=True, icon_src='v2/icons/message.svg', icon_position='left',
+                  icon_src='v2/icons/message.svg', icon_position='left',
                   attrs={'data-gm-topic': role_name ~ 's'} %}
               {% snippet 'v2/components/info-icon.html',
                   aria_label=_('About group messages'),
@@ -251,29 +250,29 @@
           <input type="hidden" name="org_id" value="{{ group_dict.id }}">
           <input type="hidden" name="pkg_id" value="">
           <div class="c-form-field">
-            {% snippet 'v2/components/dropdown.html',
-                native=True, name='topic', id='group-message-topic',
+            {% snippet 'v2/components/select.html',
+                name='topic', id='group-message-topic',
                 label=_('Send message to'), required=True,
                 options=gm_info.data.group_topics,
                 placeholder=_('Select recipient group(s)') %}
           </div>
           <div class="c-form-field">
-            {% snippet 'v2/components/search-input.html',
+            {% snippet 'v2/components/text-field.html',
                 size='m', type='text', name='fullname', id='group-message-fullname',
                 label=_('Your name'), required=True,
-                value=gm_info.data.fullname, show_icon=False %}
+                value=gm_info.data.fullname %}
           </div>
           <div class="c-form-field">
-            {% snippet 'v2/components/search-input.html',
+            {% snippet 'v2/components/text-field.html',
                 size='m', type='email', name='email', id='group-message-email',
                 label=_('Your email'), required=True,
-                value=gm_info.data.email, show_icon=False %}
+                value=gm_info.data.email %}
           </div>
           <div class="c-form-field">
-            {% snippet 'v2/components/search-input.html',
+            {% snippet 'v2/components/text-field.html',
                 size='m', name='msg', id='group-message-msg',
                 label=_('Comments'), required=True,
-                multiline=True, rows=4, show_icon=False %}
+                multiline=True, rows=4 %}
           </div>
           <p class="c-drawer-form__text hdx-v2-org-members__gm-success" id="group-message-success" hidden>
             {{ _('Your message has been sent.') }}
@@ -459,8 +458,8 @@
             {% set _role_opts.options = dict(_role_opts.options, **{role_categ.value: role_categ.text}) %}
           {% endfor %}
           <div class="c-form-field">
-            {% snippet 'v2/components/dropdown.html',
-                native=True, name='role', id='invite-role',
+            {% snippet 'v2/components/select.html',
+                name='role', id='invite-role',
                 options=_role_opts.options,
                 placeholder=_('Select a role') %}
           </div>

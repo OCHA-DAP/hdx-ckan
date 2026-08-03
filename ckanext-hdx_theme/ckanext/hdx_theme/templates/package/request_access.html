@@ -76,22 +76,22 @@
 
           {# Your name #}
           <div class="c-form-field">
-            {% snippet 'v2/components/search-input.html',
+            {% snippet 'v2/components/text-field.html',
                 size='m', type='text', name='sender_name', id='request-sender-name',
                 label=CONST.INPUT_FULLNAME_LABEL, required=True,
                 value=(data.get('sender_name') if 'sender_name' in data else c.userobj.fullname) or '',
                 placeholder=CONST.INPUT_FULLNAME_PLACEHOLDER,
-                show_icon=False, errors=errors.get('sender_name') %}
+                errors=errors.get('sender_name') %}
           </div>
 
           {# Your email address #}
           <div class="c-form-field">
-            {% snippet 'v2/components/search-input.html',
+            {% snippet 'v2/components/text-field.html',
                 size='m', type='email', name='email_address', id='request-email-address',
                 label=CONST.INPUT_EMAIL_LABEL, required=True, autocomplete='new-email',
                 value=(data.get('email_address') if 'email_address' in data else c.userobj.email) or '',
                 placeholder=CONST.INPUT_EMAIL_PLACEHOLDER,
-                show_icon=False, errors=errors.get('email_address') %}
+                errors=errors.get('email_address') %}
           </div>
 
           {# Your organization — native dropdown + "Other" free-text reveal.
@@ -110,8 +110,8 @@
           {% set org_selected = data.get('sender_organization_id') or '' %}
 
           <div class="c-form-field">
-            {% snippet 'v2/components/dropdown.html',
-                native=True, name='sender_organization_id', id='request-sender-organization-id',
+            {% snippet 'v2/components/select.html',
+                name='sender_organization_id', id='request-sender-organization-id',
                 label=CONST.SELECT_ORGANIZATION_LABEL, required=True,
                 options=org_options, option_attrs=org_option_attrs,
                 selected=org_selected, placeholder=CONST.SELECT_ORGANIZATION_PLACEHOLDER,
@@ -119,20 +119,20 @@
           </div>
           <div class="c-form-field hdx-v2-request-access-other{% if org_selected|lower not in ['other', 'hdx-other'] %} hdx-v2-request-access-other--hidden{% endif %}"
                data-other-field-for="sender_organization_id">
-            {% snippet 'v2/components/search-input.html',
+            {% snippet 'v2/components/text-field.html',
                 size='m', type='text', name='sender_organization_id_other', id='request-sender-organization-id-other',
                 label=CONST.SELECT_ORGANIZATION_LABEL,
                 value=data.get('sender_organization_id_other') or '',
                 placeholder=CONST.SELECT_ORGANIZATION_LABEL,
-                show_icon=False, errors=errors.get('sender_organization_id_other') %}
+                errors=errors.get('sender_organization_id_other') %}
           </div>
 
           {# Your organization type — native dropdown + "Other" free-text reveal #}
           {% set org_type_selected = data.get('sender_organization_type') or '' %}
 
           <div class="c-form-field">
-            {% snippet 'v2/components/dropdown.html',
-                native=True, name='sender_organization_type', id='request-sender-organization-type',
+            {% snippet 'v2/components/select.html',
+                name='sender_organization_type', id='request-sender-organization-type',
                 label=CONST.SELECT_ORGANIZATION_TYPE_LABEL, required=True,
                 options=h.hdx_organization_type_dict(),
                 selected=org_type_selected, placeholder=CONST.SELECT_ORGANIZATION_TYPE_PLACEHOLDER,
@@ -140,18 +140,18 @@
           </div>
           <div class="c-form-field hdx-v2-request-access-other{% if org_type_selected|lower not in ['other', 'hdx-other'] %} hdx-v2-request-access-other--hidden{% endif %}"
                data-other-field-for="sender_organization_type">
-            {% snippet 'v2/components/search-input.html',
+            {% snippet 'v2/components/text-field.html',
                 size='m', type='text', name='sender_organization_type_other', id='request-sender-organization-type-other',
                 label=CONST.SELECT_ORGANIZATION_TYPE_LABEL, required=True,
                 value=data.get('sender_organization_type_other') or '',
                 placeholder=CONST.SELECT_ORGANIZATION_TYPE_LABEL,
-                show_icon=False, errors=errors.get('sender_organization_type_other') %}
+                errors=errors.get('sender_organization_type_other') %}
           </div>
 
           {# Where are you located? — native dropdown, no "Other" #}
           <div class="c-form-field">
-            {% snippet 'v2/components/dropdown.html',
-                native=True, name='sender_country', id='request-sender-country',
+            {% snippet 'v2/components/select.html',
+                name='sender_country', id='request-sender-country',
                 label=CONST.SELECT_LOCATION_LABEL, required=True,
                 options=h.hdx_location_dict(include_world=False),
                 selected=data.get('sender_country') or '', placeholder=CONST.SELECT_LOCATION_PLACEHOLDER,
@@ -162,8 +162,8 @@
           {% set intend_selected = data.get('sender_intend') or '' %}
 
           <div class="c-form-field">
-            {% snippet 'v2/components/dropdown.html',
-                native=True, name='sender_intend', id='request-sender-intend',
+            {% snippet 'v2/components/select.html',
+                name='sender_intend', id='request-sender-intend',
                 label=CONST.SELECT_INTENDED_USE_LABEL, required=True,
                 options={'Humanitarian Assistance': 'Humanitarian Assistance', 'Academic': 'Academic', 'Advocacy': 'Advocacy', 'other': 'Other'},
                 selected=intend_selected, placeholder=CONST.SELECT_INTENDED_USE_PLACEHOLDER,
@@ -171,17 +171,17 @@
           </div>
           <div class="c-form-field hdx-v2-request-access-other{% if intend_selected|lower not in ['other', 'hdx-other'] %} hdx-v2-request-access-other--hidden{% endif %}"
                data-other-field-for="sender_intend">
-            {% snippet 'v2/components/search-input.html',
+            {% snippet 'v2/components/text-field.html',
                 size='m', type='text', name='sender_intend_other', id='request-sender-intend-other',
                 label=CONST.SELECT_INTENDED_USE_LABEL, required=True,
                 value=data.get('sender_intend_other') or '',
                 placeholder=CONST.SELECT_INTENDED_USE_LABEL,
-                show_icon=False, errors=errors.get('sender_intend_other') %}
+                errors=errors.get('sender_intend_other') %}
           </div>
 
           {# Comments #}
           <div class="c-form-field">
-            {% snippet 'v2/components/search-input.html',
+            {% snippet 'v2/components/text-field.html',
                 size='m', name='message_content', id='request-message-content',
                 label=CONST.TEXTAREA_MSG_LABEL, required=True, multiline=True, rows=6,
                 value=data.get('message_content') or '',

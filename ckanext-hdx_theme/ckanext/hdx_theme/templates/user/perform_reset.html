@@ -43,13 +43,13 @@
       {{ h.csrf_input() }}
 
       <div class="c-form-field">
-        {% snippet 'v2/components/search-input.html',
+        {% snippet 'v2/components/text-field.html',
             type='password', name='password1', id='field-password',
             label=_('Password'), required=True, autocomplete='new-password' %}
       </div>
 
       <div class="c-form-field">
-        {% snippet 'v2/components/search-input.html',
+        {% snippet 'v2/components/text-field.html',
             type='password', name='password2', id='field-confirm-password',
             label=_('Confirm password'), required=True, autocomplete='new-password' %}
       </div>

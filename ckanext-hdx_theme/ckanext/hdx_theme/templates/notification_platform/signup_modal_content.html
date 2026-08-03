@@ -20,7 +20,7 @@
 
     {% if not logged_in %}
       <div class="c-form-field">
-        {{ h.snippet('v2/components/search-input.html',
+        {{ h.snippet('v2/components/text-field.html',
             type='email',
             size='l',
             id='notification-email',
@@ -29,7 +29,6 @@
             required=True,
             autocomplete='new-email',
             placeholder=CONST_NOTIFICATION_PLATFORM.SIGNUP_INPUT_EMAIL_PLACEHOLDER,
-            show_icon=False,
             input_attrs={
               'data-validation': 'email',
               'data-validation-error': CONST_NOTIFICATION_PLATFORM.SIGNUP_INPUT_EMAIL_ERROR

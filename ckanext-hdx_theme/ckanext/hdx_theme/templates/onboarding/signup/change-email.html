@@ -44,27 +44,25 @@
     <div class="hdx-v2-signup-form-page__fields">
 
       <div class="c-form-field">
-        {% snippet 'v2/components/search-input.html',
+        {% snippet 'v2/components/text-field.html',
             type='email',
             label=CONST.INPUT_EMAIL_LABEL,
             required=True,
             name='email',
             placeholder=CONST.INPUT_EMAIL_PLACEHOLDER,
             autocomplete='new-email',
-            show_icon=False,
             errors=errors.get('email'),
             input_attrs={'data-validation': 'email', 'data-validation-error': CONST.INPUT_EMAIL_ERROR} %}
       </div>
 
       <div class="c-form-field">
-        {% snippet 'v2/components/search-input.html',
+        {% snippet 'v2/components/text-field.html',
             type='email',
             label=CONST.INPUT_EMAIL2_LABEL,
             required=True,
             name='email2',
             placeholder=CONST.INPUT_EMAIL2_PLACEHOLDER,
             autocomplete='new-email',
-            show_icon=False,
             errors=errors.get('email2'),
             input_attrs={'data-validation': 'email,match', 'data-validation-match': 'email', 'data-validation-error': CONST.INPUT_EMAIL2_ERROR} %}
       </div>
