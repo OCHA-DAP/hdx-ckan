@@ -32,6 +32,7 @@
 
 {% elif section.type in ('map', 'key_figures', 'interactive_data') %}
 
+  {% set iframe_title = {'map': _('Map'), 'key_figures': _('Key figures'), 'interactive_data': _('Interactive data')}.get(section.type, _('Embedded content')) %}
   <div class="hdx-v2-crisis-iframe-section">
     <div class="hdx-v2-container">
       <div class="hdx-v2-crisis-iframe">
@@ -40,6 +41,7 @@
                 data-crisis-iframe
                 frameborder="0"
                 style="{{ section.style }}"
+                title="{{ iframe_title }}"
                 src="{{ section.get('data_url') }}">
         </iframe>
       </div>

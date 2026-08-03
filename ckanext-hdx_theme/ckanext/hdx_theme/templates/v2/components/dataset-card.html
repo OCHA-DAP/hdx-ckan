@@ -177,15 +177,18 @@
           {% for fmt in formats %}
             {% if fmt.type == 'private' or fmt.type == 'archived' or fmt.type == 'requestdata' %}
               {% set default_icon = 'v2/icons/lock.svg' %}
+              {% set status_label = _('Private dataset') %}
               {% if fmt.type == 'archived' %}
                 {% set default_icon = 'v2/icons/archive.svg' %}
+                {% set status_label = _('Archived') %}
               {% elif fmt.type == 'requestdata' %}
                 {% set default_icon = 'v2/icons/unlock.svg' %}
+                {% set status_label = _('Request access only') %}
               {% endif %}
               {% snippet 'v2/components/label.html',
                   color='dark', size='xs',
                   icon=True, icon_src=fmt.icon_src if fmt.icon_src else default_icon,
-                  icon_only=True %}
+                  icon_only=True, attrs={'aria-label': status_label} %}
             {% elif fmt.type == 'cod' or fmt.type == 'cod_plus' %}
               {% snippet 'v2/components/label.html',
                   text=fmt.text, color='dark', size='xs', icon=False %}

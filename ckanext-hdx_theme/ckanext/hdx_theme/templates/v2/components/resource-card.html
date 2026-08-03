@@ -145,7 +145,7 @@
       {% if not hdx_connect %}
       <div class="c-resource-card__file-type">
         {% snippet 'v2/components/file-type-icon.html',
-            format=format_category, size='m' %}
+            format=format_category, size='m', aria_label=format_text or format_category %}
         {% if format_text %}
           <span class="c-resource-card__format-text">{{ format_text | upper }}</span>
         {% endif %}

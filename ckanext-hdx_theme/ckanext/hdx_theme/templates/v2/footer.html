@@ -67,8 +67,7 @@
              target="_blank" rel="noopener noreferrer"
              class="hdx-v2-footer__social-link"
              data-module="hdx_click_stopper"
-             data-module-link_type="footer"
-             title="GitHub">
+             data-module-link_type="footer">
             <span class="hdx-v2-footer__social-icon" aria-hidden="true">{% include 'v2/icons/github.svg' %}</span>
             <span class="c-text-link c-text-link--primary c-text-link--size-s">GitHub</span>
           </a>
@@ -76,8 +75,7 @@
              target="_blank" rel="noopener noreferrer"
              class="hdx-v2-footer__social-link"
              data-module="hdx_click_stopper"
-             data-module-link_type="footer"
-             title="LinkedIn">
+             data-module-link_type="footer">
             <span class="hdx-v2-footer__social-icon" aria-hidden="true">{% include 'v2/icons/linkedin.svg' %}</span>
             <span class="c-text-link c-text-link--primary c-text-link--size-s">LinkedIn</span>
           </a>
@@ -88,7 +86,6 @@
         <span class="hdx-v2-footer__related-label">Related to</span>
         <a href="https://centre.humdata.org"
            target="_blank" rel="noopener noreferrer"
-           title="Centre for Humanitarian Data"
            class="c-text-link c-text-link--primary c-text-link--size-s hdx-v2-footer__ext-link"
            data-module="hdx_click_stopper"
            data-module-link_type="footer">
@@ -103,7 +100,7 @@
 
         {# Data column #}
         <div class="hdx-v2-footer__nav-col">
-          <h2 class="hdx-v2-footer__nav-heading">Data</h2>
+          <p class="hdx-v2-footer__nav-heading">Data</p>
           <ul class="hdx-v2-footer__nav-list">
             <li>
               {% snippet 'v2/components/text-link.html',
@@ -128,7 +125,7 @@
 
         {# Products column — populated from the header quick-links registry #}
         <div class="hdx-v2-footer__nav-col">
-          <h2 class="hdx-v2-footer__nav-heading">Products</h2>
+          <p class="hdx-v2-footer__nav-heading">Products</p>
           <ul class="hdx-v2-footer__nav-list">
             {% for product in h.hdx_get_quick_links_list(archived=False, exclude_crisis=True) %}
             <li>
@@ -144,7 +141,7 @@
 
         {# Resources column #}
         <div class="hdx-v2-footer__nav-col">
-          <h2 class="hdx-v2-footer__nav-heading">Resources</h2>
+          <p class="hdx-v2-footer__nav-heading">Resources</p>
           <ul class="hdx-v2-footer__nav-list">
             <li>
               {% snippet 'v2/components/text-link.html',

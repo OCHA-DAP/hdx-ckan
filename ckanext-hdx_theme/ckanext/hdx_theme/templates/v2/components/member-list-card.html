@@ -55,20 +55,19 @@
     <div class="c-member-list-card__name-row">
       {% snippet 'v2/components/avatar.html',
           size='sm', initials=avatar_initials, aria_label=name %}
-      <a class="c-member-list-card__name" href="{{ profile_url }}" title="{{ name }}">{{ name }}</a>
+      <a class="c-member-list-card__name" href="{{ profile_url }}">{{ name }}</a>
       <span class="c-member-list-card__sep" aria-hidden="true">|</span>
-      <a class="c-member-list-card__username" href="{{ profile_url }}" title="{{ username }}">{{ username }}</a>
+      <a class="c-member-list-card__username" href="{{ profile_url }}">{{ username }}</a>
     </div>
 
     {% if meta_text %}
-      <div class="c-member-list-card__meta"
-           title="{{ meta_text }}{% if sysadmin %} - {{ _('Sysadmin') }}{% endif %}">
+      <div class="c-member-list-card__meta">
         {{ meta_text }}{% if sysadmin %} - <b>{{ _('Sysadmin') }}</b>{% endif %}
       </div>
     {% endif %}
 
     {% if stats_text %}
-      <div class="c-member-list-card__stats" title="{{ stats_text }}">{{ stats_text }}</div>
+      <div class="c-member-list-card__stats">{{ stats_text }}</div>
     {% endif %}
   </div>
 

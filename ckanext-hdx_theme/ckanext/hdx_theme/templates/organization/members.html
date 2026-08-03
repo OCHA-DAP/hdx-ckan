@@ -310,11 +310,9 @@
               size='sm',
               initials=(current_member.display_name or current_member.name or 'A')[0],
               aria_label=current_member.display_name %}
-          <a class="hdx-v2-org-members-side__bio-link" href="{{ h.url_for('user.read', id=current_member.name) }}"
-             title="{{ current_member.display_name }}">{{ current_member.display_name }}</a>
+          <a class="hdx-v2-org-members-side__bio-link" href="{{ h.url_for('user.read', id=current_member.name) }}">{{ current_member.display_name }}</a>
           <span class="hdx-v2-org-members-side__bio-sep" aria-hidden="true">|</span>
-          <a class="hdx-v2-org-members-side__bio-link" href="{{ h.url_for('user.read', id=current_member.name) }}"
-             title="{{ current_member.name }}">{{ current_member.name }}</a>
+          <a class="hdx-v2-org-members-side__bio-link" href="{{ h.url_for('user.read', id=current_member.name) }}">{{ current_member.name }}</a>
         </div>
         <div class="hdx-v2-org-members-side__bio-meta">
           {{ _('Registered') }} {{ h.render_datetime(current_member.created) }}<br>
@@ -433,7 +431,7 @@
         <form class="hdx-v2-org-members-side__invite" id="invite-members-form" method="post"
               action="{{ h.url_for('hdx_members.bulk_member_new', id=group_dict.id) }}">
           {{ h.csrf_input() }}
-          <h3 class="hdx-v2-org-members-side__invite-title">{{ _('Add / invite colleagues to this organisation') }}</h3>
+          <h2 class="hdx-v2-org-members-side__invite-title">{{ _('Add / invite colleagues to this organisation') }}</h2>
           <p class="hdx-v2-org-members-side__invite-text">
             {{ _("To invite your colleagues to join this organisation, please enter their email(s) below. Multiple email addresses can be entered if separated by comma ','") }}
           </p>

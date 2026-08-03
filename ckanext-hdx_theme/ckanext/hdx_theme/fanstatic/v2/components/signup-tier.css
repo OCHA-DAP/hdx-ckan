@@ -33,6 +33,7 @@
   font-size: var(--hdx-fs-3xl);
   font-weight: var(--hdx-fw-bold);
   line-height: var(--hdx-lh-normal);
+  display: block;
   color: var(--hdx-neutral-95);
   margin: 0;
 }
