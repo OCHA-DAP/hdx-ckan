@@ -938,10 +938,14 @@ def hdx_get_carousel_list():
     return logic.get_action('hdx_carousel_settings_show')({'max_items': 3}, {})
 
 
-def hdx_get_quick_links_list(archived=None):
+def hdx_get_quick_links_list(archived=None, exclude_crisis=False):
     result = logic.get_action('hdx_quick_links_settings_show')({}, {})
     if archived in (True, False):
         result = [item for item in result if item.get('archived',False) == archived]
+    if exclude_crisis:
+        crisis_prefixes = ('/event', '/m/event', '/dashboards', '/m/dashboards')
+        result = [item for item in result
+                  if not item.get('url', '').lower().startswith(crisis_prefixes)]
     return result
 
 
@@ -966,6 +970,20 @@ def hdx_fetch_last_three_signal_cards():
     rows.sort(key=lambda r: (r.get('campaign_date', ''), r.get('date', ''), r.get('location', '')),
               reverse=True)
 
+    def _safe_href(value):
+        if not value:
+            return '#'
+        parts = urlparse.urlparse(value)
+        if parts.scheme in ('http', 'https') or (parts.scheme == '' and value.startswith('/')):
+            return value
+        return '#'
+
+    def _safe_img_src(value):
+        if not value:
+            return ''
+        parts = urlparse.urlparse(value)
+        return value if parts.scheme in ('http', 'https') else ''
+
     cards = []
     for row in rows[:3]:
         try:
@@ -978,12 +996,12 @@ def hdx_fetch_last_three_signal_cards():
             'type': SIGNAL_CARD_INDICATOR_CATEGORIES.get(row.get('indicator_id'), ''),
             'title': row.get('summary_short', ''),
             'description': '',
-            'image_src': row.get('plot', ''),
+            'image_src': _safe_img_src(row.get('plot', '')),
             'image_alt': row.get('summary_short', ''),
             'source_label': 'Source',
-            'source_href': row.get('hdx_url', ''),
+            'source_href': _safe_href(row.get('hdx_url', '')),
             'cta_label': 'See this signal',
-            'cta_href': row.get('campaign_url', ''),
+            'cta_href': _safe_href(row.get('campaign_url', '')),
         })
     return cards
 

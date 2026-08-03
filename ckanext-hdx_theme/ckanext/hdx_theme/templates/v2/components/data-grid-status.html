@@ -52,6 +52,7 @@
 {% if extra_classes %}{% set classes = classes + [extra_classes] %}{% endif %}
 
 {% set has_tooltip = tooltip_id and tooltip_text %}
+{% if has_tooltip %}{% set classes = classes + ['c-tooltip-trigger'] %}{% endif %}
 
 {% if has_tooltip %}<span class="c-tooltip-anchor">{% endif %}
   <span class="{{ classes | join(' ') }}"

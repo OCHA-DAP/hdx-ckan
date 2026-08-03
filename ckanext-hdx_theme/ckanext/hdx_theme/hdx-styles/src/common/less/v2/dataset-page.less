@@ -19,21 +19,10 @@
 // ── Section wrapper ───────────────────────────────────────────
 // Sections are separated by <hr class="c-divider"> in the template.
 .hdx-v2-dataset-section {
-    padding: var(--hdx-space-6) 0;
-
-    @media (min-width: @hdx-bp-md) {
-        padding: var(--hdx-space-10) 0;
-    }
-
-    @media (max-width: @hdx-bp-xl) {
-        scroll-margin-top: 8rem;
-    }
+    .hdx-page-section-wrapper();
 
     &__header {
-        display:         flex;
-        align-items:     center;
-        justify-content: space-between;
-        gap:             var(--hdx-space-3);
+        .hdx-page-section-header();
     }
 
     &__title-row {
@@ -43,9 +32,7 @@
     }
 
     &__title {
-        .hdx-display-xs-semibold();
-        color:       var(--hdx-neutral-95);
-        margin:      0;
+        .hdx-page-section-title();
     }
 
     &__chevron {
@@ -61,7 +48,7 @@
     }
 
     &__body {
-        padding-top: var(--hdx-space-8);
+        .hdx-page-section-body();
     }
 
     // Collapsible variant
@@ -123,13 +110,6 @@
         display:     flex;
         align-items: center;
         gap:         var(--hdx-space-1);
-    }
-
-    // Tooltip anchors inside the metadata grid: fixed width, extends rightward
-    .c-tooltip-anchor .c-tooltip {
-        width: 14rem;
-        left:  0;      // LEFT edge = icon left edge → tooltip extends to the right
-        right: auto;   // override base right: 0
     }
 
     &__value {

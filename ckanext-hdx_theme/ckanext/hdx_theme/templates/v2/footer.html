@@ -130,7 +130,7 @@
         <div class="hdx-v2-footer__nav-col">
           <h2 class="hdx-v2-footer__nav-heading">Products</h2>
           <ul class="hdx-v2-footer__nav-list">
-            {% for product in h.hdx_get_quick_links_list(archived=False) %}
+            {% for product in h.hdx_get_quick_links_list(archived=False, exclude_crisis=True) %}
             <li>
               {% snippet 'v2/components/text-link.html',
                   label=product.title, href=product.url,

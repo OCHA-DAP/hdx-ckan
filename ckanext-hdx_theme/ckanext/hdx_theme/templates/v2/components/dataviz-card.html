@@ -1,0 +1,70 @@
+
+{#
+  Snippet: dataviz-card.html
+  Path:    templates/v2/components/dataviz-card.html
+
+  Renders a single showcase card for the Dataviz Gallery grid.
+
+  Parameters
+  ─────────────────────────────────────────────────
+  title        {string}  Card title (single-line, truncated). default: ''
+  description  {string}  Description text, 3-line clamped with "Show more". default: ''
+  img_url      {string}  Thumbnail image URL. Empty → placeholder. default: ''
+  url          {string}  Explore target — image and title link here, opens
+                          in a new tab. default: '#'
+  updated_on   {string}  Pre-formatted "Updated on ..." string. Pass '' to omit.
+                          default: ''
+  data_url     {string}  "DATA" link target, opens in a new tab. default: '#'
+  edit_href    {string}  "Edit" link target. Empty → edit link omitted
+                          (gate on h.has_dataviz_gallery_permission()).
+                          default: ''
+  ─────────────────────────────────────────────────
+#}
+
+{% set title       = title       if title       is defined else '' %}
+{% set description = description if description is defined else '' %}
+{% set img_url     = img_url     if img_url     is defined else '' %}
+{% set url         = url         if url         is defined else '#' %}
+{% set updated_on  = updated_on  if updated_on  is defined else '' %}
+{% set data_url    = data_url    if data_url    is defined else '#' %}
+{% set edit_href   = edit_href   if edit_href   is defined else '' %}
+
+<div class="c-dataviz-card">
+
+  <a class="c-dataviz-card__image" href="{{ url }}" target="_blank" rel="noopener noreferrer">
+    {% if img_url %}
+      <img class="c-dataviz-card__img lazyload" data-src="{{ img_url }}" src="{{ img_url }}" alt="{{ title }}">
+    {% else %}
+      <div class="c-dataviz-card__image-placeholder"></div>
+    {% endif %}
+  </a>
+
+  <div class="c-dataviz-card__body">
+
+    <a class="c-dataviz-card__title" href="{{ url }}" target="_blank" rel="noopener noreferrer">{{ title }}</a>
+
+    {% if description %}
+      <div class="c-dataviz-card__desc" data-module="clamped-text">
+        <p class="c-dataviz-card__desc-text" data-clamped-content>{{ description }}</p>
+        {% snippet 'v2/components/text-button.html',
+            style='tertiary', size='s', label=_('Show more'),
+            icon=True, icon_position='right', icon_src='v2/icons/chevron-down.svg',
+            tag='button', button_type='button' %}
+      </div>
+    {% endif %}
+
+    <div class="c-dataviz-card__footer">
+      {% if updated_on %}
+        <span class="c-dataviz-card__updated">{{ updated_on }}</span>
+      {% endif %}
+      {% snippet 'v2/components/text-link.html',
+          label=_('DATA'), href=data_url, style='primary', size='s', target='_blank' %}
+      {% if edit_href %}
+        {% snippet 'v2/components/text-link.html',
+            label=_('Edit'), href=edit_href, style='primary', size='s' %}
+      {% endif %}
+    </div>
+
+  </div>
+
+</div>

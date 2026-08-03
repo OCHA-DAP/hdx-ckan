@@ -4,9 +4,6 @@
   flex-wrap: nowrap;
   gap: var(--hdx-space-4);
 }
-.c-kpi-row .c-tooltip-anchor .c-tooltip {
-  width: 14rem;
-}
 .c-kpi-card {
   flex: 1 1 0;
   min-width: 0;

@@ -50,12 +50,3 @@
     }
 }
 
-// Reuses the generic .c-tooltip-anchor wrapper (label.less) for absolute
-// positioning; the hover/focus trigger selector below is component-local
-// since .c-tooltip-anchor's own reveal rule is scoped to .c-info-icon.
-.c-tooltip-anchor {
-    .c-data-grid-status:hover ~ .c-tooltip,
-    .c-data-grid-status:focus-visible ~ .c-tooltip {
-        display: block;
-    }
-}

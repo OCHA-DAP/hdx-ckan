@@ -1,47 +1,43 @@
-{% extends "page.html" %}
+{% extends "v2/page.html" %}
 
-{% block subtitle %}{{ _("Archived Dataviz") }}{% endblock %}
+{% set content_class = 'hdx-v2-content-columns__content' %}
 
-{% block breadcrumb_content %}
-  {% snippet "snippets/active_breadcrumb_item.html", title=_('Archived Dataviz'), position=2 %}
+{% block subtitle %}{{ _('Archived Dataviz') }}{% endblock %}
+
+{% block styles %}
+  {{ super() }}
+  {% asset 'hdx_theme/v2-archived-dataviz-page-styles' %}
 {% endblock %}
 
-{% block pre_primary %}
-    <div class="row top-banner-archive">
-        <div class="col-12">
-            <div class="top-banner-text-wrapper">
-                <div class="top-banner-title">
-                   {{ _('Archived Dataviz') }}
-                </div>
-            </div>
-        </div>
-    </div>
+{% block breadcrumb_items %}
+  {% snippet 'v2/components/breadcrumb.html',
+      items=[
+        {'label': _('Products'), 'href': ''},
+        {'label': _('Archived Dataviz'), 'href': ''},
+      ] %}
 {% endblock %}
+
+{# No sidebar #}
+{% block secondary %}{% endblock %}
 
 {% block primary %}
-    <div class="row mTop60">
-        <div class="col-12">
-{#            <div id="body-about-hdx" class="section-flag" style="">Archived Dataviz</div>#}
-        </div>
+  <div class="hdx-v2-archived-dataviz">
+    <div class="hdx-v2-archived-dataviz__header">
+      <h1 class="hdx-v2-archived-dataviz__title">{{ _('Archived Dataviz') }}</h1>
+      <span class="hdx-v2-archived-dataviz__count">{{ data.viz_list | length }}</span>
     </div>
-    {% snippet 'archived_quick_links/questions_sections.html', data=data %}
-{% endblock %}
 
-{% block secondary %}
-    <div id="hdx-faq-sidebar-wrapper" class="mTop60">
-        <div class="hdx-faq-sidebar" id="hdx-faq-sidebar">
-          <p>The list includes archived humanitarian crisis pages.</p>
-          <p>Country pages that were displayed under Quick Links can be found
-            <a href="/group">here</a></p>
-            <p class="no-answer-found mTop30">
-                <a onclick="closeCurrentWidget(this);spawnRecaptcha('#faqSendMsgPopup');showFaqWidget('#faqSendMsgPopup');" href="#">&nbsp;</a>
-            </p>
-        </div>
-    </div>
-{% endblock %}
-
-
-{%- block styles %}
-    {{ super() }}
-    {% asset 'hdx_theme/faq-scripts' %}
+    {% if data.viz_list %}
+      {% for item in data.viz_list %}
+        {% snippet 'v2/components/text-button.html',
+            style='tertiary', size='m', label=item.title,
+            icon=True, icon_position='right', icon_src='v2/icons/link-external.svg',
+            tag='a', href=item.url, attrs={'target': '_blank'},
+            extra_classes='hdx-v2-archived-dataviz__row' %}
+        {% if not loop.last %}<hr class="c-divider">{% endif %}
+      {% endfor %}
+    {% else %}
+      <p class="hdx-v2-archived-dataviz__empty">{{ _('No archived items found.') }}</p>
+    {% endif %}
+  </div>
 {% endblock %}

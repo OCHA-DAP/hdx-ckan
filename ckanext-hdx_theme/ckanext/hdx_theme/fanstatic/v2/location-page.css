@@ -294,12 +294,6 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.c-tooltip-anchor .hdx-v2-location-datagrid-card__title:hover ~ .c-tooltip,
-.c-tooltip-anchor .hdx-v2-location-datagrid-card__title:focus-visible ~ .c-tooltip,
-.c-tooltip-anchor .hdx-v2-location-datagrid-card__subcateg-title:hover ~ .c-tooltip,
-.c-tooltip-anchor .hdx-v2-location-datagrid-card__subcateg-title:focus-visible ~ .c-tooltip {
-  display: block;
-}
 .hdx-v2-location-datagrid-drawer__sticky-top {
   position: sticky;
   top: var(--drawer-header-height, 0px);

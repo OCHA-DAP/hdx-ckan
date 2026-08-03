@@ -119,7 +119,7 @@
                       The HDX team manually reviews every dataset uploaded to the platform as part of a standard
                       quality assurance (QA) process. This includes basic checks on the quality and sensitivity of
                       every resource. This helps ensure a high standard for all data shared on HDX. Learn more about the
-                      <a href="/about/hdx-qa-process" target="_blank">HDX QA process</a>.
+                      <a href="{{ h.HDX_CONST('DOCUMENTATION_LINKS')['QA_PROCESS'] }}" target="_blank">HDX QA process</a>.
                     </div>
                     {{ h.snippet('bem.blocks/radio_field.html',
                                           name='private',
@@ -437,7 +437,7 @@
                                                     rounded=True,
                                                     icon=False,
                                                     paragraph_classes=['paragraph__text_font_size-small'],
-                                                    paragraphs=['Tip: In general CC BY-IGO or CC-BY are our recommended licenses for data on HDX as they allow others to use data freely as long as they credit your organisation. If you are unsure, please consult with your organisation’s data policy or legal team. <a href="{0}" target="_blank" title="licenses">Read more about licenses</a>.'.format(h.url_for('hdx_faqs.read', category='licenses'))],
+                                                    paragraphs=['Tip: In general CC BY-IGO or CC-BY are our recommended licenses for data on HDX as they allow others to use data freely as long as they credit your organisation. If you are unsure, please consult with your organisation’s data policy or legal team. <a href="{0}" target="_blank" title="licenses">Read more about licenses</a>.'.format(h.HDX_CONST('DOCUMENTATION_LINKS')['DATA_LICENSES'])],
                                                     spacing_class="mb-4") }}
                       </div>
 
@@ -759,7 +759,7 @@
                                         If you wish to share this resource, take steps to ensure that it is properly
                                         anonymised (with all the direct identifiers removed) and upload it again.</p>
                                       <p>You can learn more in the <a
-                                        href="{{ h.url_for('hdx_faqs.read', category='terms') }}" target="_blank"
+                                        href="{{ h.HDX_CONST('DOCUMENTATION_LINKS')['TERMS_OF_SERVICE'] }}" target="_blank"
                                         title="HDX Terms of Service">HDX Terms of Service</a>.</p>
                                     </div>
                                   </div>
@@ -789,7 +789,7 @@
                                     <p>We will notify you within 24 hours if our team detects any disclosure risk. During
                                       this time, the resource will appear on your dataset page but be marked as under
                                       review.</p>
-                                    <p>Learn more about the <a href="/about/hdx-qa-process" title="HDX QA process"
+                                    <p>Learn more about the <a href="{{ h.HDX_CONST('DOCUMENTATION_LINKS')['QA_PROCESS'] }}" title="HDX QA process"
                                                                target="_blank">HDX QA process</a>.</p>
                                   </div>
                                 </div>
@@ -1009,13 +1009,13 @@
                                  data-module-button="create-form-submit"
                                  class="checkbox-field__label form-check-label ms-2" for="checkbox-hdx-terms">
                             I confirm this dataset does not contain Personally Identifiable Data (PII) or otherwise violate the <a target="_blank"
-                                                     href="{{ h.url_for('hdx_faqs.read', category='terms') }}"
+                                                     href="{{ h.HDX_CONST('DOCUMENTATION_LINKS')['TERMS_OF_SERVICE'] }}"
                                                      title="HDX Terms of Service">HDX Terms of Service</a>.
                           </label>
                         </div>
                       </div>
 
-                      <p>Need help? <a href="/faq" title="FAQ" target="_blank">Visit our FAQ</a> or <a href="/faq#body-faq-Contact" title="Contact" target="_blank">Contact support</a>.</p>
+                      <p>Need help? <a href="{{ h.HDX_CONST('DOCUMENTATION_LINKS')['MAIN'] }}" title="FAQ" target="_blank">Visit our FAQ</a> or <a href="{{ h.HDX_CONST('DOCUMENTATION_LINKS')['MAIN'] }}#need-support" title="Contact" target="_blank">Contact support</a>.</p>
 
                       {{ h.snippet('bem.blocks/form_button.html',
                                         type="submit",

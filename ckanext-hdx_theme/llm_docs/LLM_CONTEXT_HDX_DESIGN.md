@@ -194,7 +194,8 @@ Example page-specific template (light search):
 
 - **Template**: `ckanext-hdx_theme/ckanext/hdx_theme/templates/package/resource_read.html`
   - Extends `v2/page.html`.
-- **Core assets**: `hdx_theme/v2-resource-page-styles`.
+- **Core assets**: `hdx_theme/v2-resource-page-styles`, `hdx_theme/v2-resource-page-scripts` (Data
+  dictionary AJAX load; loaded only when `res.datastore_active`).
 
 ---
 

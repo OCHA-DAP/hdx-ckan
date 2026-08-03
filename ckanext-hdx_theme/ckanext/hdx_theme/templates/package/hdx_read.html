@@ -33,12 +33,22 @@
 {% endblock %}
 
 {% set page_title = pkg.title or pkg.name %}
+{% set page_description = h.markdown_extract(pkg.notes, extract_length=200)|forceescape %}
 {% block subtitle %}{{ page_title }} | Humanitarian Dataset{% endblock %}
 
 {% block meta %}
     {{ super() }}
-    <meta name="description" content="{{pkg.notes}} Access the {{ page_title }} dataset to support humanitarian efforts." />
+    <meta name="description" content="{{ page_description }} Access the {{ page_title }} dataset to support humanitarian efforts." />
 {% endblock %}
+
+{% block head_extras -%}
+  {{ super() }}
+  <meta property="og:title" content="{{ h.dataset_display_name(pkg) }} - {{ g.site_title }}">
+  <meta property="og:description" content="{{ page_description }}">
+  <script type="application/ld+json">
+    {{ h.structured_data(pkg, ['hdx_schemaorg'])|safe }}
+  </script>
+{% endblock -%}
 
 {% set sidebar_class    = 'hdx-v2-content-columns__sidebar hdx-v2-content-columns__sidebar--xl-only hdx-v2-dataset-sidebar' %}
 {% set content_class    = 'hdx-v2-content-columns__content' %}
@@ -362,7 +372,7 @@
               {% if pkg.license_id %}
                 {% snippet 'v2/components/text-link.html',
                     label=h.hdx_find_license_name(pkg.license_id, pkg.license_title),
-                    href=h.url_for('hdx_faqs.read', category='licenses'),
+                    href=h.HDX_CONST('DOCUMENTATION_LINKS')['DATA_LICENSES'],
                     style='secondary', size='m',
                     attrs={'property': 'dc:rights'} %}
                 {% if pkg.license_id == 'hdx-other' and pkg.license_other %}:
@@ -533,13 +543,6 @@
 
 {% block post_primary %}
 
-{% endblock %}
-
-{% block head_extras %}
-  {{ super() }}
-  <script type="application/ld+json">
-    {{ h.structured_data(pkg, ['hdx_schemaorg'])|safe }}
-  </script>
 {% endblock %}
 
 {% block scripts %}

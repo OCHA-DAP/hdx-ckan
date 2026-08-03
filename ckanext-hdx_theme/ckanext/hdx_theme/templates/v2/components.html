@@ -856,6 +856,27 @@
       </div>
     </div>
 
+    {# ── Row list with divider (outbound links) ──────── #}
+    <hr class="demo-divider">
+    <h2 class="demo-subsection__heading">Row list with divider (outbound links)</h2>
+
+    <div class="demo-row demo-row--column demo-max-width-l">
+      {% snippet 'v2/components/text-button.html',
+          style='tertiary', size='m', label='Placeholder link 1',
+          icon=True, icon_position='right', icon_src='v2/icons/link-external.svg',
+          tag='a', href='#' %}
+      <hr class="c-divider">
+      {% snippet 'v2/components/text-button.html',
+          style='tertiary', size='m', label='Placeholder link 2',
+          icon=True, icon_position='right', icon_src='v2/icons/link-external.svg',
+          tag='a', href='#' %}
+      <hr class="c-divider">
+      {% snippet 'v2/components/text-button.html',
+          style='tertiary', size='m', label='Placeholder link 3',
+          icon=True, icon_position='right', icon_src='v2/icons/link-external.svg',
+          tag='a', href='#' %}
+    </div>
+
   </section>
 
   <hr class="demo-divider">
@@ -1369,6 +1390,15 @@
             {'label': 'Home',        'href': '/'},
             {'label': 'Datasets',    'href': '/dataset'},
             {'label': 'Sudan — Example Crisis Dataset 2024', 'href': ''},
+          ] %}
+    </div>
+
+    <h2 class="demo-subsection__heading">Breadcrumb — non-linked middle crumb</h2>
+    <div class="demo-row">
+      {% snippet 'v2/components/breadcrumb.html',
+          items=[
+            {'label': 'Products',        'href': ''},
+            {'label': 'Archived Dataviz', 'href': ''},
           ] %}
     </div>
 
@@ -2105,6 +2135,29 @@
           url_is_external=True %}
       {% snippet 'v2/components/showcase-card.html',
           title='Ukraine — Example Monitoring Showcase' %}
+    </div>
+  </section>
+
+  <hr class="demo-divider">
+
+  {# ══════════════════════════════════════════════════════
+     DATAVIZ CARD
+  ══════════════════════════════════════════════════════ #}
+  <section class="demo-section" id="dataviz-card">
+    <h1 class="demo-section__title">Dataviz Card</h1>
+    <p class="demo-section__subtitle">Dataviz Gallery grid — full card with clamped description + Edit link, and minimal card</p>
+
+    <div class="c-dataviz-card-grid">
+      {% snippet 'v2/components/dataviz-card.html',
+          title='Sudan — Example Data Story 2024',
+          description='Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.',
+          img_url='',
+          url='#',
+          updated_on='Updated on 12 Dec 2025',
+          data_url='#',
+          edit_href='#' %}
+      {% snippet 'v2/components/dataviz-card.html',
+          title='Ukraine — Example Monitoring Dataviz' %}
     </div>
   </section>
 

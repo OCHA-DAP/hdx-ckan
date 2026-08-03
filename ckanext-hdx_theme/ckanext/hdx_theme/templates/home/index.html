@@ -81,8 +81,8 @@
   <div class="hdx-v2-highlights__inner hdx-v2-container">
 
     <div class="hdx-v2-highlights__header">
-      <span class="hdx-v2-highlights__label">{{ _('HDX highlights') }}</span>
-      <h2 class="hdx-v2-highlights__heading">{{ _('Curated highlights on current events') }}</h2>
+      <span class="hdx-v2-highlights__label">{{ _('Trending on HDX') }}</span>
+      <h2 class="hdx-v2-highlights__heading">{{ _('Highlights from across the platform') }}</h2>
     </div>
 
     <div class="hdx-v2-highlights__carousel mobile-carousel">
@@ -138,6 +138,7 @@
                 title=card.title,
                 description=card.description,
                 image_src=(card.image_src if card.image_src and card.image_src.startswith('http') else (h.url_for_static(card.image_src) if card.image_src else '')),
+                image_alt=card.image_alt,
                 source_label=card.source_label,
                 source_href=card.source_href,
                 cta_label=card.cta_label,
@@ -175,29 +176,30 @@
 
     <div class="hdx-v2-intro__header">
       <span class="hdx-v2-intro__label">{{ _('About HDX') }}</span>
-      <h2 class="hdx-v2-intro__heading">{{ _('A network of data-focused partners making data easy to find and use') }}</h2>
+      <h2 class="hdx-v2-intro__heading">{{ _('An open platform for sharing data across crises and organisations') }}</h2>
     </div>
 
+    {% set docs_links = h.HDX_CONST('DOCUMENTATION_LINKS') %}
     <div class="c-activity-card-list">
 
       {% snippet 'v2/components/activity-card.html',
           size='responsive',
           icon_src='v2/icons/search.svg',
-          heading=_('Find and use'),
-          subtitle=_('Search and download datasets uploaded by organizations verified by HDX.'),
-          button_label=_('Explore data'),
+          heading=_('Find data'),
+          subtitle=_('Search our catalogue of more than 20,000 datasets to find and download the data you need'),
+          button_label=_('Search data'),
           button_href=h.url_for('dataset.search'),
           button_style='primary' %}
 
       {% snippet 'v2/components/activity-card.html',
           size='responsive',
           icon_src='v2/icons/upload.svg',
-          heading=_('Share and contribute'),
-          subtitle=_('Organizations contribute new datasets and resources to HDX relevant to the community.'),
-          button_label=_('Login') if not c.userobj else _('Add data'),
-          button_href=h.url_for('hdx_signin.login') if not c.userobj else h.url_for('hdx_contribute.new'),
+          heading=_('Share data'),
+          subtitle=_("Join the 200+ humanitarian organisations sharing data on HDX - contribute your organisation's data to support humanitarian response"),
+          button_label=_('Learn More'),
+          button_href=docs_links['QA_PROCESS'],
           button_style='secondary',
-          button_attrs={'data-module': 'hdx_click_stopper', 'data-module-link_type': 'homepage body'} %}
+          button_attrs={'data-module': 'hdx_click_stopper', 'data-module-link_type': 'homepage body', 'target': '_blank', 'rel': 'noopener noreferrer'} %}
 
     </div>
 
@@ -215,6 +217,7 @@
   {{ super() }}
   {% asset 'hdx_theme/v2-carousel-scripts' %}
   {% asset 'hdx_theme/v2-home-page-scripts' %}
+  {% asset 'hdx_theme/v2-signals-landing-page-scripts' %}
   {% if structured_data %}
     <script type="application/ld+json">
       {{ structured_data | safe }}
