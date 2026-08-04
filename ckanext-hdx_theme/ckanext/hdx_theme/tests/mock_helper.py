@@ -358,7 +358,7 @@ def mock_signal_cards():
     return [
         {
             'location': 'Testland',
-            'date': 'Jan 01, 2026',
+            'date': '01 January 2026',
             'type': 'Conflict events',
             'title': 'Mock signal title for testing',
             'description': '',
