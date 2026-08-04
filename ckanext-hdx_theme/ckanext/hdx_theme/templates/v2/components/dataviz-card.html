@@ -49,7 +49,8 @@
         {% snippet 'v2/components/text-button.html',
             style='tertiary', size='s', label=_('Show more'),
             icon_position='right', icon_src='v2/icons/chevron-down.svg',
-            tag='button', button_type='button' %}
+            tag='button', button_type='button',
+            attrs={'data-clamped-toggle': ''} %}
       </div>
     {% endif %}
 

@@ -134,10 +134,10 @@
 .c-resource-card__desc-text a:hover {
   color: var(--hdx-primary-5);
 }
-.c-resource-card .c-text-button {
+.c-resource-card__footer .c-text-button {
   display: none;
 }
-.c-resource-card.is-clamped .c-text-button {
+.c-resource-card.is-clamped .c-resource-card__footer .c-text-button {
   display: inline-flex;
 }
 .c-resource-card.is-open .c-text-button__icon {

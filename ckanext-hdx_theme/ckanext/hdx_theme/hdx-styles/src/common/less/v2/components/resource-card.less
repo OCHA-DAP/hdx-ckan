@@ -182,8 +182,8 @@
     }
 
     // Show-more button: hidden until JS confirms content is actually clamped
-    .c-text-button { display: none; }
-    &.is-clamped .c-text-button { display: inline-flex; }
+    &__footer .c-text-button { display: none; }
+    &.is-clamped &__footer .c-text-button { display: inline-flex; }
 
     // Chevron icon rotation when expanded (show-more button is in __footer,
     // but is-open is toggled on this root by clamped-text.js)

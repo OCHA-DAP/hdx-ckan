@@ -35,7 +35,9 @@
   pcoded           {bool}    Show a "P-coded" label chip.
                              default: false
 
-  api_available    {bool}    Show an "API available" label chip.
+  api_available    {bool}    Show an "Access via API" text-button, linking to
+                             the resource page's #api-access section. Pass for
+                             tabular datastore-active resources only.
                              default: false
 
   preview_opened   {bool}    Pre-expand the description on server render (adds `is-open`
@@ -159,8 +161,11 @@
                 text='P-coded', color='light', size='s', icon=False %}
           {% endif %}
           {% if api_available %}
-            {% snippet 'v2/components/label.html',
-                text='API available', color='light', size='s', icon=False %}
+            {% snippet 'v2/components/text-button.html',
+                style='tertiary', size='m', state='enabled',
+                label=_('Access via API'),
+                icon_position='left', icon_src='v2/icons/api.svg',
+                tag='a', href=title_href ~ '#api-access' %}
           {% endif %}
         </div>
       {% endif %}
@@ -190,7 +195,8 @@
           label='Show less' if preview_opened else 'Show more',
           icon_position='right',
           icon_src='v2/icons/chevron-down.svg',
-          tag='button', button_type='button' %}
+          tag='button', button_type='button',
+          attrs={'data-clamped-toggle': ''} %}
     {% endif %}
 
     <div class="c-resource-card__actions">
