@@ -99,7 +99,8 @@
 {% endblock %}
 
 {# ── Anchor links — desktop sidebar ──────────────────────── #}
-{% block secondary %}
+
+{% block secondary_content %}
   {% set ns = namespace(anchor_items=[]) %}
   {% if _data_explorer %}
     {% set ns.anchor_items = ns.anchor_items + [{'label': _('Resource preview'), 'href': '#resource-preview', 'active': True}] %}
