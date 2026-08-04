@@ -53,7 +53,7 @@
 }
 @media (min-width: 80rem) {
   .hdx-v2-locations-list-map #map {
-    height: 580px;
+    height: 660px;
   }
 }
 .hdx-v2-locations-list-legend {
