@@ -80,7 +80,7 @@
         {% endblock %}
 
         {% block main_content %}
-          {% set secondary_block_output = self.secondary() %}
+          {% set secondary_block_output = self.secondary_content() %}
           <div class="{% if secondary_block_output|trim == '' %}no-nav{% endif %}">
             {#
             The pre_primary block can be used to add content before the
