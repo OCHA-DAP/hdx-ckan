@@ -178,7 +178,7 @@
 }
 .c-tooltip__text {
   position: relative;
-  line-height: 130%;
+  line-height: var(--hdx-lh-normal);
   z-index: 1;
   flex-shrink: 0;
 }
@@ -222,7 +222,7 @@
 .c-tooltip--light .c-tooltip__title {
   align-self: stretch;
   font-weight: var(--hdx-fw-medium);
-  line-height: 130%;
+  line-height: var(--hdx-lh-normal);
   display: -webkit-inline-box;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -233,7 +233,7 @@
 .c-tooltip--light .c-tooltip__subtitle {
   align-self: stretch;
   font-size: var(--hdx-fs-xs);
-  line-height: 130%;
+  line-height: var(--hdx-lh-normal);
   color: var(--hdx-neutral-85);
 }
 .c-tooltip--light .c-tooltip__icon-btn {
@@ -292,11 +292,11 @@
 }
 .c-tooltip--graph .c-tooltip__legend-label {
   font-weight: var(--hdx-fw-medium);
-  line-height: 130%;
+  line-height: var(--hdx-lh-normal);
 }
 .c-tooltip--graph .c-tooltip__legend-value {
   font-weight: var(--hdx-fw-medium);
-  line-height: 130%;
+  line-height: var(--hdx-lh-normal);
   color: var(--hdx-neutral-8);
 }
 .c-info-icon {

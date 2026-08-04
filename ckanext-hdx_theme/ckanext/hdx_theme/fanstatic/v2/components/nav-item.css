@@ -18,7 +18,7 @@
 }
 .c-nav-item__label {
   position: relative;
-  line-height: 130%;
+  line-height: var(--hdx-lh-normal);
 }
 .c-nav-item__chevron {
   width: var(--hdx-space-6);

@@ -1,9 +1,9 @@
 {% extends "v2/page.html" %}
 
-{%- block styles %}
+{% block styles %}
   {{ super() }}
   {% asset 'hdx_office_preview/main-css' %}
-{% endblock -%}
+{% endblock %}
 
 {% block page %}
   <div id="hdx-csv-preview">
@@ -15,7 +15,7 @@
   </div>
 {% endblock %}
 
-{%- block scripts %}
+{% block scripts %}
   {{ super() }}
   {% asset 'hdx_office_preview/main' %}
-{% endblock -%}
+{% endblock %}

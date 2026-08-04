@@ -635,6 +635,12 @@ dataset-quick-edit-scripts:
   contents:
     - hdx-quick-edit.js
 
+v2-quick-edit-scripts:
+  <<: *common-js
+  output: ckanext-hdx_theme/%(version)s_v2-quick-edit-scripts.js
+  contents:
+    - v2/components/quick-edit.js
+
 dataset-related-styles:
   <<: *common-css
   output: ckanext-hdx_theme/%(version)s_dataset-related-styles.css
@@ -815,6 +821,15 @@ shape-view-scripts:
 #  output: ckanext-hdx_theme/%(version)s_shape-view-styles.css
 #  contents:
 #    - vendor/leaflet-0.7.3/leaflet.css
+
+v2-shape-view-scripts:
+  <<: *common-js
+  output: ckanext-hdx_theme/%(version)s_v2-shape-view-scripts.js
+  extra:
+    preload:
+      - hdx_theme/charting-scripts
+  contents:
+    - v2/pages/shape-view.js
 
 two-step-styles:
   <<: *common-css
@@ -1613,23 +1628,23 @@ v2-resource-page-scripts:
   contents:
     - v2/pages/resource.js
 
-v2-all-locations-page-styles:
-  output: ckanext-hdx_theme/%(version)s_v2-all-locations-page-styles.css
+v2-locations-list-page-styles:
+  output: ckanext-hdx_theme/%(version)s_v2-locations-list-page-styles.css
   <<: *common-css
   contents:
     - vendor/leaflet-1.7.1/leaflet.css
     - browse_/browse.css  # TODO: remove when map is migrated to v2
     - v2/pages/locations-list.css
 
-v2-all-locations-page-scripts:
+v2-locations-list-page-scripts:
   <<: *common-js
-  output: ckanext-hdx_theme/%(version)s_v2-all-locations-page-scripts.js
+  output: ckanext-hdx_theme/%(version)s_v2-locations-list-page-scripts.js
   contents:
     - vendor/leaflet-1.7.1/leaflet.js
     - map_base.js
     - browse_/world_json.js
     - browse_/browse.js  # TODO: remove when map is migrated to v2
-    - v2/pages/all-locations.js
+    - v2/pages/locations-list.js
 
 v2-dataset-page-scripts:
   <<: *common-js

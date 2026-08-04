@@ -10,7 +10,7 @@
   font-family: var(--hdx-font-body);
   font-weight: var(--hdx-fw-regular);
   color: var(--hdx-neutral-95);
-  line-height: 130%;
+  line-height: var(--hdx-lh-normal);
 }
 .c-dropdown__trigger {
   align-self: stretch;
@@ -44,7 +44,7 @@
   flex: 1;
   font-family: var(--hdx-font-body);
   font-weight: var(--hdx-fw-medium);
-  line-height: 130%;
+  line-height: var(--hdx-lh-normal);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -280,7 +280,7 @@
 }
 .c-dropdown-calendar__year {
   font-weight: var(--hdx-fw-medium);
-  line-height: 130%;
+  line-height: var(--hdx-lh-normal);
 }
 .c-dropdown-calendar__nav-btn {
   width: 2.125rem;

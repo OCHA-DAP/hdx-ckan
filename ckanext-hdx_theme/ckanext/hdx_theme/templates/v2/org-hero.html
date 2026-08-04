@@ -34,7 +34,7 @@
   {% set logo_src = org_dict.image_url if org_dict.image_url.startswith('http') else h.url_for_static('uploads/group/' ~ org_dict.image_url) %}
 {% endif %}
 
-{% set member_since = _('Member since') ~ ' ' ~ (h.render_datetime(org_dict.created) if org_dict.created else _('Unknown')) %}
+{% set member_since = _('Member since') ~ ' ' ~ (h.hdx_format_date(org_dict.created) if org_dict.created else _('Unknown')) %}
 {% set description = h.markdown_extract(org_dict.description, extract_length=0) | striptags if org_dict.description else '' %}
 
 {% set header_actions = [

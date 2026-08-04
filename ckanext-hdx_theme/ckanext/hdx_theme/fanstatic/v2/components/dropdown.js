@@ -41,7 +41,7 @@
       var isMenu = panel.getAttribute('role') === 'menu';
       var target = isMenu
         ? panel.querySelector('[role="menuitem"]')
-        : panel.querySelector('button:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])');
+        : window.hdxV2.getFocusable(panel)[0];
       if (target) {
         requestAnimationFrame(function () { target.focus(); });
       }

@@ -1,13 +1,13 @@
 {% extends "v2/page.html" %}
-{% set outer_row_class      = 'hdx-v2-all-locations-row' %}
-{% set columns_class        = 'hdx-v2-content-columns--gap hdx-v2-all-locations-columns' %}
-{% set sidebar_class        = 'hdx-v2-content-columns__sidebar hdx-v2-content-columns__sidebar--sticky hdx-v2-all-locations-sidebar' %}
-{% set content_class        = 'hdx-v2-content-columns__content hdx-v2-all-locations-content' %}
+{% set outer_row_class      = 'hdx-v2-locations-list-row' %}
+{% set columns_class        = 'hdx-v2-content-columns--gap hdx-v2-locations-list-columns' %}
+{% set sidebar_class        = 'hdx-v2-content-columns__sidebar hdx-v2-content-columns__sidebar--sticky hdx-v2-locations-list-sidebar' %}
+{% set content_class        = 'hdx-v2-content-columns__content hdx-v2-locations-list-content' %}
 {% set breadcrumb_row_class = 'hdx-v2-breadcrumb-row--white' %}
 
 {% block styles %}
   {{ super() }}
-  {% asset 'hdx_theme/v2-all-locations-page-styles' %}
+  {% asset 'hdx_theme/v2-locations-list-page-styles' %}
 {% endblock %}
 
 {% block subtitle %}{{ _('Humanitarian Data by Location') }} | {{ _('Country Datasets')}}{% endblock %}
@@ -31,25 +31,25 @@
 {% block pre_primary %}
 
   {# Hero: title + text-buttons + KPI cards #}
-  <div class="hdx-v2-all-locations-hero">
+  <div class="hdx-v2-locations-list-hero">
     <div class="hdx-v2-container">
-      <div class="hdx-v2-all-locations-hero__body">
-        <div class="hdx-v2-all-locations-hero__header">
-          <h1 class="hdx-v2-all-locations-hero__title">{{ _('Locations') }}</h1>
-          <div class="hdx-v2-all-locations-hero__top-actions">
+      <div class="hdx-v2-locations-list-hero__body">
+        <div class="hdx-v2-locations-list-hero__header">
+          <h1 class="hdx-v2-locations-list-hero__title">{{ _('Locations') }}</h1>
+          <div class="hdx-v2-locations-list-hero__top-actions">
             {% snippet 'v2/components/text-button.html',
                 label=_('Interactive map'),
                 tag='a',
-                href='#hdx-v2-all-locations-map',
+                href='#hdx-v2-locations-list-map',
                 icon_src='v2/icons/arrow-down.svg',
                 icon_position='right',
                 style='primary',
                 size='m' %}
-            <span class="hdx-v2-all-locations-hero__top-sep" aria-hidden="true">|</span>
+            <span class="hdx-v2-locations-list-hero__top-sep" aria-hidden="true">|</span>
             {% snippet 'v2/components/text-button.html',
                 label=_('Alphabetical order'),
                 tag='a',
-                href='#hdx-v2-all-locations-list',
+                href='#hdx-v2-locations-list-list',
                 icon_src='v2/icons/arrow-down.svg',
                 icon_position='right',
                 style='secondary',
@@ -78,33 +78,33 @@
   </div>
 
   {# Map (out of scope — existing markup preserved) #}
-  <div class="hdx-v2-all-locations-map" id="hdx-v2-all-locations-map">
+  <div class="hdx-v2-locations-list-map" id="hdx-v2-locations-list-map">
     <div id="mapbox-baselayer-url-div" style="display:none;">{{ "/mapbox-base-tiles/{z}/{x}/{y}.png" }}</div>
     <div id="datasetCounts" style="display:none;">{{ countries }}</div>
     <div id="map"></div>
   </div>
 
   {# Legend: HRP square #}
-  <div class="hdx-v2-all-locations-legend">
+  <div class="hdx-v2-locations-list-legend">
     <div class="hdx-v2-container">
-      <div class="hdx-v2-all-locations-legend__row">
-        <span class="hdx-v2-all-locations-legend__square" aria-hidden="true"></span>
+      <div class="hdx-v2-locations-list-legend__row">
+        <span class="hdx-v2-locations-list-legend__square" aria-hidden="true"></span>
         <span>{{ _('Locations with a Humanitarian Response Plan') }}</span>
       </div>
     </div>
   </div>
 
   {# Controls: section title + HRP toggle + sort buttons #}
-  <div class="hdx-v2-all-locations-controls" id="hdx-v2-all-locations-list">
+  <div class="hdx-v2-locations-list-controls" id="hdx-v2-locations-list-list">
     <div class="hdx-v2-container">
-      <div class="hdx-v2-all-locations-controls__inner">
-        <b class="hdx-v2-all-locations-controls__title">{{ _('Alphabetical order') }}</b>
-        <div class="hdx-v2-all-locations-controls__right">
+      <div class="hdx-v2-locations-list-controls__inner">
+        <b class="hdx-v2-locations-list-controls__title">{{ _('Alphabetical order') }}</b>
+        <div class="hdx-v2-locations-list-controls__right">
 
-          <div class="hdx-v2-all-locations-controls__filter">
-            <label for="hrp-filter" class="hdx-v2-all-locations-controls__filter-label">
-              <span class="hdx-v2-all-locations-controls__filter-label-full">{{ _('Show only locations with Humanitarian Response Plan') }}</span>
-              <span class="hdx-v2-all-locations-controls__filter-label-short">{{ _('Show only locations with HRP') }}</span>
+          <div class="hdx-v2-locations-list-controls__filter">
+            <label for="hrp-filter" class="hdx-v2-locations-list-controls__filter-label">
+              <span class="hdx-v2-locations-list-controls__filter-label-full">{{ _('Show only locations with Humanitarian Response Plan') }}</span>
+              <span class="hdx-v2-locations-list-controls__filter-label-short">{{ _('Show only locations with HRP') }}</span>
             </label>
             {% snippet 'v2/components/toggle.html',
                 name='hrp-filter',
@@ -112,9 +112,9 @@
                 label=_('Show only locations with Humanitarian Response Plan') %}
           </div>
 
-          <div class="hdx-v2-all-locations-controls__sort">
-            <span class="hdx-v2-all-locations-controls__sort-label">{{ _('Sort by') }}</span>
-            <div class="hdx-v2-all-locations-controls__sort-btns">
+          <div class="hdx-v2-locations-list-controls__sort">
+            <span class="hdx-v2-locations-list-controls__sort-label">{{ _('Sort by') }}</span>
+            <div class="hdx-v2-locations-list-controls__sort-btns">
               {% snippet 'v2/components/button.html',
                   style='tertiary', size='m', label=_('Alphabetical A-Z'),
                   tag='button', button_type='button', state='active',
@@ -135,9 +135,9 @@
 
 {# Sidebar: letter-anchor grid (RIGHT at SM/MD, LEFT at XL) #}
 {% block secondary %}
-  <p class="hdx-v2-all-locations-sidebar__heading">{{ _('Jump to section') }}</p>
+  <p class="hdx-v2-locations-list-sidebar__heading">{{ _('Jump to section') }}</p>
   <nav aria-label="{{ _('Jump to section') }}">
-    <div class="hdx-v2-all-locations-letter-grid">
+    <div class="hdx-v2-locations-list-letter-grid">
 {#      {% set all_letters = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'] %}#}
       {% set all_letters = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','Y','Z'] %}
       {% for letter in all_letters %}
@@ -153,12 +153,12 @@
 
 {# Alphabetical letter sections #}
 {% block primary %}
-  <div class="hdx-v2-all-locations-sections">
+  <div class="hdx-v2-locations-list-sections">
     {% for letter in letters_present %}
-      <section class="hdx-v2-all-locations-section"
+      <section class="hdx-v2-locations-list-section"
                id="loc-letter-{{ letter }}"
                data-letter="{{ letter }}">
-        <b class="hdx-v2-all-locations-section__heading">{{ letter }}</b>
+        <b class="hdx-v2-locations-list-section__heading">{{ letter }}</b>
         <div class="c-selection-item-grid">
           {% for country in grouped_countries[letter] %}
             {% snippet 'v2/components/selection-item.html',
@@ -178,5 +178,5 @@
 
 {% block scripts %}
   {{ super() }}
-  {% asset 'hdx_theme/v2-all-locations-page-scripts' %}
+  {% asset 'hdx_theme/v2-locations-list-page-scripts' %}
 {% endblock %}

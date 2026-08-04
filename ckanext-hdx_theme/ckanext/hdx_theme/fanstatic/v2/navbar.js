@@ -2,20 +2,7 @@
   'use strict';
 
   // ── FocusTrap ─
-  var FOCUSABLE = [
-    'a[href]',
-    'button:not([disabled])',
-    'input:not([disabled])',
-    'select:not([disabled])',
-    'textarea:not([disabled])',
-    '[tabindex]:not([tabindex="-1"])',
-  ].join(', ');
-
-  function getFocusable(el) {
-    return Array.from(el.querySelectorAll(FOCUSABLE)).filter(function (node) {
-      return !node.closest('[hidden]') && !node.closest('[aria-hidden="true"]');
-    });
-  }
+  var getFocusable = window.hdxV2.getFocusable;
 
   function FocusTrap(element, triggerElement) {
     this.element        = element;

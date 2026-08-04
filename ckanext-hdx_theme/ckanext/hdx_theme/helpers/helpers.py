@@ -222,6 +222,17 @@ def get_dataset_date_format(date):
     return '-'.join(dates)
 
 
+def hdx_format_date(date_value, with_time=False):
+    """Render a date in the standard v2 date format: '12 December 2022'.
+
+    Accepts anything h.render_datetime accepts (a datetime object or an
+    ISO-formatted string/timestamp). Set with_time=True to also render
+    hours:minutes, e.g. '12 December 2022, 14:30 (UTC)'.
+    """
+    date_format = '%d %B %Y, %H:%M (UTC)' if with_time else '%d %B %Y'
+    return h.render_datetime(date_value, date_format=date_format)
+
+
 def get_group_followers(grp_id):
     result = logic.get_action('group_follower_count')(
         {'model': model, 'session': model.Session},
@@ -376,17 +387,17 @@ def render_date_from_concat_str(_str, separator='-'):
 
 
 def render_date_range_label(_str, separator='-'):
-    """Format dataset_date as "Data from DD Mon YYYY to DD Mon YYYY".
+    """Format dataset_date as "Data from DD Month YYYY to DD Month YYYY".
 
-    Parses the same concat-string format as render_date_from_concat_str but
-    uses abbreviated month names (%b) and adds a "Data from … to …" label.
-    Returns an empty string when _str is falsy or unparseable.
+    Parses the same concat-string format as render_date_from_concat_str and
+    adds a "Data from … to …" label. Returns an empty string when _str is
+    falsy or unparseable.
     """
     def _fmt(dt):
         try:
-            return dt.strftime('%d %b %Y')
+            return dt.strftime('%d %B %Y')
         except ValueError:
-            month = datetime.date(1900, dt.month, 1).strftime('%b')
+            month = datetime.date(1900, dt.month, 1).strftime('%B')
             return '{:02d} {} {}'.format(dt.day, month, dt.year)
 
     result = ''
@@ -987,7 +998,7 @@ def hdx_fetch_last_three_signal_cards():
     cards = []
     for row in rows[:3]:
         try:
-            campaign_date = datetime.datetime.strptime(row.get('campaign_date', ''), '%Y-%m-%d').strftime('%b %d, %Y')
+            campaign_date = datetime.datetime.strptime(row.get('campaign_date', ''), '%Y-%m-%d').strftime('%d %B %Y')
         except ValueError:
             campaign_date = row.get('campaign_date', '')
         cards.append({

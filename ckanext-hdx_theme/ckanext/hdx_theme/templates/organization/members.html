@@ -130,7 +130,7 @@
             {% set member = h.hdx_get_org_member_info(user_id, group_dict.name) %}
             {% set disable_change = (role == 'admin') and ((not sysadmin and non_sysadmin_admins < 2) or (no_admins < 2)) %}
             {% set profile_url = h.url_for('user.read', id=member.name) %}
-            {% set meta_text = translated_role ~ ' - ' ~ _('Registered') ~ ' ' ~ h.render_datetime(member.created) %}
+            {% set meta_text = translated_role ~ ' - ' ~ _('Registered') ~ ' ' ~ h.hdx_format_date(member.created) %}
             {% set stats_text = h.hdx_show_singular_plural(member.ds_num, _('Dataset'), _('Datasets')) ~ ' - '
                 ~ h.hdx_show_singular_plural(member.org_num, _('Organisation'), _('Organisations')) ~ ' - '
                 ~ h.hdx_show_singular_plural(member.grp_num, _('Countries'), _('Countries')) %}
@@ -268,7 +268,7 @@
           <a class="hdx-v2-org-members-side__bio-link" href="{{ h.url_for('user.read', id=current_member.name) }}">{{ current_member.name }}</a>
         </div>
         <div class="hdx-v2-org-members-side__bio-meta">
-          {{ _('Registered') }} {{ h.render_datetime(current_member.created) }}<br>
+          {{ _('Registered') }} {{ h.hdx_format_date(current_member.created) }}<br>
           {{ h.hdx_show_singular_plural(current_member.ds_num, _('Dataset'), _('Datasets')) }} -
           {{ h.hdx_show_singular_plural(current_member.org_num, _('Organisation'), _('Organisations')) }} -
           {{ h.hdx_show_singular_plural(current_member.grp_num, _('Countries'), _('Countries')) }}
@@ -342,7 +342,7 @@
         <div class="hdx-v2-org-members-side__pending">
           <span class="hdx-v2-org-members__group-title">{{ _('Pending approval') }} [{{ request_list | length }}]</span>
           {% for request in request_list %}
-            {% set req_meta = (_('Requested') ~ ' ' ~ h.render_datetime(request.revision_last_updated)) if request.revision_last_updated else '' %}
+            {% set req_meta = (_('Requested') ~ ' ' ~ h.hdx_format_date(request.revision_last_updated)) if request.revision_last_updated else '' %}
             {% call h.snippet('v2/components/member-list-card.html',
                 avatar_initials=(request.user_display_name or request.user_name or 'A')[0],
                 name=request.user_display_name, username=request.user_name,

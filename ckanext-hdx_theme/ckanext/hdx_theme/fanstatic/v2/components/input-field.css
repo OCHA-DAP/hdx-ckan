@@ -16,7 +16,7 @@
   background: transparent;
   font-family: inherit;
   color: var(--hdx-neutral-8);
-  line-height: 130%;
+  line-height: var(--hdx-lh-normal);
   outline: none;
 }
 .c-search-input input::placeholder,

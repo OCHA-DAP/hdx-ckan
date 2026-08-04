@@ -6,7 +6,7 @@
 @import "../mixins.less";
 
 // ── Hero / TitleKPI block ─────────────────────────────────────
-.hdx-v2-all-locations-hero {
+.hdx-v2-locations-list-hero {
     background-color: var(--hdx-neutral-0);
 
     &__body {
@@ -54,7 +54,7 @@
 }
 
 // ── Map section ───────────────────────────────────────────────
-.hdx-v2-all-locations-map {
+.hdx-v2-locations-list-map {
     position: relative;
     display: none;
 
@@ -72,7 +72,7 @@
 }
 
 // ── Legend ────────────────────────────────────────────────────
-.hdx-v2-all-locations-legend {
+.hdx-v2-locations-list-legend {
     background-color: var(--hdx-neutral-0);
 
     &__row {
@@ -98,7 +98,7 @@
 }
 
 // ── Controls row (title + filter + sort) ─────────────────────
-.hdx-v2-all-locations-controls {
+.hdx-v2-locations-list-controls {
     background-color: var(--hdx-neutral-0);
 
     &__inner {
@@ -195,19 +195,19 @@
 }
 
 // ── Outer row: white background for the sidebar+content area ──
-.hdx-v2-all-locations-row {
+.hdx-v2-locations-list-row {
     background-color: var(--hdx-neutral-0);
 }
 
 // ── Columns flex row (gap via generic --gap) ──────────────────
-.hdx-v2-all-locations-columns {
+.hdx-v2-locations-list-columns {
     width: 100%;
 }
 
 // ── Sidebar (Jump to section) ─────────────────────────────────
 // SM/MD: right side (order:1), natural/content-driven width
 // XL:    left side (order:0), 25% flex width via generic __sidebar
-.hdx-v2-all-locations-sidebar {
+.hdx-v2-locations-list-sidebar {
     flex-shrink: 0;              // natural width at SM/MD
     order:       1;
     padding-top: var(--hdx-space-8);
@@ -228,7 +228,7 @@
         }
     }
 
-    .hdx-v2-all-locations-letter-grid {
+    .hdx-v2-locations-list-letter-grid {
         display:        flex;
         flex-direction: column;
         gap:            var(--hdx-space-13);
@@ -242,16 +242,16 @@
 }
 
 // ── Content area + letter sections ───────────────────────────
-.hdx-v2-all-locations-content {
+.hdx-v2-locations-list-content {
     order:   0;
     padding: var(--hdx-space-8) 0 var(--hdx-space-24);
 
-    .hdx-v2-all-locations-sections {
+    .hdx-v2-locations-list-sections {
         display:        flex;
         flex-direction: column;
         gap:            var(--hdx-space-8);
 
-        .hdx-v2-all-locations-section {
+        .hdx-v2-locations-list-section {
             // Scroll offset for fixed header at SM/MD (matches dataset-page.less)
             @media (max-width: (@hdx-bp-xl - 0.0625rem)) {
                 scroll-margin-top: 8rem;

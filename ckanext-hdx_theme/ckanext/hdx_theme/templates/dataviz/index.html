@@ -85,7 +85,7 @@
     {% if data.page.items %}
       <div class="c-dataviz-card-grid">
         {% for dataviz in data.page.items %}
-          {% set updated_on = _('Updated on') ~ ' ' ~ h.render_datetime(dataviz.metadata_modified) if dataviz.metadata_modified else '' %}
+          {% set updated_on = _('Updated on') ~ ' ' ~ h.hdx_format_date(dataviz.metadata_modified) if dataviz.metadata_modified else '' %}
           {% snippet 'v2/components/dataviz-card.html',
               title=dataviz.dataviz_label or dataviz.title,
               description=dataviz.notes,

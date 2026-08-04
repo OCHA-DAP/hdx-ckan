@@ -169,7 +169,7 @@
     cursor:      pointer;
     font-family: var(--hdx-font-body);
     font-size:   var(--hdx-fs-s);
-    line-height: 130%;
+    line-height: var(--hdx-lh-normal);
     color:       var(--hdx-neutral-8);
 
     &__input {
@@ -209,7 +209,7 @@
         gap:         var(--hdx-space-13);  // 6 px — tighter than outer 8 px gap
     }
 
-    &__label { position: relative; line-height: 130%; }
+    &__label { position: relative; line-height: var(--hdx-lh-normal); }
 
     // ── States ──────────────────────────────────────────────
 
@@ -337,7 +337,7 @@
 
 // ────────────────────────────────────────────────────────────
 // c-selection-item-grid — grid wrapper for selection items
-// (2 cols SM/MD, 3 cols XL — all-locations page)
+// (2 cols SM/MD, 3 cols XL — locations-list page)
 // ────────────────────────────────────────────────────────────
 
 .c-selection-item-grid {

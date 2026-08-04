@@ -137,3 +137,81 @@
         min-height: 4rem;
     }
 }
+
+// ── Shape/GIS preview map ───────────────────────────────────────
+.hdx-v2-dataset-map {
+    height:        25rem;
+    margin-bottom: var(--hdx-space-4);
+
+    &__config {
+        display: none;
+    }
+}
+
+// Elements below are created/classed by shape-view.js itself
+// (MapLibre GL custom controls), not by a template — class names
+// must stay in sync with fanstatic/v2/pages/shape-view.js.
+.map-info {
+    padding:       var(--hdx-space-2) var(--hdx-space-3);
+    .hdx-body-xs();
+    color:         var(--hdx-neutral-0);
+    background:    rgba(51, 51, 51, 0.5);
+    box-shadow:    var(--hdx-shadow-sm);
+    border-radius: var(--hdx-radius-sm);
+    max-height:    20rem;
+    overflow-y:    auto;
+
+    table {
+        td:first-of-type {
+            max-width: 12.5rem;
+
+            + td {
+                max-width: 15.625rem;
+            }
+        }
+    }
+
+    td {
+        color:         var(--hdx-neutral-0);
+        overflow-wrap: break-word;
+    }
+
+    h4 {
+        .hdx-body-xs-medium();
+        margin: 0 0 var(--hdx-space-1);
+        color:  var(--hdx-neutral-0);
+    }
+}
+
+.layers-control {
+    &-toggle {
+        background-image:    url("/images/maps/layers-2x.png");
+        background-position: 50% 50%;
+        background-repeat:   no-repeat;
+        background-size:     26px 26px;
+        display:             block;
+        height:              44px;
+        width:               44px;
+    }
+
+    &-list {
+        display: none;
+        padding: var(--hdx-space-1);
+
+        .layer-control {
+            display: block;
+            padding: var(--hdx-space-1);
+
+            > input[type='checkbox'] {
+                margin-right: var(--hdx-space-1);
+            }
+        }
+    }
+
+    &:hover > &-list {
+        display: block;
+    }
+    &:hover > &-toggle {
+        display: none;
+    }
+}

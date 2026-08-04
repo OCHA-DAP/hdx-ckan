@@ -7,7 +7,7 @@
 
   // ── Smooth scroll (delegates to shared anchor-links utility) ─────────────
   document.addEventListener('click', function (e) {
-    var anchor = e.target.closest('.hdx-v2-all-locations-sidebar a[href^="#"], .hdx-v2-all-locations-hero__top-actions a[href^="#"]');
+    var anchor = e.target.closest('.hdx-v2-locations-list-sidebar a[href^="#"], .hdx-v2-locations-list-hero__top-actions a[href^="#"]');
     if (!anchor) return;
     var href = anchor.getAttribute('href');
     if (!href || href === '#') return;
@@ -45,10 +45,10 @@
   // ── Combined filter + sort ────────────────────────────────────────────────
   function applyFilters() {
     var showHrpOnly = hrpToggle && hrpToggle.checked;
-    var sections = document.querySelector('.hdx-v2-all-locations-sections');
+    var sections = document.querySelector('.hdx-v2-locations-list-sections');
     if (!sections) return;
 
-    var sectionEls = Array.from(sections.querySelectorAll('.hdx-v2-all-locations-section'));
+    var sectionEls = Array.from(sections.querySelectorAll('.hdx-v2-locations-list-section'));
 
     // Sort sections by letter
     sectionEls.sort(function (a, b) {
@@ -91,7 +91,7 @@
 
   // ── Sync anchor disabled state with filtered sections ────────────────────
   function updateAnchorStates() {
-    document.querySelectorAll('.hdx-v2-all-locations-sidebar .c-letter-anchor').forEach(function (anchor) {
+    document.querySelectorAll('.hdx-v2-locations-list-sidebar .c-letter-anchor').forEach(function (anchor) {
       var href = anchor.getAttribute('href') || '';
       var id = href.replace('#', '');
       var section = id ? document.getElementById(id) : null;
@@ -111,9 +111,9 @@
   }
 
   // ── IntersectionObserver: active anchor on scroll (XL sidebar) ──────────
-  var sidebar = document.querySelector('.hdx-v2-all-locations-sidebar');
+  var sidebar = document.querySelector('.hdx-v2-locations-list-sidebar');
   if (sidebar && 'IntersectionObserver' in window) {
-    var sectionEls = document.querySelectorAll('.hdx-v2-all-locations-section');
+    var sectionEls = document.querySelectorAll('.hdx-v2-locations-list-section');
     var observer = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
         if (!entry.isIntersecting) return;

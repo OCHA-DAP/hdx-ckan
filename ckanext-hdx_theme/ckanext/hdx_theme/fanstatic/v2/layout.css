@@ -78,8 +78,8 @@ body.hdx-v2 {
 @media (min-width: 87.5rem) {
   .hdx-v2-container {
     max-width: 1320px;
-    padding-right: 0.75rem;
-    padding-left: 0.75rem;
+    padding-right: var(--hdx-space-3);
+    padding-left: var(--hdx-space-3);
     margin-right: auto;
     margin-left: auto;
   }

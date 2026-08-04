@@ -116,7 +116,7 @@
   cursor: pointer;
   font-family: var(--hdx-font-body);
   font-size: var(--hdx-fs-s);
-  line-height: 130%;
+  line-height: var(--hdx-lh-normal);
   color: var(--hdx-neutral-8);
 }
 .c-radio__input {
@@ -152,7 +152,7 @@
 }
 .c-radio__label {
   position: relative;
-  line-height: 130%;
+  line-height: var(--hdx-lh-normal);
 }
 .c-radio--checked .c-radio__ring {
   border: 1px solid var(--hdx-primary-5);

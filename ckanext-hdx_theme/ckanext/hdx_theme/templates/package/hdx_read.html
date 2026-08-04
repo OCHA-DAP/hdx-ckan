@@ -3,9 +3,6 @@
 {% block styles %}
   {{ super() }}
   {% asset 'hdx_theme/v2-dataset-page-styles' %}
-  {% if shapes %}
-    {% asset 'hdx_theme/crisis-base-styles' %}
-  {% endif %}
   {% if h.dcat_endpoints_enabled() %}
       {% with endpoint=h.dcat_get_endpoint('dataset') %}
           {#<!--
@@ -183,9 +180,9 @@
         <h2 class="hdx-v2-dataset-section__title">{{ _('Preview') }}</h2>
       </div>
       <div class="hdx-v2-dataset-section__body">
-        <div id="mapbox-baselayer-url-div" style="display: none;">{{ h.hdx_generate_basemap_config_string() }}</div>
-        <div id="shapeData" style="display: none;">{{ shapes }}</div>
-        <div id="map" style="height: 400px; margin-bottom: 15px;"></div>
+        <div id="mapbox-baselayer-url-div" class="hdx-v2-dataset-map__config">{{ h.hdx_generate_basemap_config_string() }}</div>
+        <div id="shapeData" class="hdx-v2-dataset-map__config">{{ shapes }}</div>
+        <div id="map" class="hdx-v2-dataset-map"></div>
       </div>
     </section>
     <hr class="c-divider">
@@ -277,7 +274,7 @@
                   tooltip_id='tooltip-md-modified' %}
             </div>
             <span class="hdx-v2-dataset-metadata__value">
-              {{ h.render_datetime(pkg.last_modified) }}
+              {{ h.hdx_format_date(pkg.last_modified) }}
             </span>
           </div>
 
@@ -316,7 +313,7 @@
                   tooltip_id='tooltip-md-added' %}
             </div>
             <span class="hdx-v2-dataset-metadata__value">
-              {{ h.render_datetime(pkg.metadata_created) }}
+              {{ h.hdx_format_date(pkg.metadata_created) }}
             </span>
           </div>
 
@@ -546,9 +543,9 @@
   {% asset 'hdx_theme/v2-chart-scripts' %}
   {% asset 'hdx_theme/v2-dataset-page-scripts' %}
   {% if shapes %}
-    {% asset 'hdx_theme/shape-view-scripts' %}
+    {% asset 'hdx_theme/v2-shape-view-scripts' %}
   {% endif %}
 {#  {{ h.snippet('widget/onboarding/data-use-survey.html', id="dataUseSurveyPopup", pkg=pkg) }}#}
-  {% asset 'hdx_theme/dataset-quick-edit-scripts' %}
+  {% asset 'hdx_theme/v2-quick-edit-scripts' %}
 {#  {% resource 'hdx_theme/confirm-ajax.js' %}#}
 {% endblock %}

@@ -20,7 +20,7 @@
 {% set title       = org.title or org.display_name %}
 {% set href        = h.url_for('hdx_org.read', id=org.name) %}
 {% set description = h.markdown_extract(org.description, extract_length=0) | striptags if org.description else '' %}
-{% set created     = h.render_datetime(org.created) if org.created else _('Unknown') %}
+{% set created     = h.hdx_format_date(org.created) if org.created else _('Unknown') %}
 {% set datasets    = org.package_count or 0 %}
 
 <div class="c-org-list-card">

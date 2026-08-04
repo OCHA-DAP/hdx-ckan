@@ -1,6 +1,6 @@
 .c-list-item {
   font-family: var(--hdx-font-body);
-  line-height: 130%;
+  line-height: var(--hdx-lh-normal);
   color: var(--hdx-neutral-95);
   transition: color 0.15s ease;
   padding: var(--hdx-space-15) 0;

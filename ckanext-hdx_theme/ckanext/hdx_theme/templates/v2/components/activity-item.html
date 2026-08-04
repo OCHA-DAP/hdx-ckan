@@ -38,7 +38,7 @@
     </div>
     <time class="c-activity-item__time"
           datetime="{{ h.render_datetime(timestamp, date_format='%Y-%m-%dT%H:%M:%S') }}"
-          title="{{ h.render_datetime(timestamp, with_hours=True) }}">
+          title="{{ h.hdx_format_date(timestamp, with_time=True) }}">
       {{ h.time_ago_from_timestamp(timestamp) }}
     </time>
   </div>

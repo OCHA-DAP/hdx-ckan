@@ -74,7 +74,7 @@ class NotificationService(object):
         notifications.sort(key=lambda n: n.get('last_date'), reverse=True)
         any_personal_notifications = False
         for notification in notifications:
-            notification['last_date'] = notification.get('last_date').strftime('%b %-d, %Y') \
+            notification['last_date'] = notification.get('last_date').strftime('%d %B %Y') \
                 if notification.get('last_date') else ''
             if not any_personal_notifications and not notification['for_sysadmin']:
                 any_personal_notifications = True

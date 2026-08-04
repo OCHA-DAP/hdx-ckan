@@ -241,6 +241,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'json_dumps': json.dumps,
             'hdx_popular': hdx_helpers.hdx_popular,
             'get_dataset_date_format': hdx_helpers.get_dataset_date_format,
+            'hdx_format_date': hdx_helpers.hdx_format_date,
             'hdx_methodology_list': hdx_helpers.hdx_methodology_list,
             'hdx_license_list': hdx_helpers.hdx_license_list,
             'hdx_location_list': hdx_helpers.hdx_location_list,
