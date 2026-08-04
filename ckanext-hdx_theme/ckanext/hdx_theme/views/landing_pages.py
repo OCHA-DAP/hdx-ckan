@@ -9,7 +9,7 @@ from ckanext.hdx_theme.helpers.ui_constants.landing_pages.hapi import \
 from ckanext.hdx_theme.helpers.ui_constants.landing_pages.signals import \
     DATA_COVERAGE_CONSTANTS as SIGNALS_DATA_COVERAGE_CONSTANTS, SECTIONS_CONSTANTS as SIGNALS_SECTIONS_CONSTANTS, \
     PARTNERS_CONSTANTS as SIGNALS_PARTNERS_CONSTANTS
-from ckanext.hdx_theme.helpers.caching import cached_last_three_signal_cards
+from ckanext.hdx_theme.helpers.signals_cache import cached_last_three_signal_cards
 
 abort = tk.abort
 g = tk.g

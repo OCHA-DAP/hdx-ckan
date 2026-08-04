@@ -4,7 +4,7 @@ import ckan.plugins.toolkit as tk
 import ckanext.hdx_package.helpers.analytics as analytics
 import ckanext.hdx_theme.views.count as count
 from ckan.common import config
-from ckanext.hdx_theme.helpers.caching import cached_last_three_signal_cards
+from ckanext.hdx_theme.helpers.signals_cache import cached_last_three_signal_cards
 import json
 
 _ = tk._
