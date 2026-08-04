@@ -629,12 +629,6 @@ dataset-quick-edit-styles:
   contents:
     - datasets/dataset-quick-edit.css
 
-dataset-quick-edit-scripts:
-  <<: *common-js
-  output: ckanext-hdx_theme/%(version)s_dataset-quick-edit-scripts.js
-  contents:
-    - hdx-quick-edit.js
-
 v2-quick-edit-scripts:
   <<: *common-js
   output: ckanext-hdx_theme/%(version)s_v2-quick-edit-scripts.js
@@ -814,13 +808,7 @@ shape-view-scripts:
     preload:
       - hdx_theme/charting-scripts
   contents:
-#    - vendor/leaflet-vector-grid/Leaflet.VectorGrid.bundled.js
-    - shape-view.js
-
-#shape-view-styles:
-#  output: ckanext-hdx_theme/%(version)s_shape-view-styles.css
-#  contents:
-#    - vendor/leaflet-0.7.3/leaflet.css
+    - v2/pages/shape-view.js
 
 v2-shape-view-scripts:
   <<: *common-js
