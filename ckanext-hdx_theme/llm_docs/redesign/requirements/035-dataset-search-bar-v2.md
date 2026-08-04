@@ -317,18 +317,18 @@ Use `size='m'` to match the height of existing v2 header controls (dropdowns at 
 
 | # | Question | Decision |
 |---|----------|----------|
-| Q9.1 | Placeholder text | `"Search for datasets"` — Figma text used; v1 `"Search all datasets ..."` retained only in the v1 bar |
-| Q9.2 | Search icon | `v2/icons/search.svg` — `c-search-input` default used; no custom icon |
-| Q9.3 | Autocomplete overlay (MD only) | Deferred — out of scope for this task; no autocomplete component implemented |
-| Q9.4 | SM layout conflict — sort/limit outside overlay | Sort/limit remains inside the filter overlay only at MD/SM; Figma SM view treated as a design artifact; `hdx-v2-search-bar-row` is full-width standalone row at all breakpoints |
-| Q9.5 | Border token — XL vs MD/SM | Single consistent token — `c-search-input` component handles its own border via design tokens; no per-breakpoint border override added |
-| Q9.6 | Width at MD/SM | `width: 100%` stretch — Figma fixed widths treated as canvas sizes; `.hdx-v2-search-bar-row` and `.c-search-input` both set to `width: 100%` |
-| Q9.7 | Sort not preserved on search | Preserved as-is — existing `helpers.py` behavior unchanged; sort reset on new search is intentional |
-| Q9.8 | `#headerSearch` anchor scroll | Preserved — `organizations.js` unchanged; anchor scroll kept as-is |
+| D9.1 | Placeholder text | `"Search for datasets"` — Figma text used; v1 `"Search all datasets ..."` retained only in the v1 bar |
+| D9.2 | Search icon | `v2/icons/search.svg` — `c-search-input` default used; no custom icon |
+| D9.3 | Autocomplete overlay (MD only) | Deferred — out of scope for this task; no autocomplete component implemented |
+| D9.4 | SM layout conflict — sort/limit outside overlay | Sort/limit remains inside the filter overlay only at MD/SM; Figma SM view treated as a design artifact; `hdx-v2-search-bar-row` is full-width standalone row at all breakpoints |
+| D9.5 | Border token — XL vs MD/SM | Single consistent token — `c-search-input` component handles its own border via design tokens; no per-breakpoint border override added |
+| D9.6 | Width at MD/SM | `width: 100%` stretch — Figma fixed widths treated as canvas sizes; `.hdx-v2-search-bar-row` and `.c-search-input` both set to `width: 100%` |
+| D9.7 | Sort not preserved on search | Preserved as-is — existing `helpers.py` behavior unchanged; sort reset on new search is intentional |
+| D9.8 | `#headerSearch` anchor scroll | Preserved — `organizations.js` unchanged; anchor scroll kept as-is |
 
 ---
 
-## 10. Files to modify (implementation phase)
+## 10. Files Affected
 
 | File | Change |
 |------|--------|

@@ -408,21 +408,21 @@ These are identified safe improvements. **None should be implemented without res
 
 | Opportunity | File | Open Question |
 |---|---|---|
-| Add `outer_row_class` + `columns_class` to `search.html` | `search/search.html` | Q2 |
-| Apply `sidebar_class` to right-side secondary wrapper | `v2/page.html:114` | Q10 |
-| Move `v2-dataset-styles` preload to `webassets.yml` | `webassets.yml` + `resource_read.html` | Q4 |
-| Add `v2-resource-scripts` bundle | `webassets.yml` | Q8 |
-| Remove empty token CSS from `v2-components-styles` bundle | `webassets.yml` | Q8 |
-| Replace `{% include "v2/footer.html" %}` with `{% snippet %}` | `v2/page.html:132` | Q1 |
+| Add `outer_row_class` + `columns_class` to `search.html` | `search/search.html` | D2 |
+| Apply `sidebar_class` to right-side secondary wrapper | `v2/page.html:114` | D10 |
+| Move `v2-dataset-styles` preload to `webassets.yml` | `webassets.yml` + `resource_read.html` | D4 |
+| Add `v2-resource-scripts` bundle | `webassets.yml` | D8 |
+| Remove empty token CSS from `v2-components-styles` bundle | `webassets.yml` | D8 |
+| Replace `{% include "v2/footer.html" %}` with `{% snippet %}` | `v2/page.html:132` | D1 |
 | Update fallback `{% block toolbar %}` to use v2 class names | `v2/page.html:59–61` | — |
-| Audit and remove `page-scripts` + `onboarding-bulk-*` | `v2/page.html:12–16, 181, 185–189` | Q3 |
-| Remove unused v1 sub-blocks from `{% block primary %}` | `v2/page.html:142–178` | Q6 |
-| Define `v2=True` promotion policy; evaluate removing gate | `search/search.html` + snippets | Q7 |
+| Audit and remove `page-scripts` + `onboarding-bulk-*` | `v2/page.html:12–16, 181, 185–189` | D3 |
+| Remove unused v1 sub-blocks from `{% block primary %}` | `v2/page.html:142–178` | D6 |
+| Define `v2=True` promotion policy; evaluate removing gate | `search/search.html` + snippets | D7 |
 | Document inline SVG `{% include %}` as an explicit rule | CONVENTIONS.md or comments | — |
 
 ---
 
-## 9. Decisions
+## 9. Decisions Taken
 
 ---
 

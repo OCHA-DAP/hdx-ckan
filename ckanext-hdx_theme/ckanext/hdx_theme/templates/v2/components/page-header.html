@@ -217,65 +217,6 @@
       </div>
       {# end __description #}
 
-      {# Org card SM — shown when org_name, logo_src, actions or stats provided #}
-      {% if org_name or logo_src or header_actions or header_stats %}
-      <div class="c-page-header__right-card c-page-header__right-card--sm-only">
-        {% if logo_src %}
-          <img class="c-page-header__logo" src="{{ logo_src }}" alt="{{ org_name if org_name else title }}">
-        {% endif %}
-        {% if org_name %}
-          {% if not request_only %}
-            {% snippet 'v2/components/text-button.html',
-                style='tertiary', size='m', label='Contact organisation',
-                icon_position='left', icon_src='v2/icons/mail.svg',
-                tag='a', href=contact_href %}
-          {% endif %}
-          {% if edit_mode %}
-            {% snippet 'v2/components/text-button.html',
-                style='tertiary', size='m', label='Edit Dataset',
-                icon_position='left', icon_src='v2/icons/edit.svg',
-                tag='a', href='#',
-                attrs={'onclick': "contributeAddDetails('" ~ pkg_id ~ "', 'dataset')"} %}
-          {% endif %}
-          {% if not hide_membership and membership and membership.display_group_message %}
-            {% snippet 'v2/components/text-button.html',
-                style='tertiary', size='m', label='Group message',
-                icon_position='left', icon_src='v2/icons/message.svg',
-                tag='a', href='#',
-                attrs={'onclick': "closeCurrentWidget(this);$('#group-message-topics-selector').select2('val', '');spawnRecaptcha('#groupMessagePopup');showOnboardingWidget('#groupMessagePopup');"} %}
-          {% endif %}
-        {% endif %}
-        {% set ns_actions_sm = namespace(visible=[]) %}
-        {% for action in header_actions %}
-          {% if action.show is not defined or action.show %}
-            {% set ns_actions_sm.visible = ns_actions_sm.visible + [action] %}
-          {% endif %}
-        {% endfor %}
-        {% if ns_actions_sm.visible %}
-          <div class="c-page-header__card-actions">
-            {% for action in ns_actions_sm.visible %}
-              {% snippet 'v2/components/text-button.html',
-                  style='tertiary', size='m', label=action.label,
-                  icon_position='left', icon_src=action.icon_src,
-                  tag='a', href=action.href if action.href else '#',
-                  attrs=action.attrs if action.attrs else {} %}
-            {% endfor %}
-          </div>
-        {% endif %}
-        {% if header_stats %}
-          {% if ns_actions_sm.visible %}<hr class="c-divider">{% endif %}
-          <div class="c-page-header__card-stats">
-            {% for stat in header_stats %}
-              <div class="c-page-header__card-stat">
-                <span class="c-page-header__card-stat-label">{{ stat.label }}</span>
-                <span class="c-page-header__card-stat-value">{{ stat.value }}</span>
-              </div>
-            {% endfor %}
-          </div>
-        {% endif %}
-      </div>
-      {% endif %}
-
       {# CTA block (notifications + download count) — dataset only #}
       {% if supports_notifications or download_count %}
       <div class="c-page-header__cta">
@@ -297,9 +238,11 @@
     </div>
     {# end __left #}
 
-    {# Org card MD+ — shown when org_name, logo_src, actions or stats provided #}
+    {# Org card — logo + contact/edit/group-message actions + stats.
+       Repositions via CSS Grid on __top: stacked below __left at SM,
+       right-hand sidebar beside __left at MD+. #}
     {% if org_name or logo_src or header_actions or header_stats %}
-    <div class="c-page-header__right-card c-page-header__right-card--md-up">
+    <div class="c-page-header__right-card">
       {% if logo_src %}
         <img class="c-page-header__logo" src="{{ logo_src }}" alt="{{ org_name if org_name else title }}">
       {% endif %}
@@ -323,18 +266,18 @@
               style='tertiary', size='m', label='Group message',
               icon_position='left', icon_src='v2/icons/message.svg',
               tag='a', href='#',
-              attrs={'id': 'contact-members', 'onclick': "closeCurrentWidget(this);$('#group-message-topics-selector').select2('val', '');spawnRecaptcha('#groupMessagePopup');showOnboardingWidget('#groupMessagePopup');"} %}
+              attrs={'id': 'contact-members'} %}
         {% endif %}
       {% endif %}
-      {% set ns_actions_md = namespace(visible=[]) %}
+      {% set ns_actions = namespace(visible=[]) %}
       {% for action in header_actions %}
         {% if action.show is not defined or action.show %}
-          {% set ns_actions_md.visible = ns_actions_md.visible + [action] %}
+          {% set ns_actions.visible = ns_actions.visible + [action] %}
         {% endif %}
       {% endfor %}
-      {% if ns_actions_md.visible %}
+      {% if ns_actions.visible %}
         <div class="c-page-header__card-actions">
-          {% for action in ns_actions_md.visible %}
+          {% for action in ns_actions.visible %}
             {% snippet 'v2/components/text-button.html',
                 style='tertiary', size='m', label=action.label,
                 icon_position='left', icon_src=action.icon_src,
@@ -344,7 +287,7 @@
         </div>
       {% endif %}
       {% if header_stats %}
-        {% if ns_actions_md.visible %}<hr class="c-divider">{% endif %}
+        {% if ns_actions.visible %}<hr class="c-divider">{% endif %}
         <div class="c-page-header__card-stats">
           {% for stat in header_stats %}
             <div class="c-page-header__card-stat">
@@ -436,11 +379,13 @@
 
 </section>
 
-{# Membership popups — dataset only #}
+{# Group message drawer — dataset page (org-card action) + org page header
+   action (org-hero.html header_actions). Posts to the same
+   /membership/contact_members endpoint as the org Members-tab drawer. #}
 {% if not hide_membership and membership and membership.display_group_message %}
-  {% set membership_data = membership.data %}
-  {% set group_topics = membership.data.group_topics %}
-{#  TODO: fix these#}
-{#  {{ h.snippet('widget/membership/group-message.html', id="groupMessagePopup", title=title, groups=group_topics, org_id=org_id, pkg_id=pkg_id, membership_data=membership_data, base_title='dataset', base_type='dataset') }}#}
-{#  {{ h.snippet('widget/membership/done.html', id="membershipDonePopup") }}#}
+  {% snippet 'v2/group-message-drawer.html',
+      drawer_id='gm-header-drawer',
+      org_id=org_id, pkg_id=pkg_id, title=title,
+      group_topics=membership.data.group_topics,
+      fullname=membership.data.fullname, email=membership.data.email %}
 {% endif %}

@@ -621,7 +621,7 @@ Form container LESS:
 
 ---
 
-## 8. Files to Create / Modify
+## 8. Files Affected
 
 ### 8.1 New Templates
 - `ckanext/hdx_theme/templates/v2/components/step-pager.html`
@@ -706,17 +706,17 @@ Two existing scripts were rewritten in place (no `v2/onboarding/` subdirectory c
 
 ---
 
-## 10. Decisions
+## 10. Decisions Taken
 
-**Q1. `c-step-pager` connector layout** → **Connector `<div>` elements with `--filled` modifier.**
+**D1. `c-step-pager` connector layout** → **Connector `<div>` elements with `--filled` modifier.**
 One `<div class="c-step-pager__connector">` is inserted between each step in the Jinja loop. When `loop.index <= current_step` the `--filled` modifier switches the background to `var(--hdx-primary-5)`. No pseudo-elements or `--pager-fill-ratio` custom property. See §3.2.
 
-**Q2. Feature number badge** → **Bespoke `div`, no `c-label`.**
+**D2. Feature number badge** → **Bespoke `div`, no `c-label`.**
 Style `.c-signup-tier__feature-number` entirely within `signup-tier.less`. No dependency on the `c-label` component.
 
-**Q3. `came-from-input.js` in v2 bundle** → **Yes, include (converted in place).**
+**D3. `came-from-input.js` in v2 bundle** → **Yes, include (converted in place).**
 `came-from-input.js` and `confirm-page-leave.js` were converted to vanilla JS in place (no `v2/onboarding/` subdirectory created). `verify-email.js` was not rewritten — the existing `hdx-verify-email-scripts` bundle is used as-is on the verify-email page. `toggle-password-visibility.js` is dropped — `c-search-input` handles toggling. See §8.7.
 
-**Q4. `verify-email.js` behaviour on v2 page** → **No BEM classes targeted; reuse as-is.**
+**D4. `verify-email.js` behaviour on v2 page** → **No BEM classes targeted; reuse as-is.**
 The script uses only `history.pushState`, `window.onpopstate`, and `hdxUtil.net.removeOnboardingFlowData()` — no BEM or jQuery DOM selectors. The `hdxUtil.net.*` call is preserved verbatim (it is not jQuery). Script is used only on the verify-email page.
 

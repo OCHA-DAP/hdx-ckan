@@ -275,7 +275,7 @@ The Figma shows a subtitle row ("4.8k Datasets • 65 organisations") under the 
 
 ---
 
-## 7. Decisions
+## 7. Decisions Taken
 
 | # | Question | Decision |
 |---|----------|----------|
@@ -301,18 +301,3 @@ The Figma shows a subtitle row ("4.8k Datasets • 65 organisations") under the 
 - `h.hdx_get_carousel_list()` — data helper (reuse, do not duplicate)
 - `hdx_click_stopper.js` — analytics module (reuse, do not duplicate)
 - `hdx-styles/src/common/less/v2/styles.less` — section styles inlined here
-
----
-
-## Verification
-
-After implementation, verify:
-
-1. **XL**: 3 highlight cards render in a row with equal widths. No carousel controls visible.
-2. **MD**: Carousel renders with 1.5 visible cards, 2 dots, prev/next arrows. Arrows navigate correctly.
-3. **SM**: Carousel renders with ~1 visible card + peek, 3 dots, arrows work.
-4. **Swipe**: Swipe left/right navigates carousel on a touch device (or DevTools mobile emulation).
-5. **Empty state**: With 0 carousel items configured, the section does not render.
-6. **Analytics**: Click a card → open browser console → confirm a "link click" event fires with `linkType: "carousel"`.
-7. **No regression**: Hero section, alert bar, intro section all render correctly above and below.
-8. **Accessibility**: Tab through carousel; dots and arrow buttons are keyboard-reachable and have visible focus states. Arrow buttons have `aria-label`.

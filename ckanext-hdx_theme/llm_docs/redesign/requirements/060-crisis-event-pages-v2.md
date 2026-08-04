@@ -429,7 +429,7 @@ style); heights from the stored style + JS recalibration (D5).
 | No `description`-type section in `sections` | No description block in the header, no Show more button (clamped-text no-ops) |
 | First `description`-type section's `long_description` empty/whitespace | Section is still promoted (and excluded from the section flow) but header shows no description — same net result as if it were absent |
 | More than one `description`-type section | Only the first is promoted into the header; the 2nd+ renders inline as a normal text section, unchanged |
-| Very long / multi-paragraph header description | Clamped at all breakpoints with Show more/Show less (D4); `h.markdown_extract`+`striptags` may flatten paragraph/list boundaries with no separating whitespace — accepted limitation of the reused helper (same one `org_hero.html` uses) |
+| Very long / multi-paragraph header description | Clamped at all breakpoints with Show more/Show less (D4); `h.markdown_extract`+`striptags` may flatten paragraph/list boundaries with no separating whitespace — accepted limitation of the reused helper (same one `org-hero.html` uses) |
 | `data_list` with zero results | v2 list header shows count 0 + empty result list (search-page behavior); sidebar facets may be empty — filters form still renders |
 | Saved search URL with unparseable/missing params | v1 parity — `generate_dataset_results` ignores unknown keys; empty `fq` searches everything |
 | Archived saved-search URL | Existing `add_archived_url_helper` redirect fires before render — unchanged |
@@ -445,7 +445,7 @@ style); heights from the stored style + JS recalibration (D5).
 
 ---
 
-## 12. Decisions (2026-07-14)
+## 12. Decisions Taken
 
 All requester's explicit choices, resolved before writing this doc:
 

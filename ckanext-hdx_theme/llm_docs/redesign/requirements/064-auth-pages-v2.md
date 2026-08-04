@@ -436,7 +436,7 @@ context passed into templates) is the established precedent to follow — not ap
 
 ---
 
-## 12. Decisions (confirmed with requester)
+## 12. Decisions Taken
 
 1. **Copy wording.** Decided per-string, not as a blanket policy — see §10 for the full list requiring
    individual sign-off.

@@ -92,8 +92,9 @@
 .hdx-v2-auth-card__checkbox-row {
   display: grid;
   grid-template-columns: auto 1fr;
+  column-gap: var(--hdx-space-3);
+  align-items: center;
   column-gap: var(--hdx-space-13);
-  align-items: start;
 }
 .hdx-v2-auth-card__checkbox-row .c-checkbox__error {
   grid-column: 2;

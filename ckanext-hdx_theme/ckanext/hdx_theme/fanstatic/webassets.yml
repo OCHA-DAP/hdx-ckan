@@ -1458,6 +1458,7 @@ v2-components-styles:
   <<: *common-css
   contents:
     - v2/foundation.css
+    - v2/overlay.css
     - v2/components/accordion.css
     - v2/components/activity-card.css
     - v2/components/activity-item.css
@@ -1486,7 +1487,6 @@ v2-components-styles:
     - v2/components/nav-item.css
     - v2/components/notification-item.css
     - v2/components/org-list-card.css
-    - v2/components/overlay.css
     - v2/components/page-header.css
     - v2/components/pagination.css
     - v2/components/resource-card.css
@@ -1582,6 +1582,7 @@ v2-page-scripts:
   contents:
     - v2/navbar.js
     - v2/search-autocomplete.js
+    - v2/group-message-drawer.js
 
 v2-error-page-styles:
   output: ckanext-hdx_theme/%(version)s_v2-error-page-styles.css
@@ -1739,6 +1740,24 @@ v2-perform-reset-page-scripts:
   output: ckanext-hdx_theme/%(version)s_v2-perform-reset-page-scripts.js
   contents:
     - v2/perform-reset-page.js
+
+v2-verify-email-page-scripts:
+  <<: *common-js
+  output: ckanext-hdx_theme/%(version)s_v2-verify-email-page-scripts.js
+  contents:
+    - v2/verify-email-page.js
+
+v2-request-access-page-scripts:
+  <<: *common-js
+  output: ckanext-hdx_theme/%(version)s_v2-request-access-page-scripts.js
+  contents:
+    - v2/request-access-page.js
+
+v2-contact-contributor-page-scripts:
+  <<: *common-js
+  output: ckanext-hdx_theme/%(version)s_v2-contact-contributor-page-scripts.js
+  contents:
+    - v2/contact-contributor-page.js
 
 v2-form-validator-scripts:
   <<: *common-js

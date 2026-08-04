@@ -368,23 +368,3 @@ already used for `hdx-v2-list-header__controls` vs `__filter-btn`).
   `archived_url_helper.archived_url`/`unarchived_url` preserve the other active facet params when
   toggling Archived. Pills for other active filters continue to render normally regardless of which
   Archived state is selected.
-
----
-
-## 10. Open Questions
-
-The core architectural questions were resolved during doc drafting (see Decisions D1-D7 above,
-mirroring the D-numbered decision log style used in `056-organization-page-datasets-v2.md`):
-
-- **D1**: Archived toggle navigates via existing `archived_url_helper` URLs, not generic `updateUrl()`.
-- **D2**: All applied-filter pills use the uniform "x" remove affordance (`selection-item.html`,
-  `state='active'`); Figma's chevron-vs-x inconsistency is not replicated.
-- **D3**: No new analytics tracking is added for the Archived toggle or pill/clear-all interactions
-  — strict parity with today's (already incomplete) tracking.
-- **D4**: Pill-row overflow is detected via dynamic row-wrap measurement, not a fixed pill count.
-- **D5**: Advanced filters is figma-aligned out of the dropdown/panel shell — see §6 for the
-  `selection-item.html`/indent-icon render details.
-- **D6**: Applied-filter pills get a `max-width: 12.5rem` override (Figma's `--max-w-200`).
-- **D7**: Applied-filter pill row uses one uniform `--hdx-space-2` (0.5rem) gap throughout.
-
-No items remain open.

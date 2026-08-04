@@ -331,7 +331,7 @@ itself doesn't change between tabs.
 
 ---
 
-## Files Affected (forward-looking reference — not implemented in this task)
+## Files Affected
 
 | File | Change |
 |---|---|
@@ -341,8 +341,3 @@ itself doesn't change between tabs.
 | `ckanext-hdx_theme/ckanext/hdx_theme/templates/organization/custom_activity_stream.html` | Kept in place, unused/orphaned by this route (D9) — no edit |
 | `ckanext-hdx_org_group/ckanext/hdx_org_group/views/organization.py` (`activity_offset`) | `is_custom` branch removed; renders the new unified v2 template for all orgs (D8) |
 | `hdx-styles/src/common/less/v2/org-page.less` (or 056's equivalent) | New section-level styles for the Activity list container's per-breakpoint padding (§7); no changes to `activity-item.less` — the component itself is unchanged |
-
----
-
-*Note: per this task's brief, only this file is created — `STATUS.md` is intentionally left
-untouched here, even though its own house rule says to update it on task creation.*

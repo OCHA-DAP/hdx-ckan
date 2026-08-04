@@ -249,7 +249,7 @@ Template renders hierarchy — parent "select all" row + indented children for c
 
 ---
 
-## Files
+## Files Affected
 
 | File | Role |
 |---|---|

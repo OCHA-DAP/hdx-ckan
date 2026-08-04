@@ -217,7 +217,7 @@ Example page-specific template (light search):
 
 ### Organisation page (`/organization/<name>`)
 
-- **Templates** (one per tab, all extend `v2/page.html` and share the `v2/org_hero.html` hero — `c-page-header` + `c-tabs`):
+- **Templates** (one per tab, all extend `v2/page.html` and share the `v2/org-hero.html` hero — `c-page-header` + `c-tabs`):
   - Datasets: `organization/read.html` (reuses the search-page list/filters)
   - Activity: `organization/activity_stream.html`
   - Stats: `organization/stats.html` (Chart.js via `hdx_theme/v2-chart-scripts`)

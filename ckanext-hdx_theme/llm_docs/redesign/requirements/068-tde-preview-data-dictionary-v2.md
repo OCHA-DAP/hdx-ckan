@@ -69,7 +69,7 @@ doc — see Decisions below.
 
 ---
 
-## Decisions
+## Decisions Taken
 
 - **D1 — TDE Preview architecture (confirmed): branch inside the existing preview, not a new
   section/view.** Figma shows exactly one "Resource preview" table/section on the page (`resource-page-xl.html`

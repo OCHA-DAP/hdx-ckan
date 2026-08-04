@@ -6,10 +6,6 @@
   {% if shapes %}
     {% asset 'hdx_theme/crisis-base-styles' %}
   {% endif %}
-{#  {% asset 'hdx_theme/requestdata-styles' %}#}
-{#  {% asset 'hdx_theme/dataset-styles' %}#}
-{#  {% asset 'hdx_theme/dataset-read-styles' %}#}
-{#  {% asset 'hdx_theme/dataset-quick-edit-styles' %}#}
   {% if h.dcat_endpoints_enabled() %}
       {% with endpoint=h.dcat_get_endpoint('dataset') %}
           {#<!--
@@ -553,8 +549,6 @@
     {% asset 'hdx_theme/shape-view-scripts' %}
   {% endif %}
 {#  {{ h.snippet('widget/onboarding/data-use-survey.html', id="dataUseSurveyPopup", pkg=pkg) }}#}
-{#  {% asset 'hdx_theme/dataset-styles' %}#}
   {% asset 'hdx_theme/dataset-quick-edit-scripts' %}
-{#  {% asset 'hdx_theme/hdx-autocomplete' %}#}
 {#  {% resource 'hdx_theme/confirm-ajax.js' %}#}
 {% endblock %}

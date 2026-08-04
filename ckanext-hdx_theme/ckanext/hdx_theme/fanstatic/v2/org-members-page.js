@@ -3,9 +3,9 @@
 // - Change-role dropdowns → hidden form POST to member_new
 // - Pending-approval Approve/Decline → AJAX member_request_process
 //   (keeps the v1 analytics contract: sendMemberAddRejectEvent)
-// - Group-message drawer: topic preselect, invisible reCAPTCHA,
-//   AJAX POST to /membership/contact_members
 // - Invite tags-autocomplete on /util/user/hdx_autocomplete (Q10)
+// Group-message drawer logic lives in group-message-drawer.js (shared
+// with the dataset/org page header).
 // ============================================================
 (function () {
   'use strict';
@@ -79,120 +79,7 @@
     });
   });
 
-  // ── Group message drawer ───────────────────────────────────
-  var recaptchaWidgetId = null;
-
-  function gmForm() { return document.getElementById('group-message-form'); }
-  function gmSubmitBtn() { return document.getElementById('group-message-submit'); }
-
-  function gmValidate() {
-    var form = gmForm();
-    var btn = gmSubmitBtn();
-    if (!form || !btn) return;
-    var topic = form.querySelector('[name="topic"]');
-    var msg = form.querySelector('[name="msg"]');
-    var valid = topic && topic.value && msg && msg.value.trim();
-    btn.disabled = !valid;
-    btn.classList.toggle('is-disabled', !valid);
-  }
-
-  function gmShowError(text) {
-    var form = gmForm();
-    var alertEl = form && form.querySelector('.c-form-alert');
-    if (!alertEl) return;
-    alertEl.textContent = text || 'There was an error sending your message. Please try again.';
-    alertEl.hidden = false;
-  }
-
-  // Renders the invisible reCAPTCHA into its dedicated container (between the
-  // form fields and the buttons). Returns true when the widget is available.
-  function gmEnsureRecaptcha() {
-    var container = document.getElementById('group-message-recaptcha');
-    if (!container) return false;
-    if (recaptchaWidgetId !== null) return true;
-    if (window.grecaptcha && window.grecaptcha.render) {
-      recaptchaWidgetId = window.grecaptcha.render(container, {
-        sitekey: container.getAttribute('data-sitekey'),
-        size: 'invisible',
-        badge: 'inline',
-        callback: window.hdxGroupMessageSubmit
-      });
-      return true;
-    }
-    return false;
-  }
-
-  document.addEventListener('click', function (e) {
-    var btn = e.target.closest && e.target.closest('#group-message-submit');
-    if (!btn || btn.disabled) return;
-    if (gmEnsureRecaptcha()) {
-      window.grecaptcha.execute(recaptchaWidgetId);
-    } else {
-      // recaptcha script unavailable — submit anyway, server validates
-      window.hdxGroupMessageSubmit('');
-    }
-  });
-
-  // data-callback target for the invisible reCAPTCHA on the submit button
-  window.hdxGroupMessageSubmit = function (token) {
-    var form = gmForm();
-    if (!form) return;
-    var alertEl = form.querySelector('.c-form-alert');
-    if (alertEl) alertEl.hidden = true;
-    var topic = form.querySelector('[name="topic"]');
-    if (window.hdxUtil) {
-      // v1 parity: fired on submit (google-analytics.js sendMessagingEvent)
-      window.hdxUtil.analytics.sendMessagingEvent('dataset', 'group message', null, topic && topic.value, true);
-    }
-    var data = new URLSearchParams(new FormData(form));
-    if (token) data.set('g-recaptcha-response', token);
-    fetch('/membership/contact_members', {
-      method: 'POST',
-      headers: csrfHeaders(),
-      body: data
-    })
-      .then(function (r) { return r.json(); })
-      .then(function (resp) {
-        if (resp && resp.success) {
-          var success = document.getElementById('group-message-success');
-          if (success) success.hidden = false;
-          var msg = form.querySelector('[name="msg"]');
-          if (msg) msg.value = '';
-          gmValidate();
-          if (recaptchaWidgetId !== null) window.grecaptcha.reset(recaptchaWidgetId);
-        } else {
-          gmShowError(resp && resp.error && resp.error.message);
-          if (recaptchaWidgetId !== null) window.grecaptcha.reset(recaptchaWidgetId);
-        }
-      })
-      .catch(function () {
-        gmShowError(null);
-        if (recaptchaWidgetId !== null) window.grecaptcha.reset(recaptchaWidgetId);
-      });
-  };
-
-  document.addEventListener('click', function (e) {
-    var trigger = e.target.closest && e.target.closest('[data-gm-topic]');
-    if (!trigger) return;
-    var topicSelect = document.getElementById('group-message-topic');
-    var topic = trigger.getAttribute('data-gm-topic');
-    if (topicSelect && topicSelect.querySelector('option[value="' + topic + '"]')) {
-      topicSelect.value = topic;
-    }
-    var success = document.getElementById('group-message-success');
-    if (success) success.hidden = true;
-    if (window.hdxV2Drawer) window.hdxV2Drawer('group-message-drawer').open();
-    gmEnsureRecaptcha();
-    gmValidate();
-  });
-
   document.addEventListener('DOMContentLoaded', function () {
-    var form = gmForm();
-    if (form) {
-      form.addEventListener('submit', function (e) { e.preventDefault(); });
-      form.addEventListener('input', gmValidate);
-      form.addEventListener('change', gmValidate);
-    }
     initInviteTags();
   });
 

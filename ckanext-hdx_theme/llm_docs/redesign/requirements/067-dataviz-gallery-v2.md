@@ -28,7 +28,7 @@ These were resolved directly with the user before finalizing this doc — see De
 
 ---
 
-## Decisions
+## Decisions Taken
 
 - **D1 — Filters (confirmed): none in v2.** There is nothing working to preserve, so v2 migrates only
   what functions in v1 today: search bar, results-per-page, and sort-by. Figma's "Filter (10)"

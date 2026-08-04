@@ -20,30 +20,35 @@
         gap:     var(--hdx-space-10);
         padding: var(--hdx-space-10) 0;
     }
-    // ── Top two-column row ───────────────────────────────────
+    // ── Top row — CSS Grid so __left (description) and __right-card
+    //    (org card) can reposition across breakpoints as single elements:
+    //    stacked at SM, side-by-side sidebar at MD+. ──────────────────
 
     &__top {
-        display:        flex;
-        flex-direction: column;
-        gap:            var(--hdx-space-6);
+        display:               grid;
+        grid-template-columns: 1fr;
+        grid-template-areas:   "desc"
+                                "card";
+        gap:                   var(--hdx-space-6);
 
         @media (min-width: @hdx-bp-md) {
-            flex-direction: row;
-            align-items:    flex-start;
-            gap:            var(--hdx-space-6);
+            grid-template-columns: 1fr 25%;
+            grid-template-areas:   "desc card";
+            align-items:           flex-start;
+            gap:                   var(--hdx-space-6);
         }
     }
-    // ── Left column ──────────────────────────────────────────
+    // ── Left column (description) ─────────────────────────────
 
     &__left {
+        grid-area:      desc;
         display:        flex;
         flex-direction: column;
         gap:            var(--hdx-space-6);
+        min-width:      0;
 
         @media (min-width: @hdx-bp-md) {
-            flex:      1;
-            min-width: 0;
-            gap:       var(--hdx-space-10);
+            gap: var(--hdx-space-10);
         }
     }
     // ── Description block ────────────────────────────────────
@@ -168,43 +173,28 @@
             flex-shrink: 0;
         }
     }
-    // ── Right card (org logo + contact) ──────────────────────
+    // ── Right card (org logo + contact) — single element, repositioned
+    //    via __top's grid-area (stacked at SM, 25% sidebar at MD+ —
+    //    same proportion as .v2-sidebar-flex() elsewhere). ────────────
 
     &__right-card {
+        grid-area:        card;
         background-color: var(--hdx-neutral-0);
         border-radius:    var(--hdx-radius-md);
+        display:          flex;
+        flex-direction:   column;
+        align-items:      flex-start;
+        gap:              var(--hdx-space-2);
+        padding:          var(--hdx-space-2) var(--hdx-space-3);
+        min-width:        0;
 
-        // SM-only: inside left column, column layout
-        &--sm-only {
-            display:        flex;
-            flex-direction: column;
-            align-items:    flex-start;
-            gap:            var(--hdx-space-2);
-            padding:        var(--hdx-space-2) var(--hdx-space-3);
-
-            @media (min-width: @hdx-bp-md) {
-                display: none;
-            }
+        @media (min-width: @hdx-bp-md) {
+            gap:     var(--hdx-space-4);
+            padding: var(--hdx-space-4);
         }
 
-        // MD+: sidebar, column layout
-        &--md-up {
-            display: none;
-
-            @media (min-width: @hdx-bp-md) {
-                display:        flex;
-                flex-direction: column;
-                align-items:    flex-start;
-                gap:            var(--hdx-space-4);
-                padding:        var(--hdx-space-4);
-                width:          11.25rem;   // Figma spec
-                flex-shrink:    0;
-            }
-
-            @media (min-width: @hdx-bp-xl) {
-                padding: var(--hdx-space-6);
-                width:   17.375rem;         // Figma spec
-            }
+        @media (min-width: @hdx-bp-xl) {
+            padding: var(--hdx-space-6);
         }
     }
 

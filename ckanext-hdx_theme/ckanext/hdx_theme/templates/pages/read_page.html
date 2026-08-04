@@ -30,7 +30,7 @@
 
 {# Plain-text version for page-header.html's `description` param — that slot
    renders inside a plain <p>, auto-escaped, no markdown/HTML. Same
-   conversion v2/org_hero.html uses for org_dict.description. #}
+   conversion v2/org-hero.html uses for org_dict.description. #}
 {% set _header_description = h.markdown_extract(ns.header_description, extract_length=0) | striptags if ns.header_description else '' %}
 
 {# The row/column classes only apply real layout CSS (bordered sidebar,

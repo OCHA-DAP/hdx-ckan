@@ -1,6 +1,6 @@
 {#
-  Snippet: org_hero.html
-  Path:    templates/v2/org_hero.html
+  Snippet: org-hero.html
+  Path:    templates/v2/org-hero.html
 
   Renders the Organisation page hero: page-header (logo, title, member-since,
   description, actions/stats card, notifications CTA) + the tabs bar underneath.
@@ -56,6 +56,11 @@
    'href': h.url_for('hdx_org_join.find_organisation', selected=org_dict.id),
    'icon_src': 'v2/icons/user-plus.svg',
    'show': allow_req_membership},
+  {'label': _('Group message'),
+   'href': '#',
+   'icon_src': 'v2/icons/message.svg',
+   'attrs': {'id': 'group-message-org-action'},
+   'show': org_meta.group_message_info.display_group_message},
 ] %}
 
 <div class="hdx-v2-org-header-section">
@@ -71,7 +76,10 @@
         notification_object_id=org_dict.id,
         notification_object_dict=org_dict,
         header_actions=header_actions,
-        header_stats=header_stats %}
+        header_stats=header_stats,
+        membership=org_meta.group_message_info,
+        hide_membership=False,
+        org_id=org_dict.id %}
 
     {% snippet 'v2/components/tabs.html',
         aria_label=_('Organisation sections'),

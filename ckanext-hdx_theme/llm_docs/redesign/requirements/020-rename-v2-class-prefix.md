@@ -31,7 +31,7 @@ The rename follows BEM: `hdx-v2-{block}__{element}--{modifier}`.
 
 ---
 
-## Files to Update
+## Files Affected
 
 ### HTML Templates — `ckanext/hdx_theme/templates/v2/`
 

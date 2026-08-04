@@ -443,40 +443,40 @@ is horizontally centred at all breakpoints.
 
 ---
 
-## 10. Decisions
+## 10. Decisions Taken
 
 **Sort options** → **Alphabetical A-Z / Z-A only** (matches Figma; backend only supports
 `title asc` / `title desc` for in-memory sort; datasets asc/desc also supported but not
 surfaced in v2 per Figma).
 
-**Q1. KPI data source** → **Computed in `_index()` from already-loaded data.**
+**D1. KPI data source** → **Computed in `_index()` from already-loaded data.**
 `kpi_orgs = len(all_orgs)`. `kpi_datasets` and `kpi_locations` from cached lists.
 
-**Q2. Number formatting** → **SI suffixes via `h.hdx_format_number_si()`.**
+**D2. Number formatting** → **SI suffixes via `h.hdx_format_number_si()`.**
 `4800 → "4.8k"`, `1200000 → "1.2M"`. Applied to both dataset and member counts.
 
-**Q3. v2 gate** → **Direct template replacement** (no `{% if v2 %}` gate — same as task 048).
+**D3. v2 gate** → **Direct template replacement** (no `{% if v2 %}` gate — same as task 048).
 
-**Q4. Page size options** → **10 / 25 / 50** (aligns with search results page default range).
+**D4. Page size options** → **10 / 25 / 50** (aligns with search results page default range).
 
-**Q5. Member count** → **Pass `h.get_group_members(org.id)` per org (N+1 pattern).**
+**D5. Member count** → **Pass `h.get_group_members(org.id)` per org (N+1 pattern).**
 Returns 0 for anonymous users (CKAN auth restriction — known limitation). Acceptable;
 same as v1.
 
-**Q6. Description display** → **Fully hidden initially; `clamped-text.js` reveals on click.**
+**D6. Description display** → **Fully hidden initially; `clamped-text.js` reveals on click.**
 `max-height:0` by default. `data-module="clamped-text"` + `data-clamped-content` on the
 `<p>` element. "Show more" → "Show less" toggle.
 
-**Q7. Count label** → **No "N Results" label.** The Figma `.datasets-parent` element is
+**D7. Count label** → **No "N Results" label.** The Figma `.datasets-parent` element is
 not a page-level result counter; it does not map to a rendered UI element.
 
-**Q8. "Show more" JS** → **Reuse existing `clamped-text.js`** (`fanstatic/v2/components/clamped-text.js`).
+**D8. "Show more" JS** → **Reuse existing `clamped-text.js`** (`fanstatic/v2/components/clamped-text.js`).
 No new JS module needed.
 
-**Q9. Org card** → **Reusable snippet** at `v2/components/org-list-card.html`; also
+**D9. Org card** → **Reusable snippet** at `v2/components/org-list-card.html`; also
 documented in the `components.html` demo page.
 
-**Q10. Sidebar** → **No sidebar.** Removed entirely.
+**D10. Sidebar** → **No sidebar.** Removed entirely.
 
 ---
 

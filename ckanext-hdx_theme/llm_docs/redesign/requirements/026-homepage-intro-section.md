@@ -66,7 +66,7 @@ Heading color: `var(--hdx-neutral-95)`. Verify token values against `foundation.
 
 ---
 
-## Files to create / update
+## Files Affected
 
 ### 1. `ckanext/hdx_theme/templates/v2/components/activity-card.html`
 

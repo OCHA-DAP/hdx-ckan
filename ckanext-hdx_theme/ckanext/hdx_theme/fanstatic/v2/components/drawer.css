@@ -161,6 +161,9 @@ body.is-drawer-open {
   color: var(--hdx-neutral-8);
   margin: 0;
 }
+.c-drawer-form__text--success {
+  color: var(--hdx-brand-7);
+}
 .c-drawer-form__checkbox-row {
   display: flex;
   align-items: center;

@@ -452,7 +452,7 @@ Form elements inside the drawer body stretch to fill the available width (`align
 
 ---
 
-## 9. Files to Create / Modify
+## 9. Files Affected
 
 ### New Files
 
@@ -482,7 +482,7 @@ Form elements inside the drawer body stretch to fill the available width (`align
 
 ---
 
-## 10. Decisions
+## 10. Decisions Taken
 
 | # | Decision |
 |---|---|

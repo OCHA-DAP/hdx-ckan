@@ -387,16 +387,16 @@ Use existing breakpoint tokens `@hdx-bp-xl` and `@hdx-bp-md` (do not introduce n
 
 | # | Question | Decision |
 |---|---|---|
-| OQ-1 | Does the label move or stay fixed? | **Moves** — JS sets `--label-offset` on each cycle; CSS `translateX` follows the active bar, clamped to chart bounds |
-| OQ-2 | Inactive bar color/opacity? | **Active**: `var(--hdx-overlay-white-90)` · **Inactive**: `var(--hdx-overlay-white-20)` (new token added to overlays.less + foundation) |
-| OQ-3 | `--on-dark` modifier location? | **Shared** `selection.less` — added `.c-graph-point--on-dark` modifier reusable for future dark-background contexts |
-| OQ-4 | MD bar width? | **8px** (same as XL) — SM=4px (`--hdx-space-1`), MD/XL=8px (`--hdx-space-2`) |
-| OQ-5 | Analytics tracking? | **None** for now |
-| OQ-6 | Error guard for `hdx_get_locations`? | **Helper-level `try/except`** — catches any exception and returns `[]`; template guard `{% if _hrp_filtered %}` hides section when empty |
+| D1 | Does the label move or stay fixed? | **Moves** — JS sets `--label-offset` on each cycle; CSS `translateX` follows the active bar, clamped to chart bounds |
+| D2 | Inactive bar color/opacity? | **Active**: `var(--hdx-overlay-white-90)` · **Inactive**: `var(--hdx-overlay-white-20)` (new token added to overlays.less + foundation) |
+| D3 | `--on-dark` modifier location? | **Shared** `selection.less` — added `.c-graph-point--on-dark` modifier reusable for future dark-background contexts |
+| D4 | MD bar width? | **8px** (same as XL) — SM=4px (`--hdx-space-1`), MD/XL=8px (`--hdx-space-2`) |
+| D5 | Analytics tracking? | **None** for now |
+| D6 | Error guard for `hdx_get_locations`? | **Helper-level `try/except`** — catches any exception and returns `[]`; template guard `{% if _hrp_filtered %}` hides section when empty |
 
 ---
 
-## Files Created / Modified
+## Files Affected
 
 | File | Action |
 |---|---|

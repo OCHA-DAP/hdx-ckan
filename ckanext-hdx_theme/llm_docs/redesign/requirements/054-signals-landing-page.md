@@ -884,7 +884,7 @@ v2-signals-landing-page-scripts:
 
 ---
 
-## 11. Decisions
+## 11. Decisions Taken
 
 1. **Signals logo image** — Use `h.url_for_static('images/landing_pages/logo_hdx_signals.png')`.
    File confirmed at `hdx-styles/src/common/images/landing_pages/logo_hdx_signals.png` — same

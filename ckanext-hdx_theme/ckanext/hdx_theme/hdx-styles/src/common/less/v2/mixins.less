@@ -33,6 +33,21 @@
     align-self: flex-start;
 }
 
+// ── Form field-row layout ───────────────────────────────────────
+// Checkbox + label + inline error, two-column grid. Used by the
+// auth, signup, and request-access pages.
+
+.v2-checkbox-row() {
+    display:               grid;
+    grid-template-columns: auto 1fr;
+    column-gap:            var(--hdx-space-3);
+    align-items:           center;
+
+    .c-checkbox__error {
+        grid-column: 2;
+    }
+}
+
 
 // ── Typography — private parametric cores ─────────────────────
 // Prefixed with - to signal "internal — do not call directly".

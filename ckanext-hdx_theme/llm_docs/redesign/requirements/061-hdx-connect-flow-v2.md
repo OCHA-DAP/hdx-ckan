@@ -373,7 +373,7 @@ already established by Contact Contributor's v2 migration (`50%`/`80%`/full-widt
 
 ---
 
-## 11. Decisions (confirmed with requester)
+## 11. Decisions Taken
 
 1. **"Other" free-text conditional reveal.** Three dropdowns (organization, organization type,
    intended use) need a free-text field that appears when "Other" is selected. **Decision:** a

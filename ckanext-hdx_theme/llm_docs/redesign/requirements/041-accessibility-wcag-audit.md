@@ -595,15 +595,3 @@ Unify to a single tooltip pattern: update `tooltip.html` with full ARIA support 
 ### RF-04 — `prefers-reduced-motion` convention in CONVENTIONS.md
 
 Add a section to `llm_docs/redesign/CONVENTIONS.md` documenting the required pattern for transitions and JS animations (see R-07, R-10). Without a documented convention, each future task will independently decide whether to add the guard — leading to inconsistency.
-
----
-
-## 7. Open Questions (resolved)
-
-| Question | Decision |
-|----------|----------|
-| WCAG conformance level | WCAG 2.1 AA |
-| Supported browsers | Chrome/Edge (Chromium), Firefox, Safari |
-| Screen reader targets | NVDA + Chrome (Windows primary), VoiceOver + Safari (macOS), JAWS + Chrome/Edge (enterprise), TalkBack + Android Chrome (mobile) |
-| Existing accessibility tooling | None confirmed. Recommendation: [axe DevTools](https://www.deque.com/axe/) browser extension for automated checks before manual AT testing. |
-| Acceptable refactoring scope | Full structural changes allowed — HTML element types, JS architecture, component internals |

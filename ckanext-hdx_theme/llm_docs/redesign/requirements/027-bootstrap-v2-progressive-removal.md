@@ -22,7 +22,7 @@ This follows the Bootstrap audit (task 022) and implements decision **B1 — pro
 
 ---
 
-## Affected files
+## Files Affected
 
 | File | Bootstrap usage present |
 |------|------------------------|

@@ -46,14 +46,11 @@
 {% block scripts %}
   {{ super() }}
   {% asset 'hdx_theme/v2-org-members-page-scripts' %}
-  {% if show_group_message %}
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-  {% endif %}
 {% endblock %}
 
 {# ── Hero: org header + tabs ───────────────────────────────── #}
 {% block pre_primary %}
-  {% snippet 'v2/org_hero.html',
+  {% snippet 'v2/org-hero.html',
       org_dict=group_dict, org_meta=org_meta, active_tab='members',
       header_stats=[
         {'label': _('Datasets'), 'value': h.hdx_format_number_si(org_meta.datasets_num or 0)},
@@ -240,55 +237,11 @@
 
     {# Group-message drawer (Q6 — replaces the v1 select2 + reCAPTCHA popup) #}
     {% if show_group_message %}
-      {% call h.snippet('v2/components/drawer.html',
+      {% snippet 'v2/group-message-drawer.html',
           drawer_id='group-message-drawer',
-          title=_('Group message')) %}
-        <form class="c-drawer-form" id="group-message-form">
-          {% snippet 'v2/components/form-alert.html', hidden=True %}
-          <input type="hidden" name="source_type" value="group">
-          <input type="hidden" name="title" value="{{ group_dict.title or group_dict.display_name }}">
-          <input type="hidden" name="org_id" value="{{ group_dict.id }}">
-          <input type="hidden" name="pkg_id" value="">
-          <div class="c-form-field">
-            {% snippet 'v2/components/select.html',
-                name='topic', id='group-message-topic',
-                label=_('Send message to'), required=True,
-                options=gm_info.data.group_topics,
-                placeholder=_('Select recipient group(s)') %}
-          </div>
-          <div class="c-form-field">
-            {% snippet 'v2/components/text-field.html',
-                size='m', type='text', name='fullname', id='group-message-fullname',
-                label=_('Your name'), required=True,
-                value=gm_info.data.fullname %}
-          </div>
-          <div class="c-form-field">
-            {% snippet 'v2/components/text-field.html',
-                size='m', type='email', name='email', id='group-message-email',
-                label=_('Your email'), required=True,
-                value=gm_info.data.email %}
-          </div>
-          <div class="c-form-field">
-            {% snippet 'v2/components/text-field.html',
-                size='m', name='msg', id='group-message-msg',
-                label=_('Comments'), required=True,
-                multiline=True, rows=4 %}
-          </div>
-          <p class="c-drawer-form__text hdx-v2-org-members__gm-success" id="group-message-success" hidden>
-            {{ _('Your message has been sent.') }}
-          </p>
-          {# invisible reCAPTCHA renders here (badge inline), between fields and buttons #}
-          <div class="hdx-v2-org-members__gm-recaptcha" id="group-message-recaptcha"
-               data-sitekey="{{ g.recaptcha_publickey }}"></div>
-          <div class="c-drawer-form__buttons">
-            {% snippet 'v2/components/button.html',
-                style='tertiary', label=_('Cancel'), attrs={'data-drawer-close': ''} %}
-            {% snippet 'v2/components/button.html',
-                style='primary', label=_('Submit'), state='disabled',
-                attrs={'id': 'group-message-submit'} %}
-          </div>
-        </form>
-      {% endcall %}
+          org_id=group_dict.id, pkg_id='', title=group_dict.title or group_dict.display_name,
+          group_topics=gm_info.data.group_topics,
+          fullname=gm_info.data.fullname, email=gm_info.data.email %}
     {% endif %}
 
   </section>

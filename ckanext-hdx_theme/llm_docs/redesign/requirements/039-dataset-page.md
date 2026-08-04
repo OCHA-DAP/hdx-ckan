@@ -666,7 +666,9 @@ Standard `{% set items = items + [...] %}` fails in Jinja2 due to scoping — us
 
 ---
 
-## New Files
+## Files Affected
+
+### New Files
 
 | File | Type | Notes |
 |------|------|-------|
@@ -678,7 +680,7 @@ Standard `{% set items = items + [...] %}` fails in Jinja2 due to scoping — us
 | `hdx-styles/src/common/less/v2/dataset.less` | LESS | Source for `dataset.css` |
 | `hdx-styles/src/common/less/v2/components/showcase-card.less` | LESS | Source for `showcase-card.css` |
 
-## Files to Modify
+### Files to Modify
 
 | File | Change |
 |------|--------|

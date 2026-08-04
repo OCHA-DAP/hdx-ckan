@@ -40,12 +40,5 @@
 // spans the label column beneath. Same grid pattern as signup-page.less's
 // __checkbox-row.
 .hdx-v2-request-access-checkbox-row {
-    display:               grid;
-    grid-template-columns: auto 1fr;
-    column-gap:            var(--hdx-space-3);
-    align-items:           start;
-
-    .c-checkbox__error {
-        grid-column: 2;
-    }
+    .v2-checkbox-row();
 }

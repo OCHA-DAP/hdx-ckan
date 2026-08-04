@@ -239,23 +239,3 @@ The v1 All/Personal toggle is not carried forward — see §5.
 | Unknown/new notification type (no matching `html_template`) | Out of scope to defensively handle — would require a `notification_service.py` change (excluded); a new type added later must ship its own snippet, same as today |
 | Many notifications (sysadmin with many orgs/quarantined datasets) | Existing scrollable `max-height` behavior unchanged — no pagination, no list page (§6) |
 | Empty state (zero notifications) | Existing "No notifications" message, reused as-is |
-
----
-
-## 10. Open Questions
-
-### Resolved during planning (recorded for traceability)
-
-1. **List page vs. existing "Notifications" (Subscriptions) tab** → Confirmed unrelated; this doc's feature is a bell-dropdown migration only, does not touch `notification_platform`/`user/notifications.html` (Context, §6).
-2. **Consolidation depth** → Template-layer only; `notification_service.py` untouched (§3).
-3. **Read/unread state** → Document as out of scope; no read/unread concept invented (§1.4).
-4. **v2 header-icon analytics gap** → Fixed in this migration, restoring v1 parity (§5).
-5. **Sysadmin highlight token** → `var(--hdx-warning-1)` (§7).
-6. **Click target** → Inline text link stays clickable; the trailing arrow becomes a second, independent link to the same destination (same analytics attributes). The row/card itself is not clickable (§4).
-7. **List page scope** → Dropped entirely. No "View all" link, no `/dashboard/notifications` route/template, no new nav entry point anywhere (user menu included). The dropdown keeps its existing scroll-everything behavior (§1.6, §5, §6). Page-size/pagination questions are moot as a result.
-8. **v1 legacy dropdown** → Retired. The 4 shared snippets render the new markup unconditionally; `header-global.html`/`notification_snippet.html` are left wired up as-is, unstyled (§3).
-9. **Sysadmin All/Personal filter toggle** → Dropped. Sysadmins see every notification inline; oversight entries are distinguished only by the `.c-notification-item--sysadmin` highlight (§5).
-
-### Still open
-
-None — all open items from initial planning have been resolved above.

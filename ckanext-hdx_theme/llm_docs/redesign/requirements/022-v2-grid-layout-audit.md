@@ -123,7 +123,7 @@ Use `g-3` (24px) for standard column grids. Use `g-4` (32px) only where Figma ex
 
 ---
 
-## Files to review
+## Files Affected
 
 | File | Role |
 |------|------|

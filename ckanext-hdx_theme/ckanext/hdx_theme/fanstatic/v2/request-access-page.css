@@ -17,7 +17,7 @@
   display: grid;
   grid-template-columns: auto 1fr;
   column-gap: var(--hdx-space-3);
-  align-items: start;
+  align-items: center;
 }
 .hdx-v2-request-access-checkbox-row .c-checkbox__error {
   grid-column: 2;

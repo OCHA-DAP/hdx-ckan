@@ -540,7 +540,7 @@ activity items (unlike dataset cards). Long dataset titles wrap naturally.
 
 ---
 
-## 9. Decisions
+## 9. Decisions Taken
 
 All questions resolved — no open items remain.
 
@@ -585,7 +585,9 @@ All questions resolved — no open items remain.
 
 ---
 
-## 10. Files to Create
+## 10. Files Affected
+
+### Files to Create
 
 | File | Description |
 |---|---|
@@ -594,7 +596,7 @@ All questions resolved — no open items remain.
 | `ckanext-hdx_theme/.../hdx-styles/src/common/less/v2/components/activity-item.less` | BEM LESS source |
 | `ckanext-hdx_theme/.../fanstatic/v2/components/activity-item.css` | Compiled CSS (committed) |
 
-## Files to Modify
+### Files to Modify
 
 | File | Change |
 |---|---|

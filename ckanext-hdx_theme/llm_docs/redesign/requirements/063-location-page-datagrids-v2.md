@@ -635,7 +635,7 @@ toggle just setting `.open` on every card's `<details>` element.
 
 ---
 
-## Files Affected (first-pass working list)
+## Files Affected
 
 | Layer | File | Expected change |
 |---|---|---|

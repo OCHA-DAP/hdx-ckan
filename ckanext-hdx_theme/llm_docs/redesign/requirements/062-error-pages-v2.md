@@ -302,7 +302,7 @@ template/file.
 
 ---
 
-## 10. Decisions (confirmed with requester)
+## 10. Decisions Taken
 
 1. **Task scope.** This task delivers this requirements doc, the standalone
    `planned-maintenance.html` draft, and the 404/403/Server Error implementation in

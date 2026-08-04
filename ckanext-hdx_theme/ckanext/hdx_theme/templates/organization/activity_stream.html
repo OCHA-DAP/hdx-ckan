@@ -32,7 +32,7 @@
 
 {# ── Hero: org header + tabs ───────────────────────────────── #}
 {% block pre_primary %}
-  {% snippet 'v2/org_hero.html',
+  {% snippet 'v2/org-hero.html',
       org_dict=org_dict, org_meta=org_meta, active_tab='activity',
       header_stats=[
         {'label': _('Datasets'), 'value': h.hdx_format_number_si(org_meta.datasets_num or 0)},

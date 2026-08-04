@@ -336,7 +336,7 @@ At SM, buttons remain right-aligned side-by-side — matching Figma.
 
 ---
 
-## 9. Decisions
+## 9. Decisions Taken
 
 1. **Dropdown:** Extend `c-dropdown` with a `native=True` parameter. When `native=True` the
    snippet renders a styled `<select>` element (+ chevron) instead of the button+panel,

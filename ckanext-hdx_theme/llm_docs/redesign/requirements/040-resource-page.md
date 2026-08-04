@@ -500,7 +500,9 @@ No page-specific scripts block needed — all JS is in `v2-components-scripts`, 
 
 ---
 
-## New Files
+## Files Affected
+
+### New Files
 
 | File | Type | Notes |
 |---|---|---|
@@ -514,7 +516,7 @@ No page-specific scripts block needed — all JS is in `v2-components-scripts`, 
 | `less/v2/components/copy-button.less` | LESS | Source for `copy-button.css` |
 | `less/v2/resource-page.less` | LESS | Source for `resource-page.css` |
 
-## Files to Modify
+### Files to Modify
 
 | File | Change |
 |---|---|
@@ -563,25 +565,3 @@ Use the Jinja2 namespace trick for conditional list building:
 ```
 
 Standard `{% set items = items + [...] %}` fails in Jinja2 due to scoping.
-
----
-
-## Verification Checklist
-
-- [ ] Breadcrumb: Home → Org → Dataset → Resource (no link on last item)
-- [ ] File type icon + format label (e.g. `GEOJSON`) shown at top of header
-- [ ] Title, description with clamped-text show more/less
-- [ ] Download button shows size: `Download (14.2K)` when size available
-- [ ] GA tracking: `.ga-download`, `data-resource-name`, `data-resource-id` on download link
-- [ ] Export metadata dropdown opens/closes; JSON and CSV items navigate to download URLs
-- [ ] Metadata strip: SM stacked → MD 2+1 → XL grid aligned with sidebar+gap below
-- [ ] Copy icon turns green briefly on click; reverts after 2 seconds
-- [ ] All 10 `analytics_*` blocks present and unchanged
-- [ ] Anchor links sidebar shown at XL; hidden at MD/SM
-- [ ] Mobile dropdown shown at MD/SM; absent at XL
-- [ ] Resource preview shown when `_data_explorer` is set; no tab nav rendered, Data Explorer view rendered directly
-- [ ] API section: 3 blocks in a row at XL, stacked at MD/SM
-- [ ] "Copy resource ID" in API section uses text-button style; clipboard still works via `copy-button.js`
-- [ ] Empty state (no preview, no API): page renders without errors; no empty sidebar content
-- [ ] Dataset page unaffected: `v2/components/page-header.html` renders correctly with the dataset `meta_items`
-- [ ] `dropdown.js` handles all c-dropdown open/close; no regression in search page filters

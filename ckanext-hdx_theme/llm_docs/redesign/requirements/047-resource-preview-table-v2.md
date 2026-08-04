@@ -304,7 +304,7 @@ Page size: keep same as v1 DataTables default (10 rows per page). Total pages = 
 
 ---
 
-## 10. Decisions Log
+## 10. Decisions Taken
 
 All open questions resolved. No blockers remain before implementation.
 

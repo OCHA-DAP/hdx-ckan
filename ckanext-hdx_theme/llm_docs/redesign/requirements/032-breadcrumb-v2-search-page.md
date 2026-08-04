@@ -290,7 +290,7 @@ unchanged. All other pages that extend `v2/page.html` continue using the legacy 
 
 ---
 
-## Files
+## Files Affected
 
 | File | Change |
 |---|---|
@@ -314,7 +314,7 @@ unchanged. All other pages that extend `v2/page.html` continue using the legacy 
 
 | # | Question | Decision |
 |---|----------|----------|
-| Q1 | Spacing above breadcrumb: additional top margin beyond component's own `padding: 8px 0`? | Yes — `.hdx-v2-breadcrumb-row` adds `margin-top: var(--hdx-space-2)` (8px) and `margin-bottom: var(--hdx-space-2)` (8px) |
-| Q2 | Separator character: `/` or different character/icon? | `/` — default kept; no change |
-| Q3 | Long label truncation: `max-width: 21.875rem` sufficient, or exempt "Datasets" crumb? | Existing truncation kept as-is; "Datasets" is always short so no special exemption needed |
-| Q4 | Future pages — `href` for "Datasets" link on dataset detail page: `/dataset` or with filters? | Deferred — out of scope for this task (search page only) |
+| D1 | Spacing above breadcrumb: additional top margin beyond component's own `padding: 8px 0`? | Yes — `.hdx-v2-breadcrumb-row` adds `margin-top: var(--hdx-space-2)` (8px) and `margin-bottom: var(--hdx-space-2)` (8px) |
+| D2 | Separator character: `/` or different character/icon? | `/` — default kept; no change |
+| D3 | Long label truncation: `max-width: 21.875rem` sufficient, or exempt "Datasets" crumb? | Existing truncation kept as-is; "Datasets" is always short so no special exemption needed |
+| D4 | Future pages — `href` for "Datasets" link on dataset detail page: `/dataset` or with filters? | Deferred — out of scope for this task (search page only) |

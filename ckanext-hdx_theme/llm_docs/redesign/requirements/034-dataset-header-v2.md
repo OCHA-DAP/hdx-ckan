@@ -255,7 +255,7 @@ These MUST be preserved:
 | `page` reset | Any sort/limit/filter change deletes the `page` param (returns to page 1 without appending `?page=1`) |
 | Backend behavior | `search_logic.py` logic untouched |
 | Non-v2 layout | `#dataset-filter-start` block unchanged |
-| Admin sort option | "Due for Update" conditional on `admin_view` (open question [OQ-6]) |
+| Admin sort option | "Due for Update" conditional on `admin_view` (open question [D6]) |
 
 ---
 
@@ -275,23 +275,23 @@ These MUST be preserved:
 
 | ID | Question | Decision |
 |----|----------|---------|
-| OQ-1 | Count source | Always `packages_count` (full result set) — no tab-conditional count |
-| OQ-2 | Sort default when `used_default_sort_by=True` | "Last Modified" shown as default label — `_ns.sort_label` defaults to `_('Last Modified')` when no match found |
-| OQ-3 | Overlay position | Sort + results-per-page appear ABOVE filter groups (`hdx-v2-overlay-nav-controls` block) |
-| OQ-4 | Zero results | Show "0" — `h.localised_number(0)` renders "0" |
-| OQ-5 | Count format | `h.localised_number()` confirmed (comma-separated) |
-| OQ-6 | Admin sort option | Admin "Due for Update" preserved — `admin_view` param passed to `search-nav-controls.html` |
-| OQ-7 | Tooltips | "Trending" and "Due for Update" tooltips preserved via `tooltip` key in `nav_items` list |
-| OQ-8 | Analytics | No Mixpanel events — analytics remain commented-out as in v1 |
-| OQ-9 | Dropdown navigation mode | `[data-nav-key]` / `[data-nav-value]` data attributes; `setNavParam()` in `search.js` navigates immediately on click |
-| OQ-10 | Results per page options | Options remain `[10, 25, 50, 100]` |
+| D1 | Count source | Always `packages_count` (full result set) — no tab-conditional count |
+| D2 | Sort default when `used_default_sort_by=True` | "Last Modified" shown as default label — `_ns.sort_label` defaults to `_('Last Modified')` when no match found |
+| D3 | Overlay position | Sort + results-per-page appear ABOVE filter groups (`hdx-v2-overlay-nav-controls` block) |
+| D4 | Zero results | Show "0" — `h.localised_number(0)` renders "0" |
+| D5 | Count format | `h.localised_number()` confirmed (comma-separated) |
+| D6 | Admin sort option | Admin "Due for Update" preserved — `admin_view` param passed to `search-nav-controls.html` |
+| D7 | Tooltips | "Trending" and "Due for Update" tooltips preserved via `tooltip` key in `nav_items` list |
+| D8 | Analytics | No Mixpanel events — analytics remain commented-out as in v1 |
+| D9 | Dropdown navigation mode | `[data-nav-key]` / `[data-nav-value]` data attributes; `setNavParam()` in `search.js` navigates immediately on click |
+| D10 | Results per page options | Options remain `[10, 25, 50, 100]` |
 | — | Overlay sort/limit behavior | Immediate navigation on selection — no "Show results" button involvement |
 | — | Page heading | Always static **"Datasets"** — no dynamic filter context in the heading |
 | — | Search input | Excluded from this task |
 
 ---
 
-## 9. Files Involved
+## 9. Files Affected
 
 **Created (new):**
 

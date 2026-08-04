@@ -1,0 +1,79 @@
+{#
+  Snippet: group-message-drawer.html
+  Path:    templates/v2/group-message-drawer.html
+
+  Reusable "Group message" c-drawer form — lets an org member message
+  other members (all/admins/editors/members) via
+  POST /membership/contact_members. Used from the dataset/org page
+  header (page-header.html) and the org Members tab (members.html) —
+  each call renders its own instance with a distinct drawer_id, so
+  multiple instances can coexist on the same page.
+  JS: fanstatic/v2/group-message-drawer.js
+
+  Parameters
+  ─────────────────────────────────────────────────
+  drawer_id     {string}  Required. Unique id — also prefixes internal
+                          field ids for label/input association.
+  org_id        {string}  Required. Organisation id (auth + recipient lookup).
+  title         {string}  Required. Dataset or organisation title.
+  group_topics  {dict}    Required. {key: label} recipient options.
+  pkg_id        {string}  Dataset id — set only when messaging from a
+                          dataset page.  default: ''
+  fullname      {string}  Default value for "Your name".  default: ''
+  email         {string}  Default value for "Your email".  default: ''
+  ─────────────────────────────────────────────────
+#}
+
+{% set pkg_id    = pkg_id    if pkg_id    is defined else '' %}
+{% set fullname  = fullname  if fullname  is defined else '' %}
+{% set email     = email     if email     is defined else '' %}
+
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+{% call h.snippet('v2/components/drawer.html',
+    drawer_id=drawer_id,
+    title=_('Group message')) %}
+  <form class="c-drawer-form" data-group-message-form>
+    {% snippet 'v2/components/form-alert.html', hidden=True %}
+    <input type="hidden" name="source_type" value="{{ 'dataset' if pkg_id else 'group' }}">
+    <input type="hidden" name="title" value="{{ title }}">
+    <input type="hidden" name="org_id" value="{{ org_id }}">
+    <input type="hidden" name="pkg_id" value="{{ pkg_id }}">
+    <div class="c-form-field">
+      {% snippet 'v2/components/select.html',
+          name='topic', id=drawer_id ~ '-topic',
+          label=_('Send message to'), required=True,
+          options=group_topics,
+          placeholder=_('Select recipient group(s)') %}
+    </div>
+    <div class="c-form-field">
+      {% snippet 'v2/components/text-field.html',
+          size='m', type='text', name='fullname', id=drawer_id ~ '-fullname',
+          label=_('Your name'), required=True,
+          value=fullname %}
+    </div>
+    <div class="c-form-field">
+      {% snippet 'v2/components/text-field.html',
+          size='m', type='email', name='email', id=drawer_id ~ '-email',
+          label=_('Your email'), required=True,
+          value=email %}
+    </div>
+    <div class="c-form-field">
+      {% snippet 'v2/components/text-field.html',
+          size='m', name='msg', id=drawer_id ~ '-msg',
+          label=_('Comments'), required=True,
+          multiline=True, rows=4 %}
+    </div>
+    <p class="c-drawer-form__text c-drawer-form__text--success" data-group-message-success hidden>
+      {{ _('Your message has been sent.') }}
+    </p>
+    <div class="c-drawer-form__recaptcha" data-group-message-recaptcha
+         data-sitekey="{{ g.recaptcha_publickey }}"></div>
+    <div class="c-drawer-form__buttons">
+      {% snippet 'v2/components/button.html',
+          style='tertiary', label=_('Cancel'), attrs={'data-drawer-close': ''} %}
+      {% snippet 'v2/components/button.html',
+          style='primary', label=_('Submit'), state='disabled',
+          attrs={'data-group-message-submit': ''} %}
+    </div>
+  </form>
+{% endcall %}

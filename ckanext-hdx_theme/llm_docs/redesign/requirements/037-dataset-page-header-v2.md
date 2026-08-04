@@ -399,24 +399,24 @@ c-page-header
 
 ---
 
-## 9. Decisions
+## 9. Decisions Taken
 
 | ID | Decision |
 |----|----------|
-| OQ-1 | Data grids entries come from `pkg.links_list`. Items with `link.label` render as label + text-button; items without render as text-button only. |
-| OQ-2 | `request_only` mapped from `pkg.is_requestdata_type`. |
-| OQ-3 | Crisis entries come from `pkg.links_list` (same mechanism as data grids). |
-| OQ-4 | Download count is `pkg.approx_total_downloads`. |
-| OQ-5 | "View all" on Location always renders when the location text is non-empty. Uses `arrow-down.svg`. Anchor: `#metadata-location`. |
-| OQ-6 | If `logo_src` empty, logo area hidden entirely. |
-| OQ-7 | "Get notified" opens JS notification modal. "Contact organisation" is an `<a>` linking to `contact_href`. Uses `mail.svg` icon on the left. |
-| OQ-8 | Hidden text-link in Location value row (Figma only) — out of scope, skipped. |
-| OQ-9 | Tooltip copy hardcoded in the caller's `meta_items`. Only the time period item has a tooltip. |
-| OQ-10 | Labels flex-wrap freely with no per-line cap. |
-| OQ-11 | ~~`data-module="dataset-page-header"` handled by `page-header.js`~~ → **updated (task 038)**: uses shared `data-module="clamped-text"` + `data-clamped-content`; JS handler removed from `page-header.js`. |
-| OQ-12 | Tooltip trigger is `c-button` (icon-only) with CSS chrome removed; aria-expanded toggled by JS; outside click closes. |
-| OQ-13 | Source "View more" link is rendered but hidden; JS reveals it only when text visually overflows 1 line (scrollWidth > clientWidth). Links to `#metadata-source`. |
-| OQ-14 | `hdx_read.html` has no v2 feature gate — the new header is always rendered. v1 layout block removed. |
-| OQ-15 | MD layout: left column uses `flex: 1` (not fixed width) to avoid blank space beside org card on wide viewports. |
-| OQ-16 | Spacing and typography use CSS custom properties (`var(--hdx-space-*)`, `var(--hdx-font-*)`, etc.), not raw rem values. |
-| OQ-17 | edit_mode support: title and description container receive `data-module="hdx-quick-edit"` attrs when `edit_mode=True`, passed alongside `pkg_id`. |
+| D1 | Data grids entries come from `pkg.links_list`. Items with `link.label` render as label + text-button; items without render as text-button only. |
+| D2 | `request_only` mapped from `pkg.is_requestdata_type`. |
+| D3 | Crisis entries come from `pkg.links_list` (same mechanism as data grids). |
+| D4 | Download count is `pkg.approx_total_downloads`. |
+| D5 | "View all" on Location always renders when the location text is non-empty. Uses `arrow-down.svg`. Anchor: `#metadata-location`. |
+| D6 | If `logo_src` empty, logo area hidden entirely. |
+| D7 | "Get notified" opens JS notification modal. "Contact organisation" is an `<a>` linking to `contact_href`. Uses `mail.svg` icon on the left. |
+| D8 | Hidden text-link in Location value row (Figma only) — out of scope, skipped. |
+| D9 | Tooltip copy hardcoded in the caller's `meta_items`. Only the time period item has a tooltip. |
+| D10 | Labels flex-wrap freely with no per-line cap. |
+| D11 | ~~`data-module="dataset-page-header"` handled by `page-header.js`~~ → **updated (task 038)**: uses shared `data-module="clamped-text"` + `data-clamped-content`; JS handler removed from `page-header.js`. |
+| D12 | Tooltip trigger is `c-button` (icon-only) with CSS chrome removed; aria-expanded toggled by JS; outside click closes. |
+| D13 | Source "View more" link is rendered but hidden; JS reveals it only when text visually overflows 1 line (scrollWidth > clientWidth). Links to `#metadata-source`. |
+| D14 | `hdx_read.html` has no v2 feature gate — the new header is always rendered. v1 layout block removed. |
+| D15 | MD layout: left column uses `flex: 1` (not fixed width) to avoid blank space beside org card on wide viewports. |
+| D16 | Spacing and typography use CSS custom properties (`var(--hdx-space-*)`, `var(--hdx-font-*)`, etc.), not raw rem values. |
+| D17 | edit_mode support: title and description container receive `data-module="hdx-quick-edit"` attrs when `edit_mode=True`, passed alongside `pkg_id`. |

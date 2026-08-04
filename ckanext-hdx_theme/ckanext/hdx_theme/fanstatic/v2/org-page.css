@@ -282,9 +282,6 @@
   line-height: var(--hdx-lh-normal);
   color: var(--hdx-neutral-8);
 }
-.hdx-v2-org-members__gm-success {
-  color: var(--hdx-brand-7);
-}
 .hdx-v2-org-members-side {
   display: flex;
   flex-direction: column;

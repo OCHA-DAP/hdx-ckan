@@ -27,7 +27,7 @@ Migrate the search results dataset list to the v2 layout system and replace indi
 
 ---
 
-## Files Involved
+## Files Affected
 
 | File | Change |
 |---|---|
@@ -271,7 +271,7 @@ The following gaps exist between the current `package` data and the existing `c-
 ### Gap 1 — Query text highlighting
 **Current behavior:** `data-module="highlight" data-module-text="{{ query }}"` applied to `.dataset-heading` and `.dataset-description` activates JS text highlighting.
 **v2 component:** No `data-module` attribute on title or description elements.
-**Required extension (pending Q7):** Add optional `query` parameter. When non-empty, add `data-module="highlight" data-module-text="{{ query }}"` to `.c-dataset-card__title` and `.c-dataset-card__desc-text`.
+**Required extension (pending D7):** Add optional `query` parameter. When non-empty, add `data-module="highlight" data-module-text="{{ query }}"` to `.c-dataset-card__title` and `.c-dataset-card__desc-text`.
 **Risk:** Low — additive only. No attribute rendered when `query` is empty.
 
 ### Gap 2 — Multiple locations
@@ -327,18 +327,18 @@ No equivalent field. Resolution depends on Open Question #8.
 
 ---
 
-## Decisions
+## Decisions Taken
 
 | # | Question | Decision |
 |---|---|---|
-| Q1 | Trending indicator / download count | **Dropped** — not shown in v2 card |
-| Q2 | `is_requestdata_type` treatment | **Distinct** — `requestdata` badge (`unlock.svg`) + ` [By Request Only]` title suffix |
-| Q3 | Archived icon | **`placeholder.svg`** |
-| Q4 | Date string format | **New helper** `render_date_range_label` → `"Data from 22 Jan 2020 to 09 Mar 2023"` |
-| Q5 | Location availability and display | `package.groups` is reliably present; `"Multiple locations"` for >1 group |
-| Q6 | Max visible format badges | **3**; remainder shown as `+N` |
-| Q7 | Query highlighting | **Preserved** — `query` param added to `c-dataset-card`; `.highlight` CSS added to `v2/styles.css` |
-| Q8 | `page_list` / `links_list` | **Dropped from list view** — visible on dataset detail page only |
+| D1 | Trending indicator / download count | **Dropped** — not shown in v2 card |
+| D2 | `is_requestdata_type` treatment | **Distinct** — `requestdata` badge (`unlock.svg`) + ` [By Request Only]` title suffix |
+| D3 | Archived icon | **`placeholder.svg`** |
+| D4 | Date string format | **New helper** `render_date_range_label` → `"Data from 22 Jan 2020 to 09 Mar 2023"` |
+| D5 | Location availability and display | `package.groups` is reliably present; `"Multiple locations"` for >1 group |
+| D6 | Max visible format badges | **3**; remainder shown as `+N` |
+| D7 | Query highlighting | **Preserved** — `query` param added to `c-dataset-card`; `.highlight` CSS added to `v2/styles.css` |
+| D8 | `page_list` / `links_list` | **Dropped from list view** — visible on dataset detail page only |
 
 ---
 

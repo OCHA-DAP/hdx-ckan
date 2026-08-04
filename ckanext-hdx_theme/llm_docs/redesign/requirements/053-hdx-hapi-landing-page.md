@@ -517,42 +517,42 @@ The page must extend `v2/page.html` instead of `page_light.html`.
 
 ---
 
-## 10. Decisions
+## 10. Decisions Taken
 
-**Q1 — Be Inspired cards**
+**D1 — Be Inspired cards**
 Keep the 4 existing v1 cards only. The extra XL-only cards in Figma are not real content.
 Card count is the same at all breakpoints — no new entries in `hapi.py` constants.
 
-**Q2 — Accordion default state**
+**D2 — Accordion default state**
 The **first item is open by default** on every page load. No URL hash persistence.
 Implemented via `<details open>` on the first entry in `faq_data` — CSS-only, no JS needed.
 
-**Q3 — Analytics**
+**D3 — Analytics**
 Carry over v1 GA events. Add `data-ga-event` / `data-ga-label` attributes to
 `.c-accordion__trigger` for accordion toggles, and to sidebar link `<a>` elements for
 sidebar navigation clicks.
 
-**Q4 — "Documentation" sidebar link**
+**D4 — "Documentation" sidebar link**
 Opens in a new tab (`target="_blank" rel="noopener"`) with a visual external-link icon.
 The `c-anchor-links` snippet must be extended with an `external` flag that triggers this
 behaviour. See Section 6 for the updated snippet API.
 
-**Q5 / Q6 — Data Coverage section**
+**D5 / D6 — Data Coverage section**
 **Out of scope.** The Data Coverage section is not rendered in v2. `DATA_COVERAGE_CONSTANTS`
 is not passed to the template; the `#data-coverage` anchor and its `c-divider` are omitted;
 no view changes needed for this section.
 
-**Q7 — SM "You might also like" section**
+**D7 — SM "You might also like" section**
 **Out of scope.** Not rendered.
 
-**Q8 — Hero section**
+**D8 — Hero section**
 Replaced bespoke hero HTML with `c-page-header` component. `title='HDX HAPI'` (short),
 `subtitle=CONST.HERO_SECTION_TITLE` (full title rendered as semibold paragraph below the h1),
 `description=CONST.HERO_SECTION_DESCRIPTION` (HTML link). `c-page-header` gained a new
 `subtitle` param and a conditional `_has_dataset_meta` flag that suppresses the divider
 and metadata strip when no dataset fields are passed (as on this landing page).
 
-**Q9 — Be Inspired card component**
+**D9 — Be Inspired card component**
 New `c-content-card` component created (`content-card.html` + `content-card.less`).
 Params: `title`, `description`, `link_label`, `link_href`, `link_new_tab`, `link_attrs`.
 The link is rendered via `c-text-link` snippet (style `tertiary`, size `s`). No bespoke
@@ -565,12 +565,12 @@ regression: v1's Be Inspired cards carried `data-module="hdx_click_stopper"` +
 had no way to pass attrs through to its link. Restored via `link_attrs` on all 4 Be Inspired
 card calls in `hapi.html`, matching the same fix applied to Signals' Resources cards.
 
-**Q10 — Partner logos with no container**
+**D10 — Partner logos with no container**
 Partner logos are direct `<img>` grid children — no wrapper `<div>`. CSS Grid on
 `.hdx-v2-hapi-partners-grid` + `width: 100%; height: 7.5rem; object-fit: contain` on
 `.hdx-v2-hapi-partner-logo`. No background, border, shadow, or padding.
 
-**Q11 — Sticky sidebar via wrapper always rendering**
+**D11 — Sticky sidebar via wrapper always rendering**
 Root issue: `.c-anchor-links-wrapper` (the sticky element) was only rendered when `heading`
 or `with_mobile_dropdown` was passed. HAPI passes neither. Fixed by removing the condition
 so the wrapper always renders; the heading text inside remains conditional. This makes every

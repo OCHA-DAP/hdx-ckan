@@ -23,7 +23,7 @@ requirements drafting).
 
 ---
 
-## Decisions
+## Decisions Taken
 
 - **D1 — Scope reframe (confirmed):** This is a v2 UI migration of the existing `/archive` page
   (`hdx_archived_quick_links` blueprint), not a chart/visualization feature. The originating brief's

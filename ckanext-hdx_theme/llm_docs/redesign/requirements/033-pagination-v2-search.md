@@ -272,7 +272,7 @@ Snippet: v2/components/pagination.html
 
 ---
 
-## Files Involved
+## Files Affected
 
 | File | Change |
 |---|---|
@@ -330,11 +330,11 @@ Same as above — `sort=field+asc/desc` is already preserved by `_params_nopage(
 
 | # | Question | Decision |
 |---|----------|---------|
-| Q1 | Hide pagination when `total_pages == 1`? | Hidden — `page_count > 1` guard in template; same guard covers `total_pages == 0` |
-| Q2 | Mobile viewport use `size='sm'`? | No — always `size='md'`; no breakpoint-based size switch implemented |
-| Q3 | Active-page visual finalized as darker text + weight only? | Yes — darker text (`#101212`) + weight 500, same white background; confirmed in design analysis |
-| Q4 | Include "results count" text? | Deferred — explicitly out of scope for this task |
-| Q5 | Per-page selector in scope? | Deferred — explicitly out of scope for this task |
-| Q6 | Apply to org/group/location listing pages? | Deferred — dataset search page only in this task |
-| Q7 | ARIA live region for page changes? | No — no JS added; all navigation via standard `<a href>` links |
-| Q8 | Edge case `total_pages == 0` — hide entirely? | Hidden — same `page_count > 1` guard covers this case |
+| D1 | Hide pagination when `total_pages == 1`? | Hidden — `page_count > 1` guard in template; same guard covers `total_pages == 0` |
+| D2 | Mobile viewport use `size='sm'`? | No — always `size='md'`; no breakpoint-based size switch implemented |
+| D3 | Active-page visual finalized as darker text + weight only? | Yes — darker text (`#101212`) + weight 500, same white background; confirmed in design analysis |
+| D4 | Include "results count" text? | Deferred — explicitly out of scope for this task |
+| D5 | Per-page selector in scope? | Deferred — explicitly out of scope for this task |
+| D6 | Apply to org/group/location listing pages? | Deferred — dataset search page only in this task |
+| D7 | ARIA live region for page changes? | No — no JS added; all navigation via standard `<a href>` links |
+| D8 | Edge case `total_pages == 0` — hide entirely? | Hidden — same `page_count > 1` guard covers this case |

@@ -355,7 +355,7 @@ has `role="listbox"`, result rows should have `role="option"`.
 
 ---
 
-## 9. Decisions
+## 9. Decisions Taken
 
 ### 9.1 Data source — index vs AJAX
 
