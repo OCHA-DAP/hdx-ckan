@@ -372,12 +372,12 @@ Pages are gated with `{% if v2 %}` during rollout and promoted to always-v2 when
 
 ## Web assets — file naming
 
-Page-level LESS and JS files (non-component, non-layout) use the `-page` suffix:
+Page-level LESS and JS files (non-component, non-layout) live in a `pages/` subdirectory (mirroring `components/`) with no `-page` suffix — the directory already conveys that:
 
 | Type | Pattern | Examples |
 |---|---|---|
-| Page styles | `{page-name}-page.less` | `search-page.less`, `dataset-page.less`, `home-page.less` |
-| Page scripts | `{page-name}-page.js` | `search-page.js`, `dataset-page.js` |
+| Page styles | `pages/{page-name}.less` | `pages/search.less`, `pages/dataset.less`, `pages/home.less` |
+| Page scripts | `pages/{page-name}.js` | `pages/search.js`, `pages/dataset.js` |
 | Component | `{component-name}.less/.js` | `anchor-links.less`, `dropdown.js` |
 | Layout / global | descriptive, no suffix | `layout.less`, `navbar.less`, `bar-chart.js`, `nav-controls.less` |
 
@@ -418,7 +418,7 @@ Shared utility lib bundles (`v2-{lib-name}-scripts`, e.g. `v2-carousel-scripts`)
 
 ## Web assets — page-only code belongs in the page bundle
 
-Scripts and styles used exclusively on one page go into that page's bundle, not `v2-page-scripts`/`v2-page-styles`. Examples that were corrected: `highlights-carousel.js` + `Hammer.js` → `v2-home-page-scripts`; `search-page.js` → `v2-search-page-scripts`.
+Scripts and styles used exclusively on one page go into that page's bundle, not `v2-page-scripts`/`v2-page-styles`. Examples that were corrected: `highlights-carousel.js` + `Hammer.js` → `v2-home-page-scripts`; `pages/search.js` → `v2-search-page-scripts`.
 
 ---
 

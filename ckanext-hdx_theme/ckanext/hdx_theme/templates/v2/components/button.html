@@ -21,11 +21,9 @@
                           (rendered as aria-label instead).
                           default: ''
 
-  icon          {bool}    Whether to render an icon.
-                          default: False
-
   icon_src      {string}  Path to the SVG icon, resolved via h.url_for_static().
-                          default: 'v2/icons/placeholder.svg'
+                          Pass to render an icon; omit for none.
+                          default: not set (no icon)
 
   icon_position {string}  'left' | 'right'  — only used when type='text'.
                           default: 'left'
@@ -65,20 +63,19 @@
 
   {% snippet 'snippets/components/buttons/button.html',
       style='secondary', size='m', type='icon-only',
-      label='Open menu', icon=True %}
+      label='Open menu', icon_src='v2/icons/menu.svg' %}
 
   {% snippet 'snippets/components/buttons/button.html',
       style='tertiary', size='s', label='Filter',
-      icon=True, icon_position='right', count='(12)' %}
+      icon_src='v2/icons/filter.svg', icon_position='right', count='(12)' %}
 #}
+
 
 {# ── Defaults ────────────────────────────────────────────── #}
 {% set style         = style         if style         is defined else 'primary' %}
 {% set size          = size          if size          is defined else 'm' %}
 {% set type          = type          if type          is defined else 'text' %}
 {% set label         = label         if label         is defined else '' %}
-{% set icon          = icon          if icon          is defined else False %}
-{% set icon_src      = icon_src      if icon_src      is defined else 'v2/icons/placeholder.svg' %}
 {% set icon_position = icon_position if icon_position is defined else 'left' %}
 {% set count         = count         if count         is defined else '' %}
 {% set state         = state         if state         is defined else 'enabled' %}
@@ -118,9 +115,11 @@
 {% endif %}
 
 {# ── Icon markup (shared sub-template) ───────────────────── #}
-{% set icon_markup %}
-  <span class="c-button__icon">{% include h.url_for_static(icon_src) %}</span>
-{% endset %}
+{% if icon_src %}
+  {% set icon_markup %}
+    <span class="c-button__icon">{% include h.url_for_static(icon_src) %}</span>
+  {% endset %}
+{% endif %}
 
 {# ── Render ───────────────────────────────────────────────── #}
 {% if tag == 'a' %}
@@ -150,13 +149,13 @@
   {# ─ text type: icon-left / label / count / icon-right ─ #}
   {% else %}
 
-    {% if icon and icon_position == 'left' %}
+    {% if icon_src and icon_position == 'left' %}
       {{ icon_markup }}
     {% endif %}
 
     <span class="c-button__label">{{ label }}</span>
 
-    {% if icon and icon_position == 'right' %}
+    {% if icon_src and icon_position == 'right' %}
       {{ icon_markup }}
     {% endif %}
 

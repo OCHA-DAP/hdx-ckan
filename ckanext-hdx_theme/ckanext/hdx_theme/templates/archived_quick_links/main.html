@@ -31,7 +31,7 @@
       {% for item in data.viz_list %}
         {% snippet 'v2/components/text-button.html',
             style='tertiary', size='m', label=item.title,
-            icon=True, icon_position='right', icon_src='v2/icons/link-external.svg',
+            icon_position='right', icon_src='v2/icons/link-external.svg',
             tag='a', href=item.url, attrs={'target': '_blank'},
             extra_classes='hdx-v2-archived-dataviz__row' %}
         {% if not loop.last %}<hr class="c-divider">{% endif %}

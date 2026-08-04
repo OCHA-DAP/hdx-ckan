@@ -37,7 +37,7 @@
 
       {% snippet 'v2/components/button.html',
           style='secondary', type='text', size='l',
-          state='enabled', icon=False, tag='a', href=h.url_for('dataset.search'),
+          state='enabled', tag='a', href=h.url_for('dataset.search'),
           label=_('Explore data') %}
 
     </div>
@@ -102,12 +102,12 @@
         <div class="hdx-v2-highlights__arrows">
           {% snippet 'v2/components/button.html',
               style='tertiary', type='icon-only', size='l', state='enabled',
-              icon=True, icon_src='v2/icons/arrow-left.svg',
+              icon_src='v2/icons/arrow-left.svg',
               label=_('Previous'),
               extra_classes='hdx-v2-highlights__arrow--prev' %}
           {% snippet 'v2/components/button.html',
               style='tertiary', type='icon-only', size='l', state='enabled',
-              icon=True, icon_src='v2/icons/arrow-right.svg',
+              icon_src='v2/icons/arrow-right.svg',
               label=_('Next'),
               extra_classes='hdx-v2-highlights__arrow--next' %}
         </div>

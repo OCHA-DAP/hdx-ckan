@@ -109,6 +109,7 @@ ckan.csrf_protection.ignore_extensions = false
 
 ## Front-End Settings
 ckan.site_title = Humanitarian Data Exchange
+ckan.template_title_delimiter = |
 ckan.site_logo = /images/homepage/logo-beta-inverted.svg
 ckan.site_description =
 ckan.favicon = /favicon.ico

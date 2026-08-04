@@ -18,11 +18,9 @@
   label         {string}  Visible text label (always required).
                           default: ''
 
-  icon          {bool}    Whether to render an icon.
-                          default: True
-
   icon_src      {string}  Path to the SVG icon, resolved via h.url_for_static().
-                          default: 'v2/icons/placeholder.svg'
+                          Pass to render an icon; omit for none.
+                          default: not set (no icon)
 
   icon_position {string}  'left' | 'right'
                           default: 'left'
@@ -58,15 +56,14 @@
 
   {% snippet 'snippets/components/buttons/text-button.html',
       style='tertiary', size='s', label='See all',
-      icon=False, state='disabled' %}
+      state='disabled' %}
 #}
+
 
 {# ── Defaults ────────────────────────────────────────────── #}
 {% set style         = style         if style         is defined else 'primary' %}
 {% set size          = size          if size          is defined else 'm' %}
 {% set label         = label         if label         is defined else '' %}
-{% set icon          = icon          if icon          is defined else True %}
-{% set icon_src      = icon_src      if icon_src      is defined else 'v2/icons/placeholder.svg' %}
 {% set icon_position = icon_position if icon_position is defined else 'left' %}
 {% set state         = state         if state         is defined else 'enabled' %}
 {% set tag           = tag           if tag           is defined else 'a' %}
@@ -92,9 +89,11 @@
 {% endif %}
 
 {# ── Icon markup ──────────────────────────────────────────── #}
-{% set icon_markup %}
-  <span class="c-text-button__icon">{% include h.url_for_static(icon_src) %}</span>
-{% endset %}
+{% if icon_src %}
+  {% set icon_markup %}
+    <span class="c-text-button__icon">{% include h.url_for_static(icon_src) %}</span>
+  {% endset %}
+{% endif %}
 
 {# ── Render ───────────────────────────────────────────────── #}
 {% if tag == 'a' %}
@@ -113,13 +112,13 @@
 >
 {% endif %}
 
-  {% if icon and icon_position == 'left' %}
+  {% if icon_src and icon_position == 'left' %}
     {{ icon_markup }}
   {% endif %}
 
   <span class="c-text-button__label">{{ label }}</span>
 
-  {% if icon and icon_position == 'right' %}
+  {% if icon_src and icon_position == 'right' %}
     {{ icon_markup }}
   {% endif %}
 

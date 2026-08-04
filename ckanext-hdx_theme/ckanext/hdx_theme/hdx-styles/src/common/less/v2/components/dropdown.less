@@ -280,6 +280,7 @@
         top:              calc(100% + var(--hdx-space-1)); // 4 px below trigger
         left:             0;
         right:            0;
+        min-width:        max-content;
         z-index:          200;
         background-color: @c-dropdown-bg;
         border:           @c-dropdown-panel-border;
@@ -311,6 +312,7 @@
         padding-left:   0;
         max-height:     20rem;
         overflow-y:     auto;
+        overflow-x:     hidden;
     }
 
     // Confirm + clear footer

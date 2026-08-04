@@ -217,6 +217,7 @@
   top: calc(100% + var(--hdx-space-1));
   left: 0;
   right: 0;
+  min-width: max-content;
   z-index: 200;
   background-color: var(--hdx-neutral-0);
   border: 0.75px solid var(--hdx-neutral-1);
@@ -244,6 +245,7 @@
   padding-left: 0;
   max-height: 20rem;
   overflow-y: auto;
+  overflow-x: hidden;
 }
 .c-dropdown__footer {
   align-self: stretch;

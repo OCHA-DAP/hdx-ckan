@@ -1533,7 +1533,7 @@ v2-home-page-styles:
   <<: *common-css
   contents:
     - v2/bar-chart.css
-    - v2/home-page.css
+    - v2/pages/home.css
 
 v2-carousel-scripts:
   <<: *common-js
@@ -1556,14 +1556,13 @@ v2-home-page-scripts:
   output: ckanext-hdx_theme/%(version)s_v2-home-page-scripts.js
   contents:
     - v2/highlights-carousel.js
-    - v2/signals-carousel.js
     - v2/bar-chart.js
 
 v2-signals-landing-page-styles:
   output: ckanext-hdx_theme/%(version)s_v2-signals-landing-page-styles.css
   <<: *common-css
   contents:
-    - v2/signals-landing-page.css
+    - v2/pages/signals-landing.css
 
 v2-signals-landing-page-scripts:
   <<: *common-js
@@ -1588,31 +1587,31 @@ v2-error-page-styles:
   output: ckanext-hdx_theme/%(version)s_v2-error-page-styles.css
   <<: *common-css
   contents:
-    - v2/error-page.css
+    - v2/pages/error.css
 
 v2-search-page-styles:
   output: ckanext-hdx_theme/%(version)s_v2-search-page-styles.css
   <<: *common-css
   contents:
-    - v2/search-page.css
+    - v2/pages/search.css
 
 v2-dataset-page-styles:
   output: ckanext-hdx_theme/%(version)s_v2-dataset-page-styles.css
   <<: *common-css
   contents:
-    - v2/dataset-page.css
+    - v2/pages/dataset.css
 
 v2-resource-page-styles:
   output: ckanext-hdx_theme/%(version)s_v2-resource-page-styles.css
   <<: *common-css
   contents:
-    - v2/resource-page.css
+    - v2/pages/resource.css
 
 v2-resource-page-scripts:
   <<: *common-js
   output: ckanext-hdx_theme/%(version)s_v2-resource-page-scripts.js
   contents:
-    - v2/resource-page.js
+    - v2/pages/resource.js
 
 v2-all-locations-page-styles:
   output: ckanext-hdx_theme/%(version)s_v2-all-locations-page-styles.css
@@ -1620,7 +1619,7 @@ v2-all-locations-page-styles:
   contents:
     - vendor/leaflet-1.7.1/leaflet.css
     - browse_/browse.css  # TODO: remove when map is migrated to v2
-    - v2/locations-list-page.css
+    - v2/pages/locations-list.css
 
 v2-all-locations-page-scripts:
   <<: *common-js
@@ -1630,13 +1629,13 @@ v2-all-locations-page-scripts:
     - map_base.js
     - browse_/world_json.js
     - browse_/browse.js  # TODO: remove when map is migrated to v2
-    - v2/all-locations-page.js
+    - v2/pages/all-locations.js
 
 v2-dataset-page-scripts:
   <<: *common-js
   output: ckanext-hdx_theme/%(version)s_v2-dataset-page-scripts.js
   contents:
-    - v2/dataset-page.js
+    - v2/pages/dataset.js
 
 v2-search-scripts:
   <<: *common-js
@@ -1653,111 +1652,111 @@ v2-search-page-scripts:
     - vendor/jquery.highlight/jquery.highlight.js
     - highlight.js
     - v2/url-nav.js
-    - v2/search-page.js
+    - v2/pages/search.js
 
 v2-org-list-page-styles:
   output: ckanext-hdx_theme/%(version)s_v2-org-list-page-styles.css
   <<: *common-css
   contents:
-    - v2/org-list-page.css
+    - v2/pages/org-list.css
 
 v2-org-list-page-scripts:
   <<: *common-js
   output: ckanext-hdx_theme/%(version)s_v2-org-list-page-scripts.js
   contents:
     - v2/url-nav.js
-    - v2/org-list-page.js
+    - v2/pages/org-list.js
 
 v2-org-page-styles:
   output: ckanext-hdx_theme/%(version)s_v2-org-page-styles.css
   <<: *common-css
   contents:
-    - v2/org-page.css
+    - v2/pages/org.css
 
 v2-location-page-styles:
   output: ckanext-hdx_theme/%(version)s_v2-location-page-styles.css
   <<: *common-css
   contents:
-    - v2/location-page.css
+    - v2/pages/location.css
 
 v2-location-page-scripts:
   <<: *common-js
   output: ckanext-hdx_theme/%(version)s_v2-location-page-scripts.js
   contents:
-    - v2/location-page.js
+    - v2/pages/location.js
 
 v2-crisis-page-styles:
   output: ckanext-hdx_theme/%(version)s_v2-crisis-page-styles.css
   <<: *common-css
   contents:
-    - v2/crisis-page.css
+    - v2/pages/crisis.css
 
 v2-crisis-page-scripts:
   <<: *common-js
   output: ckanext-hdx_theme/%(version)s_v2-crisis-page-scripts.js
   contents:
-    - v2/crisis-page.js
+    - v2/pages/crisis.js
 
 v2-org-members-page-scripts:
   <<: *common-js
   output: ckanext-hdx_theme/%(version)s_v2-org-members-page-scripts.js
   contents:
     - v2/url-nav.js
-    - v2/org-members-page.js
+    - v2/pages/org-members.js
 
 v2-message-form-page-styles:
   output: ckanext-hdx_theme/%(version)s_v2-message-form-page-styles.css
   <<: *common-css
   contents:
-    - v2/message-form-page.css
+    - v2/pages/message-form.css
 
 v2-request-access-page-styles:
   output: ckanext-hdx_theme/%(version)s_v2-request-access-page-styles.css
   <<: *common-css
   contents:
-    - v2/request-access-page.css
+    - v2/pages/request-access.css
 
 v2-auth-page-styles:
   output: ckanext-hdx_theme/%(version)s_v2-auth-page-styles.css
   <<: *common-css
   contents:
-    - v2/auth-page.css
+    - v2/pages/auth.css
 
 v2-login-page-scripts:
   <<: *common-js
   output: ckanext-hdx_theme/%(version)s_v2-login-page-scripts.js
   contents:
-    - v2/login-page.js
+    - v2/pages/login.js
 
 v2-forgot-password-page-scripts:
   <<: *common-js
   output: ckanext-hdx_theme/%(version)s_v2-forgot-password-page-scripts.js
   contents:
-    - v2/forgot-password-page.js
+    - v2/pages/forgot-password.js
 
 v2-perform-reset-page-scripts:
   <<: *common-js
   output: ckanext-hdx_theme/%(version)s_v2-perform-reset-page-scripts.js
   contents:
-    - v2/perform-reset-page.js
+    - v2/pages/perform-reset.js
 
 v2-verify-email-page-scripts:
   <<: *common-js
   output: ckanext-hdx_theme/%(version)s_v2-verify-email-page-scripts.js
   contents:
-    - v2/verify-email-page.js
+    - v2/pages/verify-email.js
 
 v2-request-access-page-scripts:
   <<: *common-js
   output: ckanext-hdx_theme/%(version)s_v2-request-access-page-scripts.js
   contents:
-    - v2/request-access-page.js
+    - v2/pages/request-access.js
 
 v2-contact-contributor-page-scripts:
   <<: *common-js
   output: ckanext-hdx_theme/%(version)s_v2-contact-contributor-page-scripts.js
   contents:
-    - v2/contact-contributor-page.js
+    - v2/pages/contact-contributor.js
 
 v2-form-validator-scripts:
   <<: *common-js
@@ -1769,26 +1768,26 @@ v2-signup-page-styles:
   output: ckanext-hdx_theme/%(version)s_v2-signup-page-styles.css
   <<: *common-css
   contents:
-    - v2/signup-page.css
+    - v2/pages/signup.css
 
 v2-hapi-landing-page-styles:
   output: ckanext-hdx_theme/%(version)s_v2-hapi-landing-page-styles.css
   <<: *common-css
   contents:
-    - v2/hapi-landing-page.css
+    - v2/pages/hapi-landing.css
 
 v2-archived-dataviz-page-styles:
   output: ckanext-hdx_theme/%(version)s_v2-archived-dataviz-page-styles.css
   <<: *common-css
   contents:
-    - v2/archived-dataviz-page.css
+    - v2/pages/archived-dataviz.css
 
 
 v2-dataviz-gallery-page-styles:
   output: ckanext-hdx_theme/%(version)s_v2-dataviz-gallery-page-styles.css
   <<: *common-css
   contents:
-    - v2/dataviz-gallery-page.css
+    - v2/pages/dataviz-gallery.css
 
 v2-dataviz-gallery-page-scripts:
   <<: *common-js

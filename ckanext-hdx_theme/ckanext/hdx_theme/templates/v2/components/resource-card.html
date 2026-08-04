@@ -208,14 +208,13 @@
             style='primary', size='m', type='text',
             label=_('Request data'),
             tag='a', href=request_href,
-            icon=False,
             attrs=request_attrs %}
       {% elif show_download %}
         {% set dl_label = 'Download (' ~ download_size ~ ')' if download_size else 'Download' %}
         {% snippet 'v2/components/button.html',
             style='primary', size='m', type='text',
             label=dl_label,
-            icon=True, icon_src='v2/icons/download.svg', icon_position='left',
+            icon_src='v2/icons/download.svg', icon_position='left',
             tag='a', href=download_url,
             extra_classes=download_extra_classes,
             attrs=download_attrs %}

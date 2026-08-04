@@ -8,7 +8,7 @@
   visible; clicking it expands/collapses just that one card, for free,
   via the browser's own disclosure behavior (same underlying mechanism as
   v2/components/accordion.html). The page's single global expand/collapse
-  control (fanstatic/v2/location-page.js) drives every card's `open`
+  control (fanstatic/v2/pages/location.js) drives every card's `open`
   property at once and does not track individual per-card state.
   Server-rendered collapsed by default; still no-JS-safe since the native
   <details>/<summary> disclosure needs no JavaScript to open.

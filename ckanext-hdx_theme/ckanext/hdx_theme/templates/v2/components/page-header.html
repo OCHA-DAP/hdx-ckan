@@ -204,13 +204,11 @@
 
         {# Optional CTA button — landing pages only (cta_href must be provided) #}
         {% if cta_href %}
-          {% set cta_has_icon = cta_icon_src != '' %}
           {% snippet 'v2/components/button.html',
               tag='a', href=cta_href,
               style='primary', type='text', size='m',
               state='enabled',
-              icon=cta_has_icon,
-              icon_src=cta_icon_src if cta_icon_src else 'v2/icons/placeholder.svg',
+              icon_src=cta_icon_src,
               label=cta_label %}
         {% endif %}
 
@@ -312,7 +310,7 @@
     {% snippet 'v2/components/button.html',
         style='primary', size='m',
         label=_dl_label,
-        icon=True, icon_position='left',
+        icon_position='left',
         icon_src='v2/icons/download.svg',
         tag='a', href=download_url,
         extra_classes=_dl_extra,
