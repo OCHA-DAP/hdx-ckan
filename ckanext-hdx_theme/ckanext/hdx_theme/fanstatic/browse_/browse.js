@@ -157,9 +157,11 @@ function prepareMap(countDatasets, openNewWindow){
   }
   map = L.map('map', {
     center: [20, 0],
-    zoom: 3,
-    minZoom: 2,
-    maxZoom: 4,
+    zoom: 2.4,
+    zoomSnap: 0.1,
+    zoomDelta: 0.5,
+    minZoom: 2.4,
+    maxZoom: 4.4,
     tileLayer: {
       continuousWorld: false,
       noWrap: false
