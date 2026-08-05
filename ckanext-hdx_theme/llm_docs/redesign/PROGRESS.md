@@ -90,7 +90,7 @@ CSS custom property equivalents (`--hdx-*`) are defined in `v2/foundation.css` (
 | Page | Template | Notes                                                                                     |
 |------|----------|-------------------------------------------------------------------------------------------|
 | Homepage | `home/index.html` | Extends `v2/page.html`                                                                    |
-| Dataset search | `search/search.html` | Extends `v2/page.html`; uses `v2=true` gate for v2 UI; Archived toggle + Applied Filters pills (XL) + Advanced filters Figma-alignment — see `requirements/065-advanced-filters-v2.md` |
+| Dataset search | `search/search.html` | Extends `v2/page.html`; uses `v2=true` gate for v2 UI; Archived toggle + Applied Filters pills (XL) — see `requirements/065-advanced-filters-v2.md` |
 | Dataset page | `package/hdx_read.html` | Extends `v2/page.html`; full page implemented — see `requirements/038-dataset-page.md` |
 | Resource page | `package/resource_read.html` | Extends `v2/page.html`; full page implemented — see `requirements/040-resource-page.md` |
 | All Locations | `light/group/index.html` | Extends `v2/page.html`; sidebar + sort JS in `v2/all-locations-page.js` |

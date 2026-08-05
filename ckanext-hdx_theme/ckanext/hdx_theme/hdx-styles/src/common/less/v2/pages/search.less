@@ -137,49 +137,53 @@
 
 }
 // ────────────────────────────────────────────────────────────
-// hdx-v2-advanced-filters — always-expanded chip list (task 065)
+// hdx-v2-advanced-filters — prior implementation (task 065, D5):
+// always-expanded chip list, rendered outside the dropdown shell.
+// Kept for reference / possible future reuse; superseded by the
+// dropdown pattern (Advanced filters reuses .c-dropdown/.c-list-item
+// like Location/Organisation/Format/Topics again).
 // ────────────────────────────────────────────────────────────
 
-.hdx-v2-advanced-filters {
-
-    &__list {
-        display:   flex;
-        flex-wrap: wrap;
-        gap:       var(--hdx-space-1);
-    }
-
-    &__group {
-        display:        flex;
-        flex-direction: column;
-        align-items:    flex-start;
-        gap:            var(--hdx-space-1);
-        width:          100%;
-    }
-
-    &__children {
-        display:        flex;
-        flex-direction: column;
-        align-items:    flex-start;
-        gap:            var(--hdx-space-1);
-        width:          100%;
-    }
-
-    &__child {
-        display:     flex;
-        align-items: center;
-        gap:         var(--hdx-space-1);  // 4px, icon-to-chip gap
-        width:       100%;
-    }
-
-    &__indent-icon {
-        display:     flex;
-        align-items: center;
-        flex-shrink: 0;
-        width:       0.875rem;  // 14px
-        height:      0.875rem;
-        color:       var(--hdx-neutral-8);
-    }
-}
+// .hdx-v2-advanced-filters {
+//
+//     &__list {
+//         display:   flex;
+//         flex-wrap: wrap;
+//         gap:       var(--hdx-space-1);
+//     }
+//
+//     &__group {
+//         display:        flex;
+//         flex-direction: column;
+//         align-items:    flex-start;
+//         gap:            var(--hdx-space-1);
+//         width:          100%;
+//     }
+//
+//     &__children {
+//         display:        flex;
+//         flex-direction: column;
+//         align-items:    flex-start;
+//         gap:            var(--hdx-space-1);
+//         width:          100%;
+//     }
+//
+//     &__child {
+//         display:     flex;
+//         align-items: center;
+//         gap:         var(--hdx-space-1);  // 4px, icon-to-chip gap
+//         width:       100%;
+//     }
+//
+//     &__indent-icon {
+//         display:     flex;
+//         align-items: center;
+//         flex-shrink: 0;
+//         width:       0.875rem;  // 14px
+//         height:      0.875rem;
+//         color:       var(--hdx-neutral-8);
+//     }
+// }
 // ────────────────────────────────────────────────────────────
 // hdx-v2-applied-filters — applied filter pill row (XL only)
 // ────────────────────────────────────────────────────────────

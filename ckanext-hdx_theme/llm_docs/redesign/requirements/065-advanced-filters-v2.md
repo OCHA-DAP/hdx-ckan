@@ -294,7 +294,7 @@ already used for `hdx-v2-list-header__controls` vs `__filter-btn`).
 | `v2/components/selection-item.html` (`state='active'`) | Applied filter pills — already renders the "x" close icon |
 | `v2/components/text-link.html` | "Clear all" (`secondary`/`xs`) |
 | `v2/components/text-button.html` | "Show more"/"Show less" (`tertiary`/`s`, icon right) |
-| `v2/components/dropdown.html` + `dropdown-panel.html` + `list-item.html` + `checkbox.html` | Location/Organisation/Format/Topics dropdowns — unchanged |
+| `v2/components/dropdown.html` + `dropdown-panel.html` + `list-item.html` + `checkbox.html` | Location/Organisation/Format/Topics/Advanced dropdowns — unchanged |
 
 ### Extend only if needed
 
@@ -302,16 +302,15 @@ already used for `hdx-v2-list-header__controls` vs `__filter-btn`).
   component; a plain wrapping `<div>` around repeated `selection-item.html` calls, styled via
   `less/v2/components/selection.less` or a new small `applied-filters.less` partial). Same partial
   adds a `max-width` override (D6) and a gap value (D7) that only apply within this row.
-- Advanced filters (D5) — Figma renders this group inline, not inside a `dropdown.html` panel like
-  the other four: drop the dropdown/panel wrapper for this one group and render the already-computed
-  `_adv_ci.items` (see §1.2) directly as `selection-item.html` chips — every item, not only selected
-  ones (`size='m'`; unselected = `state='enabled'`; selected = `state='active'`, `color='light'`,
-  "x" close icon). Child rows (HPC/COD sub-items) render a separate leading indent-marker element
-  (`hdx-v2-advanced-filters__indent-icon`, `v2/icons/indent.svg`) next to an independent
-  `selection-item.html` chip — matching Figma's own `.indent-parent > .indent-icon + .selection-item`
-  sibling structure, not a chip with a built-in leading icon. No chevron/disclosure icon on the
-  parent group header row — always-expanded, nothing to disclose. No component-level (`.html`) code
-  changes needed — only the render target for this one filter group.
+
+**D5 (revised)** — Advanced filters renders inside a `dropdown.html` panel, the same as
+Location/Organisation/Format/Topics: the already-computed `_adv_ci.items` (see §1.2) build
+parent/child checklist rows (count badges, server-computed indeterminate state) through
+`dropdown-panel.html` + `list-item.html` + `checkbox.html`, with a "Clear selection" footer
+(`clear_facet='advanced'`). No component-level (`.html`) code changes needed. The always-expanded
+chip-list rendering (`selection-item.html` chips, no dropdown wrapper, indent-marker child rows) is
+preserved, commented out in place, in `search-filters.html`, `search.js`, and `search.less` for
+possible future reuse.
 
 ### Do not
 

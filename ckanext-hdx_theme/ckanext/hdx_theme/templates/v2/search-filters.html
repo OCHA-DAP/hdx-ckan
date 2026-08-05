@@ -2,10 +2,10 @@
   Snippet: search-filters.html
   Path:    templates/v2/search-filters.html
 
-  Shared filter panel — renders the "Filter by" heading, four filter
-  dropdowns (Location, Organisation, Format, Topics), the always-expanded
-  Advanced filters chip list, and (when wired) the archived "Show only"
-  toggle. Included in both the LG inline sidebar and the MD/SM overlay body.
+  Shared filter panel — renders the "Filter by" heading and five
+  filter dropdowns (Location, Organisation, Format, Topics, Advanced
+  filters), plus (when wired) the archived "Show only" toggle. Included in
+  both the LG inline sidebar and the MD/SM overlay body.
 
   Parameters
   ──────────────────────────────────────────────────────────────────
@@ -66,6 +66,73 @@
 
 {# ── Advanced filters (nested COD/HPC groups + flat ext_* flags) ── #}
 {% set adv_items = facet_list.get('featured', {}).get('items', []) %}
+{% set _adv_ns = namespace(sel=0, names=[]) %}
+{% for ai in adv_items %}
+  {% if ai.get('items') %}
+    {% set _any_child_sel = ai['items'] | selectattr('selected') | list | length > 0 %}
+    {% if _any_child_sel %}
+      {% set _adv_ns.sel = _adv_ns.sel + (ai['items'] | selectattr('selected') | list | length) %}
+      {% set _adv_ns.names = _adv_ns.names + [ai.display_name] %}
+    {% endif %}
+  {% elif ai.selected %}
+    {% set _adv_ns.sel = _adv_ns.sel + 1 %}
+    {% set _adv_ns.names = _adv_ns.names + [ai.display_name] %}
+  {% endif %}
+{% endfor %}
+{% set adv_selected = _adv_ns.sel %}
+{% set adv_trigger_text = _adv_ns.names | join(', ') if _adv_ns.names else 'All advanced filters' %}
+
+{# Build items list for the advanced filter panel #}
+{% set _adv_ci = namespace(items=[]) %}
+{% for ai in adv_items %}
+  {% if ai.get('items') %}
+    {# Nested group (e.g. COD levels) — parent toggle + indented children #}
+    {% set _cns = namespace(sel=0, total=0, count=0, children=[]) %}
+    {% for si in ai['items'] %}
+      {% if si.count or si.selected %}
+        {% set _cns.total = _cns.total + 1 %}
+        {% set _cns.count = _cns.count + (si.count | default(0) | int) %}
+        {% if si.selected %}{% set _cns.sel = _cns.sel + 1 %}{% endif %}
+        {% set _cattrs = {'data-filter-checkbox': '', 'data-facet': si.category_key, 'name': si.category_key} %}
+        {% set _cns.children = _cns.children + [{'value': si.name, 'label': si.display_name, 'count': '(' ~ si.count ~ ')' if si.count else '(0)', 'checked': si.selected, 'active': si.selected, 'extra_classes': 'c-list-item--child', 'attrs': _cattrs}] %}
+      {% endif %}
+    {% endfor %}
+    {% if _cns.children %}
+      {% set _parent_all  = _cns.sel == _cns.total and _cns.total > 0 %}
+      {% set _parent_some = _cns.sel > 0 and _cns.sel < _cns.total %}
+      {% if _parent_some %}
+        {% set _pattrs = {'data-group-toggle': '', 'data-group': ai.category_key, 'data-indeterminate': ''} %}
+      {% else %}
+        {% set _pattrs = {'data-group-toggle': '', 'data-group': ai.category_key} %}
+      {% endif %}
+      {% set _adv_ci.items = _adv_ci.items + [{'label': ai.display_name, 'count': '(' ~ _cns.count ~ ')' if _cns.count > 0 else '(0)', 'checked': _parent_all, 'active': _parent_all, 'extra_classes': 'c-list-item--parent', 'attrs': _pattrs, 'children': _cns.children}] %}
+    {% endif %}
+  {% else %}
+    {# Flat ext_* flag #}
+    {% if ai.count or ai.selected %}
+      {% set _fattrs = {'data-filter-checkbox': '', 'data-facet': ai.get('category_key', 'featured'), 'name': ai.get('category_key', 'featured')} %}
+      {% set _adv_ci.items = _adv_ci.items + [{'value': ai.name, 'label': ai.display_name, 'count': '(' ~ ai.count ~ ')' if ai.count else '(0)', 'checked': ai.selected, 'active': ai.selected, 'attrs': _fattrs}] %}
+    {% endif %}
+  {% endif %}
+{% endfor %}
+
+<div class="hdx-v2-search-filters__item">
+  {% snippet 'v2/components/dropdown.html',
+      size='m',
+      label='Advanced filters',
+      selected=adv_trigger_text,
+      state='filter' if adv_selected > 0 else 'enabled',
+      panel_id='hdx-filter-panel-advanced',
+      attrs={'data-filter-key': 'advanced'},
+      items=_adv_ci.items,
+      has_clear=adv_selected > 0,
+      clear_facet='advanced' %}
+</div>
+
+{# ────────────────────────────────────────────────────────────────
+   Prior implementation (task 065, D5) — always-expanded chip list,
+   rendered outside the dropdown shell. Kept for reference / possible
+   future reuse; superseded by the dropdown block above.
 
 {% set _adv_ci = namespace(items=[]) %}
 {% for ai in adv_items %}
@@ -123,6 +190,7 @@
     {% endfor %}
   </div>
 </div>
+   ──────────────────────────────────────────────────────────────── #}
 
 {% if archived_url_helper %}
 <div class="hdx-v2-search-filters__item">

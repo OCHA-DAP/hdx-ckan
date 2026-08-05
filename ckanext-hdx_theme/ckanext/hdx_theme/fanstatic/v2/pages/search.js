@@ -41,6 +41,13 @@
     window.location.href = url.toString();
   }
 
+  function clearAdvancedFilters() {
+    var url = new URL(window.location.href);
+    ADVANCED_FILTER_PARAMS.forEach(function (param) { url.searchParams.delete(param); });
+    url.searchParams.delete('page');
+    window.location.href = url.toString();
+  }
+
   function clearAllFilters() {
     var url = new URL(window.location.href);
     FILTER_PARAMS.forEach(function (param) { url.searchParams.delete(param); });
@@ -55,12 +62,36 @@
 
   document.addEventListener('DOMContentLoaded', function () {
 
+    // Set indeterminate state on parent group-toggle checkboxes
+    document.querySelectorAll('[data-indeterminate]').forEach(function (input) {
+      input.indeterminate = true;
+    });
+
     // Delegated: regular checkbox change → URL update
     document.addEventListener('change', function (e) {
       var el = e.target;
 
       if (el.hasAttribute('data-filter-checkbox')) {
         updateUrl(el.getAttribute('data-facet'), el.value, el.checked);
+        return;
+      }
+
+      // Group "select all" parent toggle
+      if (el.hasAttribute('data-group-toggle')) {
+        var group   = el.getAttribute('data-group');
+        var checked = el.checked;
+        var panel   = el.closest('.c-dropdown__panel');
+        if (!panel) return;
+        var children = panel.querySelectorAll('[data-filter-checkbox][data-facet="' + group + '"]');
+        var groupUrl = new URL(window.location.href);
+        groupUrl.searchParams.delete(group);
+        if (checked) {
+          children.forEach(function (child) {
+            groupUrl.searchParams.append(group, child.value);
+          });
+        }
+        groupUrl.searchParams.set('page', '1');
+        window.location.href = groupUrl.toString();
         return;
       }
 
@@ -101,12 +132,22 @@
     // This handler covers only search-specific click interactions.
     document.addEventListener('click', function (e) {
 
-      // ── Clear facet ───────────────────────────────────────────
+      // ── Clear facet / advanced filters ───────────────────────
       var clearBtn = e.target.closest && e.target.closest('[data-action="clear-filter"]');
       if (clearBtn) {
-        clearFacet(clearBtn.getAttribute('data-facet'));
+        var facet = clearBtn.getAttribute('data-facet');
+        if (facet === 'advanced') {
+          clearAdvancedFilters();
+        } else {
+          clearFacet(facet);
+        }
         return;
       }
+
+      /* ── Prior implementation (task 065, D5) — chip-based Advanced
+         filters click handlers. Kept for reference / possible future
+         reuse; superseded by the checkbox/change-based logic above,
+         now that Advanced filters renders inside a dropdown panel again.
 
       // ── Advanced filters: group "select all" chip ─────────────
       var groupChip = e.target.closest && e.target.closest('button[data-group-toggle]');
@@ -133,6 +174,8 @@
         updateUrl(chip.getAttribute('data-facet'), chip.getAttribute('data-value'), chipChecked);
         return;
       }
+
+      */
 
       // ── Applied filters: remove pill ──────────────────────────
       var pillBtn = e.target.closest && e.target.closest('[data-action="remove-pill"]');

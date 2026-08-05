@@ -124,39 +124,6 @@
   flex-direction: column;
   gap: var(--hdx-space-2);
 }
-.hdx-v2-advanced-filters__list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--hdx-space-1);
-}
-.hdx-v2-advanced-filters__group {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: var(--hdx-space-1);
-  width: 100%;
-}
-.hdx-v2-advanced-filters__children {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: var(--hdx-space-1);
-  width: 100%;
-}
-.hdx-v2-advanced-filters__child {
-  display: flex;
-  align-items: center;
-  gap: var(--hdx-space-1);
-  width: 100%;
-}
-.hdx-v2-advanced-filters__indent-icon {
-  display: flex;
-  align-items: center;
-  flex-shrink: 0;
-  width: 0.875rem;
-  height: 0.875rem;
-  color: var(--hdx-neutral-8);
-}
 .hdx-v2-applied-filters {
   display: flex;
   align-items: center;
