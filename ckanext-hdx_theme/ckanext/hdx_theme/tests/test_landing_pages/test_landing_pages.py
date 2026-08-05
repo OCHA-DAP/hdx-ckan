@@ -76,8 +76,10 @@ class TestLandingPages(object):
         assert "'pageTitle': 'HDX HAPI Beta'" in response.body
         assert "'authenticated': 'true'" in response.body
 
+    @mock.patch('ckanext.hdx_theme.views.landing_pages.cached_last_three_signal_cards',
+                return_value=mh.mock_signal_cards())
     @pytest.mark.usefixtures("hdx_clean_db")
-    def test_signals_landing_page_with_auth(self, app):
+    def test_signals_landing_page_with_auth(self, mock_cards, app):
         factories.User(name=self.username, sysadmin=True)
         api_token = factories.APIToken(user=self.username, expires_in=2, unit=60 * 60)['token']
         auth = {"Authorization": api_token}

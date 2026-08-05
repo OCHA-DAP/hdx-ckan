@@ -1,9 +1,14 @@
+from unittest import mock
+
 import ckan.plugins.toolkit as tk
 
+import ckanext.hdx_theme.tests.mock_helper as mh
 from ckanext.hdx_package.helpers.constants import DOCUMENTATION_LINKS
 
 
-def test_documentation_links_rendered(app):
+@mock.patch('ckanext.hdx_theme.views.splash_page.cached_last_three_signal_cards',
+            return_value=mh.mock_signal_cards())
+def test_documentation_links_rendered(mock_cards, app):
     url = tk.h.url_for('hdx_splash.index')
     response = app.get(url)
 

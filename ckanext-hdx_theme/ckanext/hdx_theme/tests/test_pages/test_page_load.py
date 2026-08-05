@@ -6,6 +6,7 @@ Created on Aug 28, 2014
 import pytest
 import unicodedata
 import logging as logging
+from unittest import mock
 
 import ckan.model as model
 import ckan.lib.helpers as h
@@ -15,6 +16,7 @@ import ckanext.hdx_theme.helpers.helpers as hdx_h
 
 import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
 import ckanext.hdx_theme.tests.hdx_test_with_inds_and_orgs as hdx_test_with_inds_and_orgs
+import ckanext.hdx_theme.tests.mock_helper as mh
 
 log = logging.getLogger(__name__)
 pages = [
@@ -132,6 +134,11 @@ class TestPageLoad(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
     def _create_test_data(cls):
         super(TestPageLoad, cls)._create_test_data(create_datasets=True, create_members=True, create_showcases=True)
 
+    @pytest.fixture(autouse=True)
+    def _mock_signal_cards(self):
+        with mock.patch('ckanext.hdx_theme.views.splash_page.cached_last_three_signal_cards',
+                         return_value=mh.mock_signal_cards()):
+            yield
 
     @pytest.mark.parametrize("page", pages)
     def test_page_load(self, page):
