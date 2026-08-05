@@ -34,7 +34,7 @@
     </div>
 
     {% if info_message %}
-      {% snippet 'v2/components/form-alert.html', message=info_message %}
+      {% snippet 'v2/components/alert.html', message=info_message, variant='info' %}
     {% endif %}
 
     <div class="hdx-v2-auth-card__returning-user" id="auth-returning-user" hidden>

@@ -1465,6 +1465,7 @@ v2-components-styles:
     - v2/components/accordion.css
     - v2/components/activity-card.css
     - v2/components/activity-item.css
+    - v2/components/alert.css
     - v2/components/anchor-links.css
     - v2/components/avatar-badge.css
     - v2/components/breadcrumb.css
@@ -1478,7 +1479,6 @@ v2-components-styles:
     - v2/components/divider.css
     - v2/components/drawer.css
     - v2/components/dropdown.css
-    - v2/components/form-alert.css
     - v2/components/form-field.css
     - v2/components/highlight-card.css
     - v2/components/input-field.css
@@ -1508,6 +1508,7 @@ v2-components-scripts:
   output: ckanext-hdx_theme/%(version)s_v2-components-scripts.js
   contents:
     - v2/utils.js
+    - v2/components/alert.js
     - v2/components/anchor-links.js
     - v2/components/clamped-text.js
     - v2/components/copy-button.js

@@ -275,13 +275,6 @@
   align-items: center;
   gap: var(--hdx-space-4);
 }
-.hdx-v2-org-members__request-message {
-  font-family: var(--hdx-font-body);
-  font-size: var(--hdx-fs-s);
-  font-weight: var(--hdx-fw-regular);
-  line-height: var(--hdx-lh-normal);
-  color: var(--hdx-neutral-8);
-}
 .hdx-v2-org-members-side {
   display: flex;
   flex-direction: column;

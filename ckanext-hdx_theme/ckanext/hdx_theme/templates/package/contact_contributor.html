@@ -65,7 +65,7 @@
         <p class="hdx-v2-message-form-dataset-name">{{ CONST.DATASET_NAME_TEXT.format(pkg_dict.title) }}</p>
 
         {% if error_summary %}
-          {% snippet 'v2/components/form-alert.html', message=error_summary %}
+          {% snippet 'v2/components/alert.html', message=error_summary %}
         {% endif %}
 
         {# Topic dropdown #}

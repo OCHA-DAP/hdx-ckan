@@ -180,17 +180,32 @@ See [007-stable-border-width-across-states.md](requirements/007-stable-border-wi
 
 ---
 
-## Form alerts — `c-form-alert`
+## Alerts — `c-alert`
 
-All form-level error/status alerts use the shared `c-form-alert` component
-(`templates/v2/components/form-alert.html` + `less/v2/components/form-alert.less`),
-whether server-rendered (Contact Contributor error summary) or JS-toggled
-(notification drawers, org-members group message).
+All alert-shaped feedback — page-level flash banners (`v2/page.html`) and
+form/drawer error & status messages — uses the shared `c-alert` component
+(`templates/v2/components/alert.html` + `less/v2/components/alert.less`),
+whether server-rendered (Contact Contributor error summary, login page,
+flash messages) or JS-toggled (notification drawers, org-members group
+message and request approve/decline, org member add/remove/invite flash).
 
+- Variants: `success` | `warning` | `info` | `error` (default). Pass
+  `variant='...'` to the snippet; never hand-roll a colored `<p>` for a
+  status message.
 - Visibility contract: visible by default; JS-managed instances render with
   `hidden=True` and toggle the `hidden` **attribute** (`alert.hidden = false`).
   No `is-visible`/display classes.
+- Dismissible by default (renders a `.c-alert__close` button); pass
+  `dismissible=False` only when there's a specific reason an instance
+  shouldn't be dismissed independently of the surrounding form/drawer.
+- JS must never set `.textContent`/`.innerHTML` on the `.c-alert` element
+  itself — that wipes the close button. Target the nested `.c-alert__message`
+  span instead.
 - Do not create page- or drawer-specific alert classes.
+- Full-screen "success state" swaps (Contact Contributor, Request Access,
+  Forgot Password) that re-title an entire page/card header are a distinct,
+  intentional pattern — not alert messages — and are out of scope for this
+  component.
 
 ---
 

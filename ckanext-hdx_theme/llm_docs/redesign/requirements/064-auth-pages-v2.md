@@ -156,9 +156,9 @@ folded into this task after the initial migration per §12 Decision 5, reusing t
 - Error handling: `HDXPerformResetView.post()` is inherited unmodified from core and never passes an
   `errors`/`error_summary` context var — it only calls `h.flash_error(...)`/`h.flash_success(...)` and
   re-renders the same template. The new template does not override `{% block flash %}`, so the
-  inherited `v2/page.html` flash block (existing `hdx-v2-flash {category}` + legacy
-  `.alert-danger`/`.alert-error` CSS) is the sole error/success surface, same as it already is for the
-  forgot-password page's own expired-link redirect.
+  inherited `v2/page.html` flash block (renders each flashed message through the shared `c-alert`
+  snippet, variant mapped from the flash category) is the sole error/success surface, same as it
+  already is for the forgot-password page's own expired-link redirect.
 - Analytics: kept untracked — `mixpanel_init`/`google_analytics_init`/`hotjar_init` all blanked, same
   as before and as the sibling pages (§1.5, §11).
 - Styling: reuses `hdx_theme/v2-auth-page-styles` (`auth-page.less`'s `hdx-v2-auth-card` BEM elements)
@@ -293,7 +293,7 @@ close glyph as the XL `[X]`, per context).
 | Login — remember me | `#field-remember`, checkbox, value `"63072000"` | `v2/components/checkbox.html`, same `name`/`value` preserved as-is (§8 flags the value's odd semantics, not to be touched) |
 | Login — error | Single `.error-message` div, generic string, shown/hidden via inline `style` | Figma ties the error visually to the password field: render via `search-input.html`'s `errors` prop on the password field (adds `.c-search-input--error` + inline message) — same generic `error_message` string from `signin.py:142`, just re-targeted to the password field's error slot instead of a floating top div. Wording stays as-is (Decision 9) — Figma's "Incorrect email or password" is not adopted |
 | Forgot password — user | `#field-recover-id`, plain `<input required>`, mislabeled `for` attribute (§1.2 bug) | `search-input.html` (`type='text'`), `errors` prop wired to `result.error.message` from the existing AJAX response — same JSON contract, only the rendering target changes. Label/input association bug fixed here |
-| Forgot password — submit/status | JSON success/error handled by hand-rolled JS (`recover.js`) toggling `.error-message`/`.error` classes | Same AJAX call and JSON shape; JS updates `c-search-input--error` state and a `c-form-alert` (or the field-level error span) instead of legacy classes — no change to the request/response contract |
+| Forgot password — submit/status | JSON success/error handled by hand-rolled JS (`recover.js`) toggling `.error-message`/`.error` classes | Same AJAX call and JSON shape; JS updates `c-search-input--error` state and a `c-alert` (or the field-level error span) instead of legacy classes — no change to the request/response contract |
 | reCAPTCHA | Invisible v2, bound to submit button | Unchanged (§12 Decision 2) — Figma's visible checkbox mock is not implemented |
 | Perform reset — new password | `#field-password` (`password1`), plain `<input required>`, label "Password" | `search-input.html` with `type='password'` — same eye toggle as login's password field |
 | Perform reset — confirm password | `#field-confirm-password` (`password2`), plain `<input required>`, label "Confirm" | `search-input.html` with `type='password'`, label changed to "Confirm password" (Decision 15) |
@@ -314,7 +314,7 @@ error-message sources.
 | Remember me | **Reuse** `v2/components/checkbox.html` | Already supports `label` + `errors`; no new component needed |
 | Submit / secondary buttons | **Reuse** `v2/components/button.html` | `style='primary'` for Log in/Reset, `style='tertiary'`/text-link for Register/Sign up/Cancel-style links |
 | "Forgot password?" / "Sign up" / "Not you?" links | **Reuse** `v2/components/text-link.html` / `text-button.html` | Existing generic link/button components already used elsewhere for this exact pattern. "Forgot password?" uses `style='tertiary'` (Figma's `.text-link` color is a dark neutral, not the royal-blue used for "Sign up"); "Sign up" stays `style='primary'` |
-| Top-level / field-level error and status messages | **Reuse** `v2/components/form-alert.html` and `search-input.html`'s built-in `errors` slot | `c-form-alert` is the established v2 pattern for form-level status (per `request_access.html:60-62`); field-level errors use the input's own `errors` prop, matching Figma's per-field error treatment |
+| Top-level / field-level error and status messages | **Reuse** `v2/components/alert.html` and `search-input.html`'s built-in `errors` slot | `c-alert` is the established v2 pattern for form-level status (per `request_access.html:60-62`); field-level errors use the input's own `errors` prop, matching Figma's per-field error treatment |
 | Page shell (logo-only navbar, dark background, no site header/footer/breadcrumb) | **Extend** the pattern from `error_document_template.html` | Closer analog than `request_access.html` (which keeps the full v2 site header/footer/breadcrumb chrome) — Figma shows only a logo bar and no footer on all three auth pages, matching how `error_document_template.html` extends `v2/page.html` with `header`/`footer` blocks emptied out |
 | MFA/OTP input | **Extend** `search-input.html` (`type='number'`) | No dedicated MFA component exists or is needed — it's a plain numeric text input |
 | Popup/modal chrome (`widget/popup/popup.html`, `notification.html`) | **Reuse as-is** | No v2 equivalent exists; the close-icon/`closeCurrentWidget()` behavior for forgot-password/confirmation is preserved unchanged (§1.3, §5) |
@@ -368,7 +368,7 @@ page variants with one breakpoint-driven stylesheet.
   instead of the field's real id `field-recover-id` — a copy-paste artifact from `login.html`. Corrected
   as part of this rebuild regardless of the copy-wording decisions (§10).
 - All current `required` attributes are preserved on every field (login/password/MFA/remember/user).
-- `c-form-alert`'s `role="alert"` (already built into the component) provides an accessible live region
+- `c-alert`'s `role="alert"` (already built into the component) provides an accessible live region
   for the re-targeted error message, improving on the current plain `<div>` with inline `style` toggling.
 - Focus-visible states come from the v2 components' existing defaults (`search-input.html`,
   `checkbox.html`, `button.html`) — no bespoke focus styling needed.

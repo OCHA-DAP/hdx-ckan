@@ -371,9 +371,10 @@
                     label=_('Decline'),
                     attrs={'data-decline-request': request.id} %}
               </div>
-              <div class="hdx-v2-org-members__request-message" data-request-message="{{ request.id }}" hidden>
-                {{ _('User has been approved as') }} <span class="hdx-v2-org-members__request-role">ROLE</span>.
-              </div>
+              {% snippet 'v2/components/alert.html',
+                  message=(_('User has been approved as') ~ ' <span class="hdx-v2-org-members__request-role">ROLE</span>.') | safe,
+                  variant='success', hidden=True,
+                  extra_attrs='data-request-message="' ~ request.id ~ '"' %}
             {% endcall %}
           {% endfor %}
         </div>

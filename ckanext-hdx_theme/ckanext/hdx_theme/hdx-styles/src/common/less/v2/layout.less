@@ -39,6 +39,13 @@ body.hdx-v2 {
     }
 }
 
+// ── Flash messages ────────────────────────────────────────────
+// Wraps the h.get_flashed_messages() loop in v2/page.html; each
+// message renders as a c-alert (see components/alert.less).
+.hdx-v2-flash {
+    margin: var(--hdx-space-4) 0;
+}
+
 // Base flex layout used on any v2 two-column page (search, dataset page, etc.)
 // Horizontal gap between columns is set per-page via gap or column padding.
 .hdx-v2-content-columns {

@@ -81,7 +81,7 @@
       drawer_id='notificationsVerificationDrawer',
       title=verification_modal_title) %}
     <div class="c-drawer-form">
-      <p class="c-drawer-form__text">{{ verification_modal_text|safe }}</p>
+      {% snippet 'v2/components/alert.html', message=(verification_modal_text | safe), variant='success' %}
       <div class="c-drawer-form__buttons">
         {{ h.snippet('v2/components/button.html',
             style='primary',
@@ -109,7 +109,7 @@
     title=CONST_NOTIFICATION_PLATFORM.UNSUBSCRIBE_CONFIRMATION_MODAL_TITLE) %}
   <div class="c-drawer-form">
     <p class="c-drawer-form__text">{{ confirmation_modal_text|safe }}</p>
-    {% snippet 'v2/components/form-alert.html', hidden=True %}
+    {% snippet 'v2/components/alert.html', hidden=True %}
     <div class="c-drawer-form__buttons">
       {{ h.snippet('v2/components/button.html',
           style='tertiary',
@@ -128,7 +128,7 @@
     drawer_id='notificationsUnsubscribedDrawer',
     title=CONST_NOTIFICATION_PLATFORM.UNSUBSCRIBED_MODAL_TITLE) %}
   <div class="c-drawer-form">
-    <p class="c-drawer-form__text">{{ unsubscribed_modal_text|safe }}</p>
+    {% snippet 'v2/components/alert.html', message=(unsubscribed_modal_text | safe), variant='success' %}
     <div class="c-drawer-form__buttons">
       {{ h.snippet('v2/components/button.html',
           style='primary',

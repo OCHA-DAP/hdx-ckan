@@ -40,9 +40,10 @@
 
   function showError(drawer, text) {
     var form = formIn(drawer);
-    var alertEl = form && form.querySelector('.c-form-alert');
+    var alertEl = form && form.querySelector('[data-group-message-error]');
     if (!alertEl) return;
-    alertEl.textContent = text || 'There was an error sending your message. Please try again.';
+    var messageEl = alertEl.querySelector('.c-alert__message');
+    if (messageEl) messageEl.textContent = text || 'There was an error sending your message. Please try again.';
     alertEl.hidden = false;
   }
 
@@ -68,7 +69,7 @@
   function submitForm(drawer, token) {
     var form = formIn(drawer);
     if (!form) return;
-    var alertEl = form.querySelector('.c-form-alert');
+    var alertEl = form.querySelector('[data-group-message-error]');
     if (alertEl) alertEl.hidden = true;
     var topic = form.querySelector('[name="topic"]');
     if (window.hdxUtil) {

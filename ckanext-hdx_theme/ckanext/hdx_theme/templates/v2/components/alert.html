@@ -1,0 +1,39 @@
+{#
+  Snippet: alert.html
+
+  Renders a c-alert — shared alert used for page-level flash banners
+  and inline form/drawer error & status messages.
+  Server-rendered (error summary on form pages) or JS-toggled
+  (drawer forms): JS instances pass hidden=True and toggle the
+  `hidden` attribute to show/hide.
+
+  Parameters
+  ─────────────────────────────────────────────────
+  message       {string}  Alert text (empty for JS-filled alerts).  default: ''
+  variant       {string}  success | warning | info | error.  default: 'error'
+  hidden        {bool}    Start hidden (JS-toggled instances).  default: False
+  dismissible   {bool}    Render the close button.  default: True
+  extra_classes {string}  default: ''
+  extra_attrs   {string}  Raw attribute string (e.g. a data-* hook).  default: ''
+  ─────────────────────────────────────────────────
+  Examples
+
+  {% snippet 'v2/components/alert.html', message=error_summary %}
+  {% snippet 'v2/components/alert.html', variant='success', hidden=True %}
+#}
+{% set message       = message       if message       is defined else '' %}
+{% set variant       = variant       if variant       is defined else 'error' %}
+{% set hidden        = hidden        if hidden        is defined else False %}
+{% set dismissible   = dismissible   if dismissible   is defined else True %}
+{% set extra_classes = extra_classes if extra_classes is defined else '' %}
+{% set extra_attrs   = extra_attrs   if extra_attrs   is defined else '' %}
+{% set role = 'status' if variant in ('success', 'info') else 'alert' %}
+
+<div class="c-alert c-alert--{{ variant }}{{ ' ' ~ extra_classes if extra_classes else '' }}" role="{{ role }}"{% if hidden %} hidden{% endif %}{% if extra_attrs %} {{ extra_attrs | safe }}{% endif %}>
+  <span class="c-alert__message">{{ message }}</span>
+  {% if dismissible %}
+    <button type="button" class="c-alert__close" data-alert-close aria-label="{{ _('Dismiss') }}">
+      {% include 'v2/icons/close.svg' %}
+    </button>
+  {% endif %}
+</div>

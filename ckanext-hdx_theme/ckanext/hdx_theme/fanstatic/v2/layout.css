@@ -9,6 +9,9 @@ body.hdx-v2 {
   background-color: var(--hdx-neutral-0);
   border-bottom: none;
 }
+.hdx-v2-flash {
+  margin: var(--hdx-space-4) 0;
+}
 .hdx-v2-content-columns {
   display: flex;
   align-items: stretch;

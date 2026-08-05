@@ -69,10 +69,12 @@
           <div class="flash-messages">
             <div class="hdx-v2-container">
               {% block flash_inner %}
+                {% set flash_variants = {'alert-success': 'success', 'alert-danger': 'error', 'alert-error': 'error', 'alert-info': 'info', 'alert-warning': 'warning'} %}
                 {% for category, message in h.get_flashed_messages(with_categories=true) %}
-                  <div class="hdx-v2-flash {{ category }}">
-                    {{ h.literal(message) }}
-                  </div>
+                  {% snippet 'v2/components/alert.html',
+                      message=h.literal(message),
+                      variant=flash_variants.get(category, 'info'),
+                      extra_classes='hdx-v2-flash' %}
                 {% endfor %}
               {% endblock %}
             </div>

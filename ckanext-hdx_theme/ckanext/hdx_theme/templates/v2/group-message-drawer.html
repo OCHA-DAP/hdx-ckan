@@ -33,7 +33,11 @@
     drawer_id=drawer_id,
     title=_('Group message')) %}
   <form class="c-drawer-form" data-group-message-form>
-    {% snippet 'v2/components/form-alert.html', hidden=True %}
+    {% snippet 'v2/components/alert.html', hidden=True, extra_attrs='data-group-message-error' %}
+    {% snippet 'v2/components/alert.html',
+        message=_('Your message has been sent.'),
+        variant='success', hidden=True,
+        extra_attrs='data-group-message-success' %}
     <input type="hidden" name="source_type" value="{{ 'dataset' if pkg_id else 'group' }}">
     <input type="hidden" name="title" value="{{ title }}">
     <input type="hidden" name="org_id" value="{{ org_id }}">
@@ -63,9 +67,6 @@
           label=_('Comments'), required=True,
           multiline=True, rows=4 %}
     </div>
-    <p class="c-drawer-form__text c-drawer-form__text--success" data-group-message-success hidden>
-      {{ _('Your message has been sent.') }}
-    </p>
     <div class="c-drawer-form__recaptcha" data-group-message-recaptcha
          data-sitekey="{{ g.recaptcha_publickey }}"></div>
     <div class="c-drawer-form__buttons">

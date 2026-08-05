@@ -13,7 +13,7 @@
     <p class="c-drawer-form__description">{{ CONST_NOTIFICATION_PLATFORM.SIGNUP_MODAL_TEXT_INTRO_SECOND.format(h.url_for('hdx_signin.login'))|safe }}</p>
   {% endif %}
 
-  {% snippet 'v2/components/form-alert.html', hidden=True %}
+  {% snippet 'v2/components/alert.html', hidden=True %}
 
   <form method="post" id="notification-platform-form" novalidate data-hdx-v2-form-validator>
     <input type="hidden" name="popup_source" value="">

@@ -2462,7 +2462,7 @@
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Are you sure you want
         to proceed? This action cannot be undone.
       </p>
-      {% snippet 'v2/components/form-alert.html', hidden=True %}
+      {% snippet 'v2/components/alert.html', hidden=True %}
       <div class="c-drawer-form__buttons">
         {{ h.snippet('v2/components/button.html',
             style='tertiary',
@@ -2474,6 +2474,23 @@
       </div>
     </div>
   {% endcall %}
+
+  {# ══════════════════════════════════════════════════════════════
+     Alert
+  ══════════════════════════════════════════════════════════════ #}
+  <section class="demo-section" id="alert">
+    <h1 class="demo-section__heading">Alert</h1>
+    <p class="demo-section__subtitle">
+      Shared alert used for page-level flash banners (v2/page.html) and
+      inline form/drawer error &amp; status messages. Dismissible by default.
+    </p>
+    <div class="demo-row demo-row--column">
+      {% snippet 'v2/components/alert.html', message='Something went wrong. Please try again.', variant='error' %}
+      {% snippet 'v2/components/alert.html', message='Your changes have been saved.', variant='success' %}
+      {% snippet 'v2/components/alert.html', message='This action cannot be undone.', variant='warning' %}
+      {% snippet 'v2/components/alert.html', message='You need to log in to continue.', variant='info' %}
+    </div>
+  </section>
 
   {# ── Accordion ─────────────────────────────────────────────── #}
   <section class="demo-section" id="accordion">

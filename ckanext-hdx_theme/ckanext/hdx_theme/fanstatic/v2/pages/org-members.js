@@ -45,15 +45,21 @@
       .catch(function () { window.alert('Your request failed!'); });
   }
 
-  function resolveRequestUI(requestId, messageText, roleText) {
+  function resolveRequestUI(requestId, messageText, roleText, variant) {
     var actions = document.querySelector('[data-request-id="' + requestId + '"]');
-    var message = document.querySelector('[data-request-message="' + requestId + '"]');
+    var alertEl = document.querySelector('[data-request-message="' + requestId + '"]');
     if (actions) actions.hidden = true;
-    if (!message) return;
-    if (messageText !== null) message.textContent = messageText;
-    var roleSpan = message.querySelector('.hdx-v2-org-members__request-role');
+    if (!alertEl) return;
+    var messageEl = alertEl.querySelector('.c-alert__message');
+    if (messageText !== null && messageEl) messageEl.textContent = messageText;
+    var roleSpan = messageEl && messageEl.querySelector('.hdx-v2-org-members__request-role');
     if (roleText !== null && roleSpan) roleSpan.textContent = roleText;
-    message.hidden = false;
+    if (variant && variant !== 'success') {
+      alertEl.classList.remove('c-alert--success');
+      alertEl.classList.add('c-alert--' + variant);
+      alertEl.setAttribute('role', 'status');
+    }
+    alertEl.hidden = false;
   }
 
   document.addEventListener('click', function (e) {
@@ -64,7 +70,7 @@
     var requestId = wrapper.getAttribute('data-approve-request');
     var role = item.getAttribute('data-approve-role');
     processRequest({ member: requestId, role: role, approve: true }, function () {
-      resolveRequestUI(requestId, null, role);
+      resolveRequestUI(requestId, null, role, 'success');
       if (window.hdxUtil) window.hdxUtil.analytics.sendMemberAddRejectEvent('by request', false);
     });
   });
@@ -74,7 +80,7 @@
     if (!btn) return;
     var requestId = btn.getAttribute('data-decline-request');
     processRequest({ member: requestId, reject: true }, function () {
-      resolveRequestUI(requestId, 'Membership request declined!', null);
+      resolveRequestUI(requestId, 'Membership request declined!', null, 'info');
       if (window.hdxUtil) window.hdxUtil.analytics.sendMemberAddRejectEvent('by request', true);
     });
   });
