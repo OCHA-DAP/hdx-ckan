@@ -191,3 +191,19 @@
 .layers-control:hover > .layers-control-toggle {
   display: none;
 }
+.quick-edit {
+  position: relative;
+}
+.quick-edit .quick-link {
+  position: absolute;
+  top: 0;
+  right: 0;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease;
+}
+.quick-edit:hover .quick-link,
+.quick-edit:focus-within .quick-link {
+  opacity: 1;
+  pointer-events: auto;
+}

@@ -106,3 +106,29 @@ body.hdx-v2 {
   z-index: 5;
   transition: opacity 150ms ease;
 }
+body.contribute-mode {
+  overflow: hidden;
+}
+.popup.popup-contribute {
+  z-index: 90000;
+  overflow: auto;
+}
+.popup.popup-contribute .content {
+  height: 100%;
+  padding: 0;
+  position: static;
+  left: auto;
+  top: auto;
+  margin-left: auto;
+  margin-right: auto;
+  transform: none;
+  overflow: hidden;
+}
+.popup.popup-contribute .content .details-content {
+  height: 100%;
+}
+.popup.popup-contribute .content .details-content iframe {
+  border: none;
+  height: 100%;
+  width: 100%;
+}

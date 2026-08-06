@@ -215,3 +215,25 @@
         display: none;
     }
 }
+
+// Elements below are created/classed by quick-edit.js itself, not by a
+// template — class names must stay in sync with
+// fanstatic/v2/components/quick-edit.js.
+.quick-edit {
+    position: relative;
+
+    .quick-link {
+        position:       absolute;
+        top:            0;
+        right:          0;
+        opacity:        0;
+        pointer-events: none;
+        transition:     opacity 0.15s ease;
+    }
+
+    &:hover .quick-link,
+    &:focus-within .quick-link {
+        opacity:        1;
+        pointer-events: auto;
+    }
+}

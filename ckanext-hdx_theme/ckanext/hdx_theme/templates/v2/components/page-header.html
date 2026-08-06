@@ -24,6 +24,9 @@
   request_only        {bool}    Show "Request only data" label.  default: False
   cod_dataset         {bool}    Show "COD+" label.  default: False
   links_list          {list}    {label, title, url, newTab} dicts.  default: []
+  page_list           {list}    {title, href} dicts - ongoing crisis/event pages this
+                                dataset belongs to (rendered as "Part of {title}" +
+                                "View crisis page" link groups).  default: []
   supports_notifications {bool} Show "Get notified" button.  default: False
   state_label_text    {string}  Optional state chip text (e.g. 'draft'),
                                  rendered right after the title.  default: ''
@@ -77,6 +80,7 @@
 {% set request_only        = request_only        if request_only        is defined else False %}
 {% set cod_dataset         = cod_dataset         if cod_dataset         is defined else False %}
 {% set links_list          = links_list          if links_list          is defined else [] %}
+{% set page_list           = page_list           if page_list           is defined else [] %}
 {% set supports_notifications = supports_notifications if supports_notifications is defined else False %}
 {% set meta_items          = meta_items          if meta_items          is defined else [] %}
 {% set compact_title       = compact_title       if compact_title       is defined else False %}
@@ -123,7 +127,7 @@
         {% endif %}
 
         {# Labels row — dataset #}
-        {% if request_only or cod_dataset or links_list or (pkg_state and pkg_state.startswith('deleted')) %}
+        {% if request_only or cod_dataset or links_list or page_list or (pkg_state and pkg_state.startswith('deleted')) %}
         <div class="c-page-header__labels">
 
           {% if pkg_state and pkg_state.startswith('deleted') %}
@@ -153,6 +157,19 @@
                   icon_src='v2/icons/arrow-right.svg',
                   tag='a', href=link.url,
                   attrs={'target': '_blank' if link.newTab else '_self'} %}
+            </div>
+          {% endfor %}
+
+          {% for pg in page_list %}
+            <div class="c-page-header__link-group">
+              {% snippet 'v2/components/label.html',
+                  text=_('Part of') ~ ' ' ~ pg.title,
+                  color='grey', size='s' %}
+              {% snippet 'v2/components/text-button.html',
+                  style='tertiary', size='s', label=_('View crisis page'),
+                  icon_position='right',
+                  icon_src='v2/icons/arrow-right.svg',
+                  tag='a', href=pg.href %}
             </div>
           {% endfor %}
 
@@ -187,13 +204,13 @@
 
         {# Description + show more — when provided #}
         {% if description %}
-        <div class="c-page-header__desc" data-module="clamped-text">
-          <p class="c-page-header__desc-text" data-clamped-content
+        <div class="c-page-header__desc"
+             data-module="clamped-text{{ ' hdx-quick-edit' if edit_mode else '' }}"
              {% if edit_mode %}
-               data-module="hdx-quick-edit"
                data-module-anchor="field_notes"
                data-module-dataset="{{ pkg_id }}"
-             {% endif %}>{{ description }}</p>
+             {% endif %}>
+          <p class="c-page-header__desc-text" data-clamped-content>{{ description }}</p>
           {% snippet 'v2/components/text-button.html',
               style='tertiary', size='s', label='Show more',
               icon_position='right',

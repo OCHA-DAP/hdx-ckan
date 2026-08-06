@@ -250,7 +250,7 @@ Each `meta_items` entry:
 |---------|--------|
 | `size` | Pure CSS responsive via `@hdx-bp-md` / `@hdx-bp-xl`. |
 | `part_of_data_grids` | Subsumed by `links_list`. |
-| `part_of_crisis`, `crisis_name`, `crisis_href` | Subsumed by `links_list`. |
+| `part_of_crisis`, `crisis_name`, `crisis_href` | Rendered via the new `page_list` param instead (sourced from `pkg.page_list`, not `links_list`). |
 | `org_contact_url`, `notify_href` | Buttons open existing JS modals. |
 | `location_view_all_href` | Always `#metadata-location`. |
 
@@ -405,7 +405,7 @@ c-page-header
 |----|----------|
 | D1 | Data grids entries come from `pkg.links_list`. Items with `link.label` render as label + text-button; items without render as text-button only. |
 | D2 | `request_only` mapped from `pkg.is_requestdata_type`. |
-| D3 | Crisis entries come from `pkg.links_list` (same mechanism as data grids). |
+| D3 | Crisis entries come from `pkg.page_list` (tag-matched ongoing event/dashboard pages), rendered via a separate `page_list` param - not `links_list`, which only carries sysadmin-configured data-grid links. |
 | D4 | Download count is `pkg.approx_total_downloads`. |
 | D5 | "View all" on Location always renders when the location text is non-empty. Uses `arrow-down.svg`. Anchor: `#metadata-location`. |
 | D6 | If `logo_src` empty, logo area hidden entirely. |

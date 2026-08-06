@@ -1583,9 +1583,10 @@ v2-page-scripts:
       - hdx_theme/v2-components-scripts
       - hdx_theme/v2-search-scripts
   contents:
+    - v2/contribute.js
+    - v2/group-message-drawer.js
     - v2/navbar.js
     - v2/search-autocomplete.js
-    - v2/group-message-drawer.js
 
 v2-error-page-styles:
   output: ckanext-hdx_theme/%(version)s_v2-error-page-styles.css

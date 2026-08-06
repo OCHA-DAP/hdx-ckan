@@ -2,7 +2,7 @@
   'use strict';
 
   document.addEventListener('DOMContentLoaded', function () {
-    document.querySelectorAll('[data-module="clamped-text"]').forEach(function (container) {
+    document.querySelectorAll('[data-module~="clamped-text"]').forEach(function (container) {
       var btn     = container.querySelector('[data-clamped-toggle]');
       var content = container.querySelector('[data-clamped-content]');
       var label   = btn && btn.querySelector('.c-text-button__label');

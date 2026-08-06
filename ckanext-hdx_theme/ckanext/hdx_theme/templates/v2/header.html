@@ -244,11 +244,14 @@
             {% snippet 'v2/navbar-user-menu.html' %}
           </div>
 
+          {% set add_data_obj = h.hdx_check_add_data() %}
           {% snippet 'v2/components/button.html',
               style='secondary', size='m', label=_('Add data'),
-              tag='a', href=h.url_for('hdx_contribute.new'),
+              tag='a', href=add_data_obj.href,
               extra_classes='hdx-v2-navbar__add-data',
-              attrs={'data-module': 'hdx_click_stopper', 'data-module-link_type': 'header add data'} %}
+              attrs={'onclick': add_data_obj.onclick,
+                     'data-module': add_data_obj.data_module,
+                     'data-module-link_type': add_data_obj.data_module_link_type} %}
         {% else %}
           {% snippet 'v2/components/button.html',
               style='secondary', size='m', label=_('Log in'),

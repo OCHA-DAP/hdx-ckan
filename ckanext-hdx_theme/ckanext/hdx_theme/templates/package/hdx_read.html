@@ -117,6 +117,15 @@
     {% set _subnational = pkg.subnational|int == 1 %}
     {% set _has_meta = _location_text or _update_frequency or _time_period or _source_text
                        or pkg.is_fresh or _subnational %}
+
+    {% set ns_pages = namespace(items=[]) %}
+    {% for _page in pkg.page_list or [] %}
+      {% set _page_endpoint = 'hdx_dashboard.read_dashboard' if _page.type == 'dashboard' else 'hdx_event.read_event' %}
+      {% set ns_pages.items = ns_pages.items + [{
+          'title': _page.title,
+          'href': h.url_for(_page_endpoint, id=_page.name)
+      }] %}
+    {% endfor %}
     {% set _meta_items = [
       {'label': _('Location'), 'value': _location_text,
        'chip': {'text': _('Sub-national'), 'color': 'cyan'} if _subnational else None,
@@ -142,6 +151,7 @@
         request_only=pkg.is_requestdata_type,
         cod_dataset=(analytics_is_cod == 'true'),
         links_list=pkg.links_list or [],
+        page_list=ns_pages.items,
         supports_notifications=analytics_supports_notifications,
         notification_object_type=object_type,
         notification_object_id=object_id,

@@ -170,9 +170,9 @@ def _generate_url_for(object_type: str, object: str, external: bool = False, uns
     elif object_type == ObjectType.CRISIS.value:
         page_dict = tk.get_action('page_show')({}, {'id': object})
         if page_dict.get('type') == 'event':
-            endpoint = 'hdx_light_event.read_light_event'
+            endpoint = 'hdx_event.read_event'
         else:
-            endpoint = 'hdx_light_dashboard.read_light_dashboard'
+            endpoint = 'hdx_dashboard.read_dashboard'
     else:
         raise tk.ValidationError(f'Invalid object_type: {object_type}')
 

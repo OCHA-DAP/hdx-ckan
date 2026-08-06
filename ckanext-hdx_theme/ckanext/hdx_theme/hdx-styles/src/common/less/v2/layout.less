@@ -135,3 +135,38 @@ body.hdx-v2 {
     z-index:        5;
     transition:     opacity 150ms ease;
 }
+
+// Contribute popup (Add/Edit Data modal) — toggled by fanstatic/v2/contribute.js
+body.contribute-mode {
+    overflow: hidden;
+}
+// ── Contribute popup (Add/Edit Data modal) ─────────────────────
+// Sizes the iframe-in-popup shell rendered from widget/contribute/details.html.
+// Mirrors the v1 rules in widget/contribute/details.less — same shared template/classes.
+.popup.popup-contribute {
+    z-index:  90000;
+    overflow: auto;
+
+    .content {
+        height:  100%;
+        padding: 0;
+
+        position:     static;
+        left:         auto;
+        top:          auto;
+        margin-left:  auto;
+        margin-right: auto;
+        transform:    none;
+        overflow:     hidden;
+
+        .details-content {
+            height: 100%;
+
+            iframe {
+                border: none;
+                height: 100%;
+                width:  100%;
+            }
+        }
+    }
+}
