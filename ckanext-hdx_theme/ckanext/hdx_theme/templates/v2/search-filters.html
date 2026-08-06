@@ -69,9 +69,12 @@
 {% set _adv_ns = namespace(sel=0, names=[]) %}
 {% for ai in adv_items %}
   {% if ai.get('items') %}
-    {% set _any_child_sel = ai['items'] | selectattr('selected') | list | length > 0 %}
-    {% if _any_child_sel %}
-      {% set _adv_ns.sel = _adv_ns.sel + (ai['items'] | selectattr('selected') | list | length) %}
+    {% set _child_sel = ai['items'] | selectattr('selected') | list %}
+    {% if _child_sel | length == 1 %}
+      {% set _adv_ns.sel = _adv_ns.sel + 1 %}
+      {% set _adv_ns.names = _adv_ns.names + [_child_sel[0].display_name] %}
+    {% elif _child_sel | length > 1 %}
+      {% set _adv_ns.sel = _adv_ns.sel + (_child_sel | length) %}
       {% set _adv_ns.names = _adv_ns.names + [ai.display_name] %}
     {% endif %}
   {% elif ai.selected %}
