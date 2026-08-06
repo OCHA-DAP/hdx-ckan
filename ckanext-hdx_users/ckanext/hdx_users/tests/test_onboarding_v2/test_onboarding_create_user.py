@@ -4,6 +4,7 @@ import pytest
 import ckan.model as model
 import ckan.plugins.toolkit as tk
 import ckan.tests.factories as factories
+import ckan.tests.helpers as helpers
 from ckanext.hdx_users.helpers.constants import ONBOARDING_CAME_FROM_EXTRAS_KEY, ONBOARDING_CAME_FROM_STATE_EXTRAS_KEY, \
     ONBOARDING_MAILCHIMP_OPTIN_KEY
 
@@ -155,6 +156,45 @@ class TestOnboarding(object):
                 assert ue.get('value') == 'true'
         assert len(ue_user) == 3
 
+
+    @mock.patch('ckanext.hdx_users.helpers.helpers.validate_captcha')
+    @mock.patch('ckanext.hdx_users.helpers.mailer._mail_recipient_html')
+    def test_onboarding_create_user_requires_valid_captcha(self, _mail_recipient_html, _validate_captcha, app):
+        data_dict = build_data_dict()
+        url = h.url_for('hdx_user_onboarding.user-info')
+
+        # no captcha response submitted at all
+        _validate_captcha.return_value = False
+        with helpers.changed_config('hdx.captcha', True):
+            result = app.post(url, data=data_dict)
+        assert result.status_code == 200
+        assert 'Captcha is not valid' in result.body
+        assert _validate_captcha.called
+
+        with pytest.raises(tk.ObjectNotFound):
+            _get_action('user_show')(_sysadmin_context(), {'id': NEW_USER})
+
+        # a captcha response is submitted but fails verification
+        data_dict['g-recaptcha-response'] = 'invalid-token'
+        with helpers.changed_config('hdx.captcha', True):
+            result = app.post(url, data=data_dict)
+        assert result.status_code == 200
+        assert 'Captcha is not valid' in result.body
+        assert _validate_captcha.called
+
+        with pytest.raises(tk.ObjectNotFound):
+            _get_action('user_show')(_sysadmin_context(), {'id': NEW_USER})
+
+        # a valid captcha response allows account creation to proceed
+        _validate_captcha.return_value = True
+        with helpers.changed_config('hdx.captcha', True):
+            result = app.post(url, data=data_dict)
+        assert result.status_code == 200
+        assert NEW_USER_EMAIL in result.body
+
+        user_dict = _get_action('user_show')(_sysadmin_context(), {'id': NEW_USER})
+        assert NEW_USER == user_dict.get('name')
+        assert 'pending' == user_dict.get('state')
 
     def test_onboarding_create_wrong_user(self, app):
         testuser_token = factories.APIToken(user=USER, expires_in=2, unit=60 * 60)['token']

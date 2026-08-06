@@ -14,7 +14,7 @@ import ckanext.hdx_users.helpers.tokens as tokens
 import ckanext.hdx_user_extra.helpers.helpers as ue_h
 
 from ckan.common import (
-    config, current_user, session
+    current_user, session
 )
 from ckan.types import Context, Response, DataDict
 from ckanext.hdx_users.controller_logic.onboarding_username_confirmation_logic import \
@@ -120,11 +120,8 @@ class UserOnboardingView(MethodView):
 
         # captcha check
         try:
-            is_captcha_enabled: object = config.get('hdx.captcha', 'false')
-            if is_captcha_enabled == 'true':
-                captcha_response = data_dict.get('g-recaptcha-response', None)
-                if not usr_h.is_valid_captcha(captcha_response=captcha_response):
-                    raise ValidationError(CaptchaNotValid, error_summary=CaptchaNotValid)
+            captcha_response = data_dict.get('g-recaptcha-response', None)
+            usr_h.is_valid_captcha(captcha_response=captcha_response)
         except ValidationError as e:
             error_summary = e.error_summary
             if error_summary == CaptchaNotValid:
