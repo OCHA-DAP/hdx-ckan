@@ -128,7 +128,7 @@ function prepareMap(countDatasets, openNewWindow){
       highlightFeature(e);
       return;
     }
-    openURL("group/" + code);
+    openURL("/group/" + code);
   };
 
   onEachFeature = function(feature, layer) {
