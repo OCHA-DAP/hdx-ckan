@@ -51,6 +51,15 @@
       return false;
     }
 
+    // Render as soon as the (async) recaptcha script is ready, instead of
+    // waiting for the submit click, so the badge doesn't pop in after the
+    // user has already clicked. Falls back to the submit handler's own
+    // ensureRecaptcha() call if the script is still slow to load.
+    (function tryRenderRecaptcha(attemptsLeft) {
+      if (ensureRecaptcha() || attemptsLeft <= 0) return;
+      setTimeout(function () { tryRenderRecaptcha(attemptsLeft - 1); }, 150);
+    })(20);
+
     function submitRecoverForm(token) {
       setFieldError(idField, '');
       var data = new URLSearchParams(new FormData(form));

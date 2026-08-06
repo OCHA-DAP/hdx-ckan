@@ -147,12 +147,22 @@
     validate(drawer);
   });
 
+  // Render each drawer's invisible reCAPTCHA as soon as the (async) script
+  // is ready, instead of waiting for the submit click, so the badge doesn't
+  // pop in after the user has already clicked. Falls back to the click
+  // handler's own ensureRecaptcha() call if the script is still slow to load.
+  function tryRenderRecaptcha(drawer, attemptsLeft) {
+    if (ensureRecaptcha(drawer) || attemptsLeft <= 0) return;
+    setTimeout(function () { tryRenderRecaptcha(drawer, attemptsLeft - 1); }, 150);
+  }
+
   document.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll('[data-group-message-form]').forEach(function (form) {
       var drawer = form.closest('.c-drawer');
       form.addEventListener('submit', function (e) { e.preventDefault(); });
       form.addEventListener('input', function () { validate(drawer); });
       form.addEventListener('change', function () { validate(drawer); });
+      tryRenderRecaptcha(drawer, 20);
     });
   });
 
