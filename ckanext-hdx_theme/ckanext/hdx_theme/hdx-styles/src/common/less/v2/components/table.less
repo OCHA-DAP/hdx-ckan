@@ -4,7 +4,9 @@
 // c-table — data table component
 // ============================================================
 // Demo:    templates/v2/components/table.html
-// Used by: hdx_office_preview (DataTables preview) via LESS mixins
+// Also covers DataTables-enhanced tables (table.c-table + `new
+// DataTable(...)`): resource page Data dictionary, and
+// ckanext-hdx_office_preview's Data Explorer/CSV preview.
 // ============================================================
 
 // ── Public mixins ─────────────────────────────────────────────
@@ -63,6 +65,42 @@ table.c-table {
 
     thead th {
         .c-table-th-styles();
+        position: relative; // anchors the sortable-column chevrons below
+
+        &.dt-orderable-asc,
+        &.dt-orderable-desc {
+            cursor:        pointer;
+            user-select:   none;
+            padding-right: var(--hdx-space-6);
+
+            &::before,
+            &::after {
+                content:               '';
+                position:              absolute;
+                right:                 var(--hdx-space-2);
+                width:                 var(--hdx-space-3);
+                height:                var(--hdx-space-3);
+                -webkit-mask-repeat:   no-repeat;
+                mask-repeat:           no-repeat;
+                -webkit-mask-size:     contain;
+                mask-size:             contain;
+                -webkit-mask-position: center;
+                mask-position:         center;
+                background-color:      var(--hdx-neutral-8);
+            }
+
+            &::before {
+                top:                calc(50% - var(--hdx-space-3));
+                -webkit-mask-image: url('/icons/chevron-up.svg');
+                mask-image:         url('/icons/chevron-up.svg');
+            }
+
+            &::after {
+                top:                50%;
+                -webkit-mask-image: url('/icons/chevron-down.svg');
+                mask-image:         url('/icons/chevron-down.svg');
+            }
+        }
     }
 
     tbody td {
@@ -72,4 +110,81 @@ table.c-table {
     tbody tr:last-child td               { border-bottom: none; }
     tbody tr:nth-child(odd)  td          { background-color: var(--hdx-neutral-0);  }
     tbody tr:nth-child(even) td          { background-color: var(--hdx-neutral-01); }
+
+    // DataTables sizing: let the table grow past 100% so the
+    // .dt-layout-cell scroll wrapper (below) can scroll it
+    // horizontally instead of squeezing columns.
+    &.dataTable {
+        width:     max-content;
+        min-width: 100%;
+    }
+}
+
+// ============================================================
+// DataTables adapter — chrome the library generates around a
+// table.c-table when a page enhances it with `new DataTable(...)`
+// (Data dictionary, Data Explorer/CSV preview). Everything DataTables
+// renders lives inside its own .dt-container wrapper, so this nests
+// the same way. Column widths and row data stay with each caller.
+// ============================================================
+
+.dt-container {
+    border:        1px solid var(--hdx-neutral-1);
+    border-radius: var(--hdx-radius-sm);
+    overflow:      clip;
+
+    .dt-layout-row {
+        &.dt-layout-table > .dt-layout-cell {
+            overflow-x: auto;
+        }
+
+        &:not(.dt-layout-table) {
+            .c-table-footer-styles();
+        }
+    }
+
+    .dt-paging {
+        display:     flex;
+        align-items: center;
+        overflow:    hidden;
+
+        > span         { display: contents; }
+        span.ellipsis  { display: none; }
+    }
+
+    .dt-paging-button {
+        .hdx-body-xs();
+        display:          inline-flex;
+        align-items:      center;
+        justify-content:  center;
+        min-width:        1.75rem;
+        height:           1.75rem;
+        padding:          0 var(--hdx-space-2);
+        border:           1px solid var(--hdx-neutral-2);
+        margin-left:      -1px;
+        color:            var(--hdx-neutral-8);
+        background-color: var(--hdx-neutral-0);
+        cursor:           pointer;
+        text-decoration:  none;
+        box-sizing:       border-box;
+        position:         relative;
+
+        &:first-child { margin-left: 0; }
+
+        &.current {
+            color:       var(--hdx-neutral-95);
+            font-weight: var(--hdx-fw-medium);
+            z-index:     1;
+        }
+
+        &.disabled,
+        &.disabled:hover {
+            color:  var(--hdx-neutral-5);
+            cursor: default;
+        }
+
+        &:not(.disabled):not(.current):hover {
+            color: var(--hdx-primary-5);
+        }
+    }
 }

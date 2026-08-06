@@ -46,4 +46,59 @@
     });
   };
 
+  // Keeps a same-origin iframe's height matched to its content, for content
+  // that loads/grows asynchronously (e.g. an async fetch inside the iframe).
+  // Polls indefinitely on `load` rather than stopping after one recheck, so
+  // late height growth is still caught. options: minHeight, padding,
+  // interval (ms), onError(iframe) — all optional.
+  window.hdxV2.initRecalibratingIframe = function initRecalibratingIframe(iframe, options) {
+    options = options || {};
+    var minHeight = options.minHeight || 400;
+    var padding = options.padding != null ? options.padding : 30;
+    var interval = options.interval || 200;
+    var onError = options.onError;
+    var intervalId;
+
+    function getSameOriginBody() {
+      try {
+        return iframe.contentWindow.document.body || null;
+      } catch (e) {
+        return null;
+      }
+    }
+
+    function recalibrate() {
+      var body = getSameOriginBody();
+      if (!body) return;
+      var height = Math.max(body.scrollHeight, minHeight);
+      iframe.style.height = (height + padding) + 'px';
+    }
+
+    function onLoad() {
+      recalibrate();
+      clearInterval(intervalId);
+      if (getSameOriginBody()) {
+        intervalId = setInterval(recalibrate, interval);
+      }
+    }
+
+    iframe.addEventListener('load', onLoad);
+    if (onError) {
+      iframe.addEventListener('error', function () { onError(iframe); });
+    }
+
+    // Same-origin content that already finished loading before this ran
+    // (fast/cached iframe) would otherwise miss the 'load' event above.
+    if (iframe.contentDocument && iframe.contentDocument.readyState === 'complete') {
+      onLoad();
+    }
+
+    // Firefox caches iframes — force it to fetch fresh content.
+    if (/#$/.test(iframe.src)) {
+      iframe.src = iframe.src.slice(0, -1);
+    } else {
+      iframe.src = iframe.src + '#';
+    }
+  };
+
 })();

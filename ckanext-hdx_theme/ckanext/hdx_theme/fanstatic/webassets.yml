@@ -1611,9 +1611,18 @@ v2-resource-page-styles:
   contents:
     - v2/pages/resource.css
 
+v2-datatable-scripts:
+  <<: *common-js
+  output: ckanext-hdx_theme/%(version)s_v2-datatable-scripts.js
+  contents:
+    - vendor/datatables-2.3.8/dataTables.min.js
+
 v2-resource-page-scripts:
   <<: *common-js
   output: ckanext-hdx_theme/%(version)s_v2-resource-page-scripts.js
+  extra:
+    preload:
+      - hdx_theme/v2-datatable-scripts
   contents:
     - v2/pages/resource.js
 

@@ -1,9 +1,6 @@
 {% extends "v2/page.html" %}
 
-{% block styles %}
-  {{ super() }}
-  {% asset 'hdx_office_preview/main-css' %}
-{% endblock %}
+{% block bodytag %}{{ super() }} style="background-color: unset;"{% endblock %}
 
 {% block page %}
   <div id="hdx-csv-preview">
@@ -11,7 +8,7 @@
 
     <div id="resource-id" hidden>{{ res.id }}</div>
     <div id="datastore-active" hidden>{{ 'true' if res.datastore_active else 'false' }}</div>
-    <table id="hdx-csv-table"></table>
+    <table id="hdx-csv-table" class="c-table"></table>
   </div>
 {% endblock %}
 
