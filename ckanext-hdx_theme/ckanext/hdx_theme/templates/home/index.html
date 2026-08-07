@@ -49,7 +49,7 @@
 {% if _hrp_filtered %}
   {% set _hrp_max = _hrp_filtered | map(attribute='package_count') | max %}
   <section class="hdx-v2-barchart">
-    <div class="hdx-v2-barchart__inner">
+    <div class="hdx-v2-barchart__inner hdx-v2-container">
 
       <div class="hdx-v2-barchart__label" aria-live="polite" aria-atomic="true">
         <span class="hdx-v2-barchart__label-name"></span>

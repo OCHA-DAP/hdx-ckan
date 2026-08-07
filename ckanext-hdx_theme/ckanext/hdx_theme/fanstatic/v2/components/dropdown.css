@@ -217,7 +217,8 @@
   top: calc(100% + var(--hdx-space-1));
   left: 0;
   right: 0;
-  min-width: max-content;
+  min-width: auto;
+  max-width: 22rem;
   z-index: 200;
   background-color: var(--hdx-neutral-0);
   border: 0.75px solid var(--hdx-neutral-1);

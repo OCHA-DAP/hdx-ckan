@@ -34,7 +34,8 @@
 }
 @media (min-width: 48rem) {
   .c-dataset-card__left {
-    flex: 2;
+    flex: 2 0 0%;
+    min-width: 0;
     width: auto;
   }
 }
@@ -129,7 +130,8 @@
     align-items: flex-start;
     flex-wrap: nowrap;
     gap: var(--hdx-space-3);
-    flex: 1;
+    flex: 1 0 0%;
+    min-width: 0;
     width: auto;
   }
 }
@@ -152,6 +154,9 @@
   color: var(--hdx-neutral-85);
   line-height: var(--hdx-lh-normal);
   margin: 0;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
   white-space: nowrap;
 }
 .c-dataset-card__formats {
