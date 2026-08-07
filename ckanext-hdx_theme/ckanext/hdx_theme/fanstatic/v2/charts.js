@@ -34,7 +34,7 @@
     }
 
     function reducedMotion() {
-        return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        return window.hdxV2.prefersReducedMotion();
     }
 
     // Wraps the container as .hdx-v2-chart and returns a canvas inside an

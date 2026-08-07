@@ -232,3 +232,15 @@
 .hdx-page-section-body() {
     padding-top: var(--hdx-space-8);
 }
+
+// ── Reduced-motion mixin (C-07, V-15) ──────────────────────────
+// Mixed into any rule that sets a `transition`, alongside the
+// --hdx-duration-*/--hdx-ease-* tokens. Currently a no-op pending
+// task 069's follow-up — uncomment the block below to re-enable
+// prefers-reduced-motion support everywhere this mixin is called.
+
+.hdx-motion() {
+    // @media (prefers-reduced-motion: reduce) {
+    //     transition-duration: 0.01ms;
+    // }
+}

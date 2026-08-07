@@ -40,7 +40,8 @@
         overflow-y: auto;
         box-shadow: var(--hdx-shadow-overlay);
         transform: translateX(100%);
-        transition: transform 0.3s ease-out;
+        transition: transform var(--hdx-duration-base) var(--hdx-ease-out);
+        .hdx-motion();
 
         width: 100%;
         @media (min-width: @hdx-bp-md) { width: 80%; }
@@ -97,6 +98,7 @@
         color: var(--hdx-neutral-8);
         border-radius: var(--hdx-radius-sm);
         transition: color 0.15s ease;
+        .hdx-motion();
 
         &:hover {
             color: var(--hdx-neutral-10);

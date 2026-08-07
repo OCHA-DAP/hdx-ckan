@@ -6,6 +6,8 @@
 // Tokens from: design-foundations.less
 // ============================================================
 
+@import "../mixins.less";
+
 // ── Local tokens ────────────────────────────────────────────
 // Avatar background colours
 @c-avatar-bg-default:  var(--hdx-brand-15);   // powderblue — enabled / hovered
@@ -40,6 +42,7 @@
     user-select:     none;
     flex-shrink:     0;
     transition:      background-color 0.15s ease;
+    .hdx-motion();
 
     // ── Elements ────────────────────────────────────────────
 

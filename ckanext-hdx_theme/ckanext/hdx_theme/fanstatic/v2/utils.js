@@ -101,4 +101,12 @@
     }
   };
 
+  // Currently a no-op pending task 069's follow-up — uncomment the
+  // matchMedia check to re-enable prefers-reduced-motion support
+  // everywhere this helper is called.
+  window.hdxV2.prefersReducedMotion = function prefersReducedMotion() {
+    // return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    return false;
+  };
+
 })();

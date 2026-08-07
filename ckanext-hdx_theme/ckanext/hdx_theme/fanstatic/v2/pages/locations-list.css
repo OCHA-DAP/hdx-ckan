@@ -56,6 +56,12 @@
     height: 660px;
   }
 }
+.leaflet-container path {
+  transition: none;
+}
+.leaflet-fade-anim .leaflet-popup {
+  transition: none;
+}
 .hdx-v2-locations-list-legend {
   background-color: var(--hdx-neutral-0);
 }

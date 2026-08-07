@@ -12,6 +12,7 @@
     box-shadow:       var(--hdx-shadow-sm);
     overflow:         hidden;
     transition:       border-color 0.15s ease;
+    .hdx-motion();
 
     &:hover {
         border-color: var(--hdx-neutral-8);
@@ -81,7 +82,7 @@
         .c-text-button { display: none; }
         &.is-clamped .c-text-button { display: inline-flex; }
 
-        .c-text-button__icon            { transition: transform 0.15s ease; }
+        .c-text-button__icon            { transition: transform 0.15s ease; .hdx-motion(); }
         &.is-open .c-text-button__icon  { transform: rotate(180deg); }
     }
 

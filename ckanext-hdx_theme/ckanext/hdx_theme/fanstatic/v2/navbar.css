@@ -410,6 +410,7 @@
   z-index: 1040;
   transform: translateY(-110%);
   visibility: hidden;
+  transition: transform var(--hdx-duration-base) var(--hdx-ease-out), visibility var(--hdx-duration-base) var(--hdx-ease-out);
   overflow: hidden;
 }
 .hdx-v2-offcanvas.is-open {
@@ -560,9 +561,13 @@
   padding: var(--hdx-space-5) var(--hdx-space-4);
   display: flex;
   flex-direction: column;
+  transform: translateX(100%);
+  visibility: hidden;
+  transition: transform var(--hdx-duration-base) var(--hdx-ease-out), visibility var(--hdx-duration-base) var(--hdx-ease-out);
 }
-.hdx-v2-offcanvas__level[hidden] {
-  display: none;
+.hdx-v2-offcanvas__level.is-open {
+  transform: translateX(0);
+  visibility: visible;
 }
 .hdx-v2-offcanvas__back {
   display: flex;

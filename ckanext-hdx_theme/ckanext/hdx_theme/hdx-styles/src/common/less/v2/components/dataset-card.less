@@ -5,7 +5,7 @@
 // Requirement:  llm_docs/redesign/requirements/029-implement-dataset-card-component.md
 // ============================================================
 
-@import "../breakpoints.less";
+@import "../mixins.less";
 
 // ── Local tokens ─────────────────────────────────────────────
 
@@ -25,6 +25,7 @@
     flex-direction:   column;
     align-items:      stretch;
     transition:       border-color 0.15s ease;
+    .hdx-motion();
     font-family:      var(--hdx-font-body);
 
     &:hover {
@@ -125,6 +126,7 @@
 
         .c-text-button__icon {
             transition: transform 0.15s ease;
+            .hdx-motion();
         }
     }
 

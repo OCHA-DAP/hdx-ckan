@@ -4,6 +4,8 @@
 // Figma source: "List item"
 // ============================================================
 
+@import "../mixins.less";
+
 // ── Local tokens ────────────────────────────────────────────
 @c-list-item-text-hover:     var(--hdx-primary-5);            // #1862d8
 
@@ -20,6 +22,7 @@
     line-height: var(--hdx-lh-normal);
     color: var(--hdx-neutral-95);  // #101212
     transition: color 0.15s ease;
+    .hdx-motion();
     padding: var(--hdx-space-15) 0;
 
     // Text-only list item

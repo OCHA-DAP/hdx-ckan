@@ -2,6 +2,7 @@
 // The `:root` block is compiled directly with the V2 foundation bundle.
 @import "colors.less";
 @import "elevation.less";
+@import "motion.less";
 @import "overlays.less";
 @import "radius.less";
 @import "spacing.less";
@@ -131,6 +132,11 @@
   --hdx-fw-bold: @hdx-fw-bold;
   --hdx-lh-tight: @hdx-lh-tight;
   --hdx-lh-normal: @hdx-lh-normal;
+  --hdx-duration-base: @hdx-duration-base;
+  --hdx-duration-slow: @hdx-duration-slow;
+  --hdx-ease-out: @hdx-ease-out;
+  --hdx-ease-linear: @hdx-ease-linear;
+  --hdx-ease-emphasized: @hdx-ease-emphasized;
 }
 
 // ── Screen-reader utilities ──────────────────────────────────────
@@ -156,20 +162,4 @@
     overflow:   visible;
     clip:       auto;
     white-space: normal;
-}
-
-// ── Reduced-motion override (C-07, V-15) ────────────────────────
-// Globally disables transitions and animations when the user has
-// requested reduced motion. Covers all current and future components
-// without requiring per-component wrappers.
-
-@media (prefers-reduced-motion: reduce) {
-    *,
-    *::before,
-    *::after {
-        animation-duration:        0.01ms !important;
-        animation-iteration-count: 1      !important;
-        transition-duration:       0.01ms !important;
-        scroll-behavior:           auto   !important;
-    }
 }

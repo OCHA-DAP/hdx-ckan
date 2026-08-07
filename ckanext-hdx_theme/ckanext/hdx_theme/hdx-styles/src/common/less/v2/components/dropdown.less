@@ -60,6 +60,7 @@
         box-shadow:       @c-dropdown-panel-shadow;
         cursor:           pointer;
         transition:       background-color 0.15s ease, border-color 0.15s ease;
+        .hdx-motion();
         color:            var(--hdx-neutral-8);
 
         &:hover {
@@ -108,6 +109,7 @@
         width:      1rem;
         flex-shrink: 0;
         transition: transform 0.2s ease;
+        .hdx-motion();
         line-height: 0;
 
         .c-dropdown.is-open & {
@@ -181,6 +183,7 @@
             cursor:             pointer;
             width:              100%;
             transition:         background-color 0.15s ease, border-color 0.15s ease;
+            .hdx-motion();
 
             &:hover {
                 background-color: @c-dropdown-bg-hover;
@@ -402,6 +405,7 @@
         text-overflow:    ellipsis;
         white-space:      nowrap;
         transition:       background-color 0.15s ease, border-color 0.15s ease;
+        .hdx-motion();
 
         &:hover {
             background-color: var(--hdx-neutral-01);

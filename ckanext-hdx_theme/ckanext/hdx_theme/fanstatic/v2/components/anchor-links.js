@@ -49,7 +49,13 @@
         };
     }
 
-    var ease = cubicBezier(0.6, 0, 0.3, 1);
+    function parseCubicBezier(value) {
+        var match = /cubic-bezier\(([^)]+)\)/.exec(value || '');
+        var parts = (match ? match[1] : '0.6, 0, 0.3, 1').split(',').map(parseFloat);
+        return cubicBezier(parts[0], parts[1], parts[2], parts[3]);
+    }
+
+    var ease = parseCubicBezier(window.hdxV2.token('--hdx-ease-emphasized'));
 
     // ── Smooth scroll ────────────────────────────────────────────
     // Offset is read from the target's CSS scroll-margin-top so the same
@@ -67,14 +73,14 @@
 
         // Respect the user's motion preference (V-10 / C-07): jump instantly,
         // but still honor scrollMargin + extraOffset (scrollIntoView cannot).
-        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        if (window.hdxV2.prefersReducedMotion()) {
             if (isWindow) { window.scrollTo(0, destination); }
             else          { container.scrollTop = destination; }
             return;
         }
 
         var distance     = destination - start;
-        var duration     = 500;
+        var duration     = window.hdxV2.tokenPx('--hdx-duration-slow');
         var startTime    = null;
 
         function step(timestamp) {

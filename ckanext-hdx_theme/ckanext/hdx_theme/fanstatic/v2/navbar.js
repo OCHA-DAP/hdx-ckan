@@ -95,7 +95,7 @@
     var primary = el.querySelector('.hdx-v2-offcanvas__primary');
     var levels = el.querySelectorAll('.hdx-v2-offcanvas__level');
     if (primary) primary.hidden = false;
-    levels.forEach(function (lvl) { lvl.hidden = true; });
+    levels.forEach(function (lvl) { lvl.classList.remove('is-open'); });
     // Release focus trap and return focus to hamburger (V-02)
     if (offcanvasTrap) {
       offcanvasTrap.deactivate();
@@ -179,7 +179,7 @@
       var primary = offcanvasEl.querySelector('.hdx-v2-offcanvas__primary');
       var levelEl = document.getElementById(levelId);
       if (primary) primary.hidden = true;
-      if (levelEl) levelEl.hidden = false;
+      if (levelEl) levelEl.classList.add('is-open');
       return;
     }
 
@@ -189,8 +189,8 @@
       var offcanvasEl2 = getOffcanvas();
       if (!offcanvasEl2) return;
       var primary2 = offcanvasEl2.querySelector('.hdx-v2-offcanvas__primary');
-      var openLevel = offcanvasEl2.querySelector('.hdx-v2-offcanvas__level:not([hidden])');
-      if (openLevel) openLevel.hidden = true;
+      var openLevel = offcanvasEl2.querySelector('.hdx-v2-offcanvas__level.is-open');
+      if (openLevel) openLevel.classList.remove('is-open');
       if (primary2) primary2.hidden = false;
       return;
     }

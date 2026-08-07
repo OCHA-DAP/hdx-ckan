@@ -7,7 +7,7 @@
 // Figma source: "Selection items / Radio / Toggle / Graph point"
 // ============================================================
 
-@import "../breakpoints.less";
+@import "../mixins.less";
 
 // ── Palette ──────────────────────────────────────────────────
 @c-sel-light-bg:     var(--hdx-neutral-0);       // #fff
@@ -52,6 +52,7 @@
     font-weight:      var(--hdx-fw-medium);
     color:            var(--hdx-neutral-8);
     transition:       background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+    .hdx-motion();
 
     &__icon {
         line-height: 0;
@@ -188,6 +189,7 @@
         box-sizing:    border-box;
         background:    var(--hdx-neutral-0);
         transition:    border-color 0.15s ease;
+        .hdx-motion();
     }
 
     // Inner dot (checked)
@@ -201,6 +203,7 @@
         border-radius:    100%;
         background-color: transparent;
         transition:       background-color 0.15s ease;
+        .hdx-motion();
     }
 
     &__body {
@@ -264,6 +267,7 @@
     padding:         var(--hdx-space-15);  // 2 px inner inset
     box-sizing:      border-box;
     transition:      background-color 0.2s ease;
+    .hdx-motion();
     flex-shrink:     0;
 
     &__thumb {
@@ -273,6 +277,7 @@
         background-color: var(--hdx-neutral-0);  // white
         position:      relative;
         transition:    transform 0.2s ease;
+        .hdx-motion();
         overflow:      hidden;
         flex-shrink:   0;
     }
@@ -314,6 +319,7 @@
         background-color: var(--hdx-primary-5);
         opacity:          0;
         transition:       opacity 0.15s ease;
+        .hdx-motion();
         z-index:          0;
     }
 

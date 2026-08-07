@@ -14,7 +14,7 @@
 // not compile-time), so LESS variables are required here.
 // ============================================================
 
-@import "breakpoints.less";
+@import "mixins.less";
 
 
 @hdx-top-bar-h: 2.125rem;
@@ -286,7 +286,7 @@
         align-items: stretch;
 
         // Rotate chevron when panel is open (mirrors user-menu chevron pattern)
-        > .c-nav-item .c-nav-item__chevron { transition: transform 0.15s; }
+        > .c-nav-item .c-nav-item__chevron { transition: transform 0.15s; .hdx-motion(); }
         > .c-nav-item[aria-expanded="true"] .c-nav-item__chevron { transform: rotate(180deg); }
     }
 }
@@ -419,6 +419,7 @@
         width:       1.25rem;
         flex-shrink: 0;
         transition:  transform 0.15s;
+        .hdx-motion();
     }
 
     &__section-toggle[aria-expanded="false"] {
@@ -493,7 +494,9 @@
     z-index:    1040;
     transform:  translateY(-110%);
     visibility: hidden;
-    //transition: transform 0.25s ease, visibility 0.25s;
+    transition: transform var(--hdx-duration-base) var(--hdx-ease-out),
+                visibility var(--hdx-duration-base) var(--hdx-ease-out);
+    .hdx-motion();
     overflow:   hidden;
 
     &.is-open {
@@ -610,6 +613,7 @@
         width:       1.25rem;
         flex-shrink: 0;
         transition:  transform 0.15s;
+        .hdx-motion();
         color:       var(--hdx-overlay-white-90);
     }
 
@@ -682,8 +686,16 @@
         padding:         var(--hdx-space-5) var(--hdx-space-4);
         display:         flex;
         flex-direction:  column;
+        transform:       translateX(100%);
+        visibility:      hidden;
+        transition:      transform var(--hdx-duration-base) var(--hdx-ease-out),
+                         visibility var(--hdx-duration-base) var(--hdx-ease-out);
+        .hdx-motion();
 
-        &[hidden] { display: none; }
+        &.is-open {
+            transform:  translateX(0);
+            visibility: visible;
+        }
     }
 
     // ── Back button ──────────────────────────────────────────

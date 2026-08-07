@@ -1,4 +1,4 @@
-@import "breakpoints.less";
+@import "mixins.less";
 
 .hdx-v2-top-bar {
     background-color: var(--hdx-brand-85);
@@ -70,6 +70,7 @@
             height: auto;
             display: block;
             transition: transform 0.2s ease;
+            .hdx-motion();
         }
     }
 

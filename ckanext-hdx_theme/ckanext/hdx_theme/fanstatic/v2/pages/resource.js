@@ -21,7 +21,7 @@
         if (location.hash !== '#api-access') return;
         setTimeout(function () {
             var target = document.getElementById('api-access');
-            if (target) target.scrollIntoView();
+            if (target) window.hdxSmoothScrollTo(target);
         }, 100);
     }
 

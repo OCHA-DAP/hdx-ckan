@@ -28,16 +28,11 @@
   width: var(--hdx-space-2);
   height: var(--bar-height, 10%);
   background-color: var(--hdx-overlay-white-20);
-  transition: background-color 300ms linear;
+  transition: background-color var(--hdx-duration-base) var(--hdx-ease-linear);
   flex-shrink: 0;
 }
 .hdx-v2-barchart__bar.is-active {
   background-color: var(--hdx-overlay-white-90);
-}
-@media (prefers-reduced-motion: reduce) {
-  .hdx-v2-barchart__bar {
-    transition: none;
-  }
 }
 .hdx-v2-barchart__label {
   position: absolute;
@@ -52,13 +47,8 @@
   font-family: var(--hdx-font-body);
   font-size: var(--hdx-fs-s);
   transform: translateX(var(--label-offset, 0px));
-  transition: transform 300ms linear, top 300ms linear;
+  transition: transform var(--hdx-duration-base) var(--hdx-ease-linear), top var(--hdx-duration-base) var(--hdx-ease-linear);
   pointer-events: none;
-}
-@media (prefers-reduced-motion: reduce) {
-  .hdx-v2-barchart__label {
-    transition: none;
-  }
 }
 .hdx-v2-barchart__label-name,
 .hdx-v2-barchart__label-count {

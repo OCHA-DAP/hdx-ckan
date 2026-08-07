@@ -5,7 +5,7 @@
 // Requirement:  llm_docs/redesign/requirements/resource-card.md
 // ============================================================
 
-@import "../breakpoints.less";
+@import "../mixins.less";
 
 // ── Local tokens ─────────────────────────────────────────────
 
@@ -26,6 +26,7 @@
     padding:          var(--hdx-space-4);  // 16px
     font-family:      var(--hdx-font-body);
     transition:       border-color 0.15s ease;
+    .hdx-motion();
     position:         relative;
 
     &:hover {
@@ -194,6 +195,7 @@
 
     .c-text-button__icon {
         transition: transform 0.15s ease;
+        .hdx-motion();
     }
 
     // ── __footer ─────────────────────────────────────────────

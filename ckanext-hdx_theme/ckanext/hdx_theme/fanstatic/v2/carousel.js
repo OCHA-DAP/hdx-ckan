@@ -33,6 +33,10 @@
         var busy  = false; // animation lock
         var ready = false; // initialised flag
 
+        var reducedMotion  = window.hdxV2.prefersReducedMotion();
+        var duration       = window.hdxV2.tokenPx('--hdx-duration-base');
+        var transitionRule = reducedMotion ? 'none' : ('left ' + duration + 'ms ' + window.hdxV2.token('--hdx-ease-out'));
+
         function getInner() {
             var c = document.querySelector(cSel);
             return c ? c.firstElementChild : null;
@@ -89,7 +93,7 @@
 
             measure();
 
-            inner.style.transition = 'left 350ms';
+            inner.style.transition = transitionRule;
             inner.style.left = -slot + 'px';
 
             // Touch swipe via Hammer.js
@@ -138,7 +142,7 @@
                 inner.style.transition = 'none';
                 inner.style.left = (-idx * slot) + 'px';
                 inner.offsetWidth; // force reflow before re-enabling transition
-                inner.style.transition = 'left 350ms';
+                inner.style.transition = transitionRule;
             }, 150);
         });
 
@@ -170,7 +174,7 @@
                         inner.style.left = -slot + 'px';
                     }
                     inner.offsetWidth; // force reflow before re-enabling transition
-                    inner.style.transition = 'left 350ms';
+                    inner.style.transition = transitionRule;
                 }
                 busy = false;
             }
@@ -179,8 +183,12 @@
                 if (e.target !== inner || e.propertyName !== 'left') return;
                 settle();
             }
-            inner.addEventListener('transitionend', onEnd);
-            window.setTimeout(settle, 400);        // fallback > 350ms transition
+            if (reducedMotion) {
+                settle();                              // no transition fires — settle immediately
+            } else {
+                inner.addEventListener('transitionend', onEnd);
+                window.setTimeout(settle, duration + 50);  // fallback > transition duration
+            }
         }
 
         // ── Activate dot n (1-based) ───────────────────────────────────────────

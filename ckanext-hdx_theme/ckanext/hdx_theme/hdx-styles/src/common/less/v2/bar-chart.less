@@ -31,14 +31,13 @@
         width:            var(--hdx-space-2);  // 8px
         height:           var(--bar-height, 10%);
         background-color: var(--hdx-overlay-white-20);
-        transition:       background-color 300ms linear;
+        transition:       background-color var(--hdx-duration-base) var(--hdx-ease-linear);
         flex-shrink:      0;
+        .hdx-motion();
 
         &.is-active {
             background-color: var(--hdx-overlay-white-90);
         }
-
-        @media (prefers-reduced-motion: reduce) { transition: none; }
     }
 
     &__label {
@@ -55,10 +54,10 @@
         font-family:    var(--hdx-font-body);
         font-size:      var(--hdx-fs-s);
         transform:      translateX(var(--label-offset, 0px));
-        transition:     transform 300ms linear, top 300ms linear;
+        transition:     transform var(--hdx-duration-base) var(--hdx-ease-linear),
+                        top       var(--hdx-duration-base) var(--hdx-ease-linear);
         pointer-events: none;
-
-        @media (prefers-reduced-motion: reduce) { transition: none; }
+        .hdx-motion();
     }
 
     &__label-name,
