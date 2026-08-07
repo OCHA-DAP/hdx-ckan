@@ -16,7 +16,7 @@
     <ul class="hdx-v2-notifications__list">
       {% for notification in notif.list %}
         <li class="hdx-v2-notifications__item">
-          {% include notification.html_template %}
+          {% snippet notification.html_template, notification=notification, v2=true %}
         </li>
       {% endfor %}
     </ul>

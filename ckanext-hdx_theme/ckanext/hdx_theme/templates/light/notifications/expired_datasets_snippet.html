@@ -4,18 +4,33 @@ Example:
   {% snippet 'light/notifications/expired_datasets_snippet.html', notification=notification %}
 
 #}
-{% set sysadmin_tag = '[datasets]' if notification.is_sysadmin else '' %}
-{% set body %}
-  {{ _('You have') }}
+{% if v2 %}
+  {% set sysadmin_tag = '[datasets]' if notification.is_sysadmin else '' %}
+  {% set body %}
+    {{ _('You have') }}
+    <a href="{{ notification.my_dashboard_url }}"
+       data-module="hdx_notifications_main" data-module-personal="true" data-module-type="item">
+      {{ notification.count }}
+      {{ _('datasets') if notification.count > 1 else _('dataset') }}
+    </a>
+    {{ _('that need to be updated.') if notification.count > 1 else _('that needs to be updated.') }}
+  {% endset %}
+  {% snippet 'v2/components/notification-item.html',
+      sysadmin_tag=sysadmin_tag, for_sysadmin=False,
+      date=notification.last_date, body=body,
+      url=notification.my_dashboard_url, data_personal=True %}
+{% else %}
+  {% if notification.is_sysadmin %} [datasets] {% endif %}
+
+  You have
   <a href="{{ notification.my_dashboard_url }}"
      data-module="hdx_notifications_main" data-module-personal="true" data-module-type="item">
-    {{ notification.count }}
-    {{ _('datasets') if notification.count > 1 else _('dataset') }}
+
+      {{ notification.count }}
+      {{ 'datasets' if notification.count > 1 else 'dataset' }}
   </a>
-  {{ _('that need to be updated.') if notification.count > 1 else _('that needs to be updated.') }}
-{% endset %}
-{% snippet 'v2/components/notification-item.html',
-    sysadmin_tag=sysadmin_tag, for_sysadmin=False,
-    date=notification.last_date, body=body,
-    url=notification.my_dashboard_url, data_personal=True %}
+  that {{ 'need' if notification.count > 1 else 'needs' }} to be updated.
+  <br />
+  <span class="date">{{ notification.last_date }}</span>
+{% endif %}
 
