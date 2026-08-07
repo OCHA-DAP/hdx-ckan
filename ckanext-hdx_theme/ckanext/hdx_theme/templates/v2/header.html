@@ -248,10 +248,11 @@
           {% snippet 'v2/components/button.html',
               style='secondary', size='m', label=_('Add data'),
               tag='a', href=add_data_obj.href,
-              extra_classes='hdx-v2-navbar__add-data',
+              extra_classes='hdx-v2-navbar__add-data contribute-popup-init',
               attrs={'onclick': add_data_obj.onclick,
                      'data-module': add_data_obj.data_module,
-                     'data-module-link_type': add_data_obj.data_module_link_type} %}
+                     'data-module-link_type': add_data_obj.data_module_link_type,
+                     'dataset-id': 'null' if h.check_access('package_create') else 'DO_IGNORE'} %}
         {% else %}
           {% snippet 'v2/components/button.html',
               style='secondary', size='m', label=_('Log in'),

@@ -26,7 +26,6 @@ from ckanext.hdx_users.helpers.constants import (
     ONBOARDING_MAILCHIMP_OPTIN_KEY,
     ONBOARDING_USER_EMAIL_UPDATED_KEY,
 )
-from ckanext.hdx_users.views.user_view_helper import CaptchaNotValid, OnbCaptchaErr, error_message
 from ckanext.hdx_users.logic.schema import onboarding_user_new_form_schema, onboarding_user_change_email_form_schema
 
 log = logging.getLogger(__name__)
@@ -123,13 +122,10 @@ class UserOnboardingView(MethodView):
             captcha_response = data_dict.get('g-recaptcha-response', None)
             usr_h.is_valid_captcha(captcha_response=captcha_response)
         except ValidationError as e:
-            error_summary = e.error_summary
-            if error_summary == CaptchaNotValid:
-                return OnbCaptchaErr
-            return error_message(error_summary)
+            return self.get(data_dict, errors={}, error_summary=e.error_summary)
         except Exception as e:
             log.error(e)
-            return error_message('Something went wrong. Please contact support.')
+            return self.get(data_dict, errors={}, error_summary='Something went wrong. Please contact support.')
 
         _ignore_auth = _auth_user_obj = None
         user_obj = user_notif_h.get_shadow_user_obj_by_email(data_dict.get('email'))

@@ -275,7 +275,9 @@
               style='tertiary', size='m', label='Edit Dataset',
               icon_position='left', icon_src='v2/icons/edit.svg',
               tag='a', href='#',
-              attrs={'onclick': "contributeAddDetails('" ~ pkg_id ~ "', 'dataset')"} %}
+              extra_classes='contribute-popup-init',
+              attrs={'onclick': "contributeAddDetails('" ~ pkg_id ~ "', 'dataset')",
+                     'dataset-id': pkg_id} %}
         {% endif %}
         {% if not hide_membership and membership and membership.display_group_message %}
           {% snippet 'v2/components/text-button.html',

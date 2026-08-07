@@ -47,6 +47,10 @@
     <h1 class="hdx-v2-signup-form-page__heading">{{ CONST.PAGE_TITLE }}</h1>
     <p class="hdx-v2-signup-form-page__mandatory-note">{{ CONST.MANDATORY_HELP }}</p>
 
+    {% if error_summary %}
+      {% snippet 'v2/components/alert.html', message=error_summary %}
+    {% endif %}
+
     <div class="hdx-v2-signup-form-page__fields">
 
       <div class="c-form-field">
