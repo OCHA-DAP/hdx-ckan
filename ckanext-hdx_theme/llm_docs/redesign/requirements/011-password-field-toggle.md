@@ -72,7 +72,7 @@ Inside the existing `.c-search-input` block, add a `&__toggle` rule alongside `&
 }
 ```
 
-### `fanstatic/v2/components/password-toggle.js` (new file)
+### `fanstatic/v2/components/input-field.js`
 
 Vanilla JS only. Scoped to `.c-search-input__toggle` so it never touches non-password inputs.
 
@@ -103,7 +103,7 @@ v2-components-scripts:
   <<: *common-js
   output: ckanext-hdx_theme/%(version)s_components-scripts.js
   contents:
-    - v2/components/password-toggle.js
+    - v2/components/input-field.js
 ```
 
 ### Demo page (`templates/v2/components.html`)

@@ -90,8 +90,7 @@
 
         svg {
             display: block;
-            width:   var(--hdx-space-5);
-            height:  var(--hdx-space-5);
+            .hdx-icon-size(var(--hdx-space-5));
         }
     }
 
@@ -136,5 +135,26 @@
         a {
             color: inherit;
         }
+    }
+}
+
+// ── c-signup-tier-row — wrapper for a set of tier cards ────────
+// Stacked at SM; side by side (equal-height) at MD+; wider gap at XL.
+// Moved out of pages/signup.less (task 070 B2) so the showcase can
+// reuse the real layout instead of hand-rolling its own row.
+
+.c-signup-tier-row {
+    display:        flex;
+    flex-direction: column;
+    gap:            var(--hdx-space-4);
+    align-self:     stretch;
+
+    @media (min-width: @hdx-bp-md) {
+        flex-direction: row;
+        align-items:    stretch;
+    }
+
+    @media (min-width: @hdx-bp-xl) {
+        gap: var(--hdx-space-5);
     }
 }

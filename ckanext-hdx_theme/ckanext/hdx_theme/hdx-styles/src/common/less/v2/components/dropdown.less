@@ -70,8 +70,7 @@
         }
 
         &:focus-visible {
-            outline:        2px solid var(--hdx-primary-5);
-            outline-offset: 2px;
+            .hdx-focus-ring();
         }
     }
 
@@ -200,8 +199,7 @@
             color:          @c-dropdown-text;
 
             svg {
-                width:   var(--hdx-space-4);
-                height:  var(--hdx-space-4);
+                .hdx-icon-size(var(--hdx-space-4));
                 display: block;
             }
         }
@@ -261,8 +259,7 @@
             color:   inherit;   // follows the trigger's hover color
 
             svg {
-                width:   var(--hdx-space-4);   // 16 px — Figma trailing chevron
-                height:  var(--hdx-space-4);
+                .hdx-icon-size(var(--hdx-space-4));   // 16 px — Figma trailing chevron
                 display: block;
             }
         }

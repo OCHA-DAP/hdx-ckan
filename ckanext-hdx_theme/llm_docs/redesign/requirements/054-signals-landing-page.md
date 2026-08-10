@@ -247,7 +247,7 @@ SECTIONS_CONSTANTS = [
 ### HAPI Side-Effect Change
 
 The `c-anchor-links-mobile` dropdown must also be **removed from the HAPI landing page**
-(`templates/landing_pages/hapi.html` + `less/v2/hapi-landing-page.less`) to apply the same
+(`templates/landing_pages/hapi.html` + `less/v2/pages/hapi-landing.less`) to apply the same
 XL-only decision consistently. This is a breaking change to an already-shipped template —
 verify no regression before merging.
 
@@ -639,7 +639,7 @@ dropdown call:
 {% snippet 'v2/components/anchor-links.html', items=nav_items, mobile_only=True %}
 ```
 
-From `less/v2/hapi-landing-page.less` — remove any `.c-anchor-links-mobile` responsive rules.
+From `less/v2/pages/hapi-landing.less` — remove any `.c-anchor-links-mobile` responsive rules.
 
 ---
 
@@ -928,7 +928,7 @@ v2-signals-landing-page-scripts:
 | `templates/v2/components/signal-card.html` | New `c-signal-card` component snippet |
 | `less/v2/components/signal-card.less` | Signal card LESS |
 | `less/v2/signals-landing-page.less` | Page-specific LESS |
-| `fanstatic/v2/signals-landing-page.css` | Compiled output (generated) |
+| `fanstatic/v2/pages/signals-landing.css` | Compiled output (generated) |
 | `fanstatic/v2/carousel.js` | Generic shared carousel module |
 | `fanstatic/v2/signals-carousel.js` | Thin init wrapper for signals carousel |
 
@@ -945,4 +945,4 @@ v2-signals-landing-page-scripts:
 | `templates/v2/components/page-header.html` | Add optional `cta_label`/`cta_href` params |
 | `less/v2/components/page-header.less` | Add `.c-page-header__cta` styles |
 | `templates/landing_pages/hapi.html` | Remove `c-anchor-links-mobile` call from primary block |
-| `less/v2/hapi-landing-page.less` | Remove mobile dropdown styles |
+| `less/v2/pages/hapi-landing.less` | Remove mobile dropdown styles |

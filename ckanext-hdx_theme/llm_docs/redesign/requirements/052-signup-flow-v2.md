@@ -599,7 +599,7 @@ The `{% block analytics_account_type %}` block must be reproduced inside the v2 
 | MD (768px–1280px / `@hdx-bp-md` to `@hdx-bp-xl`) | 3-column flex row, `var(--hdx-space-6)` card padding | max-width 580px, centred, 2rem top pad | Visible |
 | SM (< 768px / `@hdx-bp-md`) | Single-column stack, `var(--hdx-space-6)` card padding | Full width, `var(--hdx-space-6)` top pad | Hidden (`display: none`) |
 
-Tier card layout LESS (`hdx-styles/src/common/less/v2/signup-page.less`):
+Tier card layout LESS (`hdx-styles/src/common/less/v2/pages/signup.less`):
 ```less
 .hdx-v2-signup-tiers-page__tiers {
   display: flex;
@@ -614,7 +614,7 @@ Tier card layout LESS (`hdx-styles/src/common/less/v2/signup-page.less`):
 Form container LESS:
 ```less
 .hdx-v2-signup-form-page {
-  // See hdx-styles/src/common/less/v2/signup-page.less for full responsive rules.
+  // See hdx-styles/src/common/less/v2/pages/signup.less for full responsive rules.
   // __card child handles the centred max-width column (50% at XL, 80% at MD, 100% at SM).
 }
 ```
@@ -632,10 +632,10 @@ Form container LESS:
 - `hdx-styles/src/common/less/v2/components/signup-tier.less`
 
 ### 8.3 Modified LESS
-- `hdx-styles/src/common/less/v2/components/index.less` — add imports:
-  ```less
-  @import 'step-pager';
-  @import 'signup-tier';
+- No aggregator file exists; `fanstatic/webassets.yml` lists each compiled component file individually — add:
+  ```yaml
+  - v2/components/step-pager.css
+  - v2/components/signup-tier.css
   ```
 
 ### 8.4 Modified Templates (add `{% if v2 %}` blocks)
@@ -681,7 +681,7 @@ Two existing scripts were rewritten in place (no `v2/onboarding/` subdirectory c
 |---|---|---|
 | `fanstatic/onboarding/came-from-input.js` | Converted in place to vanilla JS | Targets `#came-from-input`; calls `hdxUtil.net.getOnboardingFlowData()` |
 | `fanstatic/onboarding/confirm-page-leave.js` | Converted in place to vanilla JS | Targets `#user-info-form`, `#user-info-cancel-button`, `#user-info-submit-button` |
-| `fanstatic/onboarding/verify-email.js` | Not rewritten — legacy bundle used | `hdx-verify-email-scripts` loaded on verify-email page as-is |
+| `fanstatic/v2/pages/verify-email.js` | Not rewritten — legacy bundle used | `hdx-verify-email-scripts` loaded on verify-email page as-is |
 | `fanstatic/onboarding/toggle-password-visibility.js` | Dropped from v2 bundles | Handled by `v2/components/input-field.js` via `.c-search-input` |
 
 ---

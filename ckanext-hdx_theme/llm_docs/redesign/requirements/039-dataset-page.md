@@ -86,10 +86,10 @@ The `{% block secondary %}` wraps in `.hdx-v2-dataset-sidebar` (XL+ only via CSS
 - CSS class on wrapper: `hdx-v2-dataset-sidebar` (set via `sidebar_class`)
 - Shown only at XL (≥80rem), hidden at MD/SM
 - Content: "Dataset details" heading (`.c-anchor-links__heading`) + `c-anchor-links` list
-- Sticky: `.c-anchor-links-wrapper { position: sticky; top: 4.5rem }` (in `navigation.less`)
+- Sticky: `.c-anchor-links-wrapper { position: sticky; top: 4.5rem }` (in `anchor-links.less`)
 
 **Mobile/tablet dropdown**:
-- CSS class: `c-anchor-links-mobile` (styles in `navigation.less`)
+- CSS class: `c-anchor-links-mobile` (styles in `anchor-links.less`)
 - JS `data-module="anchor-dropdown"` on wrapper
 - Hidden at XL, shown and sticky (`position: fixed; top: 7rem`) at MD/SM
 - Pattern: button (`.c-anchor-links-mobile__toggle`) → toggled `<ul class="c-anchor-links-mobile__panel">` below
@@ -142,7 +142,7 @@ Showcases link is added **only when `showcase_list` is non-empty**. Interactive 
 {% endif %}
 ```
 
-The map itself (MapLibre GL — `fanstatic/shape-view.js`), its on-map hover info panel, and its layer-toggle control are pre-existing and untouched — only the v2 section wrapper/heading and anchor-nav wiring are new. Loads `hdx_theme/crisis-base-styles` (in `{% block styles %}`) and `hdx_theme/shape-view-scripts` (in `{% block scripts %}`) only when `shapes` is truthy.
+The map itself (MapLibre GL — `fanstatic/v2/pages/shape-view.js`), its on-map hover info panel, and its layer-toggle control are pre-existing and untouched — only the v2 section wrapper/heading and anchor-nav wiring are new. Loads `hdx_theme/crisis-base-styles` (in `{% block styles %}`) and `hdx_theme/shape-view-scripts` (in `{% block scripts %}`) only when `shapes` is truthy.
 
 Note: `package/hdx-read-shape.html` (the pre-v2 template that used to own this markup via an orphaned `pre_primary_content` block override) is no longer rendered by any controller path as of this change; kept in the repo unused.
 
@@ -453,14 +453,14 @@ Used in both `page-header.html` (header metadata strip) and the inlined metadata
 **Tooltip positioning** — right-anchored to prevent overflow: `right: 0; left: auto; transform: none`.
 
 **Alignment**:
-- Header (`styles.less` `.c-tooltip-anchor`): `margin-left: auto` — right-aligned in label-row.
+- Header (`page-header.less` `.c-tooltip-anchor`): `margin-left: auto` — right-aligned in label-row.
 - Metadata section: no `margin-left: auto` — left-aligned immediately after label text.
 
 **JS** — `page-header.js` adds/removes `.is-open` on `.c-info-icon` on click; queries `.c-tooltip-anchor` for wrapper; document click closes all.
 
 ---
 
-### `fanstatic/v2/dataset.js` — in `v2-dataset-scripts`
+### `fanstatic/v2/pages/dataset.js` — in `v2-dataset-scripts`
 
 Contains **only section accordion logic** (all anchor/scroll logic is in `anchor-links.js` above).
 
@@ -473,9 +473,9 @@ Targets `.hdx-v2-dataset-section--collapsible .hdx-v2-dataset-section__header`.
 
 ---
 
-## CSS: `fanstatic/v2/dataset.css`
+## CSS: `fanstatic/v2/pages/dataset.css`
 
-Compiled from LESS source at `hdx-styles/src/common/less/v2/dataset.less`.
+Compiled from LESS source at `hdx-styles/src/common/less/v2/pages/dataset.less`.
 Register in new `v2-dataset-styles` bundle (preloads `v2-page-styles`).
 
 ### Layout classes
@@ -501,7 +501,7 @@ Register in new `v2-dataset-styles` bundle (preloads `v2-page-styles`).
 
 At XL (≥80rem): the generic `__sidebar` class gives 25% width (percentage, not fixed rem); `--xl-only` hides it at MD/SM. `.hdx-v2-dataset-sidebar` adds only `padding: var(--hdx-space-12) 0` at XL. The search sidebar uses the same generic classes plus its page-specific border-right/padding.
 
-### Anchor nav (desktop + mobile) — in `navigation.less`, NOT in `dataset.less`
+### Anchor nav (desktop + mobile) — in `anchor-links.less`, NOT in `dataset.less`
 
 Desktop wrapper and heading:
 ```
@@ -674,10 +674,10 @@ Standard `{% set items = items + [...] %}` fails in Jinja2 due to scoping — us
 |------|------|-------|
 | `templates/v2/components/showcase-card.html` | Jinja template | Showcase card component |
 | `fanstatic/v2/components/anchor-links.js` | JavaScript | Smooth scroll, anchor dropdown, active tracking (in `v2-components-scripts`) |
-| `fanstatic/v2/dataset.js` | JavaScript | Section accordions only (in `v2-dataset-scripts`) |
-| `fanstatic/v2/dataset.css` | CSS | Dataset page styles |
+| `fanstatic/v2/pages/dataset.js` | JavaScript | Section accordions only (in `v2-dataset-scripts`) |
+| `fanstatic/v2/pages/dataset.css` | CSS | Dataset page styles |
 | `fanstatic/v2/components/showcase-card.css` | CSS | Showcase card component styles |
-| `hdx-styles/src/common/less/v2/dataset.less` | LESS | Source for `dataset.css` |
+| `hdx-styles/src/common/less/v2/pages/dataset.less` | LESS | Source for `dataset.css` |
 | `hdx-styles/src/common/less/v2/components/showcase-card.less` | LESS | Source for `showcase-card.css` |
 
 ### Files to Modify
@@ -691,11 +691,11 @@ Standard `{% set items = items + [...] %}` fails in Jinja2 due to scoping — us
 | `templates/v2/components/anchor-links.html` | Added `heading`, `with_mobile_dropdown`, and `mobile_only` params |
 | `templates/v2/components/resource-card.html` | Renamed `ga_resource_title` → `resource_title`, `ga_resource_id` → `resource_id` |
 | `templates/package/snippets/resource_item_v2.html` | Updated to use new param names |
-| `hdx-styles/src/common/less/v2/dataset.less` | Sidebar padding (layout via generic `hdx-v2-content-columns` classes); section `border-top` removed; tooltip hover trigger + right-anchor |
-| `hdx-styles/src/common/less/v2/styles.less` | Header `.c-tooltip-anchor`: hover + `.is-open` trigger; `right: 0` positioning |
+| `hdx-styles/src/common/less/v2/pages/dataset.less` | Sidebar padding (layout via generic `hdx-v2-content-columns` classes); section `border-top` removed; tooltip hover trigger + right-anchor |
+| `hdx-styles/src/common/less/v2/components/page-header.less` | Header `.c-tooltip-anchor`: hover + `.is-open` trigger; `right: 0` positioning |
 | `hdx-styles/src/common/less/v2/components/label.less` | Added `.c-info-icon` and `.c-tooltip-anchor` |
-| `hdx-styles/src/common/less/v2/search.less` | `.hdx-v2-search-sidebar` at XL: `flex: 0 0 25%` |
-| `hdx-styles/src/common/less/v2/components/navigation.less` | Added `.c-anchor-links-wrapper`, `.c-anchor-links__heading`, `.c-anchor-links-mobile` blocks |
+| `hdx-styles/src/common/less/v2/pages/search.less` | `.hdx-v2-search-sidebar` at XL: `flex: 0 0 25%` |
+| `hdx-styles/src/common/less/v2/components/anchor-links.less` | Added `.c-anchor-links-wrapper`, `.c-anchor-links__heading`, `.c-anchor-links-mobile` blocks |
 | `hdx-styles/src/common/less/v2/components/resource-card.less` | Added `.resource-list` / `.resource-item` reset styles |
 | `fanstatic/v2/components/page-header.js` | Tooltip: target `.c-info-icon` + toggle `.is-open`; `.c-tooltip-anchor` wrapper; overflow reveal uses `[data-header-meta-overflow]` |
 | `fanstatic/webassets.yml` | Added `anchor-links.js` to `v2-components-scripts`; `showcase-card.css` to `v2-components-styles`; new `v2-dataset-styles`/`v2-dataset-scripts` bundles |

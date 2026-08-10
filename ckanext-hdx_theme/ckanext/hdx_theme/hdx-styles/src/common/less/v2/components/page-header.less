@@ -134,10 +134,7 @@
         .hdx-body-m();
         color:              var(--hdx-neutral-85);
         margin:             0;
-        display:            -webkit-box;
-        -webkit-line-clamp: 3;
-        -webkit-box-orient: vertical;
-        overflow:           hidden;
+        .hdx-line-clamp(3);
 
         a {
           color: inherit;
@@ -145,8 +142,7 @@
     }
 
     &__desc-text.is-open {
-        -webkit-line-clamp: unset;
-        overflow:           visible;
+        .hdx-line-clamp-off();
     }
     // ── CTA block ────────────────────────────────────────────
 
@@ -169,8 +165,7 @@
         color:       var(--hdx-neutral-8);
 
         svg {
-            width:       0.9375rem;     // 15 px — Figma spec
-            height:      0.9375rem;
+            .hdx-icon-size(0.9375rem);   // 15 px — Figma spec, no matching token
             flex-shrink: 0;
         }
     }

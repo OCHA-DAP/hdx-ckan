@@ -80,8 +80,8 @@
   outline-offset: 2px;
 }
 .hdx-v2-navbar__search-icon svg {
-  width: 1.25rem;
-  height: 1.25rem;
+  width: var(--hdx-space-5);
+  height: var(--hdx-space-5);
 }
 .hdx-v2-navbar__nav {
   display: flex;
@@ -158,8 +158,8 @@
   line-height: 0;
 }
 .hdx-v2-navbar__bell-icon svg {
-  width: 1.25rem;
-  height: 1.25rem;
+  width: var(--hdx-space-5);
+  height: var(--hdx-space-5);
 }
 .hdx-v2-navbar__bell-badge {
   position: absolute;
@@ -216,8 +216,8 @@
   background: var(--hdx-overlay-white-10);
 }
 .hdx-v2-navbar__hamburger svg {
-  width: 1rem;
-  height: 1rem;
+  width: var(--hdx-space-4);
+  height: var(--hdx-space-4);
 }
 @media (max-width: 80rem) {
   .hdx-v2-navbar__hamburger {

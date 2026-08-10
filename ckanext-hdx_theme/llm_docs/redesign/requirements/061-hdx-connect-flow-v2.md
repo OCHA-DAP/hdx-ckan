@@ -94,7 +94,7 @@ new Figma exports, no content changes needed**:
 
 | Event | Trigger | Implementation | Present in v2 entry point? |
 |---|---|---|---|
-| `sendMessagingEvent('dataset', 'data request', null, null, true)` | Form submitted successfully | `fanstatic/datasets/request-access.js:5-11`, reads `#request_sent` | N/A — fires from the destination page, unaffected by entry-point version |
+| `sendMessagingEvent('dataset', 'data request', null, null, true)` | Form submitted successfully | `fanstatic/v2/pages/request-access.js:5-11`, reads `#request_sent` | N/A — fires from the destination page, unaffected by entry-point version |
 | `hdx_click_stopper` → `sendLinkClickEvent({linkType:'dataset resources', label:'Request data', ...})` | Click on "Request data" CTA | v1: `resources_list.html:59-61` / `resource_req_item.html`; v2: `resource_item_v2.html`'s `request_attrs` dict, forwarded to `resource-card.html`'s button `attrs` (also wired in `resources_list.html`'s empty-resources branch) | ✅ Present |
 | `hdx-onboarding-flow` state priming (`data-start-page-type="hdx-connect"`) | Anonymous user clicks CTA | v1: `resources_list.html:59-61`, consumed by `fanstatic/hdx-onboarding-flow.js`; v2: same `request_attrs` dict, added only when `not current_user.is_authenticated` | ✅ Present |
 
@@ -204,10 +204,10 @@ carried forward unchanged. Restated for clarity per the task's explicit constrai
 |---|---|---|---|
 | Your name | `.form-field` | `v2/components/search-input.html` (`type='text'`, `show_icon=False`) | Direct reuse — identical to Contact Contributor's `fullname` field |
 | Your email address | `.form-field` | `v2/components/search-input.html` (`type='email'`, `show_icon=False`) | Direct reuse — identical to Contact Contributor's `email` field |
-| Your organization | `.dropdown` | `v2/components/dropdown.html` (`native=True`) | Reuse Contact Contributor's `native=True` pattern; **"Other" free-text extension** — see decision below. Each `<option>` also carries the org's known type as a `data-org-type` attribute (via a new `option_attrs` param), read by `request-access.js` to auto-fill "Your organization type" below — preserves the v1 org→org-type auto-select behavior |
-| Your organization type | `.dropdown` | `v2/components/dropdown.html` (`native=True`) | Same as above — "Other" extension; auto-filled from the organization field's `data-org-type` |
-| Where are you located? | `.dropdown` | `v2/components/dropdown.html` (`native=True`) | Direct reuse — **no** "Other" variant needed (matches current schema) |
-| Intended use of this data | `.dropdown` | `v2/components/dropdown.html` (`native=True`) | "Other" extension (same as organization fields) |
+| Your organization | `.dropdown` | `v2/components/select.html` | Reuse Contact Contributor's `select.html` pattern; **"Other" free-text extension** — see decision below. Each `<option>` also carries the org's known type as a `data-org-type` attribute (via a new `option_attrs` param), read by `request-access.js` to auto-fill "Your organization type" below — preserves the v1 org→org-type auto-select behavior |
+| Your organization type | `.dropdown` | `v2/components/select.html` | Same as above — "Other" extension; auto-filled from the organization field's `data-org-type` |
+| Where are you located? | `.dropdown` | `v2/components/select.html` | Direct reuse — **no** "Other" variant needed (matches current schema) |
+| Intended use of this data | `.dropdown` | `v2/components/select.html` | "Other" extension (same as organization fields) |
 | Comments | `.form-field3` | `v2/components/search-input.html` (`multiline=True`) | Direct reuse of the extension already built for Contact Contributor — no new component work |
 | Acknowledgment checkbox | `.container7`/`.input` + label | `v2/components/checkbox.html` | First use inside a real form — needs `errors`/required-state and a required-asterisk, see decision below |
 | Cancel | `.buttons2` (tertiary) | `v2/components/button.html` (`style='tertiary'`, `tag='a'`) | Direct reuse |
@@ -216,12 +216,12 @@ carried forward unchanged. Restated for clarity per the task's explicit constrai
 **No new components required.** Four extensions to existing components, all decided below (§11):
 the "Other → free text" conditional reveal for 3 of the 4 dropdowns; `errors`/required-asterisk
 support on `checkbox.html`; a per-option `data-*` attribute param (`option_attrs`) on
-`dropdown.html`'s native mode, for the organization → organization-type auto-fill; and an
-`errors`-driven visible state on `dropdown.html` itself (it previously rendered error text with no
+`select.html`, for the organization → organization-type auto-fill; and an
+`errors`-driven visible state on `select.html` itself (it previously rendered error text with no
 way to make it visible).
 
 **Decision — "Other" conditional reveal:** a conditionally-shown `v2/components/search-input.html`
-field next to the `native=True` dropdown, toggled via JS when "Other" is selected. This is the
+field next to the `select.html` dropdown, toggled via JS when "Other" is selected. This is the
 closest existing-component extension (no new component), confirmed with requester.
 
 **Decision — checkbox errors/required state:** `checkbox.html` gets an `errors` param, mirroring
@@ -235,18 +235,19 @@ component had no visible required indicator at all before this task, only the na
 **Decision — organization → organization-type auto-fill:** v1's destination page auto-fills
 "Your organization type" from the selected organization's known type (a `data-org_type` attribute
 populated via `h.hdx_user_orgs_dict(..., include_org_type=True)`, wired through select2 events).
-Confirmed with requester to preserve this. `dropdown.html`'s native mode gets a new `option_attrs`
+Confirmed with requester to preserve this. `select.html` gets a new `option_attrs`
 param (`{value: {attr_name: attr_value}}`, rendered as extra attributes on each `<option>`), and
 `request-access.js` wires a native `change` listener that reads the selected option's
 `data-org-type` and sets the organization-type `<select>`'s value, replacing the select2-specific
 event handling.
 
-**Decision — dropdown error display:** `dropdown.html`'s `errors` param interpolates error text
+**Decision — dropdown error display:** `select.html`'s `errors` param interpolates error text
 into a `<span>` but the wrapper never carried a modifier class, so the sibling-selector CSS that
 reveals `.c-search-input__error` never matched — error text was always invisible for every native
-dropdown on any page, not just this one. `dropdown.html`/`dropdown.less` get their own
-`c-dropdown--error`/`c-dropdown__error` pair, matching the `checkbox`/`search-input` convention of
-each component owning its error class.
+dropdown on any page, not just this one. `select.html` gets its own
+`c-dropdown--error`/`c-dropdown__error` pair (reusing the modifier styles already defined in
+`dropdown.less`), matching the `checkbox`/`search-input` convention of each component owning its
+error class.
 
 ---
 
@@ -350,7 +351,7 @@ already established by Contact Contributor's v2 migration (`50%`/`80%`/full-widt
 |---|---|---|
 | Breaking NAVL validation | Renaming any form `name` attribute breaks `request_create_schema()` | Never rename field names; keep exact same `name=` values as v1 |
 | Losing "Other" free-text data | The 3 "Other"-enabled dropdowns have no existing v2 conditional-reveal pattern; a naive implementation could fail to submit `*_other` values | Implement per §11 decision (conditional `c-search-input`); test submission of each "Other" path |
-| Duplicating components | Building a new dropdown/textarea/checkbox pattern instead of reusing Contact Contributor's established `native=True`/`multiline=True` extensions | Explicit component mapping in §4 reuses existing extensions everywhere except the new "Other" behavior |
+| Duplicating components | Building a new dropdown/textarea/checkbox pattern instead of reusing Contact Contributor's established `select.html`/`multiline=True` extensions | Explicit component mapping in §4 reuses existing extensions everywhere except the new "Other" behavior |
 | UX inconsistency with Contact Contributor | Diverging field/button/error styling between the two "message the org" flows would look inconsistent | Follow Contact Contributor's v2 template structure (`contact_contributor.html`) as the direct pattern; the shared row/content/column/header/form/dataset-name/buttons LESS lives in one file, `message-form-page.less` (`v2-message-form-page-styles` bundle), loaded by both pages — Contact Contributor has no page-specific LESS of its own beyond that shared set |
 | Scope creep from the three dataset-page fixes | §6's three decisions touch already-shipped v2 code (page header, resource card, accordion) outside the literal "form + success page" migration | All three were explicitly surfaced to and confirmed by the requester before drafting — not assumed |
 | `user_info_accept_terms` not server-validated | Existing gap (client-only enforcement); fixing it would be a backend/business-logic change | Explicitly out of scope — preserved as-is, called out in §11 for stakeholder awareness |
@@ -377,7 +378,7 @@ already established by Contact Contributor's v2 migration (`50%`/`80%`/full-widt
 
 1. **"Other" free-text conditional reveal.** Three dropdowns (organization, organization type,
    intended use) need a free-text field that appears when "Other" is selected. **Decision:** a
-   conditionally-shown `v2/components/search-input.html` next to the `native=True` dropdown,
+   conditionally-shown `v2/components/search-input.html` next to the `select.html` dropdown,
    toggled via JS — the closest existing-component extension, no new component built.
 2. **Second "Request only data" chip.** **Decision: in scope** — see §6/§9. Added to the "Data
    and resources" accordion section header, matching the existing `page-header.html:135` chip.
@@ -394,13 +395,13 @@ already established by Contact Contributor's v2 migration (`50%`/`80%`/full-widt
    direct match to existing convention (verified before confirming), not a new pattern. It also
    gets a `c-checkbox__required` asterisk span, matching `search-input.html`/`dropdown.html` —
    the component had no visible required indicator at all.
-5. **Dropdown error display.** `dropdown.html`'s `errors` param never actually became visible —
+5. **Dropdown error display.** `select.html`'s `errors` param never actually became visible —
    no modifier class was added for the sibling-selector CSS to key off. **Decision:** give
-   `dropdown.html`/`dropdown.less` their own `c-dropdown--error`/`c-dropdown__error` pair, same
-   shape as `checkbox`/`search-input`. This affects every page using `native=True` + `errors`, not
-   just this one.
+   `select.html` its own `c-dropdown--error`/`c-dropdown__error` pair (reusing the modifier styles
+   already defined in `dropdown.less`), same shape as `checkbox`/`search-input`. This affects
+   every page using `select.html` + `errors`, not just this one.
 6. **Organization → organization-type auto-fill.** Confirmed to preserve v1's behavior (see §1).
-   **Decision:** `dropdown.html` gets a new `option_attrs` param (native mode, per-option `data-*`
+   **Decision:** `select.html` gets a new `option_attrs` param (per-option `data-*`
    attributes); `request-access.js` reads the selected option's `data-org-type` and sets the
    organization-type `<select>`'s value via a native `change` listener, replacing v1's
    select2-event wiring.

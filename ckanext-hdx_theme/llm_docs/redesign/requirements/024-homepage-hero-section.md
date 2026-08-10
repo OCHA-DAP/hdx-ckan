@@ -63,7 +63,7 @@ Extends `v2/page.html`. The hero section markup uses `autocomplete.html` only �
 </section>
 ```
 
-### `hdx-styles/src/common/less/v2/styles.less`
+### `hdx-styles/src/common/less/v2/pages/home.less`
 
 BEM block: `hdx-v2-hero`. Dark background token: `@hdx-v2-hero-bg: var(--hdx-brand-7)`.
 
@@ -163,7 +163,7 @@ Media queries are nested directly inside each element block (see [CONVENTIONS.md
 
 ### Compiled CSS
 
-`fanstatic/v2/styles.css` — auto-compiled by the IDE from `styles.less`. Already bundled in `v2-page-styles` via `webassets.yml`; no separate asset group needed.
+`fanstatic/v2/pages/home.css` — auto-compiled by the IDE from `home.less`. Already bundled in `v2-page-styles` via `webassets.yml`; no separate asset group needed.
 
 ---
 

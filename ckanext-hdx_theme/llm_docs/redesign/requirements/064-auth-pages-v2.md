@@ -150,7 +150,7 @@ folded into this task after the initial migration per §12 Decision 5, reusing t
   (`h.csrf_input()`), and the empty-`action` full-page POST are all unchanged, so
   `HDXPerformResetView`'s inherited `_get_form_password()`/`post()` keep working with no view changes.
 - Client-side validation: kept at today's level — required-field-only submit gating (new
-  `fanstatic/v2/perform-reset-page.js`, bundle `v2-perform-reset-page-scripts`), mirroring the old
+  `fanstatic/v2/pages/perform-reset.js`, bundle `v2-perform-reset-page-scripts`), mirroring the old
   widget's `requiredFieldsFormValidator`. The signup page's live password-strength/match checklist
   (`v2/form-validator.js`) is deliberately **not** reused here — see §12 Decision 14.
 - Error handling: `HDXPerformResetView.post()` is inherited unmodified from core and never passes an
@@ -455,9 +455,10 @@ context passed into templates) is the established precedent to follow — not ap
 5. **`/user/reset/<id>` ("set new password") page.** Folded into this task despite no Figma source
    existing for it — reuses the login/forgot-password `hdx-v2-auth-card` shell verbatim (§1.4). No
    view/backend changes; only the template/CSS/JS shell was replaced.
-6. **CSRF gap on the login form.** Approved for fixing as part of this rebuild (`widget/onboarding/login.html`
-   has no `h.csrf_input()`, unlike the other two forms), conditioned on verifying it doesn't break the
-   live login POST flow (§8) before considering the change complete.
+6. **CSRF token on the login form.** The live v2 login form, `user/signin.html`, calls
+   `h.csrf_input()` directly inside its own `<form>` (around line 53-56). `widget/onboarding/login.html`
+   carries no CSRF field, but it isn't rendered anywhere live — it's referenced only in commented-out
+   lines in `page.html` and `page_light.html`.
 7. **Analytics.** Keep all three pages untracked, matching today. No new tracking is introduced by this
    migration (§11).
 8. **Login field label.** Keep current "Username or Email" (`login.html:50`). Figma's "Email" is not

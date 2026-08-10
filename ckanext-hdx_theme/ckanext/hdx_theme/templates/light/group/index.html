@@ -56,18 +56,21 @@
                 size='m' %}
           </div>
         </div>
-        <div class="c-kpi-card-row">
-          {% snippet 'v2/components/kpi-card.html',
+        <div class="c-stats-card-list c-stats-card-list--row">
+          {% snippet 'v2/components/stats-card.html',
+              variant='kpi',
               label=_('Total locations'),
               value=total_count,
               tooltip_text=_('Total number of country and territory locations on HDX.'),
               tooltip_id='kpi-total' %}
-          {% snippet 'v2/components/kpi-card.html',
+          {% snippet 'v2/components/stats-card.html',
+              variant='kpi',
               label=_('HRP locations'),
               value=hrp_count,
               tooltip_text=_('Locations with an active Humanitarian Response Plan, highlighted in teal.'),
               tooltip_id='kpi-hrp' %}
-          {% snippet 'v2/components/kpi-card.html',
+          {% snippet 'v2/components/stats-card.html',
+              variant='kpi',
               label=_('Locations part of Data Grid'),
               value=datagrid_count,
               tooltip_text=_('Locations for which an HDX Data Grid has been published.'),

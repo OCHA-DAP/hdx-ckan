@@ -68,8 +68,7 @@
         line-height:     0;
 
         svg {
-            width:  100%;
-            height: 100%;
+            .hdx-icon-size(100%);
         }
 
         &:hover { color: var(--hdx-neutral-0); }
@@ -112,11 +111,10 @@
         @media (min-width: @hdx-bp-md) { display: none; }
 
         &:hover         { background: var(--hdx-overlay-white-10); }
-        &:focus-visible { outline: 2px solid var(--hdx-neutral-0); outline-offset: 2px; }
+        &:focus-visible { .hdx-focus-ring-inverse(); }
 
         svg {
-            width:  1.25rem;
-            height: 1.25rem;
+            .hdx-icon-size(var(--hdx-space-5));
         }
     }
 
@@ -185,7 +183,7 @@
         flex-shrink:     0;
 
         &:hover         { background: var(--hdx-overlay-white-10); }
-        &:focus-visible { outline: 2px solid var(--hdx-neutral-0); outline-offset: 2px; }
+        &:focus-visible { .hdx-focus-ring-inverse(); }
     }
 
     &__bell-icon {
@@ -196,7 +194,7 @@
         justify-content: center;
         line-height:     0;
 
-        svg { width: 1.25rem; height: 1.25rem; }
+        svg { .hdx-icon-size(var(--hdx-space-5)); }
     }
 
     &__bell-badge {
@@ -228,7 +226,7 @@
         align-items:   center;
         border-radius: 100px;
 
-        &:focus-visible { outline: 2px solid var(--hdx-neutral-0); outline-offset: 2px; }
+        &:focus-visible { .hdx-focus-ring-inverse(); }
 
         @media (max-width: (@hdx-bp-xl)) { display: none; }  // MD/SM → offcanvas
     }
@@ -251,7 +249,7 @@
 
         &:hover { background: var(--hdx-overlay-white-10); }
 
-        svg { width: 1rem; height: 1rem; }
+        svg { .hdx-icon-size(var(--hdx-space-4)); }
 
         @media (max-width: (@hdx-bp-xl)) { display: flex; }  // MD/SM
     }

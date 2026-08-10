@@ -34,18 +34,21 @@
     <div class="hdx-v2-container">
       <div class="hdx-v2-org-list-hero__body">
         <h1 class="hdx-v2-org-list-hero__title">{{ _('Organisations') }}</h1>
-        <div class="c-kpi-card-row">
-          {% snippet 'v2/components/kpi-card.html',
+        <div class="c-stats-card-list c-stats-card-list--row">
+          {% snippet 'v2/components/stats-card.html',
+              variant='kpi',
               label=_('Datasets'),
               value=h.hdx_format_number_si(kpi_datasets),
               tooltip_text=_('Total number of datasets shared by all organisations on HDX.'),
               tooltip_id='kpi-datasets' %}
-          {% snippet 'v2/components/kpi-card.html',
+          {% snippet 'v2/components/stats-card.html',
+              variant='kpi',
               label=_('Organisations'),
               value=h.hdx_format_number_si(kpi_orgs),
               tooltip_text=_('Number of organisations that have shared at least one dataset on HDX.'),
               tooltip_id='kpi-orgs' %}
-          {% snippet 'v2/components/kpi-card.html',
+          {% snippet 'v2/components/stats-card.html',
+              variant='kpi',
               label=_('Locations'),
               value=h.hdx_format_number_si(kpi_locations),
               tooltip_text=_('Number of country and territory locations with datasets on HDX.'),
@@ -59,24 +62,11 @@
 {# ── Main content: controls + cards + pagination ──────────── #}
 {% block primary %}
 
-  {# Sort dropdown items #}
-  {% set _sorting = [
-    (_('Alphabetical A-Z'), 'title asc'),
-    (_('Alphabetical Z-A'), 'title desc'),
+  {# Sort options: (label, value, short_label) — no distinct short form here, label doubles as both #}
+  {% set _org_sorting = [
+    (_('Alphabetical A-Z'), 'title asc',  _('Alphabetical A-Z')),
+    (_('Alphabetical Z-A'), 'title desc', _('Alphabetical Z-A')),
   ] %}
-  {% set _sort_ns = namespace(items=[], label='') %}
-  {% for label, value in _sorting %}
-    {% set _sort_ns.items = _sort_ns.items + [{'value': value, 'label': label, 'active': sorting_selected == value}] %}
-    {% if sorting_selected == value %}{% set _sort_ns.label = label %}{% endif %}
-  {% endfor %}
-  {% if not _sort_ns.label %}{% set _sort_ns.label = _sorting[0][0] %}{% endif %}
-
-  {# Page-size dropdown items #}
-  {% set _limits = [10, 25, 50] %}
-  {% set _size_ns = namespace(items=[]) %}
-  {% for v in _limits %}
-    {% set _size_ns.items = _size_ns.items + [{'value': v|string, 'label': v|string, 'active': limit_selected == v}] %}
-  {% endfor %}
 
   {# Pagination base URL (page number appended by snippet) #}
   {% set _pager_base = h.url_for('organizations_index', q=q, sort=sorting_selected, limit=limit_selected) ~ '&page=' %}
@@ -86,29 +76,13 @@
     <div class="hdx-v2-org-list-controls">
 
       <div class="hdx-v2-org-list-controls__right">
-        <div class="hdx-v2-nav-controls">
-          <div class="hdx-v2-nav-ctrl-pair">
-            <span class="hdx-v2-nav-ctrl-label">{{ _('Results per page') }}</span>
-            {% snippet 'v2/components/dropdown.html',
-                size='s',
-                selected=limit_selected|string,
-                panel_id='hdx-org-panel-size',
-                attrs={'data-nav-key': 'limit'},
-                navigate=True,
-                items=_size_ns.items %}
-          </div>
-
-          <div class="hdx-v2-nav-ctrl-pair">
-            <span class="hdx-v2-nav-ctrl-label">{{ _('Sort by') }}</span>
-            {% snippet 'v2/components/dropdown.html',
-                size='s',
-                selected=_sort_ns.label,
-                panel_id='hdx-org-panel-sort',
-                attrs={'data-nav-key': 'sort'},
-                navigate=True,
-                items=_sort_ns.items %}
-          </div>
-        </div>
+        {% snippet 'v2/search-nav-controls.html',
+            sorting_selected=sorting_selected,
+            sorting_options=_org_sorting,
+            ext_page_size=limit_selected,
+            page_size_options=[10, 25, 50],
+            page_size_key='limit',
+            panel_suffix='org' %}
       </div>
 
       <div class="hdx-v2-org-list-controls__search">

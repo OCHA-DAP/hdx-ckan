@@ -36,16 +36,16 @@
   font-size: var(--hdx-fs-s);
 }
 .c-copy-button--size-m .c-copy-button__icon svg {
-  width: 1rem;
-  height: 1rem;
+  width: var(--hdx-space-4);
+  height: var(--hdx-space-4);
 }
 .c-copy-button--size-s {
   gap: var(--hdx-space-15);
   font-size: var(--hdx-fs-xs);
 }
 .c-copy-button--size-s .c-copy-button__icon svg {
-  width: 0.875rem;
-  height: 0.875rem;
+  width: var(--hdx-space-17);
+  height: var(--hdx-space-17);
 }
 .c-copy-button--secondary {
   color: var(--hdx-neutral-8);

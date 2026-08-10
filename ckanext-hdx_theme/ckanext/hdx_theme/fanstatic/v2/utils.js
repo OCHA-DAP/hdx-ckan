@@ -101,6 +101,44 @@
     }
   };
 
+  // Traps Tab/Shift+Tab focus inside `element`, and returns focus to
+  // `triggerElement` on deactivate. Shared by navbar.js (offcanvas) and
+  // components/drawer.js — promoted here once a second consumer needed it
+  // (task 070 A6).
+  window.hdxV2.FocusTrap = function FocusTrap(element, triggerElement) {
+    this.element        = element;
+    this.triggerElement = triggerElement;
+    this._handler       = null;
+  };
+
+  window.hdxV2.FocusTrap.prototype.activate = function () {
+    var el   = this.element;
+    var list = window.hdxV2.getFocusable(el);
+    if (list.length) list[0].focus();
+
+    this._handler = function (e) {
+      if (e.key !== 'Tab') return;
+      var current = window.hdxV2.getFocusable(el);
+      if (!current.length) { e.preventDefault(); return; }
+      var first = current[0];
+      var last  = current[current.length - 1];
+      if (e.shiftKey) {
+        if (document.activeElement === first) { e.preventDefault(); last.focus(); }
+      } else {
+        if (document.activeElement === last) { e.preventDefault(); first.focus(); }
+      }
+    };
+    document.addEventListener('keydown', this._handler);
+  };
+
+  window.hdxV2.FocusTrap.prototype.deactivate = function () {
+    if (this._handler) {
+      document.removeEventListener('keydown', this._handler);
+      this._handler = null;
+    }
+    if (this.triggerElement) this.triggerElement.focus();
+  };
+
   // Currently a no-op pending task 069's follow-up — uncomment the
   // matchMedia check to re-enable prefers-reduced-motion support
   // everywhere this helper is called.

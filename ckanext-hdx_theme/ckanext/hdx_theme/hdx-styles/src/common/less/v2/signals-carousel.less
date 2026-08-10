@@ -1,0 +1,84 @@
+@import "mixins.less";
+@import "breakpoints.less";
+
+// ============================================================
+// hdx-v2-signals-* — shared Signals carousel chrome
+// Used by the homepage Signals section and the Signals landing
+// page; fanstatic/v2/signals-carousel.js drives both.
+// Relocated out of components/signal-card.less (task 070 B3) —
+// hdx-v2-* page/section classes belong at the top level of
+// less/v2/, not inside components/.
+// Figma: llm_docs/redesign/figma_exports/signals-sm.html, signals-md.html
+// ============================================================
+
+.hdx-v2-signals-cards {
+    align-self: stretch;
+    position:   relative;
+
+    @media (max-width: @hdx-bp-xl) {
+        overflow: hidden;
+    }
+
+    &__inner {
+        position: relative;
+        display:  flex;
+
+        @media (min-width: @hdx-bp-xl) {
+            gap: var(--hdx-space-5);
+        }
+    }
+}
+
+.hdx-v2-signal-slide {
+    flex-shrink: 0;
+
+    @media (min-width: @hdx-bp-xl) {
+        flex:      1;
+        min-width: 0;
+
+        &.is-carousel-clone { display: none; }
+    }
+
+    @media (max-width: @hdx-bp-xl) {
+        // SM: ~1.1 cards visible — matches .highlight-slide's SM formula (pages/home.less)
+        width:        calc(90% - var(--hdx-space-4));
+        margin-right: var(--hdx-space-4);
+    }
+
+    @media (min-width: @hdx-bp-md) and (max-width: @hdx-bp-xl) {
+        width: calc(56% - var(--hdx-space-4));
+    }
+}
+
+.hdx-v2-signals-carousel-footer {
+    display:         flex;
+    justify-content: center;
+    margin-top:      var(--hdx-space-4);
+
+    @media (min-width: @hdx-bp-xl) {
+        display: none;
+    }
+}
+
+.hdx-v2-signals-dots {
+    display:         flex;
+    justify-content: center;
+    align-items:     center;
+    gap:             var(--hdx-space-1);
+
+    button {
+        width:            var(--hdx-space-8);
+        height:           var(--hdx-space-2);
+        border-radius:    var(--hdx-radius-sm);
+        background-color: var(--hdx-neutral-1);
+        border:           none;
+        cursor:           pointer;
+        padding:          0;
+
+        &.is-active { background-color: var(--hdx-primary-5); }
+
+        &:focus-visible {
+            .hdx-focus-ring();
+        }
+    }
+}

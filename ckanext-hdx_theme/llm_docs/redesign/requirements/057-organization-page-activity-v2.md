@@ -118,12 +118,12 @@ There is also a generic v2 numbered pager, `v2/components/pagination.html`, alre
 | File | Role |
 |---|---|
 | `ckanext-hdx_theme/ckanext/hdx_theme/templates/v2/components/activity-item.html` | `c-activity-item` — single reusable timeline item (dot+line, actor/action/subject/time) |
-| `.../templates/package/snippets/activity_stream_v2.html` | Orchestrator: loops `activity_stream`, dispatches all **23** CKAN activity types via one `{% if/elif %}` chain, calls `activity-item.html` per item, wraps in `.c-activity-stream` |
-| `.../helpers/actions.py:737-748` (`hdx_package_activity_stream`) | AJAX action: `package_activity_list(limit=7)` → renders `activity_stream_v2.html` server-side → returns HTML |
-| `.../fanstatic/v2/dataset-page.js` (`fetchActivitiesIfNeeded`) | On the dataset page's collapsible Activity accordion first-open, POSTs to `hdx_package_activity_stream`, injects the HTML |
-| `hdx-styles/.../v2/components/activity-item.less` | `.c-activity-item` (`__timeline/__line/__dot/__content/__actor/__action/__time`) + `.c-activity-stream` (flex column, `__empty` state) |
+| `.../templates/v2/activity-stream.html` | Orchestrator: loops `activity_stream`, dispatches all **23** CKAN activity types via one `{% if/elif %}` chain, calls `activity-item.html` per item, wraps in `.c-activity-stream` |
+| `.../helpers/actions.py:737-748` (`hdx_package_activity_stream`) | AJAX action: `package_activity_list(limit=7)` → renders `v2/activity-stream.html` server-side → returns HTML |
+| `.../fanstatic/v2/pages/dataset.js` (`fetchActivitiesIfNeeded`) | On the dataset page's collapsible Activity accordion first-open, POSTs to `hdx_package_activity_stream`, injects the HTML |
+| `ckanext-hdx_theme/ckanext/hdx_theme/hdx-styles/src/common/less/v2/components/activity-item.less` | `.c-activity-item` (`__timeline/__line/__dot/__content/__actor/__action/__time`) + `.c-activity-stream` (flex column, `__empty` state) |
 
-**Crucially, the dispatch chain in `activity_stream_v2.html` is already type-generic, not
+**Crucially, the dispatch chain in `v2/activity-stream.html` is already type-generic, not
 dataset-specific** — it already has branches for `new/changed/deleted organization`,
 `new/changed/deleted group`, `new/changed user`, `added/removed tag`, and all three `follow *`
 types, not just package/resource events:
@@ -136,7 +136,7 @@ types, not just package/resource events:
 This means **no new type-mapping logic is needed** to serve the org Activity tab — the file just
 needs to be reachable from the org template without duplicating it (see §4, §6, D2).
 
-Empty state: `activity_stream_v2.html` renders `<p class="c-activity-stream__empty">{{ _('No
+Empty state: `v2/activity-stream.html` renders `<p class="c-activity-stream__empty">{{ _('No
 recent activity for this dataset.') }}</p>` when the list is empty — dataset-specific copy that
 gets the org-appropriate equivalent from D10 (see §9).
 
@@ -340,4 +340,4 @@ itself doesn't change between tabs.
 | `ckanext-hdx_theme/ckanext/hdx_theme/templates/organization/activity_stream.html` | Replaced with a v2 template: extends `v2/page.html`, reuses `page-header.html` + `tabs.html` (Activity active), calls the relocated activity-stream snippet, adds the "Load more" link, empty-state copy per D10 |
 | `ckanext-hdx_theme/ckanext/hdx_theme/templates/organization/custom_activity_stream.html` | Kept in place, unused/orphaned by this route (D9) — no edit |
 | `ckanext-hdx_org_group/ckanext/hdx_org_group/views/organization.py` (`activity_offset`) | `is_custom` branch removed; renders the new unified v2 template for all orgs (D8) |
-| `hdx-styles/src/common/less/v2/org-page.less` (or 056's equivalent) | New section-level styles for the Activity list container's per-breakpoint padding (§7); no changes to `activity-item.less` — the component itself is unchanged |
+| `hdx-styles/src/common/less/v2/pages/org.less` (or 056's equivalent) | New section-level styles for the Activity list container's per-breakpoint padding (§7); no changes to `activity-item.less` — the component itself is unchanged |

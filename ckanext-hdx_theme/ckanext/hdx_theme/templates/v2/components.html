@@ -1,5 +1,48 @@
 {% extends "v2/page.html" %}
 
+{% set columns_class = 'hdx-v2-content-columns--gap-xl' %}
+{% set sidebar_class = 'hdx-v2-content-columns__sidebar hdx-v2-content-columns__sidebar--xl-only demo-components-sidebar' %}
+{% set content_class = 'hdx-v2-content-columns__content' %}
+
+{% set toc_items = [
+  {'label': 'Foundation', 'href': '#foundation', 'active': True},
+  {'label': 'Buttons', 'href': '#buttons'},
+  {'label': 'Text Buttons', 'href': '#text-buttons'},
+  {'label': 'Text Link', 'href': '#text-link'},
+  {'label': 'Copy Button', 'href': '#copy-button'},
+  {'label': 'Avatars & Badge', 'href': '#avatars-badge'},
+  {'label': 'Dropdown', 'href': '#dropdown'},
+  {'label': 'Input Field / Search / Autocomplete', 'href': '#input-field'},
+  {'label': 'Label / File-type / Tooltip', 'href': '#label'},
+  {'label': 'Navigation & Pagination', 'href': '#navigation-pagination'},
+  {'label': 'Tabs', 'href': '#tabs'},
+  {'label': 'Step Pager', 'href': '#step-pager'},
+  {'label': 'Selection Items / Radio / Toggle / Graph Point', 'href': '#selection-items'},
+  {'label': 'Checkbox', 'href': '#checkbox'},
+  {'label': 'List Item', 'href': '#list-item'},
+  {'label': 'Letter Anchor', 'href': '#letter-anchor'},
+  {'label': 'KPI Card', 'href': '#kpi-card'},
+  {'label': 'Stats Card', 'href': '#stats-card'},
+  {'label': 'Data Grid Status', 'href': '#data-grid-status'},
+  {'label': 'Signup Tier', 'href': '#signup-tier'},
+  {'label': 'Activity Card', 'href': '#activity-card'},
+  {'label': 'Dataset Card', 'href': '#dataset-card'},
+  {'label': 'Resource Card', 'href': '#resource-card'},
+  {'label': 'Highlight Card', 'href': '#highlight-card'},
+  {'label': 'Showcase Card', 'href': '#showcase-card'},
+  {'label': 'Dataviz Card', 'href': '#dataviz-card'},
+  {'label': 'Organisation List Card', 'href': '#org-list-card'},
+  {'label': 'Member List Card', 'href': '#member-list-card'},
+  {'label': 'Notification Item', 'href': '#notification-item'},
+  {'label': 'Activity Item', 'href': '#activity-item'},
+  {'label': 'Table', 'href': '#table'},
+  {'label': 'Drawer', 'href': '#drawer'},
+  {'label': 'Alert', 'href': '#alert'},
+  {'label': 'Accordion', 'href': '#accordion'},
+  {'label': 'Content Card', 'href': '#content-card'},
+  {'label': 'Signal Card', 'href': '#signal-card'},
+] %}
+
 {% block subtitle %}{{ _('Components') }}{% endblock %}
 
 {% block styles %}
@@ -8,6 +51,10 @@
   .demo-page {
     margin-top: 3rem;
     margin-bottom: 3rem;
+  }
+
+  .demo-components-sidebar {
+    padding-top: 3rem;
   }
 
   .demo-section {
@@ -250,6 +297,7 @@
     font-family: monospace;
     text-align: center;
   }
+
   </style>
 {% endblock %}
 
@@ -257,13 +305,25 @@
   {% snippet 'v2/components/breadcrumb.html', items=[{'label': _('Components'), 'href': ''}] %}
 {% endblock %}
 
+{# ── Table of contents — desktop sidebar (D4) — reuses c-anchor-links ────────── #}
+{% block secondary_content %}
+  {% snippet 'v2/components/anchor-links.html',
+      items=toc_items,
+      heading='On this page' %}
+{% endblock %}
+
 {% block primary_content %}
 <div class="demo-page">
+
+  {# Mobile sticky anchor dropdown (outside hidden sidebar) #}
+  {% snippet 'v2/components/anchor-links.html',
+      items=toc_items,
+      mobile_only=True %}
 
   {# ══════════════════════════════════════════════════════
      0. FOUNDATION / TOKENS
   ══════════════════════════════════════════════════════ #}
-  <section class="demo-section">
+  <section class="demo-section" id="foundation">
     <h1 class="demo-section__title">Foundation</h1>
     <p class="demo-section__subtitle">Design tokens — colors, typography, spacing, elevation, radius</p>
 
@@ -518,7 +578,7 @@
   {# ══════════════════════════════════════════════════════
      1. BUTTONS (filled / outlined)
   ══════════════════════════════════════════════════════ #}
-  <section class="demo-section">
+  <section class="demo-section" id="buttons">
     <h1 class="demo-section__title">Buttons</h1>
     <p class="demo-section__subtitle">style × size × state — type: text (with icon)</p>
     <p class="demo-section__subtitle">Use browser DevTools to force :hover state on the buttons.</p>
@@ -721,7 +781,7 @@
      2. TEXT BUTTONS
   ══════════════════════════════════════════════════════ #}
 
-  <section class="demo-section">
+  <section class="demo-section" id="text-buttons">
     <h1 class="demo-section__title">Text Buttons</h1>
     <p class="demo-section__subtitle">style × size × state × icon position</p>
 
@@ -886,7 +946,7 @@
   {# ══════════════════════════════════════════════════════
      3. TEXT LINK
   ══════════════════════════════════════════════════════ #}
-  <section class="demo-section">
+  <section class="demo-section" id="text-link">
     <h1 class="demo-section__title">Text Link</h1>
     <p class="demo-section__subtitle">style × size × state — inline typographic hyperlink</p>
 
@@ -1006,12 +1066,12 @@
   {# ══════════════════════════════════════════════════════
      4. AVATARS & BADGE
   ══════════════════════════════════════════════════════ #}
-  <section class="demo-section">
+  <section class="demo-section" id="avatars-badge">
     <h1 class="demo-section__title">Avatars &amp; Badge</h1>
     <p class="demo-section__subtitle">size × state × badge</p>
 
-    <h2 class="dl-h2">Sizes — enabled</h2>
-    <div class="dl-row">
+    <h2 class="demo-subsection__heading">Sizes — enabled</h2>
+    <div class="demo-row">
       {% snippet 'v2/components/avatar.html', size='l',  initials='AB', state='enabled' %}
       {% snippet 'v2/components/avatar.html', size='md', initials='JD', state='enabled' %}
       {% snippet 'v2/components/avatar.html', size='sm', initials='KC', state='enabled' %}
@@ -1043,7 +1103,7 @@
   {# ══════════════════════════════════════════════════════
      5. DROPDOWN
   ══════════════════════════════════════════════════════ #}
-  <section class="demo-section">
+  <section class="demo-section" id="dropdown">
     <h1 class="demo-section__title">Dropdown</h1>
     <p class="demo-section__subtitle">size × state</p>
 
@@ -1092,6 +1152,23 @@
              'extra_classes': 'is-disabled', 'tooltip': 'Disabled option with explanatory tooltip'},
           ] %}
     </div>
+
+    <h2 class="demo-subsection__heading">Select — native &lt;select&gt; (v2/components/select.html)</h2>
+    <div class="demo-row demo-row--flex-start">
+      {% snippet 'v2/components/select.html',
+          label='Country', placeholder='Select a country',
+          name='demo-select', options={'sd': 'Sudan', 'td': 'Chad', 'ml': 'Mali'} %}
+      {% snippet 'v2/components/select.html',
+          label='Country', selected='sd',
+          name='demo-select-filled', options={'sd': 'Sudan', 'td': 'Chad', 'ml': 'Mali'} %}
+      {% snippet 'v2/components/select.html',
+          label='Country', placeholder='Select a country', state='disabled',
+          name='demo-select-disabled', options={'sd': 'Sudan', 'td': 'Chad', 'ml': 'Mali'} %}
+      {% snippet 'v2/components/select.html',
+          label='Country', placeholder='Select a country', required=True, size='s',
+          errors='Please select a country',
+          name='demo-select-error', options={'sd': 'Sudan', 'td': 'Chad', 'ml': 'Mali'} %}
+    </div>
   </section>
 
   <br><br><br><br><br>
@@ -1101,9 +1178,19 @@
   {# ══════════════════════════════════════════════════════
      6. INPUT FIELD / SEARCH / AUTOCOMPLETE
   ══════════════════════════════════════════════════════ #}
-  <section class="demo-section">
+  <section class="demo-section" id="input-field">
     <h1 class="demo-section__title">Input Field / Search / Autocomplete</h1>
     <p class="demo-section__subtitle">size × state</p>
+
+    <h2 class="demo-subsection__heading">Form field wrapper (c-form-field)</h2>
+    <div class="demo-row--column demo-max-width-l">
+      <div class="c-form-field">
+        {% snippet 'v2/components/text-field.html',
+            type='email', name='demo-form-field-email', id='demo-form-field-email',
+            label='Email address', required=True, autocomplete='email' %}
+        <div class="c-form-field__hint">Already have an account? <a href="#">Log in</a></div>
+      </div>
+    </div>
 
     <h2 class="demo-subsection__heading">Password input</h2>
     <div class="demo-row--column demo-max-width-l">
@@ -1212,7 +1299,7 @@
   {# ══════════════════════════════════════════════════════
      7. LABEL / FILE-TYPE / TOOLTIP
   ══════════════════════════════════════════════════════ #}
-  <section class="demo-section">
+  <section class="demo-section" id="label">
     <h1 class="demo-section__title">Label / File-type / Tooltip</h1>
     <p class="demo-section__subtitle">colour × size — text, icon+text, icon-only</p>
 
@@ -1322,7 +1409,7 @@
   {# ══════════════════════════════════════════════════════
      8. NAVIGATION & PAGINATION
   ══════════════════════════════════════════════════════ #}
-  <section class="demo-section">
+  <section class="demo-section" id="navigation-pagination">
     <h1 class="demo-section__title">Navigation &amp; Pagination</h1>
     <p class="demo-section__subtitle">nav items · anchor links · pagination · breadcrumb</p>
 
@@ -1462,7 +1549,7 @@
   {# ══════════════════════════════════════════════════════
      9. SELECTION ITEMS / RADIO / TOGGLE / GRAPH POINT
   ══════════════════════════════════════════════════════ #}
-  <section class="demo-section">
+  <section class="demo-section" id="selection-items">
     <h1 class="demo-section__title">Selection Items / Radio / Toggle / Graph Point</h1>
     <p class="demo-section__subtitle">filter chips · radio inputs · toggles · chart points</p>
 
@@ -1532,7 +1619,7 @@
   {# ══════════════════════════════════════════════════════
      10. CHECKBOX
   ══════════════════════════════════════════════════════ #}
-  <section class="demo-section">
+  <section class="demo-section" id="checkbox">
     <h1 class="demo-section__title">Checkbox</h1>
     <p class="demo-section__subtitle">state — visual checkbox with semantic input</p>
 
@@ -1569,7 +1656,7 @@
   {# ══════════════════════════════════════════════════════
      11. LIST ITEM
   ══════════════════════════════════════════════════════ #}
-  <section class="demo-section">
+  <section class="demo-section" id="list-item">
     <h1 class="demo-section__title">List Item</h1>
     <p class="demo-section__subtitle">type × size × state — text-only or checklist items</p>
 
@@ -1626,7 +1713,7 @@
   {# ══════════════════════════════════════════════════════
      12. LETTER ANCHOR
   ══════════════════════════════════════════════════════ #}
-  <section class="demo-section">
+  <section class="demo-section" id="letter-anchor">
     <h1 class="demo-section__title">Letter Anchor</h1>
     <p class="demo-section__subtitle">size × state — alphabet navigation/filtering</p>
 
@@ -1691,13 +1778,14 @@
   {# ══════════════════════════════════════════════════════
      13. KPI CARD
   ══════════════════════════════════════════════════════ #}
-  <section class="demo-section">
+  <section class="demo-section" id="kpi-card">
     <h1 class="demo-section__title">KPI Card</h1>
-    <p class="demo-section__subtitle">label · value · optional info icon — used in the c-kpi-card-row on the All Locations page</p>
+    <p class="demo-section__subtitle">label · value · optional info icon — c-stats-card--kpi variant, used in the c-stats-card-list--row on the All Locations / All Organisations pages</p>
 
     <h2 class="demo-subsection__heading">Single card — with info icon (default)</h2>
     <div class="demo-row demo-row--flex-start">
-      {% snippet 'v2/components/kpi-card.html',
+      {% snippet 'v2/components/stats-card.html',
+          variant='kpi',
           label='Total locations',
           value='250',
           tooltip_text='Total number of country and territory locations on HDX.',
@@ -1706,25 +1794,29 @@
 
     <h2 class="demo-subsection__heading">Single card — show_icon=False</h2>
     <div class="demo-row demo-row--flex-start">
-      {% snippet 'v2/components/kpi-card.html',
+      {% snippet 'v2/components/stats-card.html',
+          variant='kpi',
           label='Total locations',
           value='250',
           show_icon=False %}
     </div>
 
-    <h2 class="demo-subsection__heading">Full row — 3 cards (c-kpi-card-row)</h2>
-    <div class="c-kpi-card-row">
-      {% snippet 'v2/components/kpi-card.html',
+    <h2 class="demo-subsection__heading">Full row — 3 cards (c-stats-card-list--row)</h2>
+    <div class="c-stats-card-list c-stats-card-list--row">
+      {% snippet 'v2/components/stats-card.html',
+          variant='kpi',
           label='Total locations',
           value='250',
           tooltip_text='Total number of country and territory locations on HDX.',
           tooltip_id='demo-kpi-row-total' %}
-      {% snippet 'v2/components/kpi-card.html',
+      {% snippet 'v2/components/stats-card.html',
+          variant='kpi',
           label='HRP locations',
           value='21',
           tooltip_text='Locations with an active Humanitarian Response Plan, highlighted in teal.',
           tooltip_id='demo-kpi-row-hrp' %}
-      {% snippet 'v2/components/kpi-card.html',
+      {% snippet 'v2/components/stats-card.html',
+          variant='kpi',
           label='Locations part of Data Grid',
           value='23',
           tooltip_text='Locations for which an HDX Data Grid has been published.',
@@ -1841,7 +1933,7 @@
     <h1 class="demo-section__title">Signup Tier</h1>
     <p class="demo-section__subtitle">value-proposition tier card — default with CTA button · primary (featured) variant with footer_text instead of a button</p>
 
-    <div class="demo-row demo-row--flex-start">
+    <div class="c-signup-tier-row">
       {% snippet 'v2/components/signup-tier.html',
           title='Individual account',
           description='Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
@@ -1872,7 +1964,7 @@
   {# ══════════════════════════════════════════════════════
      14. ACTIVITY CARD
   ══════════════════════════════════════════════════════ #}
-  <section class="demo-section">
+  <section class="demo-section" id="activity-card">
     <h1 class="demo-section__title">Activity Card</h1>
     <p class="demo-section__subtitle">size × state — icon, heading, subtitle, CTA button</p>
 
@@ -1908,69 +2000,9 @@
   <hr class="demo-divider">
 
   {# ══════════════════════════════════════════════════════
-     PAGE HEADER
-  ══════════════════════════════════════════════════════ #}
-  <section class="demo-section" id="page-header">
-    <h1 class="demo-section__title">Page Header</h1>
-    <p class="demo-section__subtitle">unified page hero — dataset-style (4-column meta_items grid) and resource-style (compact title, download CTA, 3-column --cols-3 grid)</p>
-
-    <h2 class="demo-subsection__heading">Dataset-style — labels, org card, downloads, meta strip with chips / tooltip / overflow "View more"</h2>
-    <div class="demo-row--highlight">
-      {% snippet 'v2/components/page-header.html',
-          title='Sudan — Example Needs Assessment 2024',
-          description='Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-          org_name='Organisation Name',
-          contact_href='#',
-          download_count=1234,
-          request_only=True,
-          meta_items=[
-            {'label': 'Location', 'value': 'Sudan',
-             'chip': {'text': 'Sub-national', 'color': 'cyan'},
-             'link': {'label': 'View all', 'href': '#'}},
-            {'label': 'Expected update frequency', 'value': 'Every month',
-             'chip': {'text': 'Up to date', 'color': 'cyan'}},
-            {'label': 'Time period', 'value': 'Jan 2024 – Dec 2024',
-             'tooltip': {'aria_label': 'More info about time period',
-                         'text': 'The earliest start date and latest end date across all resources included in the dataset.',
-                         'id': 'demo-header-time-period'}},
-            {'label': 'Source',
-             'value': 'Example Organisation, International Example Organisation for Data Coordination (IEODC), Organisation Name, Example Field Office Sudan, Example Data Unit, Example Monitoring Partner, Example Assessment Team, Example Analysis Group',
-             'link': {'label': 'View more', 'href': '#'},
-             'link_on_overflow': True},
-          ] %}
-    </div>
-
-    <h2 class="demo-subsection__heading">Resource-style — compact title, file format, download + export metadata, 3-item meta strip with copy buttons</h2>
-    <div class="demo-row--highlight">
-      {% snippet 'v2/components/page-header.html',
-          compact_title=True,
-          title='Sudan — Example Needs Assessment Data (CSV)',
-          file_format='tabular',
-          file_format_text='CSV',
-          can_download=True,
-          download_url='#',
-          download_size='2.1M',
-          export_json_url='#json',
-          export_csv_url='#csv',
-          meta_items=[
-            {'label': 'Last modified', 'value': '12 June 2026'},
-            {'label': 'Resource ID',
-             'value': 'a1b2c3d4-e5f6-7890-abcd-ef1234567890',
-             'copy_value': 'a1b2c3d4-e5f6-7890-abcd-ef1234567890'},
-            {'label': 'Resource URL',
-             'value': 'https://example.org/data/example.csv',
-             'copy_value': 'https://example.org/data/example.csv',
-             'value_href': '#'},
-          ] %}
-    </div>
-  </section>
-
-  <hr class="demo-divider">
-
-  {# ══════════════════════════════════════════════════════
      15. DATASET CARD
   ══════════════════════════════════════════════════════ #}
-  <section class="demo-section">
+  <section class="demo-section" id="dataset-card">
     <h1 class="demo-section__title">Dataset Card</h1>
     <p class="demo-section__subtitle">responsive · two-column (MD+) · stacked (SM) · description toggle</p>
 
@@ -2029,7 +2061,7 @@
   {# ══════════════════════════════════════════════════════
      16. RESOURCE CARD
   ══════════════════════════════════════════════════════ #}
-  <section class="demo-section">
+  <section class="demo-section" id="resource-card">
     <h1 class="demo-section__title">Resource Card</h1>
     <p class="demo-section__subtitle">file-type icon · labels · description toggle · action buttons</p>
 
@@ -2165,7 +2197,7 @@
 
   <hr class="demo-divider">
 
-  <section class="demo-section">
+  <section class="demo-section" id="org-list-card">
     <h1 class="demo-section__title">Organisation List Card</h1>
     <p class="demo-section__subtitle">responsive · description toggle · dataset + member counts</p>
 
@@ -2213,7 +2245,7 @@
 
   </section>
 
-  <section class="demo-section">
+  <section class="demo-section" id="member-list-card">
     <h1 class="demo-section__title">Member List Card</h1>
     <p class="demo-section__subtitle">user row (org Members tab, task 059) · caller() actions · responsive stack &lt; md</p>
 
@@ -2354,7 +2386,7 @@
 
   <hr class="demo-divider">
 
-  <section class="demo-section">
+  <section class="demo-section" id="table">
     <h1 class="demo-section__title">Table</h1>
     <p class="demo-section__subtitle">bordered · striped rows · truncating cells</p>
 
@@ -2374,7 +2406,7 @@
      Drawer
   ══════════════════════════════════════════════════════════════ #}
   <section class="demo-section" id="drawer">
-    <h1 class="demo-section__heading">Drawer</h1>
+    <h1 class="demo-section__title">Drawer</h1>
 
     <h2 class="demo-subsection__heading">Basic</h2>
     <div class="demo-row">
@@ -2479,7 +2511,7 @@
      Alert
   ══════════════════════════════════════════════════════════════ #}
   <section class="demo-section" id="alert">
-    <h1 class="demo-section__heading">Alert</h1>
+    <h1 class="demo-section__title">Alert</h1>
     <p class="demo-section__subtitle">
       Shared alert used for page-level flash banners (v2/page.html) and
       inline form/drawer error &amp; status messages. Dismissible by default.

@@ -42,8 +42,7 @@
         line-height: 1.3;
 
         &:focus-visible {
-            outline: 2px solid var(--hdx-neutral-0);
-            outline-offset: 2px;
+            .hdx-focus-ring-inverse();
         }
     }
 
@@ -53,7 +52,7 @@
         flex-shrink: 0;
 
         // ocha-logo.svg uses fill="currentColor" — inherits white from .hdx-v2-top-bar
-        svg { width: 100%; height: auto; display: block; }
+        svg { .hdx-icon-size(100%, auto); display: block; }
     }
 
     &__services-text {
@@ -66,8 +65,7 @@
         flex-shrink: 0;
 
         svg {
-            width: 1rem;
-            height: auto;
+            .hdx-icon-size(var(--hdx-space-4), auto);
             display: block;
             transition: transform 0.2s ease;
             .hdx-motion();

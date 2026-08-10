@@ -118,13 +118,13 @@ Parameters:
 
 **Critical constraint:** The component builds each page link as `href="{{ base_url }}{{ p }}"`. This means `base_url` must be the complete URL prefix up to and including `page=` — e.g. `/dataset?q=water&organization=wfp&page=`. If `base_url` omits any active params, those params are silently dropped when navigating to the next page.
 
-**Styles:** `fanstatic/v2/components/navigation.css` (compiled from `navigation.less:131–218`). Already bundled in `v2-components-styles`. **No new CSS file needed.**
+**Styles:** `fanstatic/v2/components/pagination.css` (compiled from `pagination.less:131–218`). Already bundled in `v2-components-styles`. **No new CSS file needed.**
 
 ---
 
 ## Design Analysis
 
-### Component visual spec (from `navigation.less`)
+### Component visual spec (from `pagination.less`)
 
 | Element | Background | Border | Text | Weight |
 |---|---|---|---|---|
@@ -237,7 +237,7 @@ The single-page suppression guard (`total_pages > 1`) lives inside `v2/component
 
 ### 3. LESS — pagination row wrapper
 
-**File:** `ckanext-hdx_theme/ckanext/hdx_theme/hdx-styles/src/common/less/v2/search.less`
+**File:** `ckanext-hdx_theme/ckanext/hdx_theme/hdx-styles/src/common/less/v2/pages/search.less`
 
 Add after the dataset list section:
 ```less
@@ -277,13 +277,13 @@ Snippet: v2/components/pagination.html
 | File | Change |
 |---|---|
 | `ckanext-hdx_theme/ckanext/hdx_theme/templates/search/snippets/search_results_wrapper.html` | Conditional v2/legacy in `page_pagination` block |
-| `ckanext-hdx_theme/ckanext/hdx_theme/hdx-styles/src/common/less/v2/search.less` | Add `.hdx-v2-pagination-row` |
+| `ckanext-hdx_theme/ckanext/hdx_theme/hdx-styles/src/common/less/v2/pages/search.less` | Add `.hdx-v2-pagination-row` |
 
 **Read-only (no changes):**
 | File | Why referenced |
 |---|---|
 | `ckanext-hdx_theme/ckanext/hdx_theme/templates/v2/components/pagination.html` | Component to be called — no changes needed |
-| `ckanext-hdx_theme/ckanext/hdx_theme/hdx-styles/src/common/less/v2/components/navigation.less` | Source for component styles |
+| `ckanext-hdx_theme/ckanext/hdx_theme/hdx-styles/src/common/less/v2/components/pagination.less` | Source for component styles |
 | `ckanext-hdx_search/ckanext/hdx_search/controller_logic/search_logic.py` | `_get_pager_function` / `_params_nopage` — URL generation origin, no changes |
 | `ckan/lib/pagination.py` | `BasePage._url_generator` attribute — no changes |
 

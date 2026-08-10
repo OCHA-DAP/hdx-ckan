@@ -46,8 +46,7 @@
         margin-left: var(--hdx-space-2);
 
         svg {
-            width:   var(--hdx-space-4);   // 16px
-            height:  var(--hdx-space-4);
+            .hdx-icon-size(var(--hdx-space-4));   // 16px
             display: block;
         }
     }
@@ -67,8 +66,11 @@
 // Wraps the heading + c-anchor-links list in the sidebar so both
 // become sticky together (top = navbar height).
 .c-anchor-links-wrapper {
-    position: sticky;
-    top:      var(--hdx-space-12);
+    position:   sticky;
+    top:        var(--hdx-space-12);
+    max-height: calc(100vh - var(--hdx-space-12));
+    overflow-y: auto;
+    .hdx-hide-scrollbar();
 
     // Heading rendered above the desktop list
     .c-anchor-links__heading {
@@ -130,8 +132,7 @@
         .hdx-motion();
 
         svg {
-            width:  var(--hdx-space-4);   // 16 px
-            height: var(--hdx-space-4);
+            .hdx-icon-size(var(--hdx-space-4));   // 16 px
         }
     }
 
@@ -172,8 +173,7 @@
         }
 
         svg {
-            width:       var(--hdx-space-4);  // 16px
-            height:      var(--hdx-space-4);
+            .hdx-icon-size(var(--hdx-space-4));  // 16px
             flex-shrink: 0;
         }
     }

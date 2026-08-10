@@ -34,8 +34,8 @@
   flex-shrink: 0;
 }
 .hdx-v2-search-filter-overlay__close svg {
-  width: 1.5rem;
-  height: 1.5rem;
+  width: var(--hdx-space-6);
+  height: var(--hdx-space-6);
 }
 .hdx-v2-search-filter-overlay__body {
   flex: 1;

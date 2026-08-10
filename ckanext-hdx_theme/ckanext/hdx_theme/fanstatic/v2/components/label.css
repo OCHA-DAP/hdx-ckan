@@ -311,8 +311,8 @@
   appearance: none;
 }
 .c-info-icon svg {
-  width: 0.875rem;
-  height: 0.875rem;
+  width: var(--hdx-space-17);
+  height: var(--hdx-space-17);
 }
 .c-tooltip-anchor {
   position: relative;

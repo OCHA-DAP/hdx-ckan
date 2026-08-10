@@ -42,23 +42,6 @@
     line-height: var(--hdx-lh-normal);
   }
 }
-.hdx-v2-signup-tiers-page__tiers {
-  display: flex;
-  flex-direction: column;
-  gap: var(--hdx-space-4);
-  align-self: stretch;
-}
-@media (min-width: 48rem) {
-  .hdx-v2-signup-tiers-page__tiers {
-    flex-direction: row;
-    align-items: stretch;
-  }
-}
-@media (min-width: 80rem) {
-  .hdx-v2-signup-tiers-page__tiers {
-    gap: var(--hdx-space-5);
-  }
-}
 .hdx-v2-signup-tiers-page__login {
   font-family: var(--hdx-font-body);
   font-size: var(--hdx-fs-m);

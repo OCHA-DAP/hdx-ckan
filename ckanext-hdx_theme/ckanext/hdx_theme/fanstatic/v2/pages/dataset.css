@@ -44,8 +44,8 @@
   transition: transform 0.2s ease;
 }
 .hdx-v2-dataset-section__chevron svg {
-  width: 1.25rem;
-  height: 1.25rem;
+  width: var(--hdx-space-5);
+  height: var(--hdx-space-5);
   display: block;
 }
 .hdx-v2-dataset-section__body {

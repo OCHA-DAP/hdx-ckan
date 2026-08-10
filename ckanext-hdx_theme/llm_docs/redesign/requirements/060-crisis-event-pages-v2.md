@@ -340,7 +340,7 @@ second instance undefined behavior; v1 had the same constraint implicitly). See 
   accordion/collapse, no full-bleed title variant, no Layer dropdown** (D6, D3). The stored
   `section_title`/`description` fields remain in the data model and admin form; they are
   simply not displayed on the v2 page (accepted information loss — §10).
-- **Auto-resize ported to v2** (D5): new `fanstatic/v2/crisis-page.js` containing a minimal
+- **Auto-resize ported to v2** (D5): new `fanstatic/v2/pages/crisis.js` containing a minimal
   vanilla-JS port of `modules/data-viewer2.js` behavior — on-load height recalibration
   (`minHeight` 400px), error surface — attached via `data-module`-style `data-*` hooks. The v1
   module is never loaded. Recalibration only ever writes `iframe.style.height` when it
@@ -368,12 +368,12 @@ second instance undefined behavior; v1 had the same constraint implicitly). See 
 | Filter sidebar + MD/SM overlay | **Reuse as-is** — `v2/search-filters.html` + wrapper-provided overlay | 031/056; same facet dict |
 | Inline search / sort / per-page / chips / cards / pagination | **Reuse as-is** — via `search_results_wrapper.html` → `package_list.html` → `dataset-card.html`, `v2/search-nav-controls.html`, `v2/components/pagination.html` | 029/033/035/036/056; no duplication |
 | Text (`description`) sections | **First one promoted into the header's `description` param** (D4); any subsequent one **reused as-is** — rendered markdown + v2 body typography | Real CMS prose belongs in the header slot Figma shows; `page.description` (keywords) does not |
-| Iframe sections | **New minimal** — plain iframe markup in the dispatcher, contained in `hdx-v2-container` + auto-resize port in `fanstatic/v2/crisis-page.js` | No v2 embed block exists; smallest possible addition (D5/D6) |
+| Iframe sections | **New minimal** — plain iframe markup in the dispatcher, contained in `hdx-v2-container` + auto-resize port in `fanstatic/v2/pages/crisis.js` | No v2 embed block exists; smallest possible addition (D5/D6) |
 | Section dispatcher | **New page-scoped snippet** — `templates/v2/crisis-section.html` | Replaces `section_item.html`; not a `c-*` component (057 precedent) |
 | Header KPI box, resource list, You-might-also-like, Layer dropdown, Back to top, share button | **Not implemented** | D2/D3/D6/D8 |
 
 Assets: new `v2-crisis-page-styles` (compiled `v2/crisis-page.css`; LESS source
-`hdx-styles/src/common/less/v2/crisis-page.less`, page classes `hdx-v2-crisis-*`) and
+`hdx-styles/src/common/less/v2/pages/crisis.less`, page classes `hdx-v2-crisis-*`) and
 `v2-crisis-page-scripts` (`v2/crisis-page.js`); page also loads `v2-search-page-styles` +
 `v2-search-page-scripts` (dataset list, like the org Datasets tab). No edits to any v1 bundle.
 
@@ -455,7 +455,7 @@ All requester's explicit choices, resolved before writing this doc:
 | **D2** | Header KPI box ("Datasets / Organisations" counts) **omitted** | No v1 data source; v1 key figures are iframes, not counts |
 | **D3** | "Interactive data" resource list, "You might also like", "Layer" dropdown — **deferred** | Figma-only; no backing data/feature; "no new feature development" |
 | **D4** | Header description, clamped + Show more at **all** breakpoints (incl. SM), is sourced from the **first `description`-type section's `long_description`** — not `page_dict.description`, which is admin-entered SEO keywords (§1.1), never rendered on the page | Live-testing showed `page_dict.description` displaying as a keyword list, not prose; the admin form itself labels the field "Keywords". Section `long_description` is the real CMS prose content and belongs in the header slot Figma shows. Show-more-at-all-breakpoints part of the original decision (Jira note winning over the Figma SM export) is unchanged |
-| **D5** | Iframe auto-resize **ported to v2** (`fanstatic/v2/crisis-page.js`) | Preserves v1 behavior; v1 bundles must not load on v2 pages |
+| **D5** | Iframe auto-resize **ported to v2** (`fanstatic/v2/pages/crisis.js`) | Preserves v1 behavior; v1 bundles must not load on v2 pages |
 | **D6** | Dataviz sections = **bare iframe below the header, every breakpoint, contained in `hdx-v2-container`** (full width of the container, `margin-top` spacing above — not full-bleed/edge-to-edge) — no accordion, no title row, no full-bleed first-map variant, no share button | Requester: the Figma screenshot is the map placeholder, "right below the page header, full width, no title"; supersedes the earlier accordion answer; contained (not full-bleed) per follow-up review |
 | **D7** | Get notified = existing `notification_platform/buttons.html` + `modals.html` with `object_type='crisis'`, wired through `page-header.html` params | Snippets are already v2 (051); dataset-page precedent |
 | **D8** | Back to top button **skipped** | No v1 or v2 precedent; candidate for a future shared pattern |
@@ -472,8 +472,8 @@ All requester's explicit choices, resolved before writing this doc:
 | `ckanext-hdx_theme/.../templates/pages/read_page.html` | Replaced with the v2 template (extends `v2/page.html`): header via `page-header.html` (description sourced from the first `description`-type section, D4), section loop via the new dispatcher, search-row layout blocks, notification modals kept |
 | `ckanext-hdx_theme/.../templates/v2/crisis-section.html` | **NEW** — section-type dispatcher (description 2nd+ / iframe / data_list no-op) |
 | `ckanext-hdx_theme/.../templates/v2/components/page-header.html` | Added optional `state_label_text`/`state_label_color` params (chip rendered after the title); title `<h1>` now skipped entirely when `title` is empty (was previously always rendered) — backward compatible, other callers unaffected |
-| `hdx-styles/src/common/less/v2/crisis-page.less` | **NEW** — page layout (`hdx-v2-crisis-*`), iframe section (outer white band + margin-top/bottom, inner container-constrained), description section, compiled to `fanstatic/v2/crisis-page.css` |
-| `ckanext-hdx_theme/.../fanstatic/v2/crisis-page.js` | **NEW** — iframe auto-resize + error handling port (D5) |
+| `hdx-styles/src/common/less/v2/pages/crisis.less` | **NEW** — page layout (`hdx-v2-crisis-*`), iframe section (outer white band + margin-top/bottom, inner container-constrained), description section, compiled to `fanstatic/v2/pages/crisis.css` |
+| `ckanext-hdx_theme/.../fanstatic/v2/pages/crisis.js` | **NEW** — iframe auto-resize + error handling port (D5) |
 | `ckanext-hdx_theme/.../fanstatic/webassets.yml` | New `v2-crisis-page-styles` / `v2-crisis-page-scripts` bundles |
 | `pages/snippets/section_item.html`, `pages/snippets/visualization_title.html` | Orphaned in place (superseded by the v2 template), never edited |
 | `ckanext-hdx_pages/ckanext/hdx_pages/views/light_page.py` (`_populate_template_data`) | **One-line change** (D11): pass the real per-request `is_mobile` flag instead of the hardcoded `True`, so desktop iframes use `max_height` |

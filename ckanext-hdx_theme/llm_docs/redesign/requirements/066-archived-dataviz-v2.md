@@ -131,7 +131,7 @@ To prevent conflation in any future read of this doc:
 - **The repo's actual data-visualization code** — Data Explorer / CSV preview
   (`ckanext-hdx_office_preview`, DataTables-based table, not a chart), Quick Charts
   (`ckanext-hdx_hxl_preview`, a cross-origin iframe to an external app — no chart code lives in this
-  repo), and the GIS/shape map preview (`ckanext-hdx_theme/.../fanstatic/shape-view.js`, MapLibre GL
+  repo), and the GIS/shape map preview (`ckanext-hdx_theme/.../fanstatic/v2/pages/shape-view.js`, MapLibre GL
   JS). None of this is touched by, or relevant to, the `/archive` page.
 
 ---

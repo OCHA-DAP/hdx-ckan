@@ -1,7 +1,7 @@
 # 048 — All Locations List (v2)
 
-**Scope:** Migrate `/group/` (All Locations) to v2 — layout, KPI cards, alphabetical list, anchor nav sidebar, filter toggle, sort buttons.  
-**Search is excluded from scope. Map markup is preserved from v1 but not redesigned.**  
+**Scope:** Migrate `/group/` (All Locations) to v2 — layout, KPI cards, alphabetical list, anchor nav sidebar, filter toggle, sort buttons.
+**Search is excluded from scope. Map markup is preserved from v1 but not redesigned.**
 **Figma sources:** `all-location-xl.html`, `all-location-xl-title-kpi.html`, `all-location-xl-legend.html`, `all-location-xl-title-filter.html`, `all-location-xl-content.html`, `all-location-md.html`, `all-location-md-content.html`, `all-location-sm.html`
 
 ---
@@ -120,7 +120,7 @@ header              ← flex row: sidebar + scrollable content
       bold number (1.5rem Merriweather, color: #2f3536)
 ```
 
-**Existing component:** `v2/components/kpi-card.html` + `v2/components/kpi-card.css` — **already on branch, use as-is.**
+**Existing component:** `v2/components/stats-card.html` (`variant='kpi'`) + `v2/components/stats-card.css` — merged from the former `kpi-card.html` (task 070 B1).
 
 ### Legend (`all-location-xl-legend.html`)
 
@@ -183,7 +183,7 @@ Static — no dynamic content.
         All items:   border-radius: 2px, font: 14px Roboto, color: #3f4748
 ```
 
-**No location starts with X in the data. Figma showed X as disabled; the implementation excludes X entirely from `all_letters`.**  
+**No location starts with X in the data. Figma showed X as disabled; the implementation excludes X entirely from `all_letters`.**
 **"World" is NOT in the alphabetical list.**
 
 ### MD Layout (`all-location-md-content.html`)
@@ -241,8 +241,8 @@ Static — no dynamic content.
 
 | UI Element | Component | Notes |
 |---|---|---|
-| KPI card | `c-kpi-card` → `v2/components/kpi-card.html` | **Already exists on branch** |
-| Info icon on KPI | `c-info-icon` → `v2/components/info-icon.html` | Used inside kpi-card |
+| KPI card | `c-stats-card--kpi` → `v2/components/stats-card.html`, `variant='kpi'` | Merged from the former `c-kpi-card` (task 070 B1) |
+| Info icon on KPI | `c-info-icon` → `v2/components/info-icon.html` | Used inside the `kpi` variant's label row |
 | Location item | `c-selection-item` → `v2/components/selection-item.html` | `color='cyan'` for HRP items, `color='light'` otherwise; `width: 100%; min-width: 0` on component base for grid sizing |
 | HRP filter toggle | `c-toggle` → `v2/components/toggle.html` | |
 | Sort buttons | `c-button` → `v2/components/button.html` | Secondary style, with active/selected modifier |
@@ -255,32 +255,36 @@ Static — no dynamic content.
 | File | Purpose |
 |---|---|
 | `templates/light/group/index.html` | Replace existing template |
-| `hdx-styles/src/common/less/v2/locations-list-page.less` | Page LESS (already scaffolded?) |
-| `fanstatic/v2/all-locations-page.js` | Filter toggle + sort JS |
+| `hdx-styles/src/common/less/v2/pages/locations-list.less` | Page LESS (already scaffolded?) |
+| `fanstatic/v2/pages/locations-list.js` | Filter toggle + sort JS |
 
 ---
 
 ## 4. KPI Card Definition
 
-**Already implemented** at `v2/components/kpi-card.html` with CSS at `v2/components/kpi-card.css`.
+Implemented at `v2/components/stats-card.html` (`variant='kpi'`) with CSS at `v2/components/stats-card.css` —
+merged from the former `kpi-card.html`/`kpi-card.css` (task 070 B1).
 
 ### Usage in template
 
 ```jinja2
-<div class="c-kpi-row">
-  {% snippet 'v2/components/kpi-card.html',
+<div class="c-stats-card-list c-stats-card-list--row">
+  {% snippet 'v2/components/stats-card.html',
+      variant='kpi',
       label=_('Total locations'),
       value=total_count,
       tooltip_text=_('...'),
       tooltip_id='kpi-total' %}
 
-  {% snippet 'v2/components/kpi-card.html',
+  {% snippet 'v2/components/stats-card.html',
+      variant='kpi',
       label=_('HRP locations'),
       value=hrp_count,
       tooltip_text=_('...'),
       tooltip_id='kpi-hrp' %}
 
-  {% snippet 'v2/components/kpi-card.html',
+  {% snippet 'v2/components/stats-card.html',
+      variant='kpi',
       label=_('Locations part of Data Grid'),
       value=datagrid_count,
       tooltip_text=_('...'),
@@ -288,7 +292,7 @@ Static — no dynamic content.
 </div>
 ```
 
-The `kpi-card.css` already hides the info icon on SM via `@media (max-width: 47.99rem) { .c-kpi-card__header .c-info-icon { display: none; } }`.
+The `--kpi` variant hides the info icon on SM via `@media (max-width: 47.99rem) { .c-stats-card--kpi .c-stats-card__label-row .c-info-icon { display: none; } }`.
 
 ---
 
@@ -507,7 +511,7 @@ Same component as MD: right-side vertical sidebar with letter anchors. The "Jump
 | 4 | 3-col grid (XL), 2-col grid (MD) | Confirmed from Figma CSS |
 | 5 | `c-selection-item` with `color='cyan'` for HRP items | `c-selection-item--cyan` variant matches Figma HRP bg/border; `width: 100%; min-width: 0` added to component base for grid use |
 | 6 | `c-button` for sort buttons | User confirmation + Figma button style matches |
-| 7 | `c-kpi-card` (existing) | Already on branch — reuse as-is |
+| 7 | `c-stats-card--kpi` (merged from `c-kpi-card`, task 070 B1) | Reused as-is |
 | 8 | Map (v1 markup) preserved but not redesigned; search excluded | Template retains `<div id="map">` and Leaflet asset bundle; only the search box is absent |
 | 9 | World excluded from list | Not shown in Figma |
 | 10 | Tertiary style + `is-active` class for sort buttons | Matches `:active` pseudo-class visually; `c-button` component extended with `is-active` modifier for all three button styles |
@@ -524,9 +528,9 @@ Same component as MD: right-side vertical sidebar with letter anchors. The "Jump
 | `ckanext-hdx_theme/ckanext/hdx_theme/templates/light/group/index.html` | Replace with v2 implementation |
 | `ckanext-hdx_org_group/ckanext/hdx_org_group/controller_logic/group_read_logic.py` | Add `total_count`, `hrp_count`, `datagrid_count`, `grouped_countries`, `letters_present`; exclude World |
 | `ckanext-hdx_org_group/ckanext/hdx_org_group/views/group.py` | Pass new template vars |
-| `ckanext-hdx_theme/ckanext/hdx_theme/hdx-styles/src/common/less/v2/locations-list-page.less` | Page-specific LESS (or update existing scaffolded file) |
-| `ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/v2/all-locations-page.js` | Filter toggle + sort JS |
-| `ckanext-hdx_theme/ckanext/hdx_theme/templates/v2/components/kpi-card.html` | Already exists — no change needed |
-| `ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/v2/components/kpi-card.css` | Already exists — no change needed |
+| `ckanext-hdx_theme/ckanext/hdx_theme/hdx-styles/src/common/less/v2/pages/locations-list.less` | Page-specific LESS (or update existing scaffolded file) |
+| `ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/v2/pages/locations-list.js` | Filter toggle + sort JS |
+| `ckanext-hdx_theme/ckanext/hdx_theme/templates/v2/components/stats-card.html` | Merged from `kpi-card.html` (task 070 B1) — no change needed |
+| `ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/v2/components/stats-card.css` | Merged from `kpi-card.css` (task 070 B1) — no change needed |
 | `ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/webassets.yml` | Add `v2-all-locations-page-styles` and `v2-all-locations-page-scripts` bundles |
 | `ckanext-hdx_theme/ckanext/hdx_theme/templates/v2/components.html` | Add `c-selection-item` demo section (cyan/light variants) |

@@ -71,13 +71,13 @@ expand/collapse "show more" exists inside any panel — 031 removed it deliberat
 keeps it removed.
 
 State is 100% URL-param driven: every checkbox click calls `updateUrl()` in
-`fanstatic/v2/search-page.js` (constants `FILTER_PARAMS`, `ADVANCED_FILTER_PARAMS`), which mutates
+`fanstatic/v2/pages/search.js` (constants `FILTER_PARAMS`, `ADVANCED_FILTER_PARAMS`), which mutates
 `URLSearchParams` and does a full `window.location.href` navigation — no AJAX, no client-side
 filter-state store. `ADVANCED_FILTER_PARAMS` includes `vocab_Topics` (also in `FILTER_PARAMS`)
 because nested HPC advanced-filter items share that facet key; `clearAllFilters()` clears both
 arrays' union. `031-basic-filtering.md`'s own Files/Data-Flow tables reference stale names
-(`search.less`/`search.js`); the current compiled sources are `less/v2/search-page.less` and
-`fanstatic/v2/search-page.js`.
+(`search.less`/`search.js`); the current compiled sources are `less/v2/pages/search.less` and
+`fanstatic/v2/pages/search.js`.
 
 ### 1.3 Archived datasets toggle (v1 — current, live)
 

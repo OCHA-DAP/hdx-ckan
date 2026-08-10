@@ -383,7 +383,7 @@ Does not interfere with `search.js` which handles `[data-nav-key]` items via `se
 
 Targets all `.c-page-header` instances (`querySelectorAll`). Overflow "View more" reveal on `[data-header-meta-overflow]` items + tooltip click/keyboard handling for `.c-info-icon`. Export dropdown toggle logic lives in `dropdown.js`.
 
-### `fanstatic/v2/search.js` — modified
+### `fanstatic/v2/pages/search.js` — modified
 
 Dropdown toggle/close code **removed** (moved to `dropdown.js`). Retains: URL helpers (`setNavParam`, `updateUrl`), checkbox change handler, nav item → setNavParam, clear facet, MiniSearch, FilterOverlay.
 
@@ -393,7 +393,7 @@ See `c-copy-button` spec above.
 
 ---
 
-## CSS: `fanstatic/v2/resource-page.css`
+## CSS: `fanstatic/v2/pages/resource.css`
 
 Compiled from LESS source at `less/v2/resource-page.less`.
 Registered in the `v2-resource-page-styles` bundle.
@@ -512,7 +512,7 @@ No page-specific scripts block needed — all JS is in `v2-components-scripts`, 
 | `fanstatic/v2/components/copy-button.js` | JavaScript | Clipboard copy; `is-copied` CSS class approach (in `v2-components-scripts`) |
 | `fanstatic/v2/components/dropdown.js` | JavaScript | Global dropdown toggle + URL navigate (in `v2-components-scripts`) |
 | `fanstatic/v2/components/copy-button.css` | CSS | Copy button styles (in `v2-components-styles`) |
-| `fanstatic/v2/resource-page.css` | CSS | Resource page layout |
+| `fanstatic/v2/pages/resource.css` | CSS | Resource page layout |
 | `less/v2/components/copy-button.less` | LESS | Source for `copy-button.css` |
 | `less/v2/resource-page.less` | LESS | Source for `resource-page.css` |
 
@@ -523,7 +523,7 @@ No page-specific scripts block needed — all JS is in `v2-components-scripts`, 
 | `templates/package/resource_read.html` | Extends `v2/page.html`; all blocks restructured per above; analytics blocks preserved |
 | `templates/package/hdx_read.html` | Calls `v2/components/page-header.html` with `meta_items`; wrapper class `hdx-v2-page-header-section` |
 | `less/v2/components/page-header.less` | All `.c-page-header` styles incl. `--compact-title`, `__cta--row`, `__metadata--cols-3` |
-| `fanstatic/v2/search.js` | Dropdown toggle/close code removed (moved to `dropdown.js`) |
+| `fanstatic/v2/pages/search.js` | Dropdown toggle/close code removed (moved to `dropdown.js`) |
 | `fanstatic/webassets.yml` | `v2-resource-page-styles` bundle; `dropdown.js` + `copy-button.js/css` in component bundles |
 
 ---

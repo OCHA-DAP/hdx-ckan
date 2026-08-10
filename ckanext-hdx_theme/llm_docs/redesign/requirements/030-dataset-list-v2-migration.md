@@ -43,7 +43,7 @@ Migrate the search results dataset list to the v2 layout system and replace indi
 
 **Referenced (read-only):**
 - `hdx-styles/src/common/less/v2/components/dataset-card.less` — no changes needed
-- ~~`fanstatic/v2/components/dataset-card.js`~~ → **deleted (task 038)**; replaced by `fanstatic/v2/components/clamped-text.js`
+- `fanstatic/v2/components/clamped-text.js`
 - `templates/home/index.html` — migration pattern reference
 
 ---
@@ -90,7 +90,7 @@ Migrate the search results dataset list to the v2 layout system and replace indi
 - `google-analytics.js` — Mixpanel `search` event fired on filter change; do not touch
 - `list-header.js` — filter header interactions; out of scope for this task
 - `search-facets.js` — facet click handling; out of scope
-- ~~`v2/components/dataset-card.js`~~ → **deleted (task 038)**; replaced by `v2/components/clamped-text.js` (shared module)
+- `v2/components/clamped-text.js` (shared module)
 
 ---
 
@@ -298,7 +298,7 @@ No equivalent field. Resolution depends on Open Question #8.
 | Behavior | Source | How preserved |
 |---|---|---|
 | Mixpanel `search` event | `google-analytics.js` — fires on filter/search change | No JS change; event is tied to the filter form, not the card |
-| Description expand/collapse | `v2/components/clamped-text.js` via `data-module="clamped-text"` (updated task 038) | Shared module; `dataset-card.js` deleted |
+| Description expand/collapse | `v2/components/clamped-text.js` via `data-module="clamped-text"` (updated task 038) | Shared module |
 | Query text highlighting | `data-module="highlight"` JS module | Add `query` param to component (Gap 1) |
 | Dataset URL routing | `h.url_for('dataset.read', id=package.name)` | Preserved in `title_href` |
 | Org URL routing | `h.url_for('organization.read', ...)` | Preserved in `org_href` |

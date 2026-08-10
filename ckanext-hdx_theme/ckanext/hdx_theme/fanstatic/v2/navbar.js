@@ -1,44 +1,6 @@
 (function () {
   'use strict';
 
-  // ── FocusTrap ─
-  var getFocusable = window.hdxV2.getFocusable;
-
-  function FocusTrap(element, triggerElement) {
-    this.element        = element;
-    this.triggerElement = triggerElement;
-    this._handler       = null;
-  }
-
-  FocusTrap.prototype.activate = function () {
-    var el   = this.element;
-    var list = getFocusable(el);
-    if (list.length) list[0].focus();
-
-    this._handler = function (e) {
-      if (e.key !== 'Tab') return;
-      var current = getFocusable(el);
-      if (!current.length) { e.preventDefault(); return; }
-      var first = current[0];
-      var last  = current[current.length - 1];
-      if (e.shiftKey) {
-        if (document.activeElement === first) { e.preventDefault(); last.focus(); }
-      } else {
-        if (document.activeElement === last) { e.preventDefault(); first.focus(); }
-      }
-    };
-    document.addEventListener('keydown', this._handler);
-  };
-
-  FocusTrap.prototype.deactivate = function () {
-    if (this._handler) {
-      document.removeEventListener('keydown', this._handler);
-      this._handler = null;
-    }
-    if (this.triggerElement) this.triggerElement.focus();
-  };
-  // ─────────────────────────────────────────────────────────────
-
   var activePanel     = null;
   var offcanvasTrap   = null;
   var hamburgerOpenLabel = null;
@@ -72,7 +34,7 @@
     if (backdrop) backdrop.hidden = false;
     document.body.style.overflow = 'hidden';
     // Trap focus inside the offcanvas panel (V-02 / C-04)
-    offcanvasTrap = new FocusTrap(el, btn);
+    offcanvasTrap = new window.hdxV2.FocusTrap(el, btn);
     offcanvasTrap.activate();
   }
 

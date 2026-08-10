@@ -1,6 +1,6 @@
 # Dataset Page – Activity Section (v2)
 
-**Scope:** Activity section on the dataset page (`hdx_read.html`) — `c-activity-item` component + `activity_stream_v2.html` snippet
+**Scope:** Activity section on the dataset page (`hdx_read.html`) — `c-activity-item` component + `activity-stream.html` snippet
 
 ---
 
@@ -24,7 +24,7 @@ template variable in `dataset.py` is always `[]` and the static `{% snippet %}` 
 `hdx_read.html` is a dead call — it only renders an empty-state message at page load.
 
 The real rendering path is: accordion opens → JS → API action (`helpers/actions.py:744`) →
-renders `activity_stream_v2.html` → returns HTML → JS injects into wrapper.
+renders `activity-stream.html` → returns HTML → JS injects into wrapper.
 
 ---
 
@@ -228,7 +228,7 @@ The `is_last` flag is **not** a parameter — last-item line termination is hand
 return tk.render('package/snippets/activity_stream.html', {...})
 
 # AFTER
-return tk.render('package/snippets/activity_stream_v2.html', {...})
+return tk.render('v2/activity-stream.html', {...})
 ```
 
 **`hdx_read.html:474`** — the static snippet call is updated so the page-load empty state
@@ -240,7 +240,7 @@ also uses the v2 template:
     activity_stream=hdx_activities, id=pkg.id, object_type='package' %}
 
 {# AFTER #}
-{% snippet 'package/snippets/activity_stream_v2.html',
+{% snippet 'v2/activity-stream.html',
     activity_stream=hdx_activities, id=pkg.id, object_type='package' %}
 ```
 
@@ -269,14 +269,14 @@ var $activities = $(wrapper).find('.c-activity-stream');
 | New file | Purpose |
 |---|---|
 | `v2/components/activity-item.html` | Single reusable item snippet |
-| `package/snippets/activity_stream_v2.html` | Loop + type dispatch + calls `activity-item` |
+| `v2/activity-stream.html` | Loop + type dispatch + calls `activity-item` |
 | `components/activity-item.less` | BEM styles + timeline layout |
 
 ---
 
 ## 5. Integration Plan
 
-### `activity_stream_v2.html` structure
+### `activity-stream.html` structure
 
 ```jinja2
 {# Accepts same params as v1: activity_stream, id, object_type #}
@@ -536,7 +536,7 @@ activity items (unlike dataset cards). Long dataset titles wrap naturally.
 | Missing LESS typography mixins (`hdx-body-xs`) | Low | Confirmed: `.hdx-body-s-semibold()`, `.hdx-body-s()`, `.hdx-body-xs()` all exist |
 | `#c4d0d1` token resolved | None | Used as `var(--hdx-neutral-3)` CSS custom property in LESS component |
 | `dataset-page.js` empty-state check targets old `.activity` class | High (will break) | Updated `dataset-page.js:58` to `.find('.c-activity-stream')` |
-| `hdx_package_activity_stream` renders v1 HTML | High (blocks v2) | Changed `helpers/actions.py:744` to render `activity_stream_v2.html` |
+| `hdx_package_activity_stream` renders v1 HTML | High (blocks v2) | Changed `helpers/actions.py:744` to render `activity-stream.html` |
 
 ---
 
@@ -566,7 +566,7 @@ All questions resolved — no open items remain.
 
 6. **AJAX architecture** — Activities are loaded via AJAX through `hdx_package_activity_stream`
    (`helpers/actions.py:744`). This file IS in scope. The fix is to change the rendered
-   snippet from `activity_stream.html` to `activity_stream_v2.html`. The `hdx_activities`
+   snippet from `activity_stream.html` to `activity-stream.html`. The `hdx_activities`
    static path in `dataset.py` remains `= []` and is not restored in this task.
 
 7. **Pagination** — `limit=7` is enforced by the JS call
@@ -592,7 +592,7 @@ All questions resolved — no open items remain.
 | File | Description |
 |---|---|
 | `ckanext-hdx_theme/.../templates/v2/components/activity-item.html` | Reusable single-item snippet |
-| `ckanext-hdx_theme/.../templates/package/snippets/activity_stream_v2.html` | v2 stream orchestrator |
+| `ckanext-hdx_theme/.../templates/v2/activity-stream.html` | v2 stream orchestrator |
 | `ckanext-hdx_theme/.../hdx-styles/src/common/less/v2/components/activity-item.less` | BEM LESS source |
 | `ckanext-hdx_theme/.../fanstatic/v2/components/activity-item.css` | Compiled CSS (committed) |
 
@@ -600,9 +600,9 @@ All questions resolved — no open items remain.
 
 | File | Change |
 |---|---|
-| `ckanext-hdx_theme/.../templates/package/hdx_read.html` | Line 474: change snippet name to `activity_stream_v2.html`; remove lines 475–477 (dashboard link) |
-| `ckanext-hdx_theme/ckanext/hdx_theme/helpers/actions.py` | Line 744: render `activity_stream_v2.html` instead of `activity_stream.html` |
-| `ckanext-hdx_theme/.../fanstatic/v2/dataset-page.js` | Line 58: `.find('.activity')` → `.find('.c-activity-stream')` |
+| `ckanext-hdx_theme/.../templates/package/hdx_read.html` | Line 474: change snippet name to `activity-stream.html`; remove lines 475–477 (dashboard link) |
+| `ckanext-hdx_theme/ckanext/hdx_theme/helpers/actions.py` | Line 744: render `activity-stream.html` instead of `activity_stream.html` |
+| `ckanext-hdx_theme/.../fanstatic/v2/pages/dataset.js` | Line 58: `.find('.activity')` → `.find('.c-activity-stream')` |
 | `ckanext-hdx_theme/.../fanstatic/webassets.yml` | Add `v2/components/activity-item.css` to `v2-components-styles` bundle |
 
 ## Files NOT to Touch

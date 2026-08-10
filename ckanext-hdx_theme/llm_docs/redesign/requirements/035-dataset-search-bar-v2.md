@@ -333,7 +333,7 @@ Use `size='m'` to match the height of existing v2 header controls (dropdowns at 
 | File | Change |
 |------|--------|
 | `templates/search/snippets/package_list.html` | Add v2 search bar inside `{% if v2 %}` block, after `hdx-v2-list-header`, before filter overlay |
-| `hdx-styles/src/common/less/v2/search.less` | Add CSS for search row container and breakpoint layout |
+| `hdx-styles/src/common/less/v2/pages/search.less` | Add CSS for search row container and breakpoint layout |
 
 **No changes to:**
 - `fanstatic/organization_/organizations.js`

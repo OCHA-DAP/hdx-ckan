@@ -20,6 +20,10 @@
   page_size_options {list}    Overrides the default results-per-page value set
                               (task 067 — dataviz gallery uses [12, 24, 36]).
                               default: [10, 25, 50, 100]
+  page_size_key     {string}  URL query param name the page-size dropdown
+                              navigates on (task 070 A5 — org index's backend
+                              reads 'limit', not the shared search logic's
+                              'ext_page_size'). default: 'ext_page_size'
   ──────────────────────────────────────────────────────────────────
 #}
 {% set sorting_selected = sorting_selected if sorting_selected is defined else h.HDX_CONST('DEFAULT_SORTING') %}
@@ -29,6 +33,7 @@
 {% set sorting_options  = sorting_options  if sorting_options  is defined else None %}
 {% set show_page_size   = show_page_size   if show_page_size   is defined else True %}
 {% set page_size_options = page_size_options if page_size_options is defined else None %}
+{% set page_size_key    = page_size_key    if page_size_key    is defined else 'ext_page_size' %}
 
 {% set limits = page_size_options if page_size_options else [10, 25, 50, 100] %}
 {% set limit_selected = ext_page_size|int if ext_page_size else 10 %}
@@ -82,7 +87,7 @@
         selected=limit_selected|string,
         state='enabled',
         panel_id='hdx-nav-panel-size-' ~ panel_suffix,
-        attrs={'data-nav-key': 'ext_page_size'},
+        attrs={'data-nav-key': page_size_key},
         navigate=True,
         items=_size_ns.items %}
   </div>

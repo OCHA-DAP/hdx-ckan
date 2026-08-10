@@ -71,5 +71,6 @@
 | 065 | [advanced-filters-v2](065-advanced-filters-v2.md)                                                              | implemented | |
 | 066 | [archived-dataviz-v2](066-archived-dataviz-v2.md)                                                              | implemented | |
 | 067 | [dataviz-gallery-v2](067-dataviz-gallery-v2.md)                                                                | implemented | |
-| 068 | [tde-preview-data-dictionary-v2](068-tde-preview-data-dictionary-v2.md)                                        | in_progress | |
+| 068 | [tde-preview-data-dictionary-v2](068-tde-preview-data-dictionary-v2.md)                                        | implemented | |
 | 069 | [animation-interaction-audit](069-animation-interaction-audit.md)                                              | implemented | |
+| 070 | [v2-full-audit](070-v2-full-audit.md)                                                                          | implemented | |

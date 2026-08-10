@@ -127,3 +127,20 @@
 .c-signup-tier__footer a {
   color: inherit;
 }
+.c-signup-tier-row {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hdx-space-4);
+  align-self: stretch;
+}
+@media (min-width: 48rem) {
+  .c-signup-tier-row {
+    flex-direction: row;
+    align-items: stretch;
+  }
+}
+@media (min-width: 80rem) {
+  .c-signup-tier-row {
+    gap: var(--hdx-space-5);
+  }
+}

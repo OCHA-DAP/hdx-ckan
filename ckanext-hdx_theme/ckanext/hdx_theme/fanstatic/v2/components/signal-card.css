@@ -38,10 +38,10 @@
   font-weight: var(--hdx-fw-semibold);
   line-height: var(--hdx-lh-normal);
   color: var(--hdx-neutral-95);
-  overflow: hidden;
   display: -webkit-box;
-  -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
   margin: 0;
 }
 .c-signal-card__graph {
@@ -77,81 +77,8 @@
   font-size: var(--hdx-fs-m);
   font-weight: var(--hdx-fw-medium);
   line-height: var(--hdx-lh-normal);
-  overflow: hidden;
   display: -webkit-box;
-  -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
-}
-.hdx-v2-signals-cards {
-  align-self: stretch;
-  position: relative;
-}
-@media (max-width: 80rem) {
-  .hdx-v2-signals-cards {
-    overflow: hidden;
-  }
-}
-.hdx-v2-signals-cards__inner {
-  position: relative;
-  display: flex;
-}
-@media (min-width: 80rem) {
-  .hdx-v2-signals-cards__inner {
-    gap: var(--hdx-space-5);
-  }
-}
-.hdx-v2-signal-slide {
-  flex-shrink: 0;
-}
-@media (min-width: 80rem) {
-  .hdx-v2-signal-slide {
-    flex: 1;
-    min-width: 0;
-  }
-  .hdx-v2-signal-slide.is-carousel-clone {
-    display: none;
-  }
-}
-@media (max-width: 80rem) {
-  .hdx-v2-signal-slide {
-    width: 19.938rem;
-    margin-right: var(--hdx-space-4);
-  }
-}
-@media (min-width: 48rem) and (max-width: 80rem) {
-  .hdx-v2-signal-slide {
-    width: calc(56% - var(--hdx-space-4));
-  }
-}
-.hdx-v2-signals-carousel-footer {
-  display: flex;
-  justify-content: center;
-  margin-top: var(--hdx-space-4);
-}
-@media (min-width: 80rem) {
-  .hdx-v2-signals-carousel-footer {
-    display: none;
-  }
-}
-.hdx-v2-signals-dots {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: var(--hdx-space-1);
-}
-.hdx-v2-signals-dots button {
-  width: var(--hdx-space-8);
-  height: var(--hdx-space-2);
-  border-radius: var(--hdx-radius-sm);
-  background-color: var(--hdx-neutral-1);
-  border: none;
-  cursor: pointer;
-  padding: 0;
-}
-.hdx-v2-signals-dots button.is-active {
-  background-color: var(--hdx-primary-5);
-}
-.hdx-v2-signals-dots button:focus-visible {
-  outline: 2px solid var(--hdx-primary-5);
-  outline-offset: 2px;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
 }

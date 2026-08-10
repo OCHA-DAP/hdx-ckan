@@ -68,8 +68,7 @@
         .hdx-motion();
 
         svg {
-            width: 100%;
-            height: 100%;
+            .hdx-icon-size(100%);
         }
     }
 
@@ -103,8 +102,7 @@
 
     // Focus state (keyboard accessibility)
     &__input:focus-visible ~ &__box {
-        outline: 2px solid var(--hdx-primary-5);
-        outline-offset: 2px;
+        .hdx-focus-ring();
     }
 
     // Disabled state

@@ -89,7 +89,7 @@ The v1 snippet renders a Bootstrap dropdown with class `control-order-by orderDr
 ### 2.5 Analytics
 
 - Mixpanel tracking for sort and results-per-page changes is currently **not active** — commented out in `fanstatic/google-analytics.js` lines 65–74.
-- v2 filter tracking is also commented out in `fanstatic/v2/search.js`.
+- v2 filter tracking is also commented out in `fanstatic/v2/pages/search.js`.
 
 ### 2.6 v2 dropdown component
 
@@ -300,8 +300,8 @@ These MUST be preserved:
 **Modified:**
 
 - `ckanext-hdx_theme/ckanext/hdx_theme/templates/search/snippets/package_list.html` — v2 header block added above the overlay; renders `hdx-v2-list-header` (title, count, nav-controls) and `hdx-v2-overlay-nav-controls` inside the overlay body.
-- `ckanext-hdx_theme/ckanext/hdx_theme/hdx-styles/src/common/less/v2/search.less` — `hdx-v2-list-header`, `hdx-v2-nav-controls`, `hdx-v2-nav-ctrl-pair`, `hdx-v2-nav-ctrl-label`, `hdx-v2-overlay-nav-controls` block; responsive show/hide; nav panel width/anchor overrides.
-- `ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/v2/search.js` — `[data-nav-key]` / `[data-nav-value]` click handler for immediate URL-param navigation (sort + ext_page_size).
+- `ckanext-hdx_theme/ckanext/hdx_theme/hdx-styles/src/common/less/v2/pages/search.less` — `hdx-v2-list-header`, `hdx-v2-nav-controls`, `hdx-v2-nav-ctrl-pair`, `hdx-v2-nav-ctrl-label`, `hdx-v2-overlay-nav-controls` block; responsive show/hide; nav panel width/anchor overrides.
+- `ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/v2/pages/search.js` — `[data-nav-key]` / `[data-nav-value]` click handler for immediate URL-param navigation (sort + ext_page_size).
 - `ckanext-hdx_theme/ckanext/hdx_theme/templates/v2/components/dropdown.html` — extended with unified `items`, `navigate`, `has_search`, `filter_search_key`, `has_clear`, `clear_facet` params; panel rendering delegated to `dropdown-panel.html`.
 - `ckanext-hdx_theme/ckanext/hdx_theme/templates/v2/components/dropdown-panel.html` — rewritten to support `navigate=True` (navigate-on-select via `list-item.html type='list'`) and `navigate=False` (multi-select checklist with optional search/clear); items + children flattened into single render loop.
 - `ckanext-hdx_theme/ckanext/hdx_theme/templates/v2/components/list-item.html` — extended `type='list'` to support `attrs` on outer element, `tooltip` → `title` attr, and `is-active` via `state='active'`.

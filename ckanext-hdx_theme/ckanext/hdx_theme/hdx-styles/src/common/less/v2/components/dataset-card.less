@@ -86,11 +86,7 @@
         color:              var(--hdx-neutral-95);
         line-height:        var(--hdx-lh-normal);
         text-decoration:    none;
-        // 2-line clamp (SM)
-        display:            -webkit-box;
-        -webkit-box-orient: vertical;
-        -webkit-line-clamp: 2;
-        overflow:           hidden;
+        .hdx-line-clamp(2);   // 2-line clamp (SM)
         margin:             0;
 
         &:hover {

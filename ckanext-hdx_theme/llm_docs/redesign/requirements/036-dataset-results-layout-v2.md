@@ -199,7 +199,7 @@ v2/page.html
 |---|---|
 | `ckanext-hdx_theme/.../templates/search/search.html` | Add `secondary` block with sidebar form; set `sidebar_class`, `content_class` |
 | `ckanext-hdx_theme/.../templates/search/snippets/package_list.html` | Remove `hdx-v2-search-layout` div and its sidebar form; remove `col-9` from results wrapper |
-| `ckanext-hdx_theme/.../hdx-styles/src/common/less/v2/search.less` | Remove `hdx-v2-search-layout`; add `hdx-v2-search-sidebar`, `hdx-v2-search-content` rules; update sidebar width variable |
+| `ckanext-hdx_theme/.../hdx-styles/src/common/less/v2/pages/search.less` | Remove `hdx-v2-search-layout`; add `hdx-v2-search-sidebar`, `hdx-v2-search-content` rules; update sidebar width variable |
 
 ---
 

@@ -109,7 +109,7 @@ Registered in `fanstatic/webassets.yml` under `v2-page-scripts`. **Do not reuse 
 - Prev arrow: `.hdx-v2-highlights__arrow--prev` (via `extra_classes` on `c-button`)
 - Next arrow: `.hdx-v2-highlights__arrow--next`
 
-**Infinite loop — clone-based**:  
+**Infinite loop — clone-based**:
 On init, the last real slide is prepended and the first is appended. Track: `[cloneLast | 1 | 2 … N | cloneFirst]`. The inner animates to the clone position, then silently teleports (`$inner.css('left', ...)`) to the matching real card — invisible because clone and real card look identical.
 
 ### Existing data backend
@@ -190,7 +190,7 @@ The footer (dots + arrows) is hidden at XL via CSS. At XL the carousel becomes a
 
 ### LESS
 
-Section styles are inlined directly in `hdx-styles/src/common/less/v2/styles.less` (no separate partial). The highlight-dots rule is nested inside the `.hdx-v2-highlights {}` block.
+Section styles are inlined directly in `hdx-styles/src/common/less/v2/pages/home.less` (no separate partial). The highlight-dots rule is nested inside the `.hdx-v2-highlights {}` block.
 
 ---
 
@@ -300,4 +300,4 @@ The Figma shows a subtitle row ("4.8k Datasets • 65 organisations") under the 
 - `fanstatic/v2/highlights-carousel.js` — carousel JS (new, v2-only)
 - `h.hdx_get_carousel_list()` — data helper (reuse, do not duplicate)
 - `hdx_click_stopper.js` — analytics module (reuse, do not duplicate)
-- `hdx-styles/src/common/less/v2/styles.less` — section styles inlined here
+- `hdx-styles/src/common/less/v2/pages/home.less` — section styles inlined here

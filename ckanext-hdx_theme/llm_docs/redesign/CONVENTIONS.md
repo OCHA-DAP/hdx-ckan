@@ -278,7 +278,7 @@ Update ARIA attributes whenever state changes:
 ### Focus management
 
 Overlays that block page content (offcanvas drawer, modal, full-screen overlay) must:
-1. Move focus inside on open (use `FocusTrap` — inlined in `v2/navbar.js`; copy the class if needed in future components)
+1. Move focus inside on open (use `window.hdxV2.FocusTrap` — shared in `v2/utils.js`)
 2. Trap Tab/Shift+Tab within the overlay
 3. Close on Escape
 4. Return focus to the triggering element on close
@@ -470,7 +470,7 @@ Page LESS keeps only page-rhythm concerns around the wrapper (e.g.
 
 ## Inline single-consumer utilities
 
-If a utility class or function has exactly one consumer and no realistic reuse case, inline it into the consumer rather than maintaining a separate component file. (`FocusTrap` → inlined into `navbar.js` from `focus-trap.js`.)
+If a utility class or function has exactly one consumer and no realistic reuse case, inline it into the consumer rather than maintaining a separate component file. Promote it to a shared module (`utils.js`) the moment a second consumer needs the same logic — never copy it. (`FocusTrap` started inlined into `navbar.js` from `focus-trap.js`; once `components/drawer.js` needed the same Tab-trap logic, it moved to `window.hdxV2.FocusTrap` in `utils.js`.)
 
 ---
 

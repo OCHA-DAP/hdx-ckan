@@ -5,7 +5,6 @@
 // ============================================================
 
 @import "../mixins.less";
-@import "../breakpoints.less";
 
 // ── Hero row (off-white background, includes featured cards) ──
 .hdx-v2-signals-header-section {
@@ -109,5 +108,21 @@
         align-items: center;
         gap:         var(--hdx-space-2);
         margin:      var(--hdx-space-2) 0;
+    }
+
+    // Narrows the Mailchimp embed — same width-narrowing idiom as
+    // .hdx-v2-signup-form-page__card / .hdx-v2-auth-card (task 070 B4,
+    // replaces the Bootstrap col-12 col-md-10 col-lg-8 mx-auto it had).
+    &__inner {
+        width:  100%;
+        margin: 0 auto;
+
+        @media (min-width: @hdx-bp-md) {
+            width: 80%;
+        }
+
+        @media (min-width: @hdx-bp-xl) {
+            width: 50%;
+        }
     }
 }

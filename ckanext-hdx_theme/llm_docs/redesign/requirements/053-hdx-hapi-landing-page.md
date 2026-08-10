@@ -589,7 +589,7 @@ anchor-links desktop nav self-sticky, consistent with the dataset page. The sepa
 | `ckanext-hdx_theme/…/hdx-styles/src/common/less/v2/components/accordion.less` | **New** — accordion LESS |
 | `ckanext-hdx_theme/…/templates/v2/components/content-card.html` | **New** — `c-content-card` component snippet (title + desc + `c-text-link`) |
 | `ckanext-hdx_theme/…/hdx-styles/src/common/less/v2/components/content-card.less` | **New** — content-card LESS (no `__link` block — link via `c-text-link` snippet) |
-| `ckanext-hdx_theme/…/hdx-styles/src/common/less/v2/hapi-landing-page.less` | **New** — page LESS; cards `repeat(2, 1fr)`; partners CSS Grid `repeat(5, 1fr)`; bg `var(--hdx-neutral-01)` |
+| `ckanext-hdx_theme/…/hdx-styles/src/common/less/v2/pages/hapi-landing.less` | **New** — page LESS; cards `repeat(2, 1fr)`; partners CSS Grid `repeat(5, 1fr)`; bg `var(--hdx-neutral-01)` |
 | `ckanext-hdx_theme/…/fanstatic/webassets.yml` | Add `v2-hapi-landing-page-styles` bundle |
 | `ckanext-hdx_theme/…/helpers/ui_constants/landing_pages/hapi.py` | Added `HERO_SHORT_TITLE`; `FAQ_SECTION_TITLE` = `'FAQ'`; `HERO_SECTION_TITLE` used as subtitle |
 | `ckanext-hdx_theme/…/templates/v2/components/anchor-links.html` | Add `external` flag; wrapper always renders (sticky unconditional) |
@@ -597,6 +597,6 @@ anchor-links desktop nav self-sticky, consistent with the dataset page. The sepa
 | `ckanext-hdx_theme/…/hdx-styles/src/common/less/v2/components/page-header.less` | Add `__subtitle` block (`.hdx-body-m-semibold()`, `var(--hdx-neutral-85)`) |
 | `ckanext-hdx_theme/…/fanstatic/v2/components/anchor-links.js` | `initActiveTracking()` derives watched sections from nav item hrefs (generic, not page-specific) |
 | `ckanext-hdx_theme/…/hdx-styles/src/common/less/v2/mixins.less` | Add `.v2-sidebar-sticky()` mixin (`position: sticky; top: var(--hdx-space-12); align-self: flex-start`) |
-| `ckanext-hdx_theme/…/hdx-styles/src/common/less/v2/search-page.less` | Apply `.v2-sidebar-sticky()` at XL; normalise to mobile-first (`display: none` base) |
-| `ckanext-hdx_theme/…/hdx-styles/src/common/less/v2/locations-list-page.less` | Replace inline `position: sticky; top: 0` with `.v2-sidebar-sticky()` (also fixes wrong `top: 0`) |
-| `ckanext-hdx_theme/…/hdx-styles/src/common/less/v2/dataset-page.less` | Minor cleanup: `.v2-sidebar-flex()` moved inside XL media query |
+| `ckanext-hdx_theme/…/hdx-styles/src/common/less/v2/pages/search.less` | Apply `.v2-sidebar-sticky()` at XL; normalise to mobile-first (`display: none` base) |
+| `ckanext-hdx_theme/…/hdx-styles/src/common/less/v2/pages/locations-list.less` | Replace inline `position: sticky; top: 0` with `.v2-sidebar-sticky()` (also fixes wrong `top: 0`) |
+| `ckanext-hdx_theme/…/hdx-styles/src/common/less/v2/pages/dataset.less` | Minor cleanup: `.v2-sidebar-flex()` moved inside XL media query |

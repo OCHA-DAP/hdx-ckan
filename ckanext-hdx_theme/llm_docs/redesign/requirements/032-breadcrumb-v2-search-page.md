@@ -58,7 +58,7 @@ Parameters:
 | `separator` | string | `'/'` | Separator between crumbs. |
 | `extra_classes` | string | `''` | Additional CSS classes on the root `<nav>`. |
 
-LESS: `navigation.less` lines 225–260 — flex row, 8px gap, 12px font, CSS custom properties.
+LESS: `breadcrumb.less` lines 225–260 — flex row, 8px gap, 12px font, CSS custom properties.
 No Bootstrap dependency. Classes: `.c-breadcrumb`, `.c-breadcrumb__item`,
 `.c-breadcrumb__separator`, `.c-breadcrumb__current`.
 
@@ -169,7 +169,7 @@ When all pages are migrated to v2, the old `toolbar` block in `v2/page.html` can
 - **Falsy href** (`''` or absent) → render `<span class="c-breadcrumb__current">` (non-linked)
 
 The separator never appears after the last item (existing `if not is_last` logic).
-`.c-breadcrumb__current` already exists in `navigation.less` — no LESS changes needed.
+`.c-breadcrumb__current` already exists in `breadcrumb.less` — no LESS changes needed.
 
 **`show_home` param:** Add a boolean param (default: `true`) that automatically prepends
 `{'label': _('Home'), 'href': '/'}` as the first item. This avoids callers having to repeat
@@ -245,7 +245,7 @@ Remove the `breadcrumb_content` block — it is superseded by the toolbar overri
 
 ### 4. Add `.hdx-v2-breadcrumb-row` spacing wrapper
 
-**File:** `hdx-styles/src/common/less/v2/search.less`
+**File:** `hdx-styles/src/common/less/v2/pages/search.less`
 
 Add a layout wrapper that provides vertical spacing between the header and the breadcrumb,
 and between the breadcrumb and the search content below. The component itself already has
@@ -297,7 +297,7 @@ unchanged. All other pages that extend `v2/page.html` continue using the legacy 
 | `templates/v2/components/breadcrumb.html` | Fix last-item rendering; add `show_home` param; add RDFa markup |
 | `templates/v2/components/text-link.html` | Add `inner_attrs` param for label-wrapping span |
 | `templates/search/search.html` | Override `toolbar` block; remove `breadcrumb_content` block |
-| `hdx-styles/src/common/less/v2/search.less` | Add `.hdx-v2-breadcrumb-row` wrapper styles |
+| `hdx-styles/src/common/less/v2/pages/search.less` | Add `.hdx-v2-breadcrumb-row` wrapper styles |
 
 **Unchanged:**
 - `templates/v2/page.html`
@@ -305,7 +305,7 @@ unchanged. All other pages that extend `v2/page.html` continue using the legacy 
 - `templates/snippets/home_breadcrumb_item.html`
 - `templates/snippets/active_breadcrumb_item.html`
 - `templates/snippets/other_breadcrumb_item.html`
-- `hdx-styles/src/common/less/v2/components/navigation.less`
+- `hdx-styles/src/common/less/v2/components/breadcrumb.less`
 - All other templates and components
 
 ---

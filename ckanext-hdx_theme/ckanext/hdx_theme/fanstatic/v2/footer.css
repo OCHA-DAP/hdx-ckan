@@ -176,7 +176,7 @@
   color: var(--hdx-neutral-0);
 }
 .hdx-v2-footer__social-icon svg {
-  width: 1.25rem;
+  width: var(--hdx-space-5);
   height: auto;
   display: block;
 }
@@ -203,7 +203,7 @@
   width: 1rem;
 }
 .hdx-v2-footer__ext-icon svg {
-  width: 1rem;
+  width: var(--hdx-space-4);
   height: auto;
 }
 .hdx-v2-footer__nav {
@@ -294,8 +294,8 @@
   }
 }
 .hdx-v2-footer__ocha-logo svg {
-  height: 100%;
   width: auto;
+  height: 100%;
   display: block;
 }
 .hdx-v2-footer__ocha-text {
@@ -322,7 +322,7 @@
   line-height: 0;
 }
 .hdx-v2-footer__license-icon svg {
-  width: 1.25rem;
+  width: var(--hdx-space-5);
   height: auto;
   display: block;
 }

@@ -27,10 +27,22 @@
     min-width: 0;
 }
 
+.hdx-hide-scrollbar() {
+    scrollbar-width:    none;          // Firefox
+    -ms-overflow-style: none;          // legacy Edge/IE
+
+    &::-webkit-scrollbar {
+        display: none;                 // Chrome/Safari/Chromium Edge
+    }
+}
+
 .v2-sidebar-sticky() {
     position:   sticky;
     top:        var(--hdx-space-12);   // 48px — matches .c-anchor-links-wrapper top
+    max-height: calc(100vh - var(--hdx-space-12));
+    overflow-y: auto;
     align-self: flex-start;
+    .hdx-hide-scrollbar();
 }
 
 // ── Form field-row layout ───────────────────────────────────────
@@ -231,6 +243,58 @@
 
 .hdx-page-section-body() {
     padding-top: var(--hdx-space-8);
+}
+
+// ── Line clamp ──────────────────────────────────────────────────
+// Multi-line text truncation with a trailing ellipsis. `-off()`
+// reverses it (e.g. an `.is-open` expanded state). `-inline()` is a
+// separate variant for the one site (label.less) that needs
+// -webkit-inline-box + text-overflow instead of the block form.
+
+.hdx-line-clamp(@lines) {
+    display:            -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: @lines;
+    overflow:           hidden;
+}
+
+.hdx-line-clamp-off() {
+    -webkit-line-clamp: unset;
+    overflow:           visible;
+}
+
+.hdx-line-clamp-inline(@lines) {
+    display:             -webkit-inline-box;
+    overflow:             hidden;
+    text-overflow:        ellipsis;
+    -webkit-line-clamp:   @lines;
+    -webkit-box-orient:   vertical;
+}
+
+// ── Focus ring ──────────────────────────────────────────────────
+// Keyboard-focus outline. Inverse variant is for dark surfaces
+// (navbar, top bar) where the primary-5 ring has no contrast.
+
+.hdx-focus-ring() {
+    outline:        2px solid var(--hdx-primary-5);
+    outline-offset: 2px;
+}
+
+.hdx-focus-ring-inverse() {
+    outline:        2px solid var(--hdx-neutral-0);
+    outline-offset: 2px;
+}
+
+// ── Icon size ───────────────────────────────────────────────────
+// Shared shape for the ~40 `svg { width: …; height: …; }` sizing
+// blocks across components. Sizes genuinely diverge site to site,
+// so only width/height are pulled out here — any display/flex-shrink/
+// transition lines a given site also carries stay written out at
+// that site, unchanged.
+
+.hdx-icon-size(@w, @h: @w) {
+    width:  @w;
+    height: @h;
 }
 
 // ── Reduced-motion mixin (C-07, V-15) ──────────────────────────

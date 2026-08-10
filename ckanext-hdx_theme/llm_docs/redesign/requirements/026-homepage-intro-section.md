@@ -111,7 +111,7 @@ Add the intro section immediately after the closing `</section>` of `hdx-v2-hero
 </section>
 ```
 
-### 3. `hdx-styles/src/common/less/v2/styles.less`
+### 3. `hdx-styles/src/common/less/v2/pages/home.less`
 
 Add an `hdx-v2-intro` block after `hdx-v2-hero`. Card sizing is owned by the component — the section only sets layout and `flex: 1` for equal-width columns.
 

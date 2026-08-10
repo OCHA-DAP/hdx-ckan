@@ -62,7 +62,7 @@
   flex-shrink: 0;
 }
 .hdx-v2-top-bar__services-chevron svg {
-  width: 1rem;
+  width: var(--hdx-space-4);
   height: auto;
   display: block;
   transition: transform 0.2s ease;

@@ -1482,7 +1482,6 @@ v2-components-styles:
     - v2/components/form-field.css
     - v2/components/highlight-card.css
     - v2/components/input-field.css
-    - v2/components/kpi-card.css
     - v2/components/label.css
     - v2/components/letter-anchor.css
     - v2/components/list-item.css
@@ -1529,6 +1528,7 @@ v2-page-styles:
     - vendor/bootstrap5/css/bootstrap.css
     - v2/footer.css
     - v2/layout.css
+    - v2/nav-controls.css
     - v2/navbar.css
     - v2/top-bar.css
 
@@ -1545,6 +1545,12 @@ v2-carousel-scripts:
   contents:
     - vendor/hammer/hammer.js
     - v2/carousel.js
+
+v2-signals-carousel-styles:
+  output: ckanext-hdx_theme/%(version)s_v2-signals-carousel-styles.css
+  <<: *common-css
+  contents:
+    - v2/signals-carousel.css
 
 v2-chart-scripts:
   <<: *common-js

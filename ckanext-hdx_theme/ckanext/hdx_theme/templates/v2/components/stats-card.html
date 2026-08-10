@@ -2,35 +2,57 @@
   Snippet: stats-card.html
   Path:    templates/v2/components/stats-card.html
 
-  Renders a c-stats-card — a stat display with a semibold label, an
-  optional small sublabel (e.g. "Last 30 days") and a large value with
-  an optional unit suffix.
+  Renders a c-stats-card — a stat display with a label, an optional
+  small sublabel (e.g. "Last 30 days") and a large value with an
+  optional unit suffix. Absorbed the former kpi-card.html (task 070
+  B1) as the 'kpi' variant — same label + value shape, plus an
+  optional info-icon tooltip next to the label.
 
   Parameters
   ──────────────────────────────────────────────────────
-  label     {string}  Card title.  default: ''
-  sublabel  {string}  Small text under the label.  default: ''
-  value     {string}  Bold stat value.  default: ''
-  unit      {string}  Small unit suffix after the value (e.g. 'K').  default: ''
-  variant   {string}  'card'  — white surface, radius, padding, label
-                                 above value (default). Figma:
-                                 xl-org-stats-page.html (.metadata)
-                      'plain' — no background/radius/padding, value
-                                above label, both centered. Figma:
-                                xl-location-page-datagrids-*.html
-                                (.metadata-item)
-                      default: 'card'
+  label        {string}  Card title.  default: ''
+  sublabel     {string}  Small text under the label. Not used by 'kpi'.  default: ''
+  value        {string}  Bold stat value.  default: ''
+  unit         {string}  Small unit suffix after the value (e.g. 'K'). Not used by 'kpi'.  default: ''
+  variant      {string}  'card'  — white surface, radius, padding, label
+                                    above value (default). Figma:
+                                    xl-org-stats-page.html (.metadata)
+                          'plain' — no background/radius/padding, value
+                                    above label, both centered. Figma:
+                                    xl-location-page-datagrids-*.html
+                                    (.metadata-item)
+                          'kpi'   — bordered card, smaller padding, optional
+                                    info-icon next to the label (formerly
+                                    c-kpi-card — All Locations / All
+                                    Organisations hero KPI rows).
+                          default: 'card'
+  tooltip_text {string}  Tooltip body text. Only used when variant='kpi'.  default: ''
+  tooltip_id   {string}  Unique id for the tooltip (required when variant='kpi'
+                          and show_icon=True).  default: ''
+  show_icon    {bool}    Render the info icon (variant='kpi' only). Hidden on
+                          SM via CSS.  default: True
   ──────────────────────────────────────────────────────
 #}
 
-{% set label    = label    if label    is defined else '' %}
-{% set sublabel = sublabel if sublabel is defined else '' %}
-{% set value    = value    if value    is defined else '' %}
-{% set unit     = unit     if unit     is defined else '' %}
-{% set variant  = variant  if variant  is defined else 'card' %}
+{% set label        = label        if label        is defined else '' %}
+{% set sublabel     = sublabel     if sublabel     is defined else '' %}
+{% set value        = value        if value        is defined else '' %}
+{% set unit         = unit         if unit         is defined else '' %}
+{% set variant      = variant      if variant      is defined else 'card' %}
+{% set tooltip_text = tooltip_text if tooltip_text is defined else '' %}
+{% set tooltip_id   = tooltip_id   if tooltip_id   is defined else '' %}
+{% set show_icon    = show_icon    if show_icon    is defined else True %}
 
 <div class="c-stats-card c-stats-card--{{ variant }}">
-  <span class="c-stats-card__label">{{ label }}</span>
+  <div class="c-stats-card__label-row">
+    <span class="c-stats-card__label">{{ label }}</span>
+    {% if variant == 'kpi' and show_icon and tooltip_id %}
+      {% snippet 'v2/components/info-icon.html',
+          aria_label=label,
+          tooltip_text=tooltip_text,
+          tooltip_id=tooltip_id %}
+    {% endif %}
+  </div>
   {% if sublabel %}
     <span class="c-stats-card__sublabel">{{ sublabel }}</span>
   {% endif %}

@@ -9,7 +9,7 @@
 //   XL  ≥ 80rem     — two-column: branding left / nav grid right
 // ============================================================
 
-@import "breakpoints.less";
+@import "mixins.less";
 
 // ── Root ─────────────────────────────────────────────────────
 
@@ -72,7 +72,7 @@
         flex-shrink: 0;
 
         // hdx.svg uses fill="currentColor" — inherits white from .hdx-v2-footer
-        svg { width: 100%; height: auto; display: block; }
+        svg { .hdx-icon-size(100%, auto); display: block; }
     }
 
     &__tagline {
@@ -189,7 +189,7 @@
         line-height: 0;
         color:       var(--hdx-neutral-0);
 
-        svg { width: 1.25rem; height: auto; display: block; }
+        svg { .hdx-icon-size(var(--hdx-space-5), auto); display: block; }
     }
 
 
@@ -225,7 +225,7 @@
         width:       1rem;
 
         // link-external.svg uses stroke="currentColor" — no fill override needed
-        svg { width: 1rem; height: auto; }
+        svg { .hdx-icon-size(var(--hdx-space-4), auto); }
     }
 
 
@@ -332,7 +332,7 @@
         }
 
         // ocha.svg uses fill="currentColor" — inherits white from .hdx-v2-footer
-        svg { height: 100%; width: auto; display: block; }
+        svg { .hdx-icon-size(auto, 100%); display: block; }
     }
 
     &__ocha-text {
@@ -360,7 +360,7 @@
         line-height: 0;
 
         // creative-commons.svg uses fill="currentColor" — inherits white from .hdx-v2-footer
-        svg { width: 1.25rem; height: auto; display: block; }
+        svg { .hdx-icon-size(var(--hdx-space-5), auto); display: block; }
     }
 
     &__license-text {

@@ -9,12 +9,12 @@ Refactor the breadcrumb component's link implementation to use the existing `c-t
 **In:**
 
 - `ckanext-hdx_theme/ckanext/hdx_theme/templates/v2/components/breadcrumb.html`
-- `ckanext-hdx_theme/ckanext/hdx_theme/less/v2/components/navigation.less` (breadcrumb link styles)
+- `ckanext-hdx_theme/ckanext/hdx_theme/less/v2/components/breadcrumb.less` (breadcrumb link styles)
 - Ensuring breadcrumb links use `c-text-link` with tertiary style, xs size, enabled state
 
 **Out:**
 - Changes to the `c-text-link` component itself
-- Updates to other navigation components in `navigation.less`
+- Updates to other navigation components across `anchor-links.less` / `breadcrumb.less` / `nav-item.less` / `pagination.less`
 
 ## Requirements
 
@@ -23,7 +23,7 @@ Refactor the breadcrumb component's link implementation to use the existing `c-t
    - Configure the text-link with: `style='tertiary'`, `size='xs'`, `state='enabled'`.
    - Pass the appropriate `href` and `label` parameters to the text-link snippet.
 
-2. Update navigation.less styles.
+2. Update breadcrumb.less styles.
    - Remove the `.c-breadcrumb__link` style rules from the breadcrumb section.
    - Ensure no breadcrumb-specific link styles remain that conflict with `c-text-link`.
 

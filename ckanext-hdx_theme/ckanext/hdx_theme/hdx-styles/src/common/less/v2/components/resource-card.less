@@ -57,8 +57,7 @@
         justify-content: center;
 
         svg {
-            width:  100%;
-            height: 100%;
+            .hdx-icon-size(100%);
         }
     }
 
@@ -159,14 +158,10 @@
         color:              @c-resource-card-desc-color;
         line-height:        var(--hdx-lh-normal);
         margin:             0;
-        display:            -webkit-box;
-        -webkit-line-clamp: 7;          // SM: allow more lines (narrower column)
-        -webkit-box-orient: vertical;
-        overflow:           hidden;
+        .hdx-line-clamp(7);   // SM: allow more lines (narrower column)
 
         &.is-open {
-            -webkit-line-clamp: unset;
-            overflow:           visible;
+            .hdx-line-clamp-off();
         }
 
         @media (min-width: @hdx-bp-md) {

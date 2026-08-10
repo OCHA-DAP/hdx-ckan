@@ -227,8 +227,7 @@
 
     // Focus state (keyboard accessibility) — mirrors c-checkbox's pattern
     input:focus-visible ~ &__input &__ring {
-        outline:        2px solid var(--hdx-primary-5);
-        outline-offset: 2px;
+        .hdx-focus-ring();
     }
 
     &--disabled {

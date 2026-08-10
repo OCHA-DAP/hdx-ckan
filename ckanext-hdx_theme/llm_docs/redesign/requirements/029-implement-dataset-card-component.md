@@ -9,7 +9,7 @@ Create a reusable, responsive dataset card component matching the Figma design e
 **In:**
 - `ckanext-hdx_theme/ckanext/hdx_theme/templates/v2/components/dataset-card.html`
 - `ckanext-hdx_theme/ckanext/hdx_theme/hdx-styles/src/common/less/v2/components/dataset-card.less`
-- ~~A minimal JS module: `fanstatic/v2/components/dataset-card.js`~~ → **superseded**: logic moved to shared `fanstatic/v2/components/clamped-text.js` (task 038)
+- A minimal JS module: `fanstatic/v2/components/clamped-text.js` (shared)
 
 **Out:**
 - CKAN template integration, data fetching, routing (consuming page's concern)

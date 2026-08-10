@@ -25,9 +25,9 @@ Implement the full-height sliding panel that appears when the hamburger is tappe
 
 ## What to create
 
-### `templates/v2/navbar-offcanvas.html` (new snippet)
+### `templates/v2/header.html` (offcanvas markup)
 
-Include at the end of `header.html`, outside `<nav class="hdx-v2-navbar">`, before `</header>`.
+Markup lives inline at the end of `header.html`, outside `<nav class="hdx-v2-navbar">`, before `</header>`.
 
 ```jinja2
 {# ── Offcanvas panel ─────────────────────────────────────── #}

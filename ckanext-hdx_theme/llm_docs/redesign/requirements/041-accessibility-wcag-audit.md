@@ -2,9 +2,9 @@
 
 **Status**: requirement
 
-**Standard**: WCAG 2.1 Level AA  
-**Browsers**: Chrome/Edge (Chromium), Firefox, Safari  
-**Screen readers**: NVDA + Chrome (Windows primary), VoiceOver + Safari (macOS), JAWS + Chrome/Edge (enterprise), TalkBack + Android Chrome (mobile)  
+**Standard**: WCAG 2.1 Level AA
+**Browsers**: Chrome/Edge (Chromium), Firefox, Safari
+**Screen readers**: NVDA + Chrome (Windows primary), VoiceOver + Safari (macOS), JAWS + Chrome/Edge (enterprise), TalkBack + Android Chrome (mobile)
 **Refactoring scope**: Full structural changes allowed
 
 ---
@@ -25,17 +25,16 @@ The complete v2 implementation surface area across all pages, layout templates, 
 | `templates/package/resource_read.html` | Resource detail page |
 | `templates/v2/components.html` | Component showcase (internal) |
 
-#### Layout templates (8)
+#### Layout templates (7)
 
 | Template | Description |
 |----------|-------------|
 | `templates/v2/page.html` | Base layout for all v2 pages |
-| `templates/v2/header.html` | Site header |
+| `templates/v2/header.html` | Site header + mobile navigation drawer (offcanvas markup inline) |
 | `templates/v2/footer.html` | Site footer |
-| `templates/v2/navbar-offcanvas.html` | Mobile navigation drawer |
 | `templates/v2/navbar-notifications.html` | Notifications dropdown panel |
 | `templates/v2/navbar-user-menu.html` | User account dropdown panel |
-| `templates/v2/page-header.html` | Dataset/resource page hero header |
+| `templates/v2/components/page-header.html` | Dataset/resource page hero header |
 | `templates/v2/search-filters.html` | Filter sidebar and mobile overlay |
 | `templates/v2/search-nav-controls.html` | Sort and view controls for search results |
 
@@ -56,13 +55,13 @@ The complete v2 implementation surface area across all pages, layout templates, 
 |------|--------|-------|
 | `fanstatic/v2/components/dropdown.js` | v2-components-scripts | All v2 pages |
 | `fanstatic/v2/components/copy-button.js` | v2-components-scripts | Resource page |
-| `fanstatic/v2/components/password-toggle.js` | v2-components-scripts | Auth pages |
+| `fanstatic/v2/components/input-field.js` | v2-components-scripts | Auth pages |
 | `fanstatic/v2/components/anchor-links.js` | v2-components-scripts | Dataset, resource pages |
 | `fanstatic/v2/components/clamped-text.js` | v2-components-scripts | Search, dataset pages |
 | `fanstatic/v2/components/page-header.js` | v2-components-scripts | Dataset, resource pages |
 | `fanstatic/v2/navbar.js` | v2-page-scripts | All v2 pages |
-| `fanstatic/v2/search.js` | v2-search-scripts | Search page |
-| `fanstatic/v2/dataset.js` | v2-dataset-scripts | Dataset page |
+| `fanstatic/v2/pages/search.js` | v2-search-scripts | Search page |
+| `fanstatic/v2/pages/dataset.js` | v2-dataset-scripts | Dataset page |
 
 #### Icons
 
@@ -84,171 +83,171 @@ Severity: **critical** / **major** / **minor**
 
 ### 2.1 Semantics & Structure
 
-**Heading hierarchy** — AUDIT TARGET  
-Heading order across all five pages must be verified. The page-header component renders the dataset/resource title as `<h1>`. Subsequent section headings must follow a strict h2 → h3 hierarchy without skipping levels. This cannot be confirmed without rendering the full page tree.  
+**Heading hierarchy** — AUDIT TARGET
+Heading order across all five pages must be verified. The page-header component renders the dataset/resource title as `<h1>`. Subsequent section headings must follow a strict h2 → h3 hierarchy without skipping levels. This cannot be confirmed without rendering the full page tree.
 *WCAG 1.3.1 Info and Relationships*
 
-**SVG icons — MAJOR**  
-60+ SVG icons are included inline throughout v2 templates. Decorative icons (appearing beside text labels, inside labeled buttons) must carry `aria-hidden="true"` to prevent screen readers from reading out meaningless path data. Informative icons used as the sole accessible name of an action (icon-only buttons) require an accessible name via `<title>` inside the SVG or `aria-label` on the parent `<button>`.  
-Applies to all uses of icons from `templates/v2/icons/`.  
+**SVG icons — MAJOR**
+60+ SVG icons are included inline throughout v2 templates. Decorative icons (appearing beside text labels, inside labeled buttons) must carry `aria-hidden="true"` to prevent screen readers from reading out meaningless path data. Informative icons used as the sole accessible name of an action (icon-only buttons) require an accessible name via `<title>` inside the SVG or `aria-label` on the parent `<button>`.
+Applies to all uses of icons from `templates/v2/icons/`.
 *WCAG 1.1.1 Non-text Content*
 
-**Form label association** — AUDIT TARGET  
-`checkbox.html` and `radio.html` components use visible `<label>` wrappers. Verify that rendered `<input>` elements have unique `id` attributes and that the `<label>` carries a matching `for` attribute in all page contexts (filter sidebar, search, auth pages). Programmatic association must not be assumed from visual proximity alone.  
+**Form label association** — AUDIT TARGET
+`checkbox.html` and `radio.html` components use visible `<label>` wrappers. Verify that rendered `<input>` elements have unique `id` attributes and that the `<label>` carries a matching `for` attribute in all page contexts (filter sidebar, search, auth pages). Programmatic association must not be assumed from visual proximity alone.
 *WCAG 1.3.1 Info and Relationships*
 
-**Language attribute** — AUDIT TARGET  
-Verify `<html lang="en">` (or appropriate locale) is set in `v2/page.html`. Without it, screen readers may apply incorrect pronunciation rules to all text.  
+**Language attribute** — AUDIT TARGET
+Verify `<html lang="en">` (or appropriate locale) is set in `v2/page.html`. Without it, screen readers may apply incorrect pronunciation rules to all text.
 *WCAG 3.1.1 Language of Page*
 
 ---
 
 ### 2.2 Keyboard Accessibility
 
-**`dropdown.js` — CRITICAL**  
-The dropdown trigger opens and closes on `click` only. There is no `keydown` handler for `Enter` or `Space`. There is no arrow-key navigation within the open list. Affects every dropdown in v2: filter dropdowns (search page), sort dropdown (search nav controls), navigation dropdowns (navbar).  
+**`dropdown.js` — CRITICAL**
+The dropdown trigger opens and closes on `click` only. There is no `keydown` handler for `Enter` or `Space`. There is no arrow-key navigation within the open list. Affects every dropdown in v2: filter dropdowns (search page), sort dropdown (search nav controls), navigation dropdowns (navbar).
 *WCAG 2.1.1 Keyboard*
 
-**`copy-button.js` — MAJOR**  
-The copy trigger is bound to `click` only. If the rendered element is not a native `<button>`, keyboard users cannot activate it. Even if it is a `<button>`, verify the component template to confirm.  
+**`copy-button.js` — MAJOR**
+The copy trigger is bound to `click` only. If the rendered element is not a native `<button>`, keyboard users cannot activate it. Even if it is a `<button>`, verify the component template to confirm.
 *WCAG 2.1.1 Keyboard*
 
-**`clamped-text.js` — MAJOR**  
-The "Show more / Show less" toggle is bound to `click` on `.c-text-button`. No `keydown` handler for `Enter`/`Space` is present. Whether this is keyboard-accessible depends entirely on whether `.c-text-button` renders as a native `<button>`. Verify the template.  
+**`clamped-text.js` — MAJOR**
+The "Show more / Show less" toggle is bound to `click` on `.c-text-button`. No `keydown` handler for `Enter`/`Space` is present. Whether this is keyboard-accessible depends entirely on whether `.c-text-button` renders as a native `<button>`. Verify the template.
 *WCAG 2.1.1 Keyboard*
 
-**`page-header.js` tooltips — MAJOR**  
-Info icon tooltips are triggered by `click` only. There is no keyboard open (Enter/Space on the icon), no keyboard close (Escape), and no hover fallback. The tooltip content is also unreachable by keyboard navigation.  
+**`page-header.js` tooltips — MAJOR**
+Info icon tooltips are triggered by `click` only. There is no keyboard open (Enter/Space on the icon), no keyboard close (Escape), and no hover fallback. The tooltip content is also unreachable by keyboard navigation.
 *WCAG 2.1.1 Keyboard*
 
-**`password-toggle.js` — MINOR**  
-Password visibility toggle is `click`-bound. Same concern as above: verify it renders as `<button>`. The `aria-label` update ("Show/Hide password") is already implemented ✓.  
+**`input-field.js` password toggle — MINOR**
+Password visibility toggle is `click`-bound. Same concern as above: verify it renders as `<button>`. The `aria-label` update ("Show/Hide password") is already implemented ✓.
 *WCAG 2.1.1 Keyboard*
 
 ---
 
 ### 2.3 Focus Management
 
-**`navbar.js` offcanvas — no focus trap — CRITICAL**  
-When the mobile offcanvas menu opens, focus is not trapped inside it. A keyboard user can Tab past the end of the offcanvas and interact with content behind the overlay. Focus is also not returned to the hamburger trigger when the menu closes.  
+**`navbar.js` offcanvas — no focus trap — CRITICAL**
+When the mobile offcanvas menu opens, focus is not trapped inside it. A keyboard user can Tab past the end of the offcanvas and interact with content behind the overlay. Focus is also not returned to the hamburger trigger when the menu closes.
 *WCAG 2.1.2 No Keyboard Trap (inverse violation); best practice per ARIA Authoring Practices Guide*
 
-**No skip navigation link — CRITICAL**  
-`v2/page.html` and `v2/header.html` contain no skip-to-main-content link. Every keyboard user must Tab through the full navbar (logo, top-bar, main nav items, search, user actions) before reaching page content on every page load.  
+**No skip navigation link — CRITICAL**
+`v2/page.html` and `v2/header.html` contain no skip-to-main-content link. Every keyboard user must Tab through the full navbar (logo, top-bar, main nav items, search, user actions) before reaching page content on every page load.
 *WCAG 2.4.1 Bypass Blocks*
 
-**`dropdown.js` — no focus trap, no focus return — MAJOR**  
-When a dropdown opens, focus is not moved into it. When it closes (click-outside or button re-click), focus is not returned to the trigger. A keyboard user has no way to know the dropdown state has changed.  
+**`dropdown.js` — no focus trap, no focus return — MAJOR**
+When a dropdown opens, focus is not moved into it. When it closes (click-outside or button re-click), focus is not returned to the trigger. A keyboard user has no way to know the dropdown state has changed.
 *WCAG 2.4.3 Focus Order*
 
-**`search.js` filter overlay — GOOD (reference pattern)**  
+**`search.js` filter overlay — GOOD (reference pattern)**
 The filter overlay correctly moves focus to the first focusable element on open and restores focus to the filter button on close. This is the correct pattern to replicate in `dropdown.js` and `navbar.js`.
 
 ---
 
 ### 2.4 Color & Contrast
 
-**Brand green `#269777` as text — MAJOR**  
-The brand-5 color `#269777` has a contrast ratio of approximately **3.37:1** against white (`#ffffff`). This fails WCAG AA for normal-size text (minimum 4.5:1) and passes only for large text (≥ 18px regular / ≥ 14px bold, minimum 3:1).  
-Audit all uses of `var(--hdx-brand-5)` in text contexts: labels, badges (`c-label`), success states, "up-to-date" indicators in dataset and resource cards.  
+**Brand green `#269777` as text — MAJOR**
+The brand-5 color `#269777` has a contrast ratio of approximately **3.37:1** against white (`#ffffff`). This fails WCAG AA for normal-size text (minimum 4.5:1) and passes only for large text (≥ 18px regular / ≥ 14px bold, minimum 3:1).
+Audit all uses of `var(--hdx-brand-5)` in text contexts: labels, badges (`c-label`), success states, "up-to-date" indicators in dataset and resource cards.
 *WCAG 1.4.3 Contrast (Minimum)*
 
-**Primary blue `#1862d8` on white — PASS**  
+**Primary blue `#1862d8` on white — PASS**
 Contrast ratio ≈ **5.15:1**. Passes AA for normal text. Used for links, focus indicators, CTAs.
 
-**Focus indicator — PASS**  
+**Focus indicator — PASS**
 The established focus style (`outline: 2px solid var(--hdx-primary-5); outline-offset: 2px`) applied to buttons, checkboxes, dropdowns, and text-links passes WCAG 2.1 AA focus visibility requirements.
 
-**Interactive state colors — AUDIT TARGET**  
-Hover and active color shifts for button-secondary, text-link-tertiary, and selection-item must each meet 3:1 against adjacent colors as UI component boundaries.  
+**Interactive state colors — AUDIT TARGET**
+Hover and active color shifts for button-secondary, text-link-tertiary, and selection-item must each meet 3:1 against adjacent colors as UI component boundaries.
 *WCAG 1.4.11 Non-text Contrast*
 
-**Placeholder and disabled text — AUDIT TARGET**  
-Neutral grey values used for placeholder text in input fields and for disabled state text must be verified to meet 4.5:1 against the field background (or confirmed as intentionally excluded per WCAG exception for placeholder text).  
+**Placeholder and disabled text — AUDIT TARGET**
+Neutral grey values used for placeholder text in input fields and for disabled state text must be verified to meet 4.5:1 against the field background (or confirmed as intentionally excluded per WCAG exception for placeholder text).
 *WCAG 1.4.3 Contrast (Minimum)*
 
 ---
 
 ### 2.5 ARIA Usage
 
-**`page-header.js` tooltips — no ARIA — CRITICAL**  
-Tooltip elements rendered by `page-header.js` have no ARIA attributes. The tooltip content has no `role="tooltip"` and no `id`. The trigger has no `aria-describedby`. The tooltip is completely invisible to screen readers — users receive no indication that additional information is available.  
+**`page-header.js` tooltips — no ARIA — CRITICAL**
+Tooltip elements rendered by `page-header.js` have no ARIA attributes. The tooltip content has no `role="tooltip"` and no `id`. The trigger has no `aria-describedby`. The tooltip is completely invisible to screen readers — users receive no indication that additional information is available.
 *WCAG 1.3.1 Info and Relationships; 4.1.2 Name, Role, Value*
 
-**`copy-button.js` — no status announcement — MAJOR**  
-When copy succeeds, the `.is-copied` class is added for visual feedback only. There is no `aria-live` region or `role="status"` element to announce the success state to screen readers.  
+**`copy-button.js` — no status announcement — MAJOR**
+When copy succeeds, the `.is-copied` class is added for visual feedback only. There is no `aria-live` region or `role="status"` element to announce the success state to screen readers.
 *WCAG 4.1.3 Status Messages*
 
-**`dropdown.js` — missing panel role — MAJOR**  
-Trigger correctly sets `aria-expanded` ✓. However, the dropdown panel has no `role` (`listbox`, `menu`, or `dialog` depending on context) and items have no corresponding child roles (`option`, `menuitem`). Without these, screen readers cannot communicate the composite widget structure.  
-Verify also that the trigger is a `<button>` element; if it is a `<div>`, add `role="button"` and `tabindex="0"`.  
+**`dropdown.js` — missing panel role — MAJOR**
+Trigger correctly sets `aria-expanded` ✓. However, the dropdown panel has no `role` (`listbox`, `menu`, or `dialog` depending on context) and items have no corresponding child roles (`option`, `menuitem`). Without these, screen readers cannot communicate the composite widget structure.
+Verify also that the trigger is a `<button>` element; if it is a `<div>`, add `role="button"` and `tabindex="0"`.
 *WCAG 4.1.2 Name, Role, Value*
 
-**`navbar.js` — GOOD (reference pattern)**  
+**`navbar.js` — GOOD (reference pattern)**
 `aria-expanded`, `aria-hidden`, `aria-controls`, `aria-label` / `aria-label-close` are all correctly implemented. This is the reference pattern for ARIA on interactive panels.
 
-**`anchor-links.js` — GOOD**  
+**`anchor-links.js` — GOOD**
 `aria-expanded` on the mobile toggle ✓. `aria-current` set/removed on the active link ✓.
 
-**`dataset.js` collapsible sections — GOOD**  
+**`dataset.js` collapsible sections — GOOD**
 `aria-expanded` updated on section headers ✓. `keydown` handler for Enter/Space ✓.
 
-**`clamped-text.js` — GOOD (partial)**  
+**`clamped-text.js` — GOOD (partial)**
 `aria-expanded` ✓. Verify the visible label ("Show more" / "Show less") is sufficient as an accessible name in context, or add `aria-label` that includes the dataset title (e.g., "Show more — [Dataset title]").
 
 ---
 
 ### 2.6 Interactive Elements
 
-**Icon-only buttons — AUDIT TARGET**  
-Any button whose only visible content is an icon (e.g., close button in offcanvas, hamburger, copy icon) must have an accessible name. Verify `aria-label` is present on all such buttons in `header.html`, `navbar-offcanvas.html`, `page-header.html`, and `copy-button.html`.  
+**Icon-only buttons — AUDIT TARGET**
+Any button whose only visible content is an icon (e.g., close button in offcanvas, hamburger, copy icon) must have an accessible name. Verify `aria-label` is present on all such buttons in `header.html`, `page-header.html`, and `copy-button.html`.
 *WCAG 4.1.2 Name, Role, Value*
 
-**Touch target size — AUDIT TARGET**  
-Interactive elements on mobile (SM breakpoint, < 768px) must meet a minimum touch target of 44×44px. Verify all buttons, links, checkboxes, and form controls in `search-filters.html`, `navbar-offcanvas.html`, and `resource-card.html`.  
+**Touch target size — AUDIT TARGET**
+Interactive elements on mobile (SM breakpoint, < 768px) must meet a minimum touch target of 44×44px. Verify all buttons, links, checkboxes, and form controls in `search-filters.html`, `header.html`, and `resource-card.html`.
 *WCAG 2.5.5 Target Size (AAA, but 44px is the practical AA-compatible baseline)*
 
-**`hdx_clickable_div.js` (legacy) — AUDIT TARGET**  
-This legacy JS module makes `<div>` elements clickable with no keyboard equivalent. Verify whether it is invoked anywhere within v2 templates. If so, treat as a keyboard accessibility violation.  
+**`hdx_clickable_div.js` (legacy) — AUDIT TARGET**
+This legacy JS module makes `<div>` elements clickable with no keyboard equivalent. Verify whether it is invoked anywhere within v2 templates. If so, treat as a keyboard accessibility violation.
 *WCAG 2.1.1 Keyboard*
 
 ---
 
 ### 2.7 Responsive & Zoom
 
-**Content reflow at 400% zoom — AUDIT TARGET**  
-At 400% browser zoom the effective viewport is approximately 320px wide. Verify that all v2 pages reflow without horizontal scrolling. The v2 SM breakpoint at 48rem (768px) is designed for small screens, but zoom behavior must be tested independently.  
+**Content reflow at 400% zoom — AUDIT TARGET**
+At 400% browser zoom the effective viewport is approximately 320px wide. Verify that all v2 pages reflow without horizontal scrolling. The v2 SM breakpoint at 48rem (768px) is designed for small screens, but zoom behavior must be tested independently.
 *WCAG 1.4.10 Reflow*
 
-**Text resize — LOW RISK**  
+**Text resize — LOW RISK**
 All v2 typography uses `rem`-based font sizes via LESS tokens (no `px` font sizes in component styles). Text resize by user agent setting should not break layouts.
 
 ---
 
 ### 2.8 Motion & Animation
 
-**`anchor-links.js` smooth scroll — MAJOR**  
-The 500ms custom `easeInOutCubic` scroll animation in `anchor-links.js` has no `prefers-reduced-motion` guard. For users with vestibular disorders, unexpected scrolling motion can cause nausea or disorientation.  
+**`anchor-links.js` smooth scroll — MAJOR**
+The 500ms custom `easeInOutCubic` scroll animation in `anchor-links.js` has no `prefers-reduced-motion` guard. For users with vestibular disorders, unexpected scrolling motion can cause nausea or disorientation.
 *WCAG 2.3.3 Animation from Interactions*
 
-**CSS transitions (0.15s) — MINOR**  
-All hover/focus state transitions (`background-color`, `border-color`, `color`, `box-shadow` at `0.15s ease`) are not wrapped in `@media (prefers-reduced-motion: no-preference)`. The short duration reduces risk, but is technically non-compliant.  
+**CSS transitions (0.15s) — MINOR**
+All hover/focus state transitions (`background-color`, `border-color`, `color`, `box-shadow` at `0.15s ease`) are not wrapped in `@media (prefers-reduced-motion: no-preference)`. The short duration reduces risk, but is technically non-compliant.
 *WCAG 2.3.3 Animation from Interactions*
 
 ---
 
 ### 2.9 Content & Readability
 
-**Format badges and abbreviations — AUDIT TARGET**  
-Resource format badges (e.g., "CSV", "XLSX", "JSON") are displayed as short-form labels. For screen readers these are read as individual letters. Verify whether `<abbr title="...">` or `aria-label` expansions are needed, or whether the abbreviated form is considered an industry standard that does not require expansion.  
+**Format badges and abbreviations — AUDIT TARGET**
+Resource format badges (e.g., "CSV", "XLSX", "JSON") are displayed as short-form labels. For screen readers these are read as individual letters. Verify whether `<abbr title="...">` or `aria-label` expansions are needed, or whether the abbreviated form is considered an industry standard that does not require expansion.
 *WCAG 3.1.4 Abbreviations (AAA) — informational, not blocking*
 
-**ARIA labels and i18n — AUDIT TARGET**  
-`aria-label` strings in v2 JS files (e.g., `aria-label="Open menu"` in `navbar.js`) are currently hardcoded English strings. Verify whether these pass through CKAN's i18n system (`_('...')`) or require explicit translation handling for non-English deployments.  
+**ARIA labels and i18n — AUDIT TARGET**
+`aria-label` strings in v2 JS files (e.g., `aria-label="Open menu"` in `navbar.js`) are currently hardcoded English strings. Verify whether these pass through CKAN's i18n system (`_('...')`) or require explicit translation handling for non-English deployments.
 *WCAG 3.1.1 Language of Page*
 
-**"Show more / Show less" link purpose — MINOR**  
-In context these labels are sufficient when the truncated content is immediately adjacent. If these links ever appear in isolation (e.g., in a summary list), add `aria-label="Show more — [Dataset title]"` to provide unique accessible names.  
+**"Show more / Show less" link purpose — MINOR**
+In context these labels are sufficient when the truncated content is immediately adjacent. If these links ever appear in isolation (e.g., in a summary list), add `aria-label="Show more — [Dataset title]"` to provide unique accessible names.
 *WCAG 2.4.6 Headings and Labels*
 
 ---
@@ -270,7 +269,7 @@ In context these labels are sufficient when the truncated content is immediately
 | V-11 | SVG icons | 1.1.1 Non-text Content | MAJOR | Decorative icons missing `aria-hidden="true"`. Informative icon-only buttons may lack accessible name. |
 | V-12 | `clamped-text.js` | 2.1.1 Keyboard | MAJOR | Toggle is click-only. Keyboard access depends on element being a native `<button>`. |
 | V-13 | `page-header.js` tooltip | 2.1.1 Keyboard | MAJOR | Tooltip has no keyboard trigger (Enter/Space) and no keyboard close (Escape). |
-| V-14 | `password-toggle.js` | 2.1.1 Keyboard | MINOR | Toggle is click-only. Depends on element being a native `<button>`. |
+| V-14 | `input-field.js` password toggle | 2.1.1 Keyboard | MINOR | Toggle is click-only. Depends on element being a native `<button>`. |
 | V-15 | CSS transitions | 2.3.3 Animation from Interactions | MINOR | 0.15s transitions not guarded by `prefers-reduced-motion`. |
 
 ---

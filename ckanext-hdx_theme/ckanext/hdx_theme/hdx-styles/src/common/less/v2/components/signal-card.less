@@ -1,5 +1,4 @@
 @import "../mixins.less";
-@import "../breakpoints.less";
 
 // ============================================================
 // c-signal-card — HDX Signals featured-signal card
@@ -52,10 +51,7 @@
     &__title {
         .hdx-body-l-semibold();
         color:              var(--hdx-neutral-95);
-        overflow:           hidden;
-        display:            -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
+        .hdx-line-clamp(2);
         margin:             0;
     }
 
@@ -97,82 +93,7 @@
     &--size-s {
         .c-signal-card__title {
             .hdx-body-m-medium();
-            overflow:           hidden;
-            display:            -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-        }
-    }
-}
-
-.hdx-v2-signals-cards {
-    align-self: stretch;
-    position:   relative;
-
-    @media (max-width: @hdx-bp-xl) {
-        overflow: hidden;
-    }
-
-    &__inner {
-        position: relative;
-        display:  flex;
-
-        @media (min-width: @hdx-bp-xl) {
-            gap: var(--hdx-space-5);
-        }
-    }
-}
-
-.hdx-v2-signal-slide {
-    flex-shrink: 0;
-
-    @media (min-width: @hdx-bp-xl) {
-        flex:      1;
-        min-width: 0;
-
-        &.is-carousel-clone { display: none; }
-    }
-
-    @media (max-width: @hdx-bp-xl) {
-        width:        19.938rem;
-        margin-right: var(--hdx-space-4);
-    }
-
-    @media (min-width: @hdx-bp-md) and (max-width: @hdx-bp-xl) {
-        width: calc(56% - var(--hdx-space-4));
-    }
-}
-
-.hdx-v2-signals-carousel-footer {
-    display:         flex;
-    justify-content: center;
-    margin-top:      var(--hdx-space-4);
-
-    @media (min-width: @hdx-bp-xl) {
-        display: none;
-    }
-}
-
-.hdx-v2-signals-dots {
-    display:         flex;
-    justify-content: center;
-    align-items:     center;
-    gap:             var(--hdx-space-1);
-
-    button {
-        width:            var(--hdx-space-8);
-        height:           var(--hdx-space-2);
-        border-radius:    var(--hdx-radius-sm);
-        background-color: var(--hdx-neutral-1);
-        border:           none;
-        cursor:           pointer;
-        padding:          0;
-
-        &.is-active { background-color: var(--hdx-primary-5); }
-
-        &:focus-visible {
-            outline:        2px solid var(--hdx-primary-5);
-            outline-offset: 2px;
+            .hdx-line-clamp(2);
         }
     }
 }

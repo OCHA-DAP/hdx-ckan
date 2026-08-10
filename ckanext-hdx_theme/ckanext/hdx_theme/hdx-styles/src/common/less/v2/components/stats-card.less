@@ -1,6 +1,8 @@
 // ============================================================
-// c-stats-card — borderless white stat card (org stats tab)
-// Semibold label + optional sublabel + large value with unit.
+// c-stats-card — stat display card
+// Label (+ optional info-icon) + optional sublabel + large value
+// with unit. Absorbed the former components/kpi-card.less as the
+// --kpi variant below (task 070 B1).
 // Figma: llm_docs/redesign/figma_exports/xl-org-stats-page.html (.metadata)
 // ============================================================
 @import "../mixins.less";
@@ -12,6 +14,11 @@
     padding:          var(--hdx-space-6);
     background-color: var(--hdx-neutral-0);
     border-radius:    var(--hdx-radius-md);
+
+    &__label-row {
+        display:     flex;
+        align-items: center;
+    }
 
     &__label {
         .hdx-body-s-semibold();
@@ -52,9 +59,48 @@
     text-align:         center;
     gap:                var(--hdx-space-13);   // 6px, matches Figma's .metadata-item gap-6
 
-    .c-stats-card__label { .hdx-body-xs-semibold(); order: 2; }
+    .c-stats-card__label-row { order: 2; justify-content: center; }
+    .c-stats-card__label { .hdx-body-xs-semibold(); }
     .c-stats-card__sublabel { order: 3; }
     .c-stats-card__value { order: 1; padding: 0; }
+}
+
+// ────────────────────────────────────────────────────────────
+// c-stats-card--kpi — bordered card, smaller padding, label +
+// optional info-icon tooltip. Formerly the standalone c-kpi-card
+// component (All Locations / All Organisations hero KPI rows) —
+// merged in as a variant, task 070 B1.
+// Figma: llm_docs/redesign/figma_exports/all-location-xl.html
+// ────────────────────────────────────────────────────────────
+
+.c-stats-card--kpi {
+    gap:           0;
+    padding:       var(--hdx-space-3);
+    border:        1px solid var(--hdx-neutral-2);
+    border-radius: var(--hdx-radius-sm);
+
+    .c-stats-card__label-row {
+        gap:           var(--hdx-space-2);
+        margin-bottom: var(--hdx-space-4);
+    }
+
+    .c-stats-card__label {
+        .hdx-body-m();
+    }
+
+    .c-stats-card__value {
+        .hdx-display-s();
+        display: block;
+        color:   var(--hdx-neutral-85);
+        padding: 0;
+    }
+
+    // SM: hide info icon on KPI cards
+    @media (max-width: @hdx-bp-md) {
+        .c-stats-card__label-row .c-info-icon {
+            display: none;
+        }
+    }
 }
 
 // ────────────────────────────────────────────────────────────
@@ -98,5 +144,23 @@
 
     > .c-stats-card:not(:first-child) {
         border-left: 1px solid var(--hdx-neutral-3);
+    }
+}
+
+// ────────────────────────────────────────────────────────────
+// c-stats-card-list--row — always a row, no responsive collapse
+// (formerly c-kpi-card-row — All Locations / All Organisations
+// hero KPI rows). Same shape as --divided minus the dividers,
+// task 070 B1.
+// ────────────────────────────────────────────────────────────
+
+.c-stats-card-list--row {
+    flex-direction: row;
+    flex-wrap:      nowrap;
+    gap:            var(--hdx-space-4);
+
+    > .c-stats-card {
+        flex:      1 1 0;
+        min-width: 0;
     }
 }

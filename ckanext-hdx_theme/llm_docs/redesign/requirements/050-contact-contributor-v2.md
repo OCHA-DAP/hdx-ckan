@@ -102,7 +102,7 @@ Form is hidden. Two hidden inputs are injected for analytics:
 
 ### Analytics JS
 
-File: `ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/datasets/contact-contributor.js`
+File: `ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/v2/pages/contact-contributor.js`
 
 Fires `hdxUtil.analytics.sendMessagingEvent('dataset', 'contact contributor', topic)`
 when `message_sent=True`. Reads `#message_sent` and `#message_subject` from the DOM.

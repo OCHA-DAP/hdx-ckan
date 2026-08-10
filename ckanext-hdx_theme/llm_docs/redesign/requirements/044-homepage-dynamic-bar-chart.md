@@ -134,7 +134,7 @@ If `filtered` is empty after the `selectattr` filter, hide the section entirely:
 
 ### JS file
 
-**New file**: `ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/homepage/bar-chart.js`
+**New file**: `ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/v2/bar-chart.js`
 
 Plain vanilla JS IIFE, initialised on `DOMContentLoaded` (not a CKAN module — `ckan` global is not available when this bundle loads):
 
@@ -406,5 +406,5 @@ Use existing breakpoint tokens `@hdx-bp-xl` and `@hdx-bp-md` (do not introduce n
 | `ckanext-hdx_theme/ckanext/hdx_theme/hdx-styles/src/common/less/v2/foundation.less` | Exported `--hdx-overlay-white-20` as CSS custom property |
 | `ckanext-hdx_theme/ckanext/hdx_theme/hdx-styles/src/common/less/v2/components/selection.less` | Added `.c-graph-point--on-dark` modifier |
 | `ckanext-hdx_theme/ckanext/hdx_theme/helpers/helpers.py` | Added `try/except` to `hdx_get_locations` — returns `[]` on any exception |
-| `ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/homepage/bar-chart.js` | **New** — CKAN module `hdx_barchart` |
+| `ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/v2/bar-chart.js` | **New** — CKAN module `hdx_barchart` |
 | `ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/webassets.yml` | `v2/bar-chart.css` added to `v2-page-styles`; new `v2-homepage-scripts` bundle containing `bar-chart.js` |

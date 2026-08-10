@@ -2,71 +2,55 @@
   'use strict';
 
   // Exported to window so notification platform scripts can call it directly.
-  // Depends on window.hdxV2.getFocusable (v2/utils.js).
+  // Depends on window.hdxV2.getFocusable / window.hdxV2.FocusTrap (v2/utils.js).
+  //
+  // Called fresh on every trigger click (inline onclick="hdxV2Drawer(id).open()"),
+  // so every listener bound here is stored on the drawer element and removed
+  // before being re-added — repeat calls never stack duplicate listeners.
   window.hdxV2Drawer = function hdxV2Drawer(drawerId) {
-    var $drawer    = $('#' + drawerId);
-    var $container = $drawer.find('.c-drawer__container');
-    var lastFocus;
+    var drawer = document.getElementById(drawerId);
+    if (!drawer) return { open: function () {}, close: function () {} };
 
-    function getFocusable() {
-      return window.hdxV2.getFocusable($container.get(0));
-    }
+    var container = drawer.querySelector('.c-drawer__container');
+    var trap      = new window.hdxV2.FocusTrap(container, null);
 
     function open() {
-      if ($drawer.hasClass('is-open')) return;
-      lastFocus = document.activeElement;
-      $drawer.addClass('is-open').attr('aria-hidden', 'false');
-      $('body').addClass('is-drawer-open');
-      var focusable = getFocusable();
-      if (focusable.length) {
-        focusable[0].focus();
-      } else {
-        $container.focus();
-      }
+      if (drawer.classList.contains('is-open')) return;
+      trap.triggerElement = document.activeElement;
+      drawer.classList.add('is-open');
+      drawer.setAttribute('aria-hidden', 'false');
+      document.body.classList.add('is-drawer-open');
+
+      trap.activate();
+      if (!container.contains(document.activeElement)) container.focus();
+
+      if (drawer._hdxV2Esc) document.removeEventListener('keydown', drawer._hdxV2Esc);
+      drawer._hdxV2Esc = function (e) {
+        if (e.key === 'Escape') close();
+      };
+      document.addEventListener('keydown', drawer._hdxV2Esc);
     }
 
     function close() {
-      if (!$drawer.hasClass('is-open')) return;
-      $drawer.removeClass('is-open').attr('aria-hidden', 'true');
-      $('body').removeClass('is-drawer-open');
-      $drawer.get(0).dispatchEvent(new CustomEvent('drawer:close'));
-      if (lastFocus) lastFocus.focus();
+      if (!drawer.classList.contains('is-open')) return;
+      drawer.classList.remove('is-open');
+      drawer.setAttribute('aria-hidden', 'true');
+      document.body.classList.remove('is-drawer-open');
+      drawer.dispatchEvent(new CustomEvent('drawer:close'));
+      trap.deactivate();
+
+      if (drawer._hdxV2Esc) {
+        document.removeEventListener('keydown', drawer._hdxV2Esc);
+        drawer._hdxV2Esc = null;
+      }
     }
 
-    // ESC key + Tab focus trap
-    $(document).off('keydown.drawer-' + drawerId);
-    $(document).on('keydown.drawer-' + drawerId, function (e) {
-      if (!$drawer.hasClass('is-open')) return;
-
-      if (e.key === 'Escape') {
-        close();
-        return;
-      }
-
-      if (e.key === 'Tab') {
-        var focusable = getFocusable();
-        if (!focusable.length) return;
-        var first = focusable[0];
-        var last  = focusable[focusable.length - 1];
-        if (e.shiftKey) {
-          if (document.activeElement === first) {
-            e.preventDefault();
-            last.focus();
-          }
-        } else {
-          if (document.activeElement === last) {
-            e.preventDefault();
-            first.focus();
-          }
-        }
-      }
-    });
-
     // Any element with [data-drawer-close] (overlay, header X, Cancel buttons, etc.)
-    $drawer.off('click', '[data-drawer-close]');
-    $drawer.on('click', '[data-drawer-close]', function () {
-      close();
-    });
+    if (drawer._hdxV2CloseClick) drawer.removeEventListener('click', drawer._hdxV2CloseClick);
+    drawer._hdxV2CloseClick = function (e) {
+      if (e.target.closest('[data-drawer-close]')) close();
+    };
+    drawer.addEventListener('click', drawer._hdxV2CloseClick);
 
     return { open: open, close: close };
   };

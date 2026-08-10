@@ -115,8 +115,8 @@
   line-height: var(--hdx-lh-normal);
   margin: 0;
   display: -webkit-box;
-  -webkit-line-clamp: 7;
   -webkit-box-orient: vertical;
+  -webkit-line-clamp: 7;
   overflow: hidden;
 }
 .c-resource-card__desc-text.is-open {

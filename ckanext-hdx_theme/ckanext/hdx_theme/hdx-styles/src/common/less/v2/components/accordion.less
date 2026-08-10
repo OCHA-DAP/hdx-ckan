@@ -30,8 +30,7 @@
         &::marker                 { content: none; }
 
         &:focus-visible {
-            outline:        2px solid var(--hdx-primary-5);
-            outline-offset: 2px;
+            .hdx-focus-ring();
             border-radius:  var(--hdx-radius-sm);
         }
 
@@ -53,8 +52,7 @@
         .hdx-motion();
 
         svg {
-            width:   var(--hdx-space-5);   // 20px
-            height:  var(--hdx-space-5);
+            .hdx-icon-size(var(--hdx-space-5));   // 20px
             display: block;
         }
     }

@@ -345,13 +345,13 @@ not re-decided here.
 |---|---|
 | `ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/v2/chartjs/` | **New** — vendored `chart.umd.js` (4.5.0), `chartjs-adapter-date-fns.bundle.min.js` (D12), `chartjs-plugin-zoom.min.js` (2.2.0, D7) |
 | `ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/v2/charts.js` | **New** — all four charts (A–D): `setupDatasetDownloads` (D3), `initPageviewsChart`/`initTopDownloadsChart`, clickable-label hit-test plugin (D6), zoom/pan (D7), single-dataset branch, dataset-page call site; token colors read with no fallback literal, `tokenPx()` for numeric px config |
-| `ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/v2/dataset-page.js` | Chart-init code removed (now in `charts.js`, self-initializing); keeps only the section-accordion logic |
+| `ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/v2/pages/dataset.js` | Chart-init code removed (now in `charts.js`, self-initializing); keeps only the section-accordion logic |
 | `ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/webassets.yml` | `v2-chart-scripts` carries the vendor libs + `v2/charts.js`; `v2-dataset-page-scripts` is just `v2/dataset-page.js`; `v2-components-styles` gains `stats-card.css`; all v1 bundles untouched (D13) |
 | `ckanext-hdx_theme/ckanext/hdx_theme/templates/organization/stats.html` | Replaced with the v2 template: `v2/page.html` shell + `org-hero.html` (Stats tab active), `c-stats-card` KPIs, chart cards, "See documentation" link (D1), re-placed XLSX prompt (D4) |
 | `ckanext-hdx_org_group/ckanext/hdx_org_group/views/organization.py` | `stats()` unified for standard + custom orgs (D11); fetches `datasets_num` for the hero stats |
 | `ckanext-hdx_theme/ckanext/hdx_theme/templates/v2/components/stats-card.html` | **New** — `c-stats-card` component (D14) |
 | `ckanext-hdx_theme/.../hdx-styles/src/common/less/v2/components/stats-card.less` | **New** — `c-stats-card` styles (D14) |
-| `ckanext-hdx_theme/.../hdx-styles/src/common/less/v2/org-page.less` | Stats-tab section added (`hdx-v2-org-stats*`): header/export row, KPI column/row per breakpoint, chart cards, legend |
+| `ckanext-hdx_theme/.../hdx-styles/src/common/less/v2/pages/org.less` | Stats-tab section added (`hdx-v2-org-stats*`): header/export row, KPI column/row per breakpoint, chart cards, legend |
 | `ckanext-hdx_theme/.../hdx-styles/src/common/less/v2/layout.less` | `.hdx-v2-chart` canvas wrapper + `.hdx-v2-chart-tooltip` floating-tooltip utility (shared by org stats + dataset page) |
 | `ckanext-hdx_theme/ckanext/hdx_theme/templates/package/hdx_read.html` | v1 `dataset-scripts` removed (D13); loads `v2-chart-scripts`; graph tooltip rendered in the downloads-chart block |
 | Orphaned (left on disk, no longer loaded on v2 pages) | `organization/custom_stats.html` (D11), `fanstatic/organization_/stats.js`, `organization-stats-scripts`/`-styles` bundles; `datasets/stats-chart.js` remains only for v1 `dataset-scripts` consumers |

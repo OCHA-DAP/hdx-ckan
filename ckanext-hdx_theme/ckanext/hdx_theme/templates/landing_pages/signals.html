@@ -12,6 +12,7 @@
 
 {% block styles %}
   {{ super() }}
+  {% asset 'hdx_theme/v2-signals-carousel-styles' %}
   {% asset 'hdx_theme/v2-signals-landing-page-styles' %}
 {% endblock %}
 
@@ -92,7 +93,7 @@
     <h2 class="hdx-v2-signals-section-heading">{{ CONST.SIGNUP_SECTION_TITLE }}</h2>
     <p class="hdx-v2-signals-section-description">{{ CONST.SIGNUP_SECTION_DESCRIPTION }}</p>
     <div class="hdx-v2-signals-form-card">
-      <div class="col-12 col-md-10 col-lg-8 mx-auto">
+      <div class="hdx-v2-signals-form-card__inner">
         <div id="mc_embed_shell">
           <div id="mc_embed_signup">
             <form action="https://humdata.us14.list-manage.com/subscribe/post?u=ea3f905d50ea939780139789d&amp;id=e908cb9d48&amp;f_id=006ec2e1f0"

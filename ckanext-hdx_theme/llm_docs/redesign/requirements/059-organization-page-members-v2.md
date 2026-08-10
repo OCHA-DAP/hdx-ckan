@@ -555,8 +555,8 @@ task and are folded into §§2–11 (D-numbers are kept as reference ids used th
 | `ckanext-hdx_theme/.../templates/v2/search-nav-controls.html` | Generalized per D4 (caller-provided option lists / param names, per-page optional); search page + org datasets tab regression-checked |
 | `ckanext-hdx_theme/.../templates/v2/components/member-list-card.html` | **NEW** — §3 |
 | `hdx-styles/src/common/less/v2/components/member-list-card.less` | **NEW** — §3 (compiled CSS added to `v2-components-styles`) |
-| `hdx-styles/src/common/less/v2/org-page.less` | Members-page layout classes (`hdx-v2-org-members-*`), sidebar/two-column rules |
-| `ckanext-hdx_theme/.../fanstatic/v2/org-members-page.js` | Approve/decline AJAX port, change-role hidden-form POST wiring, remove/leave + group-message drawer wiring incl. invisible reCAPTCHA (D6/D9), invite tags-autocomplete JS (D10) |
+| `hdx-styles/src/common/less/v2/pages/org.less` | Members-page layout classes (`hdx-v2-org-members-*`), sidebar/two-column rules |
+| `ckanext-hdx_theme/.../fanstatic/v2/pages/org-members.js` | Approve/decline AJAX port, change-role hidden-form POST wiring, remove/leave + group-message drawer wiring incl. invisible reCAPTCHA (D6/D9), invite tags-autocomplete JS (D10) |
 | `ckanext-hdx_theme/.../fanstatic/webassets.yml` | `member-list-card.css` appended to `v2-components-styles`; new `v2-org-members-page-scripts` bundle (`url-nav.js` + `org-members-page.js`) |
 | `ckanext-hdx_org_group/.../views/members.py` | D1 template unification only — no page slicing (D2: no pagination). **No other view/auth/action changes** |
 | v1 files (`member_item.html`, `edit_member.html`, `add_member.html`, `search_form_new.html`, `organization_/members.js`, v1 bundles) | **Untouched** — superseded for this page, never edited |

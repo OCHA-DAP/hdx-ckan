@@ -247,7 +247,7 @@ Design tokens: use `var(--hdx-space-N)`, `var(--hdx-z-*)`, existing color tokens
 
 ### 3.3 JavaScript
 
-New file: `fanstatic/javascript/v2/drawer.js`
+New file: `fanstatic/v2/components/drawer.js`
 
 Provides a `window.hdxV2Drawer(drawerId)` factory (not a constructor — call it each time you need a handle):
 
@@ -459,7 +459,7 @@ Form elements inside the drawer body stretch to fill the available width (`align
 | File | Purpose |
 |---|---|
 | `templates/v2/components/drawer.html` | Reusable drawer Jinja2 snippet |
-| `fanstatic/javascript/v2/drawer.js` | `window.hdxV2Drawer(id)` factory — open/close/ESC/overlay/full focus trap |
+| `fanstatic/v2/components/drawer.js` | `window.hdxV2Drawer(id)` factory — open/close/ESC/overlay/full focus trap |
 | `hdx-styles/src/common/less/v2/components/drawer.less` | Drawer LESS component |
 | `fanstatic/v2/form-validator.js` | Vanilla JS form validator; auto-init on `form[data-hdx-v2-form-validator]`; full v1 validation parity; `c-form-validator__live-feedback` live feedback with CSS `::before` icons |
 
@@ -478,7 +478,7 @@ Form elements inside the drawer body stretch to fill the available width (`align
 | `hdx-styles/src/common/less/v2/components/input-field.less` | `.c-form-validator__live-feedback` BEM styles appended (live feedback list with `::before` icons) |
 | `fanstatic/webassets.yml` | Added `v2-form-validator-scripts` bundle; added `jquery.js` to `v2-page-scripts`; added `drawer.js` to `v2-components-scripts` |
 | `templates/v2/components.html` | Drawer demo section (3 generic lorem ipsum drawers); "Search input — with label" demo subsection |
-| `hdx-styles/src/common/less/v2/components.less` | Import `drawer.less` |
+| `fanstatic/webassets.yml` | `v2/components/drawer.css` listed individually (no LESS aggregator file exists) |
 
 ---
 

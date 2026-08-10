@@ -8,7 +8,7 @@
 
 Tasks 001–041 have implemented the v2 redesign across search, dataset, and resource pages. This document audits the current state of the entire v2 implementation — templates, components, snippets, styles, webassets, and JS — with the goal of identifying structural gaps, missing rules, code quality issues, and refactor opportunities.
 
-**Nothing is implemented here. No behavior changes. No refactoring.**  
+**Nothing is implemented here. No behavior changes. No refactoring.**
 Findings are documented so that decisions can be made deliberately, not silently.
 
 ---
@@ -20,7 +20,7 @@ Findings are documented so that decisions can be made deliberately, not silently
 | Layer | Paths covered |
 |---|---|
 | Base template | `templates/v2/page.html` |
-| Layout sections | `templates/v2/header.html`, `templates/v2/footer.html`, `templates/v2/page-header.html` |
+| Layout sections | `templates/v2/header.html`, `templates/v2/footer.html`, `templates/v2/components/page-header.html` |
 | Page templates | `templates/search/search.html`, `templates/package/hdx_read.html`, `templates/package/resource_read.html` |
 | Components | All 27 files in `templates/v2/components/` |
 | Snippets | `templates/v2/search-filters.html`, `templates/v2/search-nav-controls.html`, `templates/search/snippets/package_item_v2.html` |
@@ -52,7 +52,7 @@ Findings are documented so that decisions can be made deliberately, not silently
 | ⚠️ Footer uses `{% include %}`, header uses `{% snippet %}` | `v2/page.html:132` vs `:50` | Low |
 | ℹ️ SVG icons use `{% include h.url_for_static(...) %}` inside components | e.g. `button.html:116`, `label.html:59` | Informational |
 
-**Footer include detail:**  
+**Footer include detail:**
 ```jinja2
 {# header — correct #}
 {% snippet 'v2/header.html' %}
@@ -62,7 +62,7 @@ Findings are documented so that decisions can be made deliberately, not silently
 ```
 `footer.html` is a layout section, not a component, so the snippet rule may not strictly apply. But the inconsistency is undocumented and creates ambiguity for future layout sections.
 
-**SVG icon include:**  
+**SVG icon include:**
 The `{% include h.url_for_static(...) %}` pattern for inline SVGs is intentional and correct — it inlines the SVG markup. This is distinct from the snippet system. However, there is no written rule that distinguishes "inline SVG = `{% include %}`" from "layout section = ambiguous".
 
 ### Design-system page exception
@@ -78,7 +78,7 @@ The following rules do not currently exist in writing. They are proposed here fo
 
 ### A. Layout variable completeness
 
-**Proposed rule:**  
+**Proposed rule:**
 Every v2 page template that extends `v2/page.html` and uses the two-column layout MUST set all four layout variables at the top of the template:
 
 ```jinja2
@@ -88,7 +88,7 @@ Every v2 page template that extends `v2/page.html` and uses the two-column layou
 {% set content_class   = '...' %}
 ```
 
-**Current gap:**  
+**Current gap:**
 `search/search.html` sets only `sidebar_class` and `content_class`. The outer wrapper div and the columns modifier class have no page-specific class applied.
 
 | Variable | search.html | hdx_read.html | resource_read.html |
@@ -115,10 +115,10 @@ Every v2 page template that extends `v2/page.html` and uses the two-column layou
 
 ### C. Webassets dependency encoding
 
-**Proposed rule:**  
+**Proposed rule:**
 Page-level style dependencies MUST be declared via `preload:` in `webassets.yml`, not via `{% asset %}` calls in templates.
 
-**Current gap:**  
+**Current gap:**
 `resource_read.html` manually loads two asset bundles:
 ```jinja2
 {% asset 'hdx_theme/v2-dataset-styles' %}
@@ -140,7 +140,7 @@ The resource page should follow the same pattern, with `v2-resource-styles` prel
 
 ### D. `v2=True` gate policy
 
-**Proposed rule (to confirm):**  
+**Proposed rule (to confirm):**
 Define when `{% if v2 %}` guards are required vs when a template is always-v2.
 
 **Current state:**
@@ -159,7 +159,7 @@ There is no rule for when a page is promoted from "gated" to "always v2".
 
 ### E. Toolbar block override rule
 
-**Proposed rule:**  
+**Proposed rule:**
 Every template extending `v2/page.html` MUST override `{% block toolbar %}`. The fallback in `v2/page.html` uses v1 class names (`toolbarRow`, `.toolbar`) and should never render on a v2 page.
 
 **Current state:** All three v2 pages already override this block. The rule is followed in practice but not written.
@@ -310,7 +310,7 @@ Then the template loads only `v2-resource-styles` and the preload chain handles 
 
 ### 6.3 Missing `v2-resource-scripts` bundle
 
-Dataset page has `v2-dataset-scripts` (preloads `v2-page-scripts` + `dataset.js`).  
+Dataset page has `v2-dataset-scripts` (preloads `v2-page-scripts` + `dataset.js`).
 Resource page has no equivalent bundle. Resource-page JS is currently served only via the component scripts preloaded in `v2-page-scripts`. If resource-specific JS grows, there is no dedicated bundle to add it to.
 
 ### 6.4 Legacy assets in v2/page.html
@@ -426,52 +426,52 @@ These are identified safe improvements. **None should be implemented without res
 
 ---
 
-**D1 — `{% snippet %}` vs `{% include %}` for layout sections** → **Require `{% snippet %}` everywhere**  
+**D1 — `{% snippet %}` vs `{% include %}` for layout sections** → **Require `{% snippet %}` everywhere**
 All v2 layout sections including `footer.html` must use `{% snippet %}`. Fix `{% include "v2/footer.html" %}` in `v2/page.html:132`.
 
 ---
 
-**D2 — Layout variable completeness rule** → **Enforce all four variables**  
+**D2 — Layout variable completeness rule** → **Enforce all four variables**
 Every v2 page using the two-column layout must set `outer_row_class`, `columns_class`, `sidebar_class`, and `content_class`. Add the missing `outer_row_class` and `columns_class` to `search/search.html` in this task.
 
 ---
 
-**D3 — Legacy assets in `v2/page.html`** → **Comment out, do not remove**  
+**D3 — Legacy assets in `v2/page.html`** → **Comment out, do not remove**
 `page-scripts` and `onboarding-bulk-*` assets are commented out in place. They are not removed — their status (still needed or not) is not yet confirmed. The existing TODO comments stay.
 
 ---
 
-**D4 — Webassets preload chain for resource styles** → **Separate resource and dataset styles entirely**  
+**D4 — Webassets preload chain for resource styles** → **Separate resource and dataset styles entirely**
 `v2-resource-styles` does not declare a preload dependency on `v2-dataset-styles`. The two bundles are independent. The manual `{% asset %}` calls in `resource_read.html` remain as-is and are now a deliberate, documented choice, not a gap.
 
 ---
 
-**D5 — Flash messages redesign** → **Remove Bootstrap classes**  
+**D5 — Flash messages redesign** → **Remove Bootstrap classes**
 Replace `.alert .alert-dismissible .fade .show` with v2 token-based styling. Bootstrap is not used for flash messages on v2 pages.
 
 ---
 
-**D6 — Backward compatibility with v1** → **Gradual — keep for now, flag for removal**  
+**D6 — Backward compatibility with v1** → **Gradual — keep for now, flag for removal**
 Unused v1 sub-blocks in `v2/page.html` (Section 7.1) and v1 asset patterns (Section 7.3) are retained but annotated with `{# TODO: remove when v1 is retired #}` comments. No removal in this task.
 
 ---
 
-**D7 — `v2=True` gate policy** → **Define a policy; search stays gated for now**  
+**D7 — `v2=True` gate policy** → **Define a policy; search stays gated for now**
 Policy: pages are gated with `{% if v2 %}` during rollout and promoted to always-v2 when v1 is retired for that page. `search.html` and its related snippets remain gated. The policy is documented but no gate is removed in this task.
 
 ---
 
-**D8 — Webassets reorganization scope** → **Aggressive, v2 entries only**  
+**D8 — Webassets reorganization scope** → **Aggressive, v2 entries only**
 Any safe structural change to v2-related webassets entries is acceptable: remove empty token file entries from `v2-components-styles`, add `v2-resource-scripts` bundle, clean up v2 bundle hierarchy. v1 bundle entries are not touched.
 
 ---
 
-**D9 — Layout breaking changes** → **Acceptable**  
+**D9 — Layout breaking changes** → **Acceptable**
 Class-level changes to v2 layout wrappers are acceptable. No external CSS depends on these classes.
 
 ---
 
-**D10 — `secondary_right_side` feature** → **Remove entirely**  
+**D10 — `secondary_right_side` feature** → **Remove entirely**
 No planned v2 page uses `secondary_right_side`. Remove the feature and its conditional branch from `v2/page.html`. Simplifies the template.
 
 ---

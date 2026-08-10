@@ -218,7 +218,7 @@ pagination         â†’ .c-table__footer > JS-rendered pagination controls (see Â
 
 Add a `<link>` tag in the `<head>` of `hdx_csv_preview_view.html` pointing to the compiled v2 CSS files needed (foundation, typography, components/table). Use `h.fanstatic_assets()` or a direct static path.
 
-### V2 CSS classes to define (in `fanstatic/v2/components/table.less`)
+### V2 CSS classes to define (in `less/v2/components/table.less`)
 
 All tokens verified against `hdx-styles/src/common/less/v2/colors.less` and `spacing.less`:
 

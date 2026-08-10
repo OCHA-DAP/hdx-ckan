@@ -191,8 +191,8 @@ At SM: title + date only. No description, no metadata.
 
 | UI Element | Component / Approach | Notes |
 |---|---|---|
-| KPI cards | `c-kpi-card` → `v2/components/kpi-card.html` + `c-kpi-row` wrapper | **Already exists — reuse as-is** |
-| KPI info icon | `c-info-icon` → `v2/components/info-icon.html` | Used inside kpi-card |
+| KPI cards | `c-stats-card--kpi` → `v2/components/stats-card.html`, `variant='kpi'` + `c-stats-card-list c-stats-card-list--row` wrapper | Merged from the former `c-kpi-card`/`c-kpi-card-row` (task 070 B1) |
+| KPI info icon | `c-info-icon` → `v2/components/info-icon.html` | Used inside the `kpi` variant's label row |
 | Search input | `v2/components/search-input.html` OR plain v2-styled `<input>` | No autocomplete, plain submission |
 | Results per page | `v2/components/dropdown.html` (size `s`) | Same pattern as `search-nav-controls.html` |
 | Sort by | `v2/components/dropdown.html` (size `s`) | Org-specific sort options (see §5) |
@@ -209,7 +209,7 @@ At SM: title + date only. No description, no metadata.
 | `templates/v2/components.html` | Add org-list-card demo section |
 | `hdx-styles/…/v2/components/org-list-card.less` | Org card LESS |
 | `hdx-styles/…/v2/org-list-page.less` | Page LESS (imports `nav-controls.less`) |
-| `fanstatic/v2/org-list-page.js` | Search Enter handler (`hdxSetNavParam`) |
+| `fanstatic/v2/pages/org-list.js` | Search Enter handler (`hdxSetNavParam`) |
 | `fanstatic/v2/url-nav.js` | Shared `setNavParam` + `[data-nav-key]` click handler |
 
 ---
@@ -385,7 +385,7 @@ column is removed entirely.
 | Breakpoint | Behaviour |
 |---|---|
 | XL | 3 flex cards, `gap: 1rem`, with info icons |
-| MD | 3 flex cards, info icons hidden (via existing `kpi-card.css` rule) |
+| MD | 3 flex cards, info icons hidden (via the `c-stats-card--kpi` rule, `stats-card.css`) |
 | SM | 3 cards; info icons hidden |
 
 ### Controls (search + sort)
@@ -491,11 +491,11 @@ documented in the `components.html` demo page.
 | `ckanext-hdx_theme/…/hdx-styles/src/…/v2/components/org-list-card.less` | New card LESS |
 | `ckanext-hdx_theme/…/hdx-styles/src/…/v2/org-list-page.less` | New page LESS (imports `nav-controls.less`) |
 | `ckanext-hdx_theme/…/hdx-styles/src/…/v2/nav-controls.less` | New shared nav-controls LESS (also used by search-page) |
-| `ckanext-hdx_theme/…/fanstatic/v2/org-list-page.js` | New search Enter handler |
+| `ckanext-hdx_theme/…/fanstatic/v2/pages/org-list.js` | New search Enter handler |
 | `ckanext-hdx_theme/…/fanstatic/v2/url-nav.js` | New shared `setNavParam` module |
 | `ckanext-hdx_theme/…/fanstatic/webassets.yml` | Add `v2-org-list-page-styles`, `v2-org-list-page-scripts` bundles |
 | `ckanext-hdx_theme/…/helpers/helpers.py` | Add `hdx_format_number_si(n)` helper |
 | `ckanext-hdx_theme/…/plugin.py` | Register `hdx_format_number_si` helper |
 | `ckanext-hdx_org_group/…/views/light_organization.py` | Add `kpi_datasets`, `kpi_orgs`, `kpi_locations` to `template_data` |
-| `ckanext-hdx_theme/…/fanstatic/v2/search-page.js` | Extract `setNavParam` → `url-nav.js` (use `window.hdxSetNavParam`) |
+| `ckanext-hdx_theme/…/fanstatic/v2/pages/search.js` | Extract `setNavParam` → `url-nav.js` (use `window.hdxSetNavParam`) |
 | `ckanext-hdx_theme/…/hdx-styles/src/…/v2/search-page.less` | Extract nav-controls block → `nav-controls.less` |

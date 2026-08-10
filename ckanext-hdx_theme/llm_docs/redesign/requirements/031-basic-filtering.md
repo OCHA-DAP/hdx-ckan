@@ -260,10 +260,10 @@ Template renders hierarchy — parent "select all" row + indented children for c
 | `templates/v2/components/dropdown-panel.html` | Panel overlay; `navigate=False` for checklist filters, `navigate=True` for navigate-on-select (sort/limit); items + children flattened before render |
 | `templates/v2/components/list-item.html` | `type='list'`: `<div>`/`<a>` with `attrs`, `tooltip`, `is-active`; `type='checklist'`: always `<label>`; no `tag` param |
 | `templates/v2/components/checkbox.html` | Always `<span>` wrapper; no `wrapper_tag` param |
-| `less/v2/search.less` | Layout styles (search-layout, sidebar, overlay, filter-btn-row); overlay footer button overrides |
+| `less/v2/pages/search.less` | Layout styles (search-layout, sidebar, overlay, filter-btn-row); overlay footer button overrides |
 | `less/v2/components/dropdown.less` | `c-dropdown` trigger + panel structural styles; `c-dropdown__list-item*` removed (use `c-list-item` from list-item.less) |
 | `less/v2/components/list-item.less` | `c-list-item--parent` (bold) and `c-list-item--child` (24px indent) modifiers |
-| `fanstatic/v2/search.js` | All filter/overlay JS (dropdown open/close, checkbox→URL, group toggle, MiniSearch, overlay open/close) |
+| `fanstatic/v2/pages/search.js` | All filter/overlay JS (dropdown open/close, checkbox→URL, group toggle, MiniSearch, overlay open/close) |
 | `fanstatic/webassets.yml` | `v2-search-styles` bundle (`v2/search.css`) + `v2-search-scripts` bundle (`v2/search.js`) — separate from `v2-components-*` |
 
 ---

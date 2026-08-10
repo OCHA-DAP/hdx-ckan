@@ -105,13 +105,11 @@
         }
 
         &:focus-visible {
-            outline: 2px solid var(--hdx-primary-5);
-            outline-offset: 2px;
+            .hdx-focus-ring();
         }
 
         svg {
-            width: var(--hdx-space-6);
-            height: var(--hdx-space-6);
+            .hdx-icon-size(var(--hdx-space-6));
             display: block;
         }
     }

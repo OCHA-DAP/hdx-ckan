@@ -238,11 +238,7 @@
             align-self:           stretch;
             font-weight:          var(--hdx-fw-medium);
             line-height: var(--hdx-lh-normal);
-            display:              -webkit-inline-box;
-            overflow:             hidden;
-            text-overflow:        ellipsis;
-            -webkit-line-clamp:   2;
-            -webkit-box-orient:   vertical;
+            .hdx-line-clamp-inline(2);
             max-height:           3.25rem;
         }
 
@@ -347,8 +343,7 @@
     appearance:  none;
 
     svg {
-        width:  0.875rem;
-        height: 0.875rem;
+        .hdx-icon-size(var(--hdx-space-17));
     }
 }
 

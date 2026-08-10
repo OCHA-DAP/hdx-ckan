@@ -45,22 +45,6 @@
         }
     }
 
-    &__tiers {
-        display:        flex;
-        flex-direction: column;
-        gap:            var(--hdx-space-4);
-        align-self:     stretch;
-
-        @media (min-width: @hdx-bp-md) {
-            flex-direction: row;
-            align-items:    stretch;
-        }
-
-        @media (min-width: @hdx-bp-xl) {
-            gap: var(--hdx-space-5);
-        }
-    }
-
     &__login {
         .hdx-body-m();
         color: var(--hdx-neutral-8);

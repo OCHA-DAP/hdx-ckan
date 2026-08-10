@@ -85,3 +85,17 @@
   gap: var(--hdx-space-2);
   margin: var(--hdx-space-2) 0;
 }
+.hdx-v2-signals-form-card__inner {
+  width: 100%;
+  margin: 0 auto;
+}
+@media (min-width: 48rem) {
+  .hdx-v2-signals-form-card__inner {
+    width: 80%;
+  }
+}
+@media (min-width: 80rem) {
+  .hdx-v2-signals-form-card__inner {
+    width: 50%;
+  }
+}
