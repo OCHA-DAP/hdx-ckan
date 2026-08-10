@@ -14,7 +14,7 @@ import ckanext.hdx_users.helpers.tokens as tokens
 import ckanext.hdx_user_extra.helpers.helpers as ue_h
 
 from ckan.common import (
-    current_user, session
+    config, current_user, session
 )
 from ckan.types import Context, Response, DataDict
 from ckanext.hdx_users.controller_logic.onboarding_username_confirmation_logic import \
@@ -26,6 +26,7 @@ from ckanext.hdx_users.helpers.constants import (
     ONBOARDING_MAILCHIMP_OPTIN_KEY,
     ONBOARDING_USER_EMAIL_UPDATED_KEY,
 )
+from ckanext.hdx_users.views.user_view_helper import CaptchaNotValid, OnbCaptchaErr, error_message
 from ckanext.hdx_users.logic.schema import onboarding_user_new_form_schema, onboarding_user_change_email_form_schema
 
 log = logging.getLogger(__name__)
@@ -120,7 +121,9 @@ class UserOnboardingView(MethodView):
         # captcha check
         try:
             captcha_response = data_dict.get('g-recaptcha-response', None)
-            usr_h.is_valid_captcha(captcha_response=captcha_response)
+            captcha_validation = usr_h.is_valid_captcha(captcha_response=captcha_response)
+            if captcha_validation is None:
+                log.warning('Captcha validation is not enabled')
         except ValidationError as e:
             return self.get(data_dict, errors={}, error_summary=e.error_summary)
         except Exception as e:

@@ -31,6 +31,10 @@ Information about the fields and the dataset creation form can be found here `Sp
 
 Information about the PII fields can be found here `PII Fields <special_fields/pii.rst>`_
 
+RESOURCE FIELDS
+~~~~~~~~~~~~~~~
+Information about the data dictionary (column definitions schema) for resources can be found here `Data Dictionary <special_fields/data_dictionary.rst>`_
+
 
 HOW TO ADD A NEW FIELD
 ----------------------

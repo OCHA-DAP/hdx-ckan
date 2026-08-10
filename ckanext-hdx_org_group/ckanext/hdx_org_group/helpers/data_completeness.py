@@ -39,7 +39,6 @@ class DataCompleteness(object):
         try:
             yaml_dict = self._fetch_yaml()
             self.config = yaml_dict
-
             context = {}
             # datasets = logic.get_action('package_search')(context, {
             #     'fq': '(res_format:"DOCX") AND -(groups:"ken")'
@@ -150,6 +149,8 @@ class DataCompleteness(object):
                     }
                     self.__org_name_to_info_cache[org_name] = org_info
                     break
+        if not org_info:
+            log.error('DataGrids: Organization with name {} not found in the list for dataset {}'.format(org_name, dataset.get('name')))
         dataset['organization_title'] = org_info.get('title')
         dataset['organization_acronym'] = org_info.get('org_acronym')
 
