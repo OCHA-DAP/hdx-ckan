@@ -31,6 +31,11 @@
     <div class="row">
       <div class="col-12 col-md-6 mx-auto">
         {{ h.snippet('bem.blocks/form_info.html', message=CONST.MANDATORY_HELP, spacing_class="mb-4") }}
+        {% if error_summary %}
+          <div class="alert alert-danger">
+            <p class="mb-0">{{ error_summary }}</p>
+          </div>
+        {% endif %}
         <form method="post" action="{{ h.url_for('hdx_user_onboarding.user-info') }}" id="user-info-form" novalidate data-module="hdx-form-validator">
           {{ h.csrf_input() }}
           <input type="hidden" name="came_from" id="came-from-input" value="">
