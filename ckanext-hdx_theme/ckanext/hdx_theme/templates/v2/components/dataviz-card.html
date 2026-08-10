@@ -45,7 +45,7 @@
 
     {% if description %}
       <div class="c-dataviz-card__desc" data-module="clamped-text">
-        <p class="c-dataviz-card__desc-text" data-clamped-content>{{ description }}</p>
+        <div class="c-dataviz-card__desc-text" data-clamped-content>{{ description }}</div>
         {% snippet 'v2/components/text-button.html',
             style='tertiary', size='s', label=_('Show more'),
             icon_position='right', icon_src='v2/icons/chevron-down.svg',

@@ -194,6 +194,12 @@
                 </a>
               </li>
             {% endfor %}
+            <li>
+              <a href="/archive"
+                 data-module="hdx_click_stopper" data-module-link_type="main nav">
+                {{ _('Archived') }}
+              </a>
+            </li>
           </ul>
         </div>
       </div>
@@ -256,7 +262,7 @@
         {% else %}
           {% snippet 'v2/components/button.html',
               style='secondary', size='m', label=_('Log in'),
-              tag='a', href=h.url_for('hdx_signin.login'),
+              tag='a', href=h.url_for('hdx_signin.login', came_from=request.environ.get('REQUEST_URI', '')),
               extra_classes='hdx-v2-navbar__login',
               attrs={'data-module': 'hdx_click_stopper', 'data-module-link_type': 'header'} %}
         {% endif %}
@@ -340,6 +346,12 @@
                 </a>
               </li>
             {% endfor %}
+            <li>
+              <a href="/archive"
+                 data-module="hdx_click_stopper" data-module-link_type="main nav">
+                {{ _('Archived') }}
+              </a>
+            </li>
           </ul>
         </nav>
 
@@ -348,7 +360,7 @@
           {% if not c.userobj %}
             {% snippet 'v2/components/button.html',
                 style='secondary', size='l', label=_('Login'),
-                tag='a', href=h.url_for('hdx_signin.login'),
+                tag='a', href=h.url_for('hdx_signin.login', came_from=request.environ.get('REQUEST_URI', '')),
                 attrs={'data-module': 'hdx_click_stopper', 'data-module-link_type': 'main nav'} %}
           {% endif %}
         </div>

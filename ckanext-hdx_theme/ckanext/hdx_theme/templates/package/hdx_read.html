@@ -143,7 +143,7 @@
 
     {% snippet 'v2/components/page-header.html',
         title=pkg.title or pkg.name,
-        description=pkg.notes,
+        description=h.render_markdown(pkg.notes) if pkg.notes else '',
         org_name=pkg.organization.title,
         logo_src=logo_config.image_url if logo_config and logo_config.image_url else '',
         contact_href=contact_href,
@@ -326,6 +326,16 @@
             <span class="hdx-v2-dataset-metadata__value">
               {{ h.hdx_format_date(pkg.metadata_created) }}
             </span>
+          </div>
+
+          <div class="hdx-v2-dataset-metadata__cell">
+            <div class="hdx-v2-dataset-metadata__label-row">
+              <span class="hdx-v2-dataset-metadata__label">{{ _('Dataset ID') }}</span>
+              {% snippet 'v2/components/copy-button.html',
+                  value=pkg.id, style='secondary', size='s',
+                  icon_position='left', label=_('Copy') %}
+            </div>
+            <span class="hdx-v2-dataset-metadata__value">{{ pkg.id }}</span>
           </div>
 
         </div>

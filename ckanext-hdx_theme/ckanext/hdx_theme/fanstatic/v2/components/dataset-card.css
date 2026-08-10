@@ -108,6 +108,19 @@
   margin: 0;
 }
 .c-dataset-card__desc-text a {
+  color: inherit;
+}
+.c-dataset-card__desc-text p,
+.c-dataset-card__desc-text ul,
+.c-dataset-card__desc-text ol {
+  margin: 0 0 var(--hdx-space-2);
+}
+.c-dataset-card__desc-text p:last-child,
+.c-dataset-card__desc-text ul:last-child,
+.c-dataset-card__desc-text ol:last-child {
+  margin-bottom: 0;
+}
+.c-dataset-card__desc-text a {
   color: var(--hdx-neutral-85);
 }
 .c-dataset-card__desc-text a:hover {

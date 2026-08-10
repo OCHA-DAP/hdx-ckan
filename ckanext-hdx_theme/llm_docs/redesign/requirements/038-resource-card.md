@@ -16,7 +16,6 @@
 | `description` | string | `''` | Full description text; clamped by default. The "Show more" button is always rendered when description is present; JS hides it if the text is short enough not to be clamped. |
 | `pcoded` | bool | `false` | Render a "P-coded" label chip. |
 | `api_available` | bool | `false` | Render an "API available" label chip. |
-| `preview_available` | bool | `false` | Show the "More information" secondary action button linking to `title_href`. |
 | `download_url` | string | `'#'` | URL for the primary Download button. |
 | `download_size` | string | `''` | Human-readable file size (e.g. `'14.2K'`). Appended to the Download button label when set. |
 | `download_attrs` | dict | `{}` | Extra HTML attributes on the Download button (e.g. `data-resource-name`, `data-resource-id` for GA/Mixpanel tracking). Passed from `resource_item_v2.html`. |
@@ -38,11 +37,11 @@
         c-label "API available"         ← if api_available
     a.c-resource-card__title[href=title_href]
     .c-resource-card__desc              ← if description
-      p[data-clamped-content]           ← description text
+      div[data-clamped-content]         ← description text (rendered markdown HTML)
   .c-resource-card__footer
     c-text-button "Show more"           ← if description (hidden by CSS; JS shows when clamped)
     .c-resource-card__actions
-      c-button (secondary) "More information" [href=title_href]  ← if preview_available
+      c-button (secondary) "More information" [href=title_href]  ← always rendered
       c-button (primary)   "Download (size)"  [href=download_url]
 ```
 

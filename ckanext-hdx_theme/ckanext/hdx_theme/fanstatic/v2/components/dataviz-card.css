@@ -72,6 +72,19 @@
   -webkit-line-clamp: 3;
   overflow: hidden;
 }
+.c-dataviz-card__desc-text a {
+  color: inherit;
+}
+.c-dataviz-card__desc-text p,
+.c-dataviz-card__desc-text ul,
+.c-dataviz-card__desc-text ol {
+  margin: 0 0 var(--hdx-space-2);
+}
+.c-dataviz-card__desc-text p:last-child,
+.c-dataviz-card__desc-text ul:last-child,
+.c-dataviz-card__desc-text ol:last-child {
+  margin-bottom: 0;
+}
 .c-dataviz-card__desc-text.is-open {
   -webkit-line-clamp: unset;
   overflow: visible;

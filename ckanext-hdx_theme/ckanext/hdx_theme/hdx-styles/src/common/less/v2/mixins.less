@@ -271,6 +271,19 @@
     -webkit-box-orient:   vertical;
 }
 
+// ── Rendered markdown content ────────────────────────────────────
+// Spacing for the block elements (p, ul, ol) a `h.render_markdown()`
+// string can contain, for use on any element that outputs one of
+// those strings directly. Links inherit the surrounding text color
+// by default — override with an `a { color: ... }` rule after
+// including this mixin if a component needs a different link color.
+.hdx-markdown-content(@gap) {
+    a { color: inherit; }
+
+    p, ul, ol { margin: 0 0 @gap; }
+    p:last-child, ul:last-child, ol:last-child { margin-bottom: 0; }
+}
+
 // ── Focus ring ──────────────────────────────────────────────────
 // Keyboard-focus outline. Inverse variant is for dark surfaces
 // (navbar, top bar) where the primary-5 ring has no contrast.

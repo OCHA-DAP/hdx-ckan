@@ -112,6 +112,19 @@
   color: var(--hdx-neutral-85);
   word-break: break-word;
 }
+.hdx-v2-dataset-metadata__value a {
+  color: inherit;
+}
+.hdx-v2-dataset-metadata__value p,
+.hdx-v2-dataset-metadata__value ul,
+.hdx-v2-dataset-metadata__value ol {
+  margin: 0 0 var(--hdx-space-4);
+}
+.hdx-v2-dataset-metadata__value p:last-child,
+.hdx-v2-dataset-metadata__value ul:last-child,
+.hdx-v2-dataset-metadata__value ol:last-child {
+  margin-bottom: 0;
+}
 .hdx-v2-dataset-metadata__value--tags {
   display: flex;
   flex-wrap: wrap;

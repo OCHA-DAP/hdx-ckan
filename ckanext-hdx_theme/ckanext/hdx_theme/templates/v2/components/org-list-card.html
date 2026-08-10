@@ -19,7 +19,7 @@
 
 {% set title       = org.title or org.display_name %}
 {% set href        = h.url_for('hdx_org.read', id=org.name) %}
-{% set description = h.markdown_extract(org.description, extract_length=0) | striptags if org.description else '' %}
+{% set description = h.render_markdown(org.description) if org.description else '' %}
 {% set created     = h.hdx_format_date(org.created) if org.created else _('Unknown') %}
 {% set datasets    = org.package_count or 0 %}
 
@@ -32,7 +32,7 @@
 
       {% if description %}
         <div class="c-org-list-card__description" data-module="clamped-text">
-          <p class="c-org-list-card__desc-text" data-clamped-content>{{ description }}</p>
+          <div class="c-org-list-card__desc-text" data-clamped-content>{{ description }}</div>
           {% snippet 'v2/components/text-button.html',
               label=_('Show more'),
               tag='button',

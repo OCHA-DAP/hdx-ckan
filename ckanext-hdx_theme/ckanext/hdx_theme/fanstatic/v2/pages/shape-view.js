@@ -27,9 +27,9 @@
   const defaultStyle = {
     type: 'fill',
     paint: {
-      'fill-color': 'hsl(4, 100%, 62%)',
+      'fill-color': '#a8d5c9',
       'fill-opacity': ['case', ['boolean', ['feature-state', 'hover'], false], 0.8, 0.6],
-      'fill-outline-color': 'hsl(4, 100%, 31%)',
+      'fill-outline-color': '#269777',
     },
   };
   const defaultLineStyle = {
@@ -37,13 +37,13 @@
     paint: {
       'line-width': ['case', ['boolean', ['feature-state', 'hover'], false], 6, 3],
       'line-opacity': ['case', ['boolean', ['feature-state', 'hover'], false], 0.8, 0.6],
-      'line-color': 'hsl(4, 100%, 62%)',
+      'line-color': '#a8d5c9',
     },
   };
   const defaultPointStyle = {
     type: 'circle',
     paint: {
-      'circle-color': 'hsl(4, 100%, 62%)',
+      'circle-color': '#a8d5c9',
       'circle-opacity': ['case', ['boolean', ['feature-state', 'hover'], false], 0.8, 0.6],
       'circle-radius': ['case', ['boolean', ['feature-state', 'hover'], false], 11, 8],
     },

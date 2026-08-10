@@ -88,7 +88,7 @@
           {% set updated_on = _('Updated on') ~ ' ' ~ h.hdx_format_date(dataviz.metadata_modified) if dataviz.metadata_modified else '' %}
           {% snippet 'v2/components/dataviz-card.html',
               title=dataviz.dataviz_label or dataviz.title,
-              description=dataviz.notes,
+              description=h.render_markdown(dataviz.notes) if dataviz.notes else '',
               img_url=dataviz.image_display_url,
               url=dataviz.url,
               updated_on=updated_on,

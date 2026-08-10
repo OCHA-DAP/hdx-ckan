@@ -96,6 +96,19 @@
   max-height: 0;
   overflow: hidden;
 }
+.c-org-list-card__desc-text a {
+  color: inherit;
+}
+.c-org-list-card__desc-text p,
+.c-org-list-card__desc-text ul,
+.c-org-list-card__desc-text ol {
+  margin: 0 0 var(--hdx-space-2);
+}
+.c-org-list-card__desc-text p:last-child,
+.c-org-list-card__desc-text ul:last-child,
+.c-org-list-card__desc-text ol:last-child {
+  margin-bottom: 0;
+}
 .c-org-list-card__desc-text.is-open {
   max-height: none;
   overflow: visible;

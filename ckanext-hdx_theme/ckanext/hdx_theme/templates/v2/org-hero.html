@@ -35,7 +35,7 @@
 {% endif %}
 
 {% set member_since = _('Member since') ~ ' ' ~ (h.hdx_format_date(org_dict.created) if org_dict.created else _('Unknown')) %}
-{% set description = h.markdown_extract(org_dict.description, extract_length=0) | striptags if org_dict.description else '' %}
+{% set description = h.render_markdown(org_dict.description) if org_dict.description else '' %}
 
 {% set header_actions = [
   {'label': _('Visit website'),

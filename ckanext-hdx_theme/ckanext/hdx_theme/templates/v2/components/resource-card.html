@@ -44,10 +44,6 @@
                              to both the root element and the description `<p>`).
                              default: false
 
-  preview_available {bool}   Show the "More information" tertiary action button,
-                             which links to title_href (the resource detail page).
-                             default: false
-
   download_url     {string}  URL for the primary Download button.
                              default: '#'
 
@@ -89,7 +85,6 @@
       description='A weekly dataset providing the total number...',
       pcoded=True,
       api_available=True,
-      preview_available=True,
       download_url='/dataset/my-dataset/resource/abc123/download/file.geojson',
       download_size='14.2K' %}
 
@@ -111,7 +106,6 @@
 {% set pcoded            = pcoded            if pcoded            is defined else false %}
 {% set api_available     = api_available     if api_available     is defined else false %}
 {% set preview_opened    = preview_opened    if preview_opened    is defined else false %}
-{% set preview_available = preview_available if preview_available is defined else false %}
 {% set download_url           = download_url           if download_url           is defined else '#' %}
 {% set download_size          = download_size          if download_size          is defined else '' %}
 {% set show_download          = show_download          if show_download          is defined else true %}
@@ -180,7 +174,7 @@
     {# Description (always visible, clamped; expanded by clamped-text.js on the root) #}
     {% if description %}
       <div class="c-resource-card__desc">
-        <p class="c-resource-card__desc-text{% if preview_opened %} is-open{% endif %}" data-clamped-content>{{ description }}</p>
+        <div class="c-resource-card__desc-text{% if preview_opened %} is-open{% endif %}" data-clamped-content>{{ description }}</div>
       </div>
     {% endif %}
 
@@ -200,12 +194,10 @@
     {% endif %}
 
     <div class="c-resource-card__actions">
-      {% if preview_available %}
-        {% snippet 'v2/components/button.html',
-            style='tertiary', size='m', type='text',
-            label='More information',
-            tag='a', href=title_href %}
-      {% endif %}
+      {% snippet 'v2/components/button.html',
+          style='tertiary', size='m', type='text',
+          label='More information',
+          tag='a', href=title_href %}
       {% if in_review %}
         <a href="{{ title_href }}"
            class="c-button c-button--secondary c-button--size-m">{{ _('Under Review') }}</a>

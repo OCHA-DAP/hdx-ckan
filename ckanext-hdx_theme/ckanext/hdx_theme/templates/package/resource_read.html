@@ -84,7 +84,7 @@
           file_format=h.hdx_format_to_icon_category(res.format),
           file_format_text=res.format or '',
           title=h.resource_display_name(res),
-          description=res.description or '',
+          description=h.render_markdown(res.description) if res.description else '',
           download_url=res.hdx_rel_url,
           can_download=can_dl,
           ga_resource_title=res.name,

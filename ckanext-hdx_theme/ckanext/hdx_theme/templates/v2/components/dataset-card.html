@@ -141,7 +141,7 @@
 
       {% if description %}
         <div class="c-dataset-card__desc" data-module="clamped-text">
-          <p class="c-dataset-card__desc-text" data-clamped-content{% if query %} data-module="highlight" data-module-text="{{ query }}"{% endif %}>{{ description }}</p>
+          <div class="c-dataset-card__desc-text" data-clamped-content{% if query %} data-module="highlight" data-module-text="{{ query }}"{% endif %}>{{ description }}</div>
           {% snippet 'v2/components/text-button.html',
               style='tertiary', size='s', label='Show more',
               icon_position='right',
