@@ -8,8 +8,8 @@ Implement the three panel/dropdown surfaces that attach to the navbar: the user 
 
 | Panel             | Trigger         | Type                    | Width      |
 |-------------------|-----------------|-------------------------|------------|
-| User menu         | Avatar button   | Custom positioned panel | 14.125rem  |
-| Notifications     | Bell button     | Custom positioned panel | 14.125rem  |
+| User menu         | Avatar button   | Custom positioned panel | 16rem  |
+| Notifications     | Bell button     | Custom positioned panel | 16rem  |
 | Products dropdown | Products nav-item | Custom positioned panel    | auto       |
 
 ## Shared panel tokens (from Figma)
@@ -196,7 +196,7 @@ Bootstrap handles open/close via `data-bs-toggle="dropdown"` on the nav-item (ta
   right: 0;
   top: calc(100% + 0.5rem);
   z-index: 1050;
-  min-width: 14.125rem;
+  min-width: 16rem;
   background: #fff;
   border: 1px solid #ebeff0;
   border-radius: 4px;

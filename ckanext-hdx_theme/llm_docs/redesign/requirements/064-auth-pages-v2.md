@@ -144,7 +144,7 @@ folded into this task after the initial migration per §12 Decision 5, reusing t
 
 - Template: `user/perform_reset.html` now extends `v2/page.html` directly (same shell as
   `user/signin.html`) instead of `base.html` + the old `widget/onboarding/password-reset.html` popup.
-- Fields: `password1`/`password2`, rendered via `v2/components/search-input.html` (`type='password'`),
+- Fields: `password1`/`password2`, rendered via `v2/components/text-field.html` (`type='password'`),
   labels "Password" / "Confirm password" (the latter changed from the old widget's "Confirm" for
   consistency with the signup page's `password2` label — §12 Decision 15). Field `name`s, CSRF
   (`h.csrf_input()`), and the empty-`action` full-page POST are all unchanged, so
@@ -287,16 +287,16 @@ close glyph as the XL `[X]`, per context).
 
 | Field / element | Current | Redesigned (v2) |
 |---|---|---|
-| Login — username/email | `#field-login`, plain `<input required>`, label "Username or Email" | `v2/components/search-input.html` (`type='text'`), same `name`/`required`; label stays "Username or Email" (Decision 8) — Figma's "Email" is not adopted since the field still accepts either |
-| Login — password | `#field-password`, plain `<input type="password" required>` | `search-input.html` with `type='password'` — built-in eye/eye-off toggle matches Figma's icon exactly, no bespoke JS needed |
-| Login — MFA/OTP | `#field-mfa`, `<input type="number">`, hidden until JS reveals it | `search-input.html` with `type='number'`, same JS-driven `hidden`/reveal logic (`check_mfa`), no new component. "Forgot your password?" is positioned directly after this field in the DOM (not after the password field) so it renders below the OTP field whenever MFA is revealed, matching Figma's password→link ordering with the OTP field spliced in between |
+| Login — username/email | `#field-login`, plain `<input required>`, label "Username or Email" | `v2/components/text-field.html` (`type='text'`), same `name`/`required`; label stays "Username or Email" (Decision 8) — Figma's "Email" is not adopted since the field still accepts either |
+| Login — password | `#field-password`, plain `<input type="password" required>` | `text-field.html` with `type='password'` — built-in eye/eye-off toggle matches Figma's icon exactly, no bespoke JS needed |
+| Login — MFA/OTP | `#field-mfa`, `<input type="number">`, hidden until JS reveals it | `text-field.html` with `type='number'`, same JS-driven `hidden`/reveal logic (`check_mfa`), no new component. "Forgot your password?" is positioned directly after this field in the DOM (not after the password field) so it renders below the OTP field whenever MFA is revealed, matching Figma's password→link ordering with the OTP field spliced in between |
 | Login — remember me | `#field-remember`, checkbox, value `"63072000"` | `v2/components/checkbox.html`, same `name`/`value` preserved as-is (§8 flags the value's odd semantics, not to be touched) |
-| Login — error | Single `.error-message` div, generic string, shown/hidden via inline `style` | Figma ties the error visually to the password field: render via `search-input.html`'s `errors` prop on the password field (adds `.c-search-input--error` + inline message) — same generic `error_message` string from `signin.py:142`, just re-targeted to the password field's error slot instead of a floating top div. Wording stays as-is (Decision 9) — Figma's "Incorrect email or password" is not adopted |
-| Forgot password — user | `#field-recover-id`, plain `<input required>`, mislabeled `for` attribute (§1.2 bug) | `search-input.html` (`type='text'`), `errors` prop wired to `result.error.message` from the existing AJAX response — same JSON contract, only the rendering target changes. Label/input association bug fixed here |
+| Login — error | Single `.error-message` div, generic string, shown/hidden via inline `style` | Figma ties the error visually to the password field: render via `text-field.html`'s `errors` prop on the password field (adds `.c-search-input--error` + inline message) — same generic `error_message` string from `signin.py:142`, just re-targeted to the password field's error slot instead of a floating top div. Wording stays as-is (Decision 9) — Figma's "Incorrect email or password" is not adopted |
+| Forgot password — user | `#field-recover-id`, plain `<input required>`, mislabeled `for` attribute (§1.2 bug) | `text-field.html` (`type='text'`), `errors` prop wired to `result.error.message` from the existing AJAX response — same JSON contract, only the rendering target changes. Label/input association bug fixed here |
 | Forgot password — submit/status | JSON success/error handled by hand-rolled JS (`recover.js`) toggling `.error-message`/`.error` classes | Same AJAX call and JSON shape; JS updates `c-search-input--error` state and a `c-alert` (or the field-level error span) instead of legacy classes — no change to the request/response contract |
 | reCAPTCHA | Invisible v2, bound to submit button | Unchanged (§12 Decision 2) — Figma's visible checkbox mock is not implemented |
-| Perform reset — new password | `#field-password` (`password1`), plain `<input required>`, label "Password" | `search-input.html` with `type='password'` — same eye toggle as login's password field |
-| Perform reset — confirm password | `#field-confirm-password` (`password2`), plain `<input required>`, label "Confirm" | `search-input.html` with `type='password'`, label changed to "Confirm password" (Decision 15) |
+| Perform reset — new password | `#field-password` (`password1`), plain `<input required>`, label "Password" | `text-field.html` with `type='password'` — same eye toggle as login's password field |
+| Perform reset — confirm password | `#field-confirm-password` (`password2`), plain `<input required>`, label "Confirm" | `text-field.html` with `type='password'`, label changed to "Confirm password" (Decision 15) |
 | Perform reset — submit gating | `requiredFieldsFormValidator` (required-only) | New `v2/perform-reset-page.js`, same required-only gating — signup's live strength/match checklist deliberately not adopted (Decision 14) |
 | Perform reset — server error | `h.flash_error(...)`/`h.flash(..., category='alert-error')` only, no `errors` dict | Unchanged — surfaced via the inherited `v2/page.html` flash block (§1.4), no per-field `errors` prop wired since core never passes one |
 
@@ -310,13 +310,13 @@ error-message sources.
 
 | UI element | Approach | Justification |
 |---|---|---|
-| Username/email/password/MFA/user text inputs | **Reuse** `v2/components/search-input.html` | Already supports `type='password'` with a built-in eye toggle (matches Figma exactly, no new JS), `label`/`required`/`errors` props cover every field in scope |
+| Username/email/password/MFA/user text inputs | **Reuse** `v2/components/text-field.html` | Already supports `type='password'` with a built-in eye toggle (matches Figma exactly, no new JS), `label`/`required`/`errors` props cover every field in scope |
 | Remember me | **Reuse** `v2/components/checkbox.html` | Already supports `label` + `errors`; no new component needed |
 | Submit / secondary buttons | **Reuse** `v2/components/button.html` | `style='primary'` for Log in/Reset, `style='tertiary'`/text-link for Register/Sign up/Cancel-style links |
 | "Forgot password?" / "Sign up" / "Not you?" links | **Reuse** `v2/components/text-link.html` / `text-button.html` | Existing generic link/button components already used elsewhere for this exact pattern. "Forgot password?" uses `style='tertiary'` (Figma's `.text-link` color is a dark neutral, not the royal-blue used for "Sign up"); "Sign up" stays `style='primary'` |
-| Top-level / field-level error and status messages | **Reuse** `v2/components/alert.html` and `search-input.html`'s built-in `errors` slot | `c-alert` is the established v2 pattern for form-level status (per `request_access.html:60-62`); field-level errors use the input's own `errors` prop, matching Figma's per-field error treatment |
+| Top-level / field-level error and status messages | **Reuse** `v2/components/alert.html` and `text-field.html`'s built-in `errors` slot | `c-alert` is the established v2 pattern for form-level status (per `request_access.html:60-62`); field-level errors use the input's own `errors` prop, matching Figma's per-field error treatment |
 | Page shell (logo-only navbar, dark background, no site header/footer/breadcrumb) | **Extend** the pattern from `error_document_template.html` | Closer analog than `request_access.html` (which keeps the full v2 site header/footer/breadcrumb chrome) — Figma shows only a logo bar and no footer on all three auth pages, matching how `error_document_template.html` extends `v2/page.html` with `header`/`footer` blocks emptied out |
-| MFA/OTP input | **Extend** `search-input.html` (`type='number'`) | No dedicated MFA component exists or is needed — it's a plain numeric text input |
+| MFA/OTP input | **Extend** `text-field.html` (`type='number'`) | No dedicated MFA component exists or is needed — it's a plain numeric text input |
 | Popup/modal chrome (`widget/popup/popup.html`, `notification.html`) | **Reuse as-is** | No v2 equivalent exists; the close-icon/`closeCurrentWidget()` behavior for forgot-password/confirmation is preserved unchanged (§1.3, §5) |
 | reCAPTCHA visible checkbox | **Not implemented** | Per Decision 2 — current invisible integration is kept, rendered into a dedicated `#recover-recaptcha` container rather than the submit button |
 
@@ -328,7 +328,7 @@ error-message sources.
   pre-check (`GET /util/user/check_lockout`) before submit; the v2 JS rewrite (replacing `signin.js`
   against new v2 markup/classes) naturally retires the broken `_showLoginError` reference (§1.1, §8) by
   wiring the lockout message into the redesigned error UI from scratch — not left broken.
-- **MFA reveal** — `GET /util/user/check_mfa` still toggles the (now `search-input.html`-based) MFA
+- **MFA reveal** — `GET /util/user/check_mfa` still toggles the (now `text-field.html`-based) MFA
   field's visibility exactly as today.
 - **Remember me** — cookie prefill/Gravatar behavior (`signin.js:91-106`) is preserved; the checkbox
   component's `name`/`value` stay identical so the server-side handling in `signin.py:124-134` needs no
@@ -370,7 +370,7 @@ page variants with one breakpoint-driven stylesheet.
 - All current `required` attributes are preserved on every field (login/password/MFA/remember/user).
 - `c-alert`'s `role="alert"` (already built into the component) provides an accessible live region
   for the re-targeted error message, improving on the current plain `<div>` with inline `style` toggling.
-- Focus-visible states come from the v2 components' existing defaults (`search-input.html`,
+- Focus-visible states come from the v2 components' existing defaults (`text-field.html`,
   `checkbox.html`, `button.html`) — no bespoke focus styling needed.
 - Keyboard navigation through the eye-toggle button, checkbox, and submit button is unchanged (native
   interactive elements throughout, no custom tab-index handling introduced).
@@ -402,7 +402,7 @@ page variants with one breakpoint-driven stylesheet.
 | Server errors on forgot-password | Existing JSON `{success:false, error:{message}}` path, re-targeted to the field's error slot — same contract |
 | Slow AJAX response (forgot-password) | Existing `widget/loading/loading.html` loading-screen widget reused as-is |
 | Empty inputs | HTML `required` blocks client-side submission on all fields, exactly as today; server-side behavior unchanged |
-| MFA-required accounts | `check_mfa` reveal logic unchanged, MFA field rendered via `search-input.html` (§3) |
+| MFA-required accounts | `check_mfa` reveal logic unchanged, MFA field rendered via `text-field.html` (§3) |
 | reCAPTCHA risk-triggered challenge | Invisible v2 behavior unchanged (§12 Decision 2) — a challenge can still appear when Google's risk engine triggers one, exactly as today |
 
 ---

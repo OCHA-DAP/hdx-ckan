@@ -25,7 +25,6 @@
 | 019 | [navbar-open](019-navbar-open.md)                                                                               | implemented | |
 | 020 | [rename-v2-class-prefix](020-rename-v2-class-prefix.md)                                                         | implemented | |
 | 021 | [v2-less-css-architecture-standardization](021-v2-less-css-architecture-standardization.md)                     | implemented | |
-| 022 | [v2-grid-layout-audit](022-v2-grid-layout-audit.md)                                                             | implemented | |
 | 023 | [footer-refinements](023-footer-refinements.md)                                                                 | implemented | |
 | 024 | [homepage-hero-section](024-homepage-hero-section.md)                                                           | implemented | |
 | 025 | [implement-activity-card-component](025-implement-activity-card-component.md)                                   | implemented | |
@@ -45,7 +44,6 @@
 | 039 | [dataset-page](039-dataset-page.md)                                                                             | implemented | |
 | 040 | [resource-page](040-resource-page.md)                                                                           | implemented | |
 | 041 | [accessibility-wcag-audit](041-accessibility-wcag-audit.md)                                                     | implemented | |
-| 042 | [v2-audit-standardization](042-v2-audit-standardization.md)                                                     | implemented | |
 | 043 | [homepage-curated-highlights](043-homepage-curated-highlights.md)                                               | implemented | |
 | 044 | [homepage-dynamic-bar-chart](044-homepage-dynamic-bar-chart.md)                                                 | implemented | |
 | 045 | [global-search-autocomplete](045-global-search-autocomplete.md)                                                 | implemented | |

@@ -411,27 +411,17 @@ verify no regression before merging.
 }
 ```
 
-### Dummy Data (Static, for v2 launch)
+### Real Data (dynamic, dogpile-cached)
 
-Add 3 dummy card constants to `signals.py`:
-
-```python
-SIGNAL_CARDS_CONSTANTS = [
-    {
-        'location': 'Ukraine',
-        'date': 'Dec 30, 2025',
-        'type': 'Armed conflict',
-        'title': 'Lorem ipsum dolor sit amet consectetur',
-        'description': '8.7K fatalities since Nov 30, 2025',
-        'image_src': 'https://picsum.photos/seed/signals1/320/130',   # external placeholder
-        'source_label': 'Source',
-        'source_href': '#',
-        'cta_label': 'See this signal',
-        'cta_href': '#',
-    },
-    # ... 2 more dummy cards
-]
-```
+`signal_cards` is fetched live, not static. `cached_last_three_signal_cards()`
+(`helpers/signals_cache.py`) is a dogpile-cached wrapper (10 min redis/local expiration, keyed
+`signals-*`) around `hdx_fetch_last_three_signal_cards()` (`helpers/helpers.py`), which downloads
+the CSV at `hdx.signals.csv`, parses it with `csv.DictReader`, sorts rows by
+`(campaign_date, date, location)` descending, and maps the top 3 rows into card dicts:
+`location`, `date` (formatted `campaign_date`), `type` (via `SIGNAL_CARD_INDICATOR_CATEGORIES`
+lookup), `title` (`summary_short`), `description` (empty), `image_src`/`source_href`/`cta_href`
+(each validated through a `_safe_href`/`_safe_img_src` scheme check, falling back to `'#'`/`''`),
+`source_label` (`'Source'`), `cta_label` (`'See this signal'`).
 
 Pass as `signal_cards` from the `signals()` view function.
 
@@ -832,17 +822,16 @@ was fully rewritten in vanilla JS (jQuery removed):
 
 ### View Function Changes
 
-In `views/landing_pages.py`, the existing `signals()` function needs one addition:
+In `views/landing_pages.py`, the existing `signals()` function needs one addition — real, dynamic data (see §4 "Real Data"), not static constants:
 
 ```python
-from ckanext.hdx_theme.helpers.ui_constants.landing_pages.signals import \
-    ..., SIGNAL_CARDS_CONSTANTS as SIGNALS_SIGNAL_CARDS_CONSTANTS
+from ckanext.hdx_theme.helpers.helpers import cached_last_three_signal_cards
 
 def signals():
     ...
     template_data = {
         ...
-        'signal_cards': SIGNALS_SIGNAL_CARDS_CONSTANTS,  # Add
+        'signal_cards': cached_last_three_signal_cards(),  # Add
     }
 ```
 
@@ -880,7 +869,7 @@ v2-signals-landing-page-scripts:
 | **Mailchimp form + v2 font injection** | v2 page layout adds `font-family: Roboto` globally — verify this reaches the form inputs without `!important` conflicts from Bootstrap classes |
 | **Partner logos: 6 logos, 3 per row** | 6 logos = exactly 2 even rows of 3, no orphan issue (unlike HAPI's 10 logos with 5 per row) |
 | **`c-page-header` extension side effects** | Adding `cta_label`/`cta_href` params is conditional — all existing pages pass neither, so no regression |
-| **Signal card placeholder image** | Uses external picsum.photos service — fine for dev/staging; replace with real chart thumbnails when available |
+| **Signal card image** | `image_src` comes from the live CSV feed, validated through a `_safe_img_src` scheme check with `''` fallback — no placeholder service involved |
 
 ---
 
@@ -890,9 +879,7 @@ v2-signals-landing-page-scripts:
    File confirmed at `hdx-styles/src/common/images/landing_pages/logo_hdx_signals.png` — same
    pattern as HAPI which is already working.
 
-2. **Signal card placeholder image** — Use an external placeholder image service.
-   `image_src` in dummy card constants uses `https://picsum.photos/seed/signalsN/320/130`
-   (unique seed per card). No static asset to create.
+2. **Signal card image** — Superseded by §4 "Real Data": `image_src` comes from the live CSV feed (`hdx_fetch_last_three_signal_cards()`), not a static placeholder service.
 
 3. **Featured signal cards section title** — **No section heading.** Match Figma directly;
    the featured cards section starts immediately with the cards (or carousel at MD/SM) without
@@ -937,8 +924,8 @@ v2-signals-landing-page-scripts:
 | File | Change |
 |---|---|
 | `templates/landing_pages/signals.html` | Replace v1 with v2; extend `v2/page.html` |
-| `helpers/ui_constants/landing_pages/signals.py` | Update `SECTIONS_CONSTANTS` (add Partners, change Signals Map URL); add `SIGNAL_CARDS_CONSTANTS` (3 dummy cards) |
-| `views/landing_pages.py` | Pass `signal_cards` from `SIGNAL_CARDS_CONSTANTS` |
+| `helpers/ui_constants/landing_pages/signals.py` | `SECTIONS_CONSTANTS` was not updated — dead/unused, since `signals.html` hardcodes `nav_items` itself (same pattern as HAPI) |
+| `views/landing_pages.py` | Pass `signal_cards` from `cached_last_three_signal_cards()` (real data, see §4) |
 | `fanstatic/v2/highlights-carousel.js` | Refactor to thin wrapper calling `carousel.js` |
 | `fanstatic/webassets.yml` | Add `v2-signals-landing-page-styles` and `v2-signals-landing-page-scripts` bundles |
 | `templates/v2/components.html` | Add `c-signal-card` demo section |

@@ -464,7 +464,7 @@ Add to `fanstatic/webassets.yml` in the `v2-components-styles` bundle,
 after `v2/components/activity-card.css`:
 
 ```yaml
-- v2/components/c-activity-item.css
+- v2/components/activity-item.css
 ```
 
 The `v2-components-styles` bundle is included by `v2-page-styles`, which is loaded by

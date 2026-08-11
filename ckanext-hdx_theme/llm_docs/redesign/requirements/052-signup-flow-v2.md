@@ -107,7 +107,7 @@ Tracks `start_page_type`, `start_page_additional_params`, `value_proposition_pag
 
 **v1:** `fanstatic/onboarding/toggle-password-visibility.js` — on click, swaps `input.type` between `'password'` and `'text'`; toggles `.fa-eye` / `.fa-eye-slash` visibility via `.d-none`.
 
-**v2:** `fanstatic/v2/components/input-field.js` handles password toggle automatically for any `.c-search-input` wrapper containing `<input type="password">`. The eye SVG is rendered by the `v2/components/search-input.html` snippet when `type='password'` is passed. No extra JS needed.
+**v2:** `fanstatic/v2/components/input-field.js` handles password toggle automatically for any `.c-search-input` wrapper containing `<input type="password">`. The eye SVG is rendered by the `v2/components/text-field.html` snippet when `type='password'` is passed. No extra JS needed.
 
 **Decision:** `toggle-password-visibility.js` must **not** be included in the v2 bundle — the `c-search-input` component covers it entirely.
 
@@ -192,7 +192,7 @@ v2 pages will need a new bundle (see §8.3).
 | Tier card | inline HTML in template | `c-signup-tier` snippet |
 | Feature list icons | Font Awesome checkmarks | numbered badge circle |
 | Validation error styling | Bootstrap `.is-invalid`, red border | `.c-search-input--error`, `var(--hdx-error-5)` |
-| Input component | `bem.blocks/input_field.html` | `v2/components/search-input.html` |
+| Input component | `bem.blocks/input_field.html` | `v2/components/text-field.html` |
 | Checkbox | `bem.blocks/checkbox_field.html` | `v2/components/checkbox.html` |
 | Buttons | `bem.blocks/form_button.html` | `v2/components/button.html` |
 | Password toggle JS | `toggle-password-visibility.js` + fa-eye | `v2/components/input-field.js` (automatic) |
@@ -376,7 +376,7 @@ Connectors are real DOM elements that flex-grow between steps. The `--filled` mo
 | Component | Snippet | Notes |
 |---|---|---|
 | Button | `v2/components/button.html` | `--primary` (submit), `--secondary` (cancel), `--size-m` |
-| Input | `v2/components/search-input.html` | `type='password'` auto-adds eye toggle |
+| Input | `v2/components/text-field.html` | `type='password'` auto-adds eye toggle |
 | Checkbox | `v2/components/checkbox.html` | terms (required) + newsletter (optional) |
 | Form validator | `fanstatic/v2/form-validator.js` | replaces v1 `hdx-form-validator.js` |
 | Input field JS | `fanstatic/v2/components/input-field.js` | password toggle + clear |
@@ -389,7 +389,7 @@ The existing form `action` URL, CSRF token hidden input, all field `name` attrib
 
 | v1 element | v2 replacement |
 |---|---|
-| `{% snippet 'bem.blocks/input_field.html', name=..., id=..., data_attributes=... %}` | `{% snippet 'v2/components/search-input.html', name=..., id=..., input_attrs=... %}` |
+| `{% snippet 'bem.blocks/input_field.html', name=..., id=..., data_attributes=... %}` | `{% snippet 'v2/components/text-field.html', name=..., id=..., input_attrs=... %}` |
 | `{% snippet 'bem.blocks/checkbox_field.html', name=..., id=... %}` | `{% snippet 'v2/components/checkbox.html', name=..., id=... %}` |
 | `{% snippet 'bem.blocks/form_button.html', ... %}` | `{% snippet 'v2/components/button.html', ... %}` |
 | `{% snippet 'bem.blocks/stepper.html', steps=..., current_step=... %}` | `{% snippet 'v2/components/step-pager.html', steps=..., current_step=... %}` |
@@ -397,7 +397,7 @@ The existing form `action` URL, CSRF token hidden input, all field `name` attrib
 
 The `data-validation`, `data-validation-match`, `data-live-feedback`, `data-validation-error` attributes are forwarded through the v2 snippet's `input_attrs` parameter.
 
-**reCAPTCHA:** The `<div id="recaptcha-widget">` and reCAPTCHA script block must be reproduced verbatim inside the v2 form block. The existing reCAPTCHA token injection JS must still be able to find `#recaptcha-widget`.
+**reCAPTCHA:** The `<div class="g-recaptcha" data-sitekey="...">` and reCAPTCHA script block must be reproduced verbatim inside the v2 form block. The existing reCAPTCHA token injection JS must still be able to find `.g-recaptcha`.
 
 ---
 
@@ -453,7 +453,7 @@ The `data-module="hdx_click_stopper"` wrapper divs must surround each tier's CTA
 </div>
 ```
 
-The `CONST.ACCOUNT_OPTIONS_*_FEATURES` lists must be updated in `value_proposition.py` to use `{number, text}` dicts instead of plain strings, since the v2 tier card renders numbered badges.
+Only the "Share Data" tier's features need `{number, text}` dicts in `value-proposition.html` — its 3 items are sequential steps. The other two tiers' `CONST.FEATURE_*` strings stay as plain `{'text': ...}` dicts, rendering checkmark icons (see D2).
 
 ### 6.2 user-info.html (Step 1)
 
@@ -478,7 +478,7 @@ The `CONST.ACCOUNT_OPTIONS_*_FEATURES` lists must be updated in `value_propositi
     <div class="hdx-v2-signup-form-page__fields">
       {# Each field wrapped in c-form-field for consistent label+input+error spacing #}
       <div class="c-form-field">
-        {% snippet 'v2/components/search-input.html',
+        {% snippet 'v2/components/text-field.html',
             type='text', label=CONST.INPUT_FULLNAME_LABEL, required=True,
             name='fullname', value=data.get('fullname', ''),
             show_icon=False, errors=errors.get('fullname'),
@@ -546,13 +546,13 @@ JS preserved: `confirm-page-leave.js` (back-button prevention), `verify-email.js
     <h1 class="hdx-v2-signup-form-page__heading">{{ CONST.PAGE_TITLE }}</h1>
     <div class="hdx-v2-signup-form-page__fields">
       <div class="c-form-field">
-        {% snippet 'v2/components/search-input.html',
+        {% snippet 'v2/components/text-field.html',
             type='email', label=CONST.INPUT_EMAIL_LABEL, required=True,
             name='email', show_icon=False, errors=errors.get('email'),
             input_attrs={'data-validation': 'email', 'data-validation-error': CONST.INPUT_EMAIL_ERROR} %}
       </div>
       <div class="c-form-field">
-        {% snippet 'v2/components/search-input.html',
+        {% snippet 'v2/components/text-field.html',
             type='email', label=CONST.INPUT_EMAIL2_LABEL, required=True,
             name='email2', show_icon=False, errors=errors.get('email2'),
             input_attrs={'data-validation': 'email,match', 'data-validation-match': 'email', ...} %}
@@ -688,11 +688,11 @@ Two existing scripts were rewritten in place (no `v2/onboarding/` subdirectory c
 
 ## 9. Edge Cases
 
-1. **Server-rendered validation errors:** When the server returns field errors (e.g. "username already taken"), the v2 form must render them via the `errors` parameter of `v2/components/search-input.html`, which populates `.c-search-input__error`. Verify `error_dict` is forwarded correctly to the v2 block.
+1. **Server-rendered validation errors:** When the server returns field errors (e.g. "username already taken"), the v2 form must render them via the `errors` parameter of `v2/components/text-field.html`, which populates `.c-search-input__error`. Verify `error_dict` is forwarded correctly to the v2 block.
 
 2. **Submit button disabled on error re-render:** When the form is re-rendered after a server error, the submit button should remain disabled (restart client-side validation). Confirm `v2/form-validator.js` re-initialises on page load.
 
-3. **reCAPTCHA failure:** The reCAPTCHA response field and error display must remain addressable by existing reCAPTCHA JS. Keep `<div id="recaptcha-widget">` and surrounding structure identical to v1.
+3. **reCAPTCHA failure:** The reCAPTCHA response field and error display must remain addressable by existing reCAPTCHA JS. Keep `<div class="g-recaptcha" data-sitekey="...">` and surrounding structure identical to v1.
 
 4. **Long error messages:** `.c-search-input__error` must wrap gracefully — do not constrain to single line. Test with maximum-length server error messages.
 
@@ -711,8 +711,8 @@ Two existing scripts were rewritten in place (no `v2/onboarding/` subdirectory c
 **D1. `c-step-pager` connector layout** → **Connector `<div>` elements with `--filled` modifier.**
 One `<div class="c-step-pager__connector">` is inserted between each step in the Jinja loop. When `loop.index <= current_step` the `--filled` modifier switches the background to `var(--hdx-primary-5)`. No pseudo-elements or `--pager-fill-ratio` custom property. See §3.2.
 
-**D2. Feature number badge** → **Bespoke `div`, no `c-label`.**
-Style `.c-signup-tier__feature-number` entirely within `signup-tier.less`. No dependency on the `c-label` component.
+**D2. Feature number badge** → **Bespoke `div`, no `c-label`. Numbered badges apply only to the "Share data" tier.**
+Style `.c-signup-tier__feature-number` entirely within `signup-tier.less`. No dependency on the `c-label` component. Numbered badges render only for the third tier ("Share data", for orgs), whose 3 features are sequential steps and each pass `'number': 1/2/3`. The first two tiers ("Search Data", "Sign up") list unordered benefits with no `number` key, so `signup-tier.html` renders checkmark icons for them instead — this is correct, not a gap.
 
 **D3. `came-from-input.js` in v2 bundle** → **Yes, include (converted in place).**
 `came-from-input.js` and `confirm-page-leave.js` were converted to vanilla JS in place (no `v2/onboarding/` subdirectory created). `verify-email.js` was not rewritten — the existing `hdx-verify-email-scripts` bundle is used as-is on the verify-email page. `toggle-password-visibility.js` is dropped — `c-search-input` handles toggling. See §8.7.

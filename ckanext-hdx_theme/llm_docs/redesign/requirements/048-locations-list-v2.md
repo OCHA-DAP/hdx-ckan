@@ -532,5 +532,5 @@ Same component as MD: right-side vertical sidebar with letter anchors. The "Jump
 | `ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/v2/pages/locations-list.js` | Filter toggle + sort JS |
 | `ckanext-hdx_theme/ckanext/hdx_theme/templates/v2/components/stats-card.html` | Merged from `kpi-card.html` (task 070 B1) — no change needed |
 | `ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/v2/components/stats-card.css` | Merged from `kpi-card.css` (task 070 B1) — no change needed |
-| `ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/webassets.yml` | Add `v2-all-locations-page-styles` and `v2-all-locations-page-scripts` bundles |
+| `ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/webassets.yml` | Add `v2-locations-list-page-styles` and `v2-locations-list-page-scripts` bundles |
 | `ckanext-hdx_theme/ckanext/hdx_theme/templates/v2/components.html` | Add `c-selection-item` demo section (cyan/light variants) |

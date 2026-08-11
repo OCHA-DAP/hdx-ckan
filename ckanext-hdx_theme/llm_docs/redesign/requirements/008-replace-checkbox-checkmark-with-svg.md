@@ -26,7 +26,7 @@ Replace the CSS `::after` pseudo-element checkmark in `.c-checkbox__box` with `v
    Inside `.c-checkbox__box`, add a `<span class="c-checkbox__icon">` containing `{% include h.url_for_static('v2/icons/check.svg') %}`. This matches the pattern used in `label.html`, `nav-item.html`, and other v2 components.
 
 3. **Size and color the icon via CSS.**
-   - `check.svg` has viewBox `0 0 10 7`; size the span to `width: 0.625rem; height: 0.4375rem` (10 × 7 px).
+   - `check.svg` has viewBox `0 0 10 7`; shipped sizing sets only `width: 0.55rem` on the span, height left to intrinsic aspect ratio.
    - Set `width: 100%; height: 100%` on the child `svg` element so it fills the span.
    - `color: @c-checkbox-checkmark-color` on `.c-checkbox__box` propagates via `currentColor` to the SVG stroke.
 

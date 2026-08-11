@@ -139,3 +139,6 @@ body.contribute-mode {
   height: 100%;
   width: 100%;
 }
+.js-hide {
+  display: none !important;
+}

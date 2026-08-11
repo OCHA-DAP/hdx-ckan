@@ -56,14 +56,14 @@ Note: the `pre_primary` block output is wrapped in `<div class="hdx-v2-dataset-h
 
 ### 3. Anchor Links Navigation (Sticky)
 
-Both variants are rendered by a single snippet call in `{% block secondary %}` — `v2/dataset-page-anchor-nav.html` was not created. Instead, `v2/components/anchor-links.html` was extended with two new params:
+Both variants are rendered by a single snippet call in `{% block secondary_content %}` — `v2/dataset-page-anchor-nav.html` was not created. Instead, `v2/components/anchor-links.html` was extended with two new params:
 - `heading {string}` — if set, wraps nav in `.c-anchor-links-wrapper` and renders the heading above the list
 - `with_mobile_dropdown {bool}` — if true, also renders the mobile sticky dropdown after the desktop nav
 - `mobile_only {bool}` — if true, renders **only** `.c-anchor-links-mobile` (no desktop nav or heading wrapper)
 
-**Usage in `{% block secondary %}`** (desktop nav only — rendered inside sidebar which is hidden on SM/MD):
+**Usage in `{% block secondary_content %}`** (desktop nav only — rendered inside sidebar which is hidden on SM/MD):
 ```jinja
-{% block secondary %}
+{% block secondary_content %}
   {% snippet 'v2/components/anchor-links.html',
       items=ns.anchor_items,
       heading=_('Dataset details'),
@@ -71,16 +71,17 @@ Both variants are rendered by a single snippet call in `{% block secondary %}` �
 {% endblock %}
 ```
 
-**New `{% block mobile_sticky_nav %}`** — defined in `v2/page.html`, placed between `{% block pre_primary %}` and the main layout div, so it renders outside the hidden sidebar:
+**Mobile dropdown** — no new `v2/page.html` block was added; the mobile anchor dropdown renders inline at the top of `{% block primary %}` instead, outside the hidden sidebar:
 ```jinja
-{% block mobile_sticky_nav %}
+{% block primary %}
   {% snippet 'v2/components/anchor-links.html',
       items=ns.anchor_items,
       mobile_only=True %}
+  …
 {% endblock %}
 ```
 
-The `{% block secondary %}` wraps in `.hdx-v2-dataset-sidebar` (XL+ only via CSS). The mobile dropdown (`.c-anchor-links-mobile`) is rendered separately via `{% block mobile_sticky_nav %}`, outside the sidebar that is hidden on SM/MD.
+The `{% block secondary_content %}` wraps in `.hdx-v2-dataset-sidebar` (XL+ only via CSS). The mobile dropdown (`.c-anchor-links-mobile`) is rendered separately at the top of `{% block primary %}`, outside the sidebar that is hidden on SM/MD.
 
 **Desktop sidebar**:
 - CSS class on wrapper: `hdx-v2-dataset-sidebar` (set via `sidebar_class`)
@@ -316,30 +317,25 @@ Grid layout:
 
 ### 8. Activity Section
 
-**Collapsible accordion**, default open.
+**Collapsible accordion**, default closed. Stream is lazily AJAX-fetched on first expand, not rendered server-side.
 
 ```html
-<section class="hdx-v2-dataset-section hdx-v2-dataset-section--collapsible is-open"
-         id="activity"
-         data-fetched="false"
-         data-dataset-id="{{ pkg.id }}">
+<section class="hdx-v2-dataset-section hdx-v2-dataset-section--collapsible"
+         id="activity">
   <div class="hdx-v2-dataset-section__header"
-       role="button" tabindex="0" aria-expanded="true" aria-controls="activity-body">
-    <h2 class="hdx-v2-dataset-section__title">Activity</h2>
-    <svg class="hdx-v2-dataset-section__chevron" .../>
+       role="button" tabindex="0" aria-expanded="false" aria-controls="activity-body">
+    <h2 class="hdx-v2-dataset-section__title">{{ _('Activity') }}</h2>
+    <span class="hdx-v2-dataset-section__chevron" aria-hidden="true">{% include 'v2/icons/chevron-down.svg' %}</span>
   </div>
   <div class="hdx-v2-dataset-section__body" id="activity-body">
-    {% snippet 'package/snippets/activity_stream.html',
-        activity_stream=hdx_activities, id=pkg.id, object_type='package' %}
-    {% if h.follow_status('dataset', pkg.name) %}
-      <a class="c-text-link c-text-link--primary c-text-link--size-s"
-         href="{{ h.url_for('activity.dashboard') }}">See more in your dashboard</a>
-    {% endif %}
+    <div class="dataset-activity-wrapper" data-fetched="false" data-dataset-id="{{ pkg.id }}">
+      {% snippet 'v2/activity-stream.html', activity_stream=hdx_activities, id=pkg.id, object_type='package' %}
+    </div>
   </div>
 </section>
 ```
 
-Do NOT change `package/snippets/activity_stream.html` internals. Only adapt surrounding CSS.
+No "See more in your dashboard" link — dropped. `fanstatic/v2/pages/dataset.js` handles the lazy fetch via `hdx_package_activity_stream` on first expand.
 
 ---
 
@@ -354,9 +350,8 @@ Do NOT change `package/snippets/activity_stream.html` internals. Only adapt surr
 - `{% block toolbar %}` — v2 breadcrumb (Home → Org → Title)
 
 ### Blocks to CHANGE:
-- `{% block secondary %}` — was metadata/showcases/activity → now anchor nav sidebar (desktop only)
-- `{% block primary %}` — was resource list only → now all content sections
-- `{% block mobile_sticky_nav %}` — new block in `v2/page.html`; renders mobile anchor dropdown outside the hidden sidebar
+- `{% block secondary_content %}` — was metadata/showcases/activity → now anchor nav sidebar (desktop only)
+- `{% block primary %}` — was resource list only → now all content sections, plus the mobile anchor dropdown rendered inline at the top (no new `v2/page.html` block was added for it)
 
 ### Blocks to KEEP UNCHANGED:
 - `{% block pre_primary %}` — dataset-page-header (task 037)
@@ -686,7 +681,7 @@ Standard `{% set items = items + [...] %}` fails in Jinja2 due to scoping — us
 |------|--------|
 | `templates/package/hdx_read.html` | Full restructure per block breakdown above; `columns_class`; inlined metadata fields; `<hr class="c-divider">` between sections; conditional Preview section (§0) + anchor-nav entry for GIS/geo-preview datasets |
 | `ckanext-hdx_package/ckanext/hdx_package/views/dataset.py` | `read()`: geo-preview branch now `break`s instead of `return render('package/hdx-read-shape.html', ...)`, falling through to the normal `hdx_read.html`/`custom_hdx_read.html` render with `shapes` set in `template_data` |
-| `templates/v2/page.html` | Support `columns_class` on `hdx-v2-content-columns`; added `{% block mobile_sticky_nav %}` between `pre_primary` and main layout div |
+| `templates/v2/page.html` | Support `columns_class` on `hdx-v2-content-columns` |
 | `templates/v2/components/page-header.html` | Tooltip triggers via `info-icon.html` (`c-info-icon`); anchor hrefs fixed; overflow items marked `data-header-meta-overflow` |
 | `templates/v2/components/anchor-links.html` | Added `heading`, `with_mobile_dropdown`, and `mobile_only` params |
 | `templates/v2/components/resource-card.html` | Renamed `ga_resource_title` → `resource_title`, `ga_resource_id` → `resource_id` |

@@ -202,13 +202,13 @@ carried forward unchanged. Restated for clarity per the task's explicit constrai
 
 | Field | Figma element | v2 component | Notes |
 |---|---|---|---|
-| Your name | `.form-field` | `v2/components/search-input.html` (`type='text'`, `show_icon=False`) | Direct reuse — identical to Contact Contributor's `fullname` field |
-| Your email address | `.form-field` | `v2/components/search-input.html` (`type='email'`, `show_icon=False`) | Direct reuse — identical to Contact Contributor's `email` field |
+| Your name | `.form-field` | `v2/components/text-field.html` (`type='text'`, `show_icon=False`) | Direct reuse — identical to Contact Contributor's `fullname` field |
+| Your email address | `.form-field` | `v2/components/text-field.html` (`type='email'`, `show_icon=False`) | Direct reuse — identical to Contact Contributor's `email` field |
 | Your organization | `.dropdown` | `v2/components/select.html` | Reuse Contact Contributor's `select.html` pattern; **"Other" free-text extension** — see decision below. Each `<option>` also carries the org's known type as a `data-org-type` attribute (via a new `option_attrs` param), read by `request-access.js` to auto-fill "Your organization type" below — preserves the v1 org→org-type auto-select behavior |
 | Your organization type | `.dropdown` | `v2/components/select.html` | Same as above — "Other" extension; auto-filled from the organization field's `data-org-type` |
 | Where are you located? | `.dropdown` | `v2/components/select.html` | Direct reuse — **no** "Other" variant needed (matches current schema) |
 | Intended use of this data | `.dropdown` | `v2/components/select.html` | "Other" extension (same as organization fields) |
-| Comments | `.form-field3` | `v2/components/search-input.html` (`multiline=True`) | Direct reuse of the extension already built for Contact Contributor — no new component work |
+| Comments | `.form-field3` | `v2/components/text-field.html` (`multiline=True`) | Direct reuse of the extension already built for Contact Contributor — no new component work |
 | Acknowledgment checkbox | `.container7`/`.input` + label | `v2/components/checkbox.html` | First use inside a real form — needs `errors`/required-state and a required-asterisk, see decision below |
 | Cancel | `.buttons2` (tertiary) | `v2/components/button.html` (`style='tertiary'`, `tag='a'`) | Direct reuse |
 | Submit | `.buttons3` (primary) | `v2/components/button.html` (`style='primary'`, `button_type='submit'`) | Direct reuse |
@@ -220,12 +220,12 @@ support on `checkbox.html`; a per-option `data-*` attribute param (`option_attrs
 `errors`-driven visible state on `select.html` itself (it previously rendered error text with no
 way to make it visible).
 
-**Decision — "Other" conditional reveal:** a conditionally-shown `v2/components/search-input.html`
+**Decision — "Other" conditional reveal:** a conditionally-shown `v2/components/text-field.html`
 field next to the `select.html` dropdown, toggled via JS when "Other" is selected. This is the
 closest existing-component extension (no new component), confirmed with requester.
 
 **Decision — checkbox errors/required state:** `checkbox.html` gets an `errors` param, mirroring
-the `search-input.html`/`dropdown.html` convention — adds a `c-checkbox--error` modifier class and
+the `text-field.html`/`dropdown.html` convention — adds a `c-checkbox--error` modifier class and
 populates the existing `.c-checkbox__error` span (`checkbox.less:122-140` already defines the
 modifier and its sibling-selector display rule). It also gets a required-asterisk span
 (`c-checkbox__required`), mirroring `c-search-input__required`/`c-form-field__required` — the
@@ -378,7 +378,7 @@ already established by Contact Contributor's v2 migration (`50%`/`80%`/full-widt
 
 1. **"Other" free-text conditional reveal.** Three dropdowns (organization, organization type,
    intended use) need a free-text field that appears when "Other" is selected. **Decision:** a
-   conditionally-shown `v2/components/search-input.html` next to the `select.html` dropdown,
+   conditionally-shown `v2/components/text-field.html` next to the `select.html` dropdown,
    toggled via JS — the closest existing-component extension, no new component built.
 2. **Second "Request only data" chip.** **Decision: in scope** — see §6/§9. Added to the "Data
    and resources" accordion section header, matching the existing `page-header.html:135` chip.
@@ -389,11 +389,11 @@ already established by Contact Contributor's v2 migration (`50%`/`80%`/full-widt
    awareness only.
 4. **Checkbox component fit.** `v2/components/checkbox.html` exists but has not yet been used
    inside a real submitted form. **Decision:** extend it with an `errors` param mirroring the
-   established `search-input.html`/`dropdown.html` convention — adds a `c-checkbox--error`
+   established `text-field.html`/`dropdown.html` convention — adds a `c-checkbox--error`
    modifier class and populates the existing `.c-checkbox__error` span. `checkbox.less:122-140`
    already defines the `--error` modifier and its sibling-selector display rule, so this is a
    direct match to existing convention (verified before confirming), not a new pattern. It also
-   gets a `c-checkbox__required` asterisk span, matching `search-input.html`/`dropdown.html` —
+   gets a `c-checkbox__required` asterisk span, matching `text-field.html`/`dropdown.html` —
    the component had no visible required indicator at all.
 5. **Dropdown error display.** `select.html`'s `errors` param never actually became visible —
    no modifier class was added for the sibling-selector CSS to key off. **Decision:** give

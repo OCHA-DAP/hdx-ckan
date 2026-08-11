@@ -56,13 +56,13 @@ Create a reusable, responsive dataset card component matching the Figma design e
 
 ## Responsive Layout
 
-| Property | XL (≥80rem) | MD (48–80rem) | SM (<48rem) |
-|---|---|---|---|
-| `.c-dataset-card__body` | `flex-direction: row` | `flex-direction: row` | `flex-wrap: wrap` |
-| `.c-dataset-card__left` width | `30.688rem` (fixed) | `flex: 1`, `max-width: 27.5rem` | `100%` |
-| `.c-dataset-card__right` width | `flex: 1` | `15rem` (fixed) | `100%` |
-| Column gap | `var(--hdx-space-10)` (2.5rem) | `var(--hdx-space-10)` | — |
-| Left column gap | `var(--hdx-space-2)` (8px) between org/title/desc | same | same |
+| Property | MD+ (≥48rem) | SM (<48rem) |
+|---|---|---|
+| `.c-dataset-card__body` | `flex-direction: row` | `flex-wrap: wrap` |
+| `.c-dataset-card__left` width | `flex: 2 0 0%` | `100%` |
+| `.c-dataset-card__right` width | `flex: 1 0 0%` | `100%` |
+| Column gap | `var(--hdx-space-10)` (2.5rem) | — |
+| Left column gap | `var(--hdx-space-13)` (6px) between org/title/desc | same |
 | Right column gap | `var(--hdx-space-3)` (12px) between locations/date/formats | same | — |
 | `.c-dataset-card__desc` | visible | visible | `display: none` |
 | `.c-dataset-card__formats` | visible | visible | `display: none` |
@@ -115,10 +115,11 @@ Rendered when there are more file formats than the visible set:
 | `location` | string | `''` | Location label text (e.g. `"Palestine"`) |
 | `subnational` | bool | `false` | Show "Sub-national" grey label |
 | `date_range` | string | `''` | Date range string (e.g. `"Data from 12 Dec 2022 to 12 Dec 2025"`) |
-| `formats` | list | `[]` | Format dicts: `{type: 'extension'\|'cod'\|'cod_plus'\|'private'\|'archived', text: str, icon_src: str}` |
+| `formats` | list | `[]` | Format dicts: `{type: 'extension'\|'cod'\|'cod_plus'\|'private'\|'archived'\|'requestdata', text: str, icon_src: str}` |
 | `formats_overflow` | int | `0` | Count of hidden formats; renders `+N` span when > 0 |
 | `show_others_label` | string | `''` | Footer link text (e.g. `"View other 89 datasets from this contributor"`) |
 | `show_others_href` | string | `'#'` | Footer link URL |
+| `query` | string | `''` | Search term to highlight in title/description via the `highlight` JS module |
 | `extra_classes` | string | `''` | Additional CSS classes on root `.c-dataset-card` element |
 
 ## JS Behavior
@@ -128,21 +129,18 @@ Rendered when there are more file formats than the visible set:
 **On "Show more" click:**
 1. Toggle `is-open` class on `.c-dataset-card__desc-text` — CSS controls `display: none` / `display: block`
 2. Toggle button label text: `"Show more"` ↔ `"Show less"`
-3. Swap icon src attribute: `chevron-down.svg` ↔ `chevron-up.svg`
+3. Chevron rotates via CSS (`&.is-open .c-text-button__icon { transform: rotate(180deg); }`) — no icon-src swap in JS
 
 No height animation required. The module does not need to run at SM breakpoint since `.c-dataset-card__desc` is hidden in CSS at that size.
 
 ## LESS File Structure
 
 ```less
-@import "../breakpoints.less";
+@import "../mixins.less";
 
 // Component-level tokens
 @c-dataset-card-border-default: 1px solid var(--hdx-neutral-1);
 @c-dataset-card-border-color-hover: var(--hdx-neutral-8);
-@c-dataset-card-left-xl:        30.688rem;
-@c-dataset-card-left-md-max:    27.5rem;
-@c-dataset-card-right-md:       15rem;
 // …
 
 .c-dataset-card {
@@ -151,8 +149,7 @@ No height animation required. The module does not need to run at SM breakpoint s
   &__body { … }
   &__left {
     // default (SM) styles
-    @media (min-width: @hdx-bp-md) { … }  // MD
-    @media (min-width: @hdx-bp-xl) { … }  // XL
+    @media (min-width: @hdx-bp-md) { flex: 2 0 0%; }  // MD+
   }
   // etc.
 }

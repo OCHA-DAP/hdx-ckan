@@ -170,7 +170,7 @@ The same alignment principle is applied to the default 4-column `__metadata` gri
 
 Follows the same pattern as the dataset page (task 039). Items are conditional.
 
-**`_data_explorer` detection** — computed at template root level (before any blocks) so it's accessible in both `{% block secondary %}` and `{% block primary %}`:
+**`_data_explorer` detection** — computed at template root level (before any blocks) so it's accessible in both `{% block secondary_content %}` and `{% block primary %}`:
 ```jinja
 {% set _de_ns = namespace(view=None) %}
 {% for _v in resource_views or [] %}
@@ -192,7 +192,7 @@ Follows the same pattern as the dataset page (task 039). Items are conditional.
 {% endif %}
 ```
 
-**Desktop sidebar** (`{% block secondary %}`) and **mobile sticky** (top of `{% block primary %}`): same as before, using the `ns.anchor_items` built above.
+**Desktop sidebar** (`{% block secondary_content %}`) and **mobile sticky** (top of `{% block primary %}`): same as before, using the `ns.anchor_items` built above.
 
 **Section IDs**:
 - `#resource-preview` — only when `_data_explorer` is set
@@ -280,7 +280,7 @@ The section body uses `.hdx-v2-resource-api` — column layout on SM/MD, row lay
 
 ### 6. Data Dictionary
 
-❌ **OUT OF SCOPE** — not implemented.
+Built later by task 068. Gated on `res.datastore_active`: `<section class="hdx-v2-resource-section" id="data-dictionary" data-module="data-dictionary" data-resource-id="{{ res.id }}">`, with a "Data dictionary" entry added to the anchor-nav item list alongside "Resource preview" and "API".
 
 ---
 
@@ -349,7 +349,7 @@ Copy icon uses `stroke="currentColor"` / `fill="currentColor"` so the green colo
 ### Blocks to ADD:
 - `{% block breadcrumb_items %}` — v2 breadcrumb (Home → Org → Dataset → Resource)
 - `{% block pre_primary %}` — page header via `v2/components/page-header.html`
-- `{% block secondary %}` — desktop anchor nav sidebar
+- `{% block secondary_content %}` — desktop anchor nav sidebar
 - `{% block primary %}` — mobile anchor dropdown + all content sections
 
 ### Blocks to KEEP UNCHANGED:
@@ -395,7 +395,7 @@ See `c-copy-button` spec above.
 
 ## CSS: `fanstatic/v2/pages/resource.css`
 
-Compiled from LESS source at `less/v2/resource-page.less`.
+Compiled from LESS source at `less/v2/pages/resource.less`.
 Registered in the `v2-resource-page-styles` bundle.
 
 ### Layout classes
@@ -514,7 +514,7 @@ No page-specific scripts block needed — all JS is in `v2-components-scripts`, 
 | `fanstatic/v2/components/copy-button.css` | CSS | Copy button styles (in `v2-components-styles`) |
 | `fanstatic/v2/pages/resource.css` | CSS | Resource page layout |
 | `less/v2/components/copy-button.less` | LESS | Source for `copy-button.css` |
-| `less/v2/resource-page.less` | LESS | Source for `resource-page.css` |
+| `less/v2/pages/resource.less` | LESS | Source for `resource-page.css` |
 
 ### Files to Modify
 

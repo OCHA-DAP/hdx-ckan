@@ -174,37 +174,35 @@ The snippet is NOT necessarily called for static rendering. Its primary role is 
 
 ## 5. Rendering Strategy
 
-### Data format
+DataTables 2.x is retained wholesale (per §3's chosen Option B) — there is no hand-rolled `.c-table` renderer. `hdx_csv_preview.js` renders straight into `<table id="hdx-csv-table" class="c-table">`:
 
-API: `GET /hxl/api/data-preview.json?rows=0&sheet=0&url={resourceUrl}`
+```js
+function loadFromHxlProxy(resourceUrl) {
+    var previewUrl = '/hxl/api/data-preview.json?rows=0&sheet=0&url=' + encodeURIComponent(resourceUrl);
+    fetch(previewUrl)
+        .then(function (r) { return r.json(); })
+        .then(function (response) {
+            if (!response || !response[0]) return;
+            var columns = response[0].map(function (h) { return { title: h }; });
+            initDataTable(response.slice(1), columns);
+        });
+}
 
-`rows=0` = all rows (no limit). Pagination is handled client-side in JS.
-
-Response:
-```json
-[
-  ["Date", "Location", "Locality", ...],   // row 0 = column headers
-  ["2025-11-30", "Nuseiba Center", ...],    // row 1 = first data row (or HXL hashtag row)
-  ...
-]
+function initDataTable(data, columns) {
+    new DataTable('#hdx-csv-table', {
+        data: data, columns: columns, pageLength: 10,
+        autoWidth: false, searching: false, lengthChange: false, info: false, select: false,
+        layout: { bottomStart: { paging: { type: 'simple_numbers' } } },
+        language: { paginate: { previous: '‹', next: '›' } }
+    });
+}
 ```
 
-**HXL hashtag row**: For HXL-tagged CSV files, `row[1]` will contain the hashtag row (e.g. `["#date", "#loc+name", ...]`). This row is **not stripped by the API** — it appears in `response.slice(1)` as a regular data row. **Decision: display it as-is** (same behaviour as v1 DataTables rendering).
+For datastore-backed resources (added later by task 068), `loadFromDatastore(resourceId)` fetches from `/api/3/action/datastore_search` instead and feeds the same `initDataTable()`.
 
-### Mapping to v2 HTML
+**HXL hashtag row**: For HXL-tagged CSV files, `row[1]` will contain the hashtag row (e.g. `["#date", "#loc+name", ...]`). This row is **not stripped by the API** — it appears in `response.slice(1)` as a regular data row and is displayed as-is (same behaviour as v1).
 
-```
-response[0]        → .c-table__header, one .c-table__cell--header per column
-response[1..n]     → .c-table__body, one .c-table__row per data row
-  odd rows (1,3,…) → bg: var(--hdx-neutral-0)   [#ffffff]
-  even rows (2,4,…)→ bg: var(--hdx-neutral-01)  [#fafbfb]
-  each cell value  → .c-table__cell > .c-table__cell-content
-pagination         → .c-table__footer > JS-rendered pagination controls (see §7)
-```
-
-### Pagination
-
-**Decision: client-side**, same as v1. All rows fetched in a single call (`rows=0`); JS slices the visible page. No backend changes needed.
+`table.less`/`table.html` (`v2/components/table.html`) still exist and define the `.c-table` classes DataTables' own DOM is re-skinned into.
 
 ---
 
@@ -235,42 +233,20 @@ All tokens verified against `hdx-styles/src/common/less/v2/colors.less` and `spa
 
 ### Error message CSS
 
-**`js-hide` is NOT defined in the v2 CSS bundle** (confirmed: only present in v1 files `fanstatic/base/header.css` etc.). Add to `resource-page.less`:
+**`js-hide` was not defined in the v2 CSS bundle** — now added to `less/v2/layout.less` (a shared v2 utility, since `.data-viewer-error js-hide` is used by several v1/v2-shared preview snippets, not just this one):
 ```less
 .js-hide { display: none !important; }
 ```
 
-In `resource_view.html`, update the error div for v2:
-- Remove `text-error` class (Bootstrap 2 — does not exist in v2)
-- Remove `icon-info-sign` (Bootstrap 2 Glyphicon — icon font not loaded in v2)
-- **Remove Bootstrap 5 collapse/expand entirely** — no more `data-bs-toggle`, `data-bs-target`, collapsible detail text
-
-**Decision: simple always-visible inline error** (Option A below). No expand/collapse behaviour.
-
-Error display options considered:
-- **A — Simple inline error div** ✅ CHOSEN: plain `<div class="c-preview-error">` styled with `@hdx-error-5` text colour; shown/hidden by `data-viewer2.js` via the existing `js-hide` class; zero JS dependency beyond what already exists
-- **B — Native `<details>/<summary>`**: expand/collapse with no JS needed; semantic but adds visual complexity for a simple error message — overkill here
-- **C — Toast/notification bar**: dismissable; wrong pattern for a persistent load-failure state
-
-Error div markup after update:
-```html
-<div class="data-viewer-error js-hide c-preview-error">
-  <!-- SVG icon TBD by design, or none -->
-  Could not load the preview for this resource.
-</div>
-```
+The `resource_view.html` error div's class cleanup (removing `text-error`/`icon-info-sign`, dropping the Bootstrap 5 collapse markup, adding `c-preview-error` styling) is deferred — `resource_view.html` is shared across several v1 and v2 rendering paths, and changing its classes needs broader verification than this task's scope. Next cycle.
 
 ---
 
 ## 7. Pagination Integration
 
-**Decision: client-side pagination with JS-rendered controls.**
+DataTables' own native `layout: { bottomStart: { paging: { type: 'simple_numbers' } } }` option handles pagination — no `c-pagination` component or JS-rendered pagination markup is involved. Styling comes from `hdx_csv_preview.less` re-skinning DataTables' own generated DOM.
 
-The existing `v2/components/pagination.html` snippet uses URL-based page links and is Jinja-rendered — it cannot be re-rendered by JS after data loads. Instead, the table JS will generate pagination markup that **visually matches** `c-pagination--size-sm` but is driven entirely by JS event listeners.
-
-The JS pagination component must produce HTML equivalent to `c-pagination--size-sm` (same CSS classes, same DOM structure) so it picks up the existing pagination CSS for free.
-
-Page size: keep same as v1 DataTables default (10 rows per page). Total pages = `Math.ceil(dataRows.length / pageSize)`.
+Page size: 10 rows (`pageLength: 10`), same as v1.
 
 ---
 
@@ -296,7 +272,7 @@ Page size: keep same as v1 DataTables default (10 rows per page). Total pages = 
 |------|------------|------------|
 | Sorting must be reimplemented | High | In scope — reimplement column sort (asc/desc toggle) in v2 JS on header click |
 | Iframe CSS loading order causes flash of unstyled content | Medium | Load v2 CSS in `<head>` of `hdx_csv_preview_view.html` before data fetch |
-| `js-hide` not defined in v2 CSS — error always visible | High (confirmed) | Add `.js-hide { display: none !important; }` to `resource-page.less` |
+| `js-hide` not defined in v2 CSS — error always visible | High (confirmed) | Added `.js-hide { display: none !important; }` to `layout.less` |
 | JS-rendered pagination CSS mismatch | Medium | Render the same DOM structure as `c-pagination--size-sm` so existing CSS applies |
 | HXL hashtag row shown as data row | Low (by design) | Expected — same as v1; no mitigation needed |
 | `data-viewer2.js` jQuery dependency | Low | jQuery is already loaded on all CKAN pages including the iframe base template |
@@ -319,6 +295,6 @@ All open questions resolved. No blockers remain before implementation.
 | 7 | Sticky header | **No** |
 | 8 | Pagination mode | **Client-side**, 10 rows/page, all rows fetched via `rows=0` |
 | 9 | `c-pagination` for table pager | **DataTables 2.x `layout` option** — `bottomStart: { paging: { type: 'simple_numbers' } }`; styled via `hdx_csv_preview.less` |
-| 10 | Error div Bootstrap collapse | **Removed** — simple always-visible error div with v2 error colour, no collapse/expand |
-| 11 | `js-hide` in v2 | **Not present** — add `.js-hide { display: none !important; }` to `resource-page.less` |
+| 10 | Error div Bootstrap collapse | **Decided, not yet applied** — `resource_view.html` is shared across v1/v2 rendering paths; the class cleanup is deferred to next cycle |
+| 11 | `js-hide` in v2 | **Added** — `.js-hide { display: none !important; }` in `layout.less` |
 | 12 | Token mapping | **All confirmed** — see §6 styling table (verified against `colors.less`, `spacing.less`, `typography.less`) |

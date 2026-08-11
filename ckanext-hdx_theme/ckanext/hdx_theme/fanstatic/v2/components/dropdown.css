@@ -68,7 +68,7 @@
 }
 .c-dropdown--disabled .c-dropdown__trigger {
   background-color: var(--hdx-neutral-0);
-  border: 1px solid var(--hdx-neutral-1);
+  border-color: var(--hdx-neutral-1);
   box-shadow: none;
   cursor: not-allowed;
   pointer-events: none;

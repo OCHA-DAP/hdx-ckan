@@ -95,11 +95,18 @@ The existing carousel infrastructure (data backend, JS, analytics) is fully reus
 
 Registered in `fanstatic/webassets.yml` under `v2-page-scripts`. **Do not reuse `homepage-responsive.js`** — that file remains on the page for other legacy purposes but is not used by this section.
 
-| Function | Selector | Behaviour |
-|----------|----------|-----------|
-| `hlInit()` | `.mobile-carousel` | Init Hammer.js swipe, arrow/dot click handlers, clone-based infinite track |
-| `hlGoTo(target)` | `.mobile-carousel-inner` | Animates `left` to `-target * hlSlot`; teleports from clones to real cards |
-| `hlSetDot(n)` | `.mobile-carousel .highlight-dots button` | Toggles `.active` on the nth dot |
+Shipped as a ~10-line config call into a shared, generic `window.hdxCarousel.init()` (`fanstatic/v2/carousel.js`), not standalone functions — the same engine also backs the Signals carousel (task 054):
+
+```js
+window.hdxCarousel.init({
+    containerSelector: '.mobile-carousel',
+    slideSelector:     '.highlight-slide',
+    prevBtnSelector:   '.hdx-v2-highlights__arrow--prev',
+    nextBtnSelector:   '.hdx-v2-highlights__arrow--next',
+    mediaQuery:        '(min-width: 80rem)',
+    dotsSelector:      '.highlight-dots',
+});
+```
 
 **Selectors used** (custom — avoid Bootstrap class-name collisions):
 - Carousel root: `.mobile-carousel`
@@ -152,8 +159,8 @@ Single carousel for all breakpoints. No separate static-grid div. CSS handles th
   <div class="hdx-v2-highlights__inner hdx-v2-container">
 
     <div class="hdx-v2-highlights__header">
-      <span class="hdx-v2-highlights__label">{{ _('HDX highlights') }}</span>
-      <h2 class="hdx-v2-highlights__heading">{{ _('Curated highlights on current events') }}</h2>
+      <span class="hdx-v2-highlights__label">{{ _('Trending on HDX') }}</span>
+      <h2 class="hdx-v2-highlights__heading">{{ _('Highlights from across the platform') }}</h2>
     </div>
 
     <div class="hdx-v2-highlights__carousel mobile-carousel">

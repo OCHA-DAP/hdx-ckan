@@ -25,16 +25,12 @@ Refactor `dropdown-panel.html` so the search bar, list items, confirm button, an
       checked=item.checked %}
   ```
 
-- The confirm button already uses `c-button`. Add the missing `state` and `type` params:
-  ```
-  {% snippet 'v2/components/button.html',
-      style='secondary', type='text', size='m', state='enabled', label=confirm_label %}
-  ```
+- There is no confirm button — the panel has no confirm action, only a clear action.
 
-- The clear link already uses `c-text-link`. Verify it passes `state='enabled'`:
+- Replace the clear link with the `c-text-button` component:
   ```
-  {% snippet 'v2/components/text-link.html',
-      style='tertiary', size='s', state='enabled', label=clear_label %}
+  {% snippet 'v2/components/text-button.html',
+      label=clear_label %}
   ```
 
 - Update the top documentation comment to reflect the new component dependencies and remove references to any parameters that no longer apply (e.g. `search_icon`).

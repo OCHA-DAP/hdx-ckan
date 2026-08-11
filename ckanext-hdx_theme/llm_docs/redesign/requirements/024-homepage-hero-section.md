@@ -11,8 +11,8 @@ Implement the first section of the homepage (v2). Displays a heading, subtitle, 
 | Label | Range | `__inner` padding | `__inner` gap | Heading size | Subtitle size | `__actions` |
 |-------|-------|-------------------|---------------|--------------|---------------|-------------|
 | SM | < 48rem | `8rem 1.25rem 4rem` | `2.5rem` | `var(--hdx-fs-4xl)` | `var(--hdx-fs-m)` | column, `width: 100%` |
-| MD | 48rem – 79.9375rem | `6rem 3rem 4rem` | `3rem` | `var(--hdx-fs-4xl)` | `var(--hdx-fs-m)` | row, `width: 36.375rem` |
-| XL | ≥ 80rem | top: `10rem` (rest unchanged) | `5rem` | `3rem` | `var(--hdx-fs-l)` | row, `width: 36.375rem` |
+| MD | 48rem – 79.9375rem | `6rem 3rem 4rem` | `3rem` | `var(--hdx-fs-4xl)` | `var(--hdx-fs-m)` | row, `width: 60%` |
+| XL | ≥ 80rem | top: `10rem` (rest unchanged) | `5rem` | `3rem` | `var(--hdx-fs-l)` | row, `width: 60%` |
 
 Breakpoint variables: `@hdx-bp-md: 48rem`, `@hdx-bp-xl: 80rem` (from `breakpoints.less`).
 
@@ -37,7 +37,7 @@ Extends `v2/page.html`. The hero section markup uses `autocomplete.html` only �
 
 ```html
 <section class="hdx-v2-hero">
-  <div class="hdx-v2-hero__inner container">
+  <div class="hdx-v2-hero__inner hdx-v2-container">
 
     <div class="hdx-v2-hero__header">
       <h1 class="hdx-v2-hero__heading">{{ _('The Humanitarian Data Exchange') }}</h1>
@@ -55,7 +55,8 @@ Extends `v2/page.html`. The hero section markup uses `autocomplete.html` only �
       {% snippet 'v2/components/button.html',
           style='secondary', type='text', size='l',
           state='enabled', icon=False,
-          label=_('Explore data') %}
+          label=_('Explore data'),
+          tag='a', href=h.url_for('dataset.search') %}
 
     </div>
 

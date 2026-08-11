@@ -121,7 +121,7 @@ If `filtered` is empty after the `selectattr` filter, hide the section entirely:
 ```
 
 **Notes:**
-- `__inner` is full-width — no `hdx-v2-container`; bars span the viewport edge-to-edge.
+- `__inner` uses `hdx-v2-container` like other sections.
 - The dot uses `v2/icons/dot.svg` included inline (not `c-graph-point`).
 - `aria-live="polite"` on the label: screen readers announce country/count changes without interrupting.
 - `is-active` is pre-set to the first bar by Jinja2 so the chart is meaningful before JS loads.
@@ -139,48 +139,40 @@ If `filtered` is empty after the `selectattr` filter, hide the section entirely:
 Plain vanilla JS IIFE, initialised on `DOMContentLoaded` (not a CKAN module — `ckan` global is not available when this bundle loads):
 
 ```javascript
-ckan.module('hdx_barchart', function($) {
-return {
-  initialize: function() {
-    var el        = this.el[0];
-    var bars      = el.querySelectorAll('.hdx-v2-barchart__bar');
-    var label     = el.closest('.hdx-v2-barchart__inner')
-                      .querySelector('.hdx-v2-barchart__label');
+(function () {
+  'use strict';
+
+  function initBarchart(barsEl) {
+    var bars      = barsEl.querySelectorAll('.hdx-v2-barchart__bar');
+    var inner     = barsEl.closest('.hdx-v2-barchart__inner');
+    var label     = inner.querySelector('.hdx-v2-barchart__label');
     var nameEl    = label.querySelector('.hdx-v2-barchart__label-name');
     var countEl   = label.querySelector('.hdx-v2-barchart__label-count');
-    var interval  = parseInt(el.getAttribute('data-module-interval'), 10) || 2000;
-    var activeIdx = 0;
+    var interval  = parseInt(barsEl.getAttribute('data-interval'), 10) || 2000;
+    var activeIdx = Math.floor(Math.random() * bars.length);
+
+    function positionLabel(bar) { /* centers label over the active bar */ }
+
+    function nextRandom() {
+      if (bars.length <= 1) { return 0; }
+      var next;
+      do { next = Math.floor(Math.random() * bars.length); } while (next === activeIdx);
+      return next;
+    }
 
     function activate(idx) {
       bars[activeIdx].classList.remove('is-active');
-      activeIdx = idx % bars.length;
+      activeIdx = idx;
       bars[activeIdx].classList.add('is-active');
-
       nameEl.textContent  = bars[activeIdx].getAttribute('data-name');
       countEl.textContent = bars[activeIdx].getAttribute('data-count') + ' datasets';
-
-      // Move label to active bar (see §4 Styling for positioning logic)
-      _positionLabel(label, bars[activeIdx]);
+      positionLabel(bars[activeIdx]);
     }
 
-    function _positionLabel(label, bar) {
-      var barRect   = bar.getBoundingClientRect();
-      var chartRect = el.getBoundingClientRect();
-      label.style.setProperty('--label-offset', (barRect.left - chartRect.left) + 'px');
-    }
-
-    // Seed initial label state from the pre-activated first bar
-    activate(0);
-
-    var timer = setInterval(function() {
-      activate(activeIdx + 1);
-    }, interval);
-
-    // Reduced-motion: skip CSS transition by toggling a class on <html>
-    // (CSS handles via @media prefers-reduced-motion — no JS needed here)
+    activate(activeIdx);
+    setInterval(function () { activate(nextRandom()); }, interval);
   }
-};
-});
+})();
 ```
 
 ### Cycling behavior
@@ -232,8 +224,7 @@ Registered as `v2/bar-chart.css` in the `v2-page-styles` webassets bundle.
 
 ```less
 .hdx-v2-barchart {
-background-color: #18614c;  // --color-teal from Figma
-border-radius: 5px 5px 0 5px;
+background-color: var(--hdx-brand-7);
 overflow: hidden;
 position: relative;
 }
@@ -400,11 +391,11 @@ Use existing breakpoint tokens `@hdx-bp-xl` and `@hdx-bp-md` (do not introduce n
 
 | File | Action |
 |---|---|
-| `ckanext-hdx_theme/ckanext/hdx_theme/templates/home/index.html` | Added `<section class="hdx-v2-barchart">` between hero and alert bar; `{% asset 'hdx_theme/v2-homepage-scripts' %}` in `head_extras` |
+| `ckanext-hdx_theme/ckanext/hdx_theme/templates/home/index.html` | Added `<section class="hdx-v2-barchart">` between hero and alert bar; `{% asset 'hdx_theme/v2-home-page-scripts' %}` in `head_extras` |
 | `ckanext-hdx_theme/ckanext/hdx_theme/hdx-styles/src/common/less/v2/bar-chart.less` | **New** — all chart LESS; compiles to `fanstatic/v2/bar-chart.css` |
 | `ckanext-hdx_theme/ckanext/hdx_theme/hdx-styles/src/common/less/v2/overlays.less` | Added `@hdx-overlay-white-20` token |
 | `ckanext-hdx_theme/ckanext/hdx_theme/hdx-styles/src/common/less/v2/foundation.less` | Exported `--hdx-overlay-white-20` as CSS custom property |
 | `ckanext-hdx_theme/ckanext/hdx_theme/hdx-styles/src/common/less/v2/components/selection.less` | Added `.c-graph-point--on-dark` modifier |
 | `ckanext-hdx_theme/ckanext/hdx_theme/helpers/helpers.py` | Added `try/except` to `hdx_get_locations` — returns `[]` on any exception |
 | `ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/v2/bar-chart.js` | **New** — CKAN module `hdx_barchart` |
-| `ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/webassets.yml` | `v2/bar-chart.css` added to `v2-page-styles`; new `v2-homepage-scripts` bundle containing `bar-chart.js` |
+| `ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/webassets.yml` | `v2/bar-chart.css` added to `v2-page-styles`; new `v2-home-page-scripts` bundle containing `bar-chart.js` |

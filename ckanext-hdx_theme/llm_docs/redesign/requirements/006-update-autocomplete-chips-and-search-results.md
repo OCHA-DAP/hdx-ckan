@@ -11,7 +11,6 @@ Refactor the autocomplete suggestion panel so the interactive chips and search r
     - `type='text'`
     - `size='m'`
     - `state='enabled'`
-    - `icon=False`
   - Render each search result link using the `c-text-link` component.
   - Each result link should use:
     - `style='tertiary'`
@@ -20,7 +19,7 @@ Refactor the autocomplete suggestion panel so the interactive chips and search r
 
 - Render the confirm action using the `c-button` component.
   - The confirm button should use:
-    - `style='secondary'`
+    - `style='tertiary'`
     - `type='text'`
     - `size='m'`
     - `state='enabled'`

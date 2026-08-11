@@ -23,31 +23,28 @@ Refine the existing v2 footer implementation to better align with the Figma spec
   ```
   The footer-level `.c-text-link` color overrides (white on dark background) already in `footer.less` apply automatically.
 
-- **REQ-4 — OCHA text: Bootstrap column.** Remove the fixed `max-width` from `__ocha-text` (see LESS change below). Restructure `__service-detail` as a Bootstrap row:
+- **REQ-4 — OCHA text: plain flex.** Remove the fixed `max-width` from `__ocha-text` (see LESS change below). `__service-detail` stays plain BEM divs — no Bootstrap classes (superseded by task 027's Bootstrap removal):
   ```html
-  <div class="hdx-v2-footer__service-detail row align-items-center g-2">
-    <span class="hdx-v2-footer__ocha-logo col-auto"> … </span>
-    <p class="hdx-v2-footer__ocha-text col-12 col-md-6"> … </p>
+  <div class="hdx-v2-footer__service-detail">
+    <span class="hdx-v2-footer__ocha-logo"> … </span>
+    <p class="hdx-v2-footer__ocha-text"> … </p>
   </div>
   ```
 
-- **REQ-5 — MD breakpoint: newsletter/social grid split.** Wrap the two children of `__actions` in a Bootstrap row and apply column classes:
+- **REQ-5 — MD breakpoint: newsletter/social split.** The 75/25 split and stacking behavior are implemented entirely in `footer.less` via flex (`&__newsletter`/`&__social` at `flex: 0 0 75%`/`25%` on MD+) — no Bootstrap row/column classes (superseded by task 027):
   ```html
   <div class="hdx-v2-footer__actions">
-    <div class="row align-items-start g-0">
-      <div class="hdx-v2-footer__newsletter col-12 col-md-9"> … </div>
-      <div class="hdx-v2-footer__social col-12 col-md-3"> … </div>
-    </div>
+    <div class="hdx-v2-footer__newsletter"> … </div>
+    <div class="hdx-v2-footer__social"> … </div>
   </div>
   ```
 
-- **REQ-7 — Newsletter input: `c-search-input` component.** Replace the raw `<input class="hdx-v2-footer__email-input">` with the snippet. Preserve all Mailchimp form attributes on the wrapping `<form>`. Pass `show_icon=False` to suppress the search icon (Figma shows no icon on this field; see REQ-9):
+- **REQ-7 — Newsletter input: `c-text-field` component.** Replace the raw `<input class="hdx-v2-footer__email-input">` with the snippet. Preserve all Mailchimp form attributes on the wrapping `<form>`. `text-field.html` never renders an icon, so no `show_icon` param is needed:
   ```jinja2
-  {% snippet 'v2/components/search-input.html',
+  {% snippet 'v2/components/text-field.html',
       size='m', state='enabled',
       type='email', name='EMAIL', id='mce-EMAIL',
-      placeholder=_('Enter your email'), value='',
-      show_icon=False %}
+      placeholder=_('Enter your email'), value='' %}
   ```
 
 - **REQ-8 — Newsletter button: `button` component.** Replace the raw `<button>` with the snippet, retaining the `hdx-v2-footer__subscribe-btn` extra class for dark-background color overrides:

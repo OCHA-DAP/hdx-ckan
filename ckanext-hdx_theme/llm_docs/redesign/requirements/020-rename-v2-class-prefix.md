@@ -37,9 +37,8 @@ The rename follows BEM: `hdx-v2-{block}__{element}--{modifier}`.
 
 Update every `class="hdx-..."` attribute and every `id="hdx-..."` attribute that belongs to a v2 layout component. Files:
 
-- `header.html`
+- `header.html` (offcanvas markup lives inline here — there is no separate `navbar-offcanvas.html` file)
 - `footer.html`
-- `navbar-offcanvas.html`
 - `navbar-notifications.html`
 - `navbar-user-menu.html`
 - `page.html`

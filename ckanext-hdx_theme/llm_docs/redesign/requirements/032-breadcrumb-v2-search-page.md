@@ -171,17 +171,13 @@ When all pages are migrated to v2, the old `toolbar` block in `v2/page.html` can
 The separator never appears after the last item (existing `if not is_last` logic).
 `.c-breadcrumb__current` already exists in `breadcrumb.less` — no LESS changes needed.
 
-**`show_home` param:** Add a boolean param (default: `true`) that automatically prepends
-`{'label': _('Home'), 'href': '/'}` as the first item. This avoids callers having to repeat
-the Home item on every page. Set `show_home=false` only when a template manages the first
-crumb itself.
+**Home crumb:** `{'label': _('Home'), 'href': '/'}` is always prepended as the first item, unconditionally — no opt-out param. This avoids callers having to repeat the Home item on every page.
 
 **Updated component API:**
 
 | Param | Type | Default | Description |
 |---|---|---|---|
-| `items` | list | `[]` | `{label, href}` dicts. Last item = current page (falsy href). |
-| `show_home` | bool | `true` | When true, Home is prepended automatically. |
+| `items` | list | `[]` | `{label, href}` dicts. Last item = current page (falsy href). Home is prepended automatically. |
 | `separator` | string | `'/'` | Separator between crumbs. |
 | `extra_classes` | string | `''` | Extra CSS classes on the root `<nav>`. |
 
@@ -216,23 +212,20 @@ Add schema.org RDFa via the existing component primitives:
 - All items: add `<meta property="position" content="{{ loop.index }}">` as a sibling inside
   the `.c-breadcrumb__item` span (after the link/span, before the separator)
 
-### 4. Override `toolbar` block in `search/search.html`
+### 4. Override `breadcrumb_items` block in `search/search.html`
 
 **File:** `templates/search/search.html`
 
-Replace the `breadcrumb_content` block with a `toolbar` block override. Since `show_home`
-defaults to `true`, only the page-specific crumbs need to be in `items`:
+`v2/page.html` itself now provides the generic `<div class="hdx-v2-breadcrumb-row">` wrapper (in its own `{% block toolbar %}`) with a `{% block breadcrumb_items %}` sub-block — every v2 page overrides only that sub-block, not `toolbar` directly:
 
 ```jinja2
-{% block toolbar %}
-  <div class="hdx-v2-breadcrumb-row">
-    {% snippet 'v2/components/breadcrumb.html',
-        items=[{'label': _('Datasets'), 'href': ''}] %}
-  </div>
+{% block breadcrumb_items %}
+  {% snippet 'v2/components/breadcrumb.html',
+      items=[{'label': _('Datasets'), 'href': ''}] %}
 {% endblock %}
 ```
 
-Remove the `breadcrumb_content` block — it is superseded by the toolbar override.
+Remove the `breadcrumb_content` block — it is superseded by `breadcrumb_items`.
 
 **Effective crumb trail:**
 
@@ -294,13 +287,13 @@ unchanged. All other pages that extend `v2/page.html` continue using the legacy 
 
 | File | Change |
 |---|---|
-| `templates/v2/components/breadcrumb.html` | Fix last-item rendering; add `show_home` param; add RDFa markup |
+| `templates/v2/components/breadcrumb.html` | Fix last-item rendering; add RDFa markup |
 | `templates/v2/components/text-link.html` | Add `inner_attrs` param for label-wrapping span |
-| `templates/search/search.html` | Override `toolbar` block; remove `breadcrumb_content` block |
-| `hdx-styles/src/common/less/v2/pages/search.less` | Add `.hdx-v2-breadcrumb-row` wrapper styles |
+| `templates/v2/page.html` | Gained the generic `toolbar`/`breadcrumb_items` block pair used by every v2 page |
+| `templates/search/search.html` | Override `breadcrumb_items` block; remove `breadcrumb_content` block |
+| `hdx-styles/src/common/less/v2/layout.less` | `.hdx-v2-breadcrumb-row` wrapper styles (shared, not search-specific) |
 
 **Unchanged:**
-- `templates/v2/page.html`
 - `templates/package/search.html` (v1 search)
 - `templates/snippets/home_breadcrumb_item.html`
 - `templates/snippets/active_breadcrumb_item.html`
@@ -317,4 +310,4 @@ unchanged. All other pages that extend `v2/page.html` continue using the legacy 
 | D1 | Spacing above breadcrumb: additional top margin beyond component's own `padding: 8px 0`? | Yes — `.hdx-v2-breadcrumb-row` adds `margin-top: var(--hdx-space-2)` (8px) and `margin-bottom: var(--hdx-space-2)` (8px) |
 | D2 | Separator character: `/` or different character/icon? | `/` — default kept; no change |
 | D3 | Long label truncation: `max-width: 21.875rem` sufficient, or exempt "Datasets" crumb? | Existing truncation kept as-is; "Datasets" is always short so no special exemption needed |
-| D4 | Future pages — `href` for "Datasets" link on dataset detail page: `/dataset` or with filters? | Deferred — out of scope for this task (search page only) |
+| D4 | Future pages — `href` for "Datasets" link on dataset detail page: `/dataset` or with filters? | Resolved by task 039 — dataset page breadcrumbs go to the Organisation, not `/dataset` |

@@ -1,13 +1,13 @@
 # 055 — Notifications (Logged-in Users): v2 Migration
 
-**Scope IN:** Bell-icon notification dropdown (header), v2-styled. Template consolidation of the 4 existing notification-type snippets into a shared v2 shell component. The 4 snippets are rewritten unconditionally (no `{% if v2 %}` branch) — the v1 Bootstrap dropdown is retired and left wired up as-is, unstyled.
+**Scope IN:** Bell-icon notification dropdown (header), v2-styled. Template consolidation of the 4 existing notification-type snippets into a shared v2 shell component. Each of the 4 snippets still branches per-request on `{% if v2 %}`; the v2 branch renders through the new shared shell, the `{% else %}` branch keeps the old v1 markup as-is, unstyled.
 **Scope OUT:** Notification *generation* logic (the DAOs/queries that decide what counts as a notification), the "Subscribe to Notifications" email opt-in system (`notification_platform/*`, `user/notifications.html` — separate feature, already migrated in task 051), any new notification types, any backend read/unread schema, a standalone notifications list page/route (dropped from scope — the dropdown keeps showing the full unfiltered list via scroll, same as today; see §6), the sysadmin All/Personal filter toggle (dropped — sysadmin entries are always shown, just highlighted).
 
 ---
 
 ## Context
 
-This is a **migration, not a redesign** — the bell dropdown must match Figma exactly while preserving every existing notification type and behavior. The v1 legacy dropdown (Bootstrap, `light/notifications/notification_snippet.html`) is retired: the 4 shared snippets now render the new markup unconditionally, and `header-global.html`/`notification_snippet.html` are left untouched (see §3).
+This is a **migration, not a redesign** — the bell dropdown must match Figma exactly while preserving every existing notification type and behavior. The v1 legacy dropdown (Bootstrap, `light/notifications/notification_snippet.html`) keeps rendering for non-v2 sessions: the 4 shared snippets still branch on `{% if v2 %}`, rendering the new markup only in the v2 branch, and `header-global.html`/`notification_snippet.html` are left untouched (see §3).
 
 Two important framing corrections vs. the original task brief, confirmed with the user during planning:
 1. **"Notifications" already names a different, unrelated feature.** `hdx_user.notifications` (route `views/user.py:227`, template `user/notifications.html`) is the "Subscribe to Notifications" hub — email opt-in/opt-out for dataset/org/location updates, entirely separate data model, already migrated to v2 drawers in task 051. This doc's subject — the bell-dropdown backlog (membership requests, HDX Connect requests, expired datasets, quarantined datasets) — is **unrelated** to it. The two must not be confused or merged.
@@ -94,7 +94,7 @@ Quarantined-dataset entries only vary the bracket tag by `is_sysadmin`; message 
 
 True single-template consolidation (activity-item.html-style, where Python pre-builds `actor_label`/`action_text` and the template has zero conditionals) would require changing the dict shape `notification_service.py` returns — out of bounds per this decision.
 
-**Chosen approach — shared v2 shell, unconditional (v1 dropdown retired, no `{% if v2 %}` branch):**
+**Chosen approach — shared v2 shell, per-request `{% if v2 %}` branch (v1 dropdown untouched in the `{% else %}` branch):**
 
 Each of the 4 shared snippets keeps its own text/link logic but now renders through one new shared component, `v2/components/notification-item.html`, instead of the previous ad hoc `<br><span class="date">` markup:
 
@@ -126,7 +126,7 @@ Each of the 4 shared snippets keeps its own text/link logic but now renders thro
 
 Notes:
 - No `notification_service.py` change → zero risk to notification *generation* logic (explicitly excluded).
-- `header-global.html` (v1 header) and `notification_snippet.html` (v1 shell) still include these 4 snippets but are not updated — non-v2 sessions see unstyled markup inside the old Bootstrap dropdown.
+- `header-global.html` (v1 header) and `notification_snippet.html` (v1 shell) still include these 4 snippets but are not updated — non-v2 sessions still render the `{% else %}` branch's original v1 markup inside the old Bootstrap dropdown, unstyled by this task.
 - Real visual/DOM consolidation is achieved: all 4 types render through one shell for spacing, the meta/date row, the arrow link, and the sysadmin highlight — satisfying "unified notification item" and "consistent item rendering" across all 4 types without touching business logic.
 
 `url`/`data_personal` are per-type: `org_membership_snippet.html` passes `notification.org_hdx_url`; `requestdata_snippet.html` passes `notification.my_requests_url`; `expired_datasets_snippet.html` passes `notification.my_dashboard_url` with `data_personal=True` (no sysadmin variant, §2); `quarantined_datasets_snippet.html` passes `notification.dataset_url` with `data_personal=not notification.is_sysadmin` (this type has no `for_sysadmin` text branch, §2).
@@ -222,7 +222,7 @@ The v1 All/Personal toggle is not carried forward — see §5.
 
 | Risk | Severity | Mitigation |
 |---|---|---|
-| v1 legacy dropdown renders unstyled/broken markup now that the shared snippets emit v2-only classes | Accepted | v1 dropdown is retired as part of this task — not mitigated by design (§3) |
+| v1 legacy dropdown renders unstyled/broken markup if the shared snippets' `{% else %}` branch drifts from the v2 branch | Accepted | Each snippet's `{% if v2 %}` branch renders the new shell; the `{% else %}` branch keeps the original v1 markup untouched — not mitigated by design (§3) |
 | Analytics silently regressed further | ❗ Critical | Item-click tracking untouched (shared markup); header-icon tracking gap is *fixed*, not just preserved (§5) |
 | Sysadmin highlight or bracket-tag logic swapped (`is_sysadmin` vs `for_sysadmin`) | ❗ Critical | Both flags threaded through unchanged from `notification_service.py`; §2 documents the distinction explicitly for implementers |
 | A notification type silently dropped during template rewrite | High | All 4 snippets updated individually; no shared/generic loop that could skip a type |

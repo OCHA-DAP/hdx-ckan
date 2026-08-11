@@ -1,7 +1,4 @@
-# Resource Card Component
-
-**Task:** resource-card
-**Status:** implemented
+# Task 038: Resource Card Component
 
 ---
 
@@ -15,10 +12,17 @@
 | `format_category` | string | `'neutral'` | `neutral \| geo \| tabular \| document \| web`. Drives icon colour. Use `h.hdx_format_to_icon_category(res.format)`. |
 | `description` | string | `''` | Full description text; clamped by default. The "Show more" button is always rendered when description is present; JS hides it if the text is short enough not to be clamped. |
 | `pcoded` | bool | `false` | Render a "P-coded" label chip. |
-| `api_available` | bool | `false` | Render an "API available" label chip. |
+| `api_available` | bool | `false` | Render an "Access via API" text-button linking to the resource page's `#api-access` section. |
+| `preview_opened` | bool | `false` | Pre-expand the description on server render. |
 | `download_url` | string | `'#'` | URL for the primary Download button. |
 | `download_size` | string | `''` | Human-readable file size (e.g. `'14.2K'`). Appended to the Download button label when set. |
+| `show_download` | bool | `true` | Render the download button at all — set `false` for requestdata resources without access. |
+| `in_review` | bool | `false` | Replace the download button with an "Under Review" link. |
+| `download_extra_classes` | string | `''` | Extra CSS classes on the download `<a>` element (legacy GA/notification tracking hooks). |
 | `download_attrs` | dict | `{}` | Extra HTML attributes on the Download button (e.g. `data-resource-name`, `data-resource-id` for GA/Mixpanel tracking). Passed from `resource_item_v2.html`. |
+| `hdx_connect` | bool | `false` | Render the request-data variant of the footer instead of the download button. |
+| `request_href` | string | `'#'` | URL for the "Request data" link when `hdx_connect` is set. |
+| `request_attrs` | dict | `{}` | Extra HTML attributes on the "Request data" link. |
 | `extra_classes` | string | `''` | Extra CSS classes on the root element. |
 
 ---
@@ -34,7 +38,7 @@
         .c-resource-card__format-text   ← format_text (uppercase)
       .c-resource-card__tags            ← if pcoded or api_available
         c-label "P-coded"               ← if pcoded
-        c-label "API available"         ← if api_available
+        c-text-button "Access via API"  ← if api_available, links to #api-access
     a.c-resource-card__title[href=title_href]
     .c-resource-card__desc              ← if description
       div[data-clamped-content]         ← description text (rendered markdown HTML)
@@ -66,8 +70,8 @@
 | Prop | What it shows |
 |------|--------------|
 | `pcoded` | "P-coded" label chip |
-| `api_available` | "API available" label chip |
-| `preview_available` | "More information" secondary button → `title_href` |
+| `api_available` | "Access via API" text-button linking to `#api-access` |
+| — | "More information" secondary button → `title_href` — always rendered, unconditional |
 | `download_url` | "Download" primary button → always rendered via `{% snippet 'v2/components/button.html', ... %}` |
 | `download_size` | Appended to Download button label: "Download (14.2K)" |
 
@@ -93,7 +97,7 @@ Replaces `dataset-card.js`. Generic IIFE that handles show-more/less for any
 `[data-module="clamped-text"]` container:
 - Selector: `[data-module="clamped-text"]`
 - Content: `[data-clamped-content]`
-- Button: `.c-text-button` (first found within container)
+- Button: `[data-clamped-toggle]` within container
 
 Affected components: `dataset-card.html`, `page-header.html`, `resource-card.html`.
 
@@ -116,7 +120,7 @@ Used to simplify the inline format-mapping logic in `package_item_v2.html`.
 
 | Question | Decision |
 |----------|----------|
-| What does `preview_available` render? | Controls visibility of "More information" secondary action button |
+| Should "More information" be conditional? | No — no `preview_available` param exists; the button always renders unconditionally |
 | Where does the show-more button live relative to description? | In `__footer`, outside `__desc`; `data-module` placed on root card element to bridge both |
 | Shared JS or separate? | New shared `clamped-text.js` covering dataset-card + dataset-page-header + resource-card |
 | Format mapping? | New `h.hdx_format_to_icon_category()` Python helper; `package_item_v2.html` simplified to use it |

@@ -1,7 +1,5 @@
 # 041 – Accessibility Audit (WCAG 2.1 AA) for v2
 
-**Status**: requirement
-
 **Standard**: WCAG 2.1 Level AA
 **Browsers**: Chrome/Edge (Chromium), Firefox, Safari
 **Screen readers**: NVDA + Chrome (Windows primary), VoiceOver + Safari (macOS), JAWS + Chrome/Edge (enterprise), TalkBack + Android Chrome (mobile)

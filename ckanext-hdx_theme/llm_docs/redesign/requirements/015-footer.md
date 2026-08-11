@@ -29,13 +29,13 @@ Key decisions:
 - Cookie consent banner excluded (handled separately).
 - Subscribe button: `<button type="submit">` with `hdx-v2-footer__subscribe-btn` modifier (ghost variant scoped to footer.less, not a new `c-button` style).
 - Email input: native `<input type="email">` — preserves MailChimp JS hooks (`id="mce-EMAIL"`, `name="EMAIL"`).
-- "Archived" in Products rendered as `{% snippet 'v2/components/label.html' %}` badge (not a link).
-- Dataviz Gallery & HDX Dataviz Guidelines: present in DOM with `style="display:none"` (Figma spec, future activation).
+- Archived items excluded from the Products column entirely (`h.hdx_get_quick_links_list(archived=False, exclude_crisis=True)`), not rendered as a badge.
+- Dataviz Gallery & HDX Dataviz Guidelines: shown unconditionally, not gated behind `display:none`.
 - MD/SM Figma duplication of "Centre for Humanitarian Data" in Resources column omitted; already in "Related to" row (follows XL pattern).
 
 ### `hdx-styles/src/common/less/v2/footer.less` (new file)
 
-BEM block `.hdx-v2-footer`. Local tokens: `@hdx-footer-bg: #0b2d24`, `@hdx-footer-bp-md: 48rem`, `@hdx-footer-bp-xl: 80rem`.
+BEM block `.hdx-v2-footer`. Uses shared tokens (`var(--hdx-brand-85)`) and shared breakpoints from `mixins.less` — no local LESS variables declared.
 
 Elements: `__top`, `__branding`, `__logo-wrap`, `__logo`, `__tagline`, `__actions`, `__newsletter`, `__newsletter-label`, `__newsletter-row`, `__email-input`, `__subscribe-btn`, `__social`, `__social-link`, `__social-icon`, `__social-label`, `__related`, `__related-label`, `__ext-link`, `__ext-icon`, `__nav`, `__nav-col`, `__nav-heading`, `__nav-list`, `__divider`, `__bottom`, `__service`, `__service-label`, `__service-detail`, `__ocha-logo`, `__ocha-text`, `__license`, `__license-icon`, `__license-text`, `__legal`.
 

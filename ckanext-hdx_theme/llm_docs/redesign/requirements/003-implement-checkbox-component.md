@@ -27,7 +27,7 @@ Create a reusable, accessible checkbox component used standalone and as a buildi
 2. Implement states and styling.
    - **Unchecked**: white background, light gray border, no checkmark
    - **Checked**: primary blue background, checkmark icon visible, no border
-   - **Disabled**: muted colors, `pointer-events: none`
+   - **Disabled**: muted colors, `cursor: not-allowed` (relies on the native `disabled` attribute for inertness)
    - All states transition smoothly (0.15s ease)
 
 3. Create CKAN snippet with parameters.

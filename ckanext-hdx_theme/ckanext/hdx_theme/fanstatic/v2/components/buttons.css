@@ -113,7 +113,7 @@
 .c-button--secondary.is-disabled {
   background-color: var(--hdx-neutral-05);
   color: var(--hdx-neutral-3);
-  border: none;
+  border-color: transparent;
   box-shadow: none;
   cursor: not-allowed;
   pointer-events: none;

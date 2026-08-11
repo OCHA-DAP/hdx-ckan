@@ -11,7 +11,7 @@ Single source of truth for general rules. Update here; do not duplicate in task 
 | `c-` | Reusable components | `c-button`, `c-autocomplete` |
 | `hdx-v2-` | Non-reusable v2 sections and layouts | `hdx-v2-hero`, `hdx-v2-grid` |
 
-Size modifiers use `--size-{xs,s,m,l}` (`c-button--size-m`, `c-copy-button--size-s`) — never a bare `--{s,m}` or a two-letter shorthand like `--sm`.
+Size modifiers use `--size-{xs,s,m,l}` (`c-button--size-m`, `c-copy-button--size-s`) — never a bare `--{s,m}` or a two-letter shorthand like `--sm`. Exception: `c-list-item` and `c-letter-anchor` still use legacy `--size-lg`/`--size-sm` naming, predating this rule.
 
 ---
 
@@ -298,17 +298,9 @@ All inline SVG icons must carry `aria-hidden="true" focusable="false"`. Icon-onl
 
 ### prefers-reduced-motion
 
-**CSS**: A global `@media (prefers-reduced-motion: reduce)` override in `foundation.less` disables all transitions and animations. Do not add per-component wrappers — the global rule covers everything.
+**CSS**: components call the `.hdx-motion()` mixin (`mixins.less`) instead of writing `transition`/`animation` directly. **JS**: guard programmatic animation via `window.hdxV2.prefersReducedMotion()` (`fanstatic/v2/utils.js`).
 
-**JS**: Guard any programmatic animation before starting:
-
-```js
-if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    // instant fallback
-    return;
-}
-// animated path
-```
+Both are currently no-ops — `.hdx-motion()`'s body is commented out and `prefersReducedMotion()` is hardcoded to `return false` — pending a follow-up pass (task 069). Reduced-motion preference is not honored anywhere in v2 yet.
 
 ### Screen-reader utilities
 
@@ -440,6 +432,18 @@ Scripts and styles used exclusively on one page go into that page's bundle, not 
 ## One LESS file per component
 
 Each component gets its own file in `components/`. Do not group unrelated components in a single file (the old `navigation.less` pattern that mixed `c-nav-item`, `c-anchor-links`, `c-pagination`, `c-breadcrumb` is the anti-pattern).
+
+---
+
+## Form-field components — which one to use
+
+Three distinct components cover form fields; pick by field type, don't extend the wrong one:
+
+- `search-input.html` — search boxes only (`type='search'`).
+- `text-field.html` — generic text/email/password/textarea fields (password-toggle, multiline).
+- `select.html` — native `<select>`-backed fields.
+
+`search-input.html` used to cover the generic-field role too; it split into `text-field.html` once form pages (contact contributor, request access, auth) needed password toggles and textareas.
 
 ---
 

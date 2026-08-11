@@ -2,7 +2,7 @@
 
 ## Goal
 
-Create a reusable activity card component with an icon, heading, subtitle, and CTA button. Supports four size variants (lg, md, sm, responsive) and two states (enabled, hovered).
+Create a reusable activity card component with an icon, heading, subtitle, and CTA button. Supports four size variants (lg, md, sm, responsive). Hover is plain CSS `:hover`, not a tracked state.
 
 ## Scope
 
@@ -11,7 +11,6 @@ Create a reusable activity card component with an icon, heading, subtitle, and C
 - `ckanext-hdx_theme/ckanext/hdx_theme/hdx-styles/src/common/less/v2/components/activity-card.less`
 - `ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/v2/components/activity-card.css`
 - Sizes: `lg`, `md`, `sm`, `responsive`
-- States: `enabled`, `hovered`
 
 **Out:**
 - JS interactivity, data fetching, button click handlers (consuming page's concern)
@@ -21,7 +20,6 @@ Create a reusable activity card component with an icon, heading, subtitle, and C
 1. Create c-activity-card component structure.
    - BEM block: `.c-activity-card`
    - Size modifiers: `.c-activity-card--size-lg`, `--size-md`, `--size-sm`, `--size-responsive`
-   - Hover state: `.is-hovered`
    - Internal layout (column flex, full width):
      ```
      .c-activity-card
@@ -55,12 +53,12 @@ Create a reusable activity card component with an icon, heading, subtitle, and C
 
 4. Implement `--size-responsive` variant.
    - Applies sm tokens by default (mobile-first), then overrides to md at `@hdx-bp-md` (48rem) and lg at `@hdx-bp-xl` (80rem).
-   - Requires `@import "../breakpoints.less"` at the top of `activity-card.less`.
+   - Requires `@import "../mixins.less"` at the top of `activity-card.less` (pulls in breakpoints transitively).
    - Use case: cards whose size should track the viewport automatically without the caller choosing a fixed size.
 
-5. Implement state styling.
-   - **enabled**: `border: 1px solid var(--hdx-neutral-1)`
-   - **hovered**: `border-color: var(--hdx-neutral-8)` (constant 1px width, color-only)
+5. Implement hover styling.
+   - Base: `border: 1px solid var(--hdx-neutral-1)`
+   - `&:hover`: `border-color: var(--hdx-neutral-8)` (constant 1px width, color-only)
    - Apply `transition: border-color 0.15s ease`
 
 6. Reuse existing button component for the footer.
@@ -69,13 +67,13 @@ Create a reusable activity card component with an icon, heading, subtitle, and C
 
 7. Create CKAN snippet with parameters.
    - `size` (string): `'lg'` | `'md'` | `'sm'` | `'responsive'`, default: `'md'`
-   - `state` (string): `'enabled'` | `'hovered'`, default: `'enabled'`
    - `icon_src` (string): path to icon SVG (e.g. `'v2/icons/search.svg'`), resolved via `h.url_for_static()` and inlined with `{% include %}`. Pass `''` to omit. default: `''`
    - `heading` (string): card heading text, default: `''`
    - `subtitle` (string): subtitle/description text, default: `''`
    - `button_label` (string): button CTA text. Pass `''` to omit the footer. default: `''`
    - `button_href` (string): button link URL, default: `'#'`
    - `button_style` (string): button style forwarded to `button.html`. Accepts `'primary'` | `'secondary'` | `'tertiary'`. default: `'primary'`
+   - `button_attrs` (dict): extra attributes forwarded to the button, default: `{}`
    - `extra_classes` (string): additional CSS classes, default: `''`
 
 8. Icon rendering — use inline SVG pattern consistent with all other v2 components.

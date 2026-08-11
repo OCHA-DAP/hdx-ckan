@@ -107,7 +107,7 @@ Markup lives inline at the end of `header.html`, outside `<nav class="hdx-v2-nav
     {% if c.userobj %}
       <div class="hdx-v2-offcanvas__level" id="hdx-v2-offcanvas-level-user-detail" hidden>
         <button class="hdx-v2-offcanvas__back" type="button" data-hdx-v2-offcanvas-back>
-          {% include 'v2/icons/arrow-left.svg' %}
+          {% include 'v2/icons/chevron-left.svg' %}
           {{ _('Back') }}
         </button>
         {# Reuse desktop user menu snippet — no duplication #}
@@ -299,7 +299,7 @@ Add to the existing IIFE the following behaviors:
 
 | # | Question | Decision |
 |---|----------|----------|
-| 1 | `arrow-left.svg` path — confirm icon exists in `v2/icons/` | Confirmed — `arrow-left.svg` exists in `templates/v2/icons/` |
+| 1 | Back-button icon | Shipped as `chevron-left.svg`, not `arrow-left.svg` — `arrow-left.svg` exists in `templates/v2/icons/` but is unused |
 | 2 | `chevron-right.svg` path — confirm icon exists | Confirmed — `chevron-right.svg` exists in `templates/v2/icons/` |
 | 3 | Body scroll lock — verify no conflict with existing page scroll logic | Implemented via `document.body.style.overflow = 'hidden'` / `''`; no conflicts observed |
 | 4 | Products URLs — all `#`, real URLs needed before launch | Resolved — products are rendered dynamically via `h.hdx_get_quick_links_list(archived=False)`; no hardcoded `#` URLs remain |

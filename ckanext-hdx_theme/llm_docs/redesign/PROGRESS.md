@@ -1,8 +1,7 @@
 # Design V2 Implementation Progress
 
-**Status**: In-progress
+**Status**: Cycle 1 complete — shipped as an alpha release
 **Started**: 2026-04-16
-**Last Updated**: 2026-07-27
 
 ---
 
@@ -95,7 +94,7 @@ CSS custom property equivalents (`--hdx-*`) are defined in `v2/foundation.css` (
 | Resource page | `package/resource_read.html` | Extends `v2/page.html`; full page implemented — see `requirements/040-resource-page.md` |
 | All Locations | `light/group/index.html` | Extends `v2/page.html`; sidebar + sort JS in `v2/all-locations-page.js` |
 | All Organisations | `organization/index.html` | Extends `v2/page.html`; org card with clamped-text, KPI row, url-nav.js |
-| Contact Contributor | `package/contact_contributor.html` | Extends `v2/page.html`; single-column; native dropdown + textarea; `breadcrumb_row_class` white; see `requirements/050-contact-contributor-v2.md` |
+| Contact Contributor | `package/contact_contributor.html` | Extends `v2/page.html`; single-column; `select.html` dropdown + `text-field.html` textarea; `breadcrumb_row_class` white; see `requirements/050-contact-contributor-v2.md` |
 | Signup — value-proposition | `onboarding/signup/value-proposition.html` | Extends `v2/page.html`; `c-signup-tier` cards; `hdx_click_stopper` analytics preserved |
 | Signup — user-info | `onboarding/signup/user-info.html` | Step 1 form; `c-step-pager`; `c-search-input` + `c-checkbox`; `data-hdx-v2-form-validator` |
 | Signup — verify-email | `onboarding/signup/verify-email.html` | Step 2; `c-step-pager`; legacy `hdx-verify-email-scripts` bundle kept |
@@ -110,6 +109,7 @@ CSS custom property equivalents (`--hdx-*`) are defined in `v2/foundation.css` (
 | Forgot password | `user/forgot_password.html` | Extends `v2/page.html`; same `minimal=True` header; confirmation is a same-route swap between two sibling cards toggled via the `hidden` attribute (no more `widget/onboarding/recoverSuccess.html`/loading-screen widget); invisible reCAPTCHA still bound to the submit button; see `requirements/064-auth-pages-v2.md` |
 | Archived Dataviz | `archived_quick_links/main.html` | Extends `v2/page.html`; single-column; title+count header, outbound-link row list via `text-button.html` + `c-divider`; see `requirements/066-archived-dataviz-v2.md` |
 | Dataviz Gallery | `dataviz/index.html` | Extends `v2/page.html`; single-column; `c-dataviz-card` grid, `search-nav-controls.html` reused for sort/page-size (12/24/36); see `requirements/067-dataviz-gallery-v2.md` |
+| Request access | `package/request_access.html` | Extends `v2/page.html`; see `requirements/061-hdx-connect-flow-v2.md` |
 
 ### Pages in holding state (on `page_light.html`)
 
@@ -123,7 +123,6 @@ Each page below extends `page_light.html`, manually overrides `{% block styles %
 | Org join — completed | `org/join/completed.html` | |
 | Org request — new request | `org/request/org_new_request.html` | |
 | Org request — completed | `org/request/completed_request.html` | |
-| Request access | `package/request_access.html` | |
 | Create/edit dataset | `contribute_flow/create_edit.html` | Also loads `hdx_theme/contribute-flow-styles` |
 
 ---
@@ -169,6 +168,14 @@ Each page below extends `page_light.html`, manually overrides `{% block styles %
 - [x] Member list card — `member-list-card.html` / `member-list-card.less`; avatar + profile links + role/registered line + counters, `caller()` actions body, `--stacked` variant; used on the org page Members tab
 - [x] Data grid status — `data-grid-status.html` / `data-grid-status.less`; presentational availability swatch (not a real checkbox); used by the location page Data Grid Availability feature (task 063)
 - [x] Dataviz card — `dataviz-card.html` / `dataviz-card.less`; thumbnail + title + clamped description + date/DATA-link footer + gated Edit link; own `c-dataviz-card-grid` wrapper; used on the Dataviz Gallery page (task 067)
+- [x] Alert — `alert.html` / `alert.less`; 4 variants (success/warning/info/error), dismissible by default; shared across page-level flash banners and form/drawer messages
+- [x] Activity card — `activity-card.html` / `activity-card.less`; used on the org page Activity tab
+- [x] Tabs — `tabs.html` / `tabs.less`; used on the org page header
+- [x] Table — `table.html` / `table.less`
+- [x] Toggle — `toggle.html`; styles in `selection.less` alongside Radio/Graph point
+- [x] Copy button — `copy-button.html` / `copy-button.less`; used on the resource page
+- [x] Graph point — `graph-point.html`; styles in `selection.less`; chart data-point dot with focus ring
+- [x] Radio — `radio.html`; styles in `selection.less`
 
 Each component file should have:
 1. **HTML template** (`templates/v2/components/component-name.html`) — reusable snippet with BEM markup
@@ -260,12 +267,11 @@ Bundle configuration:
 - [x] Create `v2-page-styles` bundle with Bootstrap + grid layout overrides ✓
 - [x] Add placeholder demo page with all components ✓
 
-### Phase 3: Page Migrations ✅ (Complete)
+### Phase 3: Page Migrations ✅ (Complete for this cycle)
 - [x] Signup page
 - [x] Landing page — HAPI (`/hapi/`)
 - [x] Landing page — Signals (`/signals/`)
 - [x] Contact contributor page
-- [ ] Find/join org page
 - [x] Homepage
 - [x] Dataset list (light + desktop — unified in v2 search template)
 - [x] Dataset page
@@ -275,9 +281,10 @@ Bundle configuration:
 - [x] Organization page (Datasets / Activity / Stats / Members tabs — 056–059; HDX Connect tab postponed)
 - [x] Archived Dataviz page
 - [x] Dataviz Gallery page
-- [ ] Remaining pages (user pages, org join, onboarding, etc.)
 
-### Phase 4: Cleanup 🔲 (Final)
+Deferred to next cycle: Find/join org page, org request pages, create/edit dataset page, org page HDX Connect tab, Signals Mailchimp form's Bootstrap-to-v2 CSS cleanup (task 070 B4), `resource_view.html` error-div class cleanup (task 047 Decision 10).
+
+### Phase 4: Cleanup — Next cycle
 - [ ] Delete old layout templates (`page.html`, `page_light.html`)
 - [ ] Delete old BEM blocks (`bem.blocks/`)
 - [ ] Remove old asset bundles from `webassets.yml`

@@ -81,7 +81,7 @@ Migrate the search results dataset list to the v2 layout system and replace indi
 ### Helpers used
 - `h.url_for('dataset.read', id=package.name)` — package URL
 - `h.url_for('organization.read', id=package.organization.name, ...)` — org URL
-- `h.markdown_extract(package.notes, extract_length=truncate)` — plain-text description
+- `h.render_markdown(package.notes)` — rendered description
 - `h.render_date_from_concat_str(package.dataset_date)` — formatted date string
 - `h.dict_list_reduce(package.resources, 'format')` — deduplicated format list
 - `h.hdx_show_singular_plural(n, singular, plural)` — batch label text
@@ -119,7 +119,7 @@ No filters, no sort controls, no results header are shown in the Figma export (c
 | **Download count** | Text shown | Not shown | Dropped |
 | **"By Request Only"** | Appended to title text | Title suffix + `requestdata` badge (`unlock.svg`) | Implemented |
 | **Private lock icon** | Icon in title area | Lock badge in formats row | Remapped to `private` format type |
-| **Archived icon** | Folder icon in title area | Badge in formats row | Implemented with `placeholder.svg` |
+| **Archived icon** | Folder icon in title area | Badge in formats row | Implemented with `archive.svg` |
 | **Format badges** | Text-only, no icons | Icon + text | Implemented with icon mapping |
 | **COD/COD+** | Text via `package_icons_cod.html` | Dark label badge in formats | Merged into formats list |
 | **Query highlighting** | `data-module="highlight"` on title/desc | No hook shown in Figma | Preserved via `query` param on component |
@@ -141,19 +141,17 @@ org_href          = h.url_for('organization.read', id=package.organization.name,
                     → '' if no organization
 
 title             = package.title or package.name
-                    → See Open Question #2 for is_requestdata_type suffix
+                    → gets a ' [By Request Only]' suffix when is_requestdata_type (D2)
 
 title_href        = h.url_for('dataset.read', id=package.name)
 
-description       = h.markdown_extract(package.notes, extract_length=0)
-                    → full first paragraph, markdown stripped
+description       = h.render_markdown(package.notes) if package.notes else ''
                     → '' if no notes (omits description section entirely)
 
 location          = (computed)
                     if len(package.groups) == 1  → package.groups[0].title
                     if len(package.groups) > 1   → "Multiple locations"
                     if len(package.groups) == 0  → ''
-                    → See Open Question #5 on availability in search results
 
 subnational       = (package.subnational == '1')
 
@@ -164,7 +162,7 @@ date_range        = h.render_date_range_label(package.dataset_date)
 formats           = (computed — see Format Mapping below)
 
 formats_overflow  = max(0, total_format_count - MAX_VISIBLE)
-                    → See Open Question #6 on MAX_VISIBLE
+                    → MAX_VISIBLE is 3 (D6)
 
 show_others_label = h.hdx_show_singular_plural(package.batch_length,
                       'other recently updated dataset',
@@ -185,12 +183,14 @@ Build the `formats` list in priority order. The component renders them left-to-r
 **Step 1 — Package-level flag badges (before resource formats):**
 
 ```
+if package.is_requestdata_type:
+    append {type: 'requestdata', text: '', icon_src: 'v2/icons/unlock.svg'}
+
 if package.private:
     append {type: 'private', text: '', icon_src: 'v2/icons/lock.svg'}
 
 if package.archived:
-    append {type: 'archived', text: '', icon_src: ???}
-    → See Open Question #3
+    append {type: 'archived', text: '', icon_src: 'v2/icons/archive.svg'}
 
 if package.cod_level == 'cod':
     append {type: 'cod', text: 'COD', icon_src: ''}
@@ -198,6 +198,8 @@ if package.cod_level == 'cod':
 if package.cod_level == 'cod-enhanced':
     append {type: 'cod_plus', text: 'COD+', icon_src: ''}
 ```
+
+Resource format badges are skipped entirely when `package.is_requestdata_type` is true.
 
 **Step 2 — Resource format badges:**
 
@@ -223,6 +225,7 @@ formats_overflow = max(0, total - MAX_VISIBLE)
 | CSV, XLSX, XLS, ODS, TSV | `v2/icons/tabular-format.svg` |
 | SHP, GEOJSON, KML, KMZ, GEOPACKAGE, GPKG, GEOTIFF, GEODATABASE, GDB | `v2/icons/geographic-format.svg` |
 | PDF, DOC, DOCX | `v2/icons/document-format.svg` |
+| HTML, HTM, XML | `v2/icons/markup-format.svg` |
 | All others | `v2/icons/other-format.svg` |
 
 **Note:** Jinja2 for-loop scoping requires a `namespace` object to accumulate resource badges inside the loop before merging into `formats_val` after `{% endfor %}`.
@@ -237,25 +240,14 @@ formats_overflow = max(0, total - MAX_VISIBLE)
 
 ### Results Section Structure
 
-```html
-<section class="hdx-v2-dataset-list">
-  <div class="hdx-v2-container">
-    <div class="c-dataset-card-list">
-      {# loop: package_item_v2.html per package #}
-    </div>
-  </div>
-</section>
-```
-
-Structure:
+Later tasks (031 filtering, 033 pagination, 034–036 header/search-bar/results-layout) added a filter-header/search-bar/applied-filters block above the list, and the containing structure changed accordingly:
 
 ```
-.hdx-v2-dataset-list
-  .hdx-v2-container
-    .c-dataset-card-list          ← flex column, gap: var(--hdx-space-4) [1rem]
-      .c-dataset-card              ← repeated
-      .c-dataset-card
-      …
+.hdx-v2-dataset-list             ← div, no longer wrapped in a <section>/.hdx-v2-container pair here;
+  .c-dataset-card-list             containment now comes from v2/page.html's two-column layout
+    .c-dataset-card               ← repeated
+    .c-dataset-card
+    …
 ```
 
 The `.c-dataset-card-list` wrapper (layout + `.highlight` rule) lives in `less/v2/components/dataset-card.less`, owned by the component.
@@ -277,19 +269,16 @@ The following gaps exist between the current `package` data and the existing `c-
 ### Gap 2 — Multiple locations
 **Current behavior:** Location not shown in current list items.
 **v2 component:** `location` accepts a single string → one cyan label.
-**Handling:** Compute the display string in the mapping layer (single name, "Multiple locations", or empty). No component extension required unless per-country labels are needed — see Open Question #5.
+**Handling:** Compute the display string in the mapping layer (single name, "Multiple locations", or empty). No component extension needed.
 
-### Gap 3 — Trending / download count *(OPEN)*
-No field in `c-dataset-card`. Resolution depends on Open Question #1.
-- If kept: add optional `trending: bool` and/or `download_count: int` parameters.
-- If dropped: no change needed.
+### Gap 3 — Trending / download count
+No field in `c-dataset-card`. **Dropped** (D1) — not shown in v2.
 
-### Gap 4 — `is_requestdata_type` *(OPEN)*
-If shown: requires a new `requestdata` format type (distinct from `private`) or a separate bool param.
-If mapped to `private` or dropped: no change needed. Depends on Open Question #2.
+### Gap 4 — `is_requestdata_type`
+Shown as a distinct `requestdata` format type (D2), not mapped to `private`.
 
-### Gap 5 — `page_list` / `links_list` *(OPEN)*
-No equivalent field. Resolution depends on Open Question #8.
+### Gap 5 — `page_list` / `links_list`
+No equivalent field. **Dropped from list view** (D8) — visible on the dataset detail page only.
 
 ---
 
@@ -320,9 +309,9 @@ No equivalent field. Resolution depends on Open Question #8.
 | Many formats (10+)                                      | Show up to MAX_VISIBLE, then `+N` overflow badge                                            |
 | Unknown format string                                   | Map to fallback `document-format.svg` icon                                                  |
 | `batch_length` = 0 or None                              | Pass `show_others_label=''`; component omits footer                                         |
-| `package.private = True`                                | Lock badge as first format item                                                             |
-| `package.archived = True`                               | Archived badge after private (if both present)                                              |
-| `package.is_request_datatype`                           | Request data badge after archived and private (if present)                                  |
+| `package.is_requestdata_type`                           | Request-data badge first, before private/archived (if present); resource format badges skipped |
+| `package.private = True`                                | Lock badge after request-data (if present), otherwise first                                 |
+| `package.archived = True`                               | Archived badge after private (if present)                                                   |
 | `subnational == '1'` but `location == ''`               | Sub-national label shown alone; `subnational` is independent of `location` in the component |
 
 ---
@@ -333,7 +322,7 @@ No equivalent field. Resolution depends on Open Question #8.
 |---|---|---|
 | D1 | Trending indicator / download count | **Dropped** — not shown in v2 card |
 | D2 | `is_requestdata_type` treatment | **Distinct** — `requestdata` badge (`unlock.svg`) + ` [By Request Only]` title suffix |
-| D3 | Archived icon | **`placeholder.svg`** |
+| D3 | Archived icon | **`archive.svg`** |
 | D4 | Date string format | **New helper** `render_date_range_label` → `"Data from 22 Jan 2020 to 09 Mar 2023"` |
 | D5 | Location availability and display | `package.groups` is reliably present; `"Multiple locations"` for >1 group |
 | D6 | Max visible format badges | **3**; remainder shown as `+N` |

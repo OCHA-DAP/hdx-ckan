@@ -1,6 +1,6 @@
 # Task 014: Align Bootstrap container with Figma grid specs
 
-Override Bootstrap's `.container` on v2 pages to match the Figma margin and max-width specs across all breakpoints. Scoped to the `.hdx-v2` body class so legacy pages are unaffected.
+Add a standalone `.hdx-v2-container` class matching the Figma margin and max-width specs across all breakpoints, applied directly to elements that need it. Bootstrap's own `.container` is never overridden — v2 templates don't use it at all.
 
 ## Breakpoint mapping
 
@@ -24,31 +24,31 @@ The Figma XS layout uses 4 columns. Bootstrap always uses 12; each Figma column 
 ### `hdx-styles/src/common/less/v2/layout.less` (new file)
 
 ```less
-@container-padding-xs:  1rem;     // 16px — XS + SM
+@import "mixins.less";
+
+@container-padding-xs:  1rem;     // 16px — SM
 @container-padding-md:  3rem;     // 48px — MD through XL
 @container-max-width:   1320px;   // XXL centered
-@breakpoint-md:         768px;
-@breakpoint-xxl:        1400px;
 
-.hdx-v2 .container {
-    max-width: 100%;
+.hdx-v2-container {
+    max-width:     100%;
     padding-right: @container-padding-xs;
     padding-left:  @container-padding-xs;
 
-    @media (min-width: @breakpoint-md) {
+    @media (min-width: @hdx-bp-md) {
         padding-right: @container-padding-md;
         padding-left:  @container-padding-md;
     }
 
-    @media (min-width: @breakpoint-xxl) {
+    @media (min-width: @hdx-bp-xxl) {
         max-width:     @container-max-width;
-        padding-right: calc(var(--bs-gutter-x) * 0.5);
-        padding-left:  calc(var(--bs-gutter-x) * 0.5);
         margin-right:  auto;
         margin-left:   auto;
     }
 }
 ```
+
+Breakpoints (`@hdx-bp-md`, `@hdx-bp-xxl`) come from the shared `mixins.less`/`breakpoints.less`, not locally-declared variables.
 
 ### `fanstatic/v2/layout.css` (compiled output — new file)
 
@@ -68,12 +68,14 @@ v2-page-styles:
 
 ### `templates/v2/page.html`
 
-Add `class="hdx-v2"` to `<body>` via the `bodyclassname` block:
+Add `class="hdx-v2"` to `<body>` via the `bodytag` block:
 
 ```
-{% block bodyclassname %}hdx-v2{% endblock %}
+{% block bodytag %}{{ super() }} class="hdx-v2"{% endblock %}
 ```
+
+Apply `.hdx-v2-container` directly to `__inner` elements of full-bleed sections — it's an opt-in class, not a Bootstrap override.
 
 ## Why
 
-Bootstrap's default `.container` at MD/LG/XL uses fixed max-widths (720px, 960px, 1140px) that don't match the Figma fluid-with-margin spec. The XXL max-width of 1320px already matches Figma's XL spec — no override needed there. All overrides are scoped to `.hdx-v2` so legacy pages using `.container` are unaffected.
+Bootstrap's default `.container` at MD/LG/XL uses fixed max-widths (720px, 960px, 1140px) that don't match the Figma fluid-with-margin spec. Rather than overriding Bootstrap's class and risk affecting other Bootstrap usage, `.hdx-v2-container` is a standalone class v2 templates opt into — legacy pages keep using Bootstrap's own `.container` untouched.

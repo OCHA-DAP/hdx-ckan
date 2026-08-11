@@ -17,8 +17,7 @@ Implement the main navigation bar (`hdx-v2-navbar`) in `v2/header.html` and CSS.
 - **Zero gaps between main sections**: Logo, search, nav use gap: 0; internal gaps (var(--hdx-space-3) / 0.75rem within nav, 1rem within actions on XL / 0.75rem on MD/SM)
 - **Spacing on XL**: var(--hdx-space-3) margin-right on nav creates gap between Products nav-item and the right-side actions
 - **Right alignment on MD/SM**: Actions pushed right with margin-left: auto when nav is hidden
-- **Login state detection**: data-logged-in="true" attribute enables CSS-based visibility
-- **Search icon on SM**: Search form hidden, search icon button shown inside `__actions` (d-md-none utility); shares same 2.125rem × 2.125rem size, border-radius: 2px, and hover styles as the bell button
+- **Search icon on SM**: Search form hidden, search icon button shown inside `__actions` (hidden at MD+ via a custom LESS media query, not a Bootstrap utility); shares same 2.125rem × 2.125rem size, border-radius: 2px, and hover styles as the bell button
 - **Avatar dropdown**: Avatar hidden on MD/SM (moved to hamburger dropdown for logged-in users)
 
 ## Layout structure
@@ -31,11 +30,11 @@ navbar__inner (flex, gap: 0, padding: 0 3rem / 0 1rem on SM)
 ├── navbar__nav (flex: 0, gap: var(--hdx-space-3), margin-left: auto, margin-right: var(--hdx-space-3))
 │   └── nav-items (Data, Locations, Organisations, Products)
 └── navbar__actions (flex: 0, gap: 1rem on XL / 0.75rem on MD/SM, margin-left: auto on MD/SM)
-    ├── search-icon (SM only, d-md-none — always first in DOM, outside logged-in/out if/else)
+    ├── search-icon (SM only, hidden at MD+ via LESS media query — always first in DOM, outside logged-in/out if/else)
     ├── [if logged in]
     │   ├── bell
     │   ├── avatar (hidden on MD/SM, XL only)
-    │   └── add-data button (XL and MD, hidden on SM)
+    │   └── add-data button (no responsive hiding — shown at all sizes)
     ├── [if logged out]
     │   └── login button (XL only)
     └── hamburger (hidden on XL, visible on MD/SM)
@@ -43,11 +42,10 @@ navbar__inner (flex, gap: 0, padding: 0 3rem / 0 1rem on SM)
 
 ## CSS features
 
-- **data-logged-in="true"**: Attribute on navbar enables login-state-aware CSS hiding (search on MD logged in)
 - **margin: 0 auto on search**: Centers search input within flex space
 - **margin-left: auto on nav/actions**: Pushes right-side elements to the right
 - **form { display: none }**: Hides search form on SM
-- **d-md-none on search-icon**: Bootstrap utility to hide search icon on MD and above; button lives inside `__actions` so it is naturally right-aligned
+- **Search icon hidden at MD+**: a custom LESS media query, not a Bootstrap utility; button lives inside `__actions` so it is naturally right-aligned
 
 ### `fanstatic/webassets.yml`
 
@@ -68,8 +66,7 @@ v2-page-styles:
 - Search bar is centered between logo and nav items using flex: 1 with max-width and margin: 0 auto
 - Search icon button lives inside `__actions` (not between search and nav), so it is right-aligned with the bell and hamburger on SM
 - Search icon styled identically to bell: 2.125rem × 2.125rem, border-radius: 2px, transparent background, same hover/focus styles
-- Uses Bootstrap's d-md-none utility to hide search icon on MD and above
-- data-logged-in attribute enables CSS-based hiding of search on MD when logged in
+- Search icon hidden on MD and above via a custom LESS media query, not a Bootstrap utility
 - Avatar hidden on MD/SM (to be moved to hamburger dropdown in task 019)
 - Search form hidden on SM, search icon button shown instead
 

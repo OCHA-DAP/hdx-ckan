@@ -27,7 +27,7 @@ Extract letter anchors from `c-nav-item` into a dedicated standalone component. 
 2. Implement states and styling.
    - **Enabled**: neutral gray text, normal font-weight, clickable
    - **Hovered**: primary blue text, normal font-weight, cursor pointer
-   - **Active**: primary blue text, semibold font-weight
+   - **Active**: primary blue text, normal font-weight
    - **Disabled**: light gray text, muted, `pointer-events: none`
    - All state transitions: 0.15s ease
    - Both sizes centered flex layout with proper padding

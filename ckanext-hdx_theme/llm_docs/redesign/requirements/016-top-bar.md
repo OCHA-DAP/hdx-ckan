@@ -17,7 +17,7 @@ Implement the thin utility top bar in `v2/header.html` as part of the `hdx-v2` p
 
 Full implementation. Two sections inside a flex row:
 
-1. **OCHA Services trigger** (`__services`) — OCHA logo (`/images/homepage/logo-ocha-white.svg`, lazy-loaded, 1.313rem × 1.125rem) + "OCHA Services" text + chevron-down icon (`v2/icons/chevron-down.svg`). Entire group is a `<button>` Bootstrap dropdown trigger (`data-bs-toggle="dropdown"`). Dropdown panel (`__dropdown`) ports all links from the production `header-global.html`: Related Platforms (2 links), Other OCHA Services (5 links), third column (4 links), "See all" button. All dropdown links carry `data-module="hdx_click_stopper"` and `data-module-link_type="header"`.
+1. **OCHA Services trigger** (`__services`) — OCHA logo (inline SVG include, `v2/icons/ocha-logo.svg`, 1.313rem × 1.125rem) + "OCHA Services" text + chevron-down icon (`v2/icons/chevron-down.svg`). Entire group is a `<button>` Bootstrap dropdown trigger (`data-bs-toggle="dropdown"`). Dropdown panel (`__dropdown`) ports all links from the production `header-global.html`: Related Platforms (1 active link — HXL is commented out), Other OCHA Services (5 links), third column (4 links), "See all" button. All dropdown links carry `data-module="hdx_click_stopper"` and `data-module-link_type="header"`.
 
 2. **Navigation links** (`__nav`) — "Documentation" link using `{% snippet 'v2/components/text-link.html' %}` with `data-module="hdx_click_stopper"` and `data-module-link_type="header"`. URL TBD, placeholder `#`.
 
@@ -30,7 +30,7 @@ Key decisions:
 
 ### `hdx-styles/src/common/less/v2/top-bar.less` (new file)
 
-BEM block `.hdx-v2-top-bar`. Local tokens: `@hdx-top-bar-bg: #0b2d24`, `@hdx-top-bar-bp-lg: 80rem`.
+BEM block `.hdx-v2-top-bar`. Uses shared tokens (`var(--hdx-brand-85)`) and shared breakpoints (`@hdx-bp-xl`) from `mixins.less` — no local LESS variables declared.
 
 Height: 2.125rem. Font: `var(--hdx-fs-xs)` (12px) Roboto, white, line-height 1.3.
 

@@ -40,7 +40,6 @@ using the existing `c-dropdown`, `c-checkbox`, and `c-button` component system.
 - Show more / Show less within filter panels — removed (all values shown directly)
 - Advanced filters toggle button — removed (replaced by the advanced filters dropdown)
 - Data type filter (separate task)
-- Show only / Archived controls
 - Sorting
 - Pagination
 - Results per page
@@ -264,7 +263,7 @@ Template renders hierarchy — parent "select all" row + indented children for c
 | `less/v2/components/dropdown.less` | `c-dropdown` trigger + panel structural styles; `c-dropdown__list-item*` removed (use `c-list-item` from list-item.less) |
 | `less/v2/components/list-item.less` | `c-list-item--parent` (bold) and `c-list-item--child` (24px indent) modifiers |
 | `fanstatic/v2/pages/search.js` | All filter/overlay JS (dropdown open/close, checkbox→URL, group toggle, MiniSearch, overlay open/close) |
-| `fanstatic/webassets.yml` | `v2-search-styles` bundle (`v2/search.css`) + `v2-search-scripts` bundle (`v2/search.js`) — separate from `v2-components-*` |
+| `fanstatic/webassets.yml` | `v2-search-page-styles` bundle (`v2/pages/search.css`) + `v2-search-page-scripts` bundle (`v2/pages/search.js`) — separate from `v2-components-*` |
 
 ---
 

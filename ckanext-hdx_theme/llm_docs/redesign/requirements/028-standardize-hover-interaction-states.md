@@ -26,7 +26,7 @@ See [CONVENTIONS.md](../CONVENTIONS.md) for general naming and token rules.
 | `less/v2/components/list-item.less` | `&.is-active-hovered { … }` | `&.is-active:hover { … }` |
 | `less/v2/components/selection.less` | `&.c-selection-item--hovered { … }` | `&:hover { … }` |
 | `less/v2/components/selection.less` | `&.c-selection-item--active-hovered { … }` | `&.is-active:hover { … }` |
-| `less/v2/components/search-input.less` | `&.c-search-input--hovered { … }` | `&:hover { … }` |
+| `less/v2/components/input-field.less` | `&.c-search-input--hovered { … }` | `&:hover { … }` |
 | `less/v2/components/dropdown.less` | `.c-dropdown--hovered > &` | See edge case below |
 
 ### 2. Templates — remove hover state parameter handling

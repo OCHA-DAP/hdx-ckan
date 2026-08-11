@@ -1,6 +1,6 @@
 # Task 013: Load Bootstrap in v2 page bundle
 
-Add Bootstrap 5 to the v2 page asset bundle so that Bootstrap classes used in `v2/page.html` (`container`, `alert`, `alert-dismissible`, `fade`, `breadcrumb`) are actually styled.
+Add Bootstrap 5 to the v2 page asset bundle. `v2/page.html` no longer uses Bootstrap's `container`/`alert`/`breadcrumb` classes today (it uses `hdx-v2-container`, `c-alert`, and `c-breadcrumb` instead — CONVENTIONS.md bans Bootstrap's `.container` in v2 outright), but Bootstrap itself is still loaded as a page-level dependency for other v2 markup.
 
 ## Context
 
@@ -35,10 +35,6 @@ with:
 ```
 {% asset 'hdx_theme/v2-page-styles' %}
 ```
-
-### Verify
-
-Confirm in browser DevTools that `fanstatic/base/layout.css` and `fanstatic/base/base.css` are **not** loaded on v2 pages. These files hard-code a 1170px container width and disable Bootstrap's responsive behaviour — they must not apply to v2 pages. Because `v2/page.html` fully replaces the styles block, this should already be the case.
 
 ## Why
 

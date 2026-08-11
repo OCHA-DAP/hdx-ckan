@@ -169,10 +169,10 @@ Loaded via `{% asset 'hdx_theme/contact-contributor-scripts' %}` only when `mess
 
 | Field | Figma element | Existing v2 component | Decision |
 |---|---|---|---|
-| Topic dropdown | `.dropdown` / `.select` (2.125rem height) | `c-dropdown` (JS, size-m: 2.125rem ✅) | **Extend `c-dropdown` with `native=True` — renders `<select>`, POST-safe; new `.c-dropdown--native` CSS modifier, plus a `c-dropdown--error`/`c-dropdown__error` pair for error display (see §9 Decision 4)** |
-| Your name | `.form-field` (2.313rem height) | `c-search-input` size-l: 2.5rem (≈ Figma 2.313rem) | **Use `c-search-input` size-l, `show_icon=False`, `type='text'`** |
-| Your email | `.form-field` (2.313rem height) | same | **Use `c-search-input` size-l, `show_icon=False`, `type='email'`** |
-| Comments | `.form-field3` (9.375rem height) | none | **Extend `c-search-input` with `multiline=True`; new `.c-search-input--textarea` CSS modifier in `input-field.css`** |
+| Topic dropdown | `.dropdown` / `.select` (2.125rem height) | `c-dropdown` (JS, size-m: 2.125rem ✅) | **Use the separate `select.html` component (native `<select>`-backed field), not `c-dropdown` — no `native` param exists on `c-dropdown`** |
+| Your name | `.form-field` (2.313rem height) | `c-search-input` size-l: 2.5rem (≈ Figma 2.313rem) | **Use `text-field.html` size-l, `type='text'`, wrapped in `c-form-field`** |
+| Your email | `.form-field` (2.313rem height) | same | **Use `text-field.html` size-l, `type='email'`, wrapped in `c-form-field`** |
+| Comments | `.form-field3` (9.375rem height) | none | **Use `text-field.html` with `multiline=True`, wrapped in `c-form-field`** |
 | Cancel button | `.buttons` (tertiary, bordered) | `c-button` style=tertiary size=m tag=a ✅ | Reuse directly |
 | Submit button | `.buttons2` (primary blue) | `c-button` style=primary size=m button_type=submit ✅ | Reuse directly |
 
@@ -183,9 +183,9 @@ Loaded via `{% asset 'hdx_theme/contact-contributor-scripts' %}` only when `mess
 No v2 textarea component exists. The old BEM `bem.blocks/textarea_field.html` is Bootstrap-
 dependent and uses v1 classes — it must not be reused.
 
-### Approach: extend `c-search-input` with `multiline=True`
+### Approach: `text-field.html` with `multiline=True`
 
-Add a `multiline` parameter to `v2/components/search-input.html`. When `True`:
+`text-field.html` (the generic form-field component, distinct from the search-only `search-input.html`) supports a `multiline` parameter. When `True`:
 - Render `<textarea name rows>` instead of `<input>`
 - Skip the icon / password-toggle / clear-button block entirely
 - Accept a `rows` parameter (default: `4`)
@@ -193,7 +193,7 @@ Add a `multiline` parameter to `v2/components/search-input.html`. When `True`:
 **Snippet usage:**
 
 ```jinja2
-{% snippet 'v2/components/search-input.html',
+{% snippet 'v2/components/text-field.html',
     multiline   = True,
     name        = 'msg',
     id          = 'field-msg',
@@ -278,10 +278,10 @@ v1 uses a Bootstrap `.alert.alert-danger`. v2 renders:
 - **Top-level summary** above the form: the shared `c-alert` snippet
   (`{% snippet 'v2/components/alert.html', message=error_summary %}`) styled with
   `--hdx-error-6` tint and red border. Reused unchanged by drawer forms.
-- **Per-field errors** inside each component: `c-search-input` gains an `errors` parameter — when
-  set, a `<span class="c-search-input__error">` is appended inside the wrapper, styled in
-  `--hdx-error-6`, CSS in `input-field.css`. `c-dropdown` (native mode) gets its own equivalent
-  pair instead of reusing `c-search-input`'s: a `c-dropdown--error` modifier on the wrapper, and a
+- **Per-field errors** inside each component: `text-field.html` takes an `errors` parameter — when
+  set, a `<span class="c-search-input__error">` is appended inside the wrapper (BEM class carried
+  over from `search-input.html`), styled in `--hdx-error-6`, CSS in `input-field.css`. `select.html`
+  gets its own equivalent pair: a `c-dropdown--error` modifier on the wrapper, and a
   `c-dropdown__error` span rendered *after* (outside) the wrapper — the modifier class is what the
   sibling-selector CSS keys off to make the span visible, in `dropdown.css`.
 
@@ -327,46 +327,39 @@ At SM, buttons remain right-aligned side-by-side — matching Figma.
 | Risk | Detail | Mitigation |
 |---|---|---|
 | Breaking form POST | Renaming fields or removing hidden inputs breaks NAVL validation | Never rename form `name` attrs; always include hidden fields and CSRF |
-| Dropdown not submitting | `c-dropdown` is JS-powered and doesn't write to a native `<select>` — CKAN expects `topic` in POST data | Use `c-dropdown` `native=True` mode which renders a plain `<select>` |
+| Dropdown not submitting | `c-dropdown` is JS-powered and doesn't write to a native `<select>` — CKAN expects `topic` in POST data | Use the `select.html` component, which renders a plain `<select>` |
 | Analytics JS breaking | `#message_sent` and `#message_subject` IDs must exist in the DOM when `message_sent=True` | Keep hidden inputs in v2 success block |
-| Textarea not existing | No v2 textarea — must extend `c-search-input` before this page can be implemented | Extend `c-search-input` with `multiline=True` as a prerequisite |
-| Text input height | `c-search-input` size-m is 2.125rem vs Figma 2.313rem — minor visual delta | Accepted; also aligns the text inputs' height with the topic dropdown's (`size='m'`, 2.125rem) on the same form |
-| Error display without Bootstrap | v1 `.alert.alert-danger` cannot be used in v2 | Top-level: shared `c-alert` snippet; per-field: `c-search-input__error` inside component |
+| Textarea not existing | No v2 textarea | Use `text-field.html` with `multiline=True` |
+| Text input height | `text-field.html` size-m is 2.125rem vs Figma 2.313rem — minor visual delta | Accepted; also aligns the text inputs' height with the topic dropdown's (`size='m'`, 2.125rem) on the same form |
+| Error display without Bootstrap | v1 `.alert.alert-danger` cannot be used in v2 | Top-level: shared `c-alert` snippet; per-field: `c-search-input__error` inside component (underlying BEM class kept from `search-input.html`, now used by `text-field.html`) |
 | v1 regression | Template was fully rewritten to extend `v2/page.html` — no v1 fallback | Accepted; page_light.html version removed |
 
 ---
 
 ## 9. Decisions Taken
 
-1. **Dropdown:** Extend `c-dropdown` with a `native=True` parameter. When `native=True` the
-   snippet renders a styled `<select>` element (+ chevron) instead of the button+panel,
-   making the field POST-safe without JS. A new `.c-dropdown--native` CSS modifier provides
-   the necessary style overrides in `dropdown.css`.
+1. **Dropdown:** Use the `select.html` component (native `<select>`-backed field, distinct from `c-dropdown`), which renders a styled `<select>` element (+ chevron), making the field POST-safe without JS. Takes an `errors` param for per-field error display.
 
-2. **Text input:** Use `c-search-input` with `size='m'` and `show_icon=False`,
-   `type='text'` / `type='email'`. No new component needed. (Aligned from the original
-   `size='l'` to `size='m'` for visual consistency with Request Access's fields.)
+2. **Text input:** Use `text-field.html` with `size='m'`, `type='text'` / `type='email'`, wrapped in `c-form-field`. (Aligned from the original `size='l'` to `size='m'` for visual consistency with Request Access's fields.)
 
-3. **Textarea:** Extend `c-search-input` with a `multiline=True` parameter and a `rows`
+3. **Textarea:** Use `text-field.html` with a `multiline=True` parameter and a `rows`
    param (default 4). When `multiline=True` the snippet renders `<textarea>` instead of `<input>` and
-   skips the icon/toggle/clear block. A new `.c-search-input--textarea` CSS modifier in
+   skips the icon/toggle/clear block. A `.c-search-input--textarea` CSS modifier in
    `input-field.css` sets a fixed `height: @c-input-textarea-l-h` (6.25rem for 4 rows),
    `align-items: flex-start`, and `height: 100%; resize: none; overflow-y: auto` on the inner `<textarea>`. Fixed height is a Figma size spec, same as `@c-input-l-h`; border state changes are color-only.
 
 4. **Error display:** Both per-field and top-level summary, matching v1 behavior.
    - Top-level: the shared `c-alert` snippet above the form, styled with
      `--hdx-error-6` tint and red border — reused unchanged by drawer forms.
-   - Per-field: `c-search-input` gains an `errors` param; when set, a
-     `<span class="c-search-input__error">` is rendered inside the wrapper. CSS in
-     `input-field.css`. `c-dropdown` (native mode) gets its own `c-dropdown--error` wrapper
-     modifier and `c-dropdown__error` span (rendered after, not inside, the wrapper) — its own
-     pair rather than reusing `c-search-input`'s, in `dropdown.css`.
+   - Per-field: `text-field.html` and `select.html` both take an `errors` param; when set, a
+     `<span class="c-search-input__error">` is rendered inside the wrapper (BEM class carried
+     over from `search-input.html`). CSS in `input-field.css`.
 
 5. **Success state:** Same centered column layout as the form. Uses `CONST.PAGE_TITLE_MESSAGE_SENT`
    and `CONST.BODY_MAIN_TEXT_MESSAGE_SENT` strings unchanged from v1.
 
-6. **Textarea CSS location:** `input-field.css` — textarea extends `c-search-input`, so its
-   modifier lives in the same file.
+6. **Textarea CSS location:** `input-field.css` — textarea is a mode of `text-field.html`, which
+   shares `search-input.html`'s underlying BEM classes, so its modifier lives in the same file.
 
 7. **Button row on SM:** Side-by-side at all breakpoints, matching Figma. No stacking.
 

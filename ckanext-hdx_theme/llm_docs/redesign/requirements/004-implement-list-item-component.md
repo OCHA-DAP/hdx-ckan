@@ -11,7 +11,7 @@ Create a list item component supporting two types: plain text lists and checklis
 - `ckanext-hdx_theme/ckanext/hdx_theme/templates/v2/components/list-item.html`
 - `ckanext-hdx_theme/ckanext/hdx_theme/less/v2/components/list-item.less`
 - Two list types: `list` (text-only) and `checklist` (with checkbox)
-- States: `default`, `hovered`, `active` (for checklist)
+- States: `default`, `active` (for checklist; hover is plain CSS `:hover`, never a tracked state)
 - Sizes: `md` (medium, 14px) and `sm` (small, 12px) for text-only lists
 
 **Out:**
@@ -40,7 +40,8 @@ Create a list item component supporting two types: plain text lists and checklis
    - `type` (string): `'list'` or `'checklist'`, default: `'list'`
    - `label` (string): item text/label
    - `size` (string): `'md'` or `'sm'` (text-only lists), default: `'md'`
-   - `state` (string): `'default'` or `'hovered'` or `'active'` (for checklist), default: `'default'`
+     - Rendered as CSS modifiers `--size-md`/`--size-sm`, legacy naming predating CONVENTIONS.md's `--size-{xs,s,m,l}` rule.
+   - `state` (string): `'default'` or `'active'` (for checklist), default: `'default'`
    - `checked` (boolean): for checklist type, default: false
    - `count` (string or number): optional badge showing item count like "(309)", default: ''
    - `href` (string): optional link for the item, default: ''

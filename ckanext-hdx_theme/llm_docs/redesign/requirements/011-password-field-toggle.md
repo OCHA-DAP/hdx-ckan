@@ -15,7 +15,7 @@ No layout or spacing changes are needed — the existing size-l styles already m
 
 ## What to update
 
-### `templates/v2/components/search-input.html`
+### `templates/v2/components/text-field.html`
 
 1. Add a `type` parameter (default: `'search'`) and an `autocomplete` parameter (default: `''`) to the parameter block and defaults section.
 
@@ -94,24 +94,12 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 ```
 
-### `fanstatic/webassets.yml`
-
-Uncomment and populate the `v2-components-scripts` bundle:
-
-```yaml
-v2-components-scripts:
-  <<: *common-js
-  output: ckanext-hdx_theme/%(version)s_components-scripts.js
-  contents:
-    - v2/components/input-field.js
-```
-
 ### Demo page (`templates/v2/components.html`)
 
 Add one password-input example in the input-field section:
 
 ```
-{% snippet 'v2/components/search-input.html',
+{% snippet 'v2/components/text-field.html',
     type='password',
     name='password',
     placeholder='Enter password',

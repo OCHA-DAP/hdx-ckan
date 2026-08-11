@@ -11,7 +11,8 @@ The dataset search results page is being progressively redesigned as part of the
 - Layout is **search-specific** — no generalization to other listing pages
 - `hdx-v2-search-page` scoping class (originally planned) was not implemented — `hdx-v2-content-columns` in page.html serves the same role
 - Border color: `--hdx-neutral-1` (not `--hdx-neutral-2`)
-- Sidebar padding: `20px top / 40px right / 80px bottom / 48px left` (Figma-aligned)
+- Sidebar padding: `20px top / 40px right / 80px bottom / 0 left` (left padding dropped — content column's own padding covers it)
+- Sidebar width: no fixed value — comes from the generic `.hdx-v2-content-columns__sidebar` 25%-flex rule shared across pages, not a dataset-results-specific variable
 
 ---
 
@@ -98,7 +99,7 @@ Legacy `container mainContent` / `hdx-wrapper wrapper` / `contentBackground` rem
 @hdx-space-10: 2.5rem;  // 40px
 @hdx-space-12: 3rem;    // 48px
 
-var(--hdx-neutral-2)    // #ebeff0  (whitesmoke — sidebar border)
+var(--hdx-neutral-1)    // sidebar border (shipped; Figma showed --hdx-neutral-2 / #ebeff0)
 ```
 
 ---
@@ -208,9 +209,11 @@ v2/page.html
 Add before any block definitions:
 
 ```jinja2
-{% set sidebar_class = 'hdx-v2-search-sidebar' %}
-{% set content_class = 'hdx-v2-search-content' %}
+{% set sidebar_class = 'hdx-v2-content-columns__sidebar hdx-v2-content-columns__sidebar--xl-only hdx-v2-content-columns__sidebar--sticky hdx-v2-search-sidebar' %}
+{% set content_class = 'hdx-v2-content-columns__content hdx-v2-search-content' %}
 ```
+
+The generic `hdx-v2-content-columns__sidebar*` modifiers (`--xl-only`, `--sticky`) come from a later, shared layout convention (`layout.less`) that postdates this task.
 
 Add secondary block with sidebar filters:
 
@@ -278,33 +281,23 @@ And the corresponding close tag:
 
 **Remove** the `hdx-v2-search-layout` block (lines 137–165). The `.hdx-v2-dataset-list { flex:1 }` rule nested inside it moves to the new `.hdx-v2-search-content` block.
 
-**Update** sidebar width variable:
-
-```less
-@hdx-v2-sf-sidebar-width: 21.875rem;  // 350px — was 15rem (240px)
-```
-
 **Add** after the removed block:
 
 ```less
 // ────────────────────────────────────────────────────────
 // hdx-v2-search-sidebar — sidebar column
 // Applied via sidebar_class in search/search.html
+// Width comes from the generic .hdx-v2-content-columns__sidebar
+// 25%-flex rule (layout.less), not a fixed value here.
 // ────────────────────────────────────────────────────────
 
 .hdx-v2-search-sidebar {
     @media (min-width: @hdx-bp-xl) {
-        flex-shrink:  0;
-        width:        @hdx-v2-sf-sidebar-width;          // 350px
-        border-right: 1px solid var(--hdx-neutral-2);   // #ebeff0
-        padding:      var(--hdx-space-5)                 // 20px top
-                      var(--hdx-space-10)                // 40px right
-                      5rem                               // 80px bottom (Figma)
-                      var(--hdx-space-12);               // 48px left
-    }
-
-    @media (max-width: @hdx-bp-xl) {
-        display: none;
+        border-right: 1px solid var(--hdx-neutral-1);
+        padding:      var(--hdx-space-5)   // 20px top
+                      var(--hdx-space-10)  // 40px right
+                      var(--hdx-space-20)  // 80px bottom
+                      0;                    // left padding dropped
     }
 }
 
@@ -391,7 +384,7 @@ Remaining v1 remnants (no active CSS depending on them in v2):
 
 3. **`hdx-v2-search-page` scoping class**: Not implemented. `hdx-v2-content-columns` in page.html is the flex container; sidebar and content rules nest under it in `search.less`. No need for an additional scoping class.
 
-4. **`@hdx-v2-sf-sidebar-width` references**: No other references to this variable exist (overlay width is not derived from it).
+4. **Sidebar width**: no fixed-width variable was introduced — width comes from the shared `.hdx-v2-content-columns__sidebar` 25%-flex rule (overlay width is not derived from it).
 
 5. **`no-nav` on anonymous wrapper div**: Left as-is — it's a v1 remnant in page.html with no active v2 CSS depending on it. Removing it is a separate cleanup task.
 

@@ -3,10 +3,7 @@
 Audit of the v2 redesign as shipped after tasks 001–069. Covers duplication, unification
 candidates, convention drift, requirement-doc accuracy, and the `/components` showcase page.
 
-Every finding carries a proposed fix. §7 records the decision on each. Code-level fixes (§1, §2,
-most of §3, §5) are decided but not yet implemented — that follows as a separate task. Documentation
-corrections (§4, plus a few catalog/convention gaps in §3 and §6) are applied directly in this doc
-and the files it touches.
+Every finding carries a proposed fix. §7 records the decision on each. The code-level fixes (§1, §2, most of §3, §5) have since landed in a follow-up implementation pass — only B4 (Mailchimp embed Bootstrap classes in `signals.html`) remains outstanding, deferred to next cycle (nothing is visually broken; the form still renders correctly off Bootstrap's own CSS, this is an architectural cleanup only). Documentation corrections (§4, plus a few catalog/convention gaps in §3 and §6) were applied directly in this doc and the files it touches.
 
 ## Scope
 
@@ -304,19 +301,19 @@ remains `CONVENTIONS.md` plus `.claude/skills/hdx-v2-styles/references/conventio
 
 | # | Decision | Rationale |
 |---|---|---|
-| Scope | Every code-level fix below (§1, §2, most of §3, §5) is decided now; implementation is a separate follow-up task once this doc is finalized. Only documentation-only corrections (doc-accuracy fixes, catalog/convention additions) were applied directly in this pass. | Matches how prior docs (061, 065, 067) were finalized before implementation |
-| A1 | Apply the proposed fix: `.hdx-line-clamp(@lines)` / `.hdx-line-clamp-off()` in `mixins.less`, migrate all 11 sites. | Follow-up task |
-| A2 | Apply the proposed fix: `.hdx-focus-ring()` / `.hdx-focus-ring-inverse()` in `mixins.less`. | Follow-up task |
-| A3 | Apply the proposed fix: `.hdx-icon-size(@size)` mixin, called with each site's existing value. | Follow-up task |
-| A4 | Apply the proposed fix: ship `nav-controls.css` once via `v2-page-styles`, drop the four page-bundle `@import`s. | Follow-up task |
-| A5 | Route `organization/index.html` through `v2/search-nav-controls.html` instead of hand-rolled markup. | Follow-up task |
-| A6 | Promote `FocusTrap` to `window.hdxV2.FocusTrap` in `utils.js`; replace the "copy the class" instruction in `conventions.md` and the skill. | Follow-up task |
-| B1 | Merge `c-kpi-card` and `c-stats-card` into one component with variants, preserving the exact current visual output on every call site (All Locations, All Organisations, org Stats tab, location page KPI row). | Follow-up task — supersedes 058 D14 / 063 D8 |
-| B2 | Add `c-signup-tier-row` to `components/signup-tier.less`; use it on both the value-proposition page and the showcase. | Follow-up task |
-| B3 | Relocate `.hdx-v2-signals-*` out of `components/signal-card.less` to the top level of `less/v2/`; remove the hardcoded `19.938rem` width at every breakpoint. | Follow-up task |
-| B4 | Wrap the Mailchimp embed in `landing_pages/signals.html` with v2-equivalent layout classes instead of Bootstrap grid classes. | Follow-up task |
-| B5 | Rewrite `components/drawer.js` in vanilla JS, closing the last component-level jQuery dependency. | Follow-up task |
-| B6 | Drop the direct `breakpoints.less` import in `pages/signals-landing.less` (keep the `mixins.less` import only). | Follow-up task, bundled with B4 (same file) |
+| Scope | Every code-level fix below (§1, §2, most of §3, §5) was decided in this pass and implemented in a follow-up pass. Documentation-only corrections (doc-accuracy fixes, catalog/convention additions) were applied directly in this pass. | Matches how prior docs (061, 065, 067) were finalized before implementation |
+| A1 | Apply the proposed fix: `.hdx-line-clamp(@lines)` / `.hdx-line-clamp-off()` in `mixins.less`, migrate all 11 sites. | Landed |
+| A2 | Apply the proposed fix: `.hdx-focus-ring()` / `.hdx-focus-ring-inverse()` in `mixins.less`. | Landed |
+| A3 | Apply the proposed fix: `.hdx-icon-size(@size)` mixin, called with each site's existing value. | Landed |
+| A4 | Apply the proposed fix: ship `nav-controls.css` once via `v2-page-styles`, drop the four page-bundle `@import`s. | Landed |
+| A5 | Route `organization/index.html` through `v2/search-nav-controls.html` instead of hand-rolled markup. | Landed |
+| A6 | Promote `FocusTrap` to `window.hdxV2.FocusTrap` in `utils.js`; replace the "copy the class" instruction in `conventions.md` and the skill. | Landed |
+| B1 | Merge `c-kpi-card` and `c-stats-card` into one component with variants, preserving the exact current visual output on every call site (All Locations, All Organisations, org Stats tab, location page KPI row). | Landed — supersedes 058 D14 / 063 D8 |
+| B2 | Add `c-signup-tier-row` to `components/signup-tier.less`; use it on both the value-proposition page and the showcase. | Landed |
+| B3 | Relocate `.hdx-v2-signals-*` out of `components/signal-card.less` to the top level of `less/v2/`; remove the hardcoded `19.938rem` width at every breakpoint. | Landed |
+| B4 | Wrap the Mailchimp embed in `landing_pages/signals.html` with v2-equivalent layout classes instead of Bootstrap grid classes. | Deferred to next cycle — nothing is visually broken today (Bootstrap's own CSS still styles the form); this is an architectural cleanup on a live, complex third-party embed with no existing v2 CSS to build on |
+| B5 | Rewrite `components/drawer.js` in vanilla JS, closing the last component-level jQuery dependency. | Landed |
+| B6 | Drop the direct `breakpoints.less` import in `pages/signals-landing.less` (keep the `mixins.less` import only). | Landed |
 | B7 | Leave the nine unbundled compiled CSS files in `fanstatic/v2/` in place. | No cleanup needed |
 | B8 | Documented: `select.html` added to the skill's component catalog; `dropdown.html`'s row no longer claims a `native` mode. | Done in this pass |
 | B9 | No action needed — `columns_class` is already documented in `CONVENTIONS.md`'s "Layout variable completeness" section and the skill's `workflows.md`. | Not a live finding |
@@ -325,6 +322,6 @@ remains `CONVENTIONS.md` plus `.claude/skills/hdx-v2-styles/references/conventio
 | 4.2 | Behavior-drift corrected in 056 (D3, D14, D17, D18), 061 (D5/D6 filename + Component Mapping table), 064 (Decision 6). | Done in this pass |
 | 062 | `planned-maintenance.html` ships from infra outside this repo — not a discrepancy, no doc change needed beyond the note already added to this audit. | Resolved |
 | 068 | STATUS.md updated to `implemented`; `c-spinner` decided unnecessary (not merely deferred) — doc references corrected accordingly. | Done in this pass |
-| D1 | Add showcase demos for `select.html`, `c-form-field`, `c-divider`. `table.html` / `graph-point.html` confirmed intentionally showcase-only — no orphan cleanup needed. | Follow-up task |
-| D2 | Rename the undefined showcase classes (`demo-section__heading` → `demo-subsection__heading`, `dl-h2` → the real class) to match what's actually defined. | Follow-up task |
-| D3 | Add `id`s to every showcase section plus a table of contents. | Follow-up task |
+| D1 | Add showcase demos for `select.html`, `c-form-field`, `c-divider`. `table.html` / `graph-point.html` confirmed intentionally showcase-only — no orphan cleanup needed. | Landed |
+| D2 | Rename the undefined showcase classes (`demo-section__heading` → `demo-subsection__heading`, `dl-h2` → the real class) to match what's actually defined. | Landed |
+| D3 | Add `id`s to every showcase section plus a table of contents. | Landed |

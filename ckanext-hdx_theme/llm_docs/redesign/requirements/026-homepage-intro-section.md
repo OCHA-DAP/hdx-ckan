@@ -41,7 +41,7 @@ Card sizing is handled entirely by `c-activity-card--size-responsive` — no car
 
 | Element | SM | MD | LG |
 |---------|-----|-----|-----|
-| Eyebrow label | `var(--hdx-fs-s)`, `var(--hdx-neutral-7)` | `var(--hdx-fs-m)` | `var(--hdx-fs-l)` |
+| Eyebrow label | `var(--hdx-fs-s)`, `var(--hdx-neutral-85)` | `var(--hdx-fs-m)` | `var(--hdx-fs-l)` |
 | Heading | `var(--hdx-fs-2xl)`, Merriweather bold | `var(--hdx-fs-3xl)` | `var(--hdx-fs-4xl)` |
 | Header internal gap | `0.5rem` | `0.75rem` | `0.75rem` |
 
@@ -54,15 +54,15 @@ Heading color: `var(--hdx-neutral-95)`. Verify token values against `foundation.
 | Element | Value |
 |---------|-------|
 | Eyebrow label | "About HDX" |
-| Heading | "A network of data-focused partners making data easy to find and use" |
-| Card 1 heading | "Find and use" |
-| Card 1 subtitle | "Search and download datasets uploaded by organizations verified by HDX." |
+| Heading | "An open platform for sharing data across crises and organisations" |
+| Card 1 heading | "Find data" |
+| Card 1 subtitle | "Search our catalogue of more than 20,000 datasets to find and download the data you need" |
 | Card 1 icon | `v2/icons/search.svg` |
-| Card 1 button | "Explore data", `href=h.url_for('dataset.search')`, `button_style='primary'` |
-| Card 2 heading | "Share and contribute" |
-| Card 2 subtitle | "Organizations contribute new datasets and resources to HDX relevant to the community." |
-| Card 2 icon | `v2/icons/share.svg` |
-| Card 2 button | "Login", `href=h.url_for('user.login')`, `button_style='secondary'` |
+| Card 1 button | "Search data", `href=h.url_for('dataset.search')`, `button_style='primary'` |
+| Card 2 heading | "Share data" |
+| Card 2 subtitle | "Join the 200+ humanitarian organisations sharing data on HDX - contribute your organisation's data to support humanitarian response" |
+| Card 2 icon | `v2/icons/upload.svg` |
+| Card 2 button | "Learn More", `href=docs_links['QA_PROCESS']` (from `h.HDX_CONST('DOCUMENTATION_LINKS')`), `button_style='secondary'`, opens in a new tab |
 
 ---
 
@@ -74,36 +74,38 @@ Add `button_style` and `size='responsive'` support (see requirement 025).
 
 ### 2. `ckanext/hdx_theme/templates/home/index.html`
 
-Add the intro section immediately after the closing `</section>` of `hdx-v2-hero`:
+Intro section markup (order relative to other homepage sections has since shifted — bar-chart/alert/highlights/signals sections were added between hero and intro by later tasks):
 
 ```html
 <section class="hdx-v2-intro">
-  <div class="hdx-v2-intro__inner container">
+  <div class="hdx-v2-intro__inner hdx-v2-container">
 
     <div class="hdx-v2-intro__header">
       <span class="hdx-v2-intro__label">{{ _('About HDX') }}</span>
-      <h2 class="hdx-v2-intro__heading">{{ _('A network of data-focused partners making data easy to find and use') }}</h2>
+      <h2 class="hdx-v2-intro__heading">{{ _('An open platform for sharing data across crises and organisations') }}</h2>
     </div>
 
+    {% set docs_links = h.HDX_CONST('DOCUMENTATION_LINKS') %}
     <div class="c-activity-card-list">
 
       {% snippet 'v2/components/activity-card.html',
           size='responsive',
           icon_src='v2/icons/search.svg',
-          heading=_('Find and use'),
-          subtitle=_('Search and download datasets uploaded by organizations verified by HDX.'),
-          button_label=_('Explore data'),
+          heading=_('Find data'),
+          subtitle=_('Search our catalogue of more than 20,000 datasets to find and download the data you need'),
+          button_label=_('Search data'),
           button_href=h.url_for('dataset.search'),
           button_style='primary' %}
 
       {% snippet 'v2/components/activity-card.html',
           size='responsive',
-          icon_src='v2/icons/share.svg',
-          heading=_('Share and contribute'),
-          subtitle=_('Organizations contribute new datasets and resources to HDX relevant to the community.'),
-          button_label=_('Login'),
-          button_href=h.url_for('user.login'),
-          button_style='secondary' %}
+          icon_src='v2/icons/upload.svg',
+          heading=_('Share data'),
+          subtitle=_("Join the 200+ humanitarian organisations sharing data on HDX - contribute your organisation's data to support humanitarian response"),
+          button_label=_('Learn More'),
+          button_href=docs_links['QA_PROCESS'],
+          button_style='secondary',
+          button_attrs={'data-module': 'hdx_click_stopper', 'data-module-link_type': 'homepage body', 'target': '_blank', 'rel': 'noopener noreferrer'} %}
 
     </div>
 
@@ -145,7 +147,7 @@ Add an `hdx-v2-intro` block after `hdx-v2-hero`. Card sizing is owned by the com
         font-family: var(--hdx-font-body);
         font-size:   var(--hdx-fs-s);
         line-height: var(--hdx-lh-normal);
-        color:       var(--hdx-neutral-7);
+        color:       var(--hdx-neutral-85);
 
         @media (min-width: @hdx-bp-md) { font-size: var(--hdx-fs-m); }
         @media (min-width: @hdx-bp-xl) { font-size: var(--hdx-fs-l); }

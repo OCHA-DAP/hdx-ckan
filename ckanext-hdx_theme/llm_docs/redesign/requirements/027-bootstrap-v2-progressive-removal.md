@@ -105,16 +105,6 @@ Rewrite the **Container and full-bleed sections** section based on the Step 1 de
 
 Remove the existing reference to Bootstrap `.container` class if Option 2 is adopted.
 
-### Step 8 — Verify
-
-Verification checks:
-1. **Footer layout** — resize from 320px to 1400px. At each breakpoint transition (`@hdx-bp-md`, `@hdx-bp-xl`), columns should behave identically to the current implementation.
-2. **Header** — at viewport < 768px the search icon is visible; at ≥ 768px it is hidden. No visual regression in navbar.
-3. **Flash messages** — correct top spacing (16px) above first flash message.
-4. **Container width and padding** — `__inner` elements on all v2 pages have correct max-width and horizontal padding at all breakpoints.
-5. **Legacy pages unaffected** — any page without the `.hdx-v2` body class renders identically to before.
-6. **No Bootstrap layout classes remain** — grep `templates/v2/` for `col-`, `d-md-`, `pt-`, `gap-`, `gx-`, `gy-`, `row `, `justify-content-` and confirm zero results.
-
 ---
 
 ## Risks and considerations
