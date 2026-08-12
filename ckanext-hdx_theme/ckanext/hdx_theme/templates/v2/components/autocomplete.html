@@ -43,7 +43,7 @@
   {% snippet 'v2/components/autocomplete.html',
       placeholder='Search datasets…',
       form_action=h.url_for('dataset.search'),
-      search_source='homepage-search' %}
+      search_source='in-page' %}
 #}
 
 {% set placeholder    = placeholder    if placeholder    is defined else 'Search' %}

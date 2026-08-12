@@ -153,12 +153,12 @@ The panel's results section needs `data-` attributes for JS to target:
 ### Integration: homepage
 
 `home/index.html` passes `form_action=h.url_for('dataset.search')` and
-`search_source='homepage-search'` to the snippet. The `<form>` element is owned
+`search_source='in-page'` to the snippet. The `<form>` element is owned
 by `autocomplete.html` via these params — callers must **not** wrap the snippet
 in an outer form.
 
 The form `action` for "View all results" must point to the dataset search:
-`/search?q=QUERY&ext_search_source=homepage-search`
+`/search?q=QUERY&ext_search_source=in-page`
 
 **MD/SM**: The homepage hero autocomplete also triggers the fullscreen overlay
 (same as the header), so the overlay is included in `header.html` unconditionally
