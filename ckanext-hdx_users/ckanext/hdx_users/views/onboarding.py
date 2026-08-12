@@ -120,19 +120,15 @@ class UserOnboardingView(MethodView):
 
         # captcha check
         try:
-            is_captcha_enabled: object = config.get('hdx.captcha', 'false')
-            if is_captcha_enabled == 'true':
-                captcha_response = data_dict.get('g-recaptcha-response', None)
-                if not usr_h.is_valid_captcha(captcha_response=captcha_response):
-                    raise ValidationError(CaptchaNotValid, error_summary=CaptchaNotValid)
+            captcha_response = data_dict.get('g-recaptcha-response', None)
+            captcha_validation = usr_h.is_valid_captcha(captcha_response=captcha_response)
+            if captcha_validation is None:
+                log.warning('Captcha validation is not enabled')
         except ValidationError as e:
-            error_summary = e.error_summary
-            if error_summary == CaptchaNotValid:
-                return OnbCaptchaErr
-            return error_message(error_summary)
+            return self.get(data_dict, errors={}, error_summary=e.error_summary)
         except Exception as e:
             log.error(e)
-            return error_message('Something went wrong. Please contact support.')
+            return self.get(data_dict, errors={}, error_summary='Something went wrong. Please contact support.')
 
         _ignore_auth = _auth_user_obj = None
         user_obj = user_notif_h.get_shadow_user_obj_by_email(data_dict.get('email'))
