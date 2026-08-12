@@ -348,13 +348,18 @@ c-page-header
   --compact-title       title fixed at 1.5rem (resource pages)
   --underlined          SM/MD bottom border (Signals)
   __top
+    --no-card            full-width description column when there's no org card
   __left
   __description
   __format              file-type icon + label (resource)
   __format-label
   __labels
   __link-group          one per links_list item
+  __title-row           title + __title-count, when title_count is set
   __title
+  __title-count         count badge (list-page titles: Dataviz Gallery, Archived Dataviz)
+  __title-actions        XL-only text-button row under the title (Locations), separated by __title-action-sep
+  __title-action-sep
   __subtitle
   __member-since
   __desc                data-module="clamped-text" (updated task 038)

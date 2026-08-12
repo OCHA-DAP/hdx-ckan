@@ -241,12 +241,13 @@ Static — no dynamic content.
 
 | UI Element | Component | Notes |
 |---|---|---|
+| Title + top text-buttons | `c-page-header` → `v2/components/page-header.html` | `title='Locations'`, `title_actions` renders "Interactive map \| Alphabetical order" as an XL-only row under the title; no org card, so `__top--no-card` applies |
 | KPI card | `c-stats-card--kpi` → `v2/components/stats-card.html`, `variant='kpi'` | Merged from the former `c-kpi-card` (task 070 B1) |
 | Info icon on KPI | `c-info-icon` → `v2/components/info-icon.html` | Used inside the `kpi` variant's label row |
 | Location item | `c-selection-item` → `v2/components/selection-item.html` | `color='cyan'` for HRP items, `color='light'` otherwise; `width: 100%; min-width: 0` on component base for grid sizing |
 | HRP filter toggle | `c-toggle` → `v2/components/toggle.html` | |
 | Sort buttons | `c-button` → `v2/components/button.html` | Secondary style, with active/selected modifier |
-| Top text-buttons | `c-text-button` → `v2/components/text-button.html` | `arrow-down` icon, royalblue (map) / darkslategray (alpha) |
+| Top text-buttons | `c-text-button` → `v2/components/text-button.html` | `arrow-down` icon, royalblue (map) / darkslategray (alpha); rendered via `c-page-header`'s `title_actions`, see above |
 | Letter anchor (XL sidebar) | `c-letter-anchor` → `v2/components/letter-anchor.html` | Size `lg`, state `active`/`enabled`/`disabled` |
 | Letter anchor (MD + SM sidebar) | `c-letter-anchor` → `v2/components/letter-anchor.html` | Size `lg` (all breakpoints) |
 
@@ -390,32 +391,32 @@ Same component as MD: right-side vertical sidebar with letter anchors. The "Jump
 | Zone | Behavior |
 |---|---|
 | Breadcrumb | White bg, no border |
-| Title | Merriweather Bold 2rem |
-| Text-buttons | "Interactive map" (royalblue) + "Alphabetical order" (darkslategray), both with arrow-down icon |
+| Title | `c-page-header` hero, `.hdx-page-title-scale()` 2rem Bold |
+| Text-buttons | "Interactive map" (royalblue) + "Alphabetical order" (darkslategray), both with arrow-down icon, via `c-page-header`'s `title_actions` |
 | KPI row | 3 flex cards with info icons |
 | Legend | 1rem square + text, padding 1rem 3rem |
-| Title+filter row | "Alphabetical order" (17.375rem fixed) inline with HRP toggle + Sort buttons |
+| Title+filter row | "Alphabetical order" (17.375rem fixed) inline with HRP toggle + Sort buttons, `.hdx-section-title()` |
 | Sidebar | Left, 20.375rem, sticky, 5-col letter grid, `c-letter-anchor` size=lg |
 | Content | Right of sidebar, `overflow-y: auto`, 3-col item grid, gap 0.75rem |
 | Item padding | 0.5rem |
-| Letter heading | 1.5rem Merriweather Bold |
+| Letter heading | `.hdx-section-title()`, 1.25rem Semibold |
 
 ### MD (`< 80rem`)
 
 | Zone | Behavior |
 |---|---|
 | Breadcrumb | Same (white bg, no border) |
-| Title | Merriweather Bold (smaller) |
-| Text-buttons | Absent (no "Interactive map" / "Alphabetical order") |
+| Title | `c-page-header` hero, `.hdx-page-title-scale()` 1.75rem Bold |
+| Text-buttons | Absent (no "Interactive map" / "Alphabetical order" — `title_actions` is XL-only) |
 | KPI row | 3 cards, NO info icons |
 | Legend | Same static |
-| Title+filter | "Alphabetical order" stacked above controls (column), not inline |
+| Title+filter | "Alphabetical order" stacked above controls (column), not inline, `.hdx-section-title()` |
 | Sort font | 12px (smaller than XL 14px) |
 | Sort padding | 0.25rem 0.5rem |
 | Sidebar | RIGHT vertical, natural/content width (single letter column), sticky |
 | Content | Left of sidebar (flex:1), 2-col item grid, gap 0.5rem |
 | Item padding | 0.375rem |
-| Letter heading | 1.25rem Merriweather |
+| Letter heading | `.hdx-section-title()`, 1.25rem Semibold |
 
 ### SM
 
@@ -525,7 +526,9 @@ Same component as MD: right-side vertical sidebar with letter anchors. The "Jump
 
 | File | Change |
 |---|---|
-| `ckanext-hdx_theme/ckanext/hdx_theme/templates/light/group/index.html` | Replace with v2 implementation |
+| `ckanext-hdx_theme/ckanext/hdx_theme/templates/light/group/index.html` | Replace with v2 implementation; hero title/text-buttons rendered via `v2/components/page-header.html` |
+| `ckanext-hdx_theme/ckanext/hdx_theme/templates/v2/components/page-header.html` | Add `title_actions` param + `__top--no-card` no-org-card layout |
+| `ckanext-hdx_theme/ckanext/hdx_theme/hdx-styles/src/common/less/v2/components/page-header.less` | Add `__title-actions`/`__title-action-sep` styles + `__top--no-card` modifier |
 | `ckanext-hdx_org_group/ckanext/hdx_org_group/controller_logic/group_read_logic.py` | Add `total_count`, `hrp_count`, `datagrid_count`, `grouped_countries`, `letters_present`; exclude World |
 | `ckanext-hdx_org_group/ckanext/hdx_org_group/views/group.py` | Pass new template vars |
 | `ckanext-hdx_theme/ckanext/hdx_theme/hdx-styles/src/common/less/v2/pages/locations-list.less` | Page-specific LESS (or update existing scaffolded file) |

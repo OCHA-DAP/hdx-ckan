@@ -18,8 +18,14 @@
   form_action     {string}  If provided, wraps the component in a <form>
                             with this action (GET method, role="search").
                             default: ''
+  form_id         {string}  id attr on the <form> (form_action must be set),
+                            so an external button can submit it via
+                            HTML's form="<id>" attribute.  default: ''
   search_source   {string}  Value for the hidden ext_search_source param
                             appended when form_action is set.  default: ''
+  show_icon       {bool}    Whether to render the input's right icon —
+                            passed straight through to search-input.html.
+                            default: True
 
   show_panel      {bool}    Whether to show the panel on initial (SSR) render.
                             The panel is always present in the DOM (hidden by
@@ -53,7 +59,9 @@
 {% set size           = size           if size           is defined else 'l' %}
 {% set icon_src       = icon_src       if icon_src       is defined else 'v2/icons/search.svg' %}
 {% set form_action    = form_action    if form_action    is defined else '' %}
+{% set form_id        = form_id        if form_id        is defined else '' %}
 {% set search_source  = search_source  if search_source  is defined else '' %}
+{% set show_icon      = show_icon      if show_icon      is defined else True %}
 {% set show_panel     = show_panel     if show_panel     is defined else False %}
 {% set trending_label = trending_label if trending_label is defined else 'Trending' %}
 {% set chips          = chips          if chips          is defined else [] %}
@@ -65,7 +73,7 @@
 
 {% set input_state = 'active' if state == 'active' else ('filled' if state == 'filled' else 'enabled') %}
 
-{% if form_action %}<form action="{{ form_action }}" method="get" role="search">
+{% if form_action %}<form action="{{ form_action }}" method="get" role="search"{% if form_id %} id="{{ form_id }}"{% endif %}>
   {% if search_source %}<input type="hidden" name="ext_search_source" value="{{ search_source }}">{% endif %}
 {% endif %}
 <div class="c-autocomplete{{ ' ' ~ extra_classes if extra_classes }}"
@@ -78,7 +86,7 @@
   {% snippet 'v2/components/search-input.html',
       size=size, placeholder=placeholder, value=value,
       state=input_state, name=name, icon_src=icon_src,
-      icon_submit=True,
+      icon_submit=True, show_icon=show_icon,
       attrs={'data-search-managed': ''} %}
 
   <div class="c-autocomplete__panel" role="listbox"{% if not show_panel %} hidden{% endif %}>

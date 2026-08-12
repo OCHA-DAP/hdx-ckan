@@ -15,11 +15,17 @@
 }
 .hdx-v2-signals-section-heading {
   font-family: var(--hdx-font-display);
-  font-size: var(--hdx-fs-xl);
-  font-weight: var(--hdx-fw-bold);
+  font-size: var(--hdx-fs-l);
+  font-weight: var(--hdx-fw-semibold);
   line-height: var(--hdx-lh-normal);
   color: var(--hdx-neutral-95);
+  margin: 0;
   margin: 0 0 var(--hdx-space-8);
+}
+@media (min-width: 48rem) {
+  .hdx-v2-signals-section-heading {
+    font-size: var(--hdx-fs-xl);
+  }
 }
 .hdx-v2-signals-section-description {
   font-family: var(--hdx-font-body);

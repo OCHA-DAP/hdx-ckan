@@ -113,10 +113,11 @@ doc — see Decisions below.
   `display:flex;justify-content:space-between` rule on `&__header`), fixing the alignment bug without
   depending on `dataset-page.less`/`v2-dataset-page-styles` at all. The padding/scroll-margin/`&__header`/
   `&__title`/`&__body` properties shared between `.hdx-v2-dataset-section` and `.hdx-v2-resource-section`
-  are factored into four flat mixins in `mixins.less` (`.hdx-page-section-wrapper()`,
-  `.hdx-page-section-header()`, `.hdx-page-section-title()`, `.hdx-page-section-body()`), called from each
-  page's own BEM block — matching the existing "List header pattern" precedent for page-owned,
-  verbatim-duplicated styling (`CONVENTIONS.md`). `dataset-page.less` keeps its extra `&__title-row`,
+  are factored into mixins in `mixins.less` (`.hdx-page-section-wrapper()`,
+  `.hdx-page-section-header()`, `.hdx-page-section-body()`), called from each page's own BEM block —
+  matching the existing "List header pattern" precedent for page-owned, verbatim-duplicated styling
+  (`CONVENTIONS.md`). The section title itself calls the broader-scope `.hdx-section-title()` mixin
+  (also used by org/HAPI/Signals/country/Locations). `dataset-page.less` keeps its extra `&__title-row`,
   `&__chevron`, and `&--collapsible` variant layered on top of the mixin calls.
 - **D5 — Resource-type detection / conditional logic (confirmed): reuse `res.datastore_active`, no new
   detection.** It is already computed by CKAN core and already gates the existing "API access" section

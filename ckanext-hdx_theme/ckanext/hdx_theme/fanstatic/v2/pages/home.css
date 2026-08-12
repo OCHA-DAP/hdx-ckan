@@ -177,6 +177,10 @@
 @media (min-width: 80rem) {
   .hdx-v2-intro__heading {
     font-size: var(--hdx-fs-4xl);
+  }
+}
+@media (min-width: 80rem) {
+  .hdx-v2-intro__heading {
     max-width: 66.67%;
   }
 }
@@ -253,6 +257,10 @@
 @media (min-width: 80rem) {
   .hdx-v2-highlights__heading {
     font-size: var(--hdx-fs-4xl);
+  }
+}
+@media (min-width: 80rem) {
+  .hdx-v2-highlights__heading {
     max-width: 66.67%;
   }
 }
@@ -410,6 +418,10 @@
 @media (min-width: 80rem) {
   .hdx-v2-signals__heading {
     font-size: var(--hdx-fs-4xl);
+  }
+}
+@media (min-width: 80rem) {
+  .hdx-v2-signals__heading {
     max-width: 66.67%;
   }
 }

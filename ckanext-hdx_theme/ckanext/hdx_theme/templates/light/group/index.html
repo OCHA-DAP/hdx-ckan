@@ -33,29 +33,16 @@
   {# Hero: title + text-buttons + KPI cards #}
   <div class="hdx-v2-locations-list-hero">
     <div class="hdx-v2-container">
+      {% snippet 'v2/components/page-header.html',
+          title=_('Locations'),
+          title_actions=[
+            {'label': _('Interactive map'), 'href': '#hdx-v2-locations-list-map',
+             'icon_src': 'v2/icons/arrow-down.svg', 'icon_position': 'right', 'style': 'primary'},
+            {'label': _('Alphabetical order'), 'href': '#hdx-v2-locations-list-list',
+             'icon_src': 'v2/icons/arrow-down.svg', 'icon_position': 'right', 'style': 'secondary'}
+          ] %}
+
       <div class="hdx-v2-locations-list-hero__body">
-        <div class="hdx-v2-locations-list-hero__header">
-          <h1 class="hdx-v2-locations-list-hero__title">{{ _('Locations') }}</h1>
-          <div class="hdx-v2-locations-list-hero__top-actions">
-            {% snippet 'v2/components/text-button.html',
-                label=_('Interactive map'),
-                tag='a',
-                href='#hdx-v2-locations-list-map',
-                icon_src='v2/icons/arrow-down.svg',
-                icon_position='right',
-                style='primary',
-                size='m' %}
-            <span class="hdx-v2-locations-list-hero__top-sep" aria-hidden="true">|</span>
-            {% snippet 'v2/components/text-button.html',
-                label=_('Alphabetical order'),
-                tag='a',
-                href='#hdx-v2-locations-list-list',
-                icon_src='v2/icons/arrow-down.svg',
-                icon_position='right',
-                style='secondary',
-                size='m' %}
-          </div>
-        </div>
         <div class="c-stats-card-list c-stats-card-list--row">
           {% snippet 'v2/components/stats-card.html',
               variant='kpi',

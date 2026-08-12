@@ -217,28 +217,36 @@ Exceptions: global container cap (1320px), fixed-height elements (buttons, input
 
 ---
 
-## List header pattern — `.hdx-list-header-title()` / `-count()` / `-empty()`
+## Page-title scale — `.hdx-page-title-scale()`
 
-Pages listing items with a title, item count, and (optionally) an empty state own their own small
-BEM header block (`hdx-v2-list-header` on the search page, `hdx-v2-archived-dataviz`,
-`hdx-v2-dataviz-gallery`) rather than a shared `c-*` component — each page's surrounding controls
-differ too much for a shared component to be worth it. The title/count/empty-state styling itself
-*was* verbatim-duplicated across all three, so it's factored into shared mixins in `mixins.less`
-(`.hdx-list-header-title()`, `.hdx-list-header-count()`, `.hdx-list-header-empty()`) — call these
-from each page's own `__title`/`__count`/`__empty` blocks instead of re-declaring the rules.
+Canonical top-of-page title scale (24 → 28 → 32px Bold) in `mixins.less`, shared by `c-page-header`'s
+hero `<h1>` and the homepage's section headings (`.hdx-section-heading()`).
 
 ---
 
-## Page-section pattern — `.hdx-page-section-wrapper()` / `-header()` / `-title()` / `-body()`
+## List header pattern — `.hdx-list-header-count()` / `-empty()`
+
+Only the search page owns a fully bespoke header block (`hdx-v2-list-header`) — its title shares a
+toolbar row with sort/filter controls, too much for `c-page-header` to absorb; its title calls
+`.hdx-section-title()` like every other in-page heading. Dataviz Gallery and Archived Dataviz reuse
+`c-page-header` directly (`title` + `title_count` params) instead. The count/empty-state styling is
+factored into `.hdx-list-header-count()`/`.hdx-list-header-empty()` in `mixins.less`, shared by all
+three plus `c-page-header`'s own `title_count` badge.
+
+---
+
+## Page-section pattern — `.hdx-page-section-wrapper()` / `-header()` / `-body()`, `.hdx-section-title()`
 
 Pages with their own anchor-linked content sections (`hdx-v2-dataset-section` on the dataset page,
 `hdx-v2-resource-section` on the resource page) own their own BEM block rather than a shared `c-*`
 component — each page has its own extra variants (the dataset page adds `&__title-row`, `&__chevron`,
-and a `&--collapsible` modifier the resource page doesn't need). The padding/scroll-margin/header/title/
-body styling itself *was* verbatim-duplicated between the two, so it's factored into shared mixins in
-`mixins.less` (`.hdx-page-section-wrapper()`, `.hdx-page-section-header()`, `.hdx-page-section-title()`,
-`.hdx-page-section-body()`) — call these from each page's own `&`/`__header`/`__title`/`__body` blocks
-instead of re-declaring the rules.
+and a `&--collapsible` modifier the resource page doesn't need). The padding/scroll-margin/header/
+body styling is factored into `mixins.less` (`.hdx-page-section-wrapper()`, `.hdx-page-section-header()`,
+`.hdx-page-section-body()`) — call these instead of re-declaring the rules.
+
+The section title itself calls `.hdx-section-title()` (18px SM / 20px MD+ Semibold) — also used by
+org's tab titles, HAPI's/Signals' landing sections, the country page's "Data Grid Availability"
+heading, and the Locations page's controls heading and per-letter dividers.
 
 ---
 

@@ -31,6 +31,11 @@
   state_label_text    {string}  Optional state chip text (e.g. 'draft'),
                                  rendered right after the title.  default: ''
   state_label_color   {string}  c-label color for state_label_text.  default: 'grey'
+  title_actions       {list}    {label, href, icon_src, icon_position, style, size} dicts —
+                                horizontal text-button row under the title, separated by "|",
+                                visible from XL only (Locations page).  default: []
+  title_count         {string}  Count badge shown next to the title (Datasets/Dataviz Gallery/
+                                Archived Dataviz list-page titles).  default: ''
   extra_classes       {string}  Extra classes on the root section.  default: ''
 
   meta_items          {list}    Metadata strip entries (strip + divider render
@@ -83,6 +88,8 @@
 {% set page_list           = page_list           if page_list           is defined else [] %}
 {% set supports_notifications = supports_notifications if supports_notifications is defined else False %}
 {% set meta_items          = meta_items          if meta_items          is defined else [] %}
+{% set title_actions       = title_actions       if title_actions       is defined else [] %}
+{% set title_count         = title_count         if title_count         is defined else '' %}
 {% set compact_title       = compact_title       if compact_title       is defined else False %}
 {% set extra_classes       = extra_classes       if extra_classes       is defined else '' %}
 {% set state_label_text    = state_label_text    if state_label_text    is defined else '' %}
@@ -107,11 +114,12 @@
 {% set file_format_text    = file_format_text    if file_format_text    is defined else '' %}
 {% set download_size       = download_size       if download_size       is defined else '' %}
 
+{% set has_card = org_name or logo_src or header_actions or header_stats %}
 
 <section class="c-page-header{{ ' c-page-header--compact-title' if compact_title else '' }}{{ ' ' ~ extra_classes if extra_classes else '' }}">
 
   {# ── TOP ─────────────────────────────────────────────────── #}
-  <div class="c-page-header__top">
+  <div class="c-page-header__top{{ '' if has_card else ' c-page-header__top--no-card' }}">
 
     <div class="c-page-header__left">
       <div class="c-page-header__description">
@@ -176,14 +184,45 @@
         </div>
         {% endif %}
 
-        {# Title — omitted when empty (e.g. crisis page show_title=off) #}
+        {# Title — omitted when empty (e.g. crisis page show_title=off).
+           title_count wraps it with a count badge (Datasets/Dataviz Gallery/
+           Archived Dataviz list-page titles); otherwise rendered bare. #}
         {% if title %}
-        <h1 class="c-page-header__title"
-            {% if edit_mode %}
-              data-module="hdx-quick-edit"
-              data-module-anchor="field_title"
-              data-module-dataset="{{ pkg_id }}"
-            {% endif %}>{{ title }}</h1>
+          {% set title_html %}
+            <h1 class="c-page-header__title"
+                {% if edit_mode %}
+                  data-module="hdx-quick-edit"
+                  data-module-anchor="field_title"
+                  data-module-dataset="{{ pkg_id }}"
+                {% endif %}>{{ title }}</h1>
+          {% endset %}
+          {% if title_count %}
+            <div class="c-page-header__title-row">
+              {{ title_html }}
+              <span class="c-page-header__title-count">{{ title_count }}</span>
+            </div>
+          {% else %}
+            {{ title_html }}
+          {% endif %}
+        {% endif %}
+
+        {# Title actions — optional horizontal text-button row under the title,
+           visible from XL only (e.g. Locations "Interactive map | Alphabetical order") #}
+        {% if title_actions %}
+        <div class="c-page-header__title-actions">
+          {% for action in title_actions %}
+            {% snippet 'v2/components/text-button.html',
+                style=action.style if action.style is defined else 'tertiary',
+                size=action.size if action.size is defined else 'm',
+                label=action.label,
+                icon_position=action.icon_position if action.icon_position is defined else 'left',
+                icon_src=action.icon_src if action.icon_src is defined else '',
+                tag='a', href=action.href %}
+            {% if not loop.last %}
+              <span class="c-page-header__title-action-sep" aria-hidden="true">|</span>
+            {% endif %}
+          {% endfor %}
+        </div>
         {% endif %}
 
         {# State chip — optional, independent of the title (e.g. crisis page 'draft') #}
@@ -265,7 +304,7 @@
       {% if org_name %}
         {% if not request_only %}
           {% snippet 'v2/components/text-button.html',
-              style='tertiary', size='m', label='Contact organisation',
+              style='tertiary', size='m', label='Contact the contributor',
               icon_position='left', icon_src='v2/icons/mail.svg',
               tag='a', href=contact_href,
               attrs={'id': 'contact-the-contributor'} %}

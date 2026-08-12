@@ -2,42 +2,12 @@
   background-color: var(--hdx-neutral-0);
 }
 .hdx-v2-locations-list-hero__body {
-  display: flex;
-  flex-direction: column;
-  gap: var(--hdx-space-6);
-  padding: var(--hdx-space-6) 0 var(--hdx-space-3);
+  padding: 0 0 var(--hdx-space-3);
 }
 @media (min-width: 48rem) {
   .hdx-v2-locations-list-hero__body {
-    gap: var(--hdx-space-8);
-    padding: var(--hdx-space-10) 0;
+    padding: 0 0 var(--hdx-space-10);
   }
-}
-.hdx-v2-locations-list-hero__header {
-  display: flex;
-  flex-direction: column;
-  gap: var(--hdx-space-3);
-}
-.hdx-v2-locations-list-hero__title {
-  font-family: var(--hdx-font-display);
-  font-size: var(--hdx-fs-4xl);
-  font-weight: var(--hdx-fw-bold);
-  line-height: var(--hdx-lh-normal);
-  color: var(--hdx-neutral-85);
-  margin: 0;
-}
-.hdx-v2-locations-list-hero__top-actions {
-  display: none;
-}
-@media (min-width: 80rem) {
-  .hdx-v2-locations-list-hero__top-actions {
-    display: flex;
-    align-items: center;
-    gap: var(--hdx-space-3);
-  }
-}
-.hdx-v2-locations-list-hero__top-sep {
-  color: var(--hdx-neutral-5);
 }
 .hdx-v2-locations-list-map {
   position: relative;
@@ -105,12 +75,18 @@
 }
 .hdx-v2-locations-list-controls__title {
   font-family: var(--hdx-font-display);
-  font-size: var(--hdx-fs-2xl);
-  font-weight: var(--hdx-fw-bold);
+  font-size: var(--hdx-fs-l);
+  font-weight: var(--hdx-fw-semibold);
   line-height: var(--hdx-lh-normal);
   color: var(--hdx-neutral-95);
+  margin: 0;
   display: none;
   margin-bottom: var(--hdx-space-2);
+}
+@media (min-width: 48rem) {
+  .hdx-v2-locations-list-controls__title {
+    font-size: var(--hdx-fs-xl);
+  }
 }
 @media (min-width: 48rem) {
   .hdx-v2-locations-list-controls__title {
@@ -121,7 +97,6 @@
   .hdx-v2-locations-list-controls__title {
     flex: 0 0 25%;
     flex-shrink: 0;
-    margin-bottom: 0;
   }
 }
 .hdx-v2-locations-list-controls__right {
@@ -249,15 +224,15 @@
 }
 .hdx-v2-locations-list-content .hdx-v2-locations-list-sections .hdx-v2-locations-list-section__heading {
   font-family: var(--hdx-font-display);
-  font-size: var(--hdx-fs-xl);
-  font-weight: var(--hdx-fw-bold);
+  font-size: var(--hdx-fs-l);
+  font-weight: var(--hdx-fw-semibold);
   line-height: var(--hdx-lh-normal);
-  color: var(--hdx-neutral-85);
-  display: block;
+  color: var(--hdx-neutral-95);
+  margin: 0;
   margin-bottom: var(--hdx-space-4);
 }
-@media (min-width: 80rem) {
+@media (min-width: 48rem) {
   .hdx-v2-locations-list-content .hdx-v2-locations-list-sections .hdx-v2-locations-list-section__heading {
-    font-size: var(--hdx-fs-2xl);
+    font-size: var(--hdx-fs-xl);
   }
 }

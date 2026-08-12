@@ -32,13 +32,16 @@
             placeholder=_('Search for datasets, locations or organisations'),
             value='', state='enabled',
             form_action=h.url_for('dataset.search'),
-            search_source='in-page' %}
+            form_id='hdx-v2-hero-search-form',
+            search_source='in-page',
+            show_icon=False %}
       </div>
 
       {% snippet 'v2/components/button.html',
           style='secondary', type='text', size='l',
-          state='enabled', tag='a', href=h.url_for('dataset.search'),
-          label=_('Explore data') %}
+          state='enabled', tag='button', button_type='submit',
+          attrs={'form': 'hdx-v2-hero-search-form'},
+          label=_('Search data') %}
 
     </div>
 

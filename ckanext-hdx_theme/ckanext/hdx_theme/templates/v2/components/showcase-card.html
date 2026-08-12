@@ -41,6 +41,7 @@
       <p class="c-showcase-card__desc">{{ description }}</p>
     {% endif %}
     <div class="c-showcase-card__actions">
+      {#
       {% snippet 'v2/components/button.html',
           label=_('View'),
           tag='a',
@@ -49,13 +50,12 @@
           style='secondary',
           size='m',
           attrs=({'target': '_blank', 'rel': 'noopener noreferrer'} if url_is_external else {}) %}
-      {#
+      #}
       {% snippet 'v2/components/text-link.html',
           label=_('Read more'),
           href=read_more_href,
           style='primary',
           size='s' %}
-      #}
     </div>
   </div>
 

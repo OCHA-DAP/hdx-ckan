@@ -5,36 +5,18 @@
 
 @import "../mixins.less";
 
-// ── Hero: title + KPI row ─────────────────────────────────────
+// ── Hero: title (c-page-header) + KPI row ──────────────────────
 .hdx-v2-org-list-hero {
     @media (min-width: @hdx-bp-xl) {
         border-bottom: 1px solid var(--hdx-neutral-1);
     }
 
     &__body {
-        display:        flex;
-        flex-direction: column;
-        gap:            var(--hdx-space-6);
-        padding:        var(--hdx-space-6) 0 var(--hdx-space-3);
+        padding: 0 0 var(--hdx-space-3);
 
         @media (min-width: @hdx-bp-md) {
-            gap:     var(--hdx-space-8);
-            padding: var(--hdx-space-8) 0;
+            padding: 0 0 var(--hdx-space-10);
         }
-
-        @media (min-width: @hdx-bp-xl) {
-            gap:     var(--hdx-space-10);
-            padding: var(--hdx-space-10) 0;
-        }
-    }
-
-    &__title {
-        font-family: var(--hdx-font-display);
-        font-size:   var(--hdx-fs-4xl);
-        font-weight: var(--hdx-fw-bold);
-        line-height: var(--hdx-lh-normal);
-        color:       var(--hdx-neutral-95);
-        margin:      0;
     }
 }
 

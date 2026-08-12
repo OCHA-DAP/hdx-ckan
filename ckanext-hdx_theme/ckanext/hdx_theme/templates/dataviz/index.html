@@ -31,10 +31,10 @@
 
   <div class="hdx-v2-dataviz-gallery">
 
-    <div class="hdx-v2-dataviz-gallery__header">
-      <h1 class="hdx-v2-dataviz-gallery__title">{{ _('Dataviz Gallery') }}</h1>
-      <span class="hdx-v2-dataviz-gallery__count">{{ h.localised_number(data.page.item_count) }}</span>
-    </div>
+
+    {% snippet 'v2/components/page-header.html',
+        title=_('Dataviz Gallery'),
+        title_count=h.localised_number(data.page.item_count) %}
 
     {# ── XL/MD: search box, then sort/page-size controls ─────────────── #}
     <div class="hdx-v2-dataviz-gallery__row hdx-v2-dataviz-gallery__row--before-search">

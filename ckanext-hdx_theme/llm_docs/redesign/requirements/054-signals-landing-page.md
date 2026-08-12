@@ -242,7 +242,7 @@ SECTIONS_CONSTANTS = [
 | FAQ | **Reuse** `c-accordion` | Same CSS-only pattern as HAPI; first item open |
 | Partner logos | **Inline grid** | 6 static logos; signals-specific CSS (same pattern as HAPI partner grid) |
 | Section dividers | **Reuse** `c-divider` | Between every major section |
-| Section headings | Direct token | `.hdx-v2-signals-section-heading` class; `.hdx-display-xs()` + spacing |
+| Section headings | Direct token | `.hdx-v2-signals-section-heading` class; `.hdx-section-title()` + spacing |
 
 ### HAPI Side-Effect Change
 

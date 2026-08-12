@@ -159,6 +159,17 @@
 .hdx-body-medium-base()   { .-hdx-body-base(var(--hdx-fw-medium));      }
 .hdx-body-semibold-base() { .-hdx-body-base(var(--hdx-fw-semibold));    }
 
+// ── Page-title scale ─────────────────────────────────────────────
+// Canonical top-of-page title scale (24 → 28 → 32px Bold) — shared by
+// c-page-header's hero <h1> and homepage major-section headings.
+
+.hdx-page-title-scale() {
+    .hdx-display-s();   // 24px bold, base
+
+    @media (min-width: @hdx-bp-md) { font-size: var(--hdx-fs-3xl); }  // 28px
+    @media (min-width: @hdx-bp-xl) { font-size: var(--hdx-fs-4xl); }  // 32px
+}
+
 // ── Section header pattern ─────────────────────────────────────
 // Shared label + heading structure for homepage sections (intro, highlights, etc.)
 
@@ -183,25 +194,18 @@
 }
 
 .hdx-section-heading() {
-    .hdx-display-s();
+    .hdx-page-title-scale();
     color:  var(--hdx-neutral-95);
     margin: 0;
 
-    @media (min-width: @hdx-bp-md) { font-size: var(--hdx-fs-3xl); }
-    @media (min-width: @hdx-bp-xl) { font-size: var(--hdx-fs-4xl); max-width: 66.67%; }
+    @media (min-width: @hdx-bp-xl) { max-width: 66.67%; }
 }
 
 // ── List header pattern ────────────────────────────────────────
-// Shared title + count + empty-state structure for page-owned list
-// headers (search page, Archived Dataviz, Dataviz Gallery).
-
-.hdx-list-header-title() {
-    .hdx-display-l();
-    color: var(--hdx-neutral-95);
-
-    @media (max-width: @hdx-bp-xl) { font-size: var(--hdx-fs-3xl); }  // 1.75rem MD
-    @media (max-width: @hdx-bp-md) { font-size: var(--hdx-fs-2xl); }  // 1.5rem SM
-}
+// Shared count + empty-state structure for page-owned list headers
+// (search page, Archived Dataviz, Dataviz Gallery, c-page-header's
+// title_count badge). Title itself calls .hdx-section-title() (search)
+// or is c-page-header's own __title (Dataviz Gallery/Archived Dataviz).
 
 .hdx-list-header-count() {
     .hdx-body-m();
@@ -235,10 +239,16 @@
     gap:             var(--hdx-space-3);
 }
 
-.hdx-page-section-title() {
-    .hdx-display-xs-semibold();
+// Canonical in-page sub-section heading (20px Semibold) — shared by
+// dataset/resource sections, org tabs, and HAPI/Signals landing sections.
+// Not for page/list-level titles (see .hdx-page-title-scale() above,
+// a different, larger tier).
+.hdx-section-title() {
+    .-hdx-display(var(--hdx-fs-l), var(--hdx-fw-semibold));   // 18px semibold, base
     color:  var(--hdx-neutral-95);
     margin: 0;
+
+    @media (min-width: @hdx-bp-md) { font-size: var(--hdx-fs-xl); }  // 20px, MD and up
 }
 
 .hdx-page-section-body() {

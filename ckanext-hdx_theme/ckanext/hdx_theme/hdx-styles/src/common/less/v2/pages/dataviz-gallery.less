@@ -6,31 +6,7 @@
 @import "../mixins.less";
 
 .hdx-v2-dataviz-gallery {
-    padding: var(--hdx-space-6) 0 var(--hdx-space-10);
-
-    @media (min-width: @hdx-bp-md) {
-        padding: var(--hdx-space-8) 0 var(--hdx-space-10);
-    }
-
-    @media (min-width: @hdx-bp-xl) {
-        padding: var(--hdx-space-10) 0;
-    }
-
-    &__header {
-        display:       flex;
-        align-items:   center;
-        gap:           var(--hdx-space-2);
-        margin-bottom: var(--hdx-space-6);
-    }
-
-    &__title {
-        .hdx-list-header-title();
-        margin: 0;
-    }
-
-    &__count {
-        .hdx-list-header-count();
-    }
+    padding: 0 0 var(--hdx-space-10);
 
     // Search + nav-controls, search-first order — shown MD+ (Figma XL/MD order).
     // Stacked column at MD, single inline row at XL (search grows via flex).

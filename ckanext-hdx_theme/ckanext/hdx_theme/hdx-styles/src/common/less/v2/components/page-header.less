@@ -37,6 +37,15 @@
             align-items:           flex-start;
             gap:                   var(--hdx-space-6);
         }
+
+        // No org card (e.g. landing pages, Locations) — description
+        // column takes the full width instead of leaving a 25% gap.
+        &--no-card {
+            @media (min-width: @hdx-bp-md) {
+                grid-template-columns: 1fr;
+                grid-template-areas:   "desc";
+            }
+        }
     }
     // ── Left column (description) ─────────────────────────────
 
@@ -84,17 +93,36 @@
     // ── Title ────────────────────────────────────────────────
 
     &__title {
-        .hdx-display-xs();
+        .hdx-page-title-scale();
         color:  var(--hdx-neutral-95);
         margin: 0;
+    }
 
-        @media (min-width: @hdx-bp-md) {
-            font-size: var(--hdx-fs-2xl);  // 1.5rem MD
-        }
+    // ── Title row — title + count badge (list-page titles) ─────
+    &__title-row {
+        display:     flex;
+        align-items: center;
+        gap:         var(--hdx-space-2);
+    }
+
+    &__title-count {
+        .hdx-list-header-count();
+    }
+
+    // ── Title actions — "Interactive map | Alphabetical order" ─
+    // style text-button row under the title. XL only (Locations).
+    &__title-actions {
+        display: none;
 
         @media (min-width: @hdx-bp-xl) {
-            font-size: var(--hdx-fs-3xl);  // 1.75rem XL
+            display:     flex;
+            align-items: center;
+            gap:         var(--hdx-space-3);
         }
+    }
+
+    &__title-action-sep {
+        color: var(--hdx-neutral-5);
     }
     // ── Subtitle ─────────────────────────────────────────────
 

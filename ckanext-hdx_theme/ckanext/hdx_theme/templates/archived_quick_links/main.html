@@ -22,10 +22,10 @@
 
 {% block primary %}
   <div class="hdx-v2-archived-dataviz">
-    <div class="hdx-v2-archived-dataviz__header">
-      <h1 class="hdx-v2-archived-dataviz__title">{{ _('Archived Dataviz') }}</h1>
-      <span class="hdx-v2-archived-dataviz__count">{{ data.viz_list | length }}</span>
-    </div>
+
+    {% snippet 'v2/components/page-header.html',
+        title=_('Archived Dataviz'),
+        title_count=data.viz_list | length %}
 
     {% if data.viz_list %}
       {% for item in data.viz_list %}

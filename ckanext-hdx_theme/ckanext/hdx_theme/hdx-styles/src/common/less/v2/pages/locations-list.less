@@ -10,46 +10,11 @@
     background-color: var(--hdx-neutral-0);
 
     &__body {
-        display:        flex;
-        flex-direction: column;
-        gap:            var(--hdx-space-6);
-        padding:        var(--hdx-space-6) 0 var(--hdx-space-3);
-
+        padding: 0 0 var(--hdx-space-3);
 
         @media (min-width: @hdx-bp-md) {
-            gap: var(--hdx-space-8);
-            padding: var(--hdx-space-10) 0;
+            padding: 0 0 var(--hdx-space-10);
         }
-    }
-
-    &__header {
-        display:        flex;
-        flex-direction: column;
-        gap:            var(--hdx-space-3);
-    }
-
-    &__title {
-        font-family: var(--hdx-font-display);
-        font-size:   var(--hdx-fs-4xl);
-        font-weight: var(--hdx-fw-bold);
-        line-height: var(--hdx-lh-normal);
-        color:       var(--hdx-neutral-85);
-        margin:      0;
-    }
-
-    // "Interactive map | Alphabetical order" text-buttons — XL only
-    &__top-actions {
-        display: none;
-
-        @media (min-width: @hdx-bp-xl) {
-            display:     flex;
-            align-items: center;
-            gap:         var(--hdx-space-3);
-        }
-    }
-
-    &__top-sep {
-        color: var(--hdx-neutral-5);
     }
 }
 
@@ -125,11 +90,7 @@
 
     // Aligned with sidebar via same 25% flex proportion at XL
     &__title {
-        font-family:   var(--hdx-font-display);
-        font-size:     var(--hdx-fs-2xl);
-        font-weight:   var(--hdx-fw-bold);
-        line-height:   var(--hdx-lh-normal);
-        color:         var(--hdx-neutral-95);
+        .hdx-section-title();
         display:       none;
         margin-bottom: var(--hdx-space-2);
 
@@ -138,9 +99,8 @@
         }
 
         @media (min-width: @hdx-bp-xl) {
-            flex:          0 0 25%;
-            flex-shrink:   0;
-            margin-bottom: 0;
+            flex:        0 0 25%;
+            flex-shrink: 0;
         }
     }
 
@@ -267,17 +227,8 @@
             }
 
             &__heading {
-                font-family:   var(--hdx-font-display);
-                font-size:     var(--hdx-fs-xl);
-                font-weight:   var(--hdx-fw-bold);
-                line-height:   var(--hdx-lh-normal);
-                color:         var(--hdx-neutral-85);
-                display:       block;
+                .hdx-section-title();
                 margin-bottom: var(--hdx-space-4);
-
-                @media (min-width: @hdx-bp-xl) {
-                    font-size: var(--hdx-fs-2xl);
-                }
             }
         }
     }
