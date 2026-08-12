@@ -383,6 +383,12 @@
 .hdx-v2-navbar__products-panel {
     list-style: none;
     margin:     0;
+
+    .c-divider { margin: var(--hdx-space-1) 0; }
+
+    .hdx-v2-navbar__products-link--archived {
+        &, &:active { color: var(--hdx-neutral-5); }
+    }
 }
 
 
@@ -507,6 +513,7 @@
     // ── Body scroll container ────────────────────────────────
     &__body {
         height:     100%;
+        overflow-x: hidden;
         overflow-y: auto;
         position:   relative;
     }
@@ -694,6 +701,8 @@
             transform:  translateX(0);
             visibility: visible;
         }
+
+        &[hidden] { display: none; }
     }
 
     // ── Back button ──────────────────────────────────────────

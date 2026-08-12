@@ -193,8 +193,9 @@
                 </a>
               </li>
             {% endfor %}
+            <hr class="c-divider">
             <li>
-              <a href="/archive"
+              <a href="/archive" class="hdx-v2-navbar__products-link--archived"
                  data-module="hdx_click_stopper" data-module-link_type="main nav">
                 {{ _('Archived') }}
               </a>
@@ -368,7 +369,7 @@
 
       {# ── Second level — user account (logged in only) ──── #}
       {% if c.userobj %}
-        <div class="hdx-v2-offcanvas__level" id="hdx-v2-offcanvas-level-user-detail">
+        <div class="hdx-v2-offcanvas__level" id="hdx-v2-offcanvas-level-user-detail" hidden>
 
           <button class="hdx-v2-offcanvas__back" type="button" data-hdx-v2-offcanvas-back>
             {% include 'v2/icons/chevron-left.svg' %}

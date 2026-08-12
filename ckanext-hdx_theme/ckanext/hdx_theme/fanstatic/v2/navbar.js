@@ -4,6 +4,7 @@
   var activePanel     = null;
   var offcanvasTrap   = null;
   var hamburgerOpenLabel = null;
+  var LEVEL_TRANSITION_MS = 300;
 
   // ── Offcanvas helpers ────────────────────────────────────────
 
@@ -57,12 +58,39 @@
     var primary = el.querySelector('.hdx-v2-offcanvas__primary');
     var levels = el.querySelectorAll('.hdx-v2-offcanvas__level');
     if (primary) primary.hidden = false;
-    levels.forEach(function (lvl) { lvl.classList.remove('is-open'); });
+    levels.forEach(function (lvl) {
+      lvl.classList.remove('is-open');
+      lvl.hidden = true;
+    });
     // Release focus trap and return focus to hamburger (V-02)
     if (offcanvasTrap) {
       offcanvasTrap.deactivate();
       offcanvasTrap = null;
     }
+  }
+
+  function openOffcanvasLevel(levelEl) {
+    if (!levelEl) return;
+    levelEl.hidden = false;
+    void levelEl.offsetWidth;
+    levelEl.classList.add('is-open');
+  }
+
+  function closeOffcanvasLevel(levelEl) {
+    if (!levelEl) return;
+    levelEl.classList.remove('is-open');
+    var done = false;
+    var onTransitionEnd = function (e) {
+      if (e.target === levelEl && e.propertyName === 'visibility') finish();
+    };
+    var finish = function () {
+      if (done) return;
+      done = true;
+      levelEl.hidden = true;
+      levelEl.removeEventListener('transitionend', onTransitionEnd);
+    };
+    levelEl.addEventListener('transitionend', onTransitionEnd);
+    setTimeout(finish, LEVEL_TRANSITION_MS);
   }
 
   function getPanelEl(name) {
@@ -141,7 +169,7 @@
       var primary = offcanvasEl.querySelector('.hdx-v2-offcanvas__primary');
       var levelEl = document.getElementById(levelId);
       if (primary) primary.hidden = true;
-      if (levelEl) levelEl.classList.add('is-open');
+      openOffcanvasLevel(levelEl);
       return;
     }
 
@@ -152,7 +180,7 @@
       if (!offcanvasEl2) return;
       var primary2 = offcanvasEl2.querySelector('.hdx-v2-offcanvas__primary');
       var openLevel = offcanvasEl2.querySelector('.hdx-v2-offcanvas__level.is-open');
-      if (openLevel) openLevel.classList.remove('is-open');
+      closeOffcanvasLevel(openLevel);
       if (primary2) primary2.hidden = false;
       return;
     }
