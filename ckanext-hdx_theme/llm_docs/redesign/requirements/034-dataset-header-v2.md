@@ -41,7 +41,7 @@ The page entry point for v2 is `search/search.html` → `search_results_wrapper.
 
 | Detail | Value |
 |--------|-------|
-| Template param | `packages_count` (= `my_c.page.item_count`) |
+| Template param | `packages_count` (= `my_c.full_facet_info.get('num_of_total_items')`, set in `search_results_wrapper.html`) |
 | Current display | `search/snippets/search_result_text.html` — sentence format: "X results found" / "X results for 'query'" |
 | Figma format | Raw number only (e.g., "19,819") |
 | Archived/unarchived split | `full_facet_info.num_of_unarchived` / `num_of_archived` available for tab counts |
