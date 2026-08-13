@@ -224,18 +224,12 @@
   }
 }
 .c-page-header__logo {
-  max-width: 7.05rem;
+  max-width: 100%;
   height: 4rem;
   object-fit: contain;
   object-position: center;
   display: block;
   margin: 0 auto;
-}
-@media (min-width: 80rem) {
-  .c-page-header__logo {
-    max-width: 9.375rem;
-    height: auto;
-  }
 }
 .c-page-header__card-actions {
   display: flex;

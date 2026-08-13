@@ -4,6 +4,11 @@
   gap: var(--hdx-space-4);
   margin-bottom: var(--hdx-space-6);
   overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.c-tabs::-webkit-scrollbar {
+  display: none;
 }
 .c-tab {
   font-family: var(--hdx-font-body);
