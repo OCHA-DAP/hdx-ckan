@@ -1071,6 +1071,21 @@ alert-bar-styles:
   contents:
     - alert_bar/warning-bar.css
 
+old-design-banner-scripts:
+  <<: *common-js
+  output: ckanext-hdx_theme/%(version)s_old-design-banner-scripts.js
+  contents:
+    - old_design_banner/old-design-banner.js
+  extra:
+    preload:
+      - hdx_theme/ckan
+
+old-design-banner-styles:
+  <<: *common-css
+  output: ckanext-hdx_theme/%(version)s_old-design-banner-styles.css
+  contents:
+    - old_design_banner/old-design-banner.css
+
 homepage-scripts:
   <<: *common-js
   output: ckanext-hdx_theme/%(version)s_homepage-scripts.js

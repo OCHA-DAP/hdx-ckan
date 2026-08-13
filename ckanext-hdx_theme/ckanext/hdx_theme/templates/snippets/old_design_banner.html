@@ -1,0 +1,37 @@
+
+{#
+Displays a dismissible banner on old (v1) design pages, letting users know
+some pages still use the previous design. Dismissal is permanent per-browser
+via localStorage (key "/site:hideOldDesignBanner").
+
+extra_class - optional additional class, e.g. to offset the banner when it
+              needs to stack above another fixed-position bar on the same page
+
+Example:
+
+  {% snippet 'snippets/old_design_banner.html' %}
+  {% snippet 'snippets/old_design_banner.html', extra_class='hdx-old-design-banner--stacked' %}
+
+#}
+{% asset 'hdx_theme/old-design-banner-styles' %}
+{% asset 'hdx_theme/old-design-banner-scripts' %}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400&display=swap" rel="stylesheet">
+
+<div id="hdx-old-design-banner" class="hdx-old-design-banner{{ ' ' ~ extra_class if extra_class else '' }}">
+  <div class="hdx-old-design-banner__text">
+    {{ _("We're rolling out HDX's new look in stages, so some pages still use the previous design. Everything works as usual.") }}
+  </div>
+  <button type="button" class="hdx-old-design-banner__close" data-old-design-banner-close aria-label="{{ _('Dismiss') }}">
+    <svg width="12" height="12" viewBox="0 0 12 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M11 1.99609L1 11.9961" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+      <path d="M1 1.99609L11 11.9961" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+    </svg>
+  </button>
+</div>
+<script>
+  if (window.localStorage.getItem('/site:hideOldDesignBanner')) {
+    document.getElementById('hdx-old-design-banner').style.display = 'none';
+  }
+</script>
