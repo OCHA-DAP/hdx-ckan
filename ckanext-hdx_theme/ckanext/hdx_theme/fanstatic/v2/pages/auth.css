@@ -93,7 +93,7 @@
   display: grid;
   grid-template-columns: auto 1fr;
   column-gap: var(--hdx-space-3);
-  align-items: center;
+  align-items: flex-start;
   column-gap: var(--hdx-space-13);
 }
 .hdx-v2-auth-card__checkbox-row .c-checkbox__error {

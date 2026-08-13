@@ -93,7 +93,7 @@
               {% endblock %}
             {% endif %}
 
-            <div class="{{ ' ' ~ outer_row_class if outer_row_class else '' }}">
+            <div class="{{ 'hdx-v2-page-row ' ~ outer_row_class if outer_row_class else '' }}">
               <div class="hdx-v2-container">
                 <div class="hdx-v2-content-columns{{ ' ' ~ columns_class if columns_class else '' }}">
                   {% if secondary_block_output|trim != '' %}

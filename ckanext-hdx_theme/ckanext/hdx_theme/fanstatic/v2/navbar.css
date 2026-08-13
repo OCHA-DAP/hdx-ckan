@@ -277,6 +277,13 @@
   right: 0;
   min-width: 16rem;
 }
+@media (max-width: 48rem) {
+  .hdx-v2-user-menu,
+  .hdx-v2-navbar__products-panel,
+  .hdx-v2-notifications {
+    min-width: 11rem;
+  }
+}
 .hdx-v2-navbar__products-panel,
 .hdx-v2-user-menu {
   padding: var(--hdx-space-3) var(--hdx-space-2) var(--hdx-space-3) var(--hdx-space-4);

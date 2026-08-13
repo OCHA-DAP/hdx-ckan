@@ -8,7 +8,8 @@
 
     <div id="resource-id" hidden>{{ res.id }}</div>
     <div id="datastore-active" hidden>{{ 'true' if res.datastore_active else 'false' }}</div>
-    <table id="hdx-csv-table" class="c-table"></table>
+    {% snippet 'v2/components/spinner.html', extra_classes='c-spinner--block' %}
+    <table id="hdx-csv-table" class="c-table" hidden></table>
   </div>
 {% endblock %}
 

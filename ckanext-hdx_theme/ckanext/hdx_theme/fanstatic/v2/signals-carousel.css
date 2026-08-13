@@ -17,6 +17,7 @@
   }
 }
 .hdx-v2-signal-slide {
+  display: flex;
   flex-shrink: 0;
 }
 @media (min-width: 80rem) {

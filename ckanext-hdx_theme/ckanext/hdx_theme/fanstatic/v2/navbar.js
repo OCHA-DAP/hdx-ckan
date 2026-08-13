@@ -140,6 +140,7 @@
     // Offcanvas open (hamburger)
     var trigger = e.target.closest('[data-hdx-v2-panel]');
     if (trigger) {
+      if (trigger.tagName === 'A') e.preventDefault();
       var panelName = trigger.getAttribute('data-hdx-v2-panel');
       if (panelName === 'offcanvas') {
         var offcanvas = getOffcanvas();

@@ -85,10 +85,12 @@
           label=source_label %}
     {% endif %}
     {% if cta_label %}
+
       {% snippet 'v2/components/button.html',
           tag='a', href=cta_href,
           style='tertiary', type='text', size='s', state='enabled',
-          label=cta_label %}
+          label=cta_label, icon_src='v2/icons/link-external.svg', icon_position='right',
+          attrs={'target': '_blank', 'rel': 'noopener noreferrer'} %}
     {% endif %}
   </div>
 

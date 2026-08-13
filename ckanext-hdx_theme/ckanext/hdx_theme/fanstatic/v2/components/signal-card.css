@@ -1,6 +1,7 @@
 .c-signal-card {
   display: flex;
   flex-direction: column;
+  height: 100%;
   gap: var(--hdx-space-6);
   padding: var(--hdx-space-6);
   border: 1px solid var(--hdx-neutral-1);

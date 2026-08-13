@@ -38,6 +38,7 @@
   {'label': 'Table', 'href': '#table'},
   {'label': 'Drawer', 'href': '#drawer'},
   {'label': 'Alert', 'href': '#alert'},
+  {'label': 'Spinner', 'href': '#spinner'},
   {'label': 'Accordion', 'href': '#accordion'},
   {'label': 'Content Card', 'href': '#content-card'},
   {'label': 'Signal Card', 'href': '#signal-card'},
@@ -2519,6 +2520,26 @@
       {% snippet 'v2/components/alert.html', message='Your changes have been saved.', variant='success' %}
       {% snippet 'v2/components/alert.html', message='This action cannot be undone.', variant='warning' %}
       {% snippet 'v2/components/alert.html', message='You need to log in to continue.', variant='info' %}
+    </div>
+  </section>
+
+  {# ══════════════════════════════════════════════════════════════
+     Spinner
+  ══════════════════════════════════════════════════════════════ #}
+  <section class="demo-section" id="spinner">
+    <h1 class="demo-section__title">Spinner</h1>
+    <p class="demo-section__subtitle">
+      Loading indicator for slow resource previews (CSV/TDE table, Data
+      Dictionary, iframe embeds). <code>--block</code> centers it as a
+      standalone loading state inside its container.
+    </p>
+    <div class="demo-row">
+      {% snippet 'v2/components/spinner.html', size='s' %}
+      {% snippet 'v2/components/spinner.html', size='m' %}
+      {% snippet 'v2/components/spinner.html', size='l' %}
+    </div>
+    <div class="demo-row demo-row--column">
+      {% snippet 'v2/components/spinner.html', extra_classes='c-spinner--block' %}
     </div>
   </section>
 

@@ -10,7 +10,6 @@
 
     &__item {
         border-top: 1px solid var(--hdx-neutral-1);
-        padding:    var(--hdx-space-8) 0;  // 32px top/bottom, no side padding
     }
 
     &__trigger {
@@ -22,7 +21,7 @@
         cursor:          pointer;
         width:           100%;
         background:      none;
-        padding:         0;
+        padding:         var(--hdx-space-8) 0;  // 32px top/bottom — click target covers the full row
         border:          none;
 
         // Remove browser-default disclosure triangle
@@ -66,7 +65,8 @@
     }
 
     &__content {
-        padding-top: var(--hdx-space-4);   // 16px
+        padding-top:    var(--hdx-space-4);   // 16px
+        padding-bottom: var(--hdx-space-8);   // 32px — replaces the item's old bottom padding
         .hdx-body-m();
         color: var(--hdx-neutral-95);
 

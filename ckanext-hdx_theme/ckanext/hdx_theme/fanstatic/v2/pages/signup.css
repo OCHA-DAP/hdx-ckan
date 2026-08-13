@@ -136,7 +136,7 @@
   display: grid;
   grid-template-columns: auto 1fr;
   column-gap: var(--hdx-space-3);
-  align-items: center;
+  align-items: flex-start;
 }
 .hdx-v2-signup-form-page__checkbox-row .c-checkbox__error {
   grid-column: 2;

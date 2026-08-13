@@ -20,7 +20,8 @@ function loadFromHxlProxy(resourceUrl) {
             if (!response || !response[0]) return;
             var columns = response[0].map(function (h) { return { title: h }; });
             initDataTable(response.slice(1), columns);
-        });
+        })
+        .finally(hidePreviewSpinner);
 }
 
 function loadFromDatastore(resourceId) {
@@ -32,10 +33,17 @@ function loadFromDatastore(resourceId) {
             var fields = response.result.fields.filter(function (f) { return f.id !== '_id'; });
             var columns = fields.map(function (f) { return { data: f.id, title: f.id }; });
             initDataTable(response.result.records, columns);
-        });
+        })
+        .finally(hidePreviewSpinner);
+}
+
+function hidePreviewSpinner() {
+    var spinner = document.querySelector('#hdx-csv-preview .c-spinner');
+    if (spinner) spinner.hidden = true;
 }
 
 function initDataTable(data, columns) {
+    document.getElementById('hdx-csv-table').hidden = false;
     new DataTable('#hdx-csv-table', {
         data:         data,
         columns:      columns,

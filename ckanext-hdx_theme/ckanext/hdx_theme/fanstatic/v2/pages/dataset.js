@@ -3,6 +3,7 @@
  *
  * Behaviour for the v2 full dataset page:
  *   - Section accordion (collapsible sections)
+ *   - Interactive data (custom dataviz) tab switching
  *
  * Smooth scroll, mobile anchor-nav dropdown and active-section tracking
  * are handled by fanstatic/v2/components/anchor-links.js.
@@ -10,6 +11,7 @@
 
 document.addEventListener('DOMContentLoaded', function () {
     initSectionAccordions();
+    initCustomDataviz();
 });
 
 // ── Section accordions ────────────────────────────────────────
@@ -39,6 +41,26 @@ function toggleSection() {
     if (!isOpen && section.id === 'activity') {
         fetchActivitiesIfNeeded(section);
     }
+}
+
+// ── Interactive data (custom dataviz) ───────────────────────────
+
+function initCustomDataviz() {
+    var triggers = document.querySelectorAll('[data-custom-dataviz-trigger]');
+    triggers.forEach(function (trigger) {
+        trigger.addEventListener('click', function () {
+            activateCustomDataviz(trigger);
+        });
+    });
+}
+
+function activateCustomDataviz(trigger) {
+    var iframe = document.getElementById(trigger.getAttribute('data-custom-dataviz-target'));
+    var url = trigger.getAttribute('data-custom-dataviz-url');
+    if (iframe) iframe.src = url;
+
+    var fullscreenLink = document.querySelector('[data-custom-dataviz-fullscreen]');
+    if (fullscreenLink) fullscreenLink.href = url;
 }
 
 function fetchActivitiesIfNeeded(section) {

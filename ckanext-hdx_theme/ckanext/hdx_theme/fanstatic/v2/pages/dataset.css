@@ -69,6 +69,16 @@
 .hdx-v2-dataset-section--collapsible:not(.is-open) .hdx-v2-dataset-section__chevron {
   transform: rotate(180deg);
 }
+.hdx-v2-custom-dataviz__toolbar {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: var(--hdx-space-4);
+}
+.hdx-v2-custom-dataviz__iframe {
+  width: 100%;
+  height: 31.25rem;
+  border: none;
+}
 .hdx-v2-dataset-metadata {
   display: flex;
   flex-direction: column;

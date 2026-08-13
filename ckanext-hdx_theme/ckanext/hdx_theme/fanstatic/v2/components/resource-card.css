@@ -90,6 +90,11 @@
 }
 .c-resource-card__title {
   align-self: stretch;
+  display: -webkit-inline-box;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
   font-size: var(--hdx-fs-m);
   font-weight: var(--hdx-fw-semibold);
   color: var(--hdx-neutral-95);

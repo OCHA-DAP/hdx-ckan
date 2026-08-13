@@ -2,6 +2,11 @@ body.hdx-v2 {
   font-family: var(--hdx-font-body);
   background-color: var(--hdx-neutral-01);
 }
+@media (min-width: 48rem) {
+  .hdx-v2-page-row {
+    min-height: 37.5rem;
+  }
+}
 .hdx-v2-breadcrumb-row {
   border-bottom: 1px solid var(--hdx-neutral-1);
 }

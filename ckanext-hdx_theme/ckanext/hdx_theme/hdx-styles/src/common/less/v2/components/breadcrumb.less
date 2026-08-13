@@ -11,7 +11,8 @@
     display:     flex;
     align-items: center;
     flex-wrap:   nowrap;             // single line — no wrapping
-    overflow:    hidden;             // clip any overflow at container level
+    overflow-x:  auto;               // scroll sideways instead of clipping/shrinking crumbs away
+    .hdx-hide-scrollbar();
     width:       100%;               // always fill the full row
     gap:         var(--hdx-space-2);
     padding:     var(--hdx-space-2) 0;
@@ -19,14 +20,10 @@
     &__item {
         display:     flex;
         align-items: center;
-        overflow:    hidden;
-        min-width:   0;              // allow flex item to shrink below content size
+        flex-shrink: 0;              // keep every crumb at its natural width; overflow scrolls instead
 
-        // Truncate link text only when actually squeezed — no artificial max-width cap
         .c-text-link {
-            overflow:      hidden;
-            text-overflow: ellipsis;
-            white-space:   nowrap;
+            white-space: nowrap;
         }
     }
 
@@ -42,9 +39,7 @@
     &__current {
         color:       var(--hdx-neutral-7);
         line-height: var(--hdx-lh-normal);
-        overflow:    hidden;
-        text-overflow: ellipsis;
         white-space: nowrap;
-        min-width:   0;              // allow last item to shrink equally
+        flex-shrink: 0;              // keep at natural width, matching the other crumbs
     }
 }

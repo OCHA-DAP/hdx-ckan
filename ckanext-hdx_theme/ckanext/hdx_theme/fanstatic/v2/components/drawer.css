@@ -163,7 +163,7 @@ body.is-drawer-open {
 }
 .c-drawer-form__checkbox-row {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: var(--hdx-space-2);
 }
 .c-drawer-form__checkbox-row label {

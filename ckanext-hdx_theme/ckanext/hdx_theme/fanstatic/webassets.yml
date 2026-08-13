@@ -1495,6 +1495,7 @@ v2-components-styles:
     - v2/components/selection.css
     - v2/components/showcase-card.css
     - v2/components/signup-tier.css
+    - v2/components/spinner.css
     - v2/components/stats-card.css
     - v2/components/step-pager.css
     - v2/components/table.css

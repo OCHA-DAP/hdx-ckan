@@ -15,6 +15,7 @@
     document.addEventListener('DOMContentLoaded', function () {
         initDataDictionary();
         initApiAccessRescroll();
+        initResourcePreviewSpinner();
     });
 
     function scrollToApiAccessIfActive() {
@@ -28,6 +29,25 @@
     function initApiAccessRescroll() {
         var iframe = document.querySelector('#resource-preview iframe');
         if (iframe) iframe.addEventListener('load', scrollToApiAccessIfActive);
+    }
+
+    // The resource-view snippet either renders content synchronously
+    // (no spinner needed) or embeds an iframe (data-viewer module) whose
+    // load can take a while — keep the spinner up until that fires.
+    function initResourcePreviewSpinner() {
+        var section = document.getElementById('resource-preview');
+        if (!section) return;
+
+        var spinner = section.querySelector('.c-spinner');
+        if (!spinner) return;
+
+        var iframe = section.querySelector('iframe');
+        if (!iframe) {
+            spinner.hidden = true;
+            return;
+        }
+
+        iframe.addEventListener('load', function () { spinner.hidden = true; });
     }
 
     var DATA_DICTIONARY_COLUMNS = [
@@ -60,6 +80,10 @@
                 if (!fields.length) return;
                 buildDataDictionaryTable(target, fields);
                 scrollToApiAccessIfActive();
+            })
+            .finally(function () {
+                var spinner = target.querySelector('.c-spinner');
+                if (spinner) spinner.remove();
             });
     }
 

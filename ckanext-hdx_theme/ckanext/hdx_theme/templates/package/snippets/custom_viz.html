@@ -5,23 +5,19 @@
 
 #}
 
-<div class="col-12">
-  <div class="list-header">
-    <span class="mL15 list-header-title">{{ _('Interactive Data') }}</span>
-    {% for viz in customviz %}
-      <a data-module="hdx_custom_dataviz_show" data-module-index="{{ loop.index-1 }}"
-         data-module-target="custom-viz-iframe" data-module-url="{{ viz.url }}" href="#" class="d-none"></a>
-    {% endfor %}
-    <div style="float: right">
-      <a class="fullscreen" href="#" target="_blank" id="pkg_fullscreen">Open fullscreen <i class="icon humanitarianicons-Out-of-platform"></i> </a>
-    </div>
+<div class="hdx-v2-custom-dataviz">
+  {% for viz in customviz %}
+    <span data-custom-dataviz-trigger data-custom-dataviz-index="{{ loop.index-1 }}"
+          data-custom-dataviz-target="custom-viz-iframe" data-custom-dataviz-url="{{ viz.url }}" hidden></span>
+  {% endfor %}
+  <div class="hdx-v2-custom-dataviz__toolbar">
+    {% snippet 'v2/components/text-button.html',
+        style='tertiary', size='s', label=_('Open fullscreen'),
+        icon_src='v2/icons/link-external.svg', icon_position='right',
+        tag='a', href=customviz[0].url,
+        attrs={'data-custom-dataviz-fullscreen': '', 'target': '_blank', 'rel': 'noopener noreferrer'} %}
   </div>
-</div>
-<div class="col-12">
-  <iframe style="width: 100%; border-style: none; height: 500px" src="{{ customviz[0].url }}" class="hxl-preview-iframe" id="custom-viz-iframe" data-hj-allow-iframe="">
+  <iframe class="hdx-v2-custom-dataviz__iframe" id="custom-viz-iframe"
+          src="{{ customviz[0].url }}" data-hj-allow-iframe="">
   </iframe>
-</div>
-<div class="col-12">
-  <div class="mBottom15" style="border-bottom: 1px solid #dddddd;">
-  </div>
 </div>
