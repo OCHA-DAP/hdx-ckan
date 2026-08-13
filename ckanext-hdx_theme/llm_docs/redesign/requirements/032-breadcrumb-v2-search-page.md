@@ -39,8 +39,8 @@ No other pages are in scope. Non-v2 pages are unaffected.
 - No changes to non-v2 page templates or to the legacy breadcrumb system
 - No other v2 pages (dataset, org, location, user — separate future tasks)
 - No Mixpanel / analytics tracking
-- No "show more" / truncation / overflow UI beyond what the existing CSS already handles
-  (`max-width: 21.875rem`, `text-overflow: ellipsis`)
+- No "show more" / truncation UI — overflow is handled by horizontal scroll
+  (`overflow-x: auto`, every crumb `flex-shrink: 0`), not truncation
 
 ---
 
@@ -309,5 +309,5 @@ unchanged. All other pages that extend `v2/page.html` continue using the legacy 
 |---|----------|----------|
 | D1 | Spacing above breadcrumb: additional top margin beyond component's own `padding: 8px 0`? | Yes — `.hdx-v2-breadcrumb-row` adds `margin-top: var(--hdx-space-2)` (8px) and `margin-bottom: var(--hdx-space-2)` (8px) |
 | D2 | Separator character: `/` or different character/icon? | `/` — default kept; no change |
-| D3 | Long label truncation: `max-width: 21.875rem` sufficient, or exempt "Datasets" crumb? | Existing truncation kept as-is; "Datasets" is always short so no special exemption needed |
+| D3 | Long label truncation: `max-width: 21.875rem` sufficient, or exempt "Datasets" crumb? | No truncation — overflow scrolls horizontally (`overflow-x: auto`, every crumb `flex-shrink: 0`), so all crumbs keep their natural width and no exemption is needed |
 | D4 | Future pages — `href` for "Datasets" link on dataset detail page: `/dataset` or with filters? | Resolved by task 039 — dataset page breadcrumbs go to the Organisation, not `/dataset` |

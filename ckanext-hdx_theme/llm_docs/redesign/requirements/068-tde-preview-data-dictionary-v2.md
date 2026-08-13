@@ -155,11 +155,10 @@ doc — see Decisions below.
   CSRF-anonymous-access exception (D2/§6) never extends to `datastore_search_sql` — raw SQL-like querying is
   a materially bigger exposure than `datastore_search`/`datastore_info`. This closes the question
   permanently rather than leaving it flagged for a future revisit.
-- **D11 — Loading/error state: not built, by decision (permanent, not deferred).** No reusable v2 loading
-  state exists anywhere in the codebase (only v1-only `.spinner-message`/`.spinkit-spinner`, not reusable for
-  v2 work). Neither the Data Dictionary AJAX load nor the TDE branch's fetch has a loading or error state
-  today — an empty/malformed response silently no-ops, same gap that existed before this task (§1.2). A
-  `c-spinner` component is not planned; this gap is accepted as-is.
+- **D11 — Loading state: built.** A reusable `c-spinner` component now exists (`v2/components/spinner.html`)
+  and is shown while the Data Dictionary AJAX load and the TDE branch's fetch are in flight, hidden on
+  success. Error state remains unbuilt — an empty/malformed response still silently no-ops, same gap that
+  existed before this task (§1.2); this gap is accepted as-is.
 - **D12 — TDE Preview page size: `limit=10` per DataTables page, fetched via one `limit=32000`
   `datastore_search` call.** The datastore-active branch issues a single `datastore_search` request with
   `limit=32000` (`DATASTORE_FETCH_ALL_LIMIT` in `hdx_csv_preview.js`) and hands all returned rows to
@@ -387,9 +386,8 @@ the same 4 field accesses inline wherever the table is assembled.
 (inserted between "Resource preview" and "API" in `resource_read.html`'s `secondary`/mobile `primary`
 blocks, §1.4). Empty/missing schema (`result.fields` is empty or absent) → `initDataDictionary()` returns
 without appending anything, so the section renders with no table and no message (not a broken table, but
-also not an explicit empty-state message). There is no loading state while the AJAX call is in flight, and
-a failed/malformed response is handled the same way — silently renders nothing (§10); accepted as-is per
-D11, no `c-spinner` planned.
+also not an explicit empty-state message). A `c-spinner` shows while the AJAX call is in flight (D11); a
+failed/malformed response is still handled the same way as before — silently renders nothing (§10).
 
 ---
 
@@ -419,9 +417,9 @@ files). The datastore-active branch requests `limit=32000` in a single `datastor
 instead of the HXL proxy. This still front-loads the full dataset into the browser on first load; genuine
 server-side `limit`/`offset` pagination per page turn is deferred.
 Column **sorting** on this branch is DataTables' own client-side sort over the already-loaded rows (D9),
-not a server-side `sort` param. While the initial fetch is in flight, there is no loading state and no error
-handling — a failed or malformed response silently no-ops, same as the pre-existing gap in the non-datastore
-branch (§1.2); accepted as-is per D11, no `c-spinner` planned.
+not a server-side `sort` param. A `c-spinner` shows while the initial fetch is in flight (D11); there is
+still no error handling — a failed or malformed response silently no-ops, same as the pre-existing gap in
+the non-datastore branch (§1.2).
 
 **Table rendering / styling**: identical DataTables instance and CSS (`hdx_csv_preview.css`) as the
 non-datastore branch — no new visual component, matching the brief's "MUST reuse existing table component"
@@ -500,10 +498,8 @@ not a candidate for future extension.
 | `dataset-page.less`'s `.hdx-v2-dataset-section` block → new shared components partial (D4) | Fixes the button-alignment bug without shipping unrelated dataset-page-only CSS to the resource page |
 | `hdx_csv_preview.js` / `hdx_csv_preview_view.html` | Add the `datastore_active` branch (§4) — same files task 047 already touched, no new files needed for TDE itself |
 
-**Not built, by decision:** a `c-spinner` component (D11) — no v2 loading/skeleton component exists
-anywhere in the codebase today (only v1-only `.spinner-message`/`.spinkit-spinner`, not reusable). The
-Data Dictionary AJAX load and the TDE branch's load + error states (§3, §4, §10) have no loading or error
-handling; this is accepted permanently, not deferred.
+**Built:** a `c-spinner` component (D11), used for the Data Dictionary AJAX load and the TDE branch's fetch
+(§3, §4, §10). Error handling for either is still not built; this gap is accepted as-is.
 
 **Do not:**
 
@@ -571,7 +567,7 @@ table width/overflow handling changes:
 | Resource is datastore-active but has zero rows | TDE branch: DataTables' own default "No data available in table" message shows in the empty `tbody`, same as the non-datastore branch — no custom empty-state handling added |
 | Large dataset (near/at the `rows_max` cap) | Not mitigated — the datastore branch requests `limit=32000` in one call (D12), i.e. it can fetch right up to the cap in a single request rather than one page at a time; server-side pagination remains deferred |
 | Missing schema fields (`info.label`/`info.notes` empty for a column) | Fall back to `field.id` for Title, blank/"-" for Description — matches Figma's own sample rows showing "-" for unset cells |
-| Slow API responses | Not handled — no loading state exists anywhere on this page today for any preview (§1.2), and this gap was not closed for either the Data Dictionary AJAX call or the TDE branch's initial fetch; accepted as-is per D11, no `c-spinner` planned |
+| Slow API responses | Handled via a `c-spinner` (D11), shown for both the Data Dictionary AJAX call and the TDE branch's initial fetch, hidden on success |
 | Anonymous/unauthorized access | Governed entirely by D2/§6's CSRF-token exception; authenticated users are unaffected; anonymous users without a valid session-bound token still see the existing "requires an authenticated user" rejection |
 | Malformed `datastore_search`/`datastore_info` response | Still silently no-ops, same as today's HXL-proxy fetch (§1.2) — `initDataDictionary()`/`loadFromDatastore()` both return early on a falsy/unsuccessful response with no inline error message; accepted as-is per D11 |
 

@@ -229,7 +229,7 @@ grep -ohE '(ckanext-hdx_theme/)?(ckanext/hdx_theme/)?(templates|fanstatic|hdx-st
 | **062** | `planned-maintenance.html` is not in this repo and has no git history here — it ships from infra outside `hdx-ckan`, per the doc's own deployment story (§Scope, §Context). Not a discrepancy |
 | **064** Decision 6 | `widget/onboarding/login.html` has no `h.csrf_input()` and is orphaned (referenced only from commented-out lines in `page.html` / `page_light.html`). The live v2 login form is `user/signin.html:53-56`, which does have it. Doc corrected to name `signin.html` |
 | **065** | The only page doc in 056–069 with no "Decisions Taken" section — its decisions are distributed through §§4–7 instead. Structural inconsistency; flagged, no content problem found |
-| **068** | All three headline decisions are shipped: D1 (`res.datastore_active` branch in `resource_read.html`), D2 (`validate_csrf` override in `ckanext-hdx_package/.../authorize.py:190-266`), D3 (Data Dictionary AJAX section, `pages/resource.js:48-79`). STATUS.md now reads `implemented`; the doc's `c-spinner` references (D11) are corrected to state it's not planned, not deferred |
+| **068** | All three headline decisions are shipped: D1 (`res.datastore_active` branch in `resource_read.html`), D2 (`validate_csrf` override in `ckanext-hdx_package/.../authorize.py:190-266`), D3 (Data Dictionary AJAX section, `pages/resource.js:48-79`). STATUS.md now reads `implemented`; a `c-spinner` component (D11) was later built and is wired into the Data Dictionary AJAX load and the TDE fetch — doc references corrected accordingly |
 
 Docs **057, 058, 059, 060, 063, 066, 067, 069** re-verified with no behavior drift found beyond the
 path staleness in §4.1. Spot-confirmed: 059 D4 (`search-nav-controls.html` generalized and reused
@@ -321,7 +321,7 @@ remains `CONVENTIONS.md` plus `.claude/skills/hdx-v2-styles/references/conventio
 | 4.1 | Stale file paths corrected across affected requirement docs; stale `c-kpi-row` class name corrected to `c-kpi-card-row` in 048/049. | Done in this pass |
 | 4.2 | Behavior-drift corrected in 056 (D3, D14, D17, D18), 061 (D5/D6 filename + Component Mapping table), 064 (Decision 6). | Done in this pass |
 | 062 | `planned-maintenance.html` ships from infra outside this repo — not a discrepancy, no doc change needed beyond the note already added to this audit. | Resolved |
-| 068 | STATUS.md updated to `implemented`; `c-spinner` decided unnecessary (not merely deferred) — doc references corrected accordingly. | Done in this pass |
+| 068 | STATUS.md updated to `implemented`; a `c-spinner` component was later built and wired into the Data Dictionary AJAX load and the TDE fetch — doc references corrected accordingly. | Done in this pass |
 | D1 | Add showcase demos for `select.html`, `c-form-field`, `c-divider`. `table.html` / `graph-point.html` confirmed intentionally showcase-only — no orphan cleanup needed. | Landed |
 | D2 | Rename the undefined showcase classes (`demo-section__heading` → `demo-subsection__heading`, `dl-h2` → the real class) to match what's actually defined. | Landed |
 | D3 | Add `id`s to every showcase section plus a table of contents. | Landed |
