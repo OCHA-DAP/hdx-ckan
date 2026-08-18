@@ -54,19 +54,20 @@
   <section class="hdx-v2-barchart">
     <div class="hdx-v2-barchart__inner hdx-v2-container">
 
-      <div class="hdx-v2-barchart__label" aria-live="polite" aria-atomic="true">
-        <span class="hdx-v2-barchart__label-name"></span>
-        <span class="hdx-v2-barchart__label-count"></span>
-        <span class="hdx-v2-barchart__dot" aria-hidden="true">{% include 'v2/icons/dot.svg' %}</span>
-      </div>
+      <span class="sr-only" aria-live="polite" aria-atomic="true" data-barchart-announcer></span>
 
-      <div class="hdx-v2-barchart__bars"
-           data-interval="2000">
+      <div class="hdx-v2-barchart__bars" data-interval="2500">
         {% for loc in _hrp_filtered %}
-        <div class="hdx-v2-barchart__bar"
+        <div class="hdx-v2-barchart__bar-group"
              style="--bar-height: {{ (loc.package_count / _hrp_max * 100) | round(2) }}%"
              data-name="{{ loc.display_name | e }}"
              data-count="{{ loc.package_count }}">
+          <div class="hdx-v2-barchart__label">
+            <span class="hdx-v2-barchart__label-name">{{ loc.display_name | e }}</span>
+            <span class="hdx-v2-barchart__label-count">{{ loc.package_count }} datasets</span>
+            <span class="hdx-v2-barchart__dot" aria-hidden="true">{% include 'v2/icons/dot.svg' %}</span>
+          </div>
+          <div class="hdx-v2-barchart__bar"></div>
         </div>
         {% endfor %}
       </div>

@@ -1,48 +1,28 @@
 (function () {
   'use strict';
 
-  var MARGIN_PX = 5;  // gap between dot bottom and bar top
-
   function initBarchart(barsEl) {
-    var bars     = barsEl.querySelectorAll('.hdx-v2-barchart__bar');
-    var inner    = barsEl.closest('.hdx-v2-barchart__inner');
-    var label    = inner.querySelector('.hdx-v2-barchart__label');
-    var nameEl   = label.querySelector('.hdx-v2-barchart__label-name');
-    var countEl  = label.querySelector('.hdx-v2-barchart__label-count');
-    var interval = parseInt(barsEl.getAttribute('data-interval'), 10) || 2000;
-    var activeIdx = Math.floor(Math.random() * bars.length);
-
-    function positionLabel(bar) {
-      var barRect   = bar.getBoundingClientRect();
-      var innerRect = inner.getBoundingClientRect();
-
-      // Horizontal: center label over bar; overflow is clipped by section's overflow:hidden
-      var barCenter = (barRect.left - innerRect.left) + barRect.width / 2;
-      var offsetX   = barCenter - label.offsetWidth / 2;
-
-      // Vertical: dot bottom sits MARGIN_PX above the bar top
-      var barTop  = barRect.top - innerRect.top;
-      var offsetY = barTop - MARGIN_PX - label.offsetHeight;
-      offsetY = Math.max(offsetY, 0);
-
-      label.style.setProperty('--label-offset', offsetX + 'px');
-      label.style.setProperty('--label-top', offsetY + 'px');
-    }
+    var groups    = barsEl.querySelectorAll('.hdx-v2-barchart__bar-group');
+    var inner     = barsEl.closest('.hdx-v2-barchart__inner');
+    var announcer = inner.querySelector('[data-barchart-announcer]');
+    var interval  = parseInt(barsEl.getAttribute('data-interval'), 10) || 2500;
+    var activeIdx = Math.floor(Math.random() * groups.length);
 
     function nextRandom() {
-      if (bars.length <= 1) { return 0; }
+      if (groups.length <= 1) { return 0; }
       var next;
-      do { next = Math.floor(Math.random() * bars.length); } while (next === activeIdx);
+      do { next = Math.floor(Math.random() * groups.length); } while (next === activeIdx);
       return next;
     }
 
     function activate(idx) {
-      bars[activeIdx].classList.remove('is-active');
+      groups[activeIdx].classList.remove('is-active');
       activeIdx = idx;
-      bars[activeIdx].classList.add('is-active');
-      nameEl.textContent  = bars[activeIdx].getAttribute('data-name');
-      countEl.textContent = bars[activeIdx].getAttribute('data-count') + ' datasets';
-      positionLabel(bars[activeIdx]);
+      groups[activeIdx].classList.add('is-active');
+      if (announcer) {
+        announcer.textContent = groups[activeIdx].getAttribute('data-name') + ', ' +
+          groups[activeIdx].getAttribute('data-count') + ' datasets';
+      }
     }
 
     activate(activeIdx);

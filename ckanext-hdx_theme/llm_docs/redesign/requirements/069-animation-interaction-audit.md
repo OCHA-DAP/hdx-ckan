@@ -32,38 +32,45 @@ it would mean overriding vendor library defaults rather than touching HDX code.
 
 ### 1.1 Homepage bar chart
 
-- **Files**: `fanstatic/v2/bar-chart.js` (56 lines), `hdx-styles/src/common/less/v2/bar-chart.less`.
-- **Mechanism**: plain `setInterval`, no rAF/library. JS only toggles the `is-active` class and swaps
-  label text/position; all visible motion is CSS `transition` driven by JS-set custom properties
-  (`--label-offset`, `--label-top`).
+- **Files**: `fanstatic/v2/bar-chart.js`, `hdx-styles/src/common/less/v2/bar-chart.less`.
+- **Mechanism**: plain `setInterval`, no rAF/library. JS only toggles `is-active` on a bar-group and
+  updates a hidden `aria-live` announcer's text — no position math, no `getBoundingClientRect`. Each
+  bar-group renders its own label statically anchored above its own bar via CSS; the label never moves.
   ```js
-  var interval = parseInt(barsEl.getAttribute('data-interval'), 10) || 2000;   // bar-chart.js:12
-  setInterval(function () { activate(nextRandom()); }, interval);              // bar-chart.js:49
+  var interval = parseInt(barsEl.getAttribute('data-interval'), 10) || 2500;   // bar-chart.js
+  setInterval(function () { activate(nextRandom()); }, interval);              // bar-chart.js
   ```
-  `nextRandom()` picks a different random bar index each cycle (not sequential).
+  `nextRandom()` picks a different random bar-group index each cycle (not sequential).
 - **CSS**:
   ```less
   &__bar {
       background-color: var(--hdx-overlay-white-20);
       transition:       background-color 300ms linear;
-      &.is-active { background-color: var(--hdx-overlay-white-90); }
   }
+  &__bar-group.is-active &__bar { background-color: var(--hdx-overlay-white-90); }
   &__label {
-      transform:  translateX(var(--label-offset, 0px));
-      transition: transform 300ms linear, top 300ms linear;
+      bottom:     calc(var(--bar-height, 10%) + 0.25rem);
+      transform:  translateX(-50%);  // static, never animated
+      opacity:    0;
+      transition: opacity 300ms linear;  // fires on fade OUT only
   }
+  &__bar-group.is-active &__label { opacity: 1; transition: none; }  // instant show, no fade-in
   ```
-- **Values found**: interval **2000ms** (default; overridable via `data-interval`), transition **300ms**,
-  easing **`linear`** (both bar color and label transform/top) — duration and curve match the spec exactly.
-- **Mechanism vs. spec label**: the spec calls this a "dissolve." The implementation cross-fades via
-  `background-color` (inactive → active token) plus a `transform`/`top` move on the label — not an
-  `opacity` transition. Whether that reads as "dissolve" is a judgment call; there is no `opacity` property
-  involved anywhere in this component today.
-- **Minor drift from the component's own spec doc**: `bar-chart.js` uses `MARGIN_PX = 5` for the gap
-  between the label dot and bar top; `044-homepage-dynamic-bar-chart.md` specifies 4px. Unrelated to the
-  animation spec, noted for completeness.
-- **Tokens**: uses color tokens (`--hdx-overlay-white-20/-90`) but the `300ms`/`linear`/`2000` values
-  themselves are hardcoded literals, not custom properties.
+- **Values found**: interval **2500ms** (updated from 2000ms at the user's request, per a fresh
+  Figma-sourced spec supplied after this audit's original pass), transition **300ms**, easing
+  **`linear`**. The bar's background-color cross-fade stays symmetric (300ms both ways, unchanged by
+  this revision); the label now uses an asymmetric fade — 300ms linear fade-out, instant (no-transition)
+  show — matching the literal "dissolve: fade out, no fade in" spec.
+- **Mechanism vs. spec label**: resolved as part of this revision — the label previously had no fade at
+  all (only a `transform`/`top` slide between shared-element positions, which read as a moving "Pong"
+  paddle rather than a dissolve). It's now a real per-bar-group opacity toggle; the bar's own
+  `background-color` cross-fade is unchanged and was already judged close enough to a dissolve.
+- **Position architecture**: the previous drift (`bar-chart.js`'s `MARGIN_PX = 5` vs. the doc's 4px) no
+  longer applies — the label's position is now a pure CSS `calc()` off the same `--bar-height` custom
+  property the bar itself uses, hardcoded to 4px, with no separate JS constant to drift.
+- **Tokens**: uses color tokens (`--hdx-overlay-white-20/-90`) and the motion tokens
+  (`--hdx-duration-base`, `--hdx-ease-linear`); the `2500` interval value remains a hardcoded literal
+  (JS default + `data-interval` attribute), not a custom property.
 
 ### 1.2 Location map — zoom in/out (+/−) — *out of scope, comment only*
 
@@ -276,7 +283,7 @@ it would mean overriding vendor library defaults rather than touching HDX code.
 
 | Item | Spec | Current | Verdict |
 |---|---|---|---|
-| Homepage bar chart | Dissolve · linear · 300ms · 2000ms cycle | `background-color`/transform cross-fade · **linear** · **300ms** · **2000ms** | Timing/curve match exactly; mechanism is not literal opacity dissolve |
+| Homepage bar chart | Dissolve (fade out, no fade in) · linear · 300ms · 2500ms cycle | Bar: symmetric `background-color` cross-fade · Label: asymmetric `opacity` fade-out/instant-show · **linear** · **300ms** · **2500ms** | Exact match after revision |
 | Map zoom *(out of scope)* | Dissolve · ease-out · 300ms | Vendor Leaflet `transform` · `cubic-bezier(0,0,0.25,1)` · 0.25s | Close, not exact; vendor default |
 | Signals carousel | Smart Animate · ease-out · 300ms, arrow-triggered | Shared engine · default `ease` · 350ms — **no arrow buttons exist** | Mismatch on timing/easing; premise (arrows) doesn't hold |
 | Mobile nav "profile" slide-in | Smart Animate · custom spring (4/1/0.01) · from right margin | **Instant `hidden` swap, no transition/transform at either level** | Full gap |
@@ -333,9 +340,14 @@ this kill-switch — reduced-motion handling moves into per-component motion mix
 
 ## 5. Options Considered (per gap)
 
-- **Homepage bar chart** — (a) leave as-is: timing/curve already match spec exactly, only the
-  "dissolve" label is arguably imprecise; (b) switch the bar's cross-fade from `background-color` to a
-  literal `opacity` transition to match "dissolve" literally.
+- **Homepage bar chart** — revisited after this audit's original pass, at the user's request, against a
+  fresh Figma-sourced spec (2500ms cycle; asymmetric dissolve — fade out only, no fade in). Two structural
+  options were considered for the label, which was the actual source of the "Pong"/swerving read (it had
+  no fade at all — only a `transform`/`top` slide between one shared element's positions): (a) restructure
+  so every bar-group renders its own statically CSS-anchored label, with JS reduced to a class toggle —
+  no position math, no ghost elements needed for the fade-out-while-new-appears overlap; (b) minimal patch
+  keeping the single shared, JS-positioned label, snapping its position instantly and layering in a
+  JS-timed opacity sequence around the reposition. (a) was chosen.
 - **Signals carousel** — (a) leave arrow-less (matches the deliberate task-054 decision) and treat the
   spec's arrow-trigger note as not applicable to this carousel; (b) add arrow buttons to match the spec's
   stated trigger, mirroring highlights' markup/config. Independently of (a)/(b): the shared engine's
@@ -375,8 +387,11 @@ this kill-switch — reduced-motion handling moves into per-component motion mix
 
 ## 6. Decisions
 
-- **Homepage bar chart**: keep the `background-color` cross-fade as-is. Timing/curve already match spec
-  exactly; the "dissolve" label is arguably imprecise, but that alone doesn't warrant a code change.
+- **Homepage bar chart**: restructured so every bar-group renders its own statically CSS-anchored label
+  (no more shared/JS-positioned label element). The bar's `background-color` cross-fade stays symmetric
+  and unchanged; the label now uses an asymmetric `opacity` fade — 300ms linear on fade-out, instant
+  (`transition: none`) on show — matching the fresh spec's "dissolve: fade out, no fade in" literally.
+  Cycle interval updated to 2500ms.
 - **Signals carousel**: add arrow buttons, mirroring highlights' markup/config. This reverses the task-054
   "dots only" decision, per the spec's arrow-trigger note.
 - **Shared carousel engine** (`carousel.js`): change from 350ms/default-ease to **300ms/ease-out**. This

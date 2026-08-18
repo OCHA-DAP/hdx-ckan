@@ -95,22 +95,24 @@ If `filtered` is empty after the `selectattr` filter, hide the section entirely:
 <section class="hdx-v2-barchart">
 <div class="hdx-v2-barchart__inner">
 
-  <!-- Label: updates via JS as active bar changes -->
-  <div class="hdx-v2-barchart__label" aria-live="polite" aria-atomic="true">
-    <span class="hdx-v2-barchart__label-name"></span>
-    <span class="hdx-v2-barchart__label-count"></span>
-    <span class="hdx-v2-barchart__dot" aria-hidden="true">{% include 'v2/icons/dot.svg' %}</span>
-  </div>
+  <!-- Hidden announcer: JS updates its text as the active bar-group changes -->
+  <span class="sr-only" aria-live="polite" aria-atomic="true" data-barchart-announcer></span>
 
-  <!-- Bars container: JS reads data-count on each bar -->
+  <!-- Bars container -->
   <div class="hdx-v2-barchart__bars"
-       data-interval="2000">
+       data-interval="2500">
 
     {% for loc in _hrp_filtered %}
-    <div class="hdx-v2-barchart__bar{% if loop.first %} is-active{% endif %}"
+    <div class="hdx-v2-barchart__bar-group{% if loop.first %} is-active{% endif %}"
          style="--bar-height: {{ (loc.package_count / _hrp_max * 100) | round(2) }}%"
          data-name="{{ loc.display_name | e }}"
          data-count="{{ loc.package_count }}">
+      <div class="hdx-v2-barchart__label">
+        <span class="hdx-v2-barchart__label-name">{{ loc.display_name | e }}</span>
+        <span class="hdx-v2-barchart__label-count">{{ loc.package_count }} datasets</span>
+        <span class="hdx-v2-barchart__dot" aria-hidden="true">{% include 'v2/icons/dot.svg' %}</span>
+      </div>
+      <div class="hdx-v2-barchart__bar"></div>
     </div>
     {% endfor %}
 
@@ -123,9 +125,10 @@ If `filtered` is empty after the `selectattr` filter, hide the section entirely:
 **Notes:**
 - `__inner` uses `hdx-v2-container` like other sections.
 - The dot uses `v2/icons/dot.svg` included inline (not `c-graph-point`).
-- `aria-live="polite"` on the label: screen readers announce country/count changes without interrupting.
-- `is-active` is pre-set to the first bar by Jinja2 so the chart is meaningful before JS loads.
-- `data-name` and `data-count` on each bar: JS reads these to populate the label — no separate JS data array needed.
+- Each bar-group renders its own label directly (name/count as real text, not JS-injected) — the label never moves; only its opacity toggles when its group becomes/stops being active.
+- A hidden `sr-only` node with `aria-live="polite"` is updated by JS on each cycle so screen readers still announce country/count changes, since the visible per-bar labels no longer swap text.
+- `is-active` is pre-set on the first bar-group by Jinja2 so the chart is meaningful before JS loads.
+- `data-name` and `data-count` on each bar-group: JS reads these to populate the hidden announcer — no separate JS data array needed.
 - Label position (both horizontal and vertical): see section 3 (Animation Strategy).
 
 ---
@@ -136,37 +139,34 @@ If `filtered` is empty after the `selectattr` filter, hide the section entirely:
 
 **New file**: `ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/v2/bar-chart.js`
 
-Plain vanilla JS IIFE, initialised on `DOMContentLoaded` (not a CKAN module — `ckan` global is not available when this bundle loads):
+Plain vanilla JS IIFE, initialised on `DOMContentLoaded` (not a CKAN module — `ckan` global is not available when this bundle loads). No position math — every label already sits above its own bar via CSS; JS only toggles which bar-group is active and updates the hidden announcer:
 
 ```javascript
 (function () {
   'use strict';
 
   function initBarchart(barsEl) {
-    var bars      = barsEl.querySelectorAll('.hdx-v2-barchart__bar');
+    var groups    = barsEl.querySelectorAll('.hdx-v2-barchart__bar-group');
     var inner     = barsEl.closest('.hdx-v2-barchart__inner');
-    var label     = inner.querySelector('.hdx-v2-barchart__label');
-    var nameEl    = label.querySelector('.hdx-v2-barchart__label-name');
-    var countEl   = label.querySelector('.hdx-v2-barchart__label-count');
-    var interval  = parseInt(barsEl.getAttribute('data-interval'), 10) || 2000;
-    var activeIdx = Math.floor(Math.random() * bars.length);
-
-    function positionLabel(bar) { /* centers label over the active bar */ }
+    var announcer = inner.querySelector('[data-barchart-announcer]');
+    var interval  = parseInt(barsEl.getAttribute('data-interval'), 10) || 2500;
+    var activeIdx = Math.floor(Math.random() * groups.length);
 
     function nextRandom() {
-      if (bars.length <= 1) { return 0; }
+      if (groups.length <= 1) { return 0; }
       var next;
-      do { next = Math.floor(Math.random() * bars.length); } while (next === activeIdx);
+      do { next = Math.floor(Math.random() * groups.length); } while (next === activeIdx);
       return next;
     }
 
     function activate(idx) {
-      bars[activeIdx].classList.remove('is-active');
+      groups[activeIdx].classList.remove('is-active');
       activeIdx = idx;
-      bars[activeIdx].classList.add('is-active');
-      nameEl.textContent  = bars[activeIdx].getAttribute('data-name');
-      countEl.textContent = bars[activeIdx].getAttribute('data-count') + ' datasets';
-      positionLabel(bars[activeIdx]);
+      groups[activeIdx].classList.add('is-active');
+      if (announcer) {
+        announcer.textContent = groups[activeIdx].getAttribute('data-name') + ', ' +
+          groups[activeIdx].getAttribute('data-count') + ' datasets';
+      }
     }
 
     activate(activeIdx);
@@ -177,38 +177,54 @@ Plain vanilla JS IIFE, initialised on `DOMContentLoaded` (not a CKAN module — 
 
 ### Cycling behavior
 
-- Starts at a **random** bar index.
+- Starts at a **random** bar-group index.
 - Each cycle picks a **different random** index (not sequential).
-- Interval: 2000ms (read from `data-interval` on the bars container).
+- Interval: 2500ms (read from `data-interval` on the bars container).
 - Loops infinitely — no end condition.
 
 ### Dissolve transition
 
-CSS drives the fade via `background-color` transition:
+The bar itself cross-fades via `background-color`, symmetrically (300ms linear both when becoming active and when becoming inactive):
 
 ```less
 .hdx-v2-barchart__bar {
 background-color: var(--hdx-overlay-white-20);  // inactive
 transition: background-color 300ms linear;
 }
-.hdx-v2-barchart__bar.is-active {
+.hdx-v2-barchart__bar-group.is-active .hdx-v2-barchart__bar {
 background-color: var(--hdx-overlay-white-90);
-}
-@media (prefers-reduced-motion: reduce) {
-.hdx-v2-barchart__bar { transition: none; }
 }
 ```
 
-`prefers-reduced-motion` keeps the 2000ms cycle but removes the 300ms transition — the state change is instant.
+The label uses an **asymmetric** dissolve — fade out only, no fade in — via the "transition only on the rule entered when deactivating" pattern:
+
+```less
+.hdx-v2-barchart__label {
+opacity: 0;
+transition: opacity 300ms linear;  // fires when a group loses is-active
+}
+.hdx-v2-barchart__bar-group.is-active .hdx-v2-barchart__label {
+opacity: 1;
+transition: none;  // instant show, no fade-in
+}
+```
+
+Real `prefers-reduced-motion` support is inert sitewide pending task 069's documented follow-up (see that doc §6) — not specific to this component.
 
 ### Label position
 
-On each cycle JS sets two CSS custom properties on the label:
+The label is **statically anchored to its own bar** via plain CSS — it never moves and JS never measures or sets its position:
 
-- `--label-offset` — horizontal: centers the label over the active bar (`barCenter - label.offsetWidth / 2`). No JS clamping; the section's `overflow: hidden` clips the label at the left/right edges for the first/last bars.
-- `--label-top` — vertical: positions the label so the dot's bottom sits 4px above the bar's top edge (`barTop - 4 - label.offsetHeight`), clamped to `0` so it never escapes the section's top.
+```less
+.hdx-v2-barchart__label {
+position: absolute;
+left: 50%;
+bottom: calc(var(--bar-height, 10%) + 0.25rem);  // 4px above the bar's own top edge
+transform: translateX(-50%);  // static horizontal centering, never animated
+}
+```
 
-Both drive CSS `transition` (300ms linear) for smooth movement.
+`--bar-height` is the same custom property already set on the bar-group by Jinja for the bar's own height, so the label's vertical offset tracks that bar's height automatically with no JS involved. Horizontal overflow for the first/last bar-groups is still clipped by the section's `overflow: hidden`, same as before.
 
 ---
 
@@ -272,7 +288,10 @@ flex-shrink: 0;
 ```less
 .hdx-v2-barchart__label {
 position: absolute;
-top: 6.5rem;
+left: 50%;
+bottom: calc(var(--bar-height, 10%) + 0.25rem);
+transform: translateX(-50%);  // static centering, never animated
+width: max-content;  // bypasses shrink-to-fit against the narrow bar-group's tiny available width
 display: flex;
 flex-direction: column;
 align-items: center;
@@ -280,24 +299,34 @@ gap: 0.187rem;        // 3px — var(--gap-3)
 color: #fff;
 font-family: Roboto, Arial, sans-serif;
 font-size: 0.875rem;  // 14px
-transform: translateX(var(--label-offset, 0px));
-transition: transform 300ms linear;
-
-@media (prefers-reduced-motion: reduce) {
-  transition: none;
+opacity: 0;
+transition: opacity 300ms linear;  // fires on fade OUT only
 }
+
+.hdx-v2-barchart__bar-group.is-active .hdx-v2-barchart__label {
+opacity: 1;
+transition: none;  // instant show, no fade-in
 }
 
 .hdx-v2-barchart__label-name {
 font-weight: 600;
 line-height: 1.3;
 text-shadow: 3px 0 0 #18614c, 0 3px 0 #18614c, -3px 0 0 #18614c, 0 -3px 0 #18614c;
+max-width: 9rem;  // wrap onto a 2nd line rather than overflow for very long country names
 }
 
 .hdx-v2-barchart__label-count {
 line-height: 1.3;
+white-space: nowrap;  // always short ("N datasets") — never wrap
 }
 ```
+
+Without `width: max-content` on `.hdx-v2-barchart__label`, the browser computes the label's width via
+shrink-to-fit bounded by the narrow bar-group as containing block — collapsing to just a few pixels of
+"available space" and forcing even short text (e.g. "43 datasets") to wrap at the word boundary. The
+`max-width`/`white-space: nowrap` pair above then controls *intentional* wrapping: the count never
+wraps (always short), the name wraps only past 9rem (real HRP names run up to ~35-40 chars, e.g.
+"Democratic Republic of the Congo", so long outliers wrapping to a 2nd line is expected).
 
 ### Dot indicator — inline SVG
 
@@ -356,9 +385,9 @@ Use existing breakpoint tokens `@hdx-bp-xl` and `@hdx-bp-md` (do not introduce n
 | Single location after filtering | One bar shown; animation starts but does nothing (one-element cycle) |
 | All locations have equal `package_count` | All bars render at equal height (100%); animation still cycles the label |
 | `max_count` is 0 or None | Cannot occur — filtered list excludes `package_count ≤ 0`; guard prevents rendering |
-| Very long `display_name` | Full name displayed — no truncation. Text wraps naturally inside the label. |
+| Very long `display_name` | Full name displayed — no truncation. Name wraps onto a 2nd line past `max-width: 9rem`; the dataset-count line never wraps. |
 | Label overflows chart at first/last bar | Label stays centered over the bar; the half that would extend outside is clipped by `overflow: hidden` on the section |
-| JS disabled | First bar stays `is-active` (pre-set by Jinja); label is empty (no text injected); section is still visible but static |
+| JS disabled | First bar-group stays `is-active` (pre-set by Jinja); its label renders and shows (opacity driven by the static `.is-active` CSS rule, not JS); section is still visible but static |
 
 ---
 
@@ -378,7 +407,7 @@ Use existing breakpoint tokens `@hdx-bp-xl` and `@hdx-bp-md` (do not introduce n
 
 | # | Question | Decision |
 |---|---|---|
-| D1 | Does the label move or stay fixed? | **Moves** — JS sets `--label-offset` on each cycle; CSS `translateX` follows the active bar, clamped to chart bounds |
+| D1 | Does the label move or stay fixed? | **Fixed** — each bar-group renders its own label, statically CSS-anchored above its own bar (`bottom: calc(var(--bar-height) + 4px)`); JS only toggles which group is active, no position math, no movement |
 | D2 | Inactive bar color/opacity? | **Active**: `var(--hdx-overlay-white-90)` · **Inactive**: `var(--hdx-overlay-white-20)` (new token added to overlays.less + foundation) |
 | D3 | `--on-dark` modifier location? | **Shared** `selection.less` — added `.c-graph-point--on-dark` modifier reusable for future dark-background contexts |
 | D4 | MD bar width? | **8px** (same as XL) — SM=4px (`--hdx-space-1`), MD/XL=8px (`--hdx-space-2`) |
