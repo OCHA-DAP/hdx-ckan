@@ -81,7 +81,7 @@
       {% if sort_by_selected %}
         <input type="hidden" name="sort" value="{{ sort_by_selected }}">
       {% endif %}
-      {% snippet 'v2/components/text-field.html',
+      {% snippet 'v2/components/search-input.html',
           size='m', name='q', value=q,
           icon_submit=True,
           state='filled' if q else 'enabled',
