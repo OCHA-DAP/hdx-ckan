@@ -19,10 +19,7 @@
 
     function scrollToApiAccessIfActive() {
         if (location.hash !== '#api-access') return;
-        setTimeout(function () {
-            var target = document.getElementById('api-access');
-            if (target) window.hdxSmoothScrollTo(target);
-        }, 100);
+        setTimeout(window.hdxScrollToHashTarget, 100);
     }
 
     function initApiAccessRescroll() {

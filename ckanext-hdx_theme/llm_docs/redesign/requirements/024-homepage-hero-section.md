@@ -10,7 +10,7 @@ Implement the first section of the homepage (v2). Displays a heading, subtitle, 
 
 | Label | Range | `__inner` padding | `__inner` gap | Heading size | Subtitle size | `__actions` |
 |-------|-------|-------------------|---------------|--------------|---------------|-------------|
-| SM | < 48rem | `8rem 1.25rem 4rem` | `2.5rem` | `var(--hdx-fs-4xl)` | `var(--hdx-fs-m)` | column, `width: 100%` |
+| SM | < 48rem | `4rem 1.25rem 4rem` | `2rem` | `var(--hdx-fs-4xl)` | `var(--hdx-fs-m)` | column, `width: 100%` |
 | MD | 48rem – 79.9375rem | `6rem 3rem 4rem` | `3rem` | `var(--hdx-fs-4xl)` | `var(--hdx-fs-m)` | row, `width: 60%` |
 | XL | ≥ 80rem | top: `10rem` (rest unchanged) | `5rem` | `3rem` | `var(--hdx-fs-l)` | row, `width: 60%` |
 
@@ -78,7 +78,7 @@ Media queries are nested directly inside each element block (see [CONVENTIONS.md
 .hdx-v2-hero {
     width:            100%;
     background-color: @hdx-v2-hero-bg;
-    padding-top: 8rem;
+    padding-top: 4rem;
 
     @media (min-width: @hdx-bp-md) { padding-top: 6rem; }
     @media (min-width: @hdx-bp-xl) { padding-top: 10rem; }
@@ -89,7 +89,7 @@ Media queries are nested directly inside each element block (see [CONVENTIONS.md
         flex-direction: column;
         align-items:    center;
         text-align:     center;
-        gap:            2.5rem;
+        gap:            2rem;
 
         @media (min-width: @hdx-bp-md) { gap: 3rem; }
         @media (min-width: @hdx-bp-xl) { gap: 5rem; }

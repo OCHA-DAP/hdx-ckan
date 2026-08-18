@@ -73,6 +73,18 @@
           </div>
           <div class="hdx-v2-signals-carousel-footer">
             <div class="hdx-v2-signals-dots"></div>
+            <div class="hdx-v2-signals-carousel__arrows">
+              {% snippet 'v2/components/button.html',
+                  style='tertiary', type='icon-only', size='l', state='enabled',
+                  icon_src='v2/icons/arrow-left.svg',
+                  label=_('Previous'),
+                  extra_classes='hdx-v2-signals-carousel__arrow--prev' %}
+              {% snippet 'v2/components/button.html',
+                  style='tertiary', type='icon-only', size='l', state='enabled',
+                  icon_src='v2/icons/arrow-right.svg',
+                  label=_('Next'),
+                  extra_classes='hdx-v2-signals-carousel__arrow--next' %}
+            </div>
           </div>
         </div>
       {% endif %}

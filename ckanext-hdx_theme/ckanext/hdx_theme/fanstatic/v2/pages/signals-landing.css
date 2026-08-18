@@ -38,6 +38,11 @@
 .hdx-v2-signals-section {
   padding: var(--hdx-space-8) 0;
 }
+@media (max-width: 80rem) {
+  .hdx-v2-signals-section {
+    scroll-margin-top: 8rem;
+  }
+}
 .hdx-v2-signals-coverage-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);

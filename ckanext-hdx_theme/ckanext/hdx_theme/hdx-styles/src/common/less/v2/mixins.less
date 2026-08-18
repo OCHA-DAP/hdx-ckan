@@ -53,10 +53,7 @@
 .v2-sidebar-sticky() {
     position:   sticky;
     top:        var(--hdx-space-12);   // 48px — matches .c-anchor-links-wrapper top
-    max-height: calc(100vh - var(--hdx-space-12));
-    overflow-y: auto;
     align-self: flex-start;
-    .hdx-hide-scrollbar();
 }
 
 // ── Form field-row layout ───────────────────────────────────────
@@ -238,12 +235,16 @@
 // sections (dataset page, resource page). Sections are separated by
 // <hr class="c-divider"> in each page's template.
 
+.hdx-scroll-offset-header() {
+    @media (max-width: @hdx-bp-xl) { scroll-margin-top: 8rem; }
+}
+
 .hdx-page-section-wrapper() {
     padding: var(--hdx-space-6) 0;
 
     @media (min-width: @hdx-bp-md) { padding: var(--hdx-space-10) 0; }
 
-    @media (max-width: @hdx-bp-xl) { scroll-margin-top: 8rem; }
+    .hdx-scroll-offset-header();
 }
 
 .hdx-page-section-header() {

@@ -42,13 +42,20 @@
 }
 .hdx-v2-signals-carousel-footer {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  gap: var(--hdx-space-4);
   margin-top: var(--hdx-space-4);
 }
 @media (min-width: 80rem) {
   .hdx-v2-signals-carousel-footer {
     display: none;
   }
+}
+.hdx-v2-signals-carousel__arrows {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: var(--hdx-space-2);
 }
 .hdx-v2-signals-dots {
   display: flex;

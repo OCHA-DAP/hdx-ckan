@@ -504,7 +504,9 @@ document.addEventListener('DOMContentLoaded', function () {
     window.hdxCarousel.init({
         containerSelector: '.hdx-v2-signals-cards',
         slideSelector:     '.hdx-v2-signal-slide',
-        dotsSelector:      '.hdx-v2-signals-dots',   // dots only — no arrows
+        prevBtnSelector:   '.hdx-v2-signals-carousel__arrow--prev',
+        nextBtnSelector:   '.hdx-v2-signals-carousel__arrow--next',
+        dotsSelector:      '.hdx-v2-signals-dots',
         mediaQuery:        '(min-width: 80rem)',
     });
 });
@@ -513,7 +515,7 @@ document.addEventListener('DOMContentLoaded', function () {
 ### Carousel Behavior
 
 - **XL (≥ 80rem):** static flex row — 3 cards visible, no carousel JS active
-- **MD/SM (< 80rem):** carousel — Hammer.js `swipeleft`/`swiperight`, dot indicators, infinite loop
+- **MD/SM (< 80rem):** carousel — Hammer.js `swipeleft`/`swiperight`, dot indicators, prev/next arrow buttons, infinite loop
 - Dots auto-populated by `carousel.js` into `.hdx-v2-signals-dots` container
 - Each slide wraps the `c-signal-card` in a `.hdx-v2-signal-slide` div (carousel needs a wrapping element distinct from the card component class)
 - `__inner` requires `position: relative` for JS `left` animation

@@ -217,23 +217,22 @@ it would mean overriding vendor library defaults rather than touching HDX code.
   anchor nav (`location-datagrid-drawer.html`). The locations-list page's own sidebar anchors
   (`pages/locations-list.js:8-22`) explicitly delegate to `window.hdxSmoothScrollTo` rather than
   reimplementing anything.
-- **One divergent call site**: `fanstatic/v2/pages/resource.js:20-26`, the "Access via API" iframe rescroll:
+- **Hash-on-load correction** (site-wide, not Signals-specific): `initHashOnLoadCorrection` re-runs
+  `smoothScrollTo` on `window.load` when the page was loaded with a `location.hash` matching an element,
+  correcting scroll drift from content (e.g. images) that finishes loading after the browser's native
+  fragment-scroll already fired. Exposed as `window.hdxScrollToHashTarget`.
+- **"Access via API" rescroll**: `fanstatic/v2/pages/resource.js:20-23`, fired on the Data Explorer iframe's
+  `load` event and again after the AJAX-built data-dictionary table renders:
   ```js
   function scrollToApiAccessIfActive() {
       if (location.hash !== '#api-access') return;
-      setTimeout(function () {
-          var target = document.getElementById('api-access');
-          if (target) target.scrollIntoView();
-      }, 100);
+      setTimeout(window.hdxScrollToHashTarget, 100);
   }
   ```
-  This is a bare `scrollIntoView()` (no `behavior` option) fired on iframe `load`, not on an anchor-link
-  click — it doesn't call the shared 500ms/bezier function. Whatever smoothness it has comes only from an
-  inherited Bootstrap rule (`ckan/public/base/css/main.css:68-71`, `:root { scroll-behavior: smooth }`,
-  active on v2 pages because `v2/page.html` calls `{{ super() }}` in the styles block) — native, no
-  configurable duration/easing. It's a different trigger (programmatic post-load reposition) than the
-  spec's "on click" anchor-link case, so whether it should be brought in line with the shared component is
-  an open question rather than a clear mismatch.
+  Goes through the shared component via `window.hdxScrollToHashTarget` (`anchor-links.js`), which looks up
+  `location.hash`'s target and calls `smoothScrollTo` on it — same 500ms/bezier function as every other
+  anchor-link scroll. It's a different trigger (programmatic post-load reposition, not a click) than the
+  spec's "on click" anchor-link case, but no longer a divergent implementation.
 
 ### 1.8 Data-grid "legend" drawer
 
@@ -378,8 +377,8 @@ this kill-switch — reduced-motion handling moves into per-component motion mix
 
 - **Homepage bar chart**: keep the `background-color` cross-fade as-is. Timing/curve already match spec
   exactly; the "dissolve" label is arguably imprecise, but that alone doesn't warrant a code change.
-- **Signals carousel**: keep dots-only. The task-054 "dots only" decision stands; the spec's arrow-trigger
-  note doesn't apply to this carousel.
+- **Signals carousel**: add arrow buttons, mirroring highlights' markup/config. This reverses the task-054
+  "dots only" decision, per the spec's arrow-trigger note.
 - **Shared carousel engine** (`carousel.js`): change from 350ms/default-ease to **300ms/ease-out**. This
   updates both the signals and highlights carousels at once, since they share one engine.
 - **Mobile nav "profile" slide-in**: implement a plain CSS `ease-out` transition (`translateX` slide-in
@@ -391,7 +390,8 @@ this kill-switch — reduced-motion handling moves into per-component motion mix
   and the vendor Leaflet popup fade, as a bundle-order CSS override in `less/v2/pages/locations-list.less`
   rather than editing the v1-authored `browse_/browse.less` directly.
 - **Anchor links**: route `resource.js`'s "Access via API" rescroll through the shared
-  `window.hdxSmoothScrollTo` utility, for full consistency across every scroll-animation call site.
+  `window.hdxScrollToHashTarget` helper (which itself calls `window.hdxSmoothScrollTo`), for full
+  consistency across every scroll-animation call site.
 - **Data-grid drawer**: no gap found; no change needed.
 - **Motion tokens (cross-cutting)**: introduce a `--hdx-duration-*`/`--hdx-ease-*` token set (new
   `motion.less`) and migrate the components touched by this audit onto it.

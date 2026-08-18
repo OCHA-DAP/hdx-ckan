@@ -178,6 +178,13 @@
   gap: var(--hdx-space-2);
   margin-left: auto;
 }
+.c-resource-card__actions .resource-download-button {
+  width: 10rem;
+}
+.c-resource-card__actions .resource-download-button .c-button__label {
+  flex-shrink: 1;
+  min-width: 0;
+}
 .c-resource-card-list {
   display: flex;
   flex-direction: column;

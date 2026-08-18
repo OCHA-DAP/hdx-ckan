@@ -5,6 +5,7 @@
  *   - Smooth scroll on anchor-link click (500ms, cubic-bezier(0.6, 0, 0.3, 1))
  *   - Mobile anchor-nav dropdown toggle
  *   - Active-section tracking via IntersectionObserver
+ *   - Hash-on-load scroll correction (any page, not just anchor-links pages)
  */
 
 (function () {
@@ -14,11 +15,13 @@
         initSmoothScroll();
         initAnchorDropdown();
         initActiveTracking();
+        initHashOnLoadCorrection();
     });
 
-    // Expose smoothScrollTo/closeMobileDropdown for reuse by other page scripts
+    // Expose smoothScrollTo/closeMobileDropdown/scrollToHashTarget for reuse by other page scripts
     window.hdxSmoothScrollTo = smoothScrollTo;
     window.hdxCloseAnchorDropdown = closeMobileDropdown;
+    window.hdxScrollToHashTarget = scrollToHashTarget;
 
 
     // ── Easing ──────────────────────────────────────────────────
@@ -225,6 +228,18 @@
         });
 
         sections.forEach(function (section) { observer.observe(section); });
+    }
+
+    // ── Hash-on-load scroll correction ────────────────────────────
+
+    function scrollToHashTarget() {
+        var target = document.getElementById(window.location.hash.slice(1));
+        if (target) smoothScrollTo(target);
+    }
+
+    function initHashOnLoadCorrection() {
+        if (!window.location.hash) return;
+        window.addEventListener('load', scrollToHashTarget);
     }
 
 }());

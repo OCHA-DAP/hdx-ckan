@@ -221,10 +221,7 @@
         gap:            var(--hdx-space-8);
 
         .hdx-v2-locations-list-section {
-            // Scroll offset for fixed header at SM/MD (matches dataset-page.less)
-            @media (max-width: (@hdx-bp-xl - 0.0625rem)) {
-                scroll-margin-top: 8rem;
-            }
+            .hdx-scroll-offset-header();
 
             &__heading {
                 .hdx-section-title();

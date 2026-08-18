@@ -217,7 +217,7 @@
   flex-direction: column;
   gap: var(--hdx-space-8);
 }
-@media (max-width: 79.9375rem) {
+@media (max-width: 80rem) {
   .hdx-v2-locations-list-content .hdx-v2-locations-list-sections .hdx-v2-locations-list-section {
     scroll-margin-top: 8rem;
   }
