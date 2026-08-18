@@ -16,8 +16,10 @@
   background: transparent;
   font-family: inherit;
   color: var(--hdx-neutral-8);
-  line-height: var(--hdx-lh-normal);
+  line-height: 1;
   outline: none;
+  padding: 0;
+  margin: 0;
 }
 .c-search-input input::placeholder,
 .c-search-input__value::placeholder {
@@ -26,6 +28,10 @@
 .c-search-input input:not(:placeholder-shown),
 .c-search-input__value:not(:placeholder-shown) {
   color: var(--hdx-neutral-95);
+}
+.c-search-input input[type="search"] {
+  appearance: none;
+  -webkit-appearance: none;
 }
 .c-search-input__icon {
   width: 1rem;

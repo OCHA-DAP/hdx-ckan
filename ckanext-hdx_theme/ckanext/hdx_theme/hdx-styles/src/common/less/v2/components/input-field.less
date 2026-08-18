@@ -50,13 +50,20 @@
         background:   transparent;
         font-family:  inherit;
         color:        @c-input-color-placeholder;
-        line-height: var(--hdx-lh-normal);
+        line-height: 1;
         outline:      none;
+        padding:      0;
+        margin:       0;
 
         &::placeholder { color: @c-input-color-placeholder; }
 
         // When filled (has value)
         &:not(:placeholder-shown) { color: @c-input-color-value; }
+    }
+
+    input[type="search"] {
+        appearance:         none;
+        -webkit-appearance: none;
     }
 
     &__icon {
