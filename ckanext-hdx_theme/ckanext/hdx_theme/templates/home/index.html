@@ -29,6 +29,7 @@
 
       <div class="hdx-v2-hero__search">
         {% snippet 'v2/components/autocomplete.html',
+            size='l',
             placeholder=_('Search for datasets, locations or organisations'),
             value='', state='enabled',
             form_action=h.url_for('dataset.search'),
