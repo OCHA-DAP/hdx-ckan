@@ -1011,7 +1011,7 @@ def hdx_fetch_last_three_signal_cards():
             'image_alt': row.get('summary_short', ''),
             'source_label': 'Source',
             'source_href': _safe_href(row.get('hdx_url', '')),
-            'cta_label': 'See this signal',
+            'cta_label': 'See this Signal',
             'cta_href': _safe_href(row.get('campaign_url', '')),
         })
     return cards

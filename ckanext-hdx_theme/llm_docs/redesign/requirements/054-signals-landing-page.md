@@ -421,7 +421,7 @@ the CSV at `hdx.signals.csv`, parses it with `csv.DictReader`, sorts rows by
 `location`, `date` (formatted `campaign_date`), `type` (via `SIGNAL_CARD_INDICATOR_CATEGORIES`
 lookup), `title` (`summary_short`), `description` (empty), `image_src`/`source_href`/`cta_href`
 (each validated through a `_safe_href`/`_safe_img_src` scheme check, falling back to `'#'`/`''`),
-`source_label` (`'Source'`), `cta_label` (`'See this signal'`).
+`source_label` (`'Source'`), `cta_label` (`'See this Signal'`).
 
 Pass as `signal_cards` from the `signals()` view function.
 

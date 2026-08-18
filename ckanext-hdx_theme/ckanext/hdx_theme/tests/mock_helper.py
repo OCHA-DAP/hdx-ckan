@@ -366,7 +366,7 @@ def mock_signal_cards():
             'image_alt': 'Mock signal title for testing',
             'source_label': 'Source',
             'source_href': 'https://example.com/source',
-            'cta_label': 'See this signal',
+            'cta_label': 'See this Signal',
             'cta_href': 'https://example.com/campaign',
         },
     ]
