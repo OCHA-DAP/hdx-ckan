@@ -146,6 +146,7 @@
         description=h.render_markdown(pkg.notes) if pkg.notes else '',
         org_name=pkg.organization.title,
         logo_src=logo_config.image_url if logo_config and logo_config.image_url else '',
+        logo_href=h.url_for(controller='organization', action='read', id=pkg.owner_org),
         contact_href=contact_href,
         download_count=pkg.approx_total_downloads,
         request_only=pkg.is_requestdata_type,

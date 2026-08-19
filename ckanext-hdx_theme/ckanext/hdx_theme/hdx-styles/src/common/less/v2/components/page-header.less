@@ -227,6 +227,22 @@
         display:         block;
         margin:          0 auto;            // centre in right card (works for both org logo and standalone)
     }
+
+    &__logo-link {
+        display: block;
+        width:   fit-content;
+        margin:  0 auto;
+        cursor:  pointer;
+
+        &:focus-visible {
+            .hdx-focus-ring();
+            border-radius: var(--hdx-radius-sm);
+        }
+
+        .c-page-header__logo {
+            margin: 0;
+        }
+    }
     // ── Right-card action links (org pages) ──────────────────
 
     &__card-actions {

@@ -103,6 +103,7 @@
 {% set membership          = membership          if membership          is defined else None %}
 {% set hide_membership     = hide_membership     if hide_membership     is defined else True %}
 {% set org_id              = org_id              if org_id              is defined else '' %}
+{% set logo_href           = logo_href           if logo_href           is defined else '' %}
 {% set file_format         = file_format         if file_format         is defined else '' %}
 {% set download_url        = download_url        if download_url        is defined else '' %}
 {% set can_download        = can_download        if can_download        is defined else False %}
@@ -299,7 +300,13 @@
     {% if org_name or logo_src or header_actions or header_stats %}
     <div class="c-page-header__right-card">
       {% if logo_src %}
-        <img class="c-page-header__logo" src="{{ logo_src }}" alt="{{ org_name if org_name else title }}">
+        {% if logo_href %}
+          <a class="c-page-header__logo-link mx-ga-dimension-organization" href="{{ logo_href }}">
+            <img class="c-page-header__logo" src="{{ logo_src }}" alt="{{ org_name if org_name else title }}">
+          </a>
+        {% else %}
+          <img class="c-page-header__logo" src="{{ logo_src }}" alt="{{ org_name if org_name else title }}">
+        {% endif %}
       {% endif %}
       {% if org_name %}
         {% if not request_only %}

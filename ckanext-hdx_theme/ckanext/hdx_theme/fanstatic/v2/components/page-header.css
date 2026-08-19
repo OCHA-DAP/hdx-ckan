@@ -231,6 +231,20 @@
   display: block;
   margin: 0 auto;
 }
+.c-page-header__logo-link {
+  display: block;
+  width: fit-content;
+  margin: 0 auto;
+  cursor: pointer;
+}
+.c-page-header__logo-link:focus-visible {
+  outline: 2px solid var(--hdx-primary-5);
+  outline-offset: 2px;
+  border-radius: var(--hdx-radius-sm);
+}
+.c-page-header__logo-link .c-page-header__logo {
+  margin: 0;
+}
 .c-page-header__card-actions {
   display: flex;
   flex-direction: column;

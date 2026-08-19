@@ -155,7 +155,7 @@ Uses the shared `c-info-icon` / `c-tooltip-anchor` pattern. Hover/focus visibili
 | Element | Markup |
 |---------|--------|
 | Divider | `<hr class="c-divider">` |
-| Org logo | `<img>` with `max-width` + `object-fit: contain` |
+| Org logo | `<img>` with `max-width` + `object-fit: contain`; wrapped in `<a class="c-page-header__logo-link">` when `logo_href` is passed (dataset page only — see Decisions) |
 | Dataset title | `<h1>` — Merriweather bold, responsive font-size; gets `data-module="hdx-quick-edit"` attrs when `edit_mode=True` |
 | Description container | `<div data-module="clamped-text">` + `<p class="...__desc-text" data-clamped-content>` + show-more button (updated task 038) |
 | Download count | `<div>` with inline SVG + `<span>` |
@@ -425,3 +425,4 @@ c-page-header
 | D15 | MD layout: left column uses `flex: 1` (not fixed width) to avoid blank space beside org card on wide viewports. |
 | D16 | Spacing and typography use CSS custom properties (`var(--hdx-space-*)`, `var(--hdx-font-*)`, etc.), not raw rem values. |
 | D17 | edit_mode support: title and description container receive `data-module="hdx-quick-edit"` attrs when `edit_mode=True`, passed alongside `pkg_id`. |
+| D18 | Org logo links to the contributor's org page via an opt-in `logo_href` param on `c-page-header` (wraps `<img>` in `<a class="c-page-header__logo-link mx-ga-dimension-organization">` when passed). `hdx_read.html` passes `logo_href=h.url_for(controller='organization', action='read', id=pkg.owner_org)`, mirroring the existing "Contributor" text-link. Opt-in so the org page's own header (same component, via `org-hero.html`) doesn't get a self-link. |
