@@ -472,7 +472,7 @@ Child sizing lives inside the wrapper, scoped with a direct-child selector
 (`> .c-stats-card { flex: 1; }`). Pages must not size or restyle `c-*`
 children directly — if a component needs a contextual variant, add a modifier
 to the component (`c-search-input--block`, `c-dropdown--inline`,
-`c-page-header--underlined`) and pass it via `extra_classes`.
+`c-page-header--compact-title`) and pass it via `extra_classes`.
 
 Page LESS keeps only page-rhythm concerns around the wrapper (e.g.
 `padding-bottom` on the org-list section) and full-bleed page bands
