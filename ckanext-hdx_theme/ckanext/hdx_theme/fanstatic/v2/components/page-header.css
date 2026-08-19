@@ -374,14 +374,6 @@
   line-height: var(--hdx-lh-normal);
   color: var(--hdx-neutral-85);
 }
-.c-page-header--underlined {
-  border-bottom: 1px solid var(--hdx-neutral-10);
-}
-@media (min-width: 80rem) {
-  .c-page-header--underlined {
-    border-bottom: none;
-  }
-}
 .c-page-header--compact-title .c-page-header__title {
   font-size: var(--hdx-fs-2xl);
 }

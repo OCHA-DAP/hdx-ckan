@@ -346,7 +346,6 @@ Block: `c-page-header` (shared component).
 ```
 c-page-header
   --compact-title       title fixed at 1.5rem (resource pages)
-  --underlined          SM/MD bottom border (Signals)
   __top
     --no-card            full-width description column when there's no org card
   __left
