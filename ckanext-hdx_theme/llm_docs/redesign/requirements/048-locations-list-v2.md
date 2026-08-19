@@ -135,7 +135,7 @@ header              ← flex row: sidebar + scrollable content
     border-radius: 2px;
     background: #d4eae4;   ← lightcyan square (NOT a circle)
   }
-  "Locations with a Humanitarian Response Plan"
+  "Locations with a Humanitarian Response Plan are marked in green"
 ```
 
 Static — no dynamic content.
@@ -460,8 +460,8 @@ Same component as MD: right-side vertical sidebar with letter anchors. The "Jump
 
 | Figma color | Hex | HDX token (to confirm) |
 |---|---|---|
-| HRP item bg | `#d4eae4` | `var(--hdx-teal-1)` or similar |
-| HRP item border | `#a8d5c9` | `var(--hdx-teal-3)` or similar |
+| HRP item bg | `#d4eae4` | `var(--hdx-brand-1)` |
+| HRP item border | `#a8d5c9` | `var(--hdx-brand-2)` |
 | Normal item border | `#d8e0e1` | `var(--hdx-neutral-2)` |
 | Active sort button bg | `#fafbfb` | `var(--hdx-neutral-1)` |
 | Active sort button border | `#101212` | `var(--hdx-neutral-11)` |
