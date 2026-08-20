@@ -1390,10 +1390,10 @@ def hdx_get_user_menu_sections():
     if is_sysadmin:
         sections.append({
             'id': 'sysadmin',
-            'label': _('Sysadmin dashboard'),
+            'label': _('Sysadmin Dashboard'),
             'items': [
-                {'label': _('All sysadmins'), 'href': h.url_for('admin.index')},
-                {'label': _('All users'), 'href': h.url_for('user.index')},
+                {'label': _('All Sysadmins'), 'href': h.url_for('admin.index')},
+                {'label': _('All Users'), 'href': h.url_for('user.index')},
                 {'label': _('Carousel'), 'href': h.url_for('hdx_carousel.show')},
                 {'label': _('HDX Connect Dashboard'), 'href': h.url_for('requestdata_ckanadmin.requests_data')},
                 {'label': _('Custom/Event Pages'), 'href': h.url_for('hdx_custom_pages.index')},
@@ -1406,33 +1406,33 @@ def hdx_get_user_menu_sections():
 
     sections.append({
         'id': 'dashboard',
-        'label': _('User dashboard'),
+        'label': _('User Dashboard'),
         'items': [
             {'label': _('Newsfeed'), 'href': h.url_for('activity.dashboard')},
-            {'label': _('My datasets'), 'href': h.url_for('hdx_user_dashboard.datasets')},
-            {'label': _('My organisations'), 'href': h.url_for('dashboard.organizations')},
-            {'label': _('My locations'), 'href': h.url_for('dashboard.groups')},
+            {'label': _('My Datasets'), 'href': h.url_for('hdx_user_dashboard.datasets')},
+            {'label': _('My Organisations'), 'href': h.url_for('dashboard.organizations')},
+            {'label': _('My Locations'), 'href': h.url_for('dashboard.groups')},
             {'label': _('HDX Connect Requests'), 'href': h.url_for('requestdata.my_requested_data', id=c.user)},
         ],
     })
 
     settings_items = [
         {'label': _('Datasets'), 'href': h.url_for('user.read', id=c.user)},
-        {'label': _('Activity stream'), 'href': h.url_for('activity.user_activity', id=c.user)},
+        {'label': _('Activity Stream'), 'href': h.url_for('activity.user_activity', id=c.user)},
     ]
     if is_sysadmin:
         settings_items.append({
-            'label': _('User permission'),
+            'label': _('User Permission'),
             'href': h.url_for('hdx_user_permission.read', id=c.user),
         })
     settings_items += [
-        {'label': _('API tokens'), 'href': h.url_for('user.api_tokens', id=c.user)},
+        {'label': _('API Tokens'), 'href': h.url_for('user.api_tokens', id=c.user)},
         {'label': _('Notifications'), 'href': h.url_for('hdx_user.notifications', id=c.user)},
-        {'label': _('Profile and password'), 'href': h.url_for('user.edit', id=c.user)},
+        {'label': _('Profile and Password'), 'href': h.url_for('user.edit', id=c.user)},
     ]
     sections.append({
         'id': 'settings',
-        'label': _('User settings'),
+        'label': _('User Settings'),
         'items': settings_items,
     })
 

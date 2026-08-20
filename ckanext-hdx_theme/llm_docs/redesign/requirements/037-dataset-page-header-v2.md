@@ -104,7 +104,7 @@ Right card moves **inside** the left column, between description and CTA. All me
 | "Get notified" button | `supports_notifications=True` |
 | Download count | `download_count` non-zero |
 | Metadata strip + divider | `meta_items` non-empty (`hdx_read.html` passes `[]` unless `_has_meta`) |
-| "View all" (Location) | Location item's `link` set when location text non-empty — arrow-down icon, href `#metadata-location` |
+| "View all" (Location) | Location item's `link` set when there are 2+ locations — arrow-down icon, href `#metadata-location` |
 | "Sub-national" label | Location item's `chip` set when `pkg.subnational == 1` |
 | "Up to date" label | Frequency item's `chip` set when `pkg.is_fresh` |
 | Time period tooltip icon | Time period item's `tooltip` dict |
@@ -172,7 +172,7 @@ The caller builds the metadata strip as a `meta_items` list via `{% set %}`, gua
 {% set _meta_items = [
   {'label': _('Location'), 'value': _location_text,
    'chip': {'text': _('Sub-national'), 'color': 'cyan'} if _subnational else None,
-   'link': {'label': _('View all'), 'href': '#metadata-location'} if _location_text else None},
+   'link': {'label': _('View all'), 'href': '#metadata-location'} if _grps|length > 1 else None},
   {'label': _('Expected update frequency'), 'value': _update_frequency,
    'chip': {'text': _('Up to date'), 'color': 'cyan'} if pkg.is_fresh else None},
   {'label': _('Time period'), 'value': _time_period,
@@ -411,7 +411,7 @@ c-page-header
 | D2 | `request_only` mapped from `pkg.is_requestdata_type`. |
 | D3 | Crisis entries come from `pkg.page_list` (tag-matched ongoing event/dashboard pages), rendered via a separate `page_list` param - not `links_list`, which only carries sysadmin-configured data-grid links. |
 | D4 | Download count is `pkg.approx_total_downloads`. |
-| D5 | "View all" on Location always renders when the location text is non-empty. Uses `arrow-down.svg`. Anchor: `#metadata-location`. |
+| D5 | "View all" on Location only renders when there are 2+ locations (`pkg.groups`). Uses `arrow-down.svg`. Anchor: `#metadata-location`. |
 | D6 | If `logo_src` empty, logo area hidden entirely. |
 | D7 | "Get notified" opens JS notification modal. "Contact organisation" is an `<a>` linking to `contact_href`. Uses `mail.svg` icon on the left. |
 | D8 | Hidden text-link in Location value row (Figma only) — out of scope, skipped. |

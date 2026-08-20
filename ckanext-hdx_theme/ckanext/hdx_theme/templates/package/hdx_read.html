@@ -129,7 +129,7 @@
     {% set _meta_items = [
       {'label': _('Location'), 'value': _location_text,
        'chip': {'text': _('Sub-national'), 'color': 'cyan'} if _subnational else None,
-       'link': {'label': _('View all'), 'href': '#metadata-location'} if _location_text else None},
+       'link': {'label': _('View all'), 'href': '#metadata-location'} if _grps|length > 1 else None},
       {'label': _('Expected update frequency'), 'value': _update_frequency,
        'chip': {'text': _('Up to date'), 'color': 'cyan'} if pkg.is_fresh else None},
       {'label': _('Time period'), 'value': _time_period,

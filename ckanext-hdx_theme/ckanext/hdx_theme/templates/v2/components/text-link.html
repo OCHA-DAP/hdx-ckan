@@ -56,7 +56,5 @@
    {% if target      %}target="{{ target }}"{% endif %}
    {% if target == '_blank' %}rel="noopener noreferrer"{% endif %}
    {% if is_disabled %}aria-disabled="true" tabindex="-1"{% endif %}
-   {% for key, val in attrs.items() %}{{ key }}="{{ val }}"{% endfor %}>
-  {% if inner_attrs %}<span {% for key, val in inner_attrs.items() %}{{ key }}="{{ val }}"{% endfor %}>{{ label }}</span>
-  {% else %}{{ label }}{% endif %}
+   {% for key, val in attrs.items() %}{{ key }}="{{ val }}"{% endfor %}>{%- if inner_attrs %}<span {% for key, val in inner_attrs.items() %}{{ key }}="{{ val }}"{% endfor %}>{{ label }}</span>{%- else %}{{ label }}{%- endif -%}
 </a>
