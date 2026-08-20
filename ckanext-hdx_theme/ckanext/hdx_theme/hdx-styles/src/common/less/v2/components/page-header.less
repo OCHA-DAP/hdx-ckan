@@ -225,13 +225,11 @@
         object-fit:      contain;
         object-position: center;
         display:         block;
-        margin:          0 auto;            // centre in right card (works for both org logo and standalone)
     }
 
     &__logo-link {
         display: block;
         width:   fit-content;
-        margin:  0 auto;
         cursor:  pointer;
 
         &:focus-visible {
@@ -355,12 +353,6 @@
 
     &__meta-view-more {
         display: none;  // JS reveals when the value overflows
-    }
-    // ── Tooltip wrapper ──────────────────────────────────────
-
-    // Header tooltip anchor: push to right of the label-row
-    .c-tooltip-anchor {
-        margin-left: auto;
     }
     // ── Format icon + label row ──────────────────────────────
 

@@ -229,12 +229,10 @@
   object-fit: contain;
   object-position: center;
   display: block;
-  margin: 0 auto;
 }
 .c-page-header__logo-link {
   display: block;
   width: fit-content;
-  margin: 0 auto;
   cursor: pointer;
 }
 .c-page-header__logo-link:focus-visible {
@@ -358,9 +356,6 @@
 }
 .c-page-header__meta-view-more {
   display: none;
-}
-.c-page-header .c-tooltip-anchor {
-  margin-left: auto;
 }
 .c-page-header__format {
   display: flex;
