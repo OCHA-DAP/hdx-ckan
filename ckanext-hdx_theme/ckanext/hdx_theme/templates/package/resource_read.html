@@ -203,13 +203,12 @@
             <p class="hdx-v2-resource-api__label">{{ _('Resource ID') }}</p>
             <p class="hdx-v2-resource-api__value">{{ res.id }}</p>
           </div>
-          {% snippet 'v2/components/text-button.html',
+
+          {% snippet 'v2/components/copy-button.html',
+              value=res.id,
               style='secondary', size='m',
-              label=_('Copy resource ID'),
               icon_position='left',
-              icon_src='v2/icons/copy.svg',
-              tag='button', button_type='button',
-              attrs={'data-copy-value': res.id} %}
+              label=_('Copy resource ID') %}
         </div>
 
         {# Block 3: Example query #}

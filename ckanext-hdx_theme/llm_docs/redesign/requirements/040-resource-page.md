@@ -256,16 +256,14 @@ The section body uses `.hdx-v2-resource-api` — column layout on SM/MD, row lay
 
 **Block 2 — Resource ID**:
 - Label + value
-- `text-button.html` (not `copy-button.html`) with `data-copy-value` attr — the global `copy-button.js` handles clipboard on any `[data-copy-value]` element:
+- `copy-button.html`, same component used by the page-header's Resource ID/URL and Dataset ID copy buttons:
 
 ```jinja
-{% snippet 'v2/components/text-button.html',
+{% snippet 'v2/components/copy-button.html',
+    value=res.id,
     style='secondary', size='m',
-    label=_('Copy resource ID'),
-    icon=True, icon_position='left',
-    icon_src='v2/icons/copy.svg',
-    tag='button', button_type='button',
-    attrs={'data-copy-value': res.id} %}
+    icon_position='left',
+    label=_('Copy resource ID') %}
 ```
 
 **Block 3 — Example Query**:
@@ -309,7 +307,7 @@ Renders a `<button>` with `data-copy-value="{{ value }}"`. No `__feedback` span 
 
 ### JS: `fanstatic/v2/components/copy-button.js`
 
-Added to `v2-components-scripts` bundle. Listens for `click` on **any** element with `[data-copy-value]` (not limited to `.c-copy-button`) — so `text-button` with `data-copy-value` also gets the green icon effect.
+Added to `v2-components-scripts` bundle. Listens for `click` on any element with `[data-copy-value]`; `copy-button.html` is currently the only template that renders that attribute.
 
 - On success: `navigator.clipboard.writeText(el.dataset.copyValue)` → adds `is-copied` class to the element
 - After 2 seconds: removes `is-copied` class
