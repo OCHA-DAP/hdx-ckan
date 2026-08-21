@@ -70,6 +70,11 @@
                              (e.g. data-module click-tracking / onboarding-flow priming).
                              default: {}
 
+  show_more_info   {bool}    Render the "More information" button. Set False when no
+                             meaningful title_href exists (e.g. the zero-resource HDX
+                             Connect state, which has no resource detail page to link to).
+                             default: true
+
   extra_classes    {string}  Additional CSS classes on the root element.
                              default: ''
 
@@ -115,6 +120,7 @@
 {% set download_extra_classes = download_extra_classes if download_extra_classes is defined else '' %}
 {% set download_attrs         = download_attrs         if download_attrs         is defined else {} %}
 {% set request_attrs          = request_attrs          if request_attrs          is defined else {} %}
+{% set show_more_info         = show_more_info         if show_more_info         is defined else true %}
 {% set extra_classes          = extra_classes          if extra_classes          is defined else '' %}
 
 {# ── BEM class list ──────────────────────────────────────── #}
@@ -194,10 +200,12 @@
     {% endif %}
 
     <div class="c-resource-card__actions">
-      {% snippet 'v2/components/button.html',
-          style='tertiary', size='m', type='text',
-          label='More information',
-          tag='a', href=title_href %}
+      {% if show_more_info %}
+        {% snippet 'v2/components/button.html',
+            style='tertiary', size='m', type='text',
+            label='More information',
+            tag='a', href=title_href %}
+      {% endif %}
       {% if in_review %}
         <a href="{{ title_href }}"
            class="c-button c-button--secondary c-button--size-m">{{ _('Under Review') }}</a>

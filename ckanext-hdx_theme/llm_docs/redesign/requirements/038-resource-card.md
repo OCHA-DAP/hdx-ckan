@@ -23,6 +23,7 @@
 | `hdx_connect` | bool | `false` | Render the request-data variant of the footer instead of the download button. |
 | `request_href` | string | `'#'` | URL for the "Request data" link when `hdx_connect` is set. |
 | `request_attrs` | dict | `{}` | Extra HTML attributes on the "Request data" link. |
+| `show_more_info` | bool | `true` | Render the "More information" button. Set `false` when no meaningful `title_href` exists (e.g. the zero-resource HDX Connect state). |
 | `extra_classes` | string | `''` | Extra CSS classes on the root element. |
 
 ---
@@ -45,7 +46,7 @@
   .c-resource-card__footer
     c-text-button "Show more"           ← if description (hidden by CSS; JS shows when clamped)
     .c-resource-card__actions
-      c-button (secondary) "More information" [href=title_href]  ← always rendered
+      c-button (secondary) "More information" [href=title_href]  ← if show_more_info (default true)
       c-button (primary)   "Download (size)"  [href=download_url]
 ```
 
@@ -71,7 +72,7 @@
 |------|--------------|
 | `pcoded` | "P-coded" label chip |
 | `api_available` | "Access via API" text-button linking to `#api-access` |
-| — | "More information" secondary button → `title_href` — always rendered, unconditional |
+| `show_more_info` | "More information" secondary button → `title_href` — rendered when true (default) |
 | `download_url` | "Download" primary button → always rendered via `{% snippet 'v2/components/button.html', ... %}` |
 | `download_size` | Appended to Download button label: "Download (14.2K)" |
 
@@ -120,7 +121,7 @@ Used to simplify the inline format-mapping logic in `package_item_v2.html`.
 
 | Question | Decision |
 |----------|----------|
-| Should "More information" be conditional? | No — no `preview_available` param exists; the button always renders unconditionally |
+| Should "More information" be conditional? | Yes — new `show_more_info` param (default `true`); the zero-resource HDX Connect card in `resources_list.html` passes `show_more_info=False` to suppress the button when there's no real `title_href` to link to |
 | Where does the show-more button live relative to description? | In `__footer`, outside `__desc`; `data-module` placed on root card element to bridge both |
 | Shared JS or separate? | New shared `clamped-text.js` covering dataset-card + dataset-page-header + resource-card |
 | Format mapping? | New `h.hdx_format_to_icon_category()` Python helper; `package_item_v2.html` simplified to use it |

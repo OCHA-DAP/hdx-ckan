@@ -243,15 +243,21 @@ Field layout (v2 grid, not the old vertical list):
 **Row 2** (3 columns at MD+, stacked at SM):
 | Contributor | Source | Dataset added on HDX |
 
+Source also gets the 3-line clamp + Show more/less toggle described below, same pattern as the
+full-width fields, via the shared `clamped-text.js` module.
+
 **Full-width fields** (stacked):
-- Location (full list, no expand/collapse — `hdx_show_more` is not used in v2)
-- Methodology (full text)
-- Caveats / Comments (full text, via `h.render_markdown()`)
-- License (non-requestdata only; full text for "Other" license)
+- Location, Methodology, Caveats / Comments (via `h.render_markdown()`), and License (non-requestdata
+  only; "Other" license text) are each clamped to 3 lines with a tertiary/size-s "Show more"/"Show less"
+  toggle, reusing the same `data-module="clamped-text"` pattern as the page-header description
+  (`hdx-v2-dataset-metadata__value--clamped`)
 - Field Names, File Types, Number of Rows (requestdata only)
 - Topics/Tags — rendered as `{% snippet 'v2/components/label.html', color='grey', size='s', tag='a', ... %}` (`c-label` chips); wrapped in `.hdx-v2-dataset-metadata__value--tags` (flex/wrap)
 - Visibility (editor-only toggle)
-- Downloads chart → `div#dataset-downloads-data` + `div#dataset-downloads-chart`
+- Downloads chart → `div#dataset-downloads-data` + `div#dataset-downloads-chart`; container is
+  width-constrained on `.hdx-v2-dataset-metadata__downloads` (50% from `@hdx-bp-md`, 33% from
+  `@hdx-bp-xl`, full-width only below MD); empty state is `.hdx-v2-dataset-metadata__no-data-label`
+  ("No download data available", muted `hdx-body-s`/`neutral-7`)
 - Export metadata links (JSON | CSV) at bottom
 
 **Metadata strip alignment at XL**: The 4-item `__metadata` strip becomes a CSS grid (`grid-template-columns: calc(25% + var(--hdx-space-6)) repeat(3, 1fr)`), so item 2 (Expected update frequency) aligns with the content column (which sits after the 25% sidebar + gap).

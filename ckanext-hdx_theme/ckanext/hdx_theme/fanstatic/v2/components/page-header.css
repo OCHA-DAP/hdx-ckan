@@ -82,6 +82,8 @@
   line-height: var(--hdx-lh-normal);
   color: var(--hdx-neutral-95);
   margin: 0;
+  word-break: break-word;
+  overflow-wrap: anywhere;
 }
 @media (min-width: 48rem) {
   .c-page-header__title {
@@ -165,6 +167,20 @@
 }
 .c-page-header__desc-text a {
   color: inherit;
+}
+.c-page-header__desc-text h1,
+.c-page-header__desc-text h2,
+.c-page-header__desc-text h3 {
+  font-family: var(--hdx-font-body);
+  font-size: var(--hdx-fs-m);
+  font-weight: var(--hdx-fw-semibold);
+  line-height: var(--hdx-lh-normal);
+  margin: 0 0 var(--hdx-space-4);
+}
+.c-page-header__desc-text h1:last-child,
+.c-page-header__desc-text h2:last-child,
+.c-page-header__desc-text h3:last-child {
+  margin-bottom: 0;
 }
 .c-page-header__desc-text p,
 .c-page-header__desc-text ul,

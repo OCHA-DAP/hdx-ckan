@@ -74,7 +74,7 @@ Create a reusable, responsive dataset card component matching the Figma design e
 
 | Element | Token | Notes |
 |---|---|---|
-| Org name | `var(--hdx-fs-s)` / `var(--hdx-neutral-9)` | 14px, weight 400 |
+| Org name | `var(--hdx-fs-s)` / `var(--hdx-neutral-9)` | 14px, weight 400, 1-line, `width: 100%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis` |
 | Title (XL/MD) | `var(--hdx-fs-l)` / `var(--hdx-neutral-10)` | 18px, weight 600, 1-line, `text-overflow: ellipsis` |
 | Title (SM) | `var(--hdx-fs-m)` / `var(--hdx-neutral-10)` | 16px, weight 600, 2-line, `-webkit-line-clamp: 2` |
 | Description text | `var(--hdx-fs-xs)` / `var(--hdx-neutral-8)` | 12px |

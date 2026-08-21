@@ -317,9 +317,15 @@
           </div>
 
           <div class="hdx-v2-dataset-metadata__cell" id="metadata-source"
-               {% if metadata_edit_mode %}data-module="hdx-quick-edit" data-module-anchor="field_dataset_source" data-module-dataset="{{ pkg.id }}"{% endif %}>
+               data-module="clamped-text{{ ' hdx-quick-edit' if metadata_edit_mode else '' }}"
+               {% if metadata_edit_mode %}data-module-anchor="field_dataset_source" data-module-dataset="{{ pkg.id }}"{% endif %}>
             <span class="hdx-v2-dataset-metadata__label">{{ _('Source') }}</span>
-            <span class="hdx-v2-dataset-metadata__value">{{ pkg.dataset_source }}</span>
+            <span class="hdx-v2-dataset-metadata__value hdx-v2-dataset-metadata__value--clamped" data-clamped-content>{{ pkg.dataset_source }}</span>
+            {% snippet 'v2/components/text-button.html',
+                style='tertiary', size='s', label=_('Show more'),
+                icon_position='right', icon_src='v2/icons/chevron-down.svg',
+                tag='button', button_type='button',
+                attrs={'data-clamped-toggle': ''} %}
           </div>
 
           <div class="hdx-v2-dataset-metadata__cell">
@@ -349,9 +355,10 @@
 
         {# ── Location ── #}
         <div class="hdx-v2-dataset-metadata__full" id="metadata-location"
-             {% if metadata_edit_mode %}data-module="hdx-quick-edit" data-module-anchor="field_locations" data-module-dataset="{{ pkg.id }}"{% endif %}>
+             data-module="clamped-text{{ ' hdx-quick-edit' if metadata_edit_mode else '' }}"
+             {% if metadata_edit_mode %}data-module-anchor="field_locations" data-module-dataset="{{ pkg.id }}"{% endif %}>
           <span class="hdx-v2-dataset-metadata__label">{{ _('Location') }}</span>
-          <div class="hdx-v2-dataset-metadata__value hdx-v2-dataset-metadata__value--locations">
+          <div class="hdx-v2-dataset-metadata__value hdx-v2-dataset-metadata__value--locations hdx-v2-dataset-metadata__value--clamped" data-clamped-content>
             {% for grp in pkg.groups %}
               {% snippet 'v2/components/text-link.html',
                   label=grp.title or grp.name,
@@ -359,37 +366,55 @@
                   style='secondary', size='m' %}{% if not loop.last %}, {% endif %}
             {% endfor %}
           </div>
+          {% snippet 'v2/components/text-button.html',
+              style='tertiary', size='s', label=_('Show more'),
+              icon_position='right', icon_src='v2/icons/chevron-down.svg',
+              tag='button', button_type='button',
+              attrs={'data-clamped-toggle': ''} %}
         </div>
 
         {# ── Methodology ── #}
         <div class="hdx-v2-dataset-metadata__full"
-             {% if metadata_edit_mode %}data-module="hdx-quick-edit" data-module-anchor="field_methodology" data-module-dataset="{{ pkg.id }}"{% endif %}>
+             data-module="clamped-text{{ ' hdx-quick-edit' if metadata_edit_mode else '' }}"
+             {% if metadata_edit_mode %}data-module-anchor="field_methodology" data-module-dataset="{{ pkg.id }}"{% endif %}>
           <span class="hdx-v2-dataset-metadata__label">{{ _('Methodology') }}</span>
           {% set methodology, methodology_other = h.methodology_bk_compat(pkg.methodology, pkg.methodology_other) %}
-          <div class="hdx-v2-dataset-metadata__value">
+          <div class="hdx-v2-dataset-metadata__value hdx-v2-dataset-metadata__value--clamped" data-clamped-content>
             {% if not methodology_other %}
               {% if methodology != None %}{{ methodology }}{% endif %}
             {% else %}
               {{ methodology_other }}
             {% endif %}
           </div>
+          {% snippet 'v2/components/text-button.html',
+              style='tertiary', size='s', label=_('Show more'),
+              icon_position='right', icon_src='v2/icons/chevron-down.svg',
+              tag='button', button_type='button',
+              attrs={'data-clamped-toggle': ''} %}
         </div>
 
         {# ── Caveats / Comments ── #}
         <div class="hdx-v2-dataset-metadata__full"
-             {% if metadata_edit_mode %}data-module="hdx-quick-edit" data-module-anchor="field_caveats" data-module-dataset="{{ pkg.id }}"{% endif %}>
+             data-module="clamped-text{{ ' hdx-quick-edit' if metadata_edit_mode else '' }}"
+             {% if metadata_edit_mode %}data-module-anchor="field_caveats" data-module-dataset="{{ pkg.id }}"{% endif %}>
           <span class="hdx-v2-dataset-metadata__label">{{ _('Caveats / Comments') }}</span>
-          <div class="hdx-v2-dataset-metadata__value">
+          <div class="hdx-v2-dataset-metadata__value hdx-v2-dataset-metadata__value--clamped" data-clamped-content>
             {{ h.render_markdown(pkg.caveats) }}
           </div>
+          {% snippet 'v2/components/text-button.html',
+              style='tertiary', size='s', label=_('Show more'),
+              icon_position='right', icon_src='v2/icons/chevron-down.svg',
+              tag='button', button_type='button',
+              attrs={'data-clamped-toggle': ''} %}
         </div>
 
         {# ── License (non-requestdata only) ── #}
         {% if not pkg.is_requestdata_type %}
           <div class="hdx-v2-dataset-metadata__full"
-               {% if metadata_edit_mode %}data-module="hdx-quick-edit" data-module-anchor="field_license_id" data-module-dataset="{{ pkg.id }}"{% endif %}>
+               data-module="clamped-text{{ ' hdx-quick-edit' if metadata_edit_mode else '' }}"
+               {% if metadata_edit_mode %}data-module-anchor="field_license_id" data-module-dataset="{{ pkg.id }}"{% endif %}>
             <span class="hdx-v2-dataset-metadata__label">{{ _('License') }}</span>
-            <div class="hdx-v2-dataset-metadata__value">
+            <div class="hdx-v2-dataset-metadata__value hdx-v2-dataset-metadata__value--clamped" data-clamped-content>
               {% if pkg.license_id %}
                 {% snippet 'v2/components/text-link.html',
                     label=h.hdx_find_license_name(pkg.license_id, pkg.license_title),
@@ -401,6 +426,11 @@
                 {% endif %}
               {% endif %}
             </div>
+            {% snippet 'v2/components/text-button.html',
+                style='tertiary', size='s', label=_('Show more'),
+                icon_position='right', icon_src='v2/icons/chevron-down.svg',
+                tag='button', button_type='button',
+                attrs={'data-clamped-toggle': ''} %}
           </div>
         {% endif %}
 
@@ -493,7 +523,7 @@
             <span class="hdx-v2-dataset-metadata__label">{{ _('Downloads') }}</span>
             <div id="dataset-downloads-chart">
               <div id="dataset-downloads-chart-no-data" class="hdx-v2-dataset-metadata__no-data">
-                <div class="title">NO DATA</div>
+                <div>{{ _('No download data available') }}</div>
               </div>
               {% snippet 'v2/components/tooltip.html', variant='graph', graph_title='',
                   extra_classes='hdx-v2-chart-tooltip',

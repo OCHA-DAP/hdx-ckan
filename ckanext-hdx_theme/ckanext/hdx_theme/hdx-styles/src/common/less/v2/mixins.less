@@ -297,13 +297,20 @@
 }
 
 // ── Rendered markdown content ────────────────────────────────────
-// Spacing for the block elements (p, ul, ol) a `h.render_markdown()`
+// Spacing for the block elements (p, ul, ol, h1-h3) a `h.render_markdown()`
 // string can contain, for use on any element that outputs one of
 // those strings directly. Links inherit the surrounding text color
 // by default — override with an `a { color: ... }` rule after
 // including this mixin if a component needs a different link color.
+// Headings are flattened to one size (16px semibold — same size as the
+// surrounding body text, so a heading is never smaller than its own
+// paragraph text, but bold enough to still read as a heading; h4-h6 are
+// already stripped by CKAN's markdown sanitizer, so only h1-h3 apply).
 .hdx-markdown-content(@gap) {
     a { color: inherit; }
+
+    h1, h2, h3 { .hdx-body-m-semibold(); margin: 0 0 @gap; }
+    h1:last-child, h2:last-child, h3:last-child { margin-bottom: 0; }
 
     p, ul, ol { margin: 0 0 @gap; }
     p:last-child, ul:last-child, ol:last-child { margin-bottom: 0; }

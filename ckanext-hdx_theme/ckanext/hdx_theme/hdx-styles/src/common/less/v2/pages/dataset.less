@@ -112,6 +112,17 @@
         gap:            var(--hdx-space-1);
 
         .hdx-scroll-offset-header();
+
+        // Show-more button (Location/Methodology/Caveats/License/Source):
+        // hidden until JS confirms the value is actually clamped.
+        .c-text-button { display: none; }
+        &.is-clamped .c-text-button { display: inline-flex; }
+
+        &.is-open .c-text-button__icon {
+            transform:  rotate(180deg);
+            transition: transform 0.15s ease;
+            .hdx-motion();
+        }
     }
 
     &__label {
@@ -140,10 +151,28 @@
         &--break {
             word-break: break-all;
         }
+
+        &--clamped {
+            .hdx-line-clamp(3);
+
+            &.is-open {
+                .hdx-line-clamp-off();
+            }
+        }
     }
 
     &__no-data {
         display: none;
+    }
+
+    &__downloads {
+        @media (min-width: @hdx-bp-md) {
+            width: 50%;
+        }
+
+        @media (min-width: @hdx-bp-xl) {
+            width: 33%;
+        }
     }
 
     &__downloads #dataset-downloads-chart {

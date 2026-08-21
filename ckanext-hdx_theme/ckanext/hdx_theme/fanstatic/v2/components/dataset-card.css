@@ -44,6 +44,10 @@
   color: var(--hdx-neutral-9);
   line-height: var(--hdx-lh-normal);
   margin: 0;
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 .c-dataset-card__org a {
   color: inherit;
@@ -109,6 +113,20 @@
 }
 .c-dataset-card__desc-text a {
   color: inherit;
+}
+.c-dataset-card__desc-text h1,
+.c-dataset-card__desc-text h2,
+.c-dataset-card__desc-text h3 {
+  font-family: var(--hdx-font-body);
+  font-size: var(--hdx-fs-m);
+  font-weight: var(--hdx-fw-semibold);
+  line-height: var(--hdx-lh-normal);
+  margin: 0 0 var(--hdx-space-2);
+}
+.c-dataset-card__desc-text h1:last-child,
+.c-dataset-card__desc-text h2:last-child,
+.c-dataset-card__desc-text h3:last-child {
+  margin-bottom: 0;
 }
 .c-dataset-card__desc-text p,
 .c-dataset-card__desc-text ul,

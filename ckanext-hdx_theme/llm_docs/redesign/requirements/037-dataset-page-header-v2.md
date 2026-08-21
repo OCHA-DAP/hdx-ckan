@@ -160,7 +160,7 @@ Uses the shared `c-info-icon` / `c-tooltip-anchor` pattern. Hover/focus visibili
 |---------|--------|
 | Divider | `<hr class="c-divider">` |
 | Org logo | `<img>` with `max-width` + `object-fit: contain`; wrapped in `<a class="c-page-header__logo-link">` when `logo_href` is passed (dataset page only — see Decisions) |
-| Dataset title | `<h1>` — Merriweather bold, responsive font-size; gets `data-module="hdx-quick-edit"` attrs when `edit_mode=True` |
+| Dataset title | `<h1>` — Merriweather bold, responsive font-size, `word-break: break-word; overflow-wrap: anywhere;` (so an unbreakable long title wraps instead of overflowing behind the org logo); gets `data-module="hdx-quick-edit"` attrs when `edit_mode=True` |
 | Description container | `<div data-module="clamped-text">` + `<p class="...__desc-text" data-clamped-content>` + show-more button (updated task 038) |
 | Download count | `<div>` with inline SVG + `<span>` |
 

@@ -75,6 +75,20 @@
 .c-dataviz-card__desc-text a {
   color: inherit;
 }
+.c-dataviz-card__desc-text h1,
+.c-dataviz-card__desc-text h2,
+.c-dataviz-card__desc-text h3 {
+  font-family: var(--hdx-font-body);
+  font-size: var(--hdx-fs-m);
+  font-weight: var(--hdx-fw-semibold);
+  line-height: var(--hdx-lh-normal);
+  margin: 0 0 var(--hdx-space-2);
+}
+.c-dataviz-card__desc-text h1:last-child,
+.c-dataviz-card__desc-text h2:last-child,
+.c-dataviz-card__desc-text h3:last-child {
+  margin-bottom: 0;
+}
 .c-dataviz-card__desc-text p,
 .c-dataviz-card__desc-text ul,
 .c-dataviz-card__desc-text ol {

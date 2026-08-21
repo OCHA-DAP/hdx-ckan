@@ -34,6 +34,20 @@
 .hdx-v2-crisis-description a {
   color: inherit;
 }
+.hdx-v2-crisis-description h1,
+.hdx-v2-crisis-description h2,
+.hdx-v2-crisis-description h3 {
+  font-family: var(--hdx-font-body);
+  font-size: var(--hdx-fs-m);
+  font-weight: var(--hdx-fw-semibold);
+  line-height: var(--hdx-lh-normal);
+  margin: 0 0 var(--hdx-space-4);
+}
+.hdx-v2-crisis-description h1:last-child,
+.hdx-v2-crisis-description h2:last-child,
+.hdx-v2-crisis-description h3:last-child {
+  margin-bottom: 0;
+}
 .hdx-v2-crisis-description p,
 .hdx-v2-crisis-description ul,
 .hdx-v2-crisis-description ol {
