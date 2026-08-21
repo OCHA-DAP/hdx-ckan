@@ -156,9 +156,23 @@ Note: `package/hdx-read-shape.html` (the pre-v2 template that used to own this m
 ```html
 <section class="hdx-v2-dataset-section" id="data-and-resources">
   <div class="hdx-v2-dataset-section__header">
-    <h2 class="hdx-v2-dataset-section__title">
-      Data and resources ({{ pkg.resources | length }})
-    </h2>
+    <div class="hdx-v2-dataset-section__title-row">
+      <h2 class="hdx-v2-dataset-section__title">
+        Data and resources ({{ pkg.resources | length }})
+      </h2>
+      {# "Archived" (dark) then "Request only data" (yellow) — same c-label chips as the
+         page-header's labels row (§3.1), shown here too when the corresponding flag is set #}
+      {% if pkg.archived %}
+        {% snippet 'v2/components/label.html',
+            text='Archived', color='dark', size='s',
+            icon=True, icon_src='v2/icons/archive.svg' %}
+      {% endif %}
+      {% if pkg.is_requestdata_type %}
+        {% snippet 'v2/components/label.html',
+            text='Request only data', color='yellow', size='s',
+            icon=True, icon_src='v2/icons/lock.svg' %}
+      {% endif %}
+    </div>
   </div>
   <div class="hdx-v2-dataset-section__body">
     {# resource cards via resources_list.html #}

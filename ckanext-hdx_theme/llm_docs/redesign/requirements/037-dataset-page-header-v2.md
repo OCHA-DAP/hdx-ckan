@@ -96,6 +96,8 @@ Right card moves **inside** the left column, between description and CTA. All me
 | Element | Condition |
 |---------|-----------|
 | Description + Show more | Only if `description` non-empty |
+| "Deleted" label | `pkg_state` starts with `'deleted'` (post-launch addition, not in the original Figma export) |
+| "Archived" label | `archived=True` (post-launch addition, not in the original Figma export) |
 | "Request only data" label | `request_only=True` |
 | "COD+" label | `cod_dataset=True` |
 | `links_list` label+button groups | `links_list` non-empty |
@@ -120,6 +122,8 @@ All elements map to existing v2 components. **No new base components needed.**
 
 | Figma label | Component | Params |
 |-------------|-----------|--------|
+| "Deleted" *(not in Figma — post-launch addition)* | `v2/components/label.html` | `color='red'`, `size='s'` |
+| "Archived" *(not in Figma — post-launch addition)* | `v2/components/label.html` | `color='dark'`, `size='s'`, `icon=True`, `icon_src='v2/icons/archive.svg'` |
 | "Request only data" | `v2/components/label.html` | `color='yellow'`, `size='s'`, `icon=True`, `icon_src='v2/icons/lock.svg'` |
 | "COD+" | `v2/components/label.html` | `color='grey'`, `size='s'` |
 | "Part of …" (data grid/crisis) | `v2/components/label.html` | `color='grey'`, `size='s'` |
@@ -221,6 +225,8 @@ Dataset-relevant params (see the docblock in `templates/v2/components/page-heade
 | `logo_src` | string | `''` | Logo image URL. Empty = logo area hidden. |
 | `contact_href` | string | `'#'` | Link for "Contact organisation" button. |
 | `download_count` | int | `0` | From `pkg.approx_total_downloads`. Zero/falsy = stat hidden. |
+| `pkg_state` | string | `''` | Show "Deleted" red label when it starts with `'deleted'`. Post-launch addition, not in the original Figma export. |
+| `archived` | bool | `False` | Show "Archived" dark label. Post-launch addition, not in the original Figma export. |
 | `request_only` | bool | `False` | Show "Request only data" yellow label. |
 | `cod_dataset` | bool | `False` | Show "COD+" grey label. |
 | `links_list` | list | `[]` | List of `{label, title, url, newTab}` dicts from `pkg.links_list`. |

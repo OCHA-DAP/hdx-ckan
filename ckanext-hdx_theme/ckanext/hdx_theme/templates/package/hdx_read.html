@@ -149,6 +149,7 @@
         logo_href=h.url_for(controller='organization', action='read', id=pkg.owner_org),
         contact_href=contact_href,
         download_count=pkg.approx_total_downloads,
+        archived=pkg.archived,
         request_only=pkg.is_requestdata_type,
         cod_dataset=(analytics_is_cod == 'true'),
         links_list=pkg.links_list or [],
@@ -207,6 +208,11 @@
         <h2 class="hdx-v2-dataset-section__title">
           {{ _('Data and resources') }}{% if pkg.resources %} ({{ pkg.resources | length }}){% endif %}
         </h2>
+        {% if pkg.archived %}
+          {% snippet 'v2/components/label.html',
+              text='Archived', color='dark', size='s',
+              icon=True, icon_src='v2/icons/archive.svg' %}
+        {% endif %}
         {% if pkg.is_requestdata_type %}
           {% snippet 'v2/components/label.html',
               text='Request only data', color='yellow', size='s',
