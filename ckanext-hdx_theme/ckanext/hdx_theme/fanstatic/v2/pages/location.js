@@ -55,6 +55,11 @@
     // one (Enter/Space on a focused <summary>), so preventDefault() on it
     // blocks the native <details> toggle for both. tabindex is toggled
     // alongside it so a disabled card isn't a dead stop in the tab order.
+    // Listener is capture-phase (not bubble) so it runs before any inner
+    // element's own click handler — e.g. tooltip.js's handler on the card
+    // title (.c-tooltip-trigger) calls stopPropagation(), which would
+    // otherwise stop a bubble-phase listener on the summary from ever
+    // firing when the click lands on the title.
 
     function initDesktopCardClickDisable() {
         var summaries = document.querySelectorAll('.hdx-v2-location-datagrid-card__summary');
@@ -75,7 +80,7 @@
         summaries.forEach(function (summary) {
             summary.addEventListener('click', function (e) {
                 if (mql.matches) e.preventDefault();
-            });
+            }, true); // capture phase — runs before tooltip.js's stopPropagation() on inner triggers
         });
 
         apply(mql.matches);
