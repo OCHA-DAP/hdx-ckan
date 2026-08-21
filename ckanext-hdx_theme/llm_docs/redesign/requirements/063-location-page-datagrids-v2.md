@@ -552,7 +552,7 @@ existing gap (nothing in v1 tracks the "Show legend" hover panel either).
 | Interaction | v1 today | v2 |
 |---|---|---|
 | Expand/collapse (whole grid) | `<input type=checkbox>` + jQuery `.toggle()` on all `.data-item-details` | Text-button ("Show more"/"Show less") + `aria-expanded` attribute, driving every card's native `<details>` `open` property at once (checkbox and jQuery replaced, same single-toggle-for-everything behavior preserved, per §2.5's confirmed Figma reading). Rendered twice — next to the title on SM/MD and next to the chart on XL, both `style='primary'` (only `display` toggles by breakpoint in LESS) — only one visible at a time, both driven together |
-| Expand/collapse (one category card) | *(did not exist)* | New (round 4) — each card is a native `<details>`/`<summary>`; clicking the summary row expands/collapses just that card, independent of the global toggle above, which always forces every card to the same state rather than reading back any mixed per-card state |
+| Expand/collapse (one category card) | *(did not exist)* | New (round 4) — each card is a native `<details>`/`<summary>`; clicking the summary row expands/collapses just that card, independent of the global toggle above, which always forces every card to the same state rather than reading back any mixed per-card state. **Desktop-disabled (round 5, ≥`@hdx-bp-md`/768px)**: `location.js` `preventDefault()`s the summary's click event (blocking both mouse and keyboard-triggered activation, since Enter/Space on a focused `<summary>` also fires `click`) and sets `tabindex="-1"` so the card is skipped in tab order; only the global toggle works at that width. Below 768px, per-card click/keyboard toggling is untouched |
 | Dataset link click | `data-module="hdx_click_stopper" data-module-link_type="data grid dataset"` → Mixpanel/GTM | Preserved verbatim, same module/attribute |
 | Add-Data link click (logged out) | `data-module-link_type="data grid add data"` → tracked | Preserved verbatim |
 | Add-Data link click (logged in) | Plain `onclick="contributeAddDetails(...)"`, untracked | Preserved verbatim (existing asymmetry kept, not "fixed" as part of this task) |
@@ -585,9 +585,9 @@ existing gap (nothing in v1 tracks the "Show legend" hover panel either).
 **`c-accordion`** — evaluated and rejected as a drop-in for the category cards. Its model is one
 `<details>`-like element collapsing/expanding independently, with no way to also force every card open/closed
 from one external control. The page needs both: a global toggle driving every card at once (§1.5, §2.5) *and*
-per-card click-to-expand (round 4). Resolved by using the same underlying native `<details>`/`<summary>`
-mechanism directly in `completeness-item.html` (not the `c-accordion` component itself), with the global
-toggle just setting `.open` on every card's `<details>` element.
+per-card click-to-expand (round 4, desktop-disabled round 5 — see §5). Resolved by using the same underlying
+native `<details>`/`<summary>` mechanism directly in `completeness-item.html` (not the `c-accordion` component
+itself), with the global toggle just setting `.open` on every card's `<details>` element.
 
 ---
 
@@ -629,7 +629,7 @@ toggle just setting `.open` on every card's `<details>` element.
 | Sub-category with 2+ datasets, any of them complementary | Per D13, any dataset with `is_complementary` true gets the indent-icon treatment in place of its status swatch, at any position and any breakpoint |
 | Complementary datasets | Indent-icon treatment, per D13 (§3.6) |
 | Very long dataset/organisation names | No truncation spec visible in any Figma export — needs a sensible `overflow`/`text-overflow: ellipsis` default, consistent with how other v2 pages (e.g. 048's `title10` class) handle this |
-| JS disabled | Cards render collapsed by default (a deliberate departure from v1's checked-by-default checkbox); each card's native `<details>`/`<summary>` still opens on click with zero JavaScript, so content stays reachable — only the global "Show more"/"Show less" toggle requires JS |
+| JS disabled | Cards render collapsed by default (a deliberate departure from v1's checked-by-default checkbox); each card's native `<details>`/`<summary>` still opens on click with zero JavaScript, so content stays reachable — only the global "Show more"/"Show less" toggle requires JS. **Round 5 caveat:** the desktop click-disable is itself JS (`preventDefault` in `location.js`), so a JS-disabled desktop visitor regains per-card click — an accepted trade-off, not a bug |
 | Location with zero N/A sub-categories | Per D6, the page-level chart's 4th legend swatch is hidden entirely |
 | Follower count (currently shown in v1 header, §1.3) | Removed entirely, per D16 |
 
@@ -641,15 +641,15 @@ toggle just setting `.open` on every card's `<details>` element.
 |---|---|---|
 | Template | `ckanext-hdx_theme/ckanext/hdx_theme/templates/country/country.html` | Re-parented to `v2/page.html`; header + Data Grid section + commented-out Key Figures/map block (D5) all in `{% block pre_primary %}` |
 | Template | `ckanext-hdx_theme/ckanext/hdx_theme/templates/light/group/read.html` | Unchanged, out of scope for now |
-| Template | `ckanext-hdx_theme/ckanext/hdx_theme/templates/v2/completeness-item.html` | Single category-card partial, called directly by `country.html`; a native `<details>`/`<summary>`, collapsed by default, so clicking a card expands/collapses it independent of the page's global toggle |
+| Template | `ckanext-hdx_theme/ckanext/hdx_theme/templates/v2/completeness-item.html` | Single category-card partial, called directly by `country.html`; a native `<details>`/`<summary>`, collapsed by default, so clicking a card expands/collapses it independent of the page's global toggle. Markup unchanged by round 5 — the desktop click-disable is applied in JS/CSS only (see `location.js`/`location.less` rows below) |
 | Template | `ckanext-hdx_theme/ckanext/hdx_theme/templates/country/completeness_legend.html` | Retired (D2) |
 | Template | `ckanext-hdx_theme/ckanext/hdx_theme/templates/country/country_actions_menu.html` | Orphaned — "Edit location page" is a `header_actions` entry passed to `page-header.html` |
 | Template | `ckanext-hdx_theme/ckanext/hdx_theme/templates/v2/location-datagrid-drawer.html` | Definitions glossary, sourced from existing `description` fields (§4.2); intro + desktop jump-list + mobile dropdown (static "Jump to sub-categories" label) wrapped in one `__sticky-top` block (D18) |
 | Template | `ckanext-hdx_theme/ckanext/hdx_theme/templates/v2/components/stats-card.html` | `variant='card'\|'plain'` param — `'plain'` is the location-page KPI look (no chrome, value above label, centered) |
-| LESS | `hdx-styles/src/common/less/v2/pages/location.less` | Page-specific (per `-page.less` naming convention) |
+| LESS | `hdx-styles/src/common/less/v2/pages/location.less` | Page-specific (per `-page.less` naming convention). Round 5: card summary's `cursor: pointer` is scoped to `<@hdx-bp-md`, `cursor: default` at `≥@hdx-bp-md`; the card's `:hover` border-highlight is likewise scoped to `<@hdx-bp-md` only |
 | LESS | `hdx-styles/src/common/less/v2/components/stats-card.less` | `--plain` modifier |
 | LESS (orphan) | `country/country.css`, `crisis/topline.css` | Left in place, unused (matches task 058's precedent for orphaned v1 assets) |
-| JS | `ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/v2/pages/location.js` | Global expand/collapse (two `text-button` instances, one shown per breakpoint, driving every card's native `<details>` at once); drawer jump-nav scroll wiring (reuses `window.hdxSmoothScrollTo` from `anchor-links.js` against the drawer's own scroll container, offset by the `__sticky-top` block's rendered height); a self-contained `MutationObserver` measuring the drawer's title-bar height into a `--drawer-header-height` custom property (D18) |
+| JS | `ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/v2/pages/location.js` | Global expand/collapse (two `text-button` instances, one shown per breakpoint, driving every card's native `<details>` at once); drawer jump-nav scroll wiring (reuses `window.hdxSmoothScrollTo` from `anchor-links.js` against the drawer's own scroll container, offset by the `__sticky-top` block's rendered height); a self-contained `MutationObserver` measuring the drawer's title-bar height into a `--drawer-header-height` custom property (D18). Round 5: `initDesktopCardClickDisable()` — `matchMedia('(min-width: 48rem)')`-gated `preventDefault()` on each card summary's click, plus `tabindex` toggling, re-evaluated live via the `mql`'s `change` listener |
 | JS | `ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/country/country.js` | Untouched — still serves the out-of-scope block (D5) |
 | JS | `ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/v2/components/drawer.js` | Unchanged — the sticky-top offset is measured by `location-page.js`'s own `MutationObserver`, not a `drawer.js` event |
 | Icons | `templates/v2/icons/humanitarian-data-grids/*.svg` | 5 reused as-is; 6th ("Geography & Infrastructure") uses existing `location.svg` (D15) |

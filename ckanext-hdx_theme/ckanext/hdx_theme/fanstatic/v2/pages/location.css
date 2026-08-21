@@ -182,8 +182,10 @@
   border: 1px solid var(--hdx-neutral-1);
   border-radius: var(--hdx-radius-sm);
 }
-.hdx-v2-location-datagrid-card:hover {
-  border-color: var(--hdx-neutral-8);
+@media (max-width: 48rem) {
+  .hdx-v2-location-datagrid-card:hover {
+    border-color: var(--hdx-neutral-8);
+  }
 }
 .hdx-v2-location-datagrid-card__summary {
   display: flex;
@@ -231,6 +233,11 @@
 .hdx-v2-location-datagrid-card__details summary {
   list-style: none;
   cursor: pointer;
+}
+@media (min-width: 48rem) {
+  .hdx-v2-location-datagrid-card__details summary {
+    cursor: default;
+  }
 }
 .hdx-v2-location-datagrid-card__details summary::-webkit-details-marker {
   display: none;

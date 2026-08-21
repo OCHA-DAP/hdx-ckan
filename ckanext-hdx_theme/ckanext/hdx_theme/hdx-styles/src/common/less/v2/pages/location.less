@@ -208,8 +208,12 @@
     border:           1px solid var(--hdx-neutral-1);
     border-radius:    var(--hdx-radius-sm);
 
-    &:hover {
-        border-color: var(--hdx-neutral-8);
+    // Hover highlight implies clickability — kept only where the card is
+    // still clickable (mobile); click is desktop-disabled above @hdx-bp-md.
+    @media (max-width: @hdx-bp-md) {
+        &:hover {
+            border-color: var(--hdx-neutral-8);
+        }
     }
 
     // Title (left) + status row (right, XL only) on one row —
@@ -273,6 +277,11 @@
         summary {
             list-style: none;
             cursor:     pointer;
+
+            // Click is desktop-disabled (location.js) — cursor reflects that.
+            @media (min-width: @hdx-bp-md) {
+                cursor: default;
+            }
 
             &::-webkit-details-marker { display: none; }
             &::marker                 { content: ""; }

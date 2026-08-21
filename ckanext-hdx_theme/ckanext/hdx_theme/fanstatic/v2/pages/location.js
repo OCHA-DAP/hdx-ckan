@@ -9,6 +9,9 @@
  *     browser itself (each card is a <details>/<summary>, task 063 round 4)
  *     and isn't tracked here; the global toggle always forces all cards to
  *     the same state rather than reading back any mixed per-card state.
+ *   - Per-card click-to-expand is desktop-disabled (>= @hdx-bp-md, 48rem):
+ *     only the global toggle above works there. Below that width, per-card
+ *     click/keyboard toggling stays native and untouched.
  *   - Definitions drawer jump-nav scroll wiring, scoped to the drawer's own
  *     internal scroll container (not the page/window).
  */
@@ -18,6 +21,7 @@
 
     document.addEventListener('DOMContentLoaded', function () {
         initExpandCollapse();
+        initDesktopCardClickDisable();
         initDesktopJumpLinks();
         initStickyTopOffset();
     });
@@ -43,6 +47,40 @@
             toggle.addEventListener('click', function () {
                 setAll(toggle.getAttribute('aria-expanded') !== 'true');
             });
+        });
+    }
+
+    // ── 1b. Per-card click disabled on desktop (>= @hdx-bp-md, 48rem) ─────
+    // Same click event covers both a mouse click and a keyboard-triggered
+    // one (Enter/Space on a focused <summary>), so preventDefault() on it
+    // blocks the native <details> toggle for both. tabindex is toggled
+    // alongside it so a disabled card isn't a dead stop in the tab order.
+
+    function initDesktopCardClickDisable() {
+        var summaries = document.querySelectorAll('.hdx-v2-location-datagrid-card__summary');
+        if (!summaries.length || !window.matchMedia) return;
+
+        var mql = window.matchMedia('(min-width: 48rem)');
+
+        function apply(isDesktop) {
+            summaries.forEach(function (summary) {
+                if (isDesktop) {
+                    summary.setAttribute('tabindex', '-1');
+                } else {
+                    summary.removeAttribute('tabindex');
+                }
+            });
+        }
+
+        summaries.forEach(function (summary) {
+            summary.addEventListener('click', function (e) {
+                if (mql.matches) e.preventDefault();
+            });
+        });
+
+        apply(mql.matches);
+        mql.addEventListener('change', function (e) {
+            apply(e.matches);
         });
     }
 
