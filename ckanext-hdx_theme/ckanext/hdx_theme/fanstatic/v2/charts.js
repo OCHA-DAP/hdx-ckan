@@ -74,18 +74,6 @@
         return Math.ceil(rounded) * multiplier;
     }
 
-    // True when rounding the tick values up to integers creates duplicates
-    // (very small maxima) — in that case ticks keep their decimals.
-    function hasDuplicatesWhenRoundedUp(values) {
-        var seen = {};
-        return values.some(function (value) {
-            var ceiled = Math.ceil(value);
-            if (seen[ceiled]) return true;
-            seen[ceiled] = true;
-            return false;
-        });
-    }
-
     // ── External tooltip driving a template-rendered c-tooltip--graph ─
     //
     // opts.title(tooltip)    → title string  (default: Chart.js title)
@@ -161,8 +149,15 @@
         });
 
         var yMax = niceMax(maxValue);
-        var tickValues = [yMax / 4, yMax / 2, (3 * yMax) / 4, yMax];
-        var integerTicks = !hasDuplicatesWhenRoundedUp(tickValues);
+        var tickValues = [];
+        var seenTicks = {};
+        [yMax / 4, yMax / 2, (3 * yMax) / 4, yMax].forEach(function (value) {
+            var rounded = Math.round(value);
+            if (!seenTicks[rounded]) {
+                seenTicks[rounded] = true;
+                tickValues.push(rounded);
+            }
+        });
 
         var lineColor = token('--hdx-primary-5');
         var lastIndex = chartData.length - 1;
@@ -182,6 +177,7 @@
                     borderWidth: 2,
                     pointRadius: 2.5,
                     pointHoverRadius: 4,
+                    clip: false,
                     // v1's C3 'dashed' region on the most recent (partial) week
                     segment: {
                         borderDash: function (ctx) {
@@ -195,6 +191,7 @@
                 maintainAspectRatio: false,
                 animation: reducedMotion() ? false : undefined,
                 interaction: { mode: 'index', intersect: false },
+                layout: { padding: tokenPx('--hdx-space-2') },
                 scales: {
                     x: {
                         type: 'time',
@@ -217,10 +214,7 @@
                         },
                         ticks: {
                             color: token('--hdx-neutral-8'),
-                            font: tickFont(),
-                            callback: function (value) {
-                                return integerTicks ? Math.round(value) : value;
-                            }
+                            font: tickFont()
                         },
                         grid: { color: token('--hdx-neutral-3') },
                         border: { display: false }
@@ -264,6 +258,7 @@
                         borderWidth: 3,
                         pointRadius: 4,
                         pointHoverRadius: 5,
+                        clip: false,
                         segment: { borderDash: dashLastSegment }
                     },
                     {
@@ -274,6 +269,7 @@
                         borderWidth: 3,
                         pointRadius: 4,
                         pointHoverRadius: 5,
+                        clip: false,
                         segment: { borderDash: dashLastSegment }
                     }
                 ]
@@ -283,6 +279,7 @@
                 maintainAspectRatio: false,
                 animation: reducedMotion() ? false : undefined,
                 interaction: { mode: 'index', intersect: false },
+                layout: { padding: tokenPx('--hdx-space-2') },
                 scales: {
                     x: {
                         type: 'time',
@@ -298,7 +295,11 @@
                     y: {
                         grid: { color: token('--hdx-neutral-3') },
                         border: { display: false },
-                        ticks: { color: token('--hdx-neutral-8'), font: tickFont() }
+                        ticks: {
+                            color: token('--hdx-neutral-8'),
+                            font: tickFont(),
+                            precision: 0
+                        }
                     }
                 },
                 plugins: {
