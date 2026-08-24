@@ -11,7 +11,9 @@
   description  {string}  Description text, 3-line clamped with "Show more". default: ''
   img_url      {string}  Thumbnail image URL. Empty → placeholder. default: ''
   url          {string}  Explore target — image and title link here, opens
-                          in a new tab. default: '#'
+                          in a new tab. Empty → image/title render as
+                          non-interactive elements instead of links.
+                          default: '#'
   updated_on   {string}  Pre-formatted "Updated on ..." string. Pass '' to omit.
                           default: ''
   data_url     {string}  "DATA" link target, opens in a new tab. default: '#'
@@ -31,17 +33,31 @@
 
 <div class="c-dataviz-card">
 
-  <a class="c-dataviz-card__image" href="{{ url }}" target="_blank" rel="noopener noreferrer">
-    {% if img_url %}
-      <img class="c-dataviz-card__img lazyload" data-src="{{ img_url }}" src="{{ img_url }}" alt="{{ title }}">
-    {% else %}
-      <div class="c-dataviz-card__image-placeholder"></div>
-    {% endif %}
-  </a>
+  {% if url %}
+    <a class="c-dataviz-card__image" href="{{ url }}" target="_blank" rel="noopener noreferrer">
+      {% if img_url %}
+        <img class="c-dataviz-card__img lazyload" data-src="{{ img_url }}" src="{{ img_url }}" alt="{{ title }}">
+      {% else %}
+        <div class="c-dataviz-card__image-placeholder"></div>
+      {% endif %}
+    </a>
+  {% else %}
+    <div class="c-dataviz-card__image">
+      {% if img_url %}
+        <img class="c-dataviz-card__img lazyload" data-src="{{ img_url }}" src="{{ img_url }}" alt="{{ title }}">
+      {% else %}
+        <div class="c-dataviz-card__image-placeholder"></div>
+      {% endif %}
+    </div>
+  {% endif %}
 
   <div class="c-dataviz-card__body">
 
-    <a class="c-dataviz-card__title" href="{{ url }}" target="_blank" rel="noopener noreferrer">{{ title }}</a>
+    {% if url %}
+      <a class="c-dataviz-card__title" href="{{ url }}" target="_blank" rel="noopener noreferrer">{{ title }}</a>
+    {% else %}
+      <span class="c-dataviz-card__title">{{ title }}</span>
+    {% endif %}
 
     {% if description %}
       <div class="c-dataviz-card__desc" data-module="clamped-text">

@@ -299,6 +299,8 @@ already used for related showcases on the dataset page):
 - Long titles: single-line truncate (ellipsis) per Figma.
 - Long descriptions: 3-line clamp per Figma.
 - Card with no permission for edit: edit link must not render at all (not just hidden via CSS).
+- Showcase with no external URL: image/title render as non-interactive elements instead of a link
+  (previously rendered `href=""`, opening a new tab to nowhere).
 - Slow responses: no skeleton/loading state exists in v1; none is added.
 - Rapid search/sort/page-size changes: not a concern — every change is a full-page reload, no
   debouncing needed (matches today's behavior).
