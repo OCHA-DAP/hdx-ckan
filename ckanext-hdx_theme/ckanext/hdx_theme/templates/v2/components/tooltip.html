@@ -92,11 +92,7 @@
   {# ── Graph / chart tooltip ───────────────────────── #}
   {% elif variant == 'graph' %}
 
-    {% if graph_title %}
-      <span class="c-tooltip__text">
-        {{ graph_title }}
-      </span>
-    {% endif %}
+    <span class="c-tooltip__text">{{ graph_title }}</span>
 
     {% if legend_items %}
       <div class="c-tooltip__legend">
