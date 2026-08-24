@@ -17,6 +17,7 @@
 }
 .c-label__text {
   position: relative;
+  line-height: 1;
 }
 .c-label--size-m {
   padding: var(--hdx-space-1) var(--hdx-space-2);
