@@ -300,9 +300,11 @@ already-filtered list).
     {'label': _('Stats'), 'href': h.url_for('hdx_org.stats', id=org_dict.name)},
 ] %}
 ```
-CSS: `.c-tab` — height `4rem`, centered text, no border, secondary text color; `.c-tab.is-active` —
-`border-bottom: 4px solid` the v2 accent token matching Figma's `--color-royalblue` (#1862d8;
-confirm exact token name in `tokens.less` at implementation time), primary/darker text color. At
+CSS: `.c-tab` — height `4rem`, centered text, secondary text color, `border-bottom: 4px solid transparent`
+(reserved in every state so `box-sizing: border-box` doesn't shift the centered text when a tab
+activates); `.c-tab.is-active` — overrides only `border-bottom-color` to the v2 accent token matching
+Figma's `--color-royalblue` (#1862d8; confirm exact token name in `tokens.less` at implementation
+time), plus primary/darker text color. At
 SM, `.c-tabs { overflow-x: auto; }` with `.c-tab { flex-shrink: 0; }` (horizontal scroll) —
 confirmed default; Figma's SM export doesn't encode a working overflow strategy for 5 tab labels,
 so this is the implementation's own solution rather than a Figma-sourced one (see D10).
