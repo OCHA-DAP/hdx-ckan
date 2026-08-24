@@ -53,7 +53,7 @@ class TestLandingPages(object):
         assert '<h2 class="hdx-v2-signals-section-heading">Data Coverage</h2>' in response.body
 
         assert '<h2 class="hdx-v2-signals-section-heading">Signals Map</h2>' in response.body
-        assert 'src="https://data.humdata.org/visualization/signals/"' in response.body
+        assert 'src="https://data.humdata.org/visualization/signals-v2/"' in response.body
 
         assert '<h2 class="hdx-v2-signals-section-heading">Resources</h2>' in response.body
 
