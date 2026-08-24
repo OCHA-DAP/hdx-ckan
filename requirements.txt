@@ -65,6 +65,8 @@ click==8.1.7
     #   flask
     #   geomet
     #   rq
+croniter==6.2.4
+    # via rq
 datasize==1.0.0
     # via -r requirements.in
 decorator==5.2.1
@@ -188,6 +190,7 @@ python-dateutil==2.9.0.post0
     #   -r requirements.in
     #   arrow
     #   botocore
+    #   croniter
     #   feedgen
 python-json-logger==2.0.7
     # via -r requirements.in
@@ -228,7 +231,7 @@ rpds-py==2026.6.3
     # via
     #   jsonschema
     #   referencing
-rq==1.16.2
+rq==2.11.0
     # via -r requirements.in
 s3transfer==0.10.4
     # via boto3
