@@ -25,6 +25,7 @@
   color: var(--hdx-neutral-8);
   text-decoration: none;
   white-space: nowrap;
+  border-bottom: var(--hdx-space-1) solid transparent;
 }
 .c-tab:hover,
 .c-tab:focus {
@@ -32,6 +33,6 @@
   text-decoration: none;
 }
 .c-tab.is-active {
-  border-bottom: var(--hdx-space-1) solid var(--hdx-primary-5);
+  border-bottom-color: var(--hdx-primary-5);
   color: var(--hdx-neutral-95);
 }

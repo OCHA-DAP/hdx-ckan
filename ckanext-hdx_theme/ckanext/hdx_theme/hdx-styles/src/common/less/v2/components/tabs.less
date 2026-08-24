@@ -33,6 +33,7 @@
     color:           var(--hdx-neutral-8);       // #3f4748 inactive
     text-decoration: none;
     white-space:     nowrap;
+    border-bottom:   var(--hdx-space-1) solid transparent;   // reserve space so .is-active doesn't shift text
 
     &:hover,
     &:focus {
@@ -41,7 +42,7 @@
     }
 
     &.is-active {
-        border-bottom: var(--hdx-space-1) solid var(--hdx-primary-5);   // 4px #1862d8
-        color:         var(--hdx-neutral-95);                           // #101212
+        border-bottom-color: var(--hdx-primary-5);   // 4px #1862d8
+        color:                var(--hdx-neutral-95); // #101212
     }
 }
