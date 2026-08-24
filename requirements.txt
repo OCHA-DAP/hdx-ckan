@@ -242,13 +242,11 @@ six==1.16.0
     #   ckantoolkit
     #   python-dateutil
     #   rfc3339-validator
-sqlalchemy[mypy]==1.4.52
+sqlalchemy[mypy]==2.0.52
     # via
     #   -r requirements.in
     #   alembic
     #   sqlalchemy
-sqlalchemy2-stubs==0.0.2a38
-    # via sqlalchemy
 sqlparse==0.5.0
     # via -r requirements.in
 stevedore==5.4.1
@@ -260,7 +258,7 @@ typing-extensions==4.12.2
     #   alembic
     #   mypy
     #   referencing
-    #   sqlalchemy2-stubs
+    #   sqlalchemy
 tzdata==2026.3
     # via arrow
 tzlocal==5.2
