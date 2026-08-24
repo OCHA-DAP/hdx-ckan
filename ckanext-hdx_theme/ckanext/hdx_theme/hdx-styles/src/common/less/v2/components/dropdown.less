@@ -45,7 +45,7 @@
         font-family: var(--hdx-font-body);
         font-weight: var(--hdx-fw-regular);
         color:       var(--hdx-neutral-95);
-        line-height: var(--hdx-lh-normal);
+        line-height: 1;
     }
 
     // ── Trigger (the select box) ─────────────────────────────
@@ -88,7 +88,7 @@
         flex:        1;
         font-family: var(--hdx-font-body);
         font-weight: var(--hdx-fw-medium);
-        line-height: var(--hdx-lh-normal);
+        line-height: 1;
         overflow:    hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
@@ -99,6 +99,7 @@
         font-size:   var(--hdx-fs-s);
         color:       var(--hdx-primary-5);
         font-weight: var(--hdx-fw-medium);
+        line-height: 1;
         white-space: nowrap;
         overflow:    hidden;
         text-overflow: ellipsis;
@@ -179,6 +180,7 @@
             box-shadow:         @c-dropdown-panel-shadow;
             box-sizing:         border-box;
             .hdx-body-s-medium();
+            line-height:        1;
             color:              @c-dropdown-text;
             cursor:             pointer;
             width:              100%;
@@ -312,6 +314,7 @@
         flex-direction: column;
         gap:            var(--hdx-space-13); // 6 px
         padding-left:   0;
+        padding-right:  var(--hdx-space-13); // 6 px — keeps counts clear of the scrollbar
         max-height:     20rem;
         overflow-y:     auto;
         overflow-x:     hidden;
