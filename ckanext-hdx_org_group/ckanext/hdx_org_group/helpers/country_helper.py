@@ -44,7 +44,13 @@ def _sort_datasets_by_is_good(data_completeness):
             for ds in cat.get('data_series'):
                 datasets_list = ds.get('datasets')
                 if datasets_list:
-                    datasets_sorted_list = sorted(datasets_list, key=lambda item: item['is_good'] == False)
+                    # Complementary datasets must always be sorted to the bottom of the
+                    # subcategory, regardless of their freshness/goodness state. Within each
+                    # group (primary vs complementary), fresh/good datasets are sorted first.
+                    datasets_sorted_list = sorted(
+                        datasets_list,
+                        key=lambda item: (bool(item.get('is_complementary')), item['is_good'] == False)
+                    )
                     ds['datasets'] = datasets_sorted_list
 
     return data_completeness
