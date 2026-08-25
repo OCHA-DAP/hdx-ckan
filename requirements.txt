@@ -16,7 +16,7 @@
     # via -r requirements.in
 -e git+https://github.com/OCHA-DAP/datapusher-plus.git@0.2.104#egg=datapusher-plus
     # via -r requirements.in
-alembic==1.13.2
+alembic==1.19.1
     # via -r requirements.in
 arrow==1.4.0
     # via isoduration
