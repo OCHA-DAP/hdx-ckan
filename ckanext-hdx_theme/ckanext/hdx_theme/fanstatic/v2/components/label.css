@@ -250,6 +250,7 @@
   width: 1.25rem;
 }
 .c-tooltip--graph {
+  position: absolute;
   background-color: var(--hdx-neutral-0);
   color: var(--hdx-neutral-8);
   padding: var(--hdx-space-2);

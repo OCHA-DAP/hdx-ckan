@@ -5,9 +5,10 @@
  *
  *   - Org stats page (#chart-data-pageviews, #chart-data-top-downloads):
  *     downloads & page views line chart, top-downloads horizontal bar
- *     chart with clickable dataset-name labels (D2/D6), wheel zoom + drag
- *     pan via chartjs-plugin-zoom (D7), and the single-dataset special
- *     case that renders the shared weekly-downloads line chart instead (D3).
+ *     chart with clickable dataset-name labels (D2/D6), drag pan via
+ *     chartjs-plugin-zoom plus a fixed-window wheel pan (D7), and the
+ *     single-dataset special case that renders the shared weekly-downloads
+ *     line chart instead (D3).
  *   - Dataset page (#dataset-downloads-chart): the same shared
  *     weekly-downloads line chart, second call site (D3).
  *
@@ -119,9 +120,105 @@
             var left = tooltip.caretX - tooltipEl.offsetWidth / 2;
             left = Math.max(0, Math.min(left, wrap.clientWidth - tooltipEl.offsetWidth));
             var top = tooltip.caretY - tooltipEl.offsetHeight - offset;
-            if (top < 0) top = tooltip.caretY + offset;
             tooltipEl.style.left = left + 'px';
             tooltipEl.style.top = top + 'px';
+        };
+    }
+
+    // Vertical guide line at the hovered index, matching v1's default C3
+    // x-grid focus line (line/point charts only, not the bar chart)
+    function crosshairPlugin() {
+        return {
+            id: 'hdxCrosshair',
+            afterDraw: function (chart) {
+                var active = chart.getActiveElements();
+                if (!active || !active.length) return;
+                var x = active[0].element.x;
+                var area = chart.chartArea;
+                var ctx = chart.ctx;
+                ctx.save();
+                ctx.beginPath();
+                ctx.moveTo(x, area.top);
+                ctx.lineTo(x, area.bottom);
+                ctx.lineWidth = 1;
+                ctx.strokeStyle = token('--hdx-neutral-3');
+                ctx.stroke();
+                ctx.restore();
+            }
+        };
+    }
+
+    // Hit-tests pointer events against the y-axis dataset-name labels and
+    // opens the dataset page on click (D6 — canvas ticks can't be <a>).
+    function datasetLinksPlugin(items) {
+        return {
+            id: 'hdxDatasetLinks',
+            afterEvent: function (chart, args) {
+                var event = args.event;
+                var scale = chart.scales.y;
+                if (!scale || event.x === null || event.y === null) return;
+
+                var index = null;
+                var inLabelArea = event.x < chart.chartArea.left &&
+                    event.y >= chart.chartArea.top && event.y <= chart.chartArea.bottom;
+                if (inLabelArea) {
+                    var rounded = Math.round(scale.getValueForPixel(event.y));
+                    if (rounded >= 0 && rounded < items.length) index = rounded;
+                }
+
+                if (event.type === 'mousemove' || event.type === 'mouseout') {
+                    var hover = event.type === 'mouseout' ? null : index;
+                    if (chart.$hdxTickHover !== hover) {
+                        chart.$hdxTickHover = hover;
+                        args.changed = true;   // repaint so the hovered label recolors
+                    }
+                    chart.canvas.style.cursor = hover === null ? '' : 'pointer';
+                } else if (event.type === 'click' && index !== null) {
+                    var item = items[index];
+                    if (item && item.url) window.open(item.url, '_blank', 'noopener');
+                }
+            }
+        };
+    }
+
+    // Shared point/line styling for the two line charts (Charts A, C, D)
+    var LINE_POINT_STYLE = { borderWidth: 2, pointRadius: 2.5, pointHoverRadius: 4, clip: false };
+
+    // v1's C3 'dashed' region on the most recent (partial) week
+    function dashLastSegment(lastIndex) {
+        return function (ctx) {
+            return ctx.p1DataIndex === lastIndex ? [2, 2] : undefined;
+        };
+    }
+
+    // Shared option skeleton for the two line charts (legend stays off —
+    // some call sites render their own HTML legend instead). Returns a
+    // fresh object every call since setupDatasetDownloads() can run more
+    // than once per page and Chart.js may mutate the config it's given.
+    function lineChartBaseOptions(monthFormat) {
+        return {
+            responsive: true,
+            maintainAspectRatio: false,
+            animation: reducedMotion() ? false : undefined,
+            interaction: { mode: 'index', intersect: false },
+            layout: { padding: tokenPx('--hdx-space-2') },
+            scales: {
+                x: {
+                    type: 'time',
+                    time: {
+                        unit: 'month',
+                        displayFormats: { month: monthFormat },
+                        tooltipFormat: 'dd MMM yyyy'
+                    },
+                    grid: { display: false },
+                    border: { display: false },
+                    ticks: { color: token('--hdx-neutral-8'), font: tickFont() }
+                }
+            },
+            plugins: {
+                legend: { display: false },
+                tooltip: { enabled: false, position: 'nearest', external: null }
+            }
         };
     }
 
@@ -165,66 +262,38 @@
         container.style.height = (options.height || 120) + 'px';
         var canvas = createCanvas(container);
 
+        var chartOptions = lineChartBaseOptions('MMM');
+        chartOptions.scales.y = {
+            min: 0,
+            max: yMax,
+            afterBuildTicks: function (axis) {
+                axis.ticks = tickValues.map(function (value) {
+                    return { value: value };
+                });
+            },
+            ticks: {
+                color: token('--hdx-neutral-8'),
+                font: tickFont()
+            },
+            grid: { color: token('--hdx-neutral-3') },
+            border: { display: false }
+        };
+        chartOptions.plugins.tooltip.external = makeGraphTooltip();
+
         return new window.Chart(canvas, {
             type: 'line',
             data: {
                 labels: chartData.map(function (item) { return item.date; }),
-                datasets: [{
+                datasets: [Object.assign({}, LINE_POINT_STYLE, {
                     label: options.seriesLabel || 'Downloads',
                     data: chartData.map(function (item) { return item.value; }),
                     borderColor: lineColor,
                     backgroundColor: lineColor,
-                    borderWidth: 2,
-                    pointRadius: 2.5,
-                    pointHoverRadius: 4,
-                    clip: false,
-                    // v1's C3 'dashed' region on the most recent (partial) week
-                    segment: {
-                        borderDash: function (ctx) {
-                            return ctx.p1DataIndex === lastIndex ? [2, 2] : undefined;
-                        }
-                    }
-                }]
+                    segment: { borderDash: dashLastSegment(lastIndex) }
+                })]
             },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                animation: reducedMotion() ? false : undefined,
-                interaction: { mode: 'index', intersect: false },
-                layout: { padding: tokenPx('--hdx-space-2') },
-                scales: {
-                    x: {
-                        type: 'time',
-                        time: {
-                            unit: 'month',
-                            displayFormats: { month: 'MMM' },
-                            tooltipFormat: 'dd MMM yyyy'
-                        },
-                        grid: { display: false },
-                        border: { display: false },
-                        ticks: { color: token('--hdx-neutral-8'), font: tickFont() }
-                    },
-                    y: {
-                        min: 0,
-                        max: yMax,
-                        afterBuildTicks: function (axis) {
-                            axis.ticks = tickValues.map(function (value) {
-                                return { value: value };
-                            });
-                        },
-                        ticks: {
-                            color: token('--hdx-neutral-8'),
-                            font: tickFont()
-                        },
-                        grid: { color: token('--hdx-neutral-3') },
-                        border: { display: false }
-                    }
-                },
-                plugins: {
-                    legend: { display: false },
-                    tooltip: { enabled: false, external: makeGraphTooltip() }
-                }
-            }
+            options: chartOptions,
+            plugins: [crosshairPlugin()]
         });
     }
 
@@ -239,74 +308,44 @@
         var downloadsColor = token('--hdx-primary-2');
         var lastIndex = data.length - 1;
 
-        function dashLastSegment(ctx) {
-            // v1's C3 'dashed' region on the most recent (partial) week
-            return ctx.p1DataIndex === lastIndex ? [2, 2] : undefined;
-        }
-
         var canvas = createCanvas(container);
+
+        var chartOptions = lineChartBaseOptions('MMM yyyy');
+        chartOptions.scales.y = {
+            min: 0,
+            grid: { color: token('--hdx-neutral-3') },
+            border: { display: false },
+            ticks: {
+                color: token('--hdx-neutral-8'),
+                font: tickFont(),
+                precision: 0
+            }
+        };
+        chartOptions.plugins.tooltip.external = makeGraphTooltip();
+
         new window.Chart(canvas, {
             type: 'line',
             data: {
                 labels: data.map(function (item) { return item.date; }),
                 datasets: [
-                    {
+                    Object.assign({}, LINE_POINT_STYLE, {
                         label: 'Page views',
                         data: data.map(function (item) { return item.pageviews; }),
                         borderColor: pageviewsColor,
                         backgroundColor: pageviewsColor,
-                        borderWidth: 3,
-                        pointRadius: 4,
-                        pointHoverRadius: 5,
-                        clip: false,
-                        segment: { borderDash: dashLastSegment }
-                    },
-                    {
+                        segment: { borderDash: dashLastSegment(lastIndex) }
+                    }),
+                    Object.assign({}, LINE_POINT_STYLE, {
                         label: 'Downloads',
                         data: data.map(function (item) { return item.downloads; }),
                         borderColor: downloadsColor,
                         backgroundColor: downloadsColor,
-                        borderWidth: 3,
-                        pointRadius: 4,
-                        pointHoverRadius: 5,
-                        clip: false,
-                        segment: { borderDash: dashLastSegment }
-                    }
+                        segment: { borderDash: dashLastSegment(lastIndex) }
+                    })
                 ]
             },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                animation: reducedMotion() ? false : undefined,
-                interaction: { mode: 'index', intersect: false },
-                layout: { padding: tokenPx('--hdx-space-2') },
-                scales: {
-                    x: {
-                        type: 'time',
-                        time: {
-                            unit: 'month',
-                            displayFormats: { month: 'MMM yyyy' },
-                            tooltipFormat: 'dd MMM yyyy'
-                        },
-                        grid: { display: false },
-                        border: { display: false },
-                        ticks: { color: token('--hdx-neutral-8'), font: tickFont() }
-                    },
-                    y: {
-                        grid: { color: token('--hdx-neutral-3') },
-                        border: { display: false },
-                        ticks: {
-                            color: token('--hdx-neutral-8'),
-                            font: tickFont(),
-                            precision: 0
-                        }
-                    }
-                },
-                plugins: {
-                    legend: { display: false },     // template renders the Figma legend
-                    tooltip: { enabled: false, external: makeGraphTooltip() }
-                }
-            }
+            options: chartOptions,
+            plugins: [crosshairPlugin()]
         });
     }
 
@@ -353,6 +392,7 @@
                 maintainAspectRatio: false,
                 animation: reducedMotion() ? false : undefined,
                 interaction: { mode: 'index', axis: 'y', intersect: false },
+                layout: { padding: tokenPx('--hdx-space-2') },
                 scales: {
                     x: {
                         beginAtZero: true,
@@ -403,52 +443,34 @@
             plugins: [datasetLinksPlugin(data)]
         };
 
-        // Wheel zoom + drag pan through the bars (D7), windowed like v1
+        // Drag pan + fixed-window wheel pan through the bars (D7), windowed
+        // like v1 — the window never resizes (no zoom), only its position
+        // shifts, matching v1's enableMouseWheelZoom behavior
         if (data.length > MAX_VISIBLE_BARS) {
             config.options.scales.y.min = 0;
             config.options.scales.y.max = MAX_VISIBLE_BARS;
             config.options.plugins.zoom = {
-                limits: { y: { min: 0, max: data.length - 1, minRange: 3 } },
-                zoom: { wheel: { enabled: true }, mode: 'y' },
+                limits: { y: { min: 0, max: data.length - 1 } },
                 pan: { enabled: true, mode: 'y' }
             };
         }
 
         var canvas = createCanvas(container);
-        new window.Chart(canvas, config);
-    }
 
-    // Hit-tests pointer events against the y-axis dataset-name labels and
-    // opens the dataset page on click (D6 — canvas ticks can't be <a>).
-    function datasetLinksPlugin(items) {
-        return {
-            id: 'hdxDatasetLinks',
-            afterEvent: function (chart, args) {
-                var event = args.event;
-                var scale = chart.scales.y;
-                if (!scale || event.x === null || event.y === null) return;
+        var chart = new window.Chart(canvas, config);
 
-                var index = null;
-                var inLabelArea = event.x < chart.chartArea.left &&
-                    event.y >= chart.chartArea.top && event.y <= chart.chartArea.bottom;
-                if (inLabelArea) {
-                    var rounded = Math.round(scale.getValueForPixel(event.y));
-                    if (rounded >= 0 && rounded < items.length) index = rounded;
-                }
-
-                if (event.type === 'mousemove' || event.type === 'mouseout') {
-                    var hover = event.type === 'mouseout' ? null : index;
-                    if (chart.$hdxTickHover !== hover) {
-                        chart.$hdxTickHover = hover;
-                        args.changed = true;   // repaint so the hovered label recolors
-                    }
-                    chart.canvas.style.cursor = hover === null ? '' : 'pointer';
-                } else if (event.type === 'click' && index !== null) {
-                    var item = items[index];
-                    if (item && item.url) window.open(item.url, '_blank', 'noopener');
-                }
-            }
-        };
+        if (data.length > MAX_VISIBLE_BARS) {
+            canvas.addEventListener('wheel', function (e) {
+                e.preventDefault();
+                var scale = chart.options.scales.y;
+                var step = e.deltaY > 0 ? 1 : -1;
+                var min = Math.min(Math.max(scale.min + step, 0), data.length - MAX_VISIBLE_BARS);
+                if (min === scale.min) return;
+                scale.min = min;
+                scale.max = min + MAX_VISIBLE_BARS;
+                chart.update();
+            }, { passive: false });
+        }
     }
 
     // v1 showed a C3 legend naming the org's single dataset under the chart
