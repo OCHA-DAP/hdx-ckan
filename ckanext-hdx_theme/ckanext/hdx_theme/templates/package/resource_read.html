@@ -11,8 +11,11 @@
 
 {# Find the Data Explorer view (first non-HXL-preview view) #}
 {% set _de_ns = namespace(view=None) %}
+{% set _excluded_de_formats = ['txt', 'text/plain', 'plain'] %}
 {% for _v in resource_views or [] %}
-  {% if not _de_ns.view and _v.view_type != 'hdx_hxl_preview' %}
+  {% if not _de_ns.view
+        and _v.view_type != 'hdx_hxl_preview'
+        and (res.format or '')|lower not in _excluded_de_formats %}
     {% set _de_ns.view = _v %}
   {% endif %}
 {% endfor %}

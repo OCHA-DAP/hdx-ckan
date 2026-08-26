@@ -250,7 +250,7 @@ signaling "this resource has queryable tabular data in the datastore" is
 **`res.datastore_active`**, already used to gate the API access section
 (`resource_read.html:100,117,142`) and the anchor-nav "API" entry. `_data_explorer`
 (`resource_read.html:12-19`) is computed independently — "first `resource_views` entry whose `view_type` is
-not `hdx_hxl_preview`" — and is unrelated to `datastore_active`; a CSV resource that later becomes
+not `hdx_hxl_preview` and whose format isn't `txt`/`text/plain`/`plain`" — and is unrelated to `datastore_active`; a CSV resource that later becomes
 datastore-active still has exactly one `ResourceView` row (the office-preview one), so there's no
 "two eligible views" ambiguity to resolve (D5).
 

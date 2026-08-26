@@ -170,11 +170,14 @@ The same alignment principle is applied to the default 4-column `__metadata` gri
 
 Follows the same pattern as the dataset page (task 039). Items are conditional.
 
-**`_data_explorer` detection** — computed at template root level (before any blocks) so it's accessible in both `{% block secondary_content %}` and `{% block primary %}`:
+**`_data_explorer` detection** — computed at template root level (before any blocks) so it's accessible in both `{% block secondary_content %}` and `{% block primary %}`. Excludes `txt`/`text/plain`/`plain` formats — CKAN core's `text_view` is unreliable for these (CORS/module-registration issues), so no preview is offered rather than a broken one:
 ```jinja
 {% set _de_ns = namespace(view=None) %}
+{% set _excluded_de_formats = ['txt', 'text/plain', 'plain'] %}
 {% for _v in resource_views or [] %}
-  {% if not _de_ns.view and _v.view_type != 'hdx_hxl_preview' %}
+  {% if not _de_ns.view
+        and _v.view_type != 'hdx_hxl_preview'
+        and (res.format or '')|lower not in _excluded_de_formats %}
     {% set _de_ns.view = _v %}
   {% endif %}
 {% endfor %}

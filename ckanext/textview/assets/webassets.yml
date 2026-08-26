@@ -4,11 +4,12 @@ main-css:
     - styles/a11y-light.css
     - css/text.css
 
+
 main:
   output: ckanext-textview/%(version)s_textview.js
   extra:
     preload:
-      - base/main
+      - hdx_theme/base-main
       - ckanext-textview/main-css
   contents:
     - vendor/highlight.js
