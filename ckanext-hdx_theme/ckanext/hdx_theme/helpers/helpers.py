@@ -970,6 +970,7 @@ def hdx_fetch_last_three_signal_cards():
 
     response = requests.get(url, timeout=10)
     response.raise_for_status()
+    response.encoding = 'utf-8'
 
     csv_reader = csv.DictReader(response.text.splitlines())
     required_columns = ['location', 'indicator_id', 'date', 'campaign_date',
