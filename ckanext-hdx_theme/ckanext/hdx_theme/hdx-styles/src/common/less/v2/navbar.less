@@ -76,20 +76,21 @@
 
     // ── Search — flex to fill space, centered with max-width
     &__search {
-        flex:   1 1 auto;
+        flex:   0 0 auto;                                     // SM — search icon opens the overlay instead
+        width:  auto;
+        margin: 0;
 
-        form {
-            max-width:    60%;
-            margin-left:  auto;
-            margin-right: auto;
-        }
+        form { display: none; }
 
-        @media (max-width: (@hdx-bp-md)) {                    // < 48rem (SM)
-            flex:   0 0 auto;
-            width:  auto;
-            margin: 0;
+        @media (min-width: @hdx-bp-md) {                      // >= 48rem (MD/XL)
+            flex: 1 1 auto;
 
-            form { display: none; }
+            form {
+                display:      block;
+                max-width:    60%;
+                margin-left:  auto;
+                margin-right: auto;
+            }
         }
     }
 

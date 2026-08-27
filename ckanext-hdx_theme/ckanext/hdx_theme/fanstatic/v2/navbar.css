@@ -36,21 +36,22 @@
   color: var(--hdx-neutral-0);
 }
 .hdx-v2-navbar__search {
-  flex: 1 1 auto;
+  flex: 0 0 auto;
+  width: auto;
+  margin: 0;
 }
 .hdx-v2-navbar__search form {
-  max-width: 60%;
-  margin-left: auto;
-  margin-right: auto;
+  display: none;
 }
-@media (max-width: 48rem) {
+@media (min-width: 48rem) {
   .hdx-v2-navbar__search {
-    flex: 0 0 auto;
-    width: auto;
-    margin: 0;
+    flex: 1 1 auto;
   }
   .hdx-v2-navbar__search form {
-    display: none;
+    display: block;
+    max-width: 60%;
+    margin-left: auto;
+    margin-right: auto;
   }
 }
 .hdx-v2-navbar__search-icon {

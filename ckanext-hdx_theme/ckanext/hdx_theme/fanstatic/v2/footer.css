@@ -284,13 +284,11 @@
   height: 2.25rem;
   flex-shrink: 0;
   line-height: 0;
-  border-right: 1px solid var(--hdx-neutral-0);
-  padding-right: var(--hdx-space-3);
 }
-@media (max-width: 47.999rem) {
+@media (min-width: 48rem) {
   .hdx-v2-footer__ocha-logo {
-    border-right: none;
-    padding-right: 0;
+    border-right: 1px solid var(--hdx-neutral-0);
+    padding-right: var(--hdx-space-3);
   }
 }
 .hdx-v2-footer__ocha-logo svg {
@@ -305,15 +303,16 @@
 }
 .hdx-v2-footer__license {
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  align-items: flex-start;
   margin-top: var(--hdx-space-2);
   margin-bottom: var(--hdx-space-2);
   gap: var(--hdx-space-2);
 }
-@media (max-width: 47.999rem) {
+@media (min-width: 48rem) {
   .hdx-v2-footer__license {
-    flex-direction: column;
-    align-items: flex-start;
+    flex-direction: row;
+    align-items: center;
   }
 }
 .hdx-v2-footer__license-icon {

@@ -25,7 +25,7 @@ Breakpoint variables: `@hdx-bp-md: 48rem`, `@hdx-bp-xl: 80rem` (from `breakpoint
 | Heading (`h1`) | "The Humanitarian Data Exchange" |
 | Subtitle (`p`) | "Find, share and use humanitarian data all in one place" |
 | Search placeholder | "Search for datasets, locations or organisations" |
-| Button label | "Explore data" |
+| Button label | "Search data" |
 
 ---
 
@@ -33,9 +33,11 @@ Breakpoint variables: `@hdx-bp-md: 48rem`, `@hdx-bp-xl: 80rem` (from `breakpoint
 
 ### `templates/home/index.html`
 
-Extends `v2/page.html`. The hero section markup uses `autocomplete.html` only — it already renders the search input internally, so do not include `search-input.html` separately.
+Extends `v2/page.html`. The hero section markup uses `autocomplete.html` only — it already renders the search input internally, so do not include `search-input.html` separately. The hero and the bar chart section (task 044) share one wrapper, `.hdx-v2-hero-band`, which paints the dark background across both — see [044](044-homepage-dynamic-bar-chart.md).
 
 ```html
+<div class="hdx-v2-hero-band">
+
 <section class="hdx-v2-hero">
   <div class="hdx-v2-hero__inner hdx-v2-container">
 
@@ -48,51 +50,63 @@ Extends `v2/page.html`. The hero section markup uses `autocomplete.html` only �
 
       <div class="hdx-v2-hero__search">
         {% snippet 'v2/components/autocomplete.html',
+            size='l',
             placeholder=_('Search for datasets, locations or organisations'),
-            value='', state='enabled' %}
+            value='', state='enabled',
+            form_action=h.url_for('dataset.search'),
+            form_id='hdx-v2-hero-search-form',
+            search_source='in-page',
+            show_icon=False %}
       </div>
 
       {% snippet 'v2/components/button.html',
           style='secondary', type='text', size='l',
-          state='enabled', icon=False,
-          label=_('Explore data'),
-          tag='a', href=h.url_for('dataset.search') %}
+          state='enabled', tag='button', button_type='submit',
+          attrs={'form': 'hdx-v2-hero-search-form'},
+          label=_('Search data') %}
 
     </div>
 
   </div>
 </section>
+
+<!-- bar chart section (task 044) renders here, still inside .hdx-v2-hero-band -->
+
+</div>
 ```
 
 ### `hdx-styles/src/common/less/v2/pages/home.less`
 
-BEM block: `hdx-v2-hero`. Dark background token: `@hdx-v2-hero-bg: var(--hdx-brand-7)`.
+BEM block: `hdx-v2-hero`. The dark background lives on the shared `.hdx-v2-hero-band` wrapper (see
+above), not on `.hdx-v2-hero` itself — the hero and the bar chart section both used to paint
+`var(--hdx-brand-7)` independently, which could leave a 1px seam between them at some zoom levels;
+one shared painted surface removes that.
 
 Media queries are nested directly inside each element block (see [CONVENTIONS.md](../CONVENTIONS.md)).
 
 ```less
-@import "breakpoints.less";
+@import "../mixins.less";
 
-@hdx-v2-hero-bg: var(--hdx-brand-7);
+.hdx-v2-hero-band {
+    background-color: var(--hdx-brand-7);
+}
 
 .hdx-v2-hero {
-    width:            100%;
-    background-color: @hdx-v2-hero-bg;
+    width:       100%;
     padding-top: 4rem;
 
-    @media (min-width: @hdx-bp-md) { padding-top: 6rem; }
+    @media (min-width: @hdx-bp-md) { padding-top: var(--hdx-space-24); }
     @media (min-width: @hdx-bp-xl) { padding-top: 10rem; }
 
     &__inner {
-        // .container handles horizontal padding; vertical padding is on the outer block
         display:        flex;
         flex-direction: column;
         align-items:    center;
         text-align:     center;
-        gap:            2rem;
+        gap:            var(--hdx-space-8);
 
-        @media (min-width: @hdx-bp-md) { gap: 3rem; }
-        @media (min-width: @hdx-bp-xl) { gap: 5rem; }
+        @media (min-width: @hdx-bp-md) { gap: var(--hdx-space-12); }
+        @media (min-width: @hdx-bp-xl) { gap: var(--hdx-space-20); }
     }
 
     &__header {
@@ -104,23 +118,17 @@ Media queries are nested directly inside each element block (see [CONVENTIONS.md
     }
 
     &__heading {
-        font-family: var(--hdx-font-display);  // Merriweather
-        font-size:   var(--hdx-fs-4xl);
-        font-weight: var(--hdx-fw-bold);
-        line-height: var(--hdx-lh-normal);
-        color:       var(--hdx-neutral-0);
-        margin:      0;
+        .hdx-display-l();
+        color:  var(--hdx-neutral-0);
+        margin: 0;
 
-        @media (min-width: @hdx-bp-xl) { font-size: 3rem; }
+        @media (min-width: @hdx-bp-xl) { font-size: var(--hdx-fs-5xl); }
     }
 
     &__subtitle {
-        font-family: var(--hdx-font-body);     // Roboto
-        font-size:   var(--hdx-fs-m);
-        font-weight: var(--hdx-fw-regular);
-        line-height: var(--hdx-lh-normal);
-        color:       var(--hdx-neutral-0);
-        margin:      0;
+        .hdx-body-m();
+        color:  var(--hdx-neutral-0);
+        margin: 0;
 
         @media (min-width: @hdx-bp-xl) { font-size: var(--hdx-fs-l); }
     }
@@ -132,7 +140,7 @@ Media queries are nested directly inside each element block (see [CONVENTIONS.md
         gap:            var(--hdx-space-3);
         width:          100%;
 
-        @media (min-width: @hdx-bp-md) { flex-direction: row; width: 36.375rem; }
+        @media (min-width: @hdx-bp-md) { flex-direction: row; width: 60%; }
     }
 
     &__search {
@@ -143,6 +151,9 @@ Media queries are nested directly inside each element block (see [CONVENTIONS.md
         position:       relative;          // anchor for autocomplete panel
 
         @media (min-width: @hdx-bp-md) { flex: 1; width: auto; }
+
+        // autocomplete.html wraps c-autocomplete in a <form>; ensure it stretches
+        > form { width: 100%; }
     }
 
     // Dark-surface overrides for c-button--secondary.
@@ -172,5 +183,5 @@ Media queries are nested directly inside each element block (see [CONVENTIONS.md
 
 - Do not implement search/autocomplete JS logic — UI markup only.
 - Do not create shared components; this block is homepage-specific.
-- Use `var(--hdx-*)` CSS custom properties throughout — no hardcoded values except `@hdx-v2-hero-bg`.
+- Use `var(--hdx-*)` CSS custom properties throughout — no hardcoded values.
 - `autocomplete.html` renders the search input internally; do not include `search-input.html` separately.

@@ -89,9 +89,12 @@
   color: var(--hdx-neutral-85);
   padding: 0;
 }
-@media (max-width: 48rem) {
+.c-stats-card--kpi .c-stats-card__label-row .c-info-icon {
+  display: none;
+}
+@media (min-width: 48rem) {
   .c-stats-card--kpi .c-stats-card__label-row .c-info-icon {
-    display: none;
+    display: inline-flex;
   }
 }
 .c-stats-card-list {

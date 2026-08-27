@@ -31,6 +31,18 @@ Size modifiers use `--size-{xs,s,m,l}` (`c-button--size-m`, `c-copy-button--size
 
 Exception: a single `@media` block may group multiple unrelated elements when there is no per-element responsive logic.
 
+Mobile-first: unprefixed styles are the smallest viewport; `min-width` layers overrides on top. Never pair a `max-width: @X` rule on one element with a `min-width: @X` rule on its counterpart (e.g. a mobile-only control vs. the desktop control it replaces) — both match at exactly `X`, hiding both.
+
+---
+
+## `[hidden]` self-guard
+
+Any component that sets `display` on its own JS-toggled element (a dropdown/autocomplete panel, an
+overlay, anything shown/hidden via the `hidden` attribute — see the Alerts section below) must also
+carry its own `&[hidden] { display: none; }` guard in that element's own ruleset. Don't rely on
+another bundle's reset/reboot rule (e.g. Bootstrap's `[hidden] { display: none !important; }`) to
+keep it hidden by default — that bundle may not always be loaded alongside the component's own.
+
 ---
 
 ## Single compile-time import

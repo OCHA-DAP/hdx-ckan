@@ -91,34 +91,35 @@ If `filtered` is empty after the `selectattr` filter, hide the section entirely:
 
 ### DOM structure
 
+Renders inside the shared `.hdx-v2-hero-band` wrapper, immediately after the hero section (see
+[024](024-homepage-hero-section.md)) — that wrapper is what paints the dark background now, not this
+section itself:
+
 ```html
 <section class="hdx-v2-barchart">
-<div class="hdx-v2-barchart__inner">
+  <div class="hdx-v2-barchart__inner hdx-v2-container">
 
-  <!-- Hidden announcer: JS updates its text as the active bar-group changes -->
-  <span class="sr-only" aria-live="polite" aria-atomic="true" data-barchart-announcer></span>
+    <!-- Hidden announcer: JS updates its text as the active bar-group changes -->
+    <span class="sr-only" aria-live="polite" aria-atomic="true" data-barchart-announcer></span>
 
-  <!-- Bars container -->
-  <div class="hdx-v2-barchart__bars"
-       data-interval="2500">
-
-    {% for loc in _hrp_filtered %}
-    <div class="hdx-v2-barchart__bar-group{% if loop.first %} is-active{% endif %}"
-         style="--bar-height: {{ (loc.package_count / _hrp_max * 100) | round(2) }}%"
-         data-name="{{ loc.display_name | e }}"
-         data-count="{{ loc.package_count }}">
-      <div class="hdx-v2-barchart__label">
-        <span class="hdx-v2-barchart__label-name">{{ loc.display_name | e }}</span>
-        <span class="hdx-v2-barchart__label-count">{{ loc.package_count }} datasets</span>
-        <span class="hdx-v2-barchart__dot" aria-hidden="true">{% include 'v2/icons/dot.svg' %}</span>
+    <!-- Bars container -->
+    <div class="hdx-v2-barchart__bars" data-interval="2500">
+      {% for loc in _hrp_filtered %}
+      <div class="hdx-v2-barchart__bar-group"
+           style="--bar-height: {{ (loc.package_count / _hrp_max * 100) | round(2) }}%"
+           data-name="{{ loc.display_name | e }}"
+           data-count="{{ loc.package_count }}">
+        <div class="hdx-v2-barchart__label">
+          <span class="hdx-v2-barchart__label-name">{{ loc.display_name | e }}</span>
+          <span class="hdx-v2-barchart__label-count">{{ loc.package_count }} datasets</span>
+          <span class="hdx-v2-barchart__dot" aria-hidden="true">{% include 'v2/icons/dot.svg' %}</span>
+        </div>
+        <div class="hdx-v2-barchart__bar"></div>
       </div>
-      <div class="hdx-v2-barchart__bar"></div>
+      {% endfor %}
     </div>
-    {% endfor %}
 
   </div>
-
-</div>
 </section>
 ```
 
@@ -127,7 +128,7 @@ If `filtered` is empty after the `selectattr` filter, hide the section entirely:
 - The dot uses `v2/icons/dot.svg` included inline (not `c-graph-point`).
 - Each bar-group renders its own label directly (name/count as real text, not JS-injected) — the label never moves; only its opacity toggles when its group becomes/stops being active.
 - A hidden `sr-only` node with `aria-live="polite"` is updated by JS on each cycle so screen readers still announce country/count changes, since the visible per-bar labels no longer swap text.
-- `is-active` is pre-set on the first bar-group by Jinja2 so the chart is meaningful before JS loads.
+- `is-active` is applied purely by JS at load (`bar-chart.js` activates a random bar-group on `DOMContentLoaded`) — no bar-group is pre-marked active by Jinja.
 - `data-name` and `data-count` on each bar-group: JS reads these to populate the hidden announcer — no separate JS data array needed.
 - Label position (both horizontal and vertical): see section 3 (Animation Strategy).
 
@@ -234,90 +235,98 @@ transform: translateX(-50%);  // static horizontal centering, never animated
 
 **New file**: `ckanext-hdx_theme/ckanext/hdx_theme/hdx-styles/src/common/less/v2/bar-chart.less`
 
-Registered as `v2/bar-chart.css` in the `v2-page-styles` webassets bundle.
+Registered as `v2/bar-chart.css` in the `v2-home-page-styles` webassets bundle.
 
 ### Section container
 
 ```less
 .hdx-v2-barchart {
-background-color: var(--hdx-brand-7);
-overflow: hidden;
-position: relative;
+    overflow: hidden;
+
+    &__inner {
+        position:    relative;
+        padding-top: var(--hdx-space-20);
+    }
 }
 ```
 
 ### Bars container
 
 ```less
-.hdx-v2-barchart__bars {
-display: flex;
-align-items: flex-end;
-justify-content: space-between;
-gap: 1.25rem;       // 20px — XL
-height: 17.625rem;  // 282px — chart height (all breakpoints)
-position: relative;
+&__bars {
+    display:         flex;
+    align-items:     flex-end;
+    justify-content: space-between;
+    gap:             var(--hdx-space-13);  // 6px SM
+    height:          17.625rem;            // 282px — chart height (all breakpoints)
+    position:        relative;
+
+    @media (min-width: @hdx-bp-md) { gap: var(--hdx-space-3); }   // ~12px MD
+    @media (min-width: @hdx-bp-xl) { gap: var(--hdx-space-5); }   // 20px XL
 }
 ```
 
 ### Individual bar
 
 ```less
-.hdx-v2-barchart__bar {
-width: 0.5rem;     // 8px — XL
-height: calc(var(--bar-height, 10%));  // CSS var set by Jinja inline style
-background-color: rgba(255, 255, 255, 0.3);  // inactive — exact value TBD from Figma
-opacity: 0.3;
-transition: opacity 300ms linear;
-flex-shrink: 0;
-
-&.is-active {
-  opacity: 0.9;
-  background-color: rgba(255, 255, 255, 0.9);
+&__bar {
+    // --bar-height is set per-element by Jinja: style="--bar-height: {pct}%"
+    width:            var(--hdx-space-2);  // 8px, uniform at every breakpoint
+    height:           var(--bar-height, 10%);
+    background-color: var(--hdx-overlay-white-20);  // inactive
+    transition:       background-color var(--hdx-duration-base) var(--hdx-ease-linear);
+    .hdx-motion();   // guards the transition under prefers-reduced-motion
 }
 
-@media (prefers-reduced-motion: reduce) {
-  transition: none;
-}
+&__bar-group.is-active &__bar {
+    background-color: var(--hdx-overlay-white-90);
 }
 ```
 
-⚠️ **Exact inactive bar opacity/color to verify from Figma.** The Figma CSS does not set explicit `background-color` on bar elements — they are `<img>` tags with colors baked into the image. The `rgba(255,255,255, ...)` approach is the implementation interpretation; confirm with designer.
+Color swaps via `background-color` only — there is no separate `opacity` property on the bar itself.
 
 ### Label
 
 ```less
-.hdx-v2-barchart__label {
-position: absolute;
-left: 50%;
-bottom: calc(var(--bar-height, 10%) + 0.25rem);
-transform: translateX(-50%);  // static centering, never animated
-width: max-content;  // bypasses shrink-to-fit against the narrow bar-group's tiny available width
-display: flex;
-flex-direction: column;
-align-items: center;
-gap: 0.187rem;        // 3px — var(--gap-3)
-color: #fff;
-font-family: Roboto, Arial, sans-serif;
-font-size: 0.875rem;  // 14px
-opacity: 0;
-transition: opacity 300ms linear;  // fires on fade OUT only
+&__label {
+    position:       absolute;
+    left:           50%;
+    bottom:         calc(var(--bar-height, 10%) + 0.25rem);
+    transform:      translateX(-50%);  // static centering, never animated
+    width:          max-content;  // bypasses shrink-to-fit against the narrow bar-group's tiny available width
+    display:        flex;
+    flex-direction: column;
+    align-items:    center;
+    text-align:     center;
+    gap:            0.187rem;        // 3px
+    color:          var(--hdx-neutral-0);
+    font-family:    var(--hdx-font-body);
+    font-size:      var(--hdx-fs-s);
+    opacity:        0;
+    transition:     opacity var(--hdx-duration-base) var(--hdx-ease-linear);  // fires on fade OUT only
+    pointer-events: none;
+    .hdx-motion();
 }
 
-.hdx-v2-barchart__bar-group.is-active .hdx-v2-barchart__label {
-opacity: 1;
-transition: none;  // instant show, no fade-in
+&__bar-group.is-active &__label {
+    opacity:    1;
+    transition: none;  // instant show, no fade-in
 }
 
-.hdx-v2-barchart__label-name {
-font-weight: 600;
-line-height: 1.3;
-text-shadow: 3px 0 0 #18614c, 0 3px 0 #18614c, -3px 0 0 #18614c, 0 -3px 0 #18614c;
-max-width: 9rem;  // wrap onto a 2nd line rather than overflow for very long country names
+&__label-name,
+&__label-count {
+    line-height: var(--hdx-lh-normal);
+    text-shadow: 3px 0 0 var(--hdx-brand-7), 0 3px 0 var(--hdx-brand-7),
+                 -3px 0 0 var(--hdx-brand-7), 0 -3px 0 var(--hdx-brand-7);
 }
 
-.hdx-v2-barchart__label-count {
-line-height: 1.3;
-white-space: nowrap;  // always short ("N datasets") — never wrap
+&__label-name {
+    font-weight: var(--hdx-fw-semibold);
+    max-width:   9rem;  // wrap onto a 2nd line rather than overflow for very long country names
+}
+
+&__label-count {
+    white-space: nowrap;  // always short ("N datasets") — never wrap
 }
 ```
 
@@ -351,25 +360,16 @@ Bar width is **uniform across all breakpoints**: `var(--hdx-space-2)` (8px). Onl
 
 ### LESS breakpoint overrides
 
-```less
-// MD
-@media (max-width: @hdx-bp-xl - 1) {
-.hdx-v2-barchart__bars {
-  gap: 0.756rem;
-}
-.hdx-v2-barchart__bar {
-  width: 0.375rem;  // verify
-}
-}
+Mobile-first — SM values are the unprefixed default on `&__bars`, MD/XL layer on top via `min-width`
+(see the "Bars container" snippet above). Bar width has no override at any breakpoint — it stays
+`var(--hdx-space-2)` throughout.
 
-// SM
-@media (max-width: @hdx-bp-md - 1) {
-.hdx-v2-barchart__bars {
-  gap: 0.375rem;
-}
-.hdx-v2-barchart__bar {
-  width: 0.25rem;
-}
+```less
+&__bars {
+    gap: var(--hdx-space-13);  // 6px — SM default
+
+    @media (min-width: @hdx-bp-md) { gap: var(--hdx-space-3); }  // ~12px MD
+    @media (min-width: @hdx-bp-xl) { gap: var(--hdx-space-5); }  // 20px XL
 }
 ```
 
@@ -387,7 +387,7 @@ Use existing breakpoint tokens `@hdx-bp-xl` and `@hdx-bp-md` (do not introduce n
 | `max_count` is 0 or None | Cannot occur — filtered list excludes `package_count ≤ 0`; guard prevents rendering |
 | Very long `display_name` | Full name displayed — no truncation. Name wraps onto a 2nd line past `max-width: 9rem`; the dataset-count line never wraps. |
 | Label overflows chart at first/last bar | Label stays centered over the bar; the half that would extend outside is clipped by `overflow: hidden` on the section |
-| JS disabled | First bar-group stays `is-active` (pre-set by Jinja); its label renders and shows (opacity driven by the static `.is-active` CSS rule, not JS); section is still visible but static |
+| JS disabled | No bar-group is ever marked `is-active` (only `bar-chart.js` applies it, on `DOMContentLoaded`). All bars render at their inactive token color with no highlight; all labels stay `opacity: 0`. Chart is still visible and static, just without the highlighted-country presentation. |
 
 ---
 
@@ -426,5 +426,5 @@ Use existing breakpoint tokens `@hdx-bp-xl` and `@hdx-bp-md` (do not introduce n
 | `ckanext-hdx_theme/ckanext/hdx_theme/hdx-styles/src/common/less/v2/foundation.less` | Exported `--hdx-overlay-white-20` as CSS custom property |
 | `ckanext-hdx_theme/ckanext/hdx_theme/hdx-styles/src/common/less/v2/components/selection.less` | Added `.c-graph-point--on-dark` modifier |
 | `ckanext-hdx_theme/ckanext/hdx_theme/helpers/helpers.py` | Added `try/except` to `hdx_get_locations` — returns `[]` on any exception |
-| `ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/v2/bar-chart.js` | **New** — CKAN module `hdx_barchart` |
-| `ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/webassets.yml` | `v2/bar-chart.css` added to `v2-page-styles`; new `v2-home-page-scripts` bundle containing `bar-chart.js` |
+| `ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/v2/bar-chart.js` | **New** — plain vanilla IIFE, initialised on `DOMContentLoaded` (not a CKAN module, see §3) |
+| `ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/webassets.yml` | `v2/bar-chart.css` added to `v2-home-page-styles`; new `v2-home-page-scripts` bundle containing `bar-chart.js` |

@@ -30,9 +30,12 @@
   line-height: var(--hdx-lh-normal);
   color: var(--hdx-neutral-8);
 }
-@media (max-width: 80rem) {
+.hdx-v2-list-header__controls {
+  display: none;
+}
+@media (min-width: 80rem) {
   .hdx-v2-list-header__controls {
-    display: none;
+    display: block;
   }
 }
 @media (min-width: 80rem) {

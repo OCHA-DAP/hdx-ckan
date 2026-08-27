@@ -35,9 +35,11 @@
     }
 
     &__controls {
-        // XL: visible; MD/SM: hidden — controls move to the filter overlay
-        @media (max-width: @hdx-bp-xl) {
-            display: none;
+        // MD/SM: hidden — controls move to the filter overlay; XL: visible
+        display: none;
+
+        @media (min-width: @hdx-bp-xl) {
+            display: block;
         }
     }
 

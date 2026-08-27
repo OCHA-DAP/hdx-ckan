@@ -95,10 +95,12 @@
         padding: 0;
     }
 
-    // SM: hide info icon on KPI cards
-    @media (max-width: @hdx-bp-md) {
-        .c-stats-card__label-row .c-info-icon {
-            display: none;
+    // SM: hide info icon on KPI cards; MD and up: shown
+    .c-stats-card__label-row .c-info-icon {
+        display: none;
+
+        @media (min-width: @hdx-bp-md) {
+            display: inline-flex;
         }
     }
 }

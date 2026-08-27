@@ -80,11 +80,16 @@ Refine the existing v2 footer implementation to better align with the Figma spec
 
 - **REQ-5 — Remove `__newsletter` MD flex override.** Delete the `flex: 1` rule scoped to `min-width: @hdx-bp-md and max-width: @hdx-bp-xl` on `__newsletter`; Bootstrap columns replace it. Remove `flex-direction: row` and `gap: 2.5rem` from the MD-only `__actions` media query; the Bootstrap row handles the row direction.
 
-- **REQ-6 — Hide OCHA logo border on SM.** Add to `__ocha-logo`:
+- **REQ-6 — Hide OCHA logo border below MD.** Mobile-first: the border is added starting at MD, not
+  present by default:
   ```less
-  @media (max-width: (@hdx-bp-md - 0.001rem)) {
-      border-right:  none;
-      padding-right: 0;
+  &__ocha-logo {
+      // border-right/padding-right NOT set here — SM has neither
+
+      @media (min-width: @hdx-bp-md) {
+          border-right:  1px solid var(--hdx-neutral-0);
+          padding-right: var(--hdx-space-3);
+      }
   }
   ```
 
