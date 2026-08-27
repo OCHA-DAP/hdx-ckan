@@ -1,6 +1,8 @@
+.hdx-v2-hero-band {
+  background-color: var(--hdx-brand-7);
+}
 .hdx-v2-hero {
   width: 100%;
-  background-color: var(--hdx-brand-7);
   padding-top: 4rem;
 }
 @media (min-width: 48rem) {
