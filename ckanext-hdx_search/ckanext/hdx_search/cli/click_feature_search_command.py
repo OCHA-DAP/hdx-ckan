@@ -74,10 +74,10 @@ def _buildIndex(path):
     ## I think this is the only way to go. Please update
     ## when new crisis are added
 
-    index.append({'title': 'West Africa Ebola Outbreak 2014', 'url': h.url_for(
-        'hdx_ebola.read', qualified=True), 'type': 'event'})
-    index.append({'title': 'Nepal Earthquake', 'url': h.url_for('group.read',id='nepal-earthquake',qualified=True),
-                  'type': 'event'})
+    #index.append({'title': 'West Africa Ebola Outbreak 2014', 'url': h.url_for(
+    #    'hdx_ebola.read', qualified=True), 'type': 'event'})
+    #index.append({'title': 'Nepal Earthquake', 'url': h.url_for('group.read',id='nepal-earthquake',qualified=True),
+    #              'type': 'event'})
 
     # pages
 
@@ -106,18 +106,18 @@ def _buildIndex(path):
 
     # visualizations
 
-    index.append({'title': 'Missing Migrants',
-                  'url': '//data.humdata.org/visualization/missing-migrants/ ', 'type': 'visualization'})
-    index.append({'title': 'Lake Chad Crisis Dashboard',
-                  'url': '//data.humdata.org/visualization/ocha-lake-chad/ ', 'type': 'visualization'})
-    index.append({'title': 'Nepal: Community Perceptions Survey',
-                  'url': '//ocha-dap.github.io/hdxviz-nepal-community-survey/ ', 'type': 'visualization'})
-    index.append({'title': 'Somalia Humanitarian Dashboard',
-                  'url': '//data.humdata.org/visualization/somalia-monitoring/ ', 'type': 'visualization'})
-    index.append({'title': 'Somalia Cash 3w',
-                  'url': 'https://data.humdata.org/visualization/somalia-cash-programing-v3/ ', 'type': 'visualization'})
-    index.append({'title': 'A journey of 1000 kilometers',
-                  'url': 'https://data.humdata.org/visualization/a-journey-of-1000km/ ', 'type': 'visualization'})
+    #index.append({'title': 'Missing Migrants',
+    #              'url': '//data.humdata.org/visualization/missing-migrants/ ', 'type': 'visualization'})
+    #index.append({'title': 'Lake Chad Crisis Dashboard',
+    #              'url': '//data.humdata.org/visualization/ocha-lake-chad/ ', 'type': 'visualization'})
+    #index.append({'title': 'Nepal: Community Perceptions Survey',
+    #              'url': '//ocha-dap.github.io/hdxviz-nepal-community-survey/ ', 'type': 'visualization'})
+    #index.append({'title': 'Somalia Humanitarian Dashboard',
+    #              'url': '//data.humdata.org/visualization/somalia-monitoring/ ', 'type': 'visualization'})
+    #index.append({'title': 'Somalia Cash 3w',
+    #              'url': 'https://data.humdata.org/visualization/somalia-cash-programing-v3/ ', 'type': 'visualization'})
+    #index.append({'title': 'A journey of 1000 kilometers',
+    #              'url': 'https://data.humdata.org/visualization/a-journey-of-1000km/ ', 'type': 'visualization'})
     # index.append({'title': 'Chattam House Refugee Data',
     #               'url': '//baripembo.github.io/chathamhouse-refugeedata/ ', 'type': 'visualization'})
     # index.append({'title': 'Education Above All 3W',
@@ -129,8 +129,8 @@ def _buildIndex(path):
     # index.append({'title': 'Lake Chad Map Explorer',
     #               'url': '//data.humdata.org/mpx/#/name/lake-chad ', 'type': 'visualization'})
 
-    index.append({'title': 'WFP Food Market Prices',
-                  'url': '//data.humdata.org/visualization/wfp-food-price/', 'type': 'visualization'})
+    #index.append({'title': 'WFP Food Market Prices',
+    #              'url': '//data.humdata.org/visualization/wfp-food-price/', 'type': 'visualization'})
 
     ## UNCOMMENT THIS TO ENABLE TOPIC PAGES AS WELL
     # topic = Session.execute("select id from vocabulary where name='Topics'")
