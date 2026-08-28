@@ -117,7 +117,18 @@
 {% set file_format_text    = file_format_text    if file_format_text    is defined else '' %}
 {% set download_size       = download_size       if download_size       is defined else '' %}
 
-{% set has_card = org_name or logo_src or header_actions or header_stats %}
+{% set ns_actions = namespace(visible=[]) %}
+{% for action in header_actions %}
+  {% if action.show is not defined or action.show %}
+    {% set ns_actions.visible = ns_actions.visible + [action] %}
+  {% endif %}
+{% endfor %}
+{% set org_name_visible = org_name and (
+    not request_only
+    or edit_mode
+    or (not hide_membership and membership and membership.display_group_message)
+  ) %}
+{% set has_card = logo_src or org_name_visible or ns_actions.visible or header_stats %}
 
 <section class="c-page-header{{ ' c-page-header--compact-title' if compact_title else '' }}{{ ' ' ~ extra_classes if extra_classes else '' }}">
 
@@ -305,7 +316,7 @@
     {# Org card — logo + contact/edit/group-message actions + stats.
        Repositions via CSS Grid on __top: stacked below __left at SM,
        right-hand sidebar beside __left at MD+. #}
-    {% if org_name or logo_src or header_actions or header_stats %}
+    {% if has_card %}
     <div class="c-page-header__right-card">
       {% if logo_src %}
         {% if logo_href %}
@@ -341,12 +352,6 @@
               attrs={'id': 'contact-members'} %}
         {% endif %}
       {% endif %}
-      {% set ns_actions = namespace(visible=[]) %}
-      {% for action in header_actions %}
-        {% if action.show is not defined or action.show %}
-          {% set ns_actions.visible = ns_actions.visible + [action] %}
-        {% endif %}
-      {% endfor %}
       {% if ns_actions.visible %}
         <div class="c-page-header__card-actions">
           {% for action in ns_actions.visible %}
