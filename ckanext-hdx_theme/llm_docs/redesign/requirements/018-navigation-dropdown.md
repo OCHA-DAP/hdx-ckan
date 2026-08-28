@@ -153,7 +153,7 @@ The existing snippets in `light/notifications/` can be adapted to match this str
 The Products dropdown was implemented as part of task 017 rather than waiting for this task. Key details of what was built:
 
 - Class used: `hdx-v2-navbar__products-menu` (not `hdx-products-menu` as shown below)
-- Items driven by `h.hdx_get_quick_links_list(archived=False)` helper (not a static list)
+- Items driven by `h.hdx_get_quick_links_list(archived=False, exclude_crisis=True)` helper (not a static list) — `exclude_crisis` filters out crisis/dashboard-type quick-links (URL prefixes `/event`, `/m/event`, `/dashboards`, `/m/dashboards`), with an explicit carve-out in the helper so `/dashboards/overview-of-data-grids` is always included regardless of that filter. The hardcoded "Archived Dataviz" `/archive` item that used to follow the loop is commented out.
 - `min-width: 14rem` (not 18rem)
 - CSS lives in `navbar.less` / `navbar.css` under `&__products-menu`
 
@@ -342,7 +342,7 @@ No jQuery. No external dependencies.
 
 | # | Question | Decision |
 |---|----------|----------|
-| 1 | Products URLs | Driven by `h.hdx_get_quick_links_list(archived=False)` helper — real URLs from the quick-links registry, no `#` placeholders |
+| 1 | Products URLs | Driven by `h.hdx_get_quick_links_list(archived=False, exclude_crisis=True)` helper — real URLs from the quick-links registry, no `#` placeholders; crisis/dashboard items excluded (with `/dashboards/overview-of-data-grids` always force-included) |
 | 2 | Sysadmin dashboard URLs | All routes resolved in `h.hdx_get_user_menu_sections()` helper (e.g. `hdx_carousel.show`, `hdx_quick_links.show`, `hdx_user_permission.read`, etc.) — no `#` placeholders remain |
 | 3 | Notification item links | Each `html_template` snippet is included directly via `{% include notification.html_template %}` — link URLs are rendered inside each individual notification snippet |
 | 4 | `close.svg` icon | Confirmed — exists at `v2/icons/close.svg` |

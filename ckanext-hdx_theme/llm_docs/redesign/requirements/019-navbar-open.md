@@ -302,7 +302,7 @@ Add to the existing IIFE the following behaviors:
 | 1 | Back-button icon | Shipped as `chevron-left.svg`, not `arrow-left.svg` — `arrow-left.svg` exists in `templates/v2/icons/` but is unused |
 | 2 | `chevron-right.svg` path — confirm icon exists | Confirmed — `chevron-right.svg` exists in `templates/v2/icons/` |
 | 3 | Body scroll lock — verify no conflict with existing page scroll logic | Implemented via `document.body.style.overflow = 'hidden'` / `''`; no conflicts observed |
-| 4 | Products URLs — all `#`, real URLs needed before launch | Resolved — products are rendered dynamically via `h.hdx_get_quick_links_list(archived=False)`; no hardcoded `#` URLs remain |
+| 4 | Products URLs — all `#`, real URLs needed before launch | Resolved — products are rendered dynamically via `h.hdx_get_quick_links_list(archived=False, exclude_crisis=True)`; no hardcoded `#` URLs remain. Crisis/dashboard items are excluded (`/dashboards/overview-of-data-grids` always force-included); the hardcoded "Archived Dataviz" item after the loop is commented out |
 | 5 | Hamburger icon swap — swap SVG or use CSS transform on single icon | CSS class approach chosen: `.is-open` added to the hamburger button; icon swap handled via CSS without JS SVG manipulation |
 
 ## Why

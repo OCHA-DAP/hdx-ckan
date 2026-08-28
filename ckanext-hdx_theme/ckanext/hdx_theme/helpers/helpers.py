@@ -955,8 +955,10 @@ def hdx_get_quick_links_list(archived=None, exclude_crisis=False):
         result = [item for item in result if item.get('archived',False) == archived]
     if exclude_crisis:
         crisis_prefixes = ('/event', '/m/event', '/dashboards', '/m/dashboards')
+        forced_urls = ('/dashboards/overview-of-data-grids',)
         result = [item for item in result
-                  if not item.get('url', '').lower().startswith(crisis_prefixes)]
+                  if item.get('url', '').lower() in forced_urls
+                  or not item.get('url', '').lower().startswith(crisis_prefixes)]
     return result
 
 
