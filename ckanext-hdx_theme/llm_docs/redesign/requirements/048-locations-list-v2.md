@@ -11,7 +11,7 @@
 The existing All Locations page (`/group/`) is a JS-driven page that renders a Leaflet map and an alphabetical country list in a 6-column layout. The v2 redesign **replaces** the existing template directly — no v1 fallback gate is needed.
 
 Key structural changes vs v1:
-- KPI cards (new component — already exists on branch)
+- KPI cards (new component — already exists on branch; since commented out, see §4 — a `title_count` badge next to the page title shows the total-locations count instead)
 - Anchor navigation: **left sidebar** (XL) / **right vertical sidebar** (MD) / hidden (SM)
 - Alphabetical grouping: server-side Jinja2, flat per-letter section, **3-column grid** (XL) / **2-column grid** (MD) / 1-column (SM)
 - HRP items visually distinct: lightcyan background + powderblue border
@@ -263,6 +263,8 @@ Static — no dynamic content.
 
 ## 4. KPI Card Definition
 
+**Current status:** this KPI row is commented out in `templates/light/group/index.html`. A `title_count` badge (`title_count=h.localised_number(total_count)`, passed to `page-header.html`) shows the total-locations count next to the page title instead. The component/usage below is kept for reference.
+
 Implemented at `v2/components/stats-card.html` (`variant='kpi'`) with CSS at `v2/components/stats-card.css` —
 merged from the former `kpi-card.html`/`kpi-card.css` (task 070 B1).
 
@@ -393,7 +395,8 @@ Same component as MD: right-side vertical sidebar with letter anchors. The "Jump
 | Breadcrumb | White bg, no border |
 | Title | `c-page-header` hero, `.hdx-page-title-scale()` 2rem Bold |
 | Text-buttons | "Interactive map" (royalblue) + "Alphabetical order" (darkslategray), both with arrow-down icon, via `c-page-header`'s `title_actions` |
-| KPI row | 3 flex cards with info icons |
+| Title count | `title_count` badge next to the title, total-locations count |
+| KPI row | Commented out (see §4) |
 | Legend | 1rem square + text, padding 1rem 3rem |
 | Title+filter row | "Alphabetical order" (17.375rem fixed) inline with HRP toggle + Sort buttons, `.hdx-section-title()` |
 | Sidebar | Left, 20.375rem, sticky, 5-col letter grid, `c-letter-anchor` size=lg |
@@ -408,7 +411,7 @@ Same component as MD: right-side vertical sidebar with letter anchors. The "Jump
 | Breadcrumb | Same (white bg, no border) |
 | Title | `c-page-header` hero, `.hdx-page-title-scale()` 1.75rem Bold |
 | Text-buttons | Absent (no "Interactive map" / "Alphabetical order" — `title_actions` is XL-only) |
-| KPI row | 3 cards, NO info icons |
+| KPI row | Commented out (see §4) |
 | Legend | Same static |
 | Title+filter | "Alphabetical order" stacked above controls (column), not inline, `.hdx-section-title()` |
 | Sort font | 12px (smaller than XL 14px) |
@@ -423,7 +426,7 @@ Same component as MD: right-side vertical sidebar with letter anchors. The "Jump
 | Zone | Behavior |
 |---|---|
 | Title | No text-buttons |
-| KPI | No info icons |
+| KPI | Commented out (see §4) |
 | Filter | Toggle + sort buttons (sort visible at all breakpoints) |
 | Content | 1-column items |
 | Anchor nav | Right sidebar rendered (same as MD, no heading) |
@@ -478,7 +481,7 @@ Same component as MD: right-side vertical sidebar with letter anchors. The "Jump
 
 | Case | Expected behavior |
 |---|---|
-| No locations | Show KPIs as 0; hide alphabetical section; show empty state message |
+| No locations | Show `title_count` as 0; hide alphabetical section; show empty state message |
 | Letter with no entries (after HRP filter) | Hide letter section; disable corresponding anchor |
 | X letter | Excluded from `all_letters` — no anchor or section rendered at any breakpoint |
 | All filtered out by HRP toggle | Show message; all letter sections hidden |

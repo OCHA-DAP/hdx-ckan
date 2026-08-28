@@ -183,7 +183,7 @@ and the corrected `sm-org-page.html` stack **all tabs' content** in one long pag
 [org hero]
   [left]  {org.title} · "Member since {date}" · description (3-line clamp + "Show more")
           [CTA] "Get notified" button
-  [right] logo · action row (see below) · divider · "Datasets {N}" / "Members {N}"
+  [right] logo · action row (see below) — the divider + "Datasets {N}" / "Members {N}" stat pair that used to follow is commented out (see "KPI-style cards?" below)
   [tabs]  Datasets | Activity | Members | Requested Data | Stats   (permission-gated, see §4)
 [body]
   [sidebar, always visible]  Filter by: Location / Organisation (pinned chip = current org) /
@@ -252,6 +252,8 @@ No — `Datasets {N}` / `Members {N}` in the hero are a plain inline label/value
 card, not individual bordered KPI tiles (contrast with the All-Organisations list page's
 `kpi-locations-card`, which is a different, unrelated pattern).
 
+**Current status:** this `header_stats` stat pair is commented out on all 4 org tabs (`read.html`, `members.html`, `activity_stream.html`, `stats.html`) — the org hero no longer shows a Datasets/Members count.
+
 ---
 
 ## 3. Component Strategy
@@ -259,14 +261,14 @@ card, not individual bordered KPI tiles (contrast with the All-Organisations lis
 | UI Element | Approach | Justification |
 |---|---|---|
 | Breadcrumb | **Reuse as-is** — `v2/components/breadcrumb.html` | `Home → Organisations → {org.title}`, standard 3-item usage identical to existing dataset-page pattern |
-| Org hero | **Extend** `v2/components/page-header.html` with generic optional params (`member_since`, `header_actions`, `header_stats`) | Same integration technique as the HAPI/Signals landing pages: pass only the params the page needs, each self-gating — no mode flag. Hero metrics (title sizes, gaps, card width) inherit the dataset header defaults, no org-specific style overrides |
+| Org hero | **Extend** `v2/components/page-header.html` with generic optional params (`member_since`, `header_actions`, `header_stats`) | Same integration technique as the HAPI/Signals landing pages: pass only the params the page needs, each self-gating — no mode flag. Hero metrics (title sizes, gaps, card width) inherit the dataset header defaults, no org-specific style overrides. (`header_stats` itself is no longer passed by any of the 4 org tabs — see "KPI-style cards?" above — but the param remains supported by `page-header.html`.) |
 | Header action row | **New generic param** `header_actions` on `page-header.html`, rendered inside the existing right card | Data-driven list of `{label, href, icon_src, attrs, show}` items (Visit website / Edit org page / Add dataset / Request membership), each gated by the existing booleans from §1.3 — mirrors `org_actions_menu.html`'s conditions, rendered inline per Figma instead of in a v1 dropdown |
 | Tabs bar | **New minimal component**, `v2/components/tabs.html` | No reusable tabs component exists anywhere in the v2 system today (confirmed — searched all `ckanext-hdx_theme` templates/LESS/JS and the v2 component demo page). Closest relatives (`c-anchor-links` scroll-spy, `c-button state=active` toggle) solve different problems. See §4. |
 | Filters sidebar + MD/SM overlay | **Reuse as-is** — `v2/search-filters.html` | Facet-driven, already produces the exact facet dict for org-scoped search; Figma even shows the "Organisation" facet present with the current org pinned as a chip, confirming no special-casing is wanted |
 | Dataset cards | **Reuse as-is** — `search/snippets/package_item_v2.html` → `v2/components/dataset-card.html` | Figma's card matches this component's fields exactly (org/title/description/location/date/formats) |
 | Sort + pagination | **Reuse as-is** — `v2/search-nav-controls.html`, `v2/components/pagination.html`, `fanstatic/v2/url-nav.js` | Same components already used on the main search page; org page just needs `v2=True` threaded through |
 | "Get notified" | **Reuse as-is** — `notification_platform/buttons.html` + `v2/components/drawer.html` | Already supports `object_type='organization'` at the data layer (task 051 gave the drawer chrome to every object type; only the dataset page's *trigger* UI was restyled). Org hero just needs to call it the same way `page-header.html` does |
-| Number formatting | **Reuse as-is** — `h.hdx_format_number_si()` | Same helper task 049 introduced for the org-list-card; apply to both the Datasets and Members counts in the new hero |
+| Number formatting | **Reuse as-is** — `h.hdx_format_number_si()` | Same helper task 049 introduced for the org-list-card; was applied to the Datasets and Members counts in the hero, now moot since that stat pair is commented out |
 
 ---
 

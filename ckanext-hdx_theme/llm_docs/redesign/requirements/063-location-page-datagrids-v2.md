@@ -51,7 +51,7 @@ straightforward migration before any code is written.
 | D13 | The `indent-icon` shown in place of the status swatch on a `.sub-category` row is the visual treatment for **complementary datasets** (`dataset.is_complementary`), not a generic "2nd+ dataset in this sub-category" marker. It applies at every breakpoint, on any complementary dataset regardless of its position in the list. This resolves both the multi-dataset row pattern (§2.5) and the complementary-dataset edge case (§3.6, §9) as the same requirement. | Requester's explicit choice, correcting the doc's earlier reading of the single captured SM example — the dataset shown with an indent-icon in that example is complementary, which is the actual rule, not its ordinal position. |
 | D14 | Category label copy is sourced from the **live per-country YAML config** verbatim, not hardcoded to either the task brief's "Food Security, Nutrition & Poverty" or the XL Figma export's "Food Security & Nutrition". | Requester's explicit choice — avoids hardcoding a label that may already differ from the real config data driving the page. |
 | D15 | "Geography & Infrastructure" uses the existing generic `location.svg` icon as-is; no new dedicated icon asset is sourced for this task. | Requester's explicit choice, unblocks R4 without new design/asset work. |
-| D16 | The new header keeps a plain **Organisations count** and **Datasets count** (both as `metadata-item`s, matching Figma) plus the permission-gated **"Edit location page"** link. The v1 Organisations-count hover dropdown (listing every contributing org) is dropped. The **Followers count is removed** entirely. | Requester's explicit choice: match Figma's header composition (which shows only plain counts), dropping the hover-dropdown interaction and the Followers metric that Figma never depicts. |
+| D16 | The new header keeps a plain **Organisations count** and **Datasets count** (both as `metadata-item`s, matching Figma) plus the permission-gated **"Edit location page"** link. The v1 Organisations-count hover dropdown (listing every contributing org) is dropped. The **Followers count is removed** entirely. **Current status:** the Datasets/Organisations `header_stats` stat pair is since commented out in `country.html` — the header now shows only the title, "Get notified," and the "Edit location page" link. | Requester's explicit choice: match Figma's header composition (which shows only plain counts), dropping the hover-dropdown interaction and the Followers metric that Figma never depicts. |
 | D17 | The drawer's own overlay/slide motion (25% black backdrop, ease-out 300ms) is applied to the **shared `c-drawer` component**, not scoped to this drawer alone, so every existing drawer in the app matches. Category cards render **collapsed by default** (a deliberate departure from v1's checked-by-default checkbox, §9). Tooltip positioning on the status-swatch/title tooltips is a known issue, deliberately **deferred**, not fixed in this round. | Requester's explicit choices, made after implementation testing surfaced a card-collapse height bug and the wrong default expand state. |
 | D18 | The Definitions drawer's jump-nav is **sticky again**, superseding D17's original "non-sticky at every breakpoint" call — but as part of one combined `__sticky-top` block (intro paragraph + both jump-nav variants) rather than the jump-nav sticking on its own. Offset is measured via a self-contained `MutationObserver` in `location-page.js` (watching the drawer's `is-open` class), not a `drawer.js` change. | Requester's explicit choice, after testing showed the non-sticky jump-nav (D17) visually drifted down the drawer while scrolling — `position: relative` (needed for the mobile dropdown panel's width) has no scroll-freeze behavior on its own, so nothing kept it pinned. Pinning the whole intro/jump-nav block together, rather than re-tuning the jump-nav alone, also fixed the jump-to-category scroll offset, which previously only accounted for the drawer's title bar, never the jump-nav's own height. |
 
@@ -110,8 +110,8 @@ has a 1:1 conceptual match:
 |---|---|---|
 | `<h1 class="country-title">` | `<b class="dataset-title">` | Location display name |
 | `notification_platform/buttons.html` snippet | "Get notified" button | Same component already used elsewhere (e.g. task 051's drawer flow) — reuse as-is |
-| Datasets count (`?#dataset-filter-start` anchor) | `metadata-item` "Datasets" | Not preserved — `page-header.html`'s `header_stats` param has no `href` support, so the count no longer links/scrolls to the results section (confirmed gap, see §5) |
-| Organisations count + hover dropdown | `metadata-item` "Organisations" | Per D16, the hover dropdown is dropped — v2 renders a plain count, matching Figma |
+| Datasets count (`?#dataset-filter-start` anchor) | `metadata-item` "Datasets" | Not preserved — `page-header.html`'s `header_stats` param has no `href` support, so the count no longer links/scrolls to the results section (confirmed gap, see §5). Since commented out entirely (`header_stats` no longer passed) — the count doesn't render at all any more. |
+| Organisations count + hover dropdown | `metadata-item` "Organisations" | Per D16, the hover dropdown is dropped — v2 renders a plain count, matching Figma. Since commented out entirely (`header_stats` no longer passed) — the count doesn't render at all any more. |
 | Followers count | *(not present in any Figma export)* | Per D16, removed entirely |
 | `country/country_actions_menu.html` (permission-gated) | "Edit location page" text-button | Preserve the `group_update` permission gate |
 
@@ -304,7 +304,7 @@ rebuilding the surrounding template).
 global header (OCHA Services bar, navbar, breadcrumb: Home / Locations / <Country>)
 dataset-page-header                    ← HEADER/INTRO (§1.3)
   title + "Get notified" button
-  key-figure metadata (Datasets count, Organisations count)
+  key-figure metadata (Datasets count, Organisations count) — since commented out, see D16
   "Edit location page" text-button
 header-wrapper-parent                  ← DATA GRID SECTION (CORE)
   header: "Data Grid Availability" + subtitle "Assessing the availability of core data across six categories"
@@ -560,7 +560,7 @@ existing gap (nothing in v1 tracks the "Show legend" hover panel either).
 | Hover (`.data-grid-checkbox` status swatch, XL) | *(did not exist)* | New — `c-tooltip`, reusing dataset "Limitations" content per D1/§3.5 |
 | Show legend | Pure CSS `:hover` reveals a static panel | Removed entirely (D2) — replaced by the inline chart-legend (always visible, no interaction needed) + Definitions drawer (click-triggered) |
 | Drawer open/close | *(did not exist)* | `window.hdxV2Drawer('...').open()/.close()` — focus-trap/Escape/ARIA included for free |
-| Dataset-list anchor scroll | `?#dataset-filter-start` query param + anchor, scrolls to the results section | Not preserved — the anchor id itself exists in the new template, but nothing links to it any more (`header_stats` has no `href` support); confirmed gap, not carried over |
+| Dataset-list anchor scroll | `?#dataset-filter-start` query param + anchor, scrolls to the results section | Not preserved — the anchor id itself exists in the new template, but nothing links to it any more (`header_stats` has no `href` support, and is since commented out entirely); confirmed gap, not carried over |
 
 ---
 

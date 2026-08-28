@@ -64,6 +64,7 @@
      'icon_src': 'v2/icons/edit.svg',
      'show': can_edit},
   ] %}
+  {#
   {% set header_stats = [
     {'label': _('Datasets'), 'value': num_of_pack},
     {'label': _('Organisations'), 'value': num_of_orgs},
@@ -79,6 +80,19 @@
           notification_object_dict=data.country_dict,
           header_actions=header_actions,
           header_stats=header_stats %}
+    </div>
+  </div>
+  #}
+
+  <div class="hdx-v2-location-header-section">
+    <div class="hdx-v2-container">
+      {% snippet 'v2/components/page-header.html',
+          title=data.country_dict.display_name,
+          supports_notifications=True,
+          notification_object_type='group',
+          notification_object_id=data.country_dict.id,
+          notification_object_dict=data.country_dict,
+          header_actions=header_actions %}
     </div>
   </div>
 

@@ -50,12 +50,16 @@
 
 {# ── Hero: org header + tabs ───────────────────────────────── #}
 {% block pre_primary %}
+  {#
   {% snippet 'v2/org-hero.html',
       org_dict=group_dict, org_meta=org_meta, active_tab='members',
       header_stats=[
         {'label': _('Datasets'), 'value': h.hdx_format_number_si(org_meta.datasets_num or 0)},
         {'label': _('Members'), 'value': h.hdx_format_number_si(org_meta.members_num or 0)}
       ] %}
+  #}
+  {% snippet 'v2/org-hero.html',
+      org_dict=group_dict, org_meta=org_meta, active_tab='members' %}
 {% endblock %}
 
 {# ── Member list column ──────────────────────────────────────── #}

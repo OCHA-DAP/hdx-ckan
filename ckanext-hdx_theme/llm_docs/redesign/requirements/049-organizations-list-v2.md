@@ -14,7 +14,7 @@ that have at least one dataset. It supports text search, 4 sort options, and 3 p
 options, with server-side filtering and pagination via Python/Jinja2.
 
 The v2 redesign adds:
-- KPI cards (3 global platform stats)
+- KPI cards (3 global platform stats) — since commented out; a `title_count` badge next to the page title shows the organisations count instead (see §3 below)
 - Org card with expandable description and right-side dataset/member counts
 - v2-styled search input, results-per-page, and sort dropdowns
 - Pagination using the existing `c-pagination` component
@@ -137,6 +137,8 @@ Query param: `sort`
 - Card collapses to title + date only (no right column, no description)
 
 ### KPI Cards (from `org-list-xl.html` `.kpi` block)
+
+**Current status:** this KPI row is commented out in `templates/organization/index.html`. A `title_count` badge (`title_count=h.localised_number(kpi_orgs)`, passed to `page-header.html`) shows the organisations count next to the page title instead. The Figma spec below is kept for reference.
 
 | Label | Figma value |
 |---|---|
@@ -382,11 +384,7 @@ column is removed entirely.
 
 ### KPI Row
 
-| Breakpoint | Behaviour |
-|---|---|
-| XL | 3 flex cards, `gap: 1rem`, with info icons |
-| MD | 3 flex cards, info icons hidden (via the `c-stats-card--kpi` rule, `stats-card.css`) |
-| SM | 3 cards; info icons hidden |
+Commented out at all breakpoints (see §2, "KPI Cards"); a `title_count` badge next to the page title shows the organisations count instead.
 
 ### Controls (search + sort)
 

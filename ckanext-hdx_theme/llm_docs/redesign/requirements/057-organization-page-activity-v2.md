@@ -267,7 +267,7 @@ Per D1: a plain **server-rendered "Load more" link**, not AJAX-append and not th
 | UI Element | Approach | Justification |
 |---|---|---|
 | Breadcrumb | **Reuse as-is** — `v2/components/breadcrumb.html` | Same 3-item usage as the Datasets tab (056 §Component Strategy) |
-| Org hero | **Reuse as-is** — `v2/components/page-header.html` | Already extended by 056 with everything the org page needs (`member_since`, `header_actions`, `header_stats`); no new params required for Activity |
+| Org hero | **Reuse as-is** — `v2/components/page-header.html` | Already extended by 056 with everything the org page needs (`member_since`, `header_actions`, `header_stats`); no new params required for Activity. (`header_stats` is no longer passed here — see 056's "KPI-style cards?" — the hero no longer shows a Datasets/Members count.) |
 | Tabs bar | **Reuse as-is** — `v2/components/tabs.html`, mark `Activity` item `active: true` | Same `items` list already defined in `organization/read.html:110-117` (or its Activity-tab equivalent) — no component change, just which item gets `active` |
 | Activity item | **Reuse as-is** — `v2/components/activity-item.html` (`c-activity-item`) | §3 — visually matches Figma exactly, zero extension needed |
 | Activity dispatcher | **Relocate**, don't duplicate — `package/snippets/activity_stream_v2.html` → `v2/activity-stream.html` (D2, D6) | Already generic across all 23 types (§1.4/§4); relocating avoids a second copy of 23 type-branches while fixing the semantically-odd "package" naming for an org-page consumer |

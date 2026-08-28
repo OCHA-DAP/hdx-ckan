@@ -438,7 +438,7 @@ dropped pagination).
 | UI element | Approach | Justification |
 |---|---|---|
 | Breadcrumb | **Reuse** — `v2/components/breadcrumb.html` via `breadcrumb_items`, same 3 ancestors + "Members" active | Same pattern as 056–058 |
-| Org hero (header + tabs) | **Reuse as-is** — `v2/org-hero.html` with `active_tab='members'`, same `header_stats` | Zero new params needed; Members item already in the tabs list |
+| Org hero (header + tabs) | **Reuse as-is** — `v2/org-hero.html` with `active_tab='members'`, same `header_stats` | Zero new params needed; Members item already in the tabs list. (`header_stats` is no longer passed here — see 056's "KPI-style cards?" — the hero no longer shows a Datasets/Members count.) |
 | Tabs | **Reuse as-is** — `v2/components/tabs.html` (via org-hero) | — |
 | Search bar | **Reuse** — `c-search-input` in a GET form (§4) | Existing component matches Figma's input 1:1 |
 | Sort by (no per-page — D2) | **Generalize** `v2/search-nav-controls.html` (D4): caller-provided option lists / param names; per-page dropdown optional | Existing callers (search page, org datasets tab) keep behavior via defaults — regression-check both |

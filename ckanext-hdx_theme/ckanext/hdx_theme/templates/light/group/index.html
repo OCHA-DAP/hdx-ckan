@@ -35,6 +35,7 @@
     <div class="hdx-v2-container">
       {% snippet 'v2/components/page-header.html',
           title=_('Locations'),
+          title_count=h.localised_number(total_count),
           title_actions=[
             {'label': _('Interactive map'), 'href': '#hdx-v2-locations-list-map',
              'icon_src': 'v2/icons/arrow-down.svg', 'icon_position': 'right', 'style': 'primary'},
@@ -42,6 +43,7 @@
              'icon_src': 'v2/icons/arrow-down.svg', 'icon_position': 'right', 'style': 'secondary'}
           ] %}
 
+      {#
       <div class="hdx-v2-locations-list-hero__body">
         <div class="c-stats-card-list c-stats-card-list--row">
           {% snippet 'v2/components/stats-card.html',
@@ -64,14 +66,12 @@
               tooltip_id='kpi-datagrid' %}
         </div>
       </div>
+      #}
     </div>
   </div>
 
   {# Map (out of scope — existing markup preserved) #}
   <div class="hdx-v2-locations-list-map" id="hdx-v2-locations-list-map">
-    <div id="mapbox-baselayer-url-div" style="display:none;">{{ "/mapbox-base-tiles/{z}/{x}/{y}.png" }}</div>
-    <div id="datasetCounts" style="display:none;">{{ countries }}</div>
-    <div id="map"></div>
     <div class="hdx-v2-container">
       <div id="mapbox-baselayer-url-div" style="display:none;">{{ "/mapbox-base-tiles/{z}/{x}/{y}.png" }}</div>
       <div id="datasetCounts" style="display:none;">{{ countries }}</div>

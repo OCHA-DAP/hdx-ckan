@@ -33,7 +33,9 @@
   <div class="hdx-v2-org-list-hero">
     <div class="hdx-v2-container">
       {% snippet 'v2/components/page-header.html',
-          title=_('Organisations') %}
+          title=_('Organisations'),
+          title_count=h.localised_number(kpi_orgs) %}
+      {#
       <div class="hdx-v2-org-list-hero__body">
         <div class="c-stats-card-list c-stats-card-list--row">
           {% snippet 'v2/components/stats-card.html',
@@ -56,6 +58,7 @@
               tooltip_id='kpi-locations' %}
         </div>
       </div>
+      #}
     </div>
   </div>
 {% endblock %}
