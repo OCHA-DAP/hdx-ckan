@@ -12,6 +12,7 @@
 .hdx-v2-locations-list-map {
   position: relative;
   display: none;
+  background-color: var(--hdx-neutral-0);
 }
 @media (min-width: 48rem) {
   .hdx-v2-locations-list-map {

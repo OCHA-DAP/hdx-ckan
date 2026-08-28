@@ -513,7 +513,7 @@ Same component as MD: right-side vertical sidebar with letter anchors. The "Jump
 | 5 | `c-selection-item` with `color='cyan'` for HRP items | `c-selection-item--cyan` variant matches Figma HRP bg/border; `width: 100%; min-width: 0` added to component base for grid use |
 | 6 | `c-button` for sort buttons | User confirmation + Figma button style matches |
 | 7 | `c-stats-card--kpi` (merged from `c-kpi-card`, task 070 B1) | Reused as-is |
-| 8 | Map (v1 markup) preserved but not redesigned; search excluded | Template retains `<div id="map">` and Leaflet asset bundle; only the search box is absent |
+| 8 | Map (v1 markup) preserved but not redesigned; search excluded | Template retains `<div id="map">` and Leaflet asset bundle; only the search box is absent. The map is wrapped in `<div class="hdx-v2-container">` (added after an initial full-bleed regression let the world repeat on the east-west axis at wide viewports — production relies on its Bootstrap `.container`'s ~1170px cap, combined with the unchanged `minZoom: 2.4` Leaflet setting, to avoid that; the Leaflet JS/config itself is untouched). |
 | 9 | World excluded from list | Not shown in Figma |
 | 10 | Tertiary style + `is-active` class for sort buttons | Matches `:active` pseudo-class visually; `c-button` component extended with `is-active` modifier for all three button styles |
 | 11 | Sidebar sticky at all breakpoints, 25% width at XL only | SM/MD sidebar has natural content width (letter column); 25% flex via `.v2-sidebar-flex()` applied at XL only |
