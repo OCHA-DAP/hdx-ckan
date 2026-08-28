@@ -105,6 +105,12 @@
         padding: var(--hdx-space-6) 0;  // 24px top/bottom
     }
 
+    &:only-child {
+        @media (min-width: @hdx-bp-xl) {
+            padding-left: 0;
+        }
+    }
+
     .hdx-v2-dataset-list {
         flex:      1;
         min-width: 0;

@@ -93,6 +93,11 @@
     padding: var(--hdx-space-6) 0;
   }
 }
+@media (min-width: 80rem) {
+  .hdx-v2-search-content:only-child {
+    padding-left: 0;
+  }
+}
 .hdx-v2-search-content .hdx-v2-dataset-list {
   flex: 1;
   min-width: 0;
