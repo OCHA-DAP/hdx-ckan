@@ -59,10 +59,7 @@ Refine the existing v2 footer implementation to better align with the Figma spec
 
 ### `hdx-styles/src/common/less/v2/footer.less`
 
-- **REQ-1 — Bottom-align `__related`.** Three coordinated changes:
-  1. Add `margin-top: auto` to `__related` — absorbs free space at any breakpoint where `__branding` has height to spare.
-  2. On `__top` at XL, change `align-items: flex-start` → `align-items: stretch` — lets `__branding` grow to the full row height (set by the taller `__nav` column).
-  3. Remove the fixed `height: 17.5rem` from `__branding` at XL — was a hard-coded guess; height is now driven by the row. With real height available, `justify-content: space-between` distributes logo-wrap / actions / related correctly, pushing `__related` to the bottom.
+- **REQ-1 — Bottom-align `__related`.** Moot — the `__related` block is commented out (see task 015), so nothing renders there to bottom-align.
 
 - **REQ-2 — `__social-icon` sizing.** Remove `font-size` and `line-height` rules (FontAwesome glyph metrics). Size the SVG via `width`/`height`, consistent with `__ext-icon`:
   ```less

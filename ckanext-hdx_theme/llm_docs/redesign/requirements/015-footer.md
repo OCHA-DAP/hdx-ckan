@@ -18,8 +18,8 @@ Implement the redesigned footer in `v2/footer.html` as part of the `hdx-v2` page
 
 Full implementation. Four sections:
 
-1. **Branding** (`__branding`) — HDX logo (lazy-loaded), tagline, MailChimp newsletter form, GitHub + LinkedIn social links, "Related to" external link.
-2. **Navigation grid** (`__nav`) — three columns: Data, Products, Resources. Internal links use `{% snippet 'v2/components/text-link.html' %}`. External links (Open source, Blog, Contact, Centre for Humanitarian Data) are written as raw `<a>` elements carrying `c-text-link` classes plus `hdx-v2-footer__ext-link` to inline the SVG icon inside the anchor. All links carry `data-module="hdx_click_stopper"` and `data-module-link_type="footer"`.
+1. **Branding** (`__branding`) — HDX logo (lazy-loaded), tagline, MailChimp newsletter form, GitHub + LinkedIn social links. (The "Related to" external link that used to sit here is commented out — see below.)
+2. **Navigation grid** (`__nav`) — three columns: Data, Products, Resources. Internal links use `{% snippet 'v2/components/text-link.html' %}`. External links (Open source, Blog, Contact) are written as raw `<a>` elements carrying `c-text-link` classes plus `hdx-v2-footer__ext-link` to inline the SVG icon inside the anchor. All links carry `data-module="hdx_click_stopper"` and `data-module-link_type="footer"`.
 3. **Divider** (`__divider`) — 1px white `<hr>`.
 4. **Bottom bar** (`__bottom`) — OCHA service block (logo + description), CC license icon + text, Terms of service + Privacy policy links.
 
@@ -31,7 +31,7 @@ Key decisions:
 - Email input: native `<input type="email">` — preserves MailChimp JS hooks (`id="mce-EMAIL"`, `name="EMAIL"`).
 - Archived items excluded from the Products column entirely (`h.hdx_get_quick_links_list(archived=False, exclude_crisis=True)`), not rendered as a badge.
 - Dataviz Gallery & HDX Dataviz Guidelines: shown unconditionally, not gated behind `display:none`.
-- MD/SM Figma duplication of "Centre for Humanitarian Data" in Resources column omitted; already in "Related to" row (follows XL pattern).
+- The `__related` block ("Related to" / "Centre for Humanitarian Data" link) is commented out — "Centre for Humanitarian Data" no longer appears as a standalone link anywhere in the footer (the MD/SM Figma duplication in the Resources column was already omitted on the grounds it was covered by this row; that row is now gone too).
 
 ### `hdx-styles/src/common/less/v2/footer.less` (new file)
 
