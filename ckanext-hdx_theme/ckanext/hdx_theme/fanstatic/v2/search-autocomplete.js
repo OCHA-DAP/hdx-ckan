@@ -58,6 +58,15 @@
       boost:  { title: 10, event: 1000 }
     });
 
+    // Type-priority sort: crises, then locations, then organisations.
+    // Array.sort is stable, so relevance order is preserved within each type.
+    var TYPE_RANK = { event: 0, location: 1, organisation: 2 };
+    hits.sort(function (a, b) {
+      var ra = TYPE_RANK.hasOwnProperty(a.type) ? TYPE_RANK[a.type] : 99;
+      var rb = TYPE_RANK.hasOwnProperty(b.type) ? TYPE_RANK[b.type] : 99;
+      return ra - rb;
+    });
+
     return { results: hits.slice(0, MAX_RESULTS), termList: termList };
   }
 

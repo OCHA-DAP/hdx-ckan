@@ -187,7 +187,9 @@ or is a separate mechanism.
 3. If empty: close panel
 4. If non-empty: run `performSearchQuery(value)` against the MiniSearch index
 5. Filter results to `type='organisation'`, `type='location'`, or `type='event'` (all index types included)
-6. Render up to **5 results total** across all types, ordered by MiniSearch relevance score
+6. Render up to **5 results total** across all types, ordered by type priority (crises, then
+   locations, then organisations) with MiniSearch relevance score as the tie-break within each
+   type (see §9.3)
 7. Show panel
 
 ### MiniSearch config
@@ -374,8 +376,11 @@ behaviour exactly. No AJAX for MVP.
 
 ### 9.3 Result ordering
 
-**Decision:** **Relevance score only** — use MiniSearch's default ranking. No manual ordering
-by type (location before organisation, etc.).
+**Decision:** **Type priority, then relevance.** Results are grouped by type rank — crises
+(`event`) first, then locations, then organisations — with MiniSearch relevance score used only
+as the tie-break within each type. The list stays a single flat list (no section headers/dividers
+between types); the 5-result cap (§9.2A) is applied after the type sort, so a type earlier in the
+priority order can fill the cap before a later type is shown.
 
 ### 9.4 Header search upgrade
 
