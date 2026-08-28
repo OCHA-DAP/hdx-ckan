@@ -8,6 +8,9 @@ hide_resources - If true hides the resources (default: false).
 banner         - If true displays a popular banner (default: false).
 truncate       - The length to trucate the description to (default: 180)
 truncate_title - The length to truncate the title to (default: 80).
+emphasize_title - If true, sizes the "Datasets" heading (and its count) like
+                  a page title instead of a section title (default: false;
+                  set only by the main /dataset search page).
 
 Example:
 
@@ -117,10 +120,12 @@ Example:
 
   {# ── v2 dataset list header (title + count + sort/limit at XL) ───────── #}
 
+  {% set emphasize_title = emphasize_title if emphasize_title is defined else False %}
+
   <div class="hdx-v2-list-header">
     <div class="hdx-v2-list-header__left">
-      <strong class="hdx-v2-list-header__title">{{ _('Datasets') }}</strong>
-      <span class="hdx-v2-list-header__count">{{ h.localised_number(packages_count) }}</span>
+      <strong class="hdx-v2-list-header__title{{ ' hdx-v2-list-header__title--page-title' if emphasize_title else '' }}">{{ _('Datasets') }}</strong>
+      <span class="hdx-v2-list-header__count{{ ' hdx-v2-list-header__count--page-title' if emphasize_title else '' }}">{{ h.localised_number(packages_count) }}</span>
     </div>
     <div class="hdx-v2-list-header__controls">
       {% snippet 'v2/search-nav-controls.html',

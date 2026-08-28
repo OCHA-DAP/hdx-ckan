@@ -77,9 +77,9 @@
 }
 .c-page-header__title {
   font-family: var(--hdx-font-display);
-  font-size: var(--hdx-fs-2xl);
   font-weight: var(--hdx-fw-bold);
   line-height: var(--hdx-lh-normal);
+  font-size: var(--hdx-fs-2xl);
   color: var(--hdx-neutral-95);
   margin: 0;
   word-break: break-word;
@@ -105,7 +105,19 @@
   font-size: var(--hdx-fs-m);
   font-weight: var(--hdx-fw-regular);
   line-height: var(--hdx-lh-normal);
+  font-family: var(--hdx-font-display);
   color: var(--hdx-neutral-8);
+  font-size: var(--hdx-fs-2xl);
+}
+@media (min-width: 48rem) {
+  .c-page-header__title-count {
+    font-size: var(--hdx-fs-3xl);
+  }
+}
+@media (min-width: 80rem) {
+  .c-page-header__title-count {
+    font-size: var(--hdx-fs-4xl);
+  }
 }
 .c-page-header__title-actions {
   display: none;

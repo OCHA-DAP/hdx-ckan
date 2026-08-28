@@ -2,7 +2,9 @@
 Wrapper for the list of datasets displayed in search results.
 This snippet contains the details around the list itself. It calls indicator_list.html or package_list.html
 
-packages       - A list of packages to display.
+packages         - A list of packages to display.
+emphasize_title  - If true, passed through to package_list.html to size the
+                    "Datasets" heading like a page title (default: false).
 
 
 Example:
@@ -26,7 +28,8 @@ Example:
                 query=my_c.q, packages=my_c.page.items, packages_count=my_c.full_facet_info.get('num_of_total_items'),
                 full_facet_info=my_c.full_facet_info,
                 ext_page_size=my_c.ext_page_size, sorting_selected=my_c.sort_by_selected,
-                other_links=my_c.other_links, display_min=display_min, show_url=show_url, v2=v2) }}
+                other_links=my_c.other_links, display_min=display_min, show_url=show_url, v2=v2,
+                emphasize_title=emphasize_title if emphasize_title is defined else False) }}
       {% endblock %}
     </div>
 

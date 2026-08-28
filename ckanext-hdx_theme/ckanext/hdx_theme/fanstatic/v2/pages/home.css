@@ -165,9 +165,9 @@
 }
 .hdx-v2-intro__heading {
   font-family: var(--hdx-font-display);
-  font-size: var(--hdx-fs-2xl);
   font-weight: var(--hdx-fw-bold);
   line-height: var(--hdx-lh-normal);
+  font-size: var(--hdx-fs-2xl);
   color: var(--hdx-neutral-95);
   margin: 0;
 }
@@ -245,9 +245,9 @@
 }
 .hdx-v2-highlights__heading {
   font-family: var(--hdx-font-display);
-  font-size: var(--hdx-fs-2xl);
   font-weight: var(--hdx-fw-bold);
   line-height: var(--hdx-lh-normal);
+  font-size: var(--hdx-fs-2xl);
   color: var(--hdx-neutral-95);
   margin: 0;
 }
@@ -406,9 +406,9 @@
 }
 .hdx-v2-signals__heading {
   font-family: var(--hdx-font-display);
-  font-size: var(--hdx-fs-2xl);
   font-weight: var(--hdx-fw-bold);
   line-height: var(--hdx-lh-normal);
+  font-size: var(--hdx-fs-2xl);
   color: var(--hdx-neutral-95);
   margin: 0;
 }

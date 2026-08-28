@@ -59,7 +59,7 @@
     {% block search_results_wrapper %}
         {% snippet 'search/snippets/search_results_wrapper.html',
                             tracking_enabled=g.tracking_enabled, my_c=data or c, display_min=true,
-                            show_url=show_url, v2=true %}
+                            show_url=show_url, v2=true, emphasize_title=true %}
 
     {% endblock %}
   {% block package_search_results_api %}

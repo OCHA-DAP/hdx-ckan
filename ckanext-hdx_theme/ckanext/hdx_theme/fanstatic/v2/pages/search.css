@@ -23,12 +23,39 @@
     font-size: var(--hdx-fs-xl);
   }
 }
+.hdx-v2-list-header__title--page-title {
+  font-size: var(--hdx-fs-2xl);
+}
+@media (min-width: 48rem) {
+  .hdx-v2-list-header__title--page-title {
+    font-size: var(--hdx-fs-3xl);
+  }
+}
+@media (min-width: 80rem) {
+  .hdx-v2-list-header__title--page-title {
+    font-size: var(--hdx-fs-4xl);
+  }
+}
 .hdx-v2-list-header__count {
   font-family: var(--hdx-font-body);
   font-size: var(--hdx-fs-m);
   font-weight: var(--hdx-fw-regular);
   line-height: var(--hdx-lh-normal);
+  font-family: var(--hdx-font-display);
   color: var(--hdx-neutral-8);
+}
+.hdx-v2-list-header__count--page-title {
+  font-size: var(--hdx-fs-2xl);
+}
+@media (min-width: 48rem) {
+  .hdx-v2-list-header__count--page-title {
+    font-size: var(--hdx-fs-3xl);
+  }
+}
+@media (min-width: 80rem) {
+  .hdx-v2-list-header__count--page-title {
+    font-size: var(--hdx-fs-4xl);
+  }
 }
 .hdx-v2-list-header__controls {
   display: none;

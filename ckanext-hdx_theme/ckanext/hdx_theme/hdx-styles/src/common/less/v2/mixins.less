@@ -175,7 +175,15 @@
 // c-page-header's hero <h1> and homepage major-section headings.
 
 .hdx-page-title-scale() {
-    .hdx-display-s();   // 24px bold, base
+    .hdx-display-s();   // 24px bold, base (font-family + weight + base size)
+    .hdx-page-title-font-size();
+}
+
+// Font-size ramp only (no weight/family/color) — for title-adjacent elements
+// (list-header counts, the /dataset search page's "Datasets" sub-heading)
+// that need to track the page-title size without adopting its weight/color.
+.hdx-page-title-font-size() {
+    font-size: var(--hdx-fs-2xl);  // 24px base
 
     @media (min-width: @hdx-bp-md) { font-size: var(--hdx-fs-3xl); }  // 28px
     @media (min-width: @hdx-bp-xl) { font-size: var(--hdx-fs-4xl); }  // 32px
@@ -220,6 +228,7 @@
 
 .hdx-list-header-count() {
     .hdx-body-m();
+    font-family: var(--hdx-font-display);
     color: var(--hdx-neutral-8);
 }
 
