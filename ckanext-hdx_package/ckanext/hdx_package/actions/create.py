@@ -22,8 +22,9 @@ import ckanext.hdx_package.helpers.helpers as helpers
 from ckan.types import Context, DataDict, Schema
 from ckan.types.logic import ActionResult
 from ckanext.hdx_org_group.helpers.org_batch import get_batch_or_generate
-from ckanext.hdx_package.actions.update import process_batch_mode, flag_if_file_uploaded, run_action_without_geo_preview
-from ckanext.hdx_package.helpers.constants import BATCH_MODE, BATCH_MODE_DONT_GROUP
+from ckanext.hdx_package.actions.update import process_batch_mode, run_action_without_geo_preview, \
+    _manage_datastore_for_uploads
+from ckanext.hdx_package.helpers.constants import BATCH_MODE, BATCH_MODE_DONT_GROUP, FILE_WAS_UPLOADED
 from ckanext.hdx_package.helpers.resource_triggers import BEFORE_PACKAGE_UPDATE_LISTENERS, \
     AFTER_PACKAGE_UPDATE_LISTENERS, VERSION_CHANGE_ACTIONS
 
@@ -46,7 +47,28 @@ def resource_create(context, data_dict):
     '''
 
     process_batch_mode(context, data_dict)
-    flag_if_file_uploaded(context, data_dict)
+
+    # Captured BEFORE package_revise()/package_update() mutates data_dict, as the single
+    # source of truth for "this resource create request carries a real uploaded file"
+    # (mirrors package_update()'s own `was_real_upload` capture - see update.py).
+    #
+    # Why this matters: this action always creates a single brand-new resource (no
+    # previous version to reset via reset_on_file_upload, so no need to flag
+    # context[FILE_WAS_UPLOADED] for that purpose here). But DataPusher+ submission for
+    # this new resource is handled differently depending on which of the two cases below
+    # applies:
+    #  - Genuine file upload: package_revise()/package_update() below already flags this
+    #    resource's real id in context[FILE_WAS_UPLOADED] once it's known (post-flush) and
+    #    calls _manage_datastore_for_uploads() itself, which submits it if eligible.
+    #    DatapusherPlusPlugin.after_resource_create() is an intentional no-op specifically
+    #    to avoid submitting this same resource a second time.
+    #  - URL-only resource (no 'upload' key/payload at all): package_update()'s flagging
+    #    loop never considers it (it only flags resources with a truthy 'upload'), so it
+    #    would otherwise reach neither submission path and never be ingested - even though
+    #    this action explicitly supports creating such resources (see test_create_and_upload).
+    #    We submit it explicitly below, after the resource's real id is known, reusing the
+    #    exact same eligibility logic (format + HDX allowlist) via _manage_datastore_for_uploads().
+    was_real_upload = bool(data_dict.get('upload'))
 
     if data_dict.get('resource_type', '') != 'file.upload':
         # If this isn't an upload, it is a link so make sure we update
@@ -94,6 +116,12 @@ def resource_create(context, data_dict):
 
     for plugin in plugins.PluginImplementations(plugins.IResourceController):
         plugin.after_resource_create(context, resource)
+
+    if not was_real_upload:
+        # URL-only resource: not covered by package_update()'s FILE_WAS_UPLOADED flagging
+        # (see comment above) and not covered by DatapusherPlusPlugin.after_resource_create()
+        # (intentional no-op there). Submit it here explicitly so it isn't silently skipped.
+        _manage_datastore_for_uploads({FILE_WAS_UPLOADED: {resource['id']}}, package)
 
     return resource
 

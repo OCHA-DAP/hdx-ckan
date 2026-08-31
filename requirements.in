@@ -92,7 +92,7 @@ pyotp~=2.6.0
 # END ckanext-security
 
 # ckanext-datapusher-plus
--e git+https://github.com/OCHA-DAP/datapusher-plus.git@0.2.104#egg=datapusher-plus
+-e git+https://github.com/OCHA-DAP/datapusher-plus.git@0.4.104-b2#egg=datapusher-plus
 # END ckanext-datapusher-plus
 
 # ckanext-sitemap (Datopian version)
