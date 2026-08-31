@@ -17,7 +17,7 @@ HDX_PCODE_URL=https://gallery.ecr.aws/unocha/hdx-jp-sw-pcode/
 HDX_PCODE_TAG=0.2.3
 
 HDX_SDD_URL=https://gallery.ecr.aws/unocha/hdx-sdd/
-HDX_SDD_TAG=0.5.0
+HDX_SDD_TAG=0.5.1
 
 # not part of the normal deployment anymore
 # HDX_N8N_IMAGE_URL=https://gallery.ecr.aws/unocha/hdx-n8n/
