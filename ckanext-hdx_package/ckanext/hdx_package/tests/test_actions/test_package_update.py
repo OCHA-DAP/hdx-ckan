@@ -100,6 +100,88 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
         assert result.status_code == 200
         assert '<a class="heading" title="hdx_test.csv">' in result.body
 
+    def test_package_update_multiple_new_resources_get_real_ids_flagged(self):
+        """
+        Regression test for the bug where uploading 2+ brand-new resources in a single
+        package_update/package_revise call collapsed into a single 'NEW' sentinel in
+        context[FILE_WAS_UPLOADED] (a set), making the individual new resources
+        indistinguishable and causing _manage_datastore_for_uploads to silently skip all
+        of them (so datapusher+ was never triggered, e.g. for resources added via a
+        direct package_revise call with update__resources__extend containing 2+ items).
+
+        After the fix, each new resource must be flagged with its own real resource id.
+        """
+        from ckanext.hdx_package.helpers.constants import FILE_WAS_UPLOADED
+
+        package = {"package_creator": "test function",
+                   "private": False,
+                   "dataset_date": "[1960-01-01 TO 2012-12-31]",
+                   "caveats": "These are the caveats",
+                   "license_other": "TEST OTHER LICENSE",
+                   "methodology": "This is a test methodology",
+                   "dataset_source": "World Bank",
+                   "license_id": "hdx-other",
+                   "notes": "This is a test activity",
+                   "groups": [{"name": "roger"}],
+                   "owner_org": "hdx-test-org",
+                   'name': 'test_activity_multi_new_resources',
+                   'title': 'Test Activity Multi New Resources'
+                   }
+
+        context = {'ignore_auth': True,
+                   'model': model, 'session': model.Session, 'user': 'testsysadmin'}
+        created_package = self._get_action('package_create')(context, package)
+
+        class FakeUpload:
+            clear = False
+            mimetype = 'text/csv'
+            filesize = 10
+
+            def upload(self, resource_id, max_size=None):
+                pass
+
+        # package_update requires the full dataset dict (it isn't a patch), so start from
+        # what was just created and only add the two brand-new resources.
+        update_dict = dict(created_package)
+        update_dict['resources'] = [
+            {
+                'url': 'https://example.com/new_resource_1.csv',
+                'resource_type': 'file.upload',
+                'format': 'CSV',
+                'name': 'new_resource_1.csv',
+                'upload': 'fake-file-1',  # any truthy value; real uploader is mocked below
+            },
+            {
+                'url': 'https://example.com/new_resource_2.csv',
+                'resource_type': 'file.upload',
+                'format': 'CSV',
+                'name': 'new_resource_2.csv',
+                'upload': 'fake-file-2',
+            },
+        ]
+
+        upload_context = {'ignore_auth': True,
+                           'model': model, 'session': model.Session, 'user': 'testsysadmin'}
+
+        with mock.patch(
+            'ckanext.hdx_package.actions.update.uploader.get_resource_uploader',
+            return_value=FakeUpload()
+        ), mock.patch(
+            'ckanext.hdx_package.actions.update._manage_datastore_for_uploads'
+        ):
+            self._get_action('package_update')(upload_context, update_dict)
+
+        uploaded_ids = upload_context.get(FILE_WAS_UPLOADED, set())
+        assert 'NEW' not in uploaded_ids
+        assert len(uploaded_ids) == 2
+
+        updated_package = self._get_action('package_show')(
+            {'ignore_auth': True, 'model': model, 'session': model.Session, 'user': 'testsysadmin'},
+            {'id': package['name']}
+        )
+        real_resource_ids = {r['id'] for r in updated_package['resources']}
+        assert uploaded_ids == real_resource_ids
+
     def test_hdx_package_delete_redirect(self):
 
         package = {"package_creator": "test function",
@@ -581,11 +663,20 @@ class TestManageDatastoreForUploads:
         fake_dp_plugin._submit_to_datapusher.assert_not_called()
         datastore_delete_mock.assert_not_called()
 
-    def test_no_action_for_new_resource(self):
-        """FILE_WAS_UPLOADED = {'NEW'} → neither submit nor delete called."""
+    def test_no_action_for_unmatched_id(self):
+        """
+        FILE_WAS_UPLOADED containing an id with no matching resource in package_dict
+        (e.g. a stale/unknown id) → neither submit nor delete called.
+
+        Note: package_update() no longer produces a literal 'NEW' sentinel (see
+        test_package_update_multiple_new_resources_get_real_ids_flagged in
+        test_package_update.py's TestHDXPackageUpdate for the regression test covering
+        that fix) — this test just verifies _manage_datastore_for_uploads()'s generic,
+        defensive handling of any id that doesn't resolve to a resource.
+        """
         get_action_side_effect, datastore_delete_mock = self._make_get_action(hdx_allowed=True)
         fake_dp_plugin = self._run(
-            self._make_context(resource_ids={'NEW'}),
+            self._make_context(resource_ids={'some-unknown-id'}),
             self._make_package_dict(resource_format='CSV'),
             get_action_side_effect,
         )

@@ -27,12 +27,12 @@ Both operations are performed in `package_update()` in
 
 ### `_manage_datastore_for_uploads(context, package_dict)`
 
-Iterates over resource ids in `context[FILE_WAS_UPLOADED]` (set by `flag_if_file_uploaded()` earlier in the update). Eligibility is computed once per resource and the resource goes down exactly one path — submit or delete, never both:
+Iterates over resource ids in `context[FILE_WAS_UPLOADED]` (populated inside `package_update()` itself: existing resources are flagged with their real id before validation, new resources are flagged with their real id after `model.Session.flush()`). Eligibility is computed once per resource and the resource goes down exactly one path — submit or delete, never both:
 
 1. Returns immediately if `FILE_WAS_UPLOADED` is absent from context.
 2. Reads and normalises supported formats once via `_normalize_supported_formats`: `ckan.datapusher.formats` → fallback `ckanext.datapusher_plus.formats`.
 3. Calls `hdx_is_package_allowed_for_datastore` **once per package**. If it raises, logs the exception and returns immediately without submitting or deleting (fail open).
-4. For each uploaded resource id (skipping `'NEW'`):
+4. For each uploaded resource id:
    - Computes `eligible`: format is in supported formats **and** package is in the allowlist **and** `url_type != "datapusher"`.
    - If **eligible** → calls `datapusher_plus._submit_to_datapusher()`. Any existing datastore table is replaced by the DP+ job itself.
    - If **not eligible** → calls `_datastore_table_exists()` to check whether a real table exists. If it does, calls `datastore_delete` with `force=True`. The delete is wrapped in `try/except` so a cleanup failure never aborts the dataset update.

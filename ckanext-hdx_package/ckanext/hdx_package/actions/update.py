@@ -69,7 +69,6 @@ def resource_update(context, data_dict):
     old_resource_format = resource_obj.format
 
     process_batch_mode(context, data_dict)
-    # flag_if_file_uploaded(context, data_dict)
     process_skip_validation(context, data_dict)
 
     # make the update faster (less computation in the custom package_show)
@@ -239,8 +238,6 @@ def _manage_datastore_for_uploads(context: Context, package_dict: Dict[str, Any]
         return
 
     for resource_id in uploaded_resource_ids:
-        if resource_id == 'NEW':
-            continue
         resource_dict = next(
             (r for r in package_dict.get('resources', []) if r.get('id') == resource_id), None
         )
@@ -359,8 +356,22 @@ def package_update(
         # I believe that unless a resource has either an upload field or is marked to be deleted
         # we don't need to create an uploader object which is expensive
         if 'clear_upload' in resource or resource.get('upload'):
-            # this needs to be run while the upload field still exists
-            flag_if_file_uploaded(context, resource)
+            # NOTE: flagging happens in two stages here, both writing into the same
+            # context[FILE_WAS_UPLOADED] set:
+            #  1. Here, for *existing* resources (real 'id' already known). This must happen
+            #     before lib_plugins.plugin_validate() below, because validators such as
+            #     hdx_reset_on_file_upload (used for pii_is_sensitive, in_quarantine,
+            #     qa_hapi_report, sensitive, sdd_report) read FILE_WAS_UPLOADED *during*
+            #     validation to reset stale QA/sensitivity metadata when a file is replaced.
+            #  2. Further below (after model.Session.flush()), for *brand-new* resources, once
+            #     their real ids are assigned. We can't flag them here because at this point
+            #     they don't have a real 'id' yet, and using a shared 'NEW' sentinel would
+            #     collapse multiple simultaneously-created resources into one indistinguishable
+            #     entry (breaking _manage_datastore_for_uploads downstream). New resources have
+            #     no previous version anyway, so there's no stale value for validation to reset.
+
+            if resource.get('upload') and resource.get('id'):
+                context.setdefault(FILE_WAS_UPLOADED, set()).add(resource['id'])
 
             # file uploads/clearing
             upload = uploader.get_resource_uploader(resource)
@@ -419,6 +430,16 @@ def package_update(
         resource['id'] = pkg.resources[index].id
 
         if upload:
+            # Second flagging stage (see NOTE above the pre-validation loop): existing resources
+            # were already flagged there with their real id, so this is a harmless no-op re-add
+            # for them. Brand-new resources get their first (and only) flag here, now that their
+            # real id is known, so _manage_datastore_for_uploads can find them later.
+            # NOTE: we intentionally don't reuse flag_if_file_uploaded() here — it gates on
+            # resource_dict.get('upload'), which may no longer be present/truthy on this
+            # post-validation `resource` dict. `upload` (the uploader object built above, before
+            # validation) is the reliable signal that this resource needs flagging.
+            context.setdefault(FILE_WAS_UPLOADED, set()).add(resource['id'])
+
             log.info('There\'s a resource in package_update() which is marked for: {}'
                      .format('clear' if upload.clear else 'upload'))
             upload.upload(resource['id'], uploader.get_max_resource_size())
@@ -480,11 +501,6 @@ def process_batch_mode(context, data_dict):
         del data_dict[BATCH_MODE]
 
 
-def flag_if_file_uploaded(context, resource_dict):
-    if resource_dict.get('upload'):
-        if FILE_WAS_UPLOADED not in context:
-            context[FILE_WAS_UPLOADED] = set()
-        context[FILE_WAS_UPLOADED].add(resource_dict.get('id', 'NEW'))
 
 
 def process_skip_validation(context: Context, data_dict: DataDict):
