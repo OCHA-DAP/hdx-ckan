@@ -2,15 +2,16 @@
  * location-page.js
  *
  * Location (single-country/group) page — Data Grid Availability (task 063):
- *   - Global expand/collapse toggle (rendered twice — next to the title on
- *     SM/MD, next to the chart on XL, only one visible at a time — both
- *     driven together) that forces every category card's native <details>
- *     open/closed at once. Per-card expand/collapse is handled by the
+ *   - The category grid itself is a native <details>/<summary> reveal
+ *     ([data-datagrid-reveal]), hidden until "Show more" is clicked, so it
+ *     stays reachable with JavaScript disabled. Its `toggle` event (fires on
+ *     both a native click and a scripted `.open` change) forces every
+ *     category card's own native <details> open/closed at once, in step
+ *     with the reveal. Per-card expand/collapse is otherwise handled by the
  *     browser itself (each card is a <details>/<summary>, task 063 round 4)
- *     and isn't tracked here; the global toggle always forces all cards to
- *     the same state rather than reading back any mixed per-card state.
+ *     and isn't tracked here.
  *   - Per-card click-to-expand is desktop-disabled (>= @hdx-bp-md, 48rem):
- *     only the global toggle above works there. Below that width, per-card
+ *     only the reveal toggle above works there. Below that width, per-card
  *     click/keyboard toggling stays native and untouched.
  *   - Definitions drawer jump-nav scroll wiring, scoped to the drawer's own
  *     internal scroll container (not the page/window).
@@ -26,27 +27,24 @@
         initStickyTopOffset();
     });
 
-    // ── 1. Expand/collapse — global toggle(s) drive every card at once ────
+    // ── 1. Expand/collapse — the reveal's native `toggle` event drives
+    // every category card at once. Listening on `toggle` (not `click`)
+    // means this fires the same way whether the reveal was opened by a
+    // real click/keyboard activation on its <summary> or a no-JS browser
+    // handling the native disclosure itself — one code path either way.
 
     function initExpandCollapse() {
-        var toggles = document.querySelectorAll('.hdx-v2-location-datagrid-section__toggle');
-        if (!toggles.length) return;
+        var reveal = document.querySelector('[data-datagrid-reveal]');
+        if (!reveal) return;
 
-        function setAll(nextOpen) {
+        var label = reveal.querySelector('.c-text-button__label');
+
+        reveal.addEventListener('toggle', function () {
+            var nextOpen = reveal.open;
             document.querySelectorAll('[data-datagrid-details]').forEach(function (details) {
                 details.open = nextOpen;
             });
-            toggles.forEach(function (toggle) {
-                toggle.setAttribute('aria-expanded', String(nextOpen));
-                var label = toggle.querySelector('.c-text-button__label');
-                if (label) label.textContent = nextOpen ? 'Show less' : 'Show more';
-            });
-        }
-
-        toggles.forEach(function (toggle) {
-            toggle.addEventListener('click', function () {
-                setAll(toggle.getAttribute('aria-expanded') !== 'true');
-            });
+            if (label) label.textContent = nextOpen ? 'Show less' : 'Show more';
         });
     }
 

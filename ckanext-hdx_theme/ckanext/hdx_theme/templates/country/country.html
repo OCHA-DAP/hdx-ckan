@@ -238,12 +238,6 @@
                 <h2 class="hdx-v2-location-datagrid-section__title">{{ _('Data Grid Availability') }}</h2>
                 <p class="hdx-v2-location-datagrid-section__subtitle">{{ _('Assessing the availability of core data across six categories') }}</p>
               </div>
-              {% snippet 'v2/components/text-button.html',
-                  style='primary', size='m', state='enabled',
-                  label=_('Show more'), tag='button', button_type='button',
-                  icon_position='right', icon_src='v2/icons/chevron-down.svg',
-                  extra_classes='hdx-v2-location-datagrid-section__toggle hdx-v2-location-datagrid-section__toggle--in-title',
-                  attrs={'aria-expanded': 'false'} %}
             </div>
 
             <div class="hdx-v2-location-datagrid-section__stats-chart">
@@ -258,13 +252,6 @@
               </div>
 
               <div class="hdx-v2-location-datagrid-section__chart-panel">
-                {% snippet 'v2/components/text-button.html',
-                    style='primary', size='m', state='enabled',
-                    label=_('Show more'), tag='button', button_type='button',
-                    icon_position='right', icon_src='v2/icons/chevron-down.svg',
-                    extra_classes='hdx-v2-location-datagrid-section__toggle hdx-v2-location-datagrid-section__toggle--in-chart',
-                    attrs={'aria-expanded': 'false'} %}
-
                 <div class="hdx-v2-location-datagrid-section__chart">
                   <div class="hdx-v2-location-datagrid-section__status-row" role="img" aria-label="{{ page_status_summary }}">
                     {% for state, count in status_order %}
@@ -286,23 +273,30 @@
             </div>
           </div>
 
-          <div class="hdx-v2-location-datagrid-section__buttons-group">
-            {% snippet 'v2/components/button.html',
-                style='tertiary', size='m', type='text', state='enabled',
-                label=_('Definitions'), tag='button', button_type='button',
-                icon_position='left', icon_src='v2/icons/book.svg',
-                attrs={'onclick': "hdxV2Drawer('location-datagrid-drawer').open()"} %}
-            {% snippet 'v2/components/button.html',
-                style='tertiary', size='m', type='text', state='enabled',
-                label=_('Overview of Data Grids'), tag='a', href='/dashboards/overview-of-data-grids',
-                icon_position='left', icon_src='v2/icons/link-external.svg' %}
-          </div>
+          <details class="hdx-v2-location-datagrid-section__reveal" data-datagrid-reveal>
+            <summary class="hdx-v2-location-datagrid-section__reveal-summary hdx-v2-location-datagrid-section__toggle c-text-button c-text-button--primary c-text-button--size-m">
+              <span class="c-text-button__label">{{ _('Show more') }}</span>
+              <span class="c-text-button__icon">{% include h.url_for_static('v2/icons/chevron-down.svg') %}</span>
+            </summary>
 
-          <div class="hdx-v2-location-datagrid-section__grid">
-            {% for category in dc.categories %}
-              {% snippet 'v2/completeness-item.html', category=category, category_index=loop.index0 %}
-            {% endfor %}
-          </div>
+            <div class="hdx-v2-location-datagrid-section__grid">
+              {% for category in dc.categories %}
+                {% snippet 'v2/completeness-item.html', category=category, category_index=loop.index0 %}
+              {% endfor %}
+            </div>
+
+            <div class="hdx-v2-location-datagrid-section__buttons-group">
+              {% snippet 'v2/components/button.html',
+                  style='tertiary', size='m', type='text', state='enabled',
+                  label=_('Definitions'), tag='button', button_type='button',
+                  icon_position='left', icon_src='v2/icons/book.svg',
+                  attrs={'onclick': "hdxV2Drawer('location-datagrid-drawer').open()"} %}
+              {% snippet 'v2/components/button.html',
+                  style='tertiary', size='m', type='text', state='enabled',
+                  label=_('Overview of Data Grids'), tag='a', href='/dashboards/overview-of-data-grids',
+                  icon_position='left', icon_src='v2/icons/link-external.svg' %}
+            </div>
+          </details>
 
         </div>
       </div>

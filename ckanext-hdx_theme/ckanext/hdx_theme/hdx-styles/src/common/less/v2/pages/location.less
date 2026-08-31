@@ -31,18 +31,6 @@
         gap:            var(--hdx-space-6);
     }
 
-    // Definitions/Overview sit before the category-card grid at SM/MD,
-    // after it at XL (task 063 round 3, R3 — confirmed literally from both
-    // exports). Single DOM instance, position-only reorder.
-    &__top           { order: 1; }
-    &__buttons-group { order: 2; }
-    &__grid          { order: 3; }
-
-    @media (min-width: @hdx-bp-xl) {
-        &__grid          { order: 2; }
-        &__buttons-group { order: 3; }
-    }
-
     // Title+description and the KPI/chart column are stacked at SM/MD;
     // at XL they sit side by side on one row (task 063 round 2, R2-3 —
     // Figma: location-data-grid.html's .header-wrapper).
@@ -57,16 +45,12 @@
         }
     }
 
-    // Title+subtitle beside the Show more/less toggle at SM/MD (task 063
-    // round 4, R4-1 — Figma: location-data-grid-sm.html's .header, a row of
-    // .title + .text-buttons). The toggle instance here is display:none at
-    // XL (see &__toggle--in-title below), leaving __header-text as the only
-    // visible child, so the existing XL sizing is unaffected.
+    // Title+subtitle column, sized to a fixed width at XL so it sits beside
+    // the KPI/chart column.
     &__header {
-        display:         flex;
-        align-items:     flex-start;
-        justify-content: space-between;
-        gap:             var(--hdx-space-3);
+        display:     flex;
+        align-items: flex-start;
+        gap:         var(--hdx-space-3);
 
         @media (min-width: @hdx-bp-xl) {
             flex:      0 0 15rem;
@@ -99,8 +83,9 @@
         gap:            var(--hdx-space-6);
 
         @media (min-width: @hdx-bp-xl) {
-            flex-direction: row;
-            align-items:    flex-start;
+            flex-direction:  row;
+            align-items:     flex-start;
+            justify-content: space-between;
         }
     }
 
@@ -113,39 +98,14 @@
     &__chart-panel {
         display:        flex;
         flex-direction: column;
-        align-items:    flex-end;
         gap:            var(--hdx-space-3);
 
         @media (min-width: @hdx-bp-xl) {
-            flex: 1;
+            flex: 0 0 auto;
         }
     }
 
-    &__toggle[aria-expanded="true"] .c-text-button__icon svg {
-        transform: rotate(180deg);
-    }
-
-    // Rendered twice (title row + chart panel); only one is ever visible at
-    // a given width, both driven together by location-page.js (task 063
-    // round 4, R4-1).
-    &__toggle--in-title {
-        @media (min-width: @hdx-bp-xl) {
-            display: none;
-        }
-    }
-    &__toggle--in-chart {
-        display: none;
-
-        @media (min-width: @hdx-bp-xl) {
-            display: inline-flex;
-        }
-    }
-
-    // Chart panel's bar+legend group — stretches full width even though
-    // the parent right-aligns the narrower toggle button above it
-    // (Figma: .stacked-bar-chart's own align-self: stretch).
     &__chart {
-        align-self:     stretch;
         display:        flex;
         flex-direction: column;
         gap:            var(--hdx-space-3);
@@ -177,11 +137,32 @@
         color: var(--hdx-neutral-8);
     }
 
+    // The whole category grid is a native <details>/<summary> reveal, hidden
+    // until "Show more" is clicked, so it stays reachable with JavaScript
+    // disabled (location-page.js just keeps every card's own <details> in
+    // step with this one via its `toggle` event). Marker reset matches the
+    // per-card <details> below (.hdx-v2-location-datagrid-card__details).
+    &__reveal-summary {
+        list-style: none;
+
+        &::-webkit-details-marker { display: none; }
+        &::marker                 { content: ""; }
+    }
+
+    &__toggle .c-text-button__icon svg {
+        transition: transform 0.2s ease;
+    }
+
+    &__reveal[open] &__toggle .c-text-button__icon svg {
+        transform: rotate(180deg);
+    }
+
     &__grid {
         display:               grid;
         grid-template-columns: 1fr;
         align-items:           start;
         gap:                   var(--hdx-space-5);
+        margin-top:            var(--hdx-space-6);
 
         @media (min-width: @hdx-bp-xl) {
             grid-template-columns: repeat(3, 1fr);
@@ -195,6 +176,7 @@
         flex-wrap:       wrap;
         justify-content: space-between;
         gap:             var(--hdx-space-5);
+        margin-top:      var(--hdx-space-6);
     }
 }
 
