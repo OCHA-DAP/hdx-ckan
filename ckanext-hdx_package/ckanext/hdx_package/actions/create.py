@@ -22,7 +22,7 @@ import ckanext.hdx_package.helpers.helpers as helpers
 from ckan.types import Context, DataDict, Schema
 from ckan.types.logic import ActionResult
 from ckanext.hdx_org_group.helpers.org_batch import get_batch_or_generate
-from ckanext.hdx_package.actions.update import process_batch_mode, flag_if_file_uploaded, run_action_without_geo_preview
+from ckanext.hdx_package.actions.update import process_batch_mode, run_action_without_geo_preview
 from ckanext.hdx_package.helpers.constants import BATCH_MODE, BATCH_MODE_DONT_GROUP
 from ckanext.hdx_package.helpers.resource_triggers import BEFORE_PACKAGE_UPDATE_LISTENERS, \
     AFTER_PACKAGE_UPDATE_LISTENERS, VERSION_CHANGE_ACTIONS
@@ -46,7 +46,16 @@ def resource_create(context, data_dict):
     '''
 
     process_batch_mode(context, data_dict)
-    flag_if_file_uploaded(context, data_dict)
+    # NOTE: we intentionally don't flag this resource in context[FILE_WAS_UPLOADED] ourselves
+    # here. This always creates a single brand-new resource (no previous version to reset via
+    # reset_on_file_upload, so no need to flag for that purpose here). DataPusher+ submission
+    # is fully handled by package_revise()/package_update() below: package_update()'s flagging
+    # loop flags EVERY brand-new resource (real upload or URL-only alike) with its real id once
+    # known (post-flush), and calls _manage_datastore_for_uploads() itself, which submits it if
+    # eligible (format + HDX allowlist) - this covers both genuine uploads and URL-only
+    # resources created via this action (see test_create_and_upload for the latter).
+    # DatapusherPlusPlugin.after_resource_create() is an intentional no-op specifically to avoid
+    # submitting this same resource a second time.
 
     if data_dict.get('resource_type', '') != 'file.upload':
         # If this isn't an upload, it is a link so make sure we update
@@ -94,6 +103,7 @@ def resource_create(context, data_dict):
 
     for plugin in plugins.PluginImplementations(plugins.IResourceController):
         plugin.after_resource_create(context, resource)
+
 
     return resource
 
