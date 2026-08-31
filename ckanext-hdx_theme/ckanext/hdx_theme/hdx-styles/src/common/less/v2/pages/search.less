@@ -15,15 +15,11 @@
 
 
 .hdx-v2-list-header {
-    display:       flex;
-    align-items:   center;
-    width:         100%;
+    .hdx-list-header-row();
     margin-bottom: var(--hdx-space-4);  // 16 px below header
+
     &__left {
-        flex:        1;
-        display:     flex;
-        align-items: center;
-        gap:         var(--hdx-space-2);  // 8 px between title and count
+        .hdx-list-header-row-left();
     }
 
     &__title {
@@ -38,7 +34,7 @@
     }
 
     &__count {
-        .hdx-list-header-count();
+        .hdx-section-title-count();
 
         &--page-title {
             .hdx-page-title-font-size();

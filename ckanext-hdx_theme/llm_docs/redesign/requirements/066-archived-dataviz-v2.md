@@ -197,10 +197,13 @@ expand/collapse behavior (§1.3).
     {% if not loop.last %}<hr class="c-divider">{% endif %}
   {% endfor %}
   ```
-- **Title + count** → rendered via `v2/components/page-header.html` (`title` + `title_count` params),
-  matching the search page's `hdx-v2-list-header__title`/`__count` sizing (both delegate to
-  `.hdx-page-title-scale()`). Count is computed server-side as `len(archived_items_list)` — same
-  data, simply now rendered (v1 shows no count today).
+- **Title + count** → rendered via `v2/components/page-header.html` (`title` + `title_count` params).
+  `__title` delegates to `.hdx-page-title-scale()`; `__title-count` uses `.hdx-list-header-count()` +
+  `.hdx-page-title-font-size()` to track it — the same page-title-scale sizing the search page's
+  `hdx-v2-list-header__title`/`__count` only reach via their `--page-title` (`emphasize_title`)
+  modifier; the search page's *default* title/count are smaller (`.hdx-section-title()` /
+  `.hdx-section-title-count()`, 18→20px). Count is computed server-side as `len(archived_items_list)`
+  — same data, simply now rendered (v1 shows no count today).
 
 ---
 

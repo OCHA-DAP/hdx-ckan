@@ -205,9 +205,12 @@
   <section class="hdx-v2-dataset-section" id="data-and-resources">
     <div class="hdx-v2-dataset-section__header">
       <div class="hdx-v2-dataset-section__title-row">
-        <h2 class="hdx-v2-dataset-section__title">
-          {{ _('Data and resources') }}{% if pkg.resources %} ({{ pkg.resources | length }}){% endif %}
-        </h2>
+        <div class="hdx-v2-dataset-section__left">
+          <h2 class="hdx-v2-dataset-section__title">{{ _('Data and resources') }}</h2>
+          {% if pkg.resources %}
+            <span class="hdx-v2-dataset-section__count">{{ pkg.resources | length }}</span>
+          {% endif %}
+        </div>
         {% if pkg.archived %}
           {% snippet 'v2/components/label.html',
               text='Archived', color='dark', size='s',

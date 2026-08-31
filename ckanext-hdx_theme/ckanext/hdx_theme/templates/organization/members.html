@@ -68,8 +68,10 @@
 
     {# Heading row: title + count, sort control inline at XL only #}
     <div class="hdx-v2-org-members__header">
-      <h2 class="hdx-v2-org-members__title">{{ _('Members') }}</h2>
-      <span class="hdx-v2-org-members__count">{{ members | length }}</span>
+      <div class="hdx-v2-org-members__left">
+        <h2 class="hdx-v2-org-members__title">{{ _('Members') }}</h2>
+        <span class="hdx-v2-org-members__count">{{ members | length }}</span>
+      </div>
       <div class="hdx-v2-org-members__controls hdx-v2-org-members__controls--inline">
         {% snippet 'v2/search-nav-controls.html',
             show_page_size=False,

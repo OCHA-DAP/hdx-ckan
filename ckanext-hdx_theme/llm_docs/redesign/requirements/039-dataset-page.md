@@ -157,9 +157,12 @@ Note: `package/hdx-read-shape.html` (the pre-v2 template that used to own this m
 <section class="hdx-v2-dataset-section" id="data-and-resources">
   <div class="hdx-v2-dataset-section__header">
     <div class="hdx-v2-dataset-section__title-row">
-      <h2 class="hdx-v2-dataset-section__title">
-        Data and resources ({{ pkg.resources | length }})
-      </h2>
+      <div class="hdx-v2-dataset-section__left">
+        <h2 class="hdx-v2-dataset-section__title">Data and resources</h2>
+        {% if pkg.resources %}
+          <span class="hdx-v2-dataset-section__count">{{ pkg.resources | length }}</span>
+        {% endif %}
+      </div>
       {# "Archived" (dark) then "Request only data" (yellow) — same c-label chips as the
          page-header's labels row (§3.1), shown here too when the corresponding flag is set #}
       {% if pkg.archived %}
@@ -187,6 +190,8 @@ Note: `package/hdx-read-shape.html` (the pre-v2 template that used to own this m
 ```
 
 **resources_list.html** renders `resource-card` items (task 038) — do not change its internals. Its `resource_list_classes` param defaults to `'hdx-bs3 resource-list'`; the v2 dataset page passes `'resource-list c-resource-card-list'` (the `resource-list` class stays for `hdx_resource_grouping.js`; `c-resource-card-list` owns the layout in `components/resource-card.less`).
+
+The title/count split (`__left` wrapping a separate `__count` span, no parentheses) deviates from the Figma export, which shows `"Data and resources (7)"` as one plain text string — done instead to match the count-badge pattern already used by the org Members tab and the search page's list header (`.hdx-list-header-row-left()` + `.hdx-section-title-count()`).
 
 ---
 

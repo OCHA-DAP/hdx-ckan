@@ -31,11 +31,11 @@
 }
 .hdx-v2-org-activity__title {
   font-family: var(--hdx-font-display);
-  font-size: var(--hdx-fs-l);
   font-weight: var(--hdx-fw-semibold);
   line-height: var(--hdx-lh-normal);
   color: var(--hdx-neutral-95);
   margin: 0;
+  font-size: var(--hdx-fs-l);
 }
 @media (min-width: 48rem) {
   .hdx-v2-org-activity__title {
@@ -69,11 +69,11 @@
 }
 .hdx-v2-org-stats__title {
   font-family: var(--hdx-font-display);
-  font-size: var(--hdx-fs-l);
   font-weight: var(--hdx-fw-semibold);
   line-height: var(--hdx-lh-normal);
   color: var(--hdx-neutral-95);
   margin: 0;
+  font-size: var(--hdx-fs-l);
 }
 @media (min-width: 48rem) {
   .hdx-v2-org-stats__title {
@@ -172,15 +172,21 @@
 .hdx-v2-org-members__header {
   display: flex;
   align-items: center;
+  width: 100%;
+}
+.hdx-v2-org-members__left {
+  flex: 1;
+  display: flex;
+  align-items: center;
   gap: var(--hdx-space-2);
 }
 .hdx-v2-org-members__title {
   font-family: var(--hdx-font-display);
-  font-size: var(--hdx-fs-l);
   font-weight: var(--hdx-fw-semibold);
   line-height: var(--hdx-lh-normal);
   color: var(--hdx-neutral-95);
   margin: 0;
+  font-size: var(--hdx-fs-l);
 }
 @media (min-width: 48rem) {
   .hdx-v2-org-members__title {
@@ -188,15 +194,19 @@
   }
 }
 .hdx-v2-org-members__count {
-  font-family: var(--hdx-font-body);
-  font-size: var(--hdx-fs-m);
+  font-family: var(--hdx-font-display);
   font-weight: var(--hdx-fw-regular);
   line-height: var(--hdx-lh-normal);
   color: var(--hdx-neutral-8);
+  font-size: var(--hdx-fs-l);
+}
+@media (min-width: 48rem) {
+  .hdx-v2-org-members__count {
+    font-size: var(--hdx-fs-xl);
+  }
 }
 .hdx-v2-org-members__controls--inline {
   display: none;
-  margin-left: auto;
 }
 @media (min-width: 80rem) {
   .hdx-v2-org-members__controls--inline {

@@ -170,9 +170,11 @@
     gap:            var(--hdx-space-6);
 
     &__header {
-        display:     flex;
-        align-items: center;
-        gap:         var(--hdx-space-2);
+        .hdx-list-header-row();
+    }
+
+    &__left {
+        .hdx-list-header-row-left();
     }
 
     &__title {
@@ -180,14 +182,12 @@
     }
 
     &__count {
-        .hdx-body-m();
-        color: var(--hdx-neutral-8);
+        .hdx-section-title-count();
     }
 
     // sort control: inline in the heading row at XL only
     &__controls--inline {
-        display:     none;
-        margin-left: auto;
+        display: none;
 
         @media (min-width: @hdx-bp-xl) { display: block; }
     }

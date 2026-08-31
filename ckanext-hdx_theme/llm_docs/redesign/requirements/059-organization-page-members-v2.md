@@ -184,7 +184,7 @@ Token mapping used below: `#ebeff0`→`--hdx-neutral-1` · `#d8e0e1`→`--hdx-ne
 [section]  border-top 1px neutral-1, padding 2rem 3rem 3rem, gap 1.5rem   (same container
            treatment as the Activity/Stats tabs)
   [heading row — width of LEFT column only (53.5rem)]
-      "Members" (`.hdx-section-title()`, Merriweather 600, 20px) · count "13" (Roboto 1rem, neutral-8), gap 0.5rem
+      "Members" (`.hdx-section-title()`, Merriweather 600, 20px) · count "13" (`.hdx-section-title-count()`, Merriweather, neutral-8, 18/20px ramp), gap 0.5rem — both wrapped in `__left`, shared row shape with the search page's list header
       right-aligned, gap 1rem:  "Results per page" [10 ▾] · "Sort by" [Last added ▾]
       (label Roboto 0.875rem neutral-8; select: 0.75rem/500, white bg, 1px neutral-2 border,
        radius 2px, shadow 0 1px 4px rgba(0,0,0,.04), padding 6px 8px 6px 10px, 14px chevron)

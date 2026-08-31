@@ -238,12 +238,17 @@ hero `<h1>` and the homepage's section headings (`.hdx-section-heading()`).
 
 ## List header pattern — `.hdx-list-header-count()` / `-empty()`
 
-Only the search page owns a fully bespoke header block (`hdx-v2-list-header`) — its title shares a
-toolbar row with sort/filter controls, too much for `c-page-header` to absorb; its title calls
-`.hdx-section-title()` like every other in-page heading. Dataviz Gallery and Archived Dataviz reuse
-`c-page-header` directly (`title` + `title_count` params) instead. The count/empty-state styling is
-factored into `.hdx-list-header-count()`/`.hdx-list-header-empty()` in `mixins.less`, shared by all
-three plus `c-page-header`'s own `title_count` badge.
+The search page's header block (`hdx-v2-list-header`) and the org Members tab's heading row
+(`hdx-v2-org-members__header`) share the same row shape via `.hdx-list-header-row()` /
+`.hdx-list-header-row-left()` in `mixins.less` — title+count grouped left, sort/filter controls
+pushed right by the left group's `flex:1`. Their titles call `.hdx-section-title()` like every
+other in-page heading, *except* on the main `/dataset` search page, where an `emphasize_title`
+param bumps the title (and its count) to the page-title font-size scale instead. Dataviz Gallery
+and Archived Dataviz reuse `c-page-header` directly (`title` + `title_count` params) instead. The
+count styling is factored into `.hdx-list-header-count()` (base: family/weight/color, no size) plus
+`.hdx-section-title-count()` (adds the 18→20px ramp, used by the default list-header and Members
+tab) or `.hdx-page-title-font-size()` directly (24/28/32px, used by the `emphasize_title` variant
+and `c-page-header`'s own `title_count` badge).
 
 ---
 

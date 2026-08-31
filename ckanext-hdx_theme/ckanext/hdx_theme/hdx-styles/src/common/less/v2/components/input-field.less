@@ -344,7 +344,7 @@
         display:         flex;
         align-items:     center;
         justify-content: space-between;
-        gap:             var(--hdx-space-2);
+        gap:             var(--hdx-space-3);
 
         // Keyboard-focus indicator (hover intentionally omitted — c-text-link owns hover)
         &[aria-selected="true"] {
@@ -356,6 +356,10 @@
         flex:     1;
         min-width: 0;
         overflow:  hidden;
+
+        .c-text-link {
+            display: block;
+        }
     }
 
     &__result-label {

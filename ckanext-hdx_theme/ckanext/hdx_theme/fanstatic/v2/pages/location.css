@@ -64,11 +64,11 @@
 }
 .hdx-v2-location-datagrid-section__title {
   font-family: var(--hdx-font-display);
-  font-size: var(--hdx-fs-l);
   font-weight: var(--hdx-fw-semibold);
   line-height: var(--hdx-lh-normal);
   color: var(--hdx-neutral-95);
   margin: 0;
+  font-size: var(--hdx-fs-l);
 }
 @media (min-width: 48rem) {
   .hdx-v2-location-datagrid-section__title {

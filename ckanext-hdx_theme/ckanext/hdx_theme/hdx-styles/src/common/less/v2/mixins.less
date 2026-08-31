@@ -120,12 +120,10 @@
 // ── Typography — named type-style mixins ───────────────────────
 
 // Display  (Merriweather, 130% line-height)
-.hdx-display-xl()          { .-hdx-display(var(--hdx-fs-5xl), var(--hdx-fw-bold));     }  // 48px bold
-.hdx-display-l()           { .-hdx-display(var(--hdx-fs-4xl), var(--hdx-fw-bold));     }  // 32px bold
-.hdx-display-m()           { .-hdx-display(var(--hdx-fs-3xl), var(--hdx-fw-bold));     }  // 28px bold
-.hdx-display-s()           { .-hdx-display(var(--hdx-fs-2xl), var(--hdx-fw-bold));     }  // 24px bold
-.hdx-display-xs()          { .-hdx-display(var(--hdx-fs-xl),  var(--hdx-fw-bold));     }  // 20px bold
-.hdx-display-xs-semibold() { .-hdx-display(var(--hdx-fs-xl),  var(--hdx-fw-semibold)); }  // 20px semibold
+.hdx-display-l()  { .-hdx-display(var(--hdx-fs-4xl), var(--hdx-fw-bold)); }  // 32px bold
+.hdx-display-m()  { .-hdx-display(var(--hdx-fs-3xl), var(--hdx-fw-bold)); }  // 28px bold
+.hdx-display-s()  { .-hdx-display(var(--hdx-fs-2xl), var(--hdx-fw-bold)); }  // 24px bold
+.hdx-display-xs() { .-hdx-display(var(--hdx-fs-xl),  var(--hdx-fw-bold)); }  // 20px bold
 
 // Heading  (Roboto, 130% line-height)
 .hdx-heading-h1() { .-hdx-body(var(--hdx-fs-2xl), var(--hdx-fw-medium));   }  // 24px medium
@@ -165,10 +163,11 @@
 
 // Base-style mixins (no font-size — for use in component base classes where
 // font-size is controlled by a size modifier rather than the base class)
-.hdx-display-bold-base()  { .-hdx-display-base(var(--hdx-fw-bold));     }
-.hdx-body-regular-base()  { .-hdx-body-base(var(--hdx-fw-regular));     }
-.hdx-body-medium-base()   { .-hdx-body-base(var(--hdx-fw-medium));      }
-.hdx-body-semibold-base() { .-hdx-body-base(var(--hdx-fw-semibold));    }
+.hdx-display-bold-base()    { .-hdx-display-base(var(--hdx-fw-bold));    }
+.hdx-display-regular-base() { .-hdx-display-base(var(--hdx-fw-regular)); }
+.hdx-body-regular-base()    { .-hdx-body-base(var(--hdx-fw-regular));    }
+.hdx-body-medium-base()     { .-hdx-body-base(var(--hdx-fw-medium));     }
+.hdx-body-semibold-base()   { .-hdx-body-base(var(--hdx-fw-semibold));   }
 
 // ── Page-title scale ─────────────────────────────────────────────
 // Canonical top-of-page title scale (24 → 28 → 32px Bold) — shared by
@@ -223,13 +222,43 @@
 // ── List header pattern ────────────────────────────────────────
 // Shared count + empty-state structure for page-owned list headers
 // (search page, Archived Dataviz, Dataviz Gallery, c-page-header's
-// title_count badge). Title itself calls .hdx-section-title() (search)
-// or is c-page-header's own __title (Dataviz Gallery/Archived Dataviz).
+// title_count badge, org Members tab). Title itself calls
+// .hdx-section-title() (search, Members tab) or is c-page-header's
+// own __title (Dataviz Gallery/Archived Dataviz).
+
+// Row shape: title+count grouped on the left (`-row-left()`), any
+// controls (sort/filter) as a sibling pushed right by the left
+// group's flex:1 — used by the search-page/country/crisis list
+// header and the org Members tab heading row.
+.hdx-list-header-row() {
+    display:     flex;
+    align-items: center;
+    width:       100%;
+}
+
+.hdx-list-header-row-left() {
+    flex:        1;
+    display:     flex;
+    align-items: center;
+    gap:         var(--hdx-space-2);
+}
 
 .hdx-list-header-count() {
-    .hdx-body-m();
-    font-family: var(--hdx-font-display);
+    .hdx-display-regular-base();
     color: var(--hdx-neutral-8);
+}
+
+// Font-size ramp only — for count badges beside a .hdx-section-title()
+// heading (org Datasets tab, country/crisis pages, Members tab), tracking
+// its 18→20px step without adopting weight/color.
+.hdx-section-title-font-size() {
+    font-size: var(--hdx-fs-l);   // 18px base
+    @media (min-width: @hdx-bp-md) { font-size: var(--hdx-fs-xl); }  // 20px
+}
+
+.hdx-section-title-count() {
+    .hdx-list-header-count();
+    .hdx-section-title-font-size();
 }
 
 .hdx-list-header-empty() {
@@ -271,8 +300,7 @@
     .-hdx-display(var(--hdx-fs-l), var(--hdx-fw-semibold));   // 18px semibold, base
     color:  var(--hdx-neutral-95);
     margin: 0;
-
-    @media (min-width: @hdx-bp-md) { font-size: var(--hdx-fs-xl); }  // 20px, MD and up
+    .hdx-section-title-font-size();
 }
 
 .hdx-page-section-body() {
