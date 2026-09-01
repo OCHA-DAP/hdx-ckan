@@ -245,7 +245,7 @@ The "See documentation" button is placed inside the **section header** (alongsid
     icon=True, icon_position='left',
     icon_src='v2/icons/link-external.svg',
     tag='a',
-    href='https://un-ocha-centre-for-humanitarian.gitbook.io/hdx-docs/build-with-hdx/build-with-hdx/hdx-api/tabular-data-endpoints',
+    href=h.HDX_CONST('DOCUMENTATION_LINKS')['TABULAR_DATA_ENDPOINTS'],
     attrs={'target': '_blank', 'rel': 'noopener'} %}
 ```
 
