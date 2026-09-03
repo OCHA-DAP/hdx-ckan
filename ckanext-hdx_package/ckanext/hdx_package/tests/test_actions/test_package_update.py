@@ -182,6 +182,90 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
         real_resource_ids = {r['id'] for r in updated_package['resources']}
         assert uploaded_ids == real_resource_ids
 
+    def test_package_update_clear_upload_and_real_upload_flagging(self):
+        """
+        Regression test for the fix that gates context[FILE_WAS_UPLOADED] flagging on
+        `was_real_upload = bool(resource.get('upload'))` instead of on the uploader
+        object's truthiness.
+
+        `uploader.get_resource_uploader()` returns a truthy object even when a resource
+        is only being *cleared* (via 'clear_upload'), not actually re-uploaded. Before the
+        fix, such a resource could be wrongly flagged as a real upload, causing
+        _manage_datastore_for_uploads() to submit a cleared resource to DataPusher+, and
+        the validators in custom_validator.py (e.g. hdx_reset_on_file_upload) to wrongly
+        reset QA/sensitivity metadata on a resource whose file didn't actually change.
+
+        This exercises the real package_update() flagging loop (not a prebuilt context,
+        unlike TestManageDatastoreForUploads) for three cases on an *existing* resource:
+          1. 'clear_upload' present and truthy, no 'upload' -> must NOT be flagged.
+          2. 'clear_upload' present but falsy, no 'upload' -> must NOT be flagged.
+          3. a genuine 'upload' value -> must be flagged.
+        """
+        from ckanext.hdx_package.helpers.constants import FILE_WAS_UPLOADED
+
+        package = {"package_creator": "test function",
+                   "private": False,
+                   "dataset_date": "[1960-01-01 TO 2012-12-31]",
+                   "caveats": "These are the caveats",
+                   "license_other": "TEST OTHER LICENSE",
+                   "methodology": "This is a test methodology",
+                   "dataset_source": "World Bank",
+                   "license_id": "hdx-other",
+                   "notes": "This is a test activity",
+                   "groups": [{"name": "roger"}],
+                   "owner_org": "hdx-test-org",
+                   'name': 'test_activity_clear_upload_flagging',
+                   'title': 'Test Activity Clear Upload Flagging',
+                   'resources': [
+                       {
+                           'url': 'https://example.com/existing_resource.csv',
+                           'resource_type': 'file.upload',
+                           'format': 'CSV',
+                           'name': 'existing_resource.csv',
+                       }
+                   ]
+                   }
+
+        context = {'ignore_auth': True,
+                   'model': model, 'session': model.Session, 'user': 'testsysadmin'}
+        created_package = self._get_action('package_create')(context, package)
+        existing_resource = created_package['resources'][0]
+        existing_resource_id = existing_resource['id']
+
+        class FakeUpload:
+            clear = False
+            mimetype = 'text/csv'
+            filesize = 10
+
+            def upload(self, resource_id, max_size=None):
+                pass
+
+        def _run_update(resource_overrides):
+            update_dict = dict(created_package)
+            update_dict['resources'] = [dict(existing_resource, **resource_overrides)]
+            update_context = {'ignore_auth': True,
+                               'model': model, 'session': model.Session, 'user': 'testsysadmin'}
+            with mock.patch(
+                'ckanext.hdx_package.actions.update.uploader.get_resource_uploader',
+                return_value=FakeUpload()
+            ), mock.patch(
+                'ckanext.hdx_package.actions.update._manage_datastore_for_uploads'
+            ):
+                self._get_action('package_update')(update_context, update_dict)
+            return update_context.get(FILE_WAS_UPLOADED, set())
+
+        # Case 1: clear_upload truthy, no real upload -> must NOT be flagged
+        uploaded_ids = _run_update({'clear_upload': True})
+        assert existing_resource_id not in uploaded_ids
+
+        # Case 2: clear_upload present but falsy, no real upload -> must NOT be flagged
+        uploaded_ids = _run_update({'clear_upload': ''})
+        assert existing_resource_id not in uploaded_ids
+
+        # Case 3: genuine upload -> must be flagged
+        uploaded_ids = _run_update({'upload': 'fake-file'})
+        assert existing_resource_id in uploaded_ids
+
     def test_hdx_package_delete_redirect(self):
 
         package = {"package_creator": "test function",
