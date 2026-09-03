@@ -73,6 +73,6 @@ Unit tests for `_manage_datastore_for_uploads` live in
 | `test_delete_when_format_not_supported` | PDF, datastore table exists, allowlist=True | `datastore_delete` **called**, `_submit_to_datapusher` **not** called |
 | `test_delete_when_not_hdx_allowed` | CSV, datastore table exists, allowlist=False | `datastore_delete` **called**, `_submit_to_datapusher` **not** called |
 | `test_no_action_when_ineligible_and_no_datastore_table` | PDF, no datastore table, allowlist=True | neither called |
-| `test_no_action_for_new_resource` | `FILE_WAS_UPLOADED = {'NEW'}` | neither called |
+| `test_no_action_for_unmatched_id` | `FILE_WAS_UPLOADED` contains an id with no matching resource in `package_dict` (stale/unknown id) | neither called |
 | `test_skip_on_allowlist_exception` | allowlist lookup raises | returns early; neither called |
 | `test_submit_when_formats_config_is_string` | CSV, string config `'csv xls xlsx tsv'`, allowlist=True | `_submit_to_datapusher` **called**, `datastore_delete` **not** called |

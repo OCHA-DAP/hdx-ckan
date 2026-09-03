@@ -352,6 +352,7 @@ def package_update(
 
     resource_upload_ids = []
     resource_uploads = []
+    resource_had_real_upload = []
     for resource in data_dict.get('resources', []):
         # I believe that unless a resource has either an upload field or is marked to be deleted
         # we don't need to create an uploader object which is expensive
@@ -369,8 +370,18 @@ def package_update(
             #     collapse multiple simultaneously-created resources into one indistinguishable
             #     entry (breaking _manage_datastore_for_uploads downstream). New resources have
             #     no previous version anyway, so there's no stale value for validation to reset.
+            #
+            # We capture bool(resource.get('upload')) here, BEFORE creating the uploader, as the
+            # single source of truth for "this resource actually got a new file". We can't rely
+            # on the uploader object's truthiness later (see `upload` below): it's created (and
+            # truthy) for the 'clear_upload' branch too - and 'clear_upload' is checked by key
+            # membership, not truthiness, so it can be present-but-falsy. Without this separate
+            # signal, a cleared/no-op upload would get flagged as a real upload, and
+            # _manage_datastore_for_uploads() would wrongly submit it to DataPusher+.
+            was_real_upload = bool(resource.get('upload'))
+            resource_had_real_upload.append(was_real_upload)
 
-            if resource.get('upload') and resource.get('id'):
+            if was_real_upload and resource.get('id'):
                 context.setdefault(FILE_WAS_UPLOADED, set()).add(resource['id'])
 
             # file uploads/clearing
@@ -384,6 +395,7 @@ def package_update(
             resource['size'] = upload.filesize
         else:
             upload = None
+            resource_had_real_upload.append(False)
         resource_uploads.append(upload)
     ids_to_prev_resource_dict = _fetch_prev_resources_info(model, resource_upload_ids)
 
@@ -425,24 +437,30 @@ def package_update(
 
     # Needed to let extensions know the new resources ids
     model.Session.flush()
-    for index, (resource, upload) in enumerate(
-            zip(data.get('resources', []), resource_uploads)):
+    for index, (resource, upload, was_real_upload) in enumerate(
+            zip(data.get('resources', []), resource_uploads, resource_had_real_upload)):
         resource['id'] = pkg.resources[index].id
 
         if upload:
             # Second flagging stage (see NOTE above the pre-validation loop): existing resources
-            # were already flagged there with their real id, so this is a harmless no-op re-add
-            # for them. Brand-new resources get their first (and only) flag here, now that their
-            # real id is known, so _manage_datastore_for_uploads can find them later.
+            # with a real upload were already flagged there with their real id, so this is a
+            # harmless no-op re-add for them. Brand-new resources with a real upload get their
+            # first (and only) flag here, now that their real id is known, so
+            # _manage_datastore_for_uploads can find them later.
+            # We gate on `was_real_upload` (captured before the uploader was created), NOT on
+            # `upload` itself: `upload` is also truthy for the 'clear_upload' branch (clearing an
+            # existing file, no new data), which must NOT be flagged as an upload here - otherwise
+            # _manage_datastore_for_uploads would wrongly submit a cleared resource to DataPusher+.
             # NOTE: we intentionally don't reuse flag_if_file_uploaded() here — it gates on
             # resource_dict.get('upload'), which may no longer be present/truthy on this
-            # post-validation `resource` dict. `upload` (the uploader object built above, before
-            # validation) is the reliable signal that this resource needs flagging.
-            context.setdefault(FILE_WAS_UPLOADED, set()).add(resource['id'])
+            # post-validation `resource` dict.
+            if was_real_upload:
+                context.setdefault(FILE_WAS_UPLOADED, set()).add(resource['id'])
 
             log.info('There\'s a resource in package_update() which is marked for: {}'
                      .format('clear' if upload.clear else 'upload'))
             upload.upload(resource['id'], uploader.get_max_resource_size())
+
 
     for item in plugins.PluginImplementations(plugins.IPackageController):
         item.edit(pkg)
