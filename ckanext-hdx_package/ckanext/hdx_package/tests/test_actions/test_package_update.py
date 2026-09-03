@@ -266,6 +266,86 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
         uploaded_ids = _run_update({'upload': 'fake-file'})
         assert existing_resource_id in uploaded_ids
 
+    def test_package_update_stale_file_was_uploaded_flag_is_cleared(self):
+        """
+        Regression test for context[FILE_WAS_UPLOADED] leaking stale resource ids across
+        multiple package_update() calls that (against CKAN's own convention, but it does
+        happen in practice - e.g. via hdx_package_update_metadata(), which forwards its
+        caller's context unchanged into package_update()) reuse the SAME context dict.
+
+        Before the fix, context.setdefault(FILE_WAS_UPLOADED, set()) reused whatever set
+        was already in the context, so a resource id flagged as "uploaded" by an earlier
+        call would still be present during a later, unrelated call (e.g. one that only
+        clears the upload) on the same resource - wrongly making validators/datastore
+        management treat it as a fresh upload again.
+
+        package_update() must reset context[FILE_WAS_UPLOADED] at the start of every
+        invocation, so this test deliberately reuses one context object across two
+        sequential calls: first a genuine upload, then a clear_upload-only update.
+        """
+        from ckanext.hdx_package.helpers.constants import FILE_WAS_UPLOADED
+
+        package = {"package_creator": "test function",
+                   "private": False,
+                   "dataset_date": "[1960-01-01 TO 2012-12-31]",
+                   "caveats": "These are the caveats",
+                   "license_other": "TEST OTHER LICENSE",
+                   "methodology": "This is a test methodology",
+                   "dataset_source": "World Bank",
+                   "license_id": "hdx-other",
+                   "notes": "This is a test activity",
+                   "groups": [{"name": "roger"}],
+                   "owner_org": "hdx-test-org",
+                   'name': 'test_activity_stale_flag_reuse',
+                   'title': 'Test Activity Stale Flag Reuse',
+                   'resources': [
+                       {
+                           'url': 'https://example.com/existing_resource.csv',
+                           'resource_type': 'file.upload',
+                           'format': 'CSV',
+                           'name': 'existing_resource.csv',
+                       }
+                   ]
+                   }
+
+        create_context = {'ignore_auth': True,
+                           'model': model, 'session': model.Session, 'user': 'testsysadmin'}
+        created_package = self._get_action('package_create')(create_context, package)
+        existing_resource = created_package['resources'][0]
+        existing_resource_id = existing_resource['id']
+
+        class FakeUpload:
+            clear = False
+            mimetype = 'text/csv'
+            filesize = 10
+
+            def upload(self, resource_id, max_size=None):
+                pass
+
+        # A single, shared context reused across both calls below (unlike _run_update()
+        # in the previous test, which deliberately uses a fresh context per call).
+        shared_context = {'ignore_auth': True,
+                           'model': model, 'session': model.Session, 'user': 'testsysadmin'}
+
+        with mock.patch(
+            'ckanext.hdx_package.actions.update.uploader.get_resource_uploader',
+            return_value=FakeUpload()
+        ), mock.patch(
+            'ckanext.hdx_package.actions.update._manage_datastore_for_uploads'
+        ):
+            # First call: genuine upload -> resource id must be flagged.
+            update_dict = dict(created_package)
+            update_dict['resources'] = [dict(existing_resource, upload='fake-file')]
+            self._get_action('package_update')(shared_context, update_dict)
+            assert existing_resource_id in shared_context.get(FILE_WAS_UPLOADED, set())
+
+            # Second call, reusing the SAME context: clear_upload only, no real upload
+            # -> the stale flag from the first call must NOT survive into this call.
+            update_dict = dict(created_package)
+            update_dict['resources'] = [dict(existing_resource, clear_upload=True)]
+            self._get_action('package_update')(shared_context, update_dict)
+            assert existing_resource_id not in shared_context.get(FILE_WAS_UPLOADED, set())
+
     def test_hdx_package_delete_redirect(self):
 
         package = {"package_creator": "test function",

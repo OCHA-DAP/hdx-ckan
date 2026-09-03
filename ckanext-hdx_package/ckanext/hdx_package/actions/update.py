@@ -350,6 +350,19 @@ def package_update(
         elif context.get(BATCH_MODE) != BATCH_MODE_DONT_GROUP:
             data_dict['batch'] = get_batch_or_generate(data_dict.get('owner_org'))
 
+    # This function is the sole owner/writer of context[FILE_WAS_UPLOADED] within the
+    # lifetime of a single package_update() call (it's written here/below and only ever
+    # read later in this same call, by validators during plugin_validate() and by
+    # _manage_datastore_for_uploads() after commit). context.setdefault(FILE_WAS_UPLOADED,
+    # set()) further down reuses whatever set object is already present in context, so if
+    # a caller reuses the same context dict across multiple package_update() invocations
+    # (against CKAN's own convention, but it happens), a stale resource id flagged as
+    # "uploaded" by a previous call would incorrectly survive into this call - e.g. a
+    # later clear_upload-only update of that same resource would still be treated as a
+    # fresh upload. Resetting it here makes this call self-contained regardless of
+    # what the caller left in the context from a previous action call.
+    context[FILE_WAS_UPLOADED] = set()
+
     resource_upload_ids = []
     resource_uploads = []
     resource_had_real_upload = []
