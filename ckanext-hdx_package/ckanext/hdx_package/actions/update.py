@@ -366,7 +366,17 @@ def package_update(
     resource_upload_ids = []
     resource_uploads = []
     resource_had_real_upload = []
+    resource_was_new = []
     for resource in data_dict.get('resources', []):
+        # Captured for EVERY resource (both branches below), before any mutation - used in
+        # the post-flush loop further down to also flag brand-new resources that have no
+        # real upload at all (e.g. a URL-only resource added directly via package_revise's
+        # update__resources__extend, or via resource_create() which delegates to
+        # package_revise/package_update). Format/allowlist eligibility for DataPusher+ is
+        # still fully decided inside _manage_datastore_for_uploads(), so it's safe to flag
+        # every new resource here regardless of how it was added.
+        resource_was_new.append(not bool(resource.get('id')))
+
         # I believe that unless a resource has either an upload field or is marked to be deleted
         # we don't need to create an uploader object which is expensive
         if 'clear_upload' in resource or resource.get('upload'):
@@ -450,26 +460,30 @@ def package_update(
 
     # Needed to let extensions know the new resources ids
     model.Session.flush()
-    for index, (resource, upload, was_real_upload) in enumerate(
-            zip(data.get('resources', []), resource_uploads, resource_had_real_upload)):
+    for index, (resource, upload, was_real_upload, was_new) in enumerate(
+            zip(data.get('resources', []), resource_uploads, resource_had_real_upload, resource_was_new)):
         resource['id'] = pkg.resources[index].id
 
-        if upload:
-            # Second flagging stage (see NOTE above the pre-validation loop): existing resources
-            # with a real upload were already flagged there with their real id, so this is a
-            # harmless no-op re-add for them. Brand-new resources with a real upload get their
-            # first (and only) flag here, now that their real id is known, so
-            # _manage_datastore_for_uploads can find them later.
-            # We gate on `was_real_upload` (captured before the uploader was created), NOT on
-            # `upload` itself: `upload` is also truthy for the 'clear_upload' branch (clearing an
-            # existing file, no new data), which must NOT be flagged as an upload here - otherwise
-            # _manage_datastore_for_uploads would wrongly submit a cleared resource to DataPusher+.
-            # NOTE: we intentionally don't reuse flag_if_file_uploaded() here — it gates on
-            # resource_dict.get('upload'), which may no longer be present/truthy on this
-            # post-validation `resource` dict.
-            if was_real_upload:
-                context.setdefault(FILE_WAS_UPLOADED, set()).add(resource['id'])
+        # Second flagging stage (see NOTE above the pre-validation loop): existing resources
+        # with a real upload were already flagged there with their real id, so this is a
+        # harmless no-op re-add for them. Brand-new resources - whether a real upload or a
+        # URL-only resource with no upload at all (e.g. added directly via package_revise's
+        # update__resources__extend, or via resource_create() which delegates to
+        # package_revise/package_update) - get their first (and only) flag here, now that
+        # their real id is known, so _manage_datastore_for_uploads() can evaluate them (its
+        # own format/allowlist eligibility check decides whether anything is actually
+        # submitted).
+        # We gate on `was_real_upload` (captured before the uploader was created), NOT on
+        # `upload` itself: `upload` is also truthy for the 'clear_upload' branch (clearing an
+        # existing file, no new data), which must NOT be flagged as an upload here - otherwise
+        # _manage_datastore_for_uploads would wrongly submit a cleared resource to DataPusher+.
+        # NOTE: we intentionally don't reuse flag_if_file_uploaded() here — it gates on
+        # resource_dict.get('upload'), which may no longer be present/truthy on this
+        # post-validation `resource` dict.
+        if was_real_upload or was_new:
+            context.setdefault(FILE_WAS_UPLOADED, set()).add(resource['id'])
 
+        if upload:
             log.info('There\'s a resource in package_update() which is marked for: {}'
                      .format('clear' if upload.clear else 'upload'))
             upload.upload(resource['id'], uploader.get_max_resource_size())
@@ -494,8 +508,24 @@ def package_update(
     context['ignore_auth'] = True
     new_data_dict = _get_action('package_show')(context, {'id': data_dict['id'], "include_plugin_data": include_plugin_data})
 
-    # Added by HDX - triggering datapusher plus on file uploads (after commit so DB state is consistent)
-    _manage_datastore_for_uploads(context, new_data_dict)
+    # Added by HDX - triggering datapusher plus on file uploads (after commit so DB state is
+    # consistent). Skipped entirely when defer_commit is set: the caller hasn't actually
+    # committed the transaction yet (and may still roll it back), so submitting to DataPusher+
+    # (a separate process/worker) now could act on a resource that isn't really persisted yet.
+    # It's the deferring caller's responsibility to trigger datastore management themselves
+    # after their own commit, if needed.
+    if not context.get('defer_commit'):
+        try:
+            _manage_datastore_for_uploads(context, new_data_dict)
+        except Exception:
+            # Fail open: a transient DataPusher+/datastore failure here must not make an
+            # already-committed package_update() call fail for the caller (consistent with
+            # _manage_datastore_for_uploads()'s own fail-open handling of its allowlist lookup).
+            log.exception('Failed to manage datastore for package %s', new_data_dict.get('id'))
+    else:
+        log.info('defer_commit set on context - skipping datastore management for package %s; '
+                  'caller is responsible for triggering it after the deferred commit if needed',
+                  new_data_dict.get('id'))
 
     # HDX - delete previous files if needed
     for resource_dict in new_data_dict.get('resources'):

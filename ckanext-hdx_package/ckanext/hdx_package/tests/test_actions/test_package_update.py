@@ -103,12 +103,12 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
     def test_resource_create_url_only_reaches_manage_datastore(self):
         """
         Regression test: a URL-only new resource (no uploaded file payload) created via
-        resource_create() must still reach _manage_datastore_for_uploads(), since
-        package_update()'s FILE_WAS_UPLOADED-based flagging only ever considers resources
-        with a truthy 'upload' key (see create.py's `was_real_upload` capture) - it would
-        otherwise never be evaluated for DataPusher+ ingestion, even for an eligible
-        format/allowlisted dataset (this action explicitly supports creating such
-        resources, see test_create_and_upload above).
+        resource_create() must still reach _manage_datastore_for_uploads(), since it's
+        a brand-new resource - package_update()'s flagging loop flags every brand-new
+        resource (real upload or not) once its real id is known (post-flush), not just
+        ones with a truthy 'upload' key. This is exercised here through resource_create()'s
+        underlying package_revise -> package_update call chain (this action explicitly
+        supports creating such resources, see test_create_and_upload above).
         """
         from ckanext.hdx_package.helpers.constants import FILE_WAS_UPLOADED
 
@@ -140,23 +140,73 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
         self._get_action('package_create')(context, package)
 
         with mock.patch(
-            'ckanext.hdx_package.actions.create._manage_datastore_for_uploads'
+            'ckanext.hdx_package.actions.update._manage_datastore_for_uploads'
         ) as mock_manage_datastore:
             created_resource = self._get_action('resource_create')(context, resource)
 
         mock_manage_datastore.assert_called_once()
-        call_context, call_package = mock_manage_datastore.call_args[0]
-        assert call_context.get(FILE_WAS_UPLOADED) == {created_resource['id']}
-        assert call_package.get('id') == created_resource['package_id']
+        call_context, call_package_dict = mock_manage_datastore.call_args[0]
+        assert created_resource['id'] in call_context.get(FILE_WAS_UPLOADED, set())
+        assert call_package_dict.get('id') == created_resource['package_id']
 
-    def test_resource_create_real_upload_does_not_double_submit(self):
+    def test_package_revise_direct_url_only_new_resource_reaches_manage_datastore(self):
         """
-        Regression test: a genuine file upload must NOT trigger create.py's explicit
-        _manage_datastore_for_uploads() call added for the URL-only case above. That
-        resource is already fully handled inside package_update()'s own
-        FILE_WAS_UPLOADED flagging + _manage_datastore_for_uploads() call, invoked as
-        part of the underlying package_revise -> package_update chain for this action.
-        Calling it a second time here would submit/evaluate the same resource twice.
+        Regression test: a URL-only new resource added via a DIRECT package_revise()
+        call (update__resources__extend), with NO resource_create() involved at all,
+        must still reach _manage_datastore_for_uploads(). package_revise's own docstring
+        explicitly advertises update__resources__extend as a supported way to add a new
+        resource, so this call pattern must be covered too, not just resource_create().
+        """
+        from ckanext.hdx_package.helpers.constants import FILE_WAS_UPLOADED
+
+        package = {"package_creator": "test function",
+                   "private": False,
+                   "dataset_date": "[1960-01-01 TO 2012-12-31]",
+                   "caveats": "These are the caveats",
+                   "license_other": "TEST OTHER LICENSE",
+                   "methodology": "This is a test methodology",
+                   "dataset_source": "World Bank",
+                   "license_id": "hdx-other",
+                   "notes": "This is a test activity",
+                   "groups": [{"name": "roger"}],
+                   "owner_org": "hdx-test-org",
+                   'name': 'test_activity_direct_revise_url_only',
+                   'title': 'Test Activity Direct Revise Url Only'
+                   }
+
+        context = {'ignore_auth': True,
+                   'model': model, 'session': model.Session, 'user': 'testsysadmin'}
+        created_package = self._get_action('package_create')(context, package)
+
+        revise_dict = {
+            'match': {'id': created_package['id']},
+            'update__resources__extend': [{
+                'url': 'https://example.com/direct_revise_url_only.csv',
+                'resource_type': 'url',
+                'format': 'CSV',
+                'name': 'direct_revise_url_only.csv',
+            }]
+        }
+
+        with mock.patch(
+            'ckanext.hdx_package.actions.update._manage_datastore_for_uploads'
+        ) as mock_manage_datastore:
+            revise_response = self._get_action('package_revise')(context, revise_dict)
+
+        new_resource_id = revise_response['package']['resources'][-1]['id']
+
+        mock_manage_datastore.assert_called_once()
+        call_context, call_package_dict = mock_manage_datastore.call_args[0]
+        assert new_resource_id in call_context.get(FILE_WAS_UPLOADED, set())
+        assert call_package_dict.get('id') == created_package['id']
+
+    def test_package_update_defer_commit_skips_datastore_management(self):
+        """
+        Regression test: when context['defer_commit'] is set, package_update() must NOT
+        call _manage_datastore_for_uploads(), since the caller hasn't actually committed
+        the transaction yet (and may still roll it back) - submitting to DataPusher+ (a
+        separate process/worker) at that point could act on a resource that isn't really
+        persisted, or later gets rolled back entirely.
         """
         package = {"package_creator": "test function",
                    "private": False,
@@ -169,42 +219,68 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
                    "notes": "This is a test activity",
                    "groups": [{"name": "roger"}],
                    "owner_org": "hdx-test-org",
-                   'name': 'test_activity_real_upload_resource',
-                   'title': 'Test Activity Real Upload Resource'
+                   'name': 'test_activity_defer_commit',
+                   'title': 'Test Activity Defer Commit'
                    }
-
-        resource = {
-            'package_id': 'test_activity_real_upload_resource',
-            'url': 'https://example.com/uploaded_resource.csv',
-            'resource_type': 'file.upload',
-            'format': 'CSV',
-            'name': 'uploaded_resource.csv',
-            'upload': 'fake-file-content',  # any truthy value; real uploader is mocked below
-        }
 
         context = {'ignore_auth': True,
                    'model': model, 'session': model.Session, 'user': 'testsysadmin'}
-        self._get_action('package_create')(context, package)
+        created_package = self._get_action('package_create')(context, package)
 
-        class FakeUpload:
-            clear = False
-            mimetype = 'text/csv'
-            filesize = 10
+        update_dict = dict(created_package)
+        update_dict['notes'] = 'Updated notes for defer_commit test'
 
-            def upload(self, resource_id, max_size=None):
-                pass
-
+        update_context = {'ignore_auth': True,
+                           'model': model, 'session': model.Session, 'user': 'testsysadmin',
+                           'defer_commit': True}
         with mock.patch(
-            'ckanext.hdx_package.actions.update.uploader.get_resource_uploader',
-            return_value=FakeUpload()
-        ), mock.patch(
             'ckanext.hdx_package.actions.update._manage_datastore_for_uploads'
-        ), mock.patch(
-            'ckanext.hdx_package.actions.create._manage_datastore_for_uploads'
-        ) as mock_manage_datastore_in_create:
-            self._get_action('resource_create')(context, resource)
+        ) as mock_manage_datastore:
+            self._get_action('package_update')(update_context, update_dict)
 
-        mock_manage_datastore_in_create.assert_not_called()
+        mock_manage_datastore.assert_not_called()
+        # the caller deferred the commit itself, so make sure to leave the session clean
+        # for subsequent tests
+        model.repo.commit()
+
+    def test_package_update_datastore_management_failure_does_not_propagate(self):
+        """
+        Regression test: a transient failure inside _manage_datastore_for_uploads() (e.g.
+        DataPusher+/datastore network hiccup) must NOT make an already-committed
+        package_update() call fail for the caller - consistent with
+        _manage_datastore_for_uploads()'s own fail-open handling of its allowlist lookup.
+        """
+        package = {"package_creator": "test function",
+                   "private": False,
+                   "dataset_date": "[1960-01-01 TO 2012-12-31]",
+                   "caveats": "These are the caveats",
+                   "license_other": "TEST OTHER LICENSE",
+                   "methodology": "This is a test methodology",
+                   "dataset_source": "World Bank",
+                   "license_id": "hdx-other",
+                   "notes": "This is a test activity",
+                   "groups": [{"name": "roger"}],
+                   "owner_org": "hdx-test-org",
+                   'name': 'test_activity_datastore_failure',
+                   'title': 'Test Activity Datastore Failure'
+                   }
+
+        context = {'ignore_auth': True,
+                   'model': model, 'session': model.Session, 'user': 'testsysadmin'}
+        created_package = self._get_action('package_create')(context, package)
+
+        update_dict = dict(created_package)
+        update_dict['notes'] = 'Updated notes for datastore failure test'
+
+        update_context = {'ignore_auth': True,
+                           'model': model, 'session': model.Session, 'user': 'testsysadmin'}
+        with mock.patch(
+            'ckanext.hdx_package.actions.update._manage_datastore_for_uploads',
+            side_effect=Exception('simulated transient DataPusher+/datastore failure')
+        ):
+            result = self._get_action('package_update')(update_context, update_dict)
+
+        assert result['notes'] == 'Updated notes for datastore failure test'
 
     def test_package_update_multiple_new_resources_get_real_ids_flagged(self):
         """
