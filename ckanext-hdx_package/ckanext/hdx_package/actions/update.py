@@ -420,6 +420,17 @@ def package_update(
     context["package"] = pkg
     prev_last_modified = pkg.metadata_modified
 
+    # immutable fields
+    data_dict["id"] = pkg.id
+    data_dict['type'] = pkg.type
+    if 'groups' in data_dict:
+        data_dict['solr_additions'] = helpers.build_additions(data_dict['groups'])
+
+    # Authorization must happen before any resource-ID lookup, since the global
+    # `model.Resource.id.in_(...)` query can be attacker-controlled and should not
+    # run for an unauthorised caller.
+    _check_access('package_update', context, data_dict)
+
     # Ids of every resource already belonging to this package (ANY state, including
     # 'deleted') - used ONLY for core validation/comparison semantics (id-collision
     # checks, url/last_modified diffing), matching core's unfiltered
@@ -473,16 +484,8 @@ def package_update(
             {r.id: r.metadata_modified for r in matching_existing_resources}
         )
 
-    # immutable fields
-    data_dict["id"] = pkg.id
-    data_dict['type'] = pkg.type
-    if 'groups' in data_dict:
-        data_dict['solr_additions'] = helpers.build_additions(data_dict['groups'])
-
     # if 'dataset_confirm_freshness' in data_dict and data_dict['dataset_confirm_freshness'] == 'on':
     #     data_dict['review_date'] = datetime.datetime.utcnow()
-
-    _check_access('package_update', context, data_dict)
 
     user = context['user']
     # get the schema
