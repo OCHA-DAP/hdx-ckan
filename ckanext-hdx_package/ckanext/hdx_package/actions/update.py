@@ -336,6 +336,22 @@ def package_update(
     # previously-deleted resource id is likewise "existing" from resource_dict_save()'s POV.
     existing_resource_ids = {r.id for r in pkg.resources_all}
 
+    # Captured for the same reason and at the same point as existing_resource_ids above -
+    # the pre-update url of every existing resource, keyed by id. Used further down to
+    # detect "an existing resource's url changed without a real file upload" (e.g. a
+    # link-type resource whose url is edited directly through the form/API, with no
+    # 'upload'/'clear_upload' key at all) and flag it into FILE_WAS_UPLOADED too, exactly
+    # as CKAN core's resource_dict_save() itself detects this (`if 'url' in changed: ...
+    # obj.url_changed = True`) to fire the IResourceUrlChange interface. We deliberately
+    # replace reliance on that core hook for DataPusher+ purposes: it fires from
+    # DomainObjectModificationExtension.before_commit() - i.e. DURING model.repo.commit(),
+    # on not-yet-durably-committed data, and with NO exception guard around it (unlike the
+    # IDomainObjectModification dispatch beside it) - see DatapusherPlusPlugin.notify()
+    # (now an intentional no-op) for the full rationale. Tracking it here instead lets this
+    # same resource flow through our own already fail-open, POST-commit
+    # _manage_datastore_for_uploads() call below.
+    existing_resource_urls = {r.id: r.url for r in pkg.resources_all}
+
     # immutable fields
     data_dict["id"] = pkg.id
     data_dict['type'] = pkg.type
@@ -403,6 +419,22 @@ def package_update(
         # doesn't exist in the DB yet; resource_dict_save() still treats that as new, so we
         # must too, or it silently never gets flagged for DataPusher+/datastore management.
         resource_was_new.append(resource.get('id') not in existing_resource_ids)
+
+        # An existing resource whose 'url' changed, with no 'upload'/'clear_upload' key at
+        # all (e.g. a link-type resource whose url is edited directly through the form/API)
+        # is NOT covered by the 'clear_upload'/'upload' branch just below, so it would
+        # otherwise never be flagged and never reach _manage_datastore_for_uploads(). This
+        # mirrors what CKAN core's resource_dict_save() itself checks to set
+        # obj.url_changed = True (which used to drive DatapusherPlusPlugin.notify(), now an
+        # intentional no-op - see existing_resource_urls above for the full rationale).
+        # Flagged here at stage 1 (pre-validation), same as a real upload replacement,
+        # since a url change is likewise "new data for this resource" from
+        # hdx_reset_on_file_upload's POV.
+        resource_id = resource.get('id')
+        if (resource_id in existing_resource_ids
+                and resource.get('url') is not None
+                and resource.get('url') != existing_resource_urls.get(resource_id)):
+            context.setdefault(FILE_WAS_UPLOADED, set()).add(resource_id)
 
         # I believe that unless a resource has either an upload field or is marked to be deleted
         # we don't need to create an uploader object which is expensive

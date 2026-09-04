@@ -358,6 +358,177 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
         # flagged so DataPusher+ submission isn't affected by this fix.
         assert caller_generated_id in update_context.get(FILE_WAS_UPLOADED, set())
 
+    @pytest.mark.xfail(
+        reason=(
+            "Documents an inherent CKAN-core gap (ckan/model/modification.py: "
+            "DomainObjectModificationExtension.before_commit dispatches "
+            "IResourceUrlChange.notify() with NO exception guard) that cannot be fixed "
+            "from an extension without patching core. Our real mitigation is that "
+            "DatapusherPlusPlugin.notify() (src/datapusher-plus) is now an intentional "
+            "no-op, and package_update() itself now covers 'existing resource url "
+            "changed' via existing_resource_urls (see "
+            "test_package_update_existing_resource_url_change_reaches_manage_datastore) "
+            "- so in practice nothing HDX-controlled raises from this hook anymore. This "
+            "test uses a synthetic third-party-style plugin to prove the core dispatch "
+            "itself still has no safety net, in case any OTHER plugin implements this "
+            "interface unsafely."
+        ),
+        strict=True,
+    )
+    def test_resource_url_change_commit_hook_exception_does_not_propagate(self):
+        """
+        Regression test / KNOWN FAILURE: CKAN core's commit-time IResourceUrlChange hook
+        (ckan/model/modification.py: DomainObjectModificationExtension.before_commit ->
+        notify_observers()) has NO exception guard around it, unlike the fail-open
+        guarantee package_update() otherwise builds for DataPusher+/datastore management
+        (see the try/except around _manage_datastore_for_uploads() a few lines after
+        model.repo.commit() in package_update()).
+
+        Whenever an EXISTING resource's 'url' (or 'last_modified') changes,
+        resource_dict_save() sets obj.url_changed = True, and that same core before_commit
+        hook then calls IResourceUrlChange.notify() for every plugin implementing that
+        interface - synchronously, DURING model.repo.commit() (i.e. BEFORE our own
+        post-commit try/except is even reached), and with no try/except of its own
+        (contrast with the IDomainObjectModification dispatch a few lines below it in the
+        same file, which IS wrapped in try/except).
+
+        DatapusherPlusPlugin.notify() (src/datapusher-plus/ckanext/datapusher_plus/
+        plugin.py) has since been made an intentional no-op specifically because of this
+        gap - see its docstring/comment. This test doesn't require datapusher_plus to be
+        loaded at all - it simulates the exact same unguarded core dispatch with a
+        minimal synthetic fake plugin that raises, to prove the CORE mechanism itself
+        still provides no safety net for whatever plugin implements this interface. This
+        is expected to keep failing (xfail, strict) until CKAN core adds a guard here -
+        which is out of scope for our extensions.
+        """
+        import ckan.plugins as ckan_plugins
+
+        class RaisingUrlChangePlugin:
+            def notify(self, resource):
+                raise Exception('simulated DataPusher+ failure from IResourceUrlChange.notify()')
+
+        real_plugin_implementations = ckan_plugins.PluginImplementations
+
+        def plugin_implementations_side_effect(interface):
+            if interface is ckan_plugins.IResourceUrlChange:
+                return [RaisingUrlChangePlugin()]
+            return real_plugin_implementations(interface)
+
+        package = {"package_creator": "test function",
+                   "private": False,
+                   "dataset_date": "[1960-01-01 TO 2012-12-31]",
+                   "caveats": "These are the caveats",
+                   "license_other": "TEST OTHER LICENSE",
+                   "methodology": "This is a test methodology",
+                   "dataset_source": "World Bank",
+                   "license_id": "hdx-other",
+                   "notes": "This is a test activity",
+                   "groups": [{"name": "roger"}],
+                   "owner_org": "hdx-test-org",
+                   'name': 'test_activity_url_change_commit_hook',
+                   'title': 'Test Activity Url Change Commit Hook',
+                   'resources': [
+                       {
+                           'url': 'https://example.com/original.csv',
+                           'resource_type': 'url',
+                           'format': 'CSV',
+                           'name': 'original.csv',
+                       }
+                   ]
+                   }
+
+        context = {'ignore_auth': True,
+                   'model': model, 'session': model.Session, 'user': 'testsysadmin'}
+        created_package = self._get_action('package_create')(context, package)
+        existing_resource = created_package['resources'][0]
+
+        update_dict = dict(created_package)
+        # Changing the url is what sets obj.url_changed = True inside
+        # resource_dict_save(), which is what makes CKAN core dispatch
+        # IResourceUrlChange.notify() during model.repo.commit() below.
+        update_dict['resources'] = [dict(existing_resource, url='https://example.com/changed.csv')]
+
+        update_context = {'ignore_auth': True,
+                           'model': model, 'session': model.Session, 'user': 'testsysadmin'}
+
+        with mock.patch(
+            'ckan.plugins.PluginImplementations',
+            side_effect=plugin_implementations_side_effect
+        ), mock.patch(
+            'ckanext.hdx_package.actions.update._manage_datastore_for_uploads'
+        ):
+            # This must NOT raise - a failure from this commit-time hook must not abort
+            # an otherwise-successful package_update() call, consistent with every other
+            # fail-open guarantee already covered elsewhere in this test file.
+            result = self._get_action('package_update')(update_context, update_dict)
+
+        assert result['resources'][0]['url'] == 'https://example.com/changed.csv'
+
+    def test_package_update_existing_resource_url_change_reaches_manage_datastore(self):
+        """
+        Regression test for existing_resource_urls: an EXISTING resource whose 'url'
+        changes with NO 'upload'/'clear_upload' key at all (e.g. a link-type resource
+        whose url is edited directly through the form/API) must still be flagged into
+        context[FILE_WAS_UPLOADED] and reach _manage_datastore_for_uploads().
+
+        This scenario used to be covered exclusively by CKAN core's commit-time
+        IResourceUrlChange hook (DatapusherPlusPlugin.notify(), dispatched from
+        DomainObjectModificationExtension.before_commit() DURING model.repo.commit(),
+        with no exception guard - see
+        test_resource_url_change_commit_hook_exception_does_not_propagate). That hook is
+        now an intentional no-op, so package_update() itself must cover this case via its
+        own existing_resource_urls tracking, flowing through the already fail-open,
+        POST-commit _manage_datastore_for_uploads() call instead.
+        """
+        from ckanext.hdx_package.helpers.constants import FILE_WAS_UPLOADED
+
+        package = {"package_creator": "test function",
+                   "private": False,
+                   "dataset_date": "[1960-01-01 TO 2012-12-31]",
+                   "caveats": "These are the caveats",
+                   "license_other": "TEST OTHER LICENSE",
+                   "methodology": "This is a test methodology",
+                   "dataset_source": "World Bank",
+                   "license_id": "hdx-other",
+                   "notes": "This is a test activity",
+                   "groups": [{"name": "roger"}],
+                   "owner_org": "hdx-test-org",
+                   'name': 'test_activity_existing_resource_url_change',
+                   'title': 'Test Activity Existing Resource Url Change',
+                   'resources': [
+                       {
+                           'url': 'https://example.com/original_url_change.csv',
+                           'resource_type': 'url',
+                           'format': 'CSV',
+                           'name': 'original_url_change.csv',
+                       }
+                   ]
+                   }
+
+        context = {'ignore_auth': True,
+                   'model': model, 'session': model.Session, 'user': 'testsysadmin'}
+        created_package = self._get_action('package_create')(context, package)
+        existing_resource = created_package['resources'][0]
+        existing_resource_id = existing_resource['id']
+
+        update_dict = dict(created_package)
+        # No 'upload'/'clear_upload' key at all here - just a plain url edit, which is
+        # exactly the case existing_resource_urls exists to cover.
+        update_dict['resources'] = [dict(existing_resource, url='https://example.com/changed_url_change.csv')]
+
+        update_context = {'ignore_auth': True,
+                           'model': model, 'session': model.Session, 'user': 'testsysadmin'}
+
+        with mock.patch(
+            'ckanext.hdx_package.actions.update._manage_datastore_for_uploads'
+        ) as mock_manage_datastore:
+            self._get_action('package_update')(update_context, update_dict)
+
+        mock_manage_datastore.assert_called_once()
+        call_context, call_package_dict = mock_manage_datastore.call_args[0]
+        assert existing_resource_id in call_context.get(FILE_WAS_UPLOADED, set())
+        assert call_package_dict.get('id') == created_package['id']
+
     def test_package_revise_resurrected_deleted_resource_not_treated_as_new(self):
         """
 
