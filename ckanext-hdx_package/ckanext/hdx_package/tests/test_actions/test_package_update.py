@@ -1185,20 +1185,15 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
 
     def test_package_update_http_to_https_url_change_reaches_manage_datastore(self):
         """
-        Regression test (currently EXPECTED TO FAIL) for
-        _normalize_resource_url_for_comparison() stripping ANY leading http(s)://
-        scheme from BOTH sides before comparing - not just a scheme that CKAN itself
-        synthesized.
+        Regression test for preserving explicit scheme changes in
+        _normalize_resource_url_for_comparison().
 
         model_dictize.resource_dictize() (ckan/lib/dictization/model_dictize.py:
-        132-144) only ever prepends 'http://' to a stored url that has NO scheme at
-        all (`not urlsplit(url).scheme`) - it never touches a url that already has a
-        scheme (http OR https). So an existing resource whose url is genuinely edited
-        from 'http://host/file.csv' to 'https://host/file.csv' is a REAL change that
-        must still be flagged - but today, stripping the scheme from both sides makes
-        them compare equal ('host/file.csv' == 'host/file.csv'), so the change is
-        silently swallowed and the datastore is never refreshed for it (now that the
-        IResourceUrlChange hook is an intentional no-op).
+        132-144) only prepends 'http://' to a stored URL that has no scheme at all
+        (`not urlsplit(url).scheme`) - it never rewrites a URL that already has a
+        scheme (http or https). A genuine edit from 'http://host/file.csv' to
+        'https://host/file.csv' is therefore a real change that must still be flagged,
+        even though the host/path stays the same.
         """
         from ckanext.hdx_package.helpers.constants import FILE_WAS_UPLOADED
 
@@ -1253,8 +1248,8 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
 
         mock_manage_datastore.assert_called_once()
         call_context, _ = mock_manage_datastore.call_args[0]
-        # Today this fails: the scheme is stripped from both sides, so the genuine
-        # http -> https change is invisible to the comparison and never flagged.
+        # Preserve explicit scheme changes: only the scheme differs, but this still
+        # must be treated as a real resource change and trigger datastore handling.
         assert existing_resource_id in call_context.get(FILE_WAS_UPLOADED, set())
 
     def test_package_update_defer_commit_skips_datastore_management(self):
