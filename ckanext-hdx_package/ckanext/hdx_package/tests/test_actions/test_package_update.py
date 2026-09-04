@@ -1252,6 +1252,113 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
         # must be treated as a real resource change and trigger datastore handling.
         assert existing_resource_id in call_context.get(FILE_WAS_UPLOADED, set())
 
+    def test_urls_match_for_comparison_protocol_relative_and_root_relative_urls(self):
+        """
+        Regression test for protocol-relative (//example.com/file.csv) and root-relative
+        (/example.com/file.csv) stored URLs in _urls_match_for_comparison().
+
+        CKAN's model_dictize.resource_dictize() synthesizes the display URL using
+        url.lstrip('/') before prepending 'http://', so stored '//example.com/file.csv'
+        becomes incoming 'http://example.com/file.csv'. Stripping 'http://' from incoming
+        leaves 'example.com/file.csv', which must equal existing_url after stripping
+        its leading slashes (existing_url.lstrip('/')).
+        """
+        from ckanext.hdx_package.actions.update import _urls_match_for_comparison
+
+        # Protocol-relative stored URL vs synthesized http:// incoming URL
+        assert _urls_match_for_comparison('//example.com/file.csv', 'http://example.com/file.csv')
+
+        # Root-relative stored URL vs synthesized http:// incoming URL
+        assert _urls_match_for_comparison('/example.com/file.csv', 'http://example.com/file.csv')
+
+        # Scheme-less stored URL vs synthesized http:// incoming URL
+        assert _urls_match_for_comparison('example.com/file.csv', 'http://example.com/file.csv')
+
+        # Genuine scheme change (http -> https) must still evaluate to False (not matching)
+        assert not _urls_match_for_comparison('http://example.com/file.csv', 'https://example.com/file.csv')
+
+    def test_package_update_cross_package_deleted_resource_id_same_url_timestamp_not_false_flagged(self):
+        """
+        Regression test for cross-package deleted resource ID reuse with identical URL/timestamp.
+
+        When a deleted resource ID from package A is reused on package B with the same URL
+        and timestamp, the global lookup fetches its prior URL and timestamp into the
+        existing_resource_urls and existing_resource_last_modified snapshots. It must NOT
+        be false-flagged into context[FILE_WAS_UPLOADED] or trigger unnecessary datastore work.
+        """
+        from ckanext.hdx_package.helpers.constants import FILE_WAS_UPLOADED
+
+        package_a = {"package_creator": "test function",
+                     "private": False,
+                     "dataset_date": "[1960-01-01 TO 2012-12-31]",
+                     "caveats": "These are the caveats",
+                     "license_other": "TEST OTHER LICENSE",
+                     "methodology": "This is a test methodology",
+                     "dataset_source": "World Bank",
+                     "license_id": "hdx-other",
+                     "notes": "This is a test activity",
+                     "groups": [{"name": "roger"}],
+                     "owner_org": "hdx-test-org",
+                     'name': 'test_activity_cross_same_url_source',
+                     'title': 'Test Activity Cross Same URL Source',
+                     'resources': [
+                         {
+                             'url': 'https://example.com/same_cross_package.csv',
+                             'resource_type': 'url',
+                             'format': 'CSV',
+                             'name': 'same_cross_package.csv',
+                         }
+                     ]
+                     }
+
+        context = {'ignore_auth': True,
+                   'model': model, 'session': model.Session, 'user': 'testsysadmin'}
+        created_package_a = self._get_action('package_create')(context, package_a)
+        reused_resource_id = created_package_a['resources'][0]['id']
+
+        # Delete the resource from package A so it can be reused on package B
+        delete_context = {'ignore_auth': True,
+                          'model': model, 'session': model.Session, 'user': 'testsysadmin'}
+        self._get_action('resource_delete')(delete_context, {'id': reused_resource_id})
+
+        package_b = {"package_creator": "test function",
+                     "private": False,
+                     "dataset_date": "[1960-01-01 TO 2012-12-31]",
+                     "caveats": "These are the caveats",
+                     "license_other": "TEST OTHER LICENSE",
+                     "methodology": "This is a test methodology",
+                     "dataset_source": "World Bank",
+                     "license_id": "hdx-other",
+                     "notes": "This is a test activity",
+                     "groups": [{"name": "roger"}],
+                     "owner_org": "hdx-test-org",
+                     'name': 'test_activity_cross_same_url_target',
+                     'title': 'Test Activity Cross Same URL Target',
+                     }
+        create_b_context = {'ignore_auth': True,
+                            'model': model, 'session': model.Session, 'user': 'testsysadmin'}
+        created_package_b = self._get_action('package_create')(create_b_context, package_b)
+
+        update_dict = dict(created_package_b)
+        update_dict['resources'] = [{
+            'id': reused_resource_id,
+            'url': 'https://example.com/same_cross_package.csv',
+            'resource_type': 'url',
+            'format': 'CSV',
+            'name': 'same_cross_package.csv',
+        }]
+
+        update_context = {'ignore_auth': True,
+                           'model': model, 'session': model.Session, 'user': 'testsysadmin'}
+
+        with mock.patch(
+            'ckanext.hdx_package.actions.update._manage_datastore_for_uploads'
+        ):
+            self._get_action('package_update')(update_context, update_dict)
+
+        # Because URL and last_modified were unchanged, the reused resource should NOT be flagged as changed
+        assert reused_resource_id not in update_context.get(FILE_WAS_UPLOADED, set())
+
     def test_package_update_defer_commit_skips_datastore_management(self):
         """
         Regression test: when context['defer_commit'] is set, package_update() must NOT

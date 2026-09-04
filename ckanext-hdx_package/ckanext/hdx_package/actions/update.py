@@ -272,7 +272,7 @@ def _urls_match_for_comparison(existing_url: Any, incoming_url: Any) -> bool:
         # no synthesized-scheme special case applies; the plain comparison above
         # is authoritative.
         return False
-    return re.sub(r'^http://', '', incoming_url, flags=re.IGNORECASE) == existing_url
+    return re.sub(r'^http://', '', incoming_url, flags=re.IGNORECASE) == existing_url.lstrip('/')
 
 
 def _normalize_last_modified_for_comparison(value: Any) -> Any:
@@ -446,61 +446,29 @@ def package_update(
     # caller-supplied ids that are actually present in this call's incoming resources -
     # never a full-table scan - to mirror that cross-package case too.
     existing_resource_ids = {r.id for r in pkg.resources_all}
+    existing_resource_urls = {r.id: r.url for r in pkg.resources_all}
+    existing_resource_last_modified = {
+        r.id: (r.last_modified or r.metadata_modified) for r in pkg.resources_all
+    }
+
     _incoming_resource_ids = [
         r.get('id') for r in data_dict.get('resources', [])
         if isinstance(r, dict) and isinstance(r.get('id'), str) and r.get('id')
     ]
-    matching_existing_resources = []
-    if _incoming_resource_ids:
+    _unknown_incoming_resource_ids = [
+        r_id for r_id in _incoming_resource_ids if r_id not in existing_resource_ids
+    ]
+    if _unknown_incoming_resource_ids:
         matching_existing_resources = model.Session.query(model.Resource).filter(
-                model.Resource.id.in_(_incoming_resource_ids)
-            ).all()
+            model.Resource.id.in_(_unknown_incoming_resource_ids)
+        ).all()
         existing_resource_ids |= {resource.id for resource in matching_existing_resources}
-
-    # Captured for the same reason and at the same point as existing_resource_ids above -
-    # the pre-update url of every existing resource, keyed by id. Used further down to
-    # detect "an existing resource's url changed without a real file upload" (e.g. a
-    # link-type resource whose url is edited directly through the form/API, with no
-    # 'upload'/'clear_upload' key at all) and flag it into FILE_WAS_UPLOADED too, exactly
-    # as CKAN core's resource_dict_save() itself detects this (`if 'url' in changed: ...
-    # obj.url_changed = True`) to fire the IResourceUrlChange interface. We deliberately
-    # replace reliance on that core hook for DataPusher+ purposes: it fires from
-    # DomainObjectModificationExtension.before_commit() - i.e. DURING model.repo.commit(),
-    # on not-yet-durably-committed data, and with NO exception guard around it (unlike the
-    # IDomainObjectModification dispatch beside it) - see DatapusherPlusPlugin.notify()
-    # (now an intentional no-op) for the full rationale. Tracking it here instead lets this
-    # same resource flow through our own already fail-open, POST-commit
-    # _manage_datastore_for_uploads() call below.
-    existing_resource_urls = {r.id: r.url for r in pkg.resources_all}
-
-    # Captured for the same reason/point as existing_resource_urls above - the pre-update
-    # last_modified of every existing resource, keyed by id. CKAN core's resource_dict_save()
-    # sets obj.url_changed = True not just on a url change, but ALSO when an EXISTING
-    # resource's last_modified changes (`'last_modified' in changed and not new` -
-    # ckan/lib/dictization/model_save.py:50-51). This covers a harvester/package_revise
-    # bumping last_modified for content at a stable remote URL to signal "re-fetch me" -
-    # without tracking this too, that case would silently stop reaching DataPusher+ now
-    # that the IResourceUrlChange hook is an intentional no-op (see existing_resource_urls
-    # above for the full rationale).
-    #
-    # We fall back to r.metadata_modified when the raw last_modified column is None,
-    # mirroring _additional_hdx_resource_show_processing()'s own display fallback
-    # (ckanext-hdx_package/ckanext/hdx_package/actions/get.py:541-542:
-    # `if not resource_dict.get('last_modified'): resource_dict['last_modified'] =
-    # resource_dict['metadata_modified']`). Without this, a normal package_show() ->
-    # edit-something-else -> package_update() round trip on a resource whose real
-    # last_modified was never set would carry that synthesized metadata_modified value
-    # back in as 'last_modified', which would never match the raw (None) DB value and
-    # would false-flag on every no-op save.
-    existing_resource_last_modified = {
-        r.id: (r.last_modified or r.metadata_modified) for r in pkg.resources_all
-    }
-    existing_resource_urls.update(
-        {r.id: r.url for r in matching_existing_resources}
-    )
-    existing_resource_last_modified.update(
-        {r.id: (r.last_modified or r.metadata_modified) for r in matching_existing_resources}
-    )
+        existing_resource_urls.update(
+            {r.id: r.url for r in matching_existing_resources}
+        )
+        existing_resource_last_modified.update(
+            {r.id: (r.last_modified or r.metadata_modified) for r in matching_existing_resources}
+        )
 
     # immutable fields
     data_dict["id"] = pkg.id
