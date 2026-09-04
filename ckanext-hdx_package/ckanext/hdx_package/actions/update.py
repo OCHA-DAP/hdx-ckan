@@ -14,6 +14,7 @@ from sqlalchemy import or_
 from typing import Any, Dict
 
 import ckan.lib.dictization.model_save as model_save
+import ckan.lib.helpers as h
 import ckan.lib.munge as munge
 import ckan.lib.plugins as lib_plugins
 import ckan.lib.uploader as uploader
@@ -222,9 +223,19 @@ def _normalize_resource_url_for_comparison(url: Any, url_type: Any) -> Any:
     stripping that scheme back off before comparing, an unrelated field edit on
     a resource with a scheme-less stored url would look like a URL change and
     wrongly flag the resource into FILE_WAS_UPLOADED.
+
+    Runs BEFORE lib_plugins.plugin_validate() below, so `url` is still raw,
+    unvalidated caller input at this point - the resource schema's unicode_safe
+    validator is what normally coerces a non-string value (e.g. an int) into a
+    string later. A non-string value here must be left untouched (skip
+    normalization, no comparison match) rather than calling .strip() on it,
+    which would raise AttributeError and turn an otherwise-coercible request
+    into a 500 before validation ever gets a chance to run/reject it.
     """
     if url is None:
         return None
+    if not isinstance(url, str):
+        return url
     normalized = url.strip()
     if url_type == 'upload':
         return find_filename_in_url(normalized)
@@ -238,9 +249,25 @@ def _normalize_last_modified_for_comparison(value: Any) -> Any:
     mirroring how DictMixin.from_dict() (ckan/model/base.py) itself compares:
     a datetime DB value is rendered to isoformat() before comparing against a
     string incoming value.
+
+    Runs BEFORE lib_plugins.plugin_validate() below, so a string `value` here
+    has NOT yet been through the resource schema's isodate validator
+    (ckan/logic/validators.py: isodate(), which itself parses via
+    h.date_str_to_datetime()) - so two equivalent-but-differently-formatted
+    accepted strings (e.g. '2024-01-01T00:00:00' vs
+    '2024-01-01T00:00:00.000000') would otherwise compare unequal here even
+    though CKAN's own from_dict() would consider them the same value once
+    parsed. We parse with that same date parser before comparing. An invalid
+    string is left as-is (unparsed) rather than raising here - validation
+    further down is what's responsible for rejecting it.
     """
     if isinstance(value, datetime.datetime):
         return value.isoformat()
+    if isinstance(value, str):
+        try:
+            return h.date_str_to_datetime(value).isoformat()
+        except (TypeError, ValueError):
+            return value
     return value
 
 
@@ -481,7 +508,21 @@ def package_update(
         # 'id' (e.g. a pre-generated UUID from a script/harvester) for a resource that
         # doesn't exist in the DB yet; resource_dict_save() still treats that as new, so we
         # must too, or it silently never gets flagged for DataPusher+/datastore management.
-        resource_was_new.append(resource.get('id') not in existing_resource_ids)
+        #
+        # This runs BEFORE lib_plugins.plugin_validate() below, so a caller-supplied 'id'
+        # is still raw, unvalidated input here - it could be a malformed, unhashable value
+        # (e.g. a list/dict) instead of the string the UUID validator expects. `in`/`.get()`
+        # against existing_resource_ids/existing_resource_urls/existing_resource_last_modified
+        # (all keyed by real string ids) would raise TypeError on such a value, crashing
+        # before validation ever gets a chance to reject it with a proper ValidationError.
+        # We catch that here and simply treat it as "not an existing resource" for these
+        # comparisons - consistent with it not actually matching any real existing id.
+        resource_id = resource.get('id')
+        try:
+            resource_id_is_existing = resource_id in existing_resource_ids
+        except TypeError:
+            resource_id_is_existing = False
+        resource_was_new.append(not resource_id_is_existing)
 
         # An existing resource whose 'url' changed, with no 'upload'/'clear_upload' key at
         # all (e.g. a link-type resource whose url is edited directly through the form/API)
@@ -497,15 +538,17 @@ def package_update(
         # Flagged here at stage 1 (pre-validation), same as a real upload replacement,
         # since a url change is likewise "new data for this resource" from
         # hdx_reset_on_file_upload's POV.
-        resource_id = resource.get('id')
         resource_url_type = resource.get('url_type')
         resource_url = _normalize_resource_url_for_comparison(resource.get('url'), resource_url_type)
-        existing_url = _normalize_resource_url_for_comparison(
-            existing_resource_urls.get(resource_id), resource_url_type)
         resource_last_modified = _normalize_last_modified_for_comparison(resource.get('last_modified'))
-        existing_last_modified = _normalize_last_modified_for_comparison(
-            existing_resource_last_modified.get(resource_id))
-        if resource_id in existing_resource_ids and (
+        existing_url = None
+        existing_last_modified = None
+        if resource_id_is_existing:
+            existing_url = _normalize_resource_url_for_comparison(
+                existing_resource_urls.get(resource_id), resource_url_type)
+            existing_last_modified = _normalize_last_modified_for_comparison(
+                existing_resource_last_modified.get(resource_id))
+        if resource_id_is_existing and (
                 (resource_url is not None and resource_url != existing_url)
                 or (resource_last_modified is not None and resource_last_modified != existing_last_modified)):
             context.setdefault(FILE_WAS_UPLOADED, set()).add(resource_id)
@@ -548,7 +591,9 @@ def package_update(
             # version to reset in the first place. Stage 1 must only ever flag TRULY
             # existing resources; the post-flush stage 2 below still flags this new
             # resource (via `was_new`) so DataPusher+ submission isn't affected.
-            if was_real_upload and resource.get('id') in existing_resource_ids:
+            # Reuses resource_id_is_existing (computed above, already TypeError-safe for a
+            # malformed/unhashable caller-supplied id).
+            if was_real_upload and resource_id_is_existing:
                 context.setdefault(FILE_WAS_UPLOADED, set()).add(resource['id'])
 
             # file uploads/clearing

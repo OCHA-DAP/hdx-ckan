@@ -728,6 +728,190 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
         assert existing_resource_id in call_context.get(FILE_WAS_UPLOADED, set())
         assert call_package_dict.get('id') == created_package['id']
 
+    def test_package_update_non_string_resource_url_does_not_crash(self):
+        """
+        Regression test: _normalize_resource_url_for_comparison() runs BEFORE
+        lib_plugins.plugin_validate(), on raw, unvalidated caller input. The resource
+        schema's unicode_safe validator is what normally coerces a non-string 'url'
+        value (e.g. an int) into a string - but that hasn't run yet at this point. An
+        unguarded .strip() call here would raise AttributeError on such a value,
+        turning an otherwise-coercible/validatable request into an unhandled 500
+        instead of a proper ValidationError (or a successful, schema-coerced save).
+        """
+        package = {"package_creator": "test function",
+                   "private": False,
+                   "dataset_date": "[1960-01-01 TO 2012-12-31]",
+                   "caveats": "These are the caveats",
+                   "license_other": "TEST OTHER LICENSE",
+                   "methodology": "This is a test methodology",
+                   "dataset_source": "World Bank",
+                   "license_id": "hdx-other",
+                   "notes": "This is a test activity",
+                   "groups": [{"name": "roger"}],
+                   "owner_org": "hdx-test-org",
+                   'name': 'test_activity_non_string_url',
+                   'title': 'Test Activity Non String Url',
+                   'resources': [
+                       {
+                           'url': 'https://example.com/original_non_string_url.csv',
+                           'resource_type': 'url',
+                           'format': 'CSV',
+                           'name': 'original_non_string_url.csv',
+                       }
+                   ]
+                   }
+
+        context = {'ignore_auth': True,
+                   'model': model, 'session': model.Session, 'user': 'testsysadmin'}
+        created_package = self._get_action('package_create')(context, package)
+        existing_resource = created_package['resources'][0]
+
+        update_dict = dict(created_package)
+        # A non-string url - what the schema's unicode_safe validator would normally
+        # coerce, but that hasn't run yet when our pre-validation comparison runs.
+        update_dict['resources'] = [dict(existing_resource, url=12345)]
+
+        update_context = {'ignore_auth': True,
+                           'model': model, 'session': model.Session, 'user': 'testsysadmin'}
+
+        with mock.patch(
+            'ckanext.hdx_package.actions.update._manage_datastore_for_uploads'
+        ):
+            # Must NOT raise AttributeError/TypeError from our own comparison code -
+            # either succeeds (schema coerces the int to a string) or raises CKAN's own
+            # ValidationError, never an unhandled crash.
+            try:
+                self._get_action('package_update')(update_context, update_dict)
+            except ValidationError:
+                pass
+
+    def test_package_update_last_modified_equivalent_iso_format_not_falsely_flagged(self):
+        """
+        Regression test: _normalize_last_modified_for_comparison() must parse an
+        incoming string last_modified with the same date parser the resource schema's
+        isodate validator uses (h.date_str_to_datetime()), so two equivalent-but-
+        differently-formatted accepted strings (e.g. '2024-01-01T00:00:00' vs
+        '2024-01-01T00:00:00.000000') compare EQUAL here - exactly as CKAN's own
+        DictMixin.from_dict() would consider them once both are parsed into real
+        datetime objects, and CKAN detects no actual last_modified change.
+        """
+        from ckanext.hdx_package.helpers.constants import FILE_WAS_UPLOADED
+
+        package = {"package_creator": "test function",
+                   "private": False,
+                   "dataset_date": "[1960-01-01 TO 2012-12-31]",
+                   "caveats": "These are the caveats",
+                   "license_other": "TEST OTHER LICENSE",
+                   "methodology": "This is a test methodology",
+                   "dataset_source": "World Bank",
+                   "license_id": "hdx-other",
+                   "notes": "This is a test activity",
+                   "groups": [{"name": "roger"}],
+                   "owner_org": "hdx-test-org",
+                   'name': 'test_activity_equivalent_last_modified',
+                   'title': 'Test Activity Equivalent Last Modified',
+                   'resources': [
+                       {
+                           'url': 'https://example.com/equivalent_last_modified.csv',
+                           'resource_type': 'url',
+                           'format': 'CSV',
+                           'name': 'equivalent_last_modified.csv',
+                           'last_modified': '2024-01-01T00:00:00',
+                       }
+                   ]
+                   }
+
+        context = {'ignore_auth': True,
+                   'model': model, 'session': model.Session, 'user': 'testsysadmin'}
+        created_package = self._get_action('package_create')(context, package)
+        existing_resource = created_package['resources'][0]
+        existing_resource_id = existing_resource['id']
+
+        update_dict = dict(created_package)
+        # Same instant, just formatted with explicit microseconds - must compare EQUAL
+        # to the stored '2024-01-01T00:00:00', not be treated as a real change.
+        update_dict['resources'] = [
+            dict(existing_resource, last_modified='2024-01-01T00:00:00.000000')
+        ]
+
+        update_context = {'ignore_auth': True,
+                           'model': model, 'session': model.Session, 'user': 'testsysadmin'}
+
+        with mock.patch(
+            'ckanext.hdx_package.actions.update._manage_datastore_for_uploads'
+        ) as mock_manage_datastore:
+            self._get_action('package_update')(update_context, update_dict)
+
+        mock_manage_datastore.assert_called_once()
+        call_context, _ = mock_manage_datastore.call_args[0]
+        assert existing_resource_id not in call_context.get(FILE_WAS_UPLOADED, set())
+
+    def test_package_update_malformed_resource_id_does_not_crash(self):
+        """
+        Regression test: the pre-validation stage-1 loop performs `in`/`.get()`
+        lookups against existing_resource_ids/existing_resource_urls/
+        existing_resource_last_modified (all keyed by real, hashable string ids)
+        using the caller-supplied 'id' BEFORE lib_plugins.plugin_validate() (and its
+        uuid_validator) ever runs. A malformed, unhashable id (e.g. a list) must not
+        raise TypeError here - the schema's uuid_validator further down is what's
+        responsible for rejecting it instead (note: CKAN core's own uuid_validator
+        (ckan/logic/validators.py) only catches ValueError around uuid.UUID(value,
+        version=4) - passing a list surfaces as an uncaught AttributeError from
+        uuid.UUID.__init__ itself, a separate, pre-existing CKAN core limitation
+        that's out of scope here. This test only asserts our OWN pre-validation loop
+        doesn't add its own, different crash - the unhashable-type TypeError - on top
+        of that).
+        """
+        package = {"package_creator": "test function",
+                   "private": False,
+                   "dataset_date": "[1960-01-01 TO 2012-12-31]",
+                   "caveats": "These are the caveats",
+                   "license_other": "TEST OTHER LICENSE",
+                   "methodology": "This is a test methodology",
+                   "dataset_source": "World Bank",
+                   "license_id": "hdx-other",
+                   "notes": "This is a test activity",
+                   "groups": [{"name": "roger"}],
+                   "owner_org": "hdx-test-org",
+                   'name': 'test_activity_malformed_resource_id',
+                   'title': 'Test Activity Malformed Resource Id',
+                   'resources': [
+                       {
+                           'url': 'https://example.com/malformed_id.csv',
+                           'resource_type': 'url',
+                           'format': 'CSV',
+                           'name': 'malformed_id.csv',
+                       }
+                   ]
+                   }
+
+        context = {'ignore_auth': True,
+                   'model': model, 'session': model.Session, 'user': 'testsysadmin'}
+        created_package = self._get_action('package_create')(context, package)
+        existing_resource = created_package['resources'][0]
+
+        update_dict = dict(created_package)
+        # An unhashable id - a list - instead of the string the uuid_validator expects.
+        update_dict['resources'] = [dict(existing_resource, id=['not', 'a', 'valid', 'id'])]
+
+        update_context = {'ignore_auth': True,
+                           'model': model, 'session': model.Session, 'user': 'testsysadmin'}
+
+        with mock.patch(
+            'ckanext.hdx_package.actions.update._manage_datastore_for_uploads'
+        ):
+            # Must NOT raise TypeError ("unhashable type: 'list'") from our own
+            # pre-validation comparison code. Any other exception (e.g. CKAN core's
+            # own AttributeError from uuid_validator - see docstring above) is a
+            # separate, pre-existing limitation outside this fix's scope, so it's
+            # tolerated here; only TypeError would indicate our fix regressed.
+            try:
+                self._get_action('package_update')(update_context, update_dict)
+            except TypeError:
+                raise
+            except Exception:
+                pass
+
     def test_package_update_upload_resource_filename_change_reaches_manage_datastore(self):
         """
         Counterpart to test_package_update_upload_resource_unchanged_url_not_falsely_flagged:
