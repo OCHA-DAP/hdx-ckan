@@ -248,9 +248,17 @@ _URL_SCHEME_RE = re.compile(r'^[a-zA-Z][a-zA-Z0-9+.\-]*:')
 
 def _urls_match_for_comparison(existing_url: Any, incoming_url: Any) -> bool:
     """
-    Compares an existing (pre-update, DB-stored) resource url against an incoming
-    (caller-supplied) one, both already run through _normalize_resource_url_for_comparison()
-    above, WITHOUT masking a genuine scheme change (e.g. http -> https).
+    Compares an existing (pre-update, DB-stored, RAW - i.e. untouched, NOT run through
+    _normalize_resource_url_for_comparison()) resource url against an incoming
+    (caller-supplied, already run through _normalize_resource_url_for_comparison() above)
+    one, WITHOUT masking a genuine scheme change (e.g. http -> https).
+
+    The existing side is deliberately passed through as-is here, never re-normalized with
+    whatever url_type happens to be incoming this time - see the call site in
+    package_update() for the full rationale (an existing url-type resource's full stored
+    URL must not be silently collapsed down to a bare filename just because the incoming
+    url_type says 'upload', which would mask a real url_type + implied url change that
+    resource_dict_save() itself does detect).
 
     A plain equality check would false-flag a normal read-modify-write on a
     scheme-less stored url as "changed": model_dictize.resource_dictize()
@@ -623,11 +631,28 @@ def package_update(
         # itself checks to set obj.url_changed = True (which used to drive
         # DatapusherPlusPlugin.notify(), now an intentional no-op - see existing_resource_urls
         # above for the full rationale).
-        # url: both sides are run through _normalize_resource_url_for_comparison() (whitespace/
-        # filename normalization only) and then compared via _urls_match_for_comparison(),
-        # which reconciles CKAN's synthesized scheme-less-vs-http:// pair without also
-        # masking a genuine scheme change (e.g. http -> https) - see that helper's
-        # docstring for the full rationale.
+        # url: only the INCOMING side is run through _normalize_resource_url_for_comparison()
+        # (whitespace/filename normalization only) - the EXISTING (raw, already-stored) side
+        # is used exactly as-is, deliberately NOT re-normalized with the incoming url_type.
+        # This mirrors what resource_dict_save() itself actually compares: it mutates only
+        # the INCOMING res_dict (`if res_dict.get('url_type') == 'upload': res_dict['url'] =
+        # res_dict['url'].rsplit('/')[-1]`), then diffs that against the untouched, already-
+        # persisted obj.url column value - never re-deriving/re-transforming the existing
+        # value based on whatever url_type happens to be incoming this time. Normalizing the
+        # existing side with the INCOMING url_type would wrongly collapse a real change:
+        # e.g. an existing url-type resource stored as the full
+        # 'https://example.com/file.csv', with only 'url_type' being changed to 'upload' (no
+        # other change) - normalizing the existing side with url_type='upload' would strip it
+        # down to 'file.csv' too, matching the similarly-stripped incoming value and hiding a
+        # change that resource_dict_save() itself DOES detect (raw existing full URL !=
+        # newly-stored bare filename). An existing upload-type resource's stored value is
+        # already just a bare filename to begin with (core keeps it that way on every save),
+        # so leaving it untouched here doesn't affect the normal upload-unchanged comparison
+        # at all - it only fixes the type-change case above.
+        # Both sides are then compared via _urls_match_for_comparison(), which reconciles
+        # CKAN's synthesized scheme-less-vs-http:// pair without also masking a genuine
+        # scheme change (e.g. http -> https) - see that helper's docstring for the full
+        # rationale.
         # last_modified: only compared when the caller's resource dict actually carries a
         # 'last_modified' key at all - an absent key means "leave it unchanged" (mirroring
         # from_dict()'s own `if col.name in _dict` gate: a column simply not present in the
@@ -648,8 +673,7 @@ def package_update(
         existing_last_modified = None
         existing_metadata_modified = None
         if resource_id_is_existing:
-            existing_url = _normalize_resource_url_for_comparison(
-                existing_resource_urls.get(resource_id), resource_url_type)
+            existing_url = existing_resource_urls.get(resource_id)
             existing_last_modified = _normalize_last_modified_for_comparison(
                 existing_resource_last_modified.get(resource_id))
             existing_metadata_modified = _normalize_last_modified_for_comparison(

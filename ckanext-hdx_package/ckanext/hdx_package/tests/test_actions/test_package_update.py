@@ -1440,6 +1440,77 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
         # must be treated as a real resource change and trigger datastore handling.
         assert existing_resource_id in call_context.get(FILE_WAS_UPLOADED, set())
 
+    def test_package_update_url_type_change_to_upload_reaches_manage_datastore(self):
+        """
+        Regression test for the existing (raw, DB-stored) side of the url comparison
+        being wrongly re-normalized with the INCOMING url_type.
+
+        Setup: an existing url-type resource is stored with a full URL, e.g.
+        'https://example.com/file.csv'. The update changes ONLY 'url_type' to
+        'upload' (with 'url' left as that same full string, no 'upload'/'clear_upload'
+        key at all - simulating a caller mutating url_type directly without a real
+        file upload).
+
+        CKAN core's resource_dict_save() mutates the INCOMING res_dict's url down to
+        a bare filename ('file.csv') when url_type == 'upload', then diffs that
+        against the untouched, already-persisted obj.url column
+        ('https://example.com/file.csv') - a real, detected change.
+
+        Before the fix, _normalize_resource_url_for_comparison() was applied to the
+        EXISTING side too, using the INCOMING url_type - collapsing
+        'https://example.com/file.csv' down to 'file.csv' as well, matching the
+        similarly-collapsed incoming value and hiding this real change entirely.
+        """
+        from ckanext.hdx_package.helpers.constants import FILE_WAS_UPLOADED
+
+        package = {"package_creator": "test function",
+                   "private": False,
+                   "dataset_date": "[1960-01-01 TO 2012-12-31]",
+                   "caveats": "These are the caveats",
+                   "license_other": "TEST OTHER LICENSE",
+                   "methodology": "This is a test methodology",
+                   "dataset_source": "World Bank",
+                   "license_id": "hdx-other",
+                   "notes": "This is a test activity",
+                   "groups": [{"name": "roger"}],
+                   "owner_org": "hdx-test-org",
+                   'name': 'test_activity_url_type_change_to_upload',
+                   'title': 'Test Activity Url Type Change To Upload',
+                   'resources': [
+                       {
+                           'url': 'https://example.com/url_type_change.csv',
+                           'resource_type': 'url',
+                           'format': 'CSV',
+                           'name': 'url_type_change.csv',
+                       }
+                   ]
+                   }
+
+        context = {'ignore_auth': True,
+                   'model': model, 'session': model.Session, 'user': 'testsysadmin'}
+        created_package = self._get_action('package_create')(context, package)
+        existing_resource = created_package['resources'][0]
+        existing_resource_id = existing_resource['id']
+
+        assert existing_resource['url'] == 'https://example.com/url_type_change.csv'
+
+        update_dict = dict(created_package)
+        # Only url_type changes here - 'url' is left as the same full string, no
+        # 'upload'/'clear_upload' key at all.
+        update_dict['resources'] = [dict(existing_resource, url_type='upload')]
+
+        update_context = {'ignore_auth': True,
+                           'model': model, 'session': model.Session, 'user': 'testsysadmin'}
+
+        with mock.patch(
+            'ckanext.hdx_package.actions.update._manage_datastore_for_uploads'
+        ) as mock_manage_datastore:
+            self._get_action('package_update')(update_context, update_dict)
+
+        mock_manage_datastore.assert_called_once()
+        call_context, _ = mock_manage_datastore.call_args[0]
+        assert existing_resource_id in call_context.get(FILE_WAS_UPLOADED, set())
+
     def test_urls_match_for_comparison_protocol_relative_and_root_relative_urls(self):
         """
         Regression test for protocol-relative (//example.com/file.csv) and root-relative

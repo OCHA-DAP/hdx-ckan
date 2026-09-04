@@ -13,12 +13,12 @@ The same eligibility logic applies uniformly to **brand-new resources regardless
 
 ### 2. Remove the datastore when a resource is no longer eligible
 
-When a dataset is updated and one or more resources have a new file uploaded, any resource that **currently has a datastore table** but no longer meets the eligibility criteria above must have its datastore table deleted. This covers two scenarios:
+When a dataset is updated and one or more resources are flagged for evaluation (see [Implementation](#implementation) below for every way a resource gets flagged — not just a real file upload/re-upload, but also an existing resource's `url` or `last_modified` changing, or a brand-new resource being added), any such resource that **currently has a datastore table** but no longer meets the eligibility criteria above must have its datastore table deleted. This covers two scenarios:
 
 - **Format changed to an unsupported type** — e.g. the resource was a CSV (supported) and was re-uploaded as a PDF (not supported).
 - **Dataset removed from the HDX allowlist** — the external allowlist may change between uploads; a resource that was allowed previously may no longer be allowed at the time of the next upload.
 
-Only resources that had a file uploaded during the current update are evaluated. New resources (no prior existence) are excluded from cleanup.
+Only resources actually flagged into `context[FILE_WAS_UPLOADED]` are evaluated — `_manage_datastore_for_uploads()` runs the exact same submit-or-delete decision, unconditionally, for every flagged id, regardless of *why* it was flagged (real upload, url change, last_modified change, or brand-new resource). A resource that was never flagged at all (e.g. an existing resource updated with no url/last_modified/upload change) is excluded from cleanup.
 
 ### 3. Never act on non-committed or rolled-back data, and never break the calling action
 
