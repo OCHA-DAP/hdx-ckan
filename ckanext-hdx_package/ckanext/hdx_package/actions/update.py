@@ -430,10 +430,12 @@ def package_update(
         # Flagged here at stage 1 (pre-validation), same as a real upload replacement,
         # since a url change is likewise "new data for this resource" from
         # hdx_reset_on_file_upload's POV.
-        resource_id = resource.get('id')
+        resource_url = resource.get('url')
+        if resource.get('url_type') == 'upload':
+            resource_url = find_filename_in_url(resource_url)
         if (resource_id in existing_resource_ids
-                and resource.get('url') is not None
-                and resource.get('url') != existing_resource_urls.get(resource_id)):
+                and resource_url is not None
+                and resource_url != existing_resource_urls.get(resource_id)):
             context.setdefault(FILE_WAS_UPLOADED, set()).add(resource_id)
 
         # I believe that unless a resource has either an upload field or is marked to be deleted
