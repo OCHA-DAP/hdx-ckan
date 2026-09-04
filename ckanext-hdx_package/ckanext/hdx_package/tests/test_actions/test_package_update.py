@@ -846,6 +846,127 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
         call_context, _ = mock_manage_datastore.call_args[0]
         assert existing_resource_id not in call_context.get(FILE_WAS_UPLOADED, set())
 
+    def test_package_update_blank_last_modified_null_existing_not_falsely_flagged(self):
+        """
+        Regression test: the resource schema's isodate validator (ckan/logic/
+        validators.py) converts an empty string last_modified to None BEFORE
+        resource_dict_save() ever compares it (`if value == '': return None`), so
+        submitting last_modified='' against a resource whose raw DB last_modified is
+        already null is seen by core as no change at all (None == None).
+        _normalize_last_modified_for_comparison() must mirror that same empty-string-
+        to-None conversion, and the comparison must run against the RAW existing
+        value (not a metadata_modified fallback), so this must NOT be flagged into
+        context[FILE_WAS_UPLOADED] and must not trigger an unnecessary metadata
+        reset/DataPusher submission.
+        """
+        from ckanext.hdx_package.helpers.constants import FILE_WAS_UPLOADED
+
+        package = {"package_creator": "test function",
+                   "private": False,
+                   "dataset_date": "[1960-01-01 TO 2012-12-31]",
+                   "caveats": "These are the caveats",
+                   "license_other": "TEST OTHER LICENSE",
+                   "methodology": "This is a test methodology",
+                   "dataset_source": "World Bank",
+                   "license_id": "hdx-other",
+                   "notes": "This is a test activity",
+                   "groups": [{"name": "roger"}],
+                   "owner_org": "hdx-test-org",
+                   'name': 'test_activity_blank_last_modified_null_existing',
+                   'title': 'Test Activity Blank Last Modified Null Existing',
+                   'resources': [
+                       {
+                           # No 'last_modified' key at all here - the resource's raw DB
+                           # last_modified column is left null.
+                           'url': 'https://example.com/blank_last_modified.csv',
+                           'resource_type': 'url',
+                           'format': 'CSV',
+                           'name': 'blank_last_modified.csv',
+                       }
+                   ]
+                   }
+
+        context = {'ignore_auth': True,
+                   'model': model, 'session': model.Session, 'user': 'testsysadmin'}
+        created_package = self._get_action('package_create')(context, package)
+        existing_resource = created_package['resources'][0]
+        existing_resource_id = existing_resource['id']
+
+        update_dict = dict(created_package)
+        # An explicit blank string, NOT an omitted key - must normalize to None and
+        # match the (also null) raw existing value.
+        update_dict['resources'] = [dict(existing_resource, last_modified='')]
+
+        update_context = {'ignore_auth': True,
+                           'model': model, 'session': model.Session, 'user': 'testsysadmin'}
+
+        with mock.patch(
+            'ckanext.hdx_package.actions.update._manage_datastore_for_uploads'
+        ) as mock_manage_datastore:
+            self._get_action('package_update')(update_context, update_dict)
+
+        mock_manage_datastore.assert_called_once()
+        call_context, _ = mock_manage_datastore.call_args[0]
+        assert existing_resource_id not in call_context.get(FILE_WAS_UPLOADED, set())
+
+    def test_package_update_blank_last_modified_non_null_existing_reaches_manage_datastore(self):
+        """
+        Counterpart to test_package_update_blank_last_modified_null_existing_not_falsely_flagged:
+        an explicit blank last_modified sent against a resource that DOES have a real
+        (non-null) raw DB last_modified is a genuine explicit clearing - isodate()
+        converts it to None, which differs from the existing non-null raw value, so
+        CKAN core's resource_dict_save() sees `'last_modified' in changed` and sets
+        obj.url_changed = True. This must still be flagged into
+        context[FILE_WAS_UPLOADED], proving the fix for the null-existing case above
+        doesn't also mask a real explicit-clear change.
+        """
+        from ckanext.hdx_package.helpers.constants import FILE_WAS_UPLOADED
+
+        package = {"package_creator": "test function",
+                   "private": False,
+                   "dataset_date": "[1960-01-01 TO 2012-12-31]",
+                   "caveats": "These are the caveats",
+                   "license_other": "TEST OTHER LICENSE",
+                   "methodology": "This is a test methodology",
+                   "dataset_source": "World Bank",
+                   "license_id": "hdx-other",
+                   "notes": "This is a test activity",
+                   "groups": [{"name": "roger"}],
+                   "owner_org": "hdx-test-org",
+                   'name': 'test_activity_blank_last_modified_non_null_existing',
+                   'title': 'Test Activity Blank Last Modified Non Null Existing',
+                   'resources': [
+                       {
+                           'url': 'https://example.com/blank_last_modified_real.csv',
+                           'resource_type': 'url',
+                           'format': 'CSV',
+                           'name': 'blank_last_modified_real.csv',
+                           'last_modified': '2024-01-01T00:00:00',
+                       }
+                   ]
+                   }
+
+        context = {'ignore_auth': True,
+                   'model': model, 'session': model.Session, 'user': 'testsysadmin'}
+        created_package = self._get_action('package_create')(context, package)
+        existing_resource = created_package['resources'][0]
+        existing_resource_id = existing_resource['id']
+
+        update_dict = dict(created_package)
+        update_dict['resources'] = [dict(existing_resource, last_modified='')]
+
+        update_context = {'ignore_auth': True,
+                           'model': model, 'session': model.Session, 'user': 'testsysadmin'}
+
+        with mock.patch(
+            'ckanext.hdx_package.actions.update._manage_datastore_for_uploads'
+        ) as mock_manage_datastore:
+            self._get_action('package_update')(update_context, update_dict)
+
+        mock_manage_datastore.assert_called_once()
+        call_context, _ = mock_manage_datastore.call_args[0]
+        assert existing_resource_id in call_context.get(FILE_WAS_UPLOADED, set())
+
     def test_package_update_malformed_resource_id_does_not_crash(self):
         """
         Regression test: the pre-validation stage-1 loop performs `in`/`.get()`
@@ -959,6 +1080,73 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
         # an upload-type resource, but with a genuinely different filename at the end -
         # simulating the stored file having actually changed.
         changed_download_url = existing_resource['url'].rsplit('/', 1)[0] + '/renamed_upload.csv'
+        update_dict['resources'] = [dict(existing_resource, url=changed_download_url)]
+
+        update_context = {'ignore_auth': True,
+                           'model': model, 'session': model.Session, 'user': 'testsysadmin'}
+
+        with mock.patch(
+            'ckanext.hdx_package.actions.update._manage_datastore_for_uploads'
+        ) as mock_manage_datastore:
+            self._get_action('package_update')(update_context, update_dict)
+
+        mock_manage_datastore.assert_called_once()
+        call_context, call_package_dict = mock_manage_datastore.call_args[0]
+        assert existing_resource_id in call_context.get(FILE_WAS_UPLOADED, set())
+        assert call_package_dict.get('id') == created_package['id']
+
+    def test_package_update_upload_resource_query_string_change_reaches_manage_datastore(self):
+        """
+        Regression test for _normalize_resource_url_for_comparison() matching core's
+        EXACT string operation for url_type == 'upload'. resource_dict_save() itself
+        does `res_dict['url'] = res_dict['url'].rsplit('/')[-1]` - a plain split on
+        the last '/' that keeps a trailing query string/fragment intact. It must NOT
+        use find_filename_in_url() (which parses the url and takes only
+        path.basename(), silently dropping any query string/fragment) - otherwise a
+        real change from '.../file.csv?version=1' to '.../file.csv?version=2' would be
+        stripped down to 'file.csv' on both sides and compare as unchanged here, even
+        though core itself stores the changed, query-string-inclusive value and would
+        set obj.url_changed = True.
+        """
+        from ckanext.hdx_package.helpers.constants import FILE_WAS_UPLOADED
+
+        package = {"package_creator": "test function",
+                   "private": False,
+                   "dataset_date": "[1960-01-01 TO 2012-12-31]",
+                   "caveats": "These are the caveats",
+                   "license_other": "TEST OTHER LICENSE",
+                   "methodology": "This is a test methodology",
+                   "dataset_source": "World Bank",
+                   "license_id": "hdx-other",
+                   "notes": "This is a test activity",
+                   "groups": [{"name": "roger"}],
+                   "owner_org": "hdx-test-org",
+                   'name': 'test_activity_upload_query_string_changed',
+                   'title': 'Test Activity Upload Query String Changed',
+                   'resources': [
+                       {
+                           'url': 'existing_upload.csv?version=1',
+                           'url_type': 'upload',
+                           'resource_type': 'file.upload',
+                           'format': 'CSV',
+                           'name': 'existing_upload.csv',
+                       }
+                   ]
+                   }
+
+        context = {'ignore_auth': True,
+                   'model': model, 'session': model.Session, 'user': 'testsysadmin'}
+        created_package = self._get_action('package_create')(context, package)
+        existing_resource = created_package['resources'][0]
+        existing_resource_id = existing_resource['id']
+
+        update_dict = dict(created_package)
+        # Same download-url shape the incoming resource dict would normally carry for
+        # an upload-type resource, but with a genuinely different query string at the
+        # end - the actual filename portion (path only) is identical, so a
+        # path.basename()-based comparison would wrongly see no change at all here.
+        changed_download_url = existing_resource['url'].rsplit('?', 1)[0] + '?version=2'
+        assert changed_download_url != existing_resource['url']
         update_dict['resources'] = [dict(existing_resource, url=changed_download_url)]
 
         update_context = {'ignore_auth': True,

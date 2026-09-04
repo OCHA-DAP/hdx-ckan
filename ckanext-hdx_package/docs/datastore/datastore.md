@@ -50,10 +50,10 @@ Iterates over resource ids in `context[FILE_WAS_UPLOADED]`. Eligibility is compu
 
 1. Returns immediately if `FILE_WAS_UPLOADED` is absent from context.
 2. Reads and normalises supported formats once via `_normalize_supported_formats`: `ckan.datapusher.formats` → fallback `ckanext.datapusher_plus.formats`.
-3. Calls `hdx_is_package_allowed_for_datastore` **once per package**. If it raises, logs the exception and returns immediately without submitting or deleting (fail open).
+3. Calls `hdx_is_package_allowed_for_datastore` **once per package** as a precheck. If it raises, logs the exception and returns immediately without submitting or deleting (fail open).
 4. For each uploaded resource id:
-   - Computes `eligible`: format is in supported formats **and** package is in the allowlist **and** `url_type != "datapusher"`.
-   - If **eligible** → calls `datapusher_plus._submit_to_datapusher()`. Any existing datastore table is replaced by the DP+ job itself.
+   - Computes `eligible`: format is in supported formats **and** package is in the allowlist (per the precheck above) **and** `url_type != "datapusher"`.
+   - If **eligible** → calls `datapusher_plus._submit_to_datapusher()`, which — in the pinned `datapusher-plus` dependency (`src/datapusher-plus/ckanext/datapusher_plus/plugin.py`) — calls `hdx_is_package_allowed_for_datastore` **again**, per resource, before actually submitting. So an eligible package/resource pair triggers **two** allowlist lookups in total for that resource: one package-level precheck here, plus one more inside the plugin per submitted resource. Any existing datastore table is replaced by the DP+ job itself.
    - If **not eligible** → calls `_datastore_table_exists()` to check whether a real table exists. If it does, calls `datastore_delete` with `force=True`. The delete is wrapped in `try/except` so a cleanup failure never aborts the dataset update.
 
 ### `_datastore_table_exists(resource_id)`

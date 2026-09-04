@@ -210,9 +210,15 @@ def _normalize_resource_url_for_comparison(url: Any, url_type: Any) -> Any:
     Normalizes a resource url for a like-for-like comparison against
     existing_resource_urls (see package_update() below).
 
-    For url_type == 'upload': mirrors the raw filename comparison
-    resource_dict_save() itself does (ckan/lib/dictization/model_save.py:
-    `res_dict['url'] = res_dict['url'].rsplit('/')[-1]`), via find_filename_in_url().
+    For url_type == 'upload': mirrors the EXACT string operation
+    resource_dict_save() itself does (ckan/lib/dictization/model_save.py:41:
+    `res_dict['url'] = res_dict['url'].rsplit('/')[-1]`) - a plain split on the
+    last '/', NOT find_filename_in_url() (which parses the url and takes only
+    path.basename(), silently dropping any query string/fragment). For a url
+    like '.../file.csv?version=2', core's rsplit keeps 'file.csv?version=2'
+    intact, so a change from '...?version=1' to '...?version=2' IS a real
+    stored-url change there; using find_filename_in_url() here instead would
+    strip both down to 'file.csv' and miss that change entirely.
 
     For every other url_type: only strips surrounding whitespace. Any http(s)://
     scheme is deliberately left untouched here - see _urls_match_for_comparison()
@@ -233,7 +239,7 @@ def _normalize_resource_url_for_comparison(url: Any, url_type: Any) -> Any:
         return url
     normalized = url.strip()
     if url_type == 'upload':
-        return find_filename_in_url(normalized)
+        return normalized.rsplit('/', 1)[-1]
     return normalized
 
 
@@ -285,15 +291,27 @@ def _normalize_last_modified_for_comparison(value: Any) -> Any:
 
     Runs BEFORE lib_plugins.plugin_validate() below, so a string `value` here
     has NOT yet been through the resource schema's isodate validator
-    (ckan/logic/validators.py: isodate(), which itself parses via
-    h.date_str_to_datetime()) - so two equivalent-but-differently-formatted
-    accepted strings (e.g. '2024-01-01T00:00:00' vs
-    '2024-01-01T00:00:00.000000') would otherwise compare unequal here even
-    though CKAN's own from_dict() would consider them the same value once
-    parsed. We parse with that same date parser before comparing. An invalid
-    string is left as-is (unparsed) rather than raising here - validation
-    further down is what's responsible for rejecting it.
+    (ckan/logic/validators.py: isodate()) - which special-cases an empty
+    string to `None` BEFORE attempting to parse it at all (`if value == '':
+    return None`), and only then parses everything else via
+    h.date_str_to_datetime(). We mirror that same empty-string-to-None
+    special case here first: without it, a caller explicitly blanking
+    last_modified (value == '') would compare as the literal string '' against
+    the raw DB value below - almost certainly a mismatch even when the DB
+    value is already None/blank - falsely flagging a resource that
+    resource_dict_save() itself would see as unchanged (None == None once
+    isodate has run).
+
+    Beyond that, we parse with the same date parser isodate() itself uses
+    (h.date_str_to_datetime()) before comparing, so two equivalent-but-
+    differently-formatted accepted strings (e.g. '2024-01-01T00:00:00' vs
+    '2024-01-01T00:00:00.000000') don't compare unequal here even though
+    CKAN's own from_dict() would consider them the same value once parsed.
+    An invalid string is left as-is (unparsed) rather than raising here -
+    validation further down is what's responsible for rejecting it.
     """
+    if value == '':
+        return None
     if isinstance(value, datetime.datetime):
         return value.isoformat()
     if isinstance(value, str):
@@ -302,6 +320,41 @@ def _normalize_last_modified_for_comparison(value: Any) -> Any:
         except (TypeError, ValueError):
             return value
     return value
+
+
+def _last_modified_matches_for_comparison(
+        existing_last_modified: Any, incoming_last_modified: Any, existing_metadata_modified: Any) -> bool:
+    """
+    Compares an existing (pre-update, DB-stored, RAW) resource last_modified
+    against an incoming (caller-supplied) one, both already run through
+    _normalize_last_modified_for_comparison() above.
+
+    A plain equality check against the raw DB value is exactly what CKAN
+    core's own from_dict()/resource_dict_save() effectively do once isodate()
+    has parsed the incoming value - including a blank incoming value
+    normalizing to None, matching a null (never-set) raw DB value with no
+    false positive. See _normalize_last_modified_for_comparison() above for
+    why the blank -> None step matters here.
+
+    The one deliberate departure from a plain raw comparison: when the raw DB
+    value is None, we ALSO accept an incoming value that matches the
+    resource's metadata_modified as "unchanged". This is not something core
+    itself does - it's specifically to tolerate a normal package_show() ->
+    edit-something-else -> package_update() round trip: get.py's
+    _additional_hdx_resource_show_processing() (ckanext-hdx_package/
+    ckanext/hdx_package/actions/get.py:541-542) synthesizes
+    `last_modified = metadata_modified` on read whenever the raw column is
+    None/falsy, so that same synthesized value normally comes right back in
+    the resources array on the next package_update() call even when the
+    caller never touched last_modified at all. Without this, that ordinary
+    round trip would look identical to a real explicit last_modified being
+    set for the first time, and would be false-flagged every time.
+    """
+    if incoming_last_modified == existing_last_modified:
+        return True
+    if existing_last_modified is None and incoming_last_modified is not None:
+        return incoming_last_modified == existing_metadata_modified
+    return False
 
 
 def _datastore_table_exists(resource_id: str) -> bool:
@@ -447,9 +500,15 @@ def package_update(
     # never a full-table scan - to mirror that cross-package case too.
     existing_resource_ids = {r.id for r in pkg.resources_all}
     existing_resource_urls = {r.id: r.url for r in pkg.resources_all}
-    existing_resource_last_modified = {
-        r.id: (r.last_modified or r.metadata_modified) for r in pkg.resources_all
-    }
+    # Raw, unmodified DB last_modified snapshot - deliberately NOT falling back to
+    # metadata_modified here (see existing_resource_metadata_modified and
+    # _last_modified_matches_for_comparison() above for how that round-trip
+    # tolerance is applied instead, without corrupting this raw baseline). Comparing
+    # against the raw value is what lets a blank/None incoming last_modified
+    # correctly match a null raw DB value (see _normalize_last_modified_for_comparison()
+    # above) instead of being compared against a non-null synthesized fallback.
+    existing_resource_last_modified = {r.id: r.last_modified for r in pkg.resources_all}
+    existing_resource_metadata_modified = {r.id: r.metadata_modified for r in pkg.resources_all}
 
     _incoming_resource_ids = [
         r.get('id') for r in data_dict.get('resources', [])
@@ -467,7 +526,10 @@ def package_update(
             {r.id: r.url for r in matching_existing_resources}
         )
         existing_resource_last_modified.update(
-            {r.id: (r.last_modified or r.metadata_modified) for r in matching_existing_resources}
+            {r.id: r.last_modified for r in matching_existing_resources}
+        )
+        existing_resource_metadata_modified.update(
+            {r.id: r.metadata_modified for r in matching_existing_resources}
         )
 
     # immutable fields
@@ -540,11 +602,12 @@ def package_update(
         # This runs BEFORE lib_plugins.plugin_validate() below, so a caller-supplied 'id'
         # is still raw, unvalidated input here - it could be a malformed, unhashable value
         # (e.g. a list/dict) instead of the string the UUID validator expects. `in`/`.get()`
-        # against existing_resource_ids/existing_resource_urls/existing_resource_last_modified
-        # (all keyed by real string ids) would raise TypeError on such a value, crashing
-        # before validation ever gets a chance to reject it with a proper ValidationError.
-        # We catch that here and simply treat it as "not an existing resource" for these
-        # comparisons - consistent with it not actually matching any real existing id.
+        # against existing_resource_ids/existing_resource_urls/existing_resource_last_modified/
+        # existing_resource_metadata_modified (all keyed by real string ids) would raise
+        # TypeError on such a value, crashing before validation ever gets a chance to reject
+        # it with a proper ValidationError. We catch that here and simply treat it as
+        # "not an existing resource" for these comparisons - consistent with it not actually
+        # matching any real existing id.
         resource_id = resource.get('id')
         try:
             resource_id_is_existing = resource_id in existing_resource_ids
@@ -552,34 +615,49 @@ def package_update(
             resource_id_is_existing = False
         resource_was_new.append(not resource_id_is_existing)
 
-        # An existing resource whose 'url' changed, with no 'upload'/'clear_upload' key at
-        # all (e.g. a link-type resource whose url is edited directly through the form/API)
-        # is NOT covered by the 'clear_upload'/'upload' branch just below, so it would
-        # otherwise never be flagged and never reach _manage_datastore_for_uploads(). This
-        # mirrors what CKAN core's resource_dict_save() itself checks to set
-        # obj.url_changed = True (which used to drive DatapusherPlusPlugin.notify(), now an
-        # intentional no-op - see existing_resource_urls above for the full rationale).
-        # Both sides are run through _normalize_resource_url_for_comparison() (whitespace/
+        # An existing resource whose 'url' or 'last_modified' changed, with no
+        # 'upload'/'clear_upload' key at all (e.g. a link-type resource whose url is edited
+        # directly through the form/API) is NOT covered by the 'clear_upload'/'upload'
+        # branch just below, so it would otherwise never be flagged and never reach
+        # _manage_datastore_for_uploads(). This mirrors what CKAN core's resource_dict_save()
+        # itself checks to set obj.url_changed = True (which used to drive
+        # DatapusherPlusPlugin.notify(), now an intentional no-op - see existing_resource_urls
+        # above for the full rationale).
+        # url: both sides are run through _normalize_resource_url_for_comparison() (whitespace/
         # filename normalization only) and then compared via _urls_match_for_comparison(),
         # which reconciles CKAN's synthesized scheme-less-vs-http:// pair without also
         # masking a genuine scheme change (e.g. http -> https) - see that helper's
         # docstring for the full rationale.
+        # last_modified: only compared when the caller's resource dict actually carries a
+        # 'last_modified' key at all - an absent key means "leave it unchanged" (mirroring
+        # from_dict()'s own `if col.name in _dict` gate: a column simply not present in the
+        # dict is never touched), NOT "clear it". Both sides are run through
+        # _normalize_last_modified_for_comparison() (which special-cases a blank incoming
+        # string to None, mirroring isodate()) and then compared via
+        # _last_modified_matches_for_comparison(), which additionally tolerates a normal
+        # package_show() round-trip re-submitting a synthesized metadata_modified passthrough
+        # against a null raw DB value - see that helper's docstring for the full rationale.
         # Flagged here at stage 1 (pre-validation), same as a real upload replacement,
-        # since a url change is likewise "new data for this resource" from
+        # since a url/last_modified change is likewise "new data for this resource" from
         # hdx_reset_on_file_upload's POV.
         resource_url_type = resource.get('url_type')
         resource_url = _normalize_resource_url_for_comparison(resource.get('url'), resource_url_type)
+        resource_has_last_modified_key = 'last_modified' in resource
         resource_last_modified = _normalize_last_modified_for_comparison(resource.get('last_modified'))
         existing_url = None
         existing_last_modified = None
+        existing_metadata_modified = None
         if resource_id_is_existing:
             existing_url = _normalize_resource_url_for_comparison(
                 existing_resource_urls.get(resource_id), resource_url_type)
             existing_last_modified = _normalize_last_modified_for_comparison(
                 existing_resource_last_modified.get(resource_id))
+            existing_metadata_modified = _normalize_last_modified_for_comparison(
+                existing_resource_metadata_modified.get(resource_id))
         if resource_id_is_existing and (
                 (resource_url is not None and not _urls_match_for_comparison(existing_url, resource_url))
-                or (resource_last_modified is not None and resource_last_modified != existing_last_modified)):
+                or (resource_has_last_modified_key and not _last_modified_matches_for_comparison(
+                    existing_last_modified, resource_last_modified, existing_metadata_modified))):
             context.setdefault(FILE_WAS_UPLOADED, set()).add(resource_id)
 
         # I believe that unless a resource has either an upload field or is marked to be deleted
