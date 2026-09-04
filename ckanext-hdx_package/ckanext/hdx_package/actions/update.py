@@ -237,7 +237,7 @@ def _normalize_resource_url_for_comparison(url: Any, url_type: Any) -> Any:
     return normalized
 
 
-_URL_SCHEME_RE = re.compile(r'^[a-zA-Z][a-zA-Z0-9+.\-]*://')
+_URL_SCHEME_RE = re.compile(r'^[a-zA-Z][a-zA-Z0-9+.\-]*:')
 
 
 def _urls_match_for_comparison(existing_url: Any, incoming_url: Any) -> bool:
