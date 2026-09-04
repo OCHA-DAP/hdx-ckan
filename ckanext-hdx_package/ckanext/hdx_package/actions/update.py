@@ -430,6 +430,7 @@ def package_update(
         # Flagged here at stage 1 (pre-validation), same as a real upload replacement,
         # since a url change is likewise "new data for this resource" from
         # hdx_reset_on_file_upload's POV.
+        resource_id = resource.get('id')
         resource_url = resource.get('url')
         if resource.get('url_type') == 'upload':
             resource_url = find_filename_in_url(resource_url)
