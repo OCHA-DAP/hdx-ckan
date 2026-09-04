@@ -204,6 +204,46 @@ def _normalize_supported_formats(config_value: Any) -> set[str]:
     return normalized
 
 
+def _normalize_resource_url_for_comparison(url: Any, url_type: Any) -> Any:
+    """
+    Normalizes a resource url for a like-for-like comparison against
+    existing_resource_urls (see package_update() below).
+
+    For url_type == 'upload': mirrors the raw filename comparison
+    resource_dict_save() itself does (ckan/lib/dictization/model_save.py:
+    `res_dict['url'] = res_dict['url'].rsplit('/')[-1]`), via find_filename_in_url().
+
+    For every other url_type: strips a leading http(s):// scheme and surrounding
+    whitespace. This matters because model_dictize.resource_dictize()
+    (ckan/lib/dictization/model_dictize.py:145-147) unconditionally prepends
+    'http://' to a stored scheme-less url whenever the dict isn't built with
+    context['for_edit']=True - which is exactly the shape of dict a normal
+    package_show() -> edit -> package_update() round trip carries. Without
+    stripping that scheme back off before comparing, an unrelated field edit on
+    a resource with a scheme-less stored url would look like a URL change and
+    wrongly flag the resource into FILE_WAS_UPLOADED.
+    """
+    if url is None:
+        return None
+    normalized = url.strip()
+    if url_type == 'upload':
+        return find_filename_in_url(normalized)
+    return re.sub(r'^https?://', '', normalized, flags=re.IGNORECASE)
+
+
+def _normalize_last_modified_for_comparison(value: Any) -> Any:
+    """
+    Normalizes a resource's last_modified value for a like-for-like comparison
+    against existing_resource_last_modified (see package_update() below),
+    mirroring how DictMixin.from_dict() (ckan/model/base.py) itself compares:
+    a datetime DB value is rendered to isoformat() before comparing against a
+    string incoming value.
+    """
+    if isinstance(value, datetime.datetime):
+        return value.isoformat()
+    return value
+
+
 def _datastore_table_exists(resource_id: str) -> bool:
     try:
         _get_action('datastore_search')(
@@ -352,6 +392,29 @@ def package_update(
     # _manage_datastore_for_uploads() call below.
     existing_resource_urls = {r.id: r.url for r in pkg.resources_all}
 
+    # Captured for the same reason/point as existing_resource_urls above - the pre-update
+    # last_modified of every existing resource, keyed by id. CKAN core's resource_dict_save()
+    # sets obj.url_changed = True not just on a url change, but ALSO when an EXISTING
+    # resource's last_modified changes (`'last_modified' in changed and not new` -
+    # ckan/lib/dictization/model_save.py:50-51). This covers a harvester/package_revise
+    # bumping last_modified for content at a stable remote URL to signal "re-fetch me" -
+    # without tracking this too, that case would silently stop reaching DataPusher+ now
+    # that the IResourceUrlChange hook is an intentional no-op (see existing_resource_urls
+    # above for the full rationale).
+    #
+    # We fall back to r.metadata_modified when the raw last_modified column is None,
+    # mirroring _additional_hdx_resource_show_processing()'s own display fallback
+    # (ckanext-hdx_package/ckanext/hdx_package/actions/get.py:541-542:
+    # `if not resource_dict.get('last_modified'): resource_dict['last_modified'] =
+    # resource_dict['metadata_modified']`). Without this, a normal package_show() ->
+    # edit-something-else -> package_update() round trip on a resource whose real
+    # last_modified was never set would carry that synthesized metadata_modified value
+    # back in as 'last_modified', which would never match the raw (None) DB value and
+    # would false-flag on every no-op save.
+    existing_resource_last_modified = {
+        r.id: (r.last_modified or r.metadata_modified) for r in pkg.resources_all
+    }
+
     # immutable fields
     data_dict["id"] = pkg.id
     data_dict['type'] = pkg.type
@@ -427,16 +490,24 @@ def package_update(
         # mirrors what CKAN core's resource_dict_save() itself checks to set
         # obj.url_changed = True (which used to drive DatapusherPlusPlugin.notify(), now an
         # intentional no-op - see existing_resource_urls above for the full rationale).
+        # Both sides are run through _normalize_resource_url_for_comparison() before
+        # comparing - a raw comparison would false-flag a normal read-modify-write on a
+        # scheme-less stored url (model_dictize.resource_dictize() unconditionally prepends
+        # 'http://' to it - see that helper's docstring for the full rationale).
         # Flagged here at stage 1 (pre-validation), same as a real upload replacement,
         # since a url change is likewise "new data for this resource" from
         # hdx_reset_on_file_upload's POV.
         resource_id = resource.get('id')
-        resource_url = resource.get('url')
-        if resource.get('url_type') == 'upload':
-            resource_url = find_filename_in_url(resource_url)
-        if (resource_id in existing_resource_ids
-                and resource_url is not None
-                and resource_url != existing_resource_urls.get(resource_id)):
+        resource_url_type = resource.get('url_type')
+        resource_url = _normalize_resource_url_for_comparison(resource.get('url'), resource_url_type)
+        existing_url = _normalize_resource_url_for_comparison(
+            existing_resource_urls.get(resource_id), resource_url_type)
+        resource_last_modified = _normalize_last_modified_for_comparison(resource.get('last_modified'))
+        existing_last_modified = _normalize_last_modified_for_comparison(
+            existing_resource_last_modified.get(resource_id))
+        if resource_id in existing_resource_ids and (
+                (resource_url is not None and resource_url != existing_url)
+                or (resource_last_modified is not None and resource_last_modified != existing_last_modified)):
             context.setdefault(FILE_WAS_UPLOADED, set()).add(resource_id)
 
         # I believe that unless a resource has either an upload field or is marked to be deleted

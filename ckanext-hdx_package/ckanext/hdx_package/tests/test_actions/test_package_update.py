@@ -4,6 +4,7 @@ Created on Sep 9, 2014
 @author: alexandru-m-g
 '''
 import pytest
+import datetime
 import json
 import uuid
 import unittest.mock as mock
@@ -515,6 +516,266 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
         # No 'upload'/'clear_upload' key at all here - just a plain url edit, which is
         # exactly the case existing_resource_urls exists to cover.
         update_dict['resources'] = [dict(existing_resource, url='https://example.com/changed_url_change.csv')]
+
+        update_context = {'ignore_auth': True,
+                           'model': model, 'session': model.Session, 'user': 'testsysadmin'}
+
+        with mock.patch(
+            'ckanext.hdx_package.actions.update._manage_datastore_for_uploads'
+        ) as mock_manage_datastore:
+            self._get_action('package_update')(update_context, update_dict)
+
+        mock_manage_datastore.assert_called_once()
+        call_context, call_package_dict = mock_manage_datastore.call_args[0]
+        assert existing_resource_id in call_context.get(FILE_WAS_UPLOADED, set())
+        assert call_package_dict.get('id') == created_package['id']
+
+    def test_package_update_upload_resource_unchanged_url_not_falsely_flagged(self):
+        """
+        Regression test for the url_type == 'upload' branch of the url-change detection
+        (existing_resource_urls comparison): a "load, then save back unchanged" round trip
+        on an existing upload-type resource - e.g. package_show() then package_update()
+        with no actual edits, a very common caller pattern used throughout this test file
+        (see `update_dict = dict(created_package)` elsewhere) - must NOT be falsely
+        flagged into context[FILE_WAS_UPLOADED].
+
+        For url_type == 'upload' resources, model_dictize.resource_dictize() rewrites the
+        raw stored 'url' (just the munged filename, e.g. "existing_upload.csv") into a
+        fully qualified download URL (e.g. ".../resource/<id>/download/existing_upload.csv")
+        whenever the dict isn't built with context['for_edit']=True. Comparing that full
+        download URL directly against existing_resource_urls.get(resource_id) (the raw
+        filename) would ALWAYS differ - even with zero real change - and wrongly trigger
+        DataPusher+ resubmission/datastore churn on every no-op save. package_update()
+        must instead unwrap the incoming url via find_filename_in_url() before comparing,
+        exactly like the fix does.
+        """
+        from ckanext.hdx_package.helpers.constants import FILE_WAS_UPLOADED
+
+        package = {"package_creator": "test function",
+                   "private": False,
+                   "dataset_date": "[1960-01-01 TO 2012-12-31]",
+                   "caveats": "These are the caveats",
+                   "license_other": "TEST OTHER LICENSE",
+                   "methodology": "This is a test methodology",
+                   "dataset_source": "World Bank",
+                   "license_id": "hdx-other",
+                   "notes": "This is a test activity",
+                   "groups": [{"name": "roger"}],
+                   "owner_org": "hdx-test-org",
+                   'name': 'test_activity_upload_url_unchanged',
+                   'title': 'Test Activity Upload Url Unchanged',
+                   'resources': [
+                       {
+                           'url': 'existing_upload.csv',
+                           'url_type': 'upload',
+                           'resource_type': 'file.upload',
+                           'format': 'CSV',
+                           'name': 'existing_upload.csv',
+                       }
+                   ]
+                   }
+
+        context = {'ignore_auth': True,
+                   'model': model, 'session': model.Session, 'user': 'testsysadmin'}
+        created_package = self._get_action('package_create')(context, package)
+        existing_resource = created_package['resources'][0]
+        existing_resource_id = existing_resource['id']
+
+        # Sanity check: package_show() (no for_edit) really does rewrite the raw filename
+        # into a fully qualified download URL for upload-type resources - otherwise this
+        # test wouldn't actually exercise the unwrapping logic being regression-tested.
+        assert existing_resource['url_type'] == 'upload'
+        assert existing_resource['url'] != 'existing_upload.csv'
+        assert existing_resource['url'].endswith('/existing_upload.csv')
+
+        # No edits at all - just the exact dict package_show() returned, re-saved as-is.
+        update_dict = dict(created_package)
+
+        update_context = {'ignore_auth': True,
+                           'model': model, 'session': model.Session, 'user': 'testsysadmin'}
+
+        with mock.patch(
+            'ckanext.hdx_package.actions.update._manage_datastore_for_uploads'
+        ) as mock_manage_datastore:
+            self._get_action('package_update')(update_context, update_dict)
+
+        mock_manage_datastore.assert_called_once()
+        call_context, _ = mock_manage_datastore.call_args[0]
+        assert existing_resource_id not in call_context.get(FILE_WAS_UPLOADED, set())
+
+    def test_package_update_scheme_less_url_round_trip_not_falsely_flagged(self):
+        """
+        Regression test: model_dictize.resource_dictize() (ckan/lib/dictization/
+        model_dictize.py:145-147) unconditionally prepends 'http://' to a stored
+        scheme-less url whenever the dict isn't built with context['for_edit']=True -
+        exactly the shape of dict a normal package_show() -> edit-something-else ->
+        package_update() round trip carries. Comparing that raw, scheme-prefixed
+        incoming url directly against existing_resource_urls (the raw, scheme-less DB
+        value) would false-flag every such round trip on a scheme-less link resource,
+        even when the url itself never actually changed. Both sides must be normalized
+        (scheme stripped) via _normalize_resource_url_for_comparison() before comparing.
+        """
+        from ckanext.hdx_package.helpers.constants import FILE_WAS_UPLOADED
+
+        package = {"package_creator": "test function",
+                   "private": False,
+                   "dataset_date": "[1960-01-01 TO 2012-12-31]",
+                   "caveats": "These are the caveats",
+                   "license_other": "TEST OTHER LICENSE",
+                   "methodology": "This is a test methodology",
+                   "dataset_source": "World Bank",
+                   "license_id": "hdx-other",
+                   "notes": "This is a test activity",
+                   "groups": [{"name": "roger"}],
+                   "owner_org": "hdx-test-org",
+                   'name': 'test_activity_scheme_less_url',
+                   'title': 'Test Activity Scheme Less Url',
+                   'resources': [
+                       {
+                           'url': 'example.com/scheme_less.csv',
+                           'resource_type': 'url',
+                           'format': 'CSV',
+                           'name': 'scheme_less.csv',
+                       }
+                   ]
+                   }
+
+        context = {'ignore_auth': True,
+                   'model': model, 'session': model.Session, 'user': 'testsysadmin'}
+        created_package = self._get_action('package_create')(context, package)
+        existing_resource = created_package['resources'][0]
+        existing_resource_id = existing_resource['id']
+
+        # Sanity check: package_show() (no for_edit) really does rewrite a scheme-less
+        # stored url into one prefixed with 'http://' - otherwise this test wouldn't
+        # actually exercise the scheme-stripping logic being regression-tested.
+        assert existing_resource['url'] == 'http://example.com/scheme_less.csv'
+
+        # No edits at all - just the exact dict package_show() returned, re-saved as-is.
+        update_dict = dict(created_package)
+
+        update_context = {'ignore_auth': True,
+                           'model': model, 'session': model.Session, 'user': 'testsysadmin'}
+
+        with mock.patch(
+            'ckanext.hdx_package.actions.update._manage_datastore_for_uploads'
+        ) as mock_manage_datastore:
+            self._get_action('package_update')(update_context, update_dict)
+
+        mock_manage_datastore.assert_called_once()
+        call_context, _ = mock_manage_datastore.call_args[0]
+        assert existing_resource_id not in call_context.get(FILE_WAS_UPLOADED, set())
+
+    def test_package_update_stable_url_last_modified_change_reaches_manage_datastore(self):
+        """
+        Regression test for existing_resource_last_modified: CKAN core's
+        resource_dict_save() sets obj.url_changed = True not just on a url change, but
+        ALSO when an EXISTING resource's last_modified changes
+        (`'last_modified' in changed and not new` - ckan/lib/dictization/
+        model_save.py:50-51). A harvester/package_revise call that bumps last_modified
+        for content at a STABLE remote url (no url change at all) - to signal "the
+        remote content changed, re-fetch me" - must still reach
+        _manage_datastore_for_uploads(), now that the IResourceUrlChange hook is an
+        intentional no-op.
+        """
+        from ckanext.hdx_package.helpers.constants import FILE_WAS_UPLOADED
+
+        package = {"package_creator": "test function",
+                   "private": False,
+                   "dataset_date": "[1960-01-01 TO 2012-12-31]",
+                   "caveats": "These are the caveats",
+                   "license_other": "TEST OTHER LICENSE",
+                   "methodology": "This is a test methodology",
+                   "dataset_source": "World Bank",
+                   "license_id": "hdx-other",
+                   "notes": "This is a test activity",
+                   "groups": [{"name": "roger"}],
+                   "owner_org": "hdx-test-org",
+                   'name': 'test_activity_stable_url_last_modified',
+                   'title': 'Test Activity Stable Url Last Modified',
+                   'resources': [
+                       {
+                           'url': 'https://example.com/stable_url.csv',
+                           'resource_type': 'url',
+                           'format': 'CSV',
+                           'name': 'stable_url.csv',
+                       }
+                   ]
+                   }
+
+        context = {'ignore_auth': True,
+                   'model': model, 'session': model.Session, 'user': 'testsysadmin'}
+        created_package = self._get_action('package_create')(context, package)
+        existing_resource = created_package['resources'][0]
+        existing_resource_id = existing_resource['id']
+
+        update_dict = dict(created_package)
+        # url is UNCHANGED (stable remote url) - only last_modified is bumped, exactly
+        # as a harvester would do to signal "the remote content changed".
+        new_last_modified = (datetime.datetime.utcnow() + datetime.timedelta(days=1)).isoformat()
+        update_dict['resources'] = [dict(existing_resource, last_modified=new_last_modified)]
+
+        update_context = {'ignore_auth': True,
+                           'model': model, 'session': model.Session, 'user': 'testsysadmin'}
+
+        with mock.patch(
+            'ckanext.hdx_package.actions.update._manage_datastore_for_uploads'
+        ) as mock_manage_datastore:
+            self._get_action('package_update')(update_context, update_dict)
+
+        mock_manage_datastore.assert_called_once()
+        call_context, call_package_dict = mock_manage_datastore.call_args[0]
+        assert existing_resource_id in call_context.get(FILE_WAS_UPLOADED, set())
+        assert call_package_dict.get('id') == created_package['id']
+
+    def test_package_update_upload_resource_filename_change_reaches_manage_datastore(self):
+        """
+        Counterpart to test_package_update_upload_resource_unchanged_url_not_falsely_flagged:
+        an existing url_type == 'upload' resource whose underlying filename genuinely
+        changes (e.g. its stored 'url' changes from "existing_upload.csv" to
+        "renamed_upload.csv") - even with no 'upload'/'clear_upload' key present in the
+        incoming dict - must still be flagged into context[FILE_WAS_UPLOADED] and reach
+        _manage_datastore_for_uploads(). This proves find_filename_in_url() unwrapping is
+        only used for a like-for-like comparison and doesn't mask genuine changes.
+        """
+        from ckanext.hdx_package.helpers.constants import FILE_WAS_UPLOADED
+
+        package = {"package_creator": "test function",
+                   "private": False,
+                   "dataset_date": "[1960-01-01 TO 2012-12-31]",
+                   "caveats": "These are the caveats",
+                   "license_other": "TEST OTHER LICENSE",
+                   "methodology": "This is a test methodology",
+                   "dataset_source": "World Bank",
+                   "license_id": "hdx-other",
+                   "notes": "This is a test activity",
+                   "groups": [{"name": "roger"}],
+                   "owner_org": "hdx-test-org",
+                   'name': 'test_activity_upload_url_changed',
+                   'title': 'Test Activity Upload Url Changed',
+                   'resources': [
+                       {
+                           'url': 'existing_upload.csv',
+                           'url_type': 'upload',
+                           'resource_type': 'file.upload',
+                           'format': 'CSV',
+                           'name': 'existing_upload.csv',
+                       }
+                   ]
+                   }
+
+        context = {'ignore_auth': True,
+                   'model': model, 'session': model.Session, 'user': 'testsysadmin'}
+        created_package = self._get_action('package_create')(context, package)
+        existing_resource = created_package['resources'][0]
+        existing_resource_id = existing_resource['id']
+
+        update_dict = dict(created_package)
+        # Same download-url shape as the incoming resource dict would normally carry for
+        # an upload-type resource, but with a genuinely different filename at the end -
+        # simulating the stored file having actually changed.
+        changed_download_url = existing_resource['url'].rsplit('/', 1)[0] + '/renamed_upload.csv'
+        update_dict['resources'] = [dict(existing_resource, url=changed_download_url)]
 
         update_context = {'ignore_auth': True,
                            'model': model, 'session': model.Session, 'user': 'testsysadmin'}
@@ -1535,4 +1796,3 @@ class TestManageDatastoreForUploads:
             call.args[0]['id'] for call in fake_dp_plugin._submit_to_datapusher.call_args_list
         }
         assert submitted_ids == {resource_id_fails, resource_id_ok}
-
