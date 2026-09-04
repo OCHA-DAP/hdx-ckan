@@ -238,30 +238,37 @@ def _manage_datastore_for_uploads(context: Context, package_dict: Dict[str, Any]
         return
 
     for resource_id in uploaded_resource_ids:
-        resource_dict = next(
-            (r for r in package_dict.get('resources', []) if r.get('id') == resource_id), None
-        )
-        if not resource_dict:
-            continue
-        resource_format = (resource_dict.get('format') or '').lower()
-        eligible = (
-            resource_format in supported_formats
-            and hdx_allowed
-            and resource_dict.get('url_type') != 'datapusher'
-        )
-        if eligible:
-            for item in plugins.PluginImplementations(plugins.IResourceController):
-                if item.name == 'datapusher_plus':
-                    item._submit_to_datapusher(resource_dict)  # noqa
-        elif _datastore_table_exists(resource_id):
-            try:
-                _get_action('datastore_delete')(
-                    {'ignore_auth': True}, {'resource_id': resource_id, 'force': True}
-                )
-                log.info('Deleted datastore for resource %s (format=%s, hdx_allowed=%s)',
-                         resource_id, resource_format, hdx_allowed)
-            except Exception:
-                log.exception('Failed to delete datastore for resource %s', resource_id)
+        try:
+            resource_dict = next(
+                (r for r in package_dict.get('resources', []) if r.get('id') == resource_id), None
+            )
+            if not resource_dict:
+                continue
+            resource_format = (resource_dict.get('format') or '').lower()
+            eligible = (
+                resource_format in supported_formats
+                and hdx_allowed
+                and resource_dict.get('url_type') != 'datapusher'
+            )
+            if eligible:
+                for item in plugins.PluginImplementations(plugins.IResourceController):
+                    if item.name == 'datapusher_plus':
+                        item._submit_to_datapusher(resource_dict)  # noqa
+            elif _datastore_table_exists(resource_id):
+                try:
+                    _get_action('datastore_delete')(
+                        {'ignore_auth': True}, {'resource_id': resource_id, 'force': True}
+                    )
+                    log.info('Deleted datastore for resource %s (format=%s, hdx_allowed=%s)',
+                             resource_id, resource_format, hdx_allowed)
+                except Exception:
+                    log.exception('Failed to delete datastore for resource %s', resource_id)
+        except Exception:
+            # Fail open per-resource: a failure while submitting/looking up one resource's
+            # datastore state must not prevent the remaining flagged resource ids in this
+            # same package_update() call from being processed (see outer fail-open handling
+            # in package_update()).
+            log.exception('Failed to manage datastore for resource %s', resource_id)
 
 
 @ckanext.hdx_package.helpers.resource_triggers.common.trigger_4_resource_changes(
