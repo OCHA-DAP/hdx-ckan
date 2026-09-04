@@ -1056,7 +1056,7 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
 
     def test_package_update_cross_package_deleted_resource_id_flagged_pre_validation(self):
         """
-        Regression test (currently EXPECTED TO FAIL) for existing_resource_ids being
+        Regression test for existing_resource_ids being
         computed from pkg.resources_all - i.e. scoped to THIS package only - while CKAN
         core's resource_dict_save() looks the supplied id up GLOBALLY, with no package
         or state filter at all (`session.query(model.Resource).get(id)`).
@@ -1075,15 +1075,9 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
         replacement upload onto an existing (if resurrected/reassigned) resource, not a
         brand-new one.
 
-        What this action currently does: existing_resource_ids is built only from
-        package B's OWN pkg.resources_all, which cannot contain a row that (at the time
-        this is computed) still belongs to package A. So this resource is wrongly
-        classified as "new" here, and is NOT flagged during STAGE 1 (pre-validation) -
-        meaning hdx_reset_on_file_upload cannot see it as a real replacement upload
-        during validation, even though core itself treats it as one.
-
-        This test currently FAILS: it asserts the id IS flagged pre-validation
-        (matching core's real behavior), but today it is not.
+        This action extends existing_resource_ids with the matching global resource,
+        so the reused id is flagged during STAGE 1 (pre-validation), matching core's
+        treatment of it as a real replacement upload.
         """
         from ckanext.hdx_package.helpers.constants import FILE_WAS_UPLOADED
         import ckanext.hdx_package.actions.update as update_module
@@ -1185,8 +1179,8 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
             self._get_action('package_update')(update_context, update_dict)
 
         # Core treats this as a real replacement upload onto an EXISTING (resurrected)
-        # resource - so it should be flagged pre-validation, exactly like the
-        # same-package case. Today it is NOT (misclassified as new), so this fails.
+        # resource, so it is flagged pre-validation, exactly like the same-package
+        # case.
         assert reused_resource_id in captured_stage1_flags['ids']
 
     def test_package_update_http_to_https_url_change_reaches_manage_datastore(self):
