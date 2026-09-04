@@ -1125,7 +1125,7 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
                    'title': 'Test Activity Upload Query String Changed',
                    'resources': [
                        {
-                           'url': 'existing_upload.csv?version=1',
+                            'url': 'existing_upload.csv',
                            'url_type': 'upload',
                            'resource_type': 'file.upload',
                            'format': 'CSV',
