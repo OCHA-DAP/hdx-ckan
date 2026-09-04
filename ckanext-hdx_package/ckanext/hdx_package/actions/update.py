@@ -442,7 +442,7 @@ def package_update(
     # resource_dict_save()'s POV (it gets reassigned to package B by
     # package_resource_list_save(), ckan/lib/dictization/model_save.py:91-100), even
     # though it can never appear in package B's own pkg.resources_all. We extend the
-    # pkg-scoped set below with a small, targeted global lookup for exactly the
+    # pkg-scoped snapshots below with a small, targeted global lookup for exactly the
     # caller-supplied ids that are actually present in this call's incoming resources -
     # never a full-table scan - to mirror that cross-package case too.
     existing_resource_ids = {r.id for r in pkg.resources_all}
@@ -450,12 +450,12 @@ def package_update(
         r.get('id') for r in data_dict.get('resources', [])
         if isinstance(r, dict) and isinstance(r.get('id'), str) and r.get('id')
     ]
+    matching_existing_resources = []
     if _incoming_resource_ids:
-        existing_resource_ids |= {
-            row[0] for row in model.Session.query(model.Resource.id).filter(
+        matching_existing_resources = model.Session.query(model.Resource).filter(
                 model.Resource.id.in_(_incoming_resource_ids)
             ).all()
-        }
+        existing_resource_ids |= {resource.id for resource in matching_existing_resources}
 
     # Captured for the same reason and at the same point as existing_resource_ids above -
     # the pre-update url of every existing resource, keyed by id. Used further down to
@@ -495,6 +495,12 @@ def package_update(
     existing_resource_last_modified = {
         r.id: (r.last_modified or r.metadata_modified) for r in pkg.resources_all
     }
+    existing_resource_urls.update(
+        {r.id: r.url for r in matching_existing_resources}
+    )
+    existing_resource_last_modified.update(
+        {r.id: (r.last_modified or r.metadata_modified) for r in matching_existing_resources}
+    )
 
     # immutable fields
     data_dict["id"] = pkg.id
