@@ -14,7 +14,7 @@
     # via -r requirements.in
 -e git+https://github.com/datopian/ckanext-sitemap.git@88fb3b6242a64f58fbdb0f76c089c5b5c2984bf9#egg=ckanext-sitemap
     # via -r requirements.in
--e git+https://github.com/OCHA-DAP/datapusher-plus.git@0.2.104#egg=datapusher-plus
+-e git+https://github.com/OCHA-DAP/datapusher-plus.git@0.4.104-b3#egg=datapusher-plus
     # via -r requirements.in
 alembic==1.13.2
     # via -r requirements.in
