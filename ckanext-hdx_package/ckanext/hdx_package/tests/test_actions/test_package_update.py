@@ -1054,6 +1054,215 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
         call_context, _ = mock_manage_datastore.call_args[0]
         assert resource_id not in call_context.get(FILE_WAS_UPLOADED, set())
 
+    def test_package_update_cross_package_deleted_resource_id_flagged_pre_validation(self):
+        """
+        Regression test (currently EXPECTED TO FAIL) for existing_resource_ids being
+        computed from pkg.resources_all - i.e. scoped to THIS package only - while CKAN
+        core's resource_dict_save() looks the supplied id up GLOBALLY, with no package
+        or state filter at all (`session.query(model.Resource).get(id)`).
+
+        Setup: a resource is created in package A, then deleted (soft-delete: the row
+        still physically exists with state='deleted'). Its id is then reused as a
+        caller-supplied 'id' on a REAL file upload to a completely different package B.
+
+        What CKAN core actually does: the resource-id validator
+        (`resource_id_does_not_exist`, ckan/logic/validators.py) filters out deleted
+        rows when checking for a clash, so it lets this reused id through unblocked.
+        `resource_dict_save()` then finds the row via its unfiltered global lookup,
+        so `new = False` - it's treated as an EXISTING resource, and
+        `package_resource_list_save()` (ckan/lib/dictization/model_save.py:91-100)
+        reassigns its package_id to package B. From core's POV, this is a real
+        replacement upload onto an existing (if resurrected/reassigned) resource, not a
+        brand-new one.
+
+        What this action currently does: existing_resource_ids is built only from
+        package B's OWN pkg.resources_all, which cannot contain a row that (at the time
+        this is computed) still belongs to package A. So this resource is wrongly
+        classified as "new" here, and is NOT flagged during STAGE 1 (pre-validation) -
+        meaning hdx_reset_on_file_upload cannot see it as a real replacement upload
+        during validation, even though core itself treats it as one.
+
+        This test currently FAILS: it asserts the id IS flagged pre-validation
+        (matching core's real behavior), but today it is not.
+        """
+        from ckanext.hdx_package.helpers.constants import FILE_WAS_UPLOADED
+        import ckanext.hdx_package.actions.update as update_module
+
+        package_a = {"package_creator": "test function",
+                     "private": False,
+                     "dataset_date": "[1960-01-01 TO 2012-12-31]",
+                     "caveats": "These are the caveats",
+                     "license_other": "TEST OTHER LICENSE",
+                     "methodology": "This is a test methodology",
+                     "dataset_source": "World Bank",
+                     "license_id": "hdx-other",
+                     "notes": "This is a test activity",
+                     "groups": [{"name": "roger"}],
+                     "owner_org": "hdx-test-org",
+                     'name': 'test_activity_cross_pkg_source',
+                     'title': 'Test Activity Cross Pkg Source',
+                     'resources': [
+                         {
+                             'url': 'https://example.com/cross_package.csv',
+                             'resource_type': 'url',
+                             'format': 'CSV',
+                             'name': 'cross_package.csv',
+                         }
+                     ]
+                     }
+
+        context = {'ignore_auth': True,
+                   'model': model, 'session': model.Session, 'user': 'testsysadmin'}
+        created_package_a = self._get_action('package_create')(context, package_a)
+        reused_resource_id = created_package_a['resources'][0]['id']
+
+        # NOTE: uses a FRESH context for resource_delete/package_create/package_update
+        # below - resource_delete() sets context['defer_commit'] = True on whatever
+        # context it's given and never resets it, which would otherwise mask what this
+        # test is meant to verify (same reasoning as the same-package resurrection test
+        # above).
+        delete_context = {'ignore_auth': True,
+                           'model': model, 'session': model.Session, 'user': 'testsysadmin'}
+        self._get_action('resource_delete')(delete_context, {'id': reused_resource_id})
+
+        package_b = {"package_creator": "test function",
+                     "private": False,
+                     "dataset_date": "[1960-01-01 TO 2012-12-31]",
+                     "caveats": "These are the caveats",
+                     "license_other": "TEST OTHER LICENSE",
+                     "methodology": "This is a test methodology",
+                     "dataset_source": "World Bank",
+                     "license_id": "hdx-other",
+                     "notes": "This is a test activity",
+                     "groups": [{"name": "roger"}],
+                     "owner_org": "hdx-test-org",
+                     'name': 'test_activity_cross_pkg_target',
+                     'title': 'Test Activity Cross Pkg Target',
+                     }
+        create_b_context = {'ignore_auth': True,
+                            'model': model, 'session': model.Session, 'user': 'testsysadmin'}
+        created_package_b = self._get_action('package_create')(create_b_context, package_b)
+
+        class FakeUpload:
+            clear = False
+            mimetype = 'text/csv'
+            filesize = 10
+
+            def upload(self, resource_id, max_size=None):
+                pass
+
+        update_dict = dict(created_package_b)
+        update_dict['resources'] = [{
+            # Reusing package A's deleted resource id on a REAL upload into package B.
+            'id': reused_resource_id,
+            'url': 'https://example.com/cross_package_reused.csv',
+            'resource_type': 'file.upload',
+            'format': 'CSV',
+            'name': 'cross_package_reused.csv',
+            'upload': 'fake-file',
+        }]
+
+        captured_stage1_flags = {}
+        real_plugin_validate = update_module.lib_plugins.plugin_validate
+
+        def spy_plugin_validate(package_plugin, ctx, data, schema, action):
+            if action == 'package_update' and 'ids' not in captured_stage1_flags:
+                captured_stage1_flags['ids'] = set(ctx.get(FILE_WAS_UPLOADED, set()))
+            return real_plugin_validate(package_plugin, ctx, data, schema, action)
+
+        update_context = {'ignore_auth': True,
+                           'model': model, 'session': model.Session, 'user': 'testsysadmin'}
+
+        with mock.patch(
+            'ckanext.hdx_package.actions.update.uploader.get_resource_uploader',
+            return_value=FakeUpload()
+        ), mock.patch(
+            'ckanext.hdx_package.actions.update._manage_datastore_for_uploads'
+        ), mock.patch(
+            'ckanext.hdx_package.actions.update.lib_plugins.plugin_validate',
+            side_effect=spy_plugin_validate
+        ):
+            self._get_action('package_update')(update_context, update_dict)
+
+        # Core treats this as a real replacement upload onto an EXISTING (resurrected)
+        # resource - so it should be flagged pre-validation, exactly like the
+        # same-package case. Today it is NOT (misclassified as new), so this fails.
+        assert reused_resource_id in captured_stage1_flags['ids']
+
+    def test_package_update_http_to_https_url_change_reaches_manage_datastore(self):
+        """
+        Regression test (currently EXPECTED TO FAIL) for
+        _normalize_resource_url_for_comparison() stripping ANY leading http(s)://
+        scheme from BOTH sides before comparing - not just a scheme that CKAN itself
+        synthesized.
+
+        model_dictize.resource_dictize() (ckan/lib/dictization/model_dictize.py:
+        132-144) only ever prepends 'http://' to a stored url that has NO scheme at
+        all (`not urlsplit(url).scheme`) - it never touches a url that already has a
+        scheme (http OR https). So an existing resource whose url is genuinely edited
+        from 'http://host/file.csv' to 'https://host/file.csv' is a REAL change that
+        must still be flagged - but today, stripping the scheme from both sides makes
+        them compare equal ('host/file.csv' == 'host/file.csv'), so the change is
+        silently swallowed and the datastore is never refreshed for it (now that the
+        IResourceUrlChange hook is an intentional no-op).
+        """
+        from ckanext.hdx_package.helpers.constants import FILE_WAS_UPLOADED
+
+        package = {"package_creator": "test function",
+                   "private": False,
+                   "dataset_date": "[1960-01-01 TO 2012-12-31]",
+                   "caveats": "These are the caveats",
+                   "license_other": "TEST OTHER LICENSE",
+                   "methodology": "This is a test methodology",
+                   "dataset_source": "World Bank",
+                   "license_id": "hdx-other",
+                   "notes": "This is a test activity",
+                   "groups": [{"name": "roger"}],
+                   "owner_org": "hdx-test-org",
+                   'name': 'test_activity_http_to_https',
+                   'title': 'Test Activity Http To Https',
+                   'resources': [
+                       {
+                           'url': 'http://example.com/http_to_https.csv',
+                           'resource_type': 'url',
+                           'format': 'CSV',
+                           'name': 'http_to_https.csv',
+                       }
+                   ]
+                   }
+
+        context = {'ignore_auth': True,
+                   'model': model, 'session': model.Session, 'user': 'testsysadmin'}
+        created_package = self._get_action('package_create')(context, package)
+        existing_resource = created_package['resources'][0]
+        existing_resource_id = existing_resource['id']
+
+        # Sanity check: the resource genuinely already has an explicit http:// scheme
+        # (not one synthesized by model_dictize from a scheme-less stored value) -
+        # otherwise this test wouldn't actually exercise the bug being demonstrated.
+        assert existing_resource['url'] == 'http://example.com/http_to_https.csv'
+
+        update_dict = dict(created_package)
+        # A genuine protocol change - the remote host/path is identical, only the
+        # scheme changed from http to https. This must be treated as a real change.
+        update_dict['resources'] = [
+            dict(existing_resource, url='https://example.com/http_to_https.csv')
+        ]
+
+        update_context = {'ignore_auth': True,
+                           'model': model, 'session': model.Session, 'user': 'testsysadmin'}
+
+        with mock.patch(
+            'ckanext.hdx_package.actions.update._manage_datastore_for_uploads'
+        ) as mock_manage_datastore:
+            self._get_action('package_update')(update_context, update_dict)
+
+        mock_manage_datastore.assert_called_once()
+        call_context, _ = mock_manage_datastore.call_args[0]
+        # Today this fails: the scheme is stripped from both sides, so the genuine
+        # http -> https change is invisible to the comparison and never flagged.
+        assert existing_resource_id in call_context.get(FILE_WAS_UPLOADED, set())
+
     def test_package_update_defer_commit_skips_datastore_management(self):
         """
         Regression test: when context['defer_commit'] is set, package_update() must NOT

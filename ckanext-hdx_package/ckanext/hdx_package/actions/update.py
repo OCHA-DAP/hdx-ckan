@@ -214,15 +214,10 @@ def _normalize_resource_url_for_comparison(url: Any, url_type: Any) -> Any:
     resource_dict_save() itself does (ckan/lib/dictization/model_save.py:
     `res_dict['url'] = res_dict['url'].rsplit('/')[-1]`), via find_filename_in_url().
 
-    For every other url_type: strips a leading http(s):// scheme and surrounding
-    whitespace. This matters because model_dictize.resource_dictize()
-    (ckan/lib/dictization/model_dictize.py:145-147) unconditionally prepends
-    'http://' to a stored scheme-less url whenever the dict isn't built with
-    context['for_edit']=True - which is exactly the shape of dict a normal
-    package_show() -> edit -> package_update() round trip carries. Without
-    stripping that scheme back off before comparing, an unrelated field edit on
-    a resource with a scheme-less stored url would look like a URL change and
-    wrongly flag the resource into FILE_WAS_UPLOADED.
+    For every other url_type: only strips surrounding whitespace. Any http(s)://
+    scheme is deliberately left untouched here - see _urls_match_for_comparison()
+    below for how a CKAN-synthesized scheme-less-vs-http:// pair is reconciled
+    without also masking a genuine http -> https scheme change.
 
     Runs BEFORE lib_plugins.plugin_validate() below, so `url` is still raw,
     unvalidated caller input at this point - the resource schema's unicode_safe
@@ -239,7 +234,45 @@ def _normalize_resource_url_for_comparison(url: Any, url_type: Any) -> Any:
     normalized = url.strip()
     if url_type == 'upload':
         return find_filename_in_url(normalized)
-    return re.sub(r'^https?://', '', normalized, flags=re.IGNORECASE)
+    return normalized
+
+
+_URL_SCHEME_RE = re.compile(r'^[a-zA-Z][a-zA-Z0-9+.\-]*://')
+
+
+def _urls_match_for_comparison(existing_url: Any, incoming_url: Any) -> bool:
+    """
+    Compares an existing (pre-update, DB-stored) resource url against an incoming
+    (caller-supplied) one, both already run through _normalize_resource_url_for_comparison()
+    above, WITHOUT masking a genuine scheme change (e.g. http -> https).
+
+    A plain equality check would false-flag a normal read-modify-write on a
+    scheme-less stored url as "changed": model_dictize.resource_dictize()
+    (ckan/lib/dictization/model_dictize.py:132-144) unconditionally prepends
+    'http://' to a stored url that has NO scheme at all (`not urlsplit(url).scheme`)
+    whenever the dict isn't built with context['for_edit']=True - which is exactly
+    the shape of dict a normal package_show() -> edit -> package_update() round
+    trip carries. So we special-case exactly that: an existing url with no scheme
+    at all is considered unchanged if the incoming url is identical after
+    stripping ONLY a leading 'http://' (never 'https://', since CKAN itself never
+    synthesizes that one) from it.
+
+    Crucially, this special case only applies when the EXISTING url has no scheme
+    to begin with. If the existing url already has an explicit scheme (http OR
+    https), a straight comparison is used instead - so a real edit from
+    'http://host/file' to 'https://host/file' is correctly seen as a change,
+    since model_dictize never touches a url that already has a scheme.
+    """
+    if existing_url == incoming_url:
+        return True
+    if not isinstance(existing_url, str) or not isinstance(incoming_url, str):
+        return False
+    if _URL_SCHEME_RE.match(existing_url):
+        # existing url already has an explicit scheme (http, https, or otherwise) -
+        # no synthesized-scheme special case applies; the plain comparison above
+        # is authoritative.
+        return False
+    return re.sub(r'^http://', '', incoming_url, flags=re.IGNORECASE) == existing_url
 
 
 def _normalize_last_modified_for_comparison(value: Any) -> Any:
@@ -401,7 +434,28 @@ def package_update(
     # the `resources` property, which filters out state='deleted') to also match core's
     # unfiltered `session.query(model.Resource).get(id)` lookup - e.g. a caller resurrecting a
     # previously-deleted resource id is likewise "existing" from resource_dict_save()'s POV.
+    #
+    # This still isn't quite enough on its own though: core's lookup is by id ALONE, with
+    # NO package filter at all - so a caller-supplied id that belongs to a *different*
+    # package entirely (e.g. a previously-deleted resource id from package A, reused as
+    # the 'id' of a brand-new/uploaded resource on package B) is likewise "existing" from
+    # resource_dict_save()'s POV (it gets reassigned to package B by
+    # package_resource_list_save(), ckan/lib/dictization/model_save.py:91-100), even
+    # though it can never appear in package B's own pkg.resources_all. We extend the
+    # pkg-scoped set below with a small, targeted global lookup for exactly the
+    # caller-supplied ids that are actually present in this call's incoming resources -
+    # never a full-table scan - to mirror that cross-package case too.
     existing_resource_ids = {r.id for r in pkg.resources_all}
+    _incoming_resource_ids = [
+        r.get('id') for r in data_dict.get('resources', [])
+        if isinstance(r, dict) and isinstance(r.get('id'), str) and r.get('id')
+    ]
+    if _incoming_resource_ids:
+        existing_resource_ids |= {
+            row[0] for row in model.Session.query(model.Resource.id).filter(
+                model.Resource.id.in_(_incoming_resource_ids)
+            ).all()
+        }
 
     # Captured for the same reason and at the same point as existing_resource_ids above -
     # the pre-update url of every existing resource, keyed by id. Used further down to
@@ -531,10 +585,11 @@ def package_update(
         # mirrors what CKAN core's resource_dict_save() itself checks to set
         # obj.url_changed = True (which used to drive DatapusherPlusPlugin.notify(), now an
         # intentional no-op - see existing_resource_urls above for the full rationale).
-        # Both sides are run through _normalize_resource_url_for_comparison() before
-        # comparing - a raw comparison would false-flag a normal read-modify-write on a
-        # scheme-less stored url (model_dictize.resource_dictize() unconditionally prepends
-        # 'http://' to it - see that helper's docstring for the full rationale).
+        # Both sides are run through _normalize_resource_url_for_comparison() (whitespace/
+        # filename normalization only) and then compared via _urls_match_for_comparison(),
+        # which reconciles CKAN's synthesized scheme-less-vs-http:// pair without also
+        # masking a genuine scheme change (e.g. http -> https) - see that helper's
+        # docstring for the full rationale.
         # Flagged here at stage 1 (pre-validation), same as a real upload replacement,
         # since a url change is likewise "new data for this resource" from
         # hdx_reset_on_file_upload's POV.
@@ -549,7 +604,7 @@ def package_update(
             existing_last_modified = _normalize_last_modified_for_comparison(
                 existing_resource_last_modified.get(resource_id))
         if resource_id_is_existing and (
-                (resource_url is not None and resource_url != existing_url)
+                (resource_url is not None and not _urls_match_for_comparison(existing_url, resource_url))
                 or (resource_last_modified is not None and resource_last_modified != existing_last_modified)):
             context.setdefault(FILE_WAS_UPLOADED, set()).add(resource_id)
 
