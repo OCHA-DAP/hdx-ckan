@@ -483,9 +483,9 @@ def package_update(
     prev_last_modified = pkg.metadata_modified
 
     # Captured BEFORE any resource processing/mutation below - the set of resource ids that
-    # already exist in the DB for this package, used further down to determine "newness" the
-    # same way CKAN core's resource_dict_save() does: a resource is new if no DB row exists
-    # for its id yet, NOT simply if the incoming dict happens to omit an 'id' key. A caller
+    # already belong to this package, used further down to determine datastore "newness".
+    # A resource is new to this package if its id is not present here, NOT simply if the
+    # incoming dict happens to omit an 'id' key. A caller
     # (e.g. an ignore_auth/sysadmin script, harvester, or migration job) may legitimately
     # supply its own pre-generated UUID as 'id' for a brand-new resource - resource_dict_save()
     # still creates it as new in that case (session.query(model.Resource).get(id) finds
@@ -506,7 +506,8 @@ def package_update(
     # pkg-scoped snapshots below with a small, targeted global lookup for exactly the
     # caller-supplied ids that are actually present in this call's incoming resources -
     # never a full-table scan - to mirror that cross-package case too.
-    existing_resource_ids = {r.id for r in pkg.resources_all}
+    package_resource_ids = {r.id for r in pkg.resources_all}
+    existing_resource_ids = set(package_resource_ids)
     existing_resource_urls = {r.id: r.url for r in pkg.resources_all}
     # Raw, unmodified DB last_modified snapshot - deliberately NOT falling back to
     # metadata_modified here (see existing_resource_metadata_modified and
@@ -601,7 +602,7 @@ def package_update(
         # package_revise/package_update). Format/allowlist eligibility for DataPusher+ is
         # still fully decided inside _manage_datastore_for_uploads(), so it's safe to flag
         # every new resource here regardless of how it was added.
-        # We check membership against existing_resource_ids (captured before this loop),
+        # We check package membership against package_resource_ids (captured before this loop),
         # NOT `not bool(resource.get('id'))` - a resource dict CAN carry a caller-supplied
         # 'id' (e.g. a pre-generated UUID from a script/harvester) for a resource that
         # doesn't exist in the DB yet; resource_dict_save() still treats that as new, so we
@@ -621,7 +622,10 @@ def package_update(
             resource_id_is_existing = resource_id in existing_resource_ids
         except TypeError:
             resource_id_is_existing = False
-        resource_was_new.append(not resource_id_is_existing)
+        try:
+            resource_was_new.append(resource_id not in package_resource_ids)
+        except TypeError:
+            resource_was_new.append(True)
 
         # An existing resource whose 'url' or 'last_modified' changed, with no
         # 'upload'/'clear_upload' key at all (e.g. a link-type resource whose url is edited

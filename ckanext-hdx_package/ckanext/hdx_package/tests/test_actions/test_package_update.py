@@ -1536,14 +1536,13 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
         # Genuine scheme change (http -> https) must still evaluate to False (not matching)
         assert not _urls_match_for_comparison('http://example.com/file.csv', 'https://example.com/file.csv')
 
-    def test_package_update_cross_package_deleted_resource_id_same_url_timestamp_not_false_flagged(self):
+    def test_package_update_cross_package_deleted_resource_id_flagged_as_new(self):
         """
         Regression test for cross-package deleted resource ID reuse with identical URL/timestamp.
 
         When a deleted resource ID from package A is reused on package B with the same URL
-        and timestamp, the global lookup fetches its prior URL and timestamp into the
-        existing_resource_urls and existing_resource_last_modified snapshots. It must NOT
-        be false-flagged into context[FILE_WAS_UPLOADED] or trigger unnecessary datastore work.
+        and timestamp, it is new to package B and must be flagged into
+        context[FILE_WAS_UPLOADED] for datastore reevaluation.
         """
         from ckanext.hdx_package.helpers.constants import FILE_WAS_UPLOADED
 
@@ -1615,8 +1614,8 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
         ):
             self._get_action('package_update')(update_context, update_dict)
 
-        # Because URL and last_modified were unchanged, the reused resource should NOT be flagged as changed
-        assert reused_resource_id not in update_context.get(FILE_WAS_UPLOADED, set())
+        # The resource is new to package B, so it must be flagged for datastore reevaluation.
+        assert reused_resource_id in update_context.get(FILE_WAS_UPLOADED, set())
 
     def test_package_update_defer_commit_skips_datastore_management(self):
         """
