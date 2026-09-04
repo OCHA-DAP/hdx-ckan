@@ -207,31 +207,18 @@ def _normalize_supported_formats(config_value: Any) -> set[str]:
 
 def _normalize_resource_url_for_comparison(url: Any, url_type: Any) -> Any:
     """
-    Normalizes a resource url for a like-for-like comparison against
-    existing_resource_urls (see package_update() below).
+    Normalizes a url for comparison against the existing stored value.
 
-    For url_type == 'upload': mirrors the EXACT string operation
-    resource_dict_save() itself does (ckan/lib/dictization/model_save.py:41:
-    `res_dict['url'] = res_dict['url'].rsplit('/')[-1]`) - a plain split on the
-    last '/', NOT find_filename_in_url() (which parses the url and takes only
-    path.basename(), silently dropping any query string/fragment). For a url
-    like '.../file.csv?version=2', core's rsplit keeps 'file.csv?version=2'
-    intact, so a change from '...?version=1' to '...?version=2' IS a real
-    stored-url change there; using find_filename_in_url() here instead would
-    strip both down to 'file.csv' and miss that change entirely.
+    For url_type == 'upload': mirrors resource_dict_save()'s exact operation
+    (`url.rsplit('/')[-1]`, ckan/lib/dictization/model_save.py:41) - NOT
+    find_filename_in_url(), which drops query strings/fragments and would
+    mask a real change like '...?version=1' -> '...?version=2'.
 
-    For every other url_type: only strips surrounding whitespace. Any http(s)://
-    scheme is deliberately left untouched here - see _urls_match_for_comparison()
-    below for how a CKAN-synthesized scheme-less-vs-http:// pair is reconciled
-    without also masking a genuine http -> https scheme change.
+    For other url_types: only strips whitespace; scheme handling is left to
+    _urls_match_for_comparison() below.
 
-    Runs BEFORE lib_plugins.plugin_validate() below, so `url` is still raw,
-    unvalidated caller input at this point - the resource schema's unicode_safe
-    validator is what normally coerces a non-string value (e.g. an int) into a
-    string later. A non-string value here must be left untouched (skip
-    normalization, no comparison match) rather than calling .strip() on it,
-    which would raise AttributeError and turn an otherwise-coercible request
-    into a 500 before validation ever gets a chance to run/reject it.
+    Runs before validation, so a non-string url (not yet coerced by the
+    schema) is returned as-is rather than crashing on .strip().
     """
     if url is None:
         return None
@@ -248,75 +235,40 @@ _URL_SCHEME_RE = re.compile(r'^[a-zA-Z][a-zA-Z0-9+.\-]*:')
 
 def _urls_match_for_comparison(existing_url: Any, incoming_url: Any) -> bool:
     """
-    Compares an existing (pre-update, DB-stored, RAW - i.e. untouched, NOT run through
-    _normalize_resource_url_for_comparison()) resource url against an incoming
-    (caller-supplied, already run through _normalize_resource_url_for_comparison() above)
-    one, WITHOUT masking a genuine scheme change (e.g. http -> https).
+    Compares a raw, DB-stored existing url (deliberately NOT run through
+    _normalize_resource_url_for_comparison() - see package_update() for why)
+    against an incoming url that already has been, without masking a genuine
+    scheme change (e.g. http -> https).
 
-    The existing side is deliberately passed through as-is here, never re-normalized with
-    whatever url_type happens to be incoming this time - see the call site in
-    package_update() for the full rationale (an existing url-type resource's full stored
-    URL must not be silently collapsed down to a bare filename just because the incoming
-    url_type says 'upload', which would mask a real url_type + implied url change that
-    resource_dict_save() itself does detect).
-
-    A plain equality check would false-flag a normal read-modify-write on a
-    scheme-less stored url as "changed": model_dictize.resource_dictize()
-    (ckan/lib/dictization/model_dictize.py:132-144) unconditionally prepends
-    'http://' to a stored url that has NO scheme at all (`not urlsplit(url).scheme`)
-    whenever the dict isn't built with context['for_edit']=True - which is exactly
-    the shape of dict a normal package_show() -> edit -> package_update() round
-    trip carries. So we special-case exactly that: an existing url with no scheme
-    at all is considered unchanged if the incoming url is identical after
-    stripping ONLY a leading 'http://' (never 'https://', since CKAN itself never
-    synthesizes that one) from it.
-
-    Crucially, this special case only applies when the EXISTING url has no scheme
-    to begin with. If the existing url already has an explicit scheme (http OR
-    https), a straight comparison is used instead - so a real edit from
-    'http://host/file' to 'https://host/file' is correctly seen as a change,
-    since model_dictize never touches a url that already has a scheme.
+    model_dictize.resource_dictize() (ckan/lib/dictization/model_dictize.py:
+    132-144) prepends 'http://' to a stored url with NO scheme at all when
+    not for_edit - exactly the shape of a package_show() -> edit ->
+    package_update() round trip. So an existing scheme-less url matches an
+    incoming url that's identical after stripping a leading 'http://' (never
+    'https://'). If the existing url already has a scheme, no special-casing
+    applies - a real http -> https edit is correctly seen as a change.
     """
     if existing_url == incoming_url:
         return True
     if not isinstance(existing_url, str) or not isinstance(incoming_url, str):
         return False
     if _URL_SCHEME_RE.match(existing_url):
-        # existing url already has an explicit scheme (http, https, or otherwise) -
-        # no synthesized-scheme special case applies; the plain comparison above
-        # is authoritative.
+        # existing url already has an explicit scheme - no synthesized-scheme
+        # special case applies; the plain comparison above is authoritative.
         return False
     return re.sub(r'^http://', '', incoming_url, flags=re.IGNORECASE) == existing_url.lstrip('/')
 
 
 def _normalize_last_modified_for_comparison(value: Any) -> Any:
     """
-    Normalizes a resource's last_modified value for a like-for-like comparison
-    against existing_resource_last_modified (see package_update() below),
-    mirroring how DictMixin.from_dict() (ckan/model/base.py) itself compares:
-    a datetime DB value is rendered to isoformat() before comparing against a
-    string incoming value.
+    Normalizes last_modified for comparison against the raw DB value.
 
-    Runs BEFORE lib_plugins.plugin_validate() below, so a string `value` here
-    has NOT yet been through the resource schema's isodate validator
-    (ckan/logic/validators.py: isodate()) - which special-cases an empty
-    string to `None` BEFORE attempting to parse it at all (`if value == '':
-    return None`), and only then parses everything else via
-    h.date_str_to_datetime(). We mirror that same empty-string-to-None
-    special case here first: without it, a caller explicitly blanking
-    last_modified (value == '') would compare as the literal string '' against
-    the raw DB value below - almost certainly a mismatch even when the DB
-    value is already None/blank - falsely flagging a resource that
-    resource_dict_save() itself would see as unchanged (None == None once
-    isodate has run).
-
-    Beyond that, we parse with the same date parser isodate() itself uses
-    (h.date_str_to_datetime()) before comparing, so two equivalent-but-
-    differently-formatted accepted strings (e.g. '2024-01-01T00:00:00' vs
-    '2024-01-01T00:00:00.000000') don't compare unequal here even though
-    CKAN's own from_dict() would consider them the same value once parsed.
-    An invalid string is left as-is (unparsed) rather than raising here -
-    validation further down is what's responsible for rejecting it.
+    Mirrors isodate()'s own '' -> None conversion (ckan/logic/validators.py)
+    before parsing everything else via h.date_str_to_datetime(), so
+    equivalent-but-differently-formatted strings (e.g. with/without
+    microseconds) compare equal, same as CKAN's own from_dict() would once
+    parsed. An unparseable string is left as-is; validation further down is
+    what rejects it.
     """
     if value == '':
         return None
@@ -333,30 +285,16 @@ def _normalize_last_modified_for_comparison(value: Any) -> Any:
 def _last_modified_matches_for_comparison(
         existing_last_modified: Any, incoming_last_modified: Any, existing_metadata_modified: Any) -> bool:
     """
-    Compares an existing (pre-update, DB-stored, RAW) resource last_modified
-    against an incoming (caller-supplied) one, both already run through
-    _normalize_last_modified_for_comparison() above.
+    Compares raw DB last_modified against an incoming value (both already
+    normalized), matching what core's from_dict()/resource_dict_save() do
+    once isodate() has parsed it - including blank -> None matching a null
+    DB value.
 
-    A plain equality check against the raw DB value is exactly what CKAN
-    core's own from_dict()/resource_dict_save() effectively do once isodate()
-    has parsed the incoming value - including a blank incoming value
-    normalizing to None, matching a null (never-set) raw DB value with no
-    false positive. See _normalize_last_modified_for_comparison() above for
-    why the blank -> None step matters here.
-
-    The one deliberate departure from a plain raw comparison: when the raw DB
-    value is None, we ALSO accept an incoming value that matches the
-    resource's metadata_modified as "unchanged". This is not something core
-    itself does - it's specifically to tolerate a normal package_show() ->
-    edit-something-else -> package_update() round trip: get.py's
-    _additional_hdx_resource_show_processing() (ckanext-hdx_package/
-    ckanext/hdx_package/actions/get.py:541-542) synthesizes
-    `last_modified = metadata_modified` on read whenever the raw column is
-    None/falsy, so that same synthesized value normally comes right back in
-    the resources array on the next package_update() call even when the
-    caller never touched last_modified at all. Without this, that ordinary
-    round trip would look identical to a real explicit last_modified being
-    set for the first time, and would be false-flagged every time.
+    One deliberate addition: when the raw DB value is None, an incoming
+    value equal to the resource's metadata_modified is ALSO treated as
+    unchanged - tolerates get.py's read-time
+    `last_modified = metadata_modified` synthesis (actions/get.py:541-542)
+    surviving an untouched round trip without being seen as a new value.
     """
     if incoming_last_modified == existing_last_modified:
         return True
@@ -482,40 +420,34 @@ def package_update(
     context["package"] = pkg
     prev_last_modified = pkg.metadata_modified
 
-    # Captured BEFORE any resource processing/mutation below - the set of resource ids that
-    # already belong to this package, used further down to determine datastore "newness".
-    # A resource is new to this package if its id is not present here, NOT simply if the
-    # incoming dict happens to omit an 'id' key. A caller
-    # (e.g. an ignore_auth/sysadmin script, harvester, or migration job) may legitimately
-    # supply its own pre-generated UUID as 'id' for a brand-new resource - resource_dict_save()
-    # still creates it as new in that case (session.query(model.Resource).get(id) finds
-    # nothing, so `new = True`), but naively checking `not bool(resource.get('id'))` would
-    # misclassify it as "existing" and it would then never be flagged in FILE_WAS_UPLOADED,
-    # silently skipping DataPusher+/datastore management for it. We use resources_all (not
-    # the `resources` property, which filters out state='deleted') to also match core's
-    # unfiltered `session.query(model.Resource).get(id)` lookup - e.g. a caller resurrecting a
-    # previously-deleted resource id is likewise "existing" from resource_dict_save()'s POV.
+    # Ids of every resource already belonging to this package (ANY state, including
+    # 'deleted') - used ONLY for core validation/comparison semantics (id-collision
+    # checks, url/last_modified diffing), matching core's unfiltered
+    # session.query(model.Resource).get(id) lookup. NOT used for datastore "newness" -
+    # see active_resource_ids below for that separate concern.
     #
-    # This still isn't quite enough on its own though: core's lookup is by id ALONE, with
-    # NO package filter at all - so a caller-supplied id that belongs to a *different*
-    # package entirely (e.g. a previously-deleted resource id from package A, reused as
-    # the 'id' of a brand-new/uploaded resource on package B) is likewise "existing" from
-    # resource_dict_save()'s POV (it gets reassigned to package B by
-    # package_resource_list_save(), ckan/lib/dictization/model_save.py:91-100), even
-    # though it can never appear in package B's own pkg.resources_all. We extend the
-    # pkg-scoped snapshots below with a small, targeted global lookup for exactly the
-    # caller-supplied ids that are actually present in this call's incoming resources -
-    # never a full-table scan - to mirror that cross-package case too.
-    package_resource_ids = {r.id for r in pkg.resources_all}
-    existing_resource_ids = set(package_resource_ids)
+    # We use resources_all (not `resources`, which excludes 'deleted') so a resurrected
+    # id is still seen as existing here, same as core.
+    #
+    # Core's lookup has no package filter at all, so an id from a DIFFERENT package
+    # (e.g. reused from a deleted resource in package A) is also "existing" from core's
+    # POV, reassigned via package_resource_list_save() (ckan/lib/dictization/
+    # model_save.py:91-100). We extend this set below with a targeted lookup for just
+    # the incoming ids not already found here, to mirror that cross-package case.
+    existing_resource_ids = {r.id for r in pkg.resources_all}
+    # SEPARATE from existing_resource_ids - scoped to this package's currently ACTIVE
+    # resources only (excludes 'deleted') - used ONLY to determine datastore "newness"
+    # (resource_was_new). HDX's patched package_resource_list_save() (ckan/lib/
+    # dictization/model_save.py:110-121) drops a resource's datastore table the moment
+    # it leaves the active list (soft-delete). So a resurrected id in the SAME package
+    # must be treated as "new" for datastore purposes even though core's validation
+    # sees it as existing - otherwise its already-dropped table is never resubmitted.
+    active_resource_ids = {r.id for r in pkg.resources}
     existing_resource_urls = {r.id: r.url for r in pkg.resources_all}
-    # Raw, unmodified DB last_modified snapshot - deliberately NOT falling back to
-    # metadata_modified here (see existing_resource_metadata_modified and
-    # _last_modified_matches_for_comparison() above for how that round-trip
-    # tolerance is applied instead, without corrupting this raw baseline). Comparing
-    # against the raw value is what lets a blank/None incoming last_modified
-    # correctly match a null raw DB value (see _normalize_last_modified_for_comparison()
-    # above) instead of being compared against a non-null synthesized fallback.
+    # Raw DB snapshot - NOT falling back to metadata_modified (see
+    # existing_resource_metadata_modified / _last_modified_matches_for_comparison for
+    # that round-trip tolerance instead), so a blank/None incoming value correctly
+    # matches a null raw value.
     existing_resource_last_modified = {r.id: r.last_modified for r in pkg.resources_all}
     existing_resource_metadata_modified = {r.id: r.metadata_modified for r in pkg.resources_all}
 
@@ -577,17 +509,9 @@ def package_update(
         elif context.get(BATCH_MODE) != BATCH_MODE_DONT_GROUP:
             data_dict['batch'] = get_batch_or_generate(data_dict.get('owner_org'))
 
-    # This function is the sole owner/writer of context[FILE_WAS_UPLOADED] within the
-    # lifetime of a single package_update() call (it's written here/below and only ever
-    # read later in this same call, by validators during plugin_validate() and by
-    # _manage_datastore_for_uploads() after commit). context.setdefault(FILE_WAS_UPLOADED,
-    # set()) further down reuses whatever set object is already present in context, so if
-    # a caller reuses the same context dict across multiple package_update() invocations
-    # (against CKAN's own convention, but it happens), a stale resource id flagged as
-    # "uploaded" by a previous call would incorrectly survive into this call - e.g. a
-    # later clear_upload-only update of that same resource would still be treated as a
-    # fresh upload. Resetting it here makes this call self-contained regardless of
-    # what the caller left in the context from a previous action call.
+    # Sole owner/writer of context[FILE_WAS_UPLOADED] for this call. Reset here (not
+    # just setdefault) so a caller reusing the same context across multiple
+    # package_update() calls doesn't carry over a stale flag from a previous call.
     context[FILE_WAS_UPLOADED] = set()
 
     resource_upload_ids = []
@@ -595,80 +519,42 @@ def package_update(
     resource_had_real_upload = []
     resource_was_new = []
     for resource in data_dict.get('resources', []):
-        # Captured for EVERY resource (both branches below), before any mutation - used in
-        # the post-flush loop further down to also flag brand-new resources that have no
-        # real upload at all (e.g. a URL-only resource added directly via package_revise's
-        # update__resources__extend, or via resource_create() which delegates to
-        # package_revise/package_update). Format/allowlist eligibility for DataPusher+ is
-        # still fully decided inside _manage_datastore_for_uploads(), so it's safe to flag
-        # every new resource here regardless of how it was added.
-        # We check package membership against package_resource_ids (captured before this loop),
-        # NOT `not bool(resource.get('id'))` - a resource dict CAN carry a caller-supplied
-        # 'id' (e.g. a pre-generated UUID from a script/harvester) for a resource that
-        # doesn't exist in the DB yet; resource_dict_save() still treats that as new, so we
-        # must too, or it silently never gets flagged for DataPusher+/datastore management.
+        # "New for datastore" is checked against active_resource_ids (excludes
+        # 'deleted'), NOT `not bool(resource.get('id'))` - a caller-supplied id for a
+        # not-yet-existing resource must still count as new (resource_dict_save() does),
+        # or it never gets flagged for DataPusher+/datastore management.
         #
-        # This runs BEFORE lib_plugins.plugin_validate() below, so a caller-supplied 'id'
-        # is still raw, unvalidated input here - it could be a malformed, unhashable value
-        # (e.g. a list/dict) instead of the string the UUID validator expects. `in`/`.get()`
-        # against existing_resource_ids/existing_resource_urls/existing_resource_last_modified/
-        # existing_resource_metadata_modified (all keyed by real string ids) would raise
-        # TypeError on such a value, crashing before validation ever gets a chance to reject
-        # it with a proper ValidationError. We catch that here and simply treat it as
-        # "not an existing resource" for these comparisons - consistent with it not actually
-        # matching any real existing id.
+        # Runs BEFORE validation, so a caller-supplied id may be malformed/unhashable
+        # (e.g. a list) - `in`/`.get()` lookups below would raise TypeError, so we treat
+        # that as "not existing" here and let validation reject it properly instead.
         resource_id = resource.get('id')
         try:
             resource_id_is_existing = resource_id in existing_resource_ids
         except TypeError:
             resource_id_is_existing = False
         try:
-            resource_was_new.append(resource_id not in package_resource_ids)
+            resource_was_new.append(resource_id not in active_resource_ids)
         except TypeError:
             resource_was_new.append(True)
 
-        # An existing resource whose 'url' or 'last_modified' changed, with no
-        # 'upload'/'clear_upload' key at all (e.g. a link-type resource whose url is edited
-        # directly through the form/API) is NOT covered by the 'clear_upload'/'upload'
-        # branch just below, so it would otherwise never be flagged and never reach
-        # _manage_datastore_for_uploads(). This mirrors what CKAN core's resource_dict_save()
-        # itself checks to set obj.url_changed = True (which used to drive
-        # DatapusherPlusPlugin.notify(), now an intentional no-op - see existing_resource_urls
-        # above for the full rationale).
-        # url: only the INCOMING side is run through _normalize_resource_url_for_comparison()
-        # (whitespace/filename normalization only) - the EXISTING (raw, already-stored) side
-        # is used exactly as-is, deliberately NOT re-normalized with the incoming url_type.
-        # This mirrors what resource_dict_save() itself actually compares: it mutates only
-        # the INCOMING res_dict (`if res_dict.get('url_type') == 'upload': res_dict['url'] =
-        # res_dict['url'].rsplit('/')[-1]`), then diffs that against the untouched, already-
-        # persisted obj.url column value - never re-deriving/re-transforming the existing
-        # value based on whatever url_type happens to be incoming this time. Normalizing the
-        # existing side with the INCOMING url_type would wrongly collapse a real change:
-        # e.g. an existing url-type resource stored as the full
-        # 'https://example.com/file.csv', with only 'url_type' being changed to 'upload' (no
-        # other change) - normalizing the existing side with url_type='upload' would strip it
-        # down to 'file.csv' too, matching the similarly-stripped incoming value and hiding a
-        # change that resource_dict_save() itself DOES detect (raw existing full URL !=
-        # newly-stored bare filename). An existing upload-type resource's stored value is
-        # already just a bare filename to begin with (core keeps it that way on every save),
-        # so leaving it untouched here doesn't affect the normal upload-unchanged comparison
-        # at all - it only fixes the type-change case above.
-        # Both sides are then compared via _urls_match_for_comparison(), which reconciles
-        # CKAN's synthesized scheme-less-vs-http:// pair without also masking a genuine
-        # scheme change (e.g. http -> https) - see that helper's docstring for the full
-        # rationale.
-        # last_modified: only compared when the caller's resource dict actually carries a
-        # 'last_modified' key at all - an absent key means "leave it unchanged" (mirroring
-        # from_dict()'s own `if col.name in _dict` gate: a column simply not present in the
-        # dict is never touched), NOT "clear it". Both sides are run through
-        # _normalize_last_modified_for_comparison() (which special-cases a blank incoming
-        # string to None, mirroring isodate()) and then compared via
-        # _last_modified_matches_for_comparison(), which additionally tolerates a normal
-        # package_show() round-trip re-submitting a synthesized metadata_modified passthrough
-        # against a null raw DB value - see that helper's docstring for the full rationale.
-        # Flagged here at stage 1 (pre-validation), same as a real upload replacement,
-        # since a url/last_modified change is likewise "new data for this resource" from
-        # hdx_reset_on_file_upload's POV.
+        # An existing resource's url/last_modified changing with no upload/clear_upload
+        # key (e.g. a direct url edit) isn't covered by the branch below, so it must be
+        # flagged here - mirrors resource_dict_save() setting obj.url_changed = True
+        # (replacing the now-no-op IResourceUrlChange hook).
+        #
+        # url: only the INCOMING side is normalized - the EXISTING (raw, stored) side is
+        # compared as-is, since core only transforms the incoming dict, never the
+        # persisted value. Re-normalizing the existing side with the incoming url_type
+        # would mask a real change (e.g. a url-type resource's full url collapsing to a
+        # bare filename just because url_type -> 'upload'). Compared via
+        # _urls_match_for_comparison() (handles CKAN's scheme-less synthesis).
+        #
+        # last_modified: only compared when the key is actually present (an absent key
+        # means "leave unchanged", matching from_dict()'s own gate). Compared via
+        # _last_modified_matches_for_comparison() (handles blank input and the
+        # metadata_modified round-trip case).
+        #
+        # Flagged pre-validation (stage 1), like a real upload replacement.
         resource_url_type = resource.get('url_type')
         resource_url = _normalize_resource_url_for_comparison(resource.get('url'), resource_url_type)
         resource_has_last_modified_key = 'last_modified' in resource
@@ -691,43 +577,24 @@ def package_update(
         # I believe that unless a resource has either an upload field or is marked to be deleted
         # we don't need to create an uploader object which is expensive
         if 'clear_upload' in resource or resource.get('upload'):
-            # NOTE: flagging happens in two stages here, both writing into the same
-            # context[FILE_WAS_UPLOADED] set:
-            #  1. Here, for *existing* resources (real 'id' already known). This must happen
-            #     before lib_plugins.plugin_validate() below, because validators such as
-            #     hdx_reset_on_file_upload (used for pii_is_sensitive, in_quarantine,
-            #     qa_hapi_report, sensitive, sdd_report) read FILE_WAS_UPLOADED *during*
-            #     validation to reset stale QA/sensitivity metadata when a file is replaced.
-            #  2. Further below (after model.Session.flush()), for *brand-new* resources, once
-            #     their real ids are assigned. We can't flag them here because at this point
-            #     they don't have a real 'id' yet, and using a shared 'NEW' sentinel would
-            #     collapse multiple simultaneously-created resources into one indistinguishable
-            #     entry (breaking _manage_datastore_for_uploads downstream). New resources have
-            #     no previous version anyway, so there's no stale value for validation to reset.
+            # Flagging happens in two stages, both writing into context[FILE_WAS_UPLOADED]:
+            #  1. Here, for existing resources - must happen before plugin_validate() so
+            #     validators like hdx_reset_on_file_upload can read the flag during validation.
+            #  2. Below (after flush), for brand-new resources, once their real id is known -
+            #     they have no previous version to reset, so stage 1 doesn't apply to them.
             #
-            # We capture bool(resource.get('upload')) here, BEFORE creating the uploader, as the
-            # single source of truth for "this resource actually got a new file". We can't rely
-            # on the uploader object's truthiness later (see `upload` below): it's created (and
-            # truthy) for the 'clear_upload' branch too - and 'clear_upload' is checked by key
-            # membership, not truthiness, so it can be present-but-falsy. Without this separate
-            # signal, a cleared/no-op upload would get flagged as a real upload, and
-            # _manage_datastore_for_uploads() would wrongly submit it to DataPusher+.
+            # was_real_upload (captured before creating the uploader) is the source of truth
+            # for "a new file was actually uploaded" - `upload` itself is also truthy for the
+            # clear_upload branch (no new data), so using it directly would wrongly flag a
+            # cleared resource as a real upload.
             was_real_upload = bool(resource.get('upload'))
             resource_had_real_upload.append(was_real_upload)
 
-            # Gate on membership in existing_resource_ids (captured before this loop),
-            # NOT on `resource.get('id')` truthiness: a brand-new resource can carry a
-            # caller-supplied id (e.g. a pre-generated UUID from a script/harvester) that
-            # doesn't exist in the DB yet. Flagging it here (stage 1, pre-validation)
-            # would wrongly expose it to hdx_reset_on_file_upload, which unconditionally
-            # pops fields like pii_is_sensitive/sensitive/sdd_report/in_quarantine/
-            # qa_hapi_report whenever the id is in FILE_WAS_UPLOADED during validation -
-            # discarding values the caller explicitly set on a resource that has no prior
-            # version to reset in the first place. Stage 1 must only ever flag TRULY
-            # existing resources; the post-flush stage 2 below still flags this new
-            # resource (via `was_new`) so DataPusher+ submission isn't affected.
-            # Reuses resource_id_is_existing (computed above, already TypeError-safe for a
-            # malformed/unhashable caller-supplied id).
+            # Gated on resource_id_is_existing (not resource.get('id') truthiness), since a
+            # brand-new resource can carry a caller-supplied id. Flagging it here would wrongly
+            # expose it to hdx_reset_on_file_upload, which resets QA/sensitivity fields meant
+            # only for real replacements - stage 2 below still flags new resources so
+            # DataPusher+ submission isn't affected.
             if was_real_upload and resource_id_is_existing:
                 context.setdefault(FILE_WAS_UPLOADED, set()).add(resource['id'])
 
@@ -788,22 +655,15 @@ def package_update(
             zip(data.get('resources', []), resource_uploads, resource_had_real_upload, resource_was_new)):
         resource['id'] = pkg.resources[index].id
 
-        # Second flagging stage (see NOTE above the pre-validation loop): existing resources
-        # with a real upload were already flagged there with their real id, so this is a
-        # harmless no-op re-add for them. Brand-new resources - whether a real upload or a
-        # URL-only resource with no upload at all (e.g. added directly via package_revise's
-        # update__resources__extend, or via resource_create() which delegates to
-        # package_revise/package_update) - get their first (and only) flag here, now that
-        # their real id is known, so _manage_datastore_for_uploads() can evaluate them (its
-        # own format/allowlist eligibility check decides whether anything is actually
-        # submitted).
-        # We gate on `was_real_upload` (captured before the uploader was created), NOT on
-        # `upload` itself: `upload` is also truthy for the 'clear_upload' branch (clearing an
-        # existing file, no new data), which must NOT be flagged as an upload here - otherwise
-        # _manage_datastore_for_uploads would wrongly submit a cleared resource to DataPusher+.
-        # NOTE: we intentionally don't reuse flag_if_file_uploaded() here — it gates on
-        # resource_dict.get('upload'), which may no longer be present/truthy on this
-        # post-validation `resource` dict.
+        # Second flagging stage: existing resources with a real upload were already
+        # flagged above (harmless no-op re-add here); brand-new resources (upload or
+        # URL-only) get their first flag here, now that their real id is known -
+        # eligibility is still fully decided inside _manage_datastore_for_uploads().
+        #
+        # Gated on was_real_upload (not `upload`, also truthy for clear_upload) to avoid
+        # wrongly submitting a cleared resource to DataPusher+. Doesn't reuse
+        # flag_if_file_uploaded() - it gates on resource_dict.get('upload'), which may no
+        # longer be present here.
         if was_real_upload or was_new:
             context.setdefault(FILE_WAS_UPLOADED, set()).add(resource['id'])
 
@@ -832,19 +692,15 @@ def package_update(
     context['ignore_auth'] = True
     new_data_dict = _get_action('package_show')(context, {'id': data_dict['id'], "include_plugin_data": include_plugin_data})
 
-    # Added by HDX - triggering datapusher plus on file uploads (after commit so DB state is
-    # consistent). Skipped entirely when defer_commit is set: the caller hasn't actually
-    # committed the transaction yet (and may still roll it back), so submitting to DataPusher+
-    # (a separate process/worker) now could act on a resource that isn't really persisted yet.
-    # It's the deferring caller's responsibility to trigger datastore management themselves
-    # after their own commit, if needed.
+    # Added by HDX - triggers DataPusher+ after commit (so DB state is consistent).
+    # Skipped when defer_commit is set: the caller hasn't committed yet (and may roll
+    # back), so it's the deferring caller's responsibility to trigger this themselves.
     if not context.get('defer_commit'):
         try:
             _manage_datastore_for_uploads(context, new_data_dict)
         except Exception:
-            # Fail open: a transient DataPusher+/datastore failure here must not make an
-            # already-committed package_update() call fail for the caller (consistent with
-            # _manage_datastore_for_uploads()'s own fail-open handling of its allowlist lookup).
+            # Fail open: a transient DataPusher+/datastore failure must not fail an
+            # already-committed package_update() call for the caller.
             log.exception('Failed to manage datastore for package %s', new_data_dict.get('id'))
     else:
         log.info('defer_commit set on context - skipping datastore management for package %s; '

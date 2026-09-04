@@ -1162,23 +1162,43 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
         assert existing_resource_id in call_context.get(FILE_WAS_UPLOADED, set())
         assert call_package_dict.get('id') == created_package['id']
 
-    def test_package_revise_resurrected_deleted_resource_not_treated_as_new(self):
+    def test_package_revise_resurrected_deleted_resource_treated_as_datastore_new(self):
         """
+        Regression test for active_resource_ids being scoped to this package's
+        CURRENTLY ACTIVE resources only (pkg.resources, which excludes
+        state='deleted'), used to determine `resource_was_new` for DATASTORE
+        purposes - deliberately a SEPARATE set from existing_resource_ids (which stays
+        scoped to pkg.resources_all, ALL states, for CORE VALIDATION semantics).
 
-        Regression test for existing_resource_ids being computed from pkg.resources_all
-        (ALL states) rather than pkg.resources (which filters out state='deleted').
+        Renamed/inverted from the previous
+        test_package_revise_resurrected_deleted_resource_not_treated_as_new, which
+        asserted the OPPOSITE (and was itself the bug this proves the fix for).
 
-        CKAN core's resource_dict_save() (ckan/lib/dictization/model_save.py) looks up a
-        resource unconditionally by id (session.query(model.Resource).get(id)),
-        regardless of its current state - so resurrecting a previously-deleted resource
-        id (e.g. via a direct package_revise update__resources__extend call re-adding the
-        same id) is treated as an EXISTING resource by core (it just flips its state back
-        to 'active'), NOT a new one.
+        Setup: a resource is created, soft-deleted, then the SAME id is re-added to
+        the SAME package with an IDENTICAL url/last_modified (no real change at all) -
+        e.g. via a direct package_revise update__resources__extend call re-adding the
+        same id.
 
-        If existing_resource_ids were computed from pkg.resources instead (which
-        excludes deleted resources), the resurrected id would incorrectly be classified
-        as "new" here, wrongly flagging it into context[FILE_WAS_UPLOADED] for a
-        resource that core itself doesn't consider new.
+        CKAN core's resource_dict_save() (ckan/lib/dictization/model_save.py) looks up
+        a resource unconditionally by id (session.query(model.Resource).get(id)),
+        regardless of its current state - so core itself treats this resurrection as
+        an EXISTING resource (it just flips its state back to 'active'), NOT a new
+        one. That part is still correctly reflected by existing_resource_ids
+        (pkg.resources_all-based) and is unaffected by this test.
+
+        However, HDX's own patched package_resource_list_save() (ckan/lib/
+        dictization/model_save.py:110-121) already deleted this resource's datastore
+        table the moment it left the active resource list (i.e. the instant it was
+        soft-deleted): `for resource in (set(deleted_list) | set(old_list)) -
+        set(obj_list): ... tk.get_action('datastore_delete')(...)`. So from a
+        DATASTORE point of view, this resurrection genuinely needs re-ingesting, even
+        though core's validation semantics see it as "existing, not new". Without a
+        fix here (i.e. if datastore-newness were based on the same pkg.resources_all
+        set as core-validation existing-ness, or on the OLD single conflated
+        package_resource_ids), this resource - having no url/last_modified change
+        either - would never be flagged into context[FILE_WAS_UPLOADED] at all, and
+        would silently come back to 'active' with no datastore table and no
+        resubmission.
         """
         from ckanext.hdx_package.helpers.constants import FILE_WAS_UPLOADED
 
@@ -1226,6 +1246,9 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
             'match': {'id': created_package['id']},
             'update__resources__extend': [{
                 'id': resource_id,
+                # Identical url/last_modified to the pre-deletion state - proving this
+                # is flagged purely because it's newly-active again, NOT because of any
+                # url/last_modified diff.
                 'url': 'https://example.com/to_be_deleted.csv',
                 'resource_type': 'url',
                 'format': 'CSV',
@@ -1240,7 +1263,7 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
 
         mock_manage_datastore.assert_called_once()
         call_context, _ = mock_manage_datastore.call_args[0]
-        assert resource_id not in call_context.get(FILE_WAS_UPLOADED, set())
+        assert resource_id in call_context.get(FILE_WAS_UPLOADED, set())
 
     def test_package_update_cross_package_deleted_resource_id_flagged_pre_validation(self):
         """
