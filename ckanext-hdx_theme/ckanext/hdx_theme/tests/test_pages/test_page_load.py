@@ -87,9 +87,9 @@ pages = [
     {'url_name': 'hdx_splash.about', 'usertype': 'all', 'url_params': {'page': 'hdx-qa-process'}},
     {'url_name': 'hdx_splash.about', 'usertype': None, 'url_params': {'page': 'hdx-qa-process'}},
 
-    # archive page
-    {'url_name': 'hdx_archived_quick_links.show', 'usertype': 'all'},
-    {'url_name': 'hdx_archived_quick_links.show', 'usertype': None},
+    # crisis pages
+    {'url_name': 'hdx_crisis_pages.show', 'usertype': 'all'},
+    {'url_name': 'hdx_crisis_pages.show', 'usertype': None},
 
     {'url_name': 'dashboard.organizations', 'usertype': 'all'},
     {'url_name': 'activity.dashboard', 'usertype': 'all'},

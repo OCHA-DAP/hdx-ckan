@@ -141,9 +141,10 @@ reflow concerns — this is a text row list, not a grid), per the stacked-sectio
 
 ## 8. Decisions Taken (confirmed with user during requirements drafting)
 
-- **D1 — New dedicated page (confirmed):** A new, separate route/page — not a repurposing, retitling,
-  or restructuring of the existing `/archive` page, which stays exactly as implemented in
-  `066-archived-dataviz-v2.md`.
+- **D1 — New dedicated page (confirmed):** A new, separate route/page, not a repurposing or
+  retitling of `/archive`'s own v2 UI (`066-archived-dataviz-v2.md`, unchanged in the codebase). Once
+  this page exists, `/archive` itself permanently redirects (301) here rather than rendering that UI —
+  see D19.
 - **D2 — Scope: crisis pages only (confirmed):** `type == 'event'` pages only. `type == 'dashboards'`
   pages (currently just "Overview of Data Grids") are out of scope.
 - **D3 — Ongoing / Archived split (confirmed):** Uses the existing `Page.status` column
@@ -172,9 +173,9 @@ reflow concerns — this is a text row list, not a grid), per the stacked-sectio
   existing pattern; no design is requested before this first implementation.
 - **D12 — Analytics (confirmed):** No tracking, matching `/archive`'s precedent (`066` D4).
 - **D13 — Page heading copy (confirmed):** "HDX Crisis Pages", no intro/subtitle copy.
-- **D14 — Discoverability (confirmed):** Intentionally undiscoverable via UI for now — no link is
-  planned from anywhere; reachable only by direct URL or a future admin-added Quick Links entry,
-  consistent with D5.
+- **D14 — Discoverability (confirmed):** No link to this page is added anywhere in the v2 header,
+  footer, or other UI; reachable via `/archive`'s redirect (D19), direct URL, or a future
+  admin-added Quick Links entry, consistent with D5.
 - **D15 — Sort field (confirmed):** The `Page` model has no `created` column, only `modified`
   (defaults to creation time, updated on every edit via `update.py`). Sorting uses `modified`, newest
   first, as the closest available proxy — accepted even though an edited page moves back to the top of
@@ -186,6 +187,14 @@ reflow concerns — this is a text row list, not a grid), per the stacked-sectio
   text headings only.
 - **D18 — Empty-state copy (confirmed):** "No ongoing crisis pages." / "No archived crisis pages." —
   section-specific wording rather than a generic message reused for both.
+- **D19 — `/archive` redirect (confirmed):** `/archive` (`hdx_archived_quick_links` blueprint)
+  permanently redirects (301) to `/crisis-pages`, via the `check_redirect_needed`-style pattern
+  (`ckan.plugins.toolkit.redirect_to` with `response.status_code` forced to `301`) already used
+  elsewhere in this codebase for permanent URL retirement. `/archive`'s own data (archived Quick
+  Links entries, and archived pages of any `type` other than `event`) has no other listing page —
+  accepted as a deliberate loss of reachability, not carried over into `/crisis-pages`. The old
+  `show()` view function, its helpers, and `archived_quick_links/main.html` stay in the codebase
+  unused (see `066-archived-dataviz-v2.md` D10) rather than being deleted.
 
 ---
 
@@ -199,3 +208,8 @@ reflow concerns — this is a text row list, not a grid), per the stacked-sectio
   page styles (compiles to `fanstatic/v2/pages/crisis-pages.css`).
 - `ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/webassets.yml` — adds the
   `v2-crisis-pages-page-styles` bundle.
+- `ckanext-hdx_theme/ckanext/hdx_theme/views/archived_quick_links_custom_settings.py` — `/archive`'s
+  route function is `redirect_to_crisis_pages`, a 301 redirect to `hdx_crisis_pages.show` (D19); the
+  original `show()` and its helpers remain, unused.
+- `ckanext-hdx_theme/ckanext/hdx_theme/tests/test_pages/test_page_load.py` — the `/archive` smoke-test
+  rows are replaced with `hdx_crisis_pages.show` rows.

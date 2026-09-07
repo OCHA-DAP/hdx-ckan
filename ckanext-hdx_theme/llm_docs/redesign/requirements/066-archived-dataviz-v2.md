@@ -1,7 +1,9 @@
 # Archived Dataviz Page (v2 Migration)
 
-**Scope:** The `/archive` route only (`hdx_archived_quick_links` blueprint). UI/UX redesign only —
-the underlying data assembly (`archived_quick_links_custom_settings.py`) is unchanged.
+**Scope:** The `/archive` route only (`hdx_archived_quick_links` blueprint). `/archive` permanently
+redirects (301) to `/crisis-pages` (see `071-crisis-pages-v2.md`); the v2 UI described in this
+document remains in the codebase (`archived_quick_links/main.html`, the data-assembly helpers in
+`archived_quick_links_custom_settings.py`) but is not rendered by any route.
 
 ---
 
@@ -59,6 +61,13 @@ requirements drafting).
   truncation added to `text-button.html`, which has none today.
 - **D9 — Pagination (confirmed):** Out of scope, no action for this migration. Revisit only if the
   list grows significantly in the future.
+- **D10 — Superseded by a redirect (confirmed):** `/archive` (`archived_quick_links_custom_settings.py::show`)
+  permanently redirects (301) to `/crisis-pages`, per `071-crisis-pages-v2.md`. The route function is
+  renamed `redirect_to_crisis_pages`; the original `show()` and its `_prepare_archived_page_list()` /
+  `_prepare_archived_viz_list()` helpers, and the `archived_quick_links/main.html` template, stay in
+  the codebase unused rather than being deleted. Archived Quick Links entries (external viz tool
+  links) and archived pages of any `type` other than `event` — both previously listed on `/archive` —
+  have no other listing page; the redirect accepts losing that reachability.
 
 ---
 

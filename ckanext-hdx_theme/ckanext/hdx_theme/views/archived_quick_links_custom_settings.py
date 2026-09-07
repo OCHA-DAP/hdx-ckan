@@ -12,6 +12,7 @@ request = tk.request
 check_access = tk.check_access
 get_action = tk.get_action
 render = tk.render
+redirect = tk.redirect_to
 
 log = logging.getLogger(__name__)
 
@@ -69,4 +70,10 @@ def show():
     return render('archived_quick_links/main.html', extra_vars=template_data)
 
 
-hdx_archived_quick_links.add_url_rule(u'/archive', view_func=show)
+def redirect_to_crisis_pages():
+    response = redirect(h.url_for('hdx_crisis_pages.show'))
+    response.status_code = 301
+    return response
+
+
+hdx_archived_quick_links.add_url_rule(u'/archive', view_func=redirect_to_crisis_pages)
