@@ -53,7 +53,7 @@ def resource_create(context, data_dict):
     # loop flags EVERY brand-new resource (real upload or URL-only alike) with its real id once
     # known (post-flush), and calls _manage_datastore_for_uploads() itself, which submits it if
     # eligible (format + HDX allowlist) - this covers both genuine uploads and URL-only
-    # resources created via this action (see test_create_and_upload for the latter).
+    # resources created via this action (see test_resource_create_url_only_reaches_manage_datastore for the latter).
     # DatapusherPlusPlugin.after_resource_create() is an intentional no-op specifically to avoid
     # submitting this same resource a second time.
 
