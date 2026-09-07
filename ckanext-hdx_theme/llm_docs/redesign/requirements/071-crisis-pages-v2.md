@@ -1,7 +1,7 @@
 # Crisis Pages (v2) — Ongoing / Archived Listing
 
-**Scope:** A new, dedicated listing page for crisis (`type='event'`) CMS pages, split into "Ongoing"
-and "Archived" sections.
+**Scope:** A new, dedicated listing page for crisis pages, sourced from the Quick Links config, split
+into "Ongoing" and "Archived" sections.
 
 **Excluded:** The existing `/archive` page (`066-archived-dataviz-v2.md`), which mixes archived Quick
 Links entries with archived CMS pages of any type — unchanged by this task. `type == 'dashboards'`
@@ -21,11 +21,11 @@ archived CMS pages of *any* type. That link has been removed outright (desktop d
 offcanvas in `v2/header.html`) as an immediate, separate change in this same work session — it was
 **not** renamed or repointed here.
 
-Separately, the intent is a new "Crisis Pages" concept: a page listing crisis (`type='event'`) CMS
-pages specifically, split into Ongoing and Archived sections, using the `Page.status` field that
-already exists and is already used for exactly this purpose in `/archive`'s and the admin pages
-table's filtering logic. This is new scope — no such listing exists anywhere in the codebase today
-(only single-page detail routes `/event/<id>` and `/dashboards/<id>` exist; there is no index).
+Separately, the intent is a new "Crisis Pages" concept: a page listing crisis pages, split into
+Ongoing and Archived sections, sourced from the Quick Links config (`hdx_quick_links_settings_show`)
+— specifically its items whose `url` starts with `/event` or `/m/event` — split by each item's own
+`archived` flag. This is new scope — no such listing exists anywhere in the codebase today (only
+single-page detail routes `/event/<id>` and `/dashboards/<id>` exist; there is no index).
 
 Decisions confirmed with the requester are listed in §8.
 
@@ -33,34 +33,29 @@ Decisions confirmed with the requester are listed in §8.
 
 ## 1. Existing Implementation Audit
 
-- **Data model** — `ckanext-hdx_pages/ckanext/hdx_pages/model.py`, table `page`:
-  - `type`: `'event'` (crisis) or `'dashboards'`
-  - `status`: `'ongoing'` / `'archived'`
-  - `state`: standard CKAN state (`active`/`draft`)
-- **`page_list` action** (`ckanext-hdx_pages/ckanext/hdx_pages/actions/get.py:68-107`) already
-  supports a `status` filter (`query.filter_by(status=...)`) plus always-applied `state='active'`. No
-  `type` filter exists — per D4, none is added; filter client-side/view-side instead.
-- **Current live data** (confirmed via direct query against the local dev DB, 2026-09-07):
-  - 3 ongoing `event` pages: Lebanon Crisis (`/event/lebanon-crisis`), COD (`/event/cod`), occupied
-    Palestinian territory-Israel Hostilities (`/event/opt-israel-hostilities`)
-  - 4 archived `event` pages: Türkiye/Syria Earthquakes (`/event/turkiye-syria-earthquakes`), Libya
-    Floods (`/event/libya-floods`), Morocco Earthquake (`/event/morocco-earthquake`), Rohingya Refugee
-    Crisis (`/event/rohingya-displacement`)
-  - 1 ongoing `dashboards` page: Overview of Data Grids (`/dashboards/overview-of-data-grids`) — out
-    of scope per D2
+- **Data model** — Quick Links (`hdx_quick_links_settings_show` action,
+  `ckanext-hdx_theme/ckanext/hdx_theme/helpers/actions.py`), a JSON list stored under CKAN's generic
+  `system_info` key `hdx.quick_links.config`. Each item: `{id, title, url, order, newTab, archived,
+  buttonText (optional)}` — no category/type field. "Crisis-ness" is inferred purely from `url`
+  starting with `/event` or `/m/event`, the same heuristic already used (inverted, to exclude these
+  URLs from the Products nav menu) by `hdx_get_quick_links_list(exclude_crisis=True)` in
+  `helpers/helpers.py`.
+- **Underlying CMS pages** — crisis page *content* itself (the individual `/event/<id>` pages) still
+  lives in the separate `Page` model (`ckanext-hdx_pages/ckanext/hdx_pages/model.py`, `type='event'`,
+  `status` `'ongoing'`/`'archived'`) via the unrelated `read_event`/`page_list` code paths; this
+  listing page does not read that model at all.
+- Not every `type='event'` Page has a corresponding Quick Links entry — Quick Links is curated
+  separately from Page creation/archival, so this listing can lag behind the full set of `event`
+  Pages until an admin adds an entry for each one — see D20.
 - **No existing listing/index route** for crisis pages — only detail routes exist:
   `/event/<id>`, `/dashboards/<id>` (desktop, `pages/read_page.html`) and `/m/event/<id>`,
   `/m/dashboards/<id>` (mobile-lite, untouched by v2).
 - **Closest structural precedents:**
-  - `ckanext-hdx_theme/ckanext/hdx_theme/views/archived_quick_links_custom_settings.py` — the
-    `/archive` view, whose `_prepare_archived_page_list()` already queries `page_list` and filters by
-    `status == 'archived'` in Python. The same approach, adding a `type == 'event'` filter, is the
-    basis for this new page's data assembly.
-  - `templates/admin/pages.html` — sysadmin table already rendering `type` / `status` / `state` per
-    page, with an "Archived/Ongoing" column header confirming this is already the established
-    user-facing vocabulary.
+  - `templates/admin/pages.html` — sysadmin table rendering `type` / `status` / `state` per page,
+    with an "Archived/Ongoing" column header — the existing precedent for this vocabulary, even
+    though this listing sources from Quick Links rather than that table.
   - `templates/archived_quick_links/main.html` + `v2/components/text-button.html` row pattern (see
-    `066-archived-dataviz-v2.md` §3) — the row-list rendering approach to reuse.
+    `066-archived-dataviz-v2.md` §3) — the row-list rendering approach reused here.
 - The v2 Products header/footer "Archived Dataviz" link (`v2/header.html`, desktop dropdown + mobile
   offcanvas) was removed outright in this same work session, per D1/D5 — not repointed here.
 
@@ -80,9 +75,9 @@ the first-pass implementation rather than being held pending a design.
 ## 3. Confirmed Structure
 
 - **Route**: `/crisis-pages`, blueprint `hdx_crisis_pages` — a single view, no params. (D7)
-- **View**: call `page_list` (action) with `state='active'`, filter to `type == 'event'` in Python
-  (mirrors the existing `_prepare_archived_page_list()` pattern), then split into two lists by
-  `status`, each sorted by the `Page.modified` timestamp, newest first. (D10, D15)
+- **View**: call `hdx_quick_links_settings_show` (action), keep items whose `url` starts with
+  `/event` or `/m/event`, split into two lists by each item's own `archived` flag, each sorted by the
+  item's own `order` field, ascending. (D10, D15, D20)
 - **Template**: extends `v2/page.html`, no-sidebar single-column layout — same base pattern as
   `archived_quick_links/main.html` (066).
 - **Two stacked sections** (not a `c-tabs` toggle), "Ongoing" first, "Archived" second — each a plain
@@ -127,6 +122,7 @@ reflow concerns — this is a text row list, not a grid), per the stacked-sectio
 |---|---|---|
 | No Figma reference | Building without one risks visual mismatch once real designs arrive. | Proceeding with §3 as the confirmed first-pass layout per D11; revisit if/when Figma designs arrive. |
 | Content overlap with `/archive` | Both pages can list archived crisis pages, through independent code paths with no shared logic. | Deliberate separation per D1/D2; future changes to one will not automatically apply to the other — worth remembering, not a defect. |
+| Quick Links coverage | A crisis page only appears on `/crisis-pages` once an admin adds a matching Quick Links entry; `Page`-level creation/archival alone has no effect on this listing. | Deliberate per D20 — Quick Links is the sole, curated source; gaps are addressed via `/ckan-admin/quick-links`, not code. |
 
 ---
 
@@ -135,7 +131,7 @@ reflow concerns — this is a text row list, not a grid), per the stacked-sectio
 | Case | Handling |
 |---|---|
 | Zero ongoing or zero archived crisis pages in a given section | Follow the `066` D7 precedent: still show the section heading, plus a short empty-state message inside it ("No ongoing crisis pages." / "No archived crisis pages."). (D9, D18) |
-| A crisis page with a missing/empty title | Assume the same data hygiene as `/archive`'s existing `_prepare_archived_page_list()`, which does no additional defensive handling today. |
+| A Quick Links entry with a missing/empty title | No defensive handling beyond `.strip()`ing whitespace — an empty title renders as an empty row label, matching the admin-curated data as entered. |
 
 ---
 
@@ -145,16 +141,14 @@ reflow concerns — this is a text row list, not a grid), per the stacked-sectio
   retitling of `/archive`'s own v2 UI (`066-archived-dataviz-v2.md`, unchanged in the codebase). Once
   this page exists, `/archive` itself permanently redirects (301) here rather than rendering that UI —
   see D19.
-- **D2 — Scope: crisis pages only (confirmed):** `type == 'event'` pages only. `type == 'dashboards'`
-  pages (currently just "Overview of Data Grids") are out of scope.
-- **D3 — Ongoing / Archived split (confirmed):** Uses the existing `Page.status` column
-  (`'ongoing'` / `'archived'`) — the same field already used by `/archive`'s
-  `_prepare_archived_page_list()` and by the sysadmin `templates/admin/pages.html` table (whose
-  "Archived/Ongoing" column is the existing precedent for this exact vocabulary).
-- **D4 — No backend action changes (confirmed):** No new `type` filter is added to the `page_list`
-  action (`ckanext-hdx_pages/ckanext/hdx_pages/actions/get.py`). Filter by `type` in the view layer
-  instead, mirroring the pattern `archived_quick_links_custom_settings.py::_prepare_archived_page_list()`
-  already uses to filter by `status` in Python.
+- **D2 — Scope: crisis pages only (confirmed):** Quick Links items whose `url` starts with `/event`
+  or `/m/event` only. `/dashboards`-prefixed items (currently just "Overview of Data Grids") are out
+  of scope.
+- **D3 — Ongoing / Archived split (confirmed):** Uses each Quick Links item's own `archived` boolean
+  field.
+- **D4 — No backend action changes (confirmed):** No changes to `hdx_quick_links_settings_show`
+  (`ckanext-hdx_theme/ckanext/hdx_theme/helpers/actions.py`) or its schema. Filter by `url` prefix and
+  split by `archived` in the view layer.
 - **D5 — No hardcoded nav entry (confirmed):** No link to this new page is added to the v2 header
   (desktop dropdown or mobile offcanvas) or footer. Discovery is via the admin-managed Quick Links
   list only — the same mechanism as any other Products-menu item — consistent with the removal in D1
@@ -167,8 +161,9 @@ reflow concerns — this is a text row list, not a grid), per the stacked-sectio
   a `c-tabs` toggle.
 - **D9 — Empty-state handling (confirmed):** Follows the `066` D7 precedent — still show the section
   heading, plus a short empty-state message inside it, if a section has zero pages.
-- **D10 — Sort order (confirmed):** Within each section, rows are sorted newest first (see D15 for the
-  field this uses).
+- **D10 — Sort order (confirmed):** Within each section, rows are sorted by the Quick Links item's
+  own `order` field, ascending — the same ordering the admin sets via drag-and-drop in
+  `/ckan-admin/quick-links`.
 - **D11 — No Figma requested (confirmed):** Proceed as a text-only first pass matching `/archive`'s
   existing pattern; no design is requested before this first implementation.
 - **D12 — Analytics (confirmed):** No tracking, matching `/archive`'s precedent (`066` D4).
@@ -176,10 +171,8 @@ reflow concerns — this is a text row list, not a grid), per the stacked-sectio
 - **D14 — Discoverability (confirmed):** No link to this page is added anywhere in the v2 header,
   footer, or other UI; reachable via `/archive`'s redirect (D19), direct URL, or a future
   admin-added Quick Links entry, consistent with D5.
-- **D15 — Sort field (confirmed):** The `Page` model has no `created` column, only `modified`
-  (defaults to creation time, updated on every edit via `update.py`). Sorting uses `modified`, newest
-  first, as the closest available proxy — accepted even though an edited page moves back to the top of
-  its section.
+- **D15 — Row title source (confirmed):** Each row's label is the Quick Links item's own `title`
+  field, verbatim (`.strip()`'d defensively), with no lookup against the underlying `Page.title`.
 - **D16 — Row link icon (confirmed):** Rows use `arrow-right.svg`, right-positioned, no `target`
   attribute — the internal-navigation convention already used for `page_list` links in
   `page-header.html`, not `066`'s external-link icon/`target="_blank"` (its rows point off-site).
@@ -195,13 +188,18 @@ reflow concerns — this is a text row list, not a grid), per the stacked-sectio
   accepted as a deliberate loss of reachability, not carried over into `/crisis-pages`. The old
   `show()` view function, its helpers, and `archived_quick_links/main.html` stay in the codebase
   unused (see `066-archived-dataviz-v2.md` D10) rather than being deleted.
+- **D20 — Data source: Quick Links, not `Page`/`page_list` (confirmed):** The listing reads
+  `hdx_quick_links_settings_show` exclusively; `Page`/`page_list` plays no role in this view. Quick
+  Links is the sole, curated source — a crisis page shows up only once an admin adds a matching Quick
+  Links entry via `/ckan-admin/quick-links`; pages without one simply don't appear, which is expected
+  and addressed by curating Quick Links, not by code.
 
 ---
 
 ## 9. Files Affected
 
-- `ckanext-hdx_theme/ckanext/hdx_theme/views/crisis_pages.py` — new; blueprint `hdx_crisis_pages`,
-  route `/crisis-pages`, builds the ongoing/archived lists per §3.
+- `ckanext-hdx_theme/ckanext/hdx_theme/views/crisis_pages.py` — blueprint `hdx_crisis_pages`, route
+  `/crisis-pages`, builds the ongoing/archived lists from Quick Links per §3.
 - `ckanext-hdx_theme/ckanext/hdx_theme/plugin.py` — registers `hdx_crisis_pages` in `get_blueprint()`.
 - `ckanext-hdx_theme/ckanext/hdx_theme/templates/crisis_pages/main.html` — new page template.
 - `ckanext-hdx_theme/ckanext/hdx_theme/hdx-styles/src/common/less/v2/pages/crisis-pages.less` — new
