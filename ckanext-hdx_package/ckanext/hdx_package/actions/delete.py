@@ -93,6 +93,12 @@ def resource_delete(context, data_dict):
     id = _get_or_bust(data_dict, 'id')
 
     context['do_geo_preview'] = False
+    # Save the caller's original defer_commit so it can be restored below - callers (e.g.
+    # hdx_package_update_metadata()) are known to reuse the same context dict across multiple
+    # action calls, so leaving our own True value in place here would wrongly make any later
+    # package_update()/package_create() on that same context think a commit is still pending,
+    # causing it to skip both its own commit and its post-commit datastore management.
+    _prev_defer_commit = context.get('defer_commit')
     context['defer_commit'] = True
     # result_dict = core_delete.resource_delete(context, data_dict)
     model = context['model']
@@ -111,6 +117,13 @@ def resource_delete(context, data_dict):
     except Exception as ex:
         log.error('Exception while trying to delete resource:' + str(ex))
         model.Session.rollback()
+    finally:
+        # Restore regardless of success/failure/rollback above, so this call's internal use
+        # of defer_commit never leaks into the caller's context.
+        if _prev_defer_commit is None:
+            context.pop('defer_commit', None)
+        else:
+            context['defer_commit'] = _prev_defer_commit
 
 def _is_requested_data_type(entity):
     for extra in entity.extras_list:
