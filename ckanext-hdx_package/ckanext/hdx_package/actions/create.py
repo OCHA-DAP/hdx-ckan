@@ -22,8 +22,9 @@ import ckanext.hdx_package.helpers.helpers as helpers
 from ckan.types import Context, DataDict, Schema
 from ckan.types.logic import ActionResult
 from ckanext.hdx_org_group.helpers.org_batch import get_batch_or_generate
-from ckanext.hdx_package.actions.update import process_batch_mode, run_action_without_geo_preview
-from ckanext.hdx_package.helpers.constants import BATCH_MODE, BATCH_MODE_DONT_GROUP
+from ckanext.hdx_package.actions.update import _manage_datastore_for_uploads, process_batch_mode, \
+    run_action_without_geo_preview
+from ckanext.hdx_package.helpers.constants import BATCH_MODE, BATCH_MODE_DONT_GROUP, FILE_WAS_UPLOADED
 from ckanext.hdx_package.helpers.resource_triggers import BEFORE_PACKAGE_UPDATE_LISTENERS, \
     AFTER_PACKAGE_UPDATE_LISTENERS, VERSION_CHANGE_ACTIONS
 
@@ -310,6 +311,39 @@ def package_create(
 
     if not context.get('defer_commit'):
         model.repo.commit()
+
+    # Added by HDX - triggers DataPusher+ after commit (so DB state is consistent), for any
+    # resources included directly in this package_create() call. Unlike resource_create(),
+    # package_create() saves initial resources itself via modified_save() and never goes
+    # through resource_create()/package_update(), so nothing else flags or submits them -
+    # every initial resource (real upload or URL-only alike) must be flagged here as "new" so
+    # eligible ones (format + HDX allowlist) still reach DataPusher+, per requirement 1 in
+    # docs/datastore/datastore.md. DatapusherPlusPlugin.notify()/after_resource_create() are
+    # intentional no-ops, so this is now the only path that submits these initial resources.
+    # Skipped when defer_commit is set: the caller hasn't committed yet (and may roll back),
+    # so it's the deferring caller's responsibility to trigger this themselves.
+    if not context.get('defer_commit'):
+        try:
+            initial_resource_ids = {
+                r['id'] for r in data.get('resources', [])
+                if isinstance(r, dict) and r.get('id')
+            }
+            if initial_resource_ids:
+                context.setdefault(FILE_WAS_UPLOADED, set())
+                context[FILE_WAS_UPLOADED] |= initial_resource_ids
+                show_context = context.copy()
+                show_context['ignore_auth'] = True
+                new_data_dict = _get_action('package_show')(
+                    show_context, {'id': pkg.id, 'include_plugin_data': include_plugin_data})
+                _manage_datastore_for_uploads(context, new_data_dict)
+        except Exception:
+            # Fail open: a transient DataPusher+/datastore failure must not fail an
+            # already-committed package_create() call for the caller.
+            log.exception('Failed to manage datastore for package %s', pkg.id)
+    else:
+        log.info('defer_commit set on context - skipping datastore management for package %s; '
+                  'caller is responsible for triggering it after the deferred commit if needed',
+                  pkg.id)
 
     return_id_only = context.get('return_id_only', False)
 

@@ -29,7 +29,10 @@ Only resources actually flagged into `context[FILE_WAS_UPLOADED]` are evaluated 
 
 ## Implementation
 
-`_manage_datastore_for_uploads()` is invoked from a **single call path**: inside `package_update()` (`ckanext-hdx_package/ckanext/hdx_package/actions/update.py`), **after** `model.repo.commit()` and the subsequent `package_show` call, so the saved resource format reflects the committed database state before any decision is made. This one call path covers every way a resource can reach `package_update()`, including via `resource_create()`'s underlying `package_revise` → `package_update` call, or a direct `package_revise(update__resources__extend=[...])` call — there is no separate/duplicate call path in `create.py`.
+`_manage_datastore_for_uploads()` is invoked from **two call paths**, both **after** `model.repo.commit()` and a subsequent `package_show` call, so the saved resource format reflects the committed database state before any decision is made:
+
+1. Inside `package_update()` (`ckanext-hdx_package/ckanext/hdx_package/actions/update.py`). This covers every way a resource can reach `package_update()`, including via `resource_create()`'s underlying `package_revise` → `package_update` call, or a direct `package_revise(update__resources__extend=[...])` call.
+2. Inside `package_create()` (`ckanext-hdx_package/ckanext/hdx_package/actions/create.py`), for resources included directly in the `resources` list of the initial `package_create()` call. `package_create()` saves those resources itself via `modified_save()` and never routes them through `resource_create()`/`package_update()`, so path 1 above never sees them — every id present in `data['resources']` after `model.Session.flush()` is flagged into `context[FILE_WAS_UPLOADED]` here, unconditionally (eligibility is still fully decided inside `_manage_datastore_for_uploads()`).
 
 `package_update()`'s own flagging loop populates `context[FILE_WAS_UPLOADED]` with the real id of every resource that should be evaluated:
 

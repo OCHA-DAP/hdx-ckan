@@ -151,6 +151,98 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
         assert created_resource['id'] in call_context.get(FILE_WAS_UPLOADED, set())
         assert call_package_dict.get('id') == created_resource['package_id']
 
+    def test_package_create_initial_url_only_resource_reaches_manage_datastore(self):
+        """
+        Regression test: a URL-only resource included directly in the `resources` list of
+        a package_create() call must still reach _manage_datastore_for_uploads().
+
+        package_create() saves its initial resources itself via modified_save() and never
+        routes them through resource_create()/package_update(), so nothing else flags or
+        submits them. With the datapusher-plus dependency upgrade that makes
+        DatapusherPlusPlugin.notify()/after_resource_create() intentional no-ops, this is
+        now the only path that submits an eligible dataset's initial resources.
+        """
+        from ckanext.hdx_package.helpers.constants import FILE_WAS_UPLOADED
+
+        package = {"package_creator": "test function",
+                   "private": False,
+                   "dataset_date": "[1960-01-01 TO 2012-12-31]",
+                   "caveats": "These are the caveats",
+                   "license_other": "TEST OTHER LICENSE",
+                   "methodology": "This is a test methodology",
+                   "dataset_source": "World Bank",
+                   "license_id": "hdx-other",
+                   "notes": "This is a test activity",
+                   "groups": [{"name": "roger"}],
+                   "owner_org": "hdx-test-org",
+                   'name': 'test_activity_initial_url_only_resource',
+                   'title': 'Test Activity Initial Url Only Resource',
+                   'resources': [
+                       {
+                           'url': 'https://example.com/initial_url_only.csv',
+                           'resource_type': 'url',
+                           'format': 'CSV',
+                           'name': 'initial_url_only.csv',
+                       }
+                   ]
+                   }
+
+        context = {'ignore_auth': True,
+                   'model': model, 'session': model.Session, 'user': 'testsysadmin'}
+
+        with mock.patch(
+            'ckanext.hdx_package.actions.create._manage_datastore_for_uploads'
+        ) as mock_manage_datastore:
+            created_package = self._get_action('package_create')(context, package)
+
+        created_resource_id = created_package['resources'][0]['id']
+
+        mock_manage_datastore.assert_called_once()
+        call_context, call_package_dict = mock_manage_datastore.call_args[0]
+        assert created_resource_id in call_context.get(FILE_WAS_UPLOADED, set())
+        assert call_package_dict.get('id') == created_package['id']
+
+    def test_package_create_defer_commit_skips_datastore_management(self):
+        """
+        Regression test: when context['defer_commit'] is set on a package_create() call
+        with an initial resources list, _manage_datastore_for_uploads() must NOT be
+        called, mirroring package_update()'s own defer_commit gate.
+        """
+        package = {"package_creator": "test function",
+                   "private": False,
+                   "dataset_date": "[1960-01-01 TO 2012-12-31]",
+                   "caveats": "These are the caveats",
+                   "license_other": "TEST OTHER LICENSE",
+                   "methodology": "This is a test methodology",
+                   "dataset_source": "World Bank",
+                   "license_id": "hdx-other",
+                   "notes": "This is a test activity",
+                   "groups": [{"name": "roger"}],
+                   "owner_org": "hdx-test-org",
+                   'name': 'test_activity_create_defer_commit',
+                   'title': 'Test Activity Create Defer Commit',
+                   'resources': [
+                       {
+                           'url': 'https://example.com/create_defer_commit.csv',
+                           'resource_type': 'url',
+                           'format': 'CSV',
+                           'name': 'create_defer_commit.csv',
+                       }
+                   ]
+                   }
+
+        context = {'ignore_auth': True,
+                   'model': model, 'session': model.Session, 'user': 'testsysadmin',
+                   'defer_commit': True}
+
+        with mock.patch(
+            'ckanext.hdx_package.actions.create._manage_datastore_for_uploads'
+        ) as mock_manage_datastore:
+            self._get_action('package_create')(context, package)
+        model.repo.commit()
+
+        mock_manage_datastore.assert_not_called()
+
     def test_package_revise_direct_url_only_new_resource_reaches_manage_datastore(self):
         """
         Regression test: a URL-only new resource added via a DIRECT package_revise()
@@ -1692,6 +1784,84 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
         # The resource is new to package B, so it must be flagged for datastore reevaluation.
         assert reused_resource_id in update_context.get(FILE_WAS_UPLOADED, set())
 
+    def test_resource_delete_restores_defer_commit_on_context(self):
+        """
+        Regression test for resource_delete() leaking context['defer_commit'] = True
+        into a reused context.
+
+        resource_delete() sets context['defer_commit'] = True internally so its own
+        package_revise()/package_update() call doesn't commit before it does its own
+        model.repo.commit(). Before the fix, that True value was never restored, so
+        any LATER package_update()/package_create() call reusing the same context
+        object (a known pattern - see hdx_package_update_metadata()) would wrongly
+        think a commit was still pending and skip both its own commit and its
+        post-commit datastore management.
+
+        resource_delete() must restore whatever value context['defer_commit'] had
+        before it ran (including popping it back out entirely if it was absent),
+        so callers reusing the same context afterward are unaffected.
+        """
+        package = {"package_creator": "test function",
+                   "private": False,
+                   "dataset_date": "[1960-01-01 TO 2012-12-31]",
+                   "caveats": "These are the caveats",
+                   "license_other": "TEST OTHER LICENSE",
+                   "methodology": "This is a test methodology",
+                   "dataset_source": "World Bank",
+                   "license_id": "hdx-other",
+                   "notes": "This is a test activity",
+                   "groups": [{"name": "roger"}],
+                   "owner_org": "hdx-test-org",
+                   'name': 'test_activity_resource_delete_defer_commit',
+                   'title': 'Test Activity Resource Delete Defer Commit',
+                   'resources': [
+                       {
+                           'url': 'https://example.com/to_be_deleted_2.csv',
+                           'resource_type': 'url',
+                           'format': 'CSV',
+                           'name': 'to_be_deleted_2.csv',
+                       }
+                   ]
+                   }
+
+        context = {'ignore_auth': True,
+                   'model': model, 'session': model.Session, 'user': 'testsysadmin'}
+        created_package = self._get_action('package_create')(context, package)
+        resource_id = created_package['resources'][0]['id']
+
+        # Case 1: context had no defer_commit key beforehand -> must be popped back out.
+        delete_context = {'ignore_auth': True,
+                           'model': model, 'session': model.Session, 'user': 'testsysadmin'}
+        assert 'defer_commit' not in delete_context
+        self._get_action('resource_delete')(delete_context, {'id': resource_id})
+        assert 'defer_commit' not in delete_context
+
+        # Reusing the SAME context for a later package_update() call must not skip
+        # datastore management because of a leaked defer_commit=True.
+        update_dict = dict(created_package)
+        update_dict['resources'] = []
+        with mock.patch(
+            'ckanext.hdx_package.actions.update._manage_datastore_for_uploads'
+        ) as mock_manage_datastore:
+            self._get_action('package_update')(delete_context, update_dict)
+        mock_manage_datastore.assert_called_once()
+
+        # Case 2: context already had defer_commit=True beforehand (nested/deferring
+        # caller) -> must remain True afterward, not be wiped out to None/False.
+        package_2 = dict(package)
+        package_2['name'] = 'test_activity_resource_delete_defer_commit_2'
+        create_context = {'ignore_auth': True,
+                           'model': model, 'session': model.Session, 'user': 'testsysadmin'}
+        created_package_2 = self._get_action('package_create')(create_context, package_2)
+        resource_id_2 = created_package_2['resources'][0]['id']
+
+        nested_context = {'ignore_auth': True,
+                           'model': model, 'session': model.Session, 'user': 'testsysadmin',
+                           'defer_commit': True}
+        self._get_action('resource_delete')(nested_context, {'id': resource_id_2})
+        assert nested_context.get('defer_commit') is True
+        model.repo.commit()
+
     def test_package_update_defer_commit_skips_datastore_management(self):
         """
         Regression test: when context['defer_commit'] is set, package_update() must NOT
@@ -1953,7 +2123,13 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
 
         package_update() must reset context[FILE_WAS_UPLOADED] at the start of every
         invocation, so this test deliberately reuses one context object across two
-        sequential calls: first a genuine upload, then a clear_upload-only update.
+        sequential calls: first a genuine upload, then a second, unrelated update of
+        the same resource (no upload/clear_upload key at all, no url/last_modified
+        change) that must NOT be flagged on its own merits - `had_clear_upload` is
+        deliberately NOT used for the second call here, since clear_upload=True is
+        itself now a legitimate (non-stale) reason to flag a resource (see
+        test_package_update_clear_upload_reaches_manage_datastore), which would
+        confound what this test is specifically meant to verify.
         """
         from ckanext.hdx_package.helpers.constants import FILE_WAS_UPLOADED
 
@@ -2011,10 +2187,12 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
             self._get_action('package_update')(shared_context, update_dict)
             assert existing_resource_id in shared_context.get(FILE_WAS_UPLOADED, set())
 
-            # Second call, reusing the SAME context: clear_upload only, no real upload
-            # -> the stale flag from the first call must NOT survive into this call.
+            # Second call, reusing the SAME context: an unrelated update of the same
+            # resource - no upload/clear_upload key at all, and no url/last_modified
+            # change - so it must NOT be flagged on its own merits. The stale flag from
+            # the first call must not survive into this call either.
             update_dict = dict(created_package)
-            update_dict['resources'] = [dict(existing_resource, clear_upload=True)]
+            update_dict['resources'] = [dict(existing_resource, upload='', clear_upload='')]
             self._get_action('package_update')(shared_context, update_dict)
             assert existing_resource_id not in shared_context.get(FILE_WAS_UPLOADED, set())
 

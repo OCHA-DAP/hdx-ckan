@@ -611,7 +611,13 @@ def package_update(
                 if hasattr(upload, 'mimetype'):
                     resource['mimetype'] = upload.mimetype
 
-            resource['size'] = upload.filesize
+            # Gated on hasattr (matching CKAN core's own resource_dict_save() /
+            # resource_update()), since ResourceUpload only sets .filesize when a real
+            # upload_field_storage was actually provided - a clear_upload-only resource
+            # (no 'upload' payload) has no .filesize attribute at all, and would raise
+            # AttributeError here otherwise.
+            if hasattr(upload, 'filesize'):
+                resource['size'] = upload.filesize
         else:
             upload = None
             resource_had_real_upload.append(False)
