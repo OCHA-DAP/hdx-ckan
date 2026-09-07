@@ -520,6 +520,7 @@ def package_update(
     resource_upload_ids = []
     resource_uploads = []
     resource_had_real_upload = []
+    resource_had_clear_upload = []
     resource_was_new = []
     for resource in data_dict.get('resources', []):
         # "New for datastore" is checked against active_resource_ids (excludes
@@ -592,6 +593,7 @@ def package_update(
             # cleared resource as a real upload.
             was_real_upload = bool(resource.get('upload'))
             resource_had_real_upload.append(was_real_upload)
+            resource_had_clear_upload.append(bool(resource.get('clear_upload')))
 
             # Gated on resource_id_is_existing (not resource.get('id') truthiness), since a
             # brand-new resource can carry a caller-supplied id. Flagging it here would wrongly
@@ -613,6 +615,7 @@ def package_update(
         else:
             upload = None
             resource_had_real_upload.append(False)
+            resource_had_clear_upload.append(False)
         resource_uploads.append(upload)
     ids_to_prev_resource_dict = _fetch_prev_resources_info(model, resource_upload_ids)
 
@@ -654,20 +657,22 @@ def package_update(
 
     # Needed to let extensions know the new resources ids
     model.Session.flush()
-    for index, (resource, upload, was_real_upload, was_new) in enumerate(
-            zip(data.get('resources', []), resource_uploads, resource_had_real_upload, resource_was_new)):
+    for index, (resource, upload, was_real_upload, had_clear_upload, was_new) in enumerate(
+            zip(data.get('resources', []), resource_uploads, resource_had_real_upload,
+                resource_had_clear_upload, resource_was_new)):
         resource['id'] = pkg.resources[index].id
 
         # Second flagging stage: existing resources with a real upload were already
-        # flagged above (harmless no-op re-add here); brand-new resources (upload or
-        # URL-only) get their first flag here, now that their real id is known -
-        # eligibility is still fully decided inside _manage_datastore_for_uploads().
+        # flagged above (harmless no-op re-add here); clear operations and brand-new
+        # resources (upload or URL-only) get their first flag here, now that their
+        # real id is known - eligibility is still fully decided inside
+        # _manage_datastore_for_uploads().
         #
         # Gated on was_real_upload (not `upload`, also truthy for clear_upload) to avoid
         # wrongly submitting a cleared resource to DataPusher+. Doesn't reuse
         # flag_if_file_uploaded() - it gates on resource_dict.get('upload'), which may no
         # longer be present here.
-        if was_real_upload or was_new:
+        if was_real_upload or had_clear_upload or was_new:
             context.setdefault(FILE_WAS_UPLOADED, set()).add(resource['id'])
 
         if upload:
