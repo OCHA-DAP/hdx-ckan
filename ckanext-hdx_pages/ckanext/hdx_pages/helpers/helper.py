@@ -63,6 +63,9 @@ def generate_dataset_results(page_id, type, saved_filters):
             search_params['default_sort_by'] = values_list[0]
         elif key == 'ext_page_size':
             search_params['num_of_items'] = values_list[0]
+        elif key == 'ext_archived':
+            if values_list and values_list[0] == '1':
+                search_params['hide_archived'] = False
 
     search_params['additional_fq'] = fq
 
