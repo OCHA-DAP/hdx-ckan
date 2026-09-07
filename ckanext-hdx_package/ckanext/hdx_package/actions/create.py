@@ -47,21 +47,15 @@ def resource_create(context, data_dict):
     '''
 
     process_batch_mode(context, data_dict)
-    # NOTE: we intentionally don't flag this resource in context[FILE_WAS_UPLOADED] ourselves
-    # here. DataPusher+ submission is fully handled by package_revise()/package_update() below:
-    # package_update()'s flagging loop flags EVERY brand-new resource (real upload or URL-only
-    # alike) with its real id once known (post-flush), and calls _manage_datastore_for_uploads()
-    # itself, which submits it if eligible (format + HDX allowlist) - this covers both genuine
-    # uploads and URL-only resources created via this action (see
-    # test_resource_create_url_only_reaches_manage_datastore for the latter).
-    # Note that resource_create() can be called with a caller-supplied id that matches a
-    # previously-deleted resource on the same package, which "resurrects" that row instead of
-    # inserting a truly fresh one - such a resource is not always brand-new and may already carry
-    # prior QA/sensitivity values. package_update()'s reset_on_file_upload path is what correctly
-    # clears those stale values when a real file is (re-)uploaded onto it, so that reset call
-    # must not be removed even though it looks redundant for the common brand-new-resource case.
-    # DatapusherPlusPlugin.after_resource_create() is an intentional no-op specifically to avoid
-    # submitting this same resource a second time.
+    # NOTE: we intentionally don't flag this resource in context[FILE_WAS_UPLOADED]
+    # ourselves. package_update() (called below via package_revise()) flags every
+    # brand-new resource itself post-flush and calls _manage_datastore_for_uploads(),
+    # covering both real uploads and URL-only resources. A caller-supplied id can also
+    # resurrect a previously-deleted resource on this package, so it may not always be
+    # brand-new and can carry prior QA/sensitivity values - package_update()'s
+    # reset_on_file_upload path handles clearing those, so it must not be removed even
+    # though it looks redundant for the common case. DatapusherPlusPlugin.after_resource_create()
+    # is an intentional no-op to avoid a duplicate submission.
 
     if data_dict.get('resource_type', '') != 'file.upload':
         # If this isn't an upload, it is a link so make sure we update
@@ -312,16 +306,11 @@ def package_create(
     if not context.get('defer_commit'):
         model.repo.commit()
 
-    # Added by HDX - triggers DataPusher+ after commit (so DB state is consistent), for any
-    # resources included directly in this package_create() call. Unlike resource_create(),
-    # package_create() saves initial resources itself via modified_save() and never goes
-    # through resource_create()/package_update(), so nothing else flags or submits them -
-    # every initial resource (real upload or URL-only alike) must be flagged here as "new" so
-    # eligible ones (format + HDX allowlist) still reach DataPusher+, per requirement 1 in
-    # docs/datastore/datastore.md. DatapusherPlusPlugin.notify()/after_resource_create() are
-    # intentional no-ops, so this is now the only path that submits these initial resources.
-    # Skipped when defer_commit is set: the caller hasn't committed yet (and may roll back),
-    # so it's the deferring caller's responsibility to trigger this themselves.
+    # Added by HDX - triggers DataPusher+ after commit for resources included directly
+    # in this package_create() call. Unlike resource_create(), package_create() saves
+    # initial resources itself and never goes through resource_create()/package_update(),
+    # so nothing else flags or submits them. Skipped when defer_commit is set - it's the
+    # deferring caller's responsibility to trigger this after their own commit.
     if not context.get('defer_commit'):
         try:
             initial_resource_ids = {
