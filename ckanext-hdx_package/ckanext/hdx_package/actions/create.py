@@ -47,13 +47,18 @@ def resource_create(context, data_dict):
 
     process_batch_mode(context, data_dict)
     # NOTE: we intentionally don't flag this resource in context[FILE_WAS_UPLOADED] ourselves
-    # here. This always creates a single brand-new resource (no previous version to reset via
-    # reset_on_file_upload, so no need to flag for that purpose here). DataPusher+ submission
-    # is fully handled by package_revise()/package_update() below: package_update()'s flagging
-    # loop flags EVERY brand-new resource (real upload or URL-only alike) with its real id once
-    # known (post-flush), and calls _manage_datastore_for_uploads() itself, which submits it if
-    # eligible (format + HDX allowlist) - this covers both genuine uploads and URL-only
-    # resources created via this action (see test_resource_create_url_only_reaches_manage_datastore for the latter).
+    # here. DataPusher+ submission is fully handled by package_revise()/package_update() below:
+    # package_update()'s flagging loop flags EVERY brand-new resource (real upload or URL-only
+    # alike) with its real id once known (post-flush), and calls _manage_datastore_for_uploads()
+    # itself, which submits it if eligible (format + HDX allowlist) - this covers both genuine
+    # uploads and URL-only resources created via this action (see
+    # test_resource_create_url_only_reaches_manage_datastore for the latter).
+    # Note that resource_create() can be called with a caller-supplied id that matches a
+    # previously-deleted resource on the same package, which "resurrects" that row instead of
+    # inserting a truly fresh one - such a resource is not always brand-new and may already carry
+    # prior QA/sensitivity values. package_update()'s reset_on_file_upload path is what correctly
+    # clears those stale values when a real file is (re-)uploaded onto it, so that reset call
+    # must not be removed even though it looks redundant for the common brand-new-resource case.
     # DatapusherPlusPlugin.after_resource_create() is an intentional no-op specifically to avoid
     # submitting this same resource a second time.
 
