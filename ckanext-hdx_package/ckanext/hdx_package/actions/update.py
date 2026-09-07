@@ -668,10 +668,16 @@ def package_update(
         # real id is known - eligibility is still fully decided inside
         # _manage_datastore_for_uploads().
         #
-        # Gated on was_real_upload (not `upload`, also truthy for clear_upload) to avoid
-        # wrongly submitting a cleared resource to DataPusher+. Doesn't reuse
-        # flag_if_file_uploaded() - it gates on resource_dict.get('upload'), which may no
-        # longer be present here.
+        # Flag on any of the three gates below, not on `upload` (also truthy for clear_upload):
+        # - was_real_upload: an actual file replacement on an existing resource.
+        # - had_clear_upload: the upload was cleared - intentionally included, since the
+        #   resource may have had its url swapped to a plain link as part of the same edit,
+        #   and that replacement link should still be eligible for DataPusher+ submission if
+        #   it otherwise qualifies (format + HDX allowlist), decided inside
+        #   _manage_datastore_for_uploads().
+        # - was_new: a brand-new resource (upload or URL-only), flagged for the first time here.
+        # Doesn't reuse flag_if_file_uploaded() - it gates on resource_dict.get('upload'),
+        # which may no longer be present here.
         if was_real_upload or had_clear_upload or was_new:
             context.setdefault(FILE_WAS_UPLOADED, set()).add(resource['id'])
 
