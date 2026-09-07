@@ -17,7 +17,7 @@ Implement the thin utility top bar in `v2/header.html` as part of the `hdx-v2` p
 
 Full implementation. Two sections inside a flex row:
 
-1. **OCHA Services trigger** (`__services`) — OCHA logo (inline SVG include, `v2/icons/ocha-logo.svg`, 1.313rem × 1.125rem) + "OCHA Services" text + chevron-down icon (`v2/icons/chevron-down.svg`). Entire group is a `<button>` Bootstrap dropdown trigger (`data-bs-toggle="dropdown"`). Dropdown panel (`__dropdown`) ports all links from the production `header-global.html`: Related Platforms (1 active link — HXL is commented out), Other OCHA Services (5 links), third column (4 links), "See all" button. All dropdown links carry `data-module="hdx_click_stopper"` and `data-module-link_type="header"`.
+1. **OCHA Services trigger** (`__services`) — OCHA logo (inline SVG include, `v2/icons/ocha-logo.svg`, 1.313rem × 1.125rem) + "OCHA Services" text + chevron-down icon (`v2/icons/chevron-down.svg`). Entire group is a `<button>` Bootstrap dropdown trigger (`data-bs-toggle="dropdown"`). Dropdown panel (`__dropdown`) has since diverged from `header-global.html` (v1, left untouched) — v2's own link set: Related Platforms (1 link), Other OCHA Services (5 links), third column with an empty heading (4 links). No "See all" button. All dropdown links carry `data-module="hdx_click_stopper"` and `data-module-link_type="header"`.
 
 2. **Navigation links** (`__nav`) — "Documentation" link using `{% snippet 'v2/components/text-link.html' %}` with `data-module="hdx_click_stopper"` and `data-module-link_type="header"`. URL TBD, placeholder `#`.
 
