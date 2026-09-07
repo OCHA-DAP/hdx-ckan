@@ -1,0 +1,32 @@
+.hdx-v2-crisis-pages {
+  padding: 0 0 var(--hdx-space-10);
+}
+.hdx-v2-crisis-pages__section + .hdx-v2-crisis-pages__section {
+  margin-top: var(--hdx-space-10);
+}
+.hdx-v2-crisis-pages__section-title {
+  font-family: var(--hdx-font-display);
+  font-weight: var(--hdx-fw-semibold);
+  line-height: var(--hdx-lh-normal);
+  color: var(--hdx-neutral-95);
+  margin: 0;
+  font-size: var(--hdx-fs-l);
+  margin-bottom: var(--hdx-space-2);
+}
+@media (min-width: 48rem) {
+  .hdx-v2-crisis-pages__section-title {
+    font-size: var(--hdx-fs-xl);
+  }
+}
+.hdx-v2-crisis-pages__row {
+  padding: var(--hdx-space-6) 0;
+}
+.hdx-v2-crisis-pages__empty {
+  font-family: var(--hdx-font-body);
+  font-size: var(--hdx-fs-m);
+  font-weight: var(--hdx-fw-regular);
+  line-height: var(--hdx-lh-normal);
+  color: var(--hdx-neutral-8);
+  text-align: center;
+  padding: var(--hdx-space-10) 0;
+}

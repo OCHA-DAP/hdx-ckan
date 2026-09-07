@@ -72,3 +72,4 @@
 | 068 | [tde-preview-data-dictionary-v2](068-tde-preview-data-dictionary-v2.md)                                        | implemented | |
 | 069 | [animation-interaction-audit](069-animation-interaction-audit.md)                                              | implemented | |
 | 070 | [v2-full-audit](070-v2-full-audit.md)                                                                          | implemented | |
+| 071 | [crisis-pages-v2](071-crisis-pages-v2.md)                                                                       | implemented | |

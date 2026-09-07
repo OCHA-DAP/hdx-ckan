@@ -20,6 +20,7 @@ from ckanext.hdx_theme.util.http_exception_helper import FlaskEmailFilter
 from ckanext.hdx_theme.views.archived_quick_links_custom_settings import hdx_archived_quick_links
 from ckanext.hdx_theme.views.colored_page import hdx_colored_page
 from ckanext.hdx_theme.views.count import hdx_count
+from ckanext.hdx_theme.views.crisis_pages import hdx_crisis_pages
 from ckanext.hdx_theme.views.custom_pages import hdx_custom_pages
 from ckanext.hdx_theme.views.custom_settings import hdx_carousel
 from ckanext.hdx_theme.views.ebola import hdx_ebola
@@ -411,7 +412,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
     def get_blueprint(self):
         return [hdx_colored_page, hdx_faqs, hdx_main_faq, hdx_ebola, hdx_global_file_server, hdx_local_image_server,
                 hdx_carousel, hdx_custom_pages, hdx_quick_links, hdx_package_links, hdx_archived_quick_links,
-                hdx_splash, hdx_count, hdx_landing_pages, hdx_redirect_manager]
+                hdx_splash, hdx_count, hdx_landing_pages, hdx_redirect_manager, hdx_crisis_pages]
 
     # IClick
     def get_commands(self):

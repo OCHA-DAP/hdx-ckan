@@ -1837,3 +1837,9 @@ v2-signup-scripts:
   contents:
     - onboarding/came-from-input.js
     - onboarding/confirm-page-leave.js
+
+v2-crisis-pages-page-styles:
+  output: ckanext-hdx_theme/%(version)s_v2-crisis-pages-page-styles.css
+  <<: *common-css
+  contents:
+    - v2/pages/crisis-pages.css
