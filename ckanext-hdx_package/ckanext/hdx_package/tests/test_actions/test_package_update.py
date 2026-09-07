@@ -1858,20 +1858,18 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
 
     def test_package_update_clear_upload_and_real_upload_flagging(self):
         """
-        Regression test for the fix that gates context[FILE_WAS_UPLOADED] flagging on
-        `was_real_upload = bool(resource.get('upload'))` instead of on the uploader
-        object's truthiness.
+        Regression test for the fix that distinguishes real uploads from clear operations
+        when flagging context[FILE_WAS_UPLOADED].
 
         `uploader.get_resource_uploader()` returns a truthy object even when a resource
-        is only being *cleared* (via 'clear_upload'), not actually re-uploaded. Before the
-        fix, such a resource could be wrongly flagged as a real upload, causing
-        _manage_datastore_for_uploads() to submit a cleared resource to DataPusher+, and
-        the validators in custom_validator.py (e.g. hdx_reset_on_file_upload) to wrongly
-        reset QA/sensitivity metadata on a resource whose file didn't actually change.
+        is only being *cleared* (via 'clear_upload'), not actually re-uploaded. Clear
+        operations are flagged after validation so _manage_datastore_for_uploads()
+        can clean up the datastore, without exposing them to the upload validators before
+        validation. The uploader object's truthiness must not flag a falsy clear operation.
 
         This exercises the real package_update() flagging loop (not a prebuilt context,
         unlike TestManageDatastoreForUploads) for three cases on an *existing* resource:
-          1. 'clear_upload' present and truthy, no 'upload' -> must NOT be flagged.
+          1. 'clear_upload' present and truthy, no 'upload' -> must be flagged.
           2. 'clear_upload' present but falsy, no 'upload' -> must NOT be flagged.
           3. a genuine 'upload' value -> must be flagged.
         """
@@ -1928,9 +1926,9 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
                 self._get_action('package_update')(update_context, update_dict)
             return update_context.get(FILE_WAS_UPLOADED, set())
 
-        # Case 1: clear_upload truthy, no real upload -> must NOT be flagged
+        # Case 1: clear_upload truthy, no real upload -> must be flagged
         uploaded_ids = _run_update({'clear_upload': True})
-        assert existing_resource_id not in uploaded_ids
+        assert existing_resource_id in uploaded_ids
 
         # Case 2: clear_upload present but falsy, no real upload -> must NOT be flagged
         uploaded_ids = _run_update({'clear_upload': ''})
