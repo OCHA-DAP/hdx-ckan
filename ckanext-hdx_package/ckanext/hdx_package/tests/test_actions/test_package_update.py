@@ -1377,12 +1377,16 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
         self._get_action('resource_delete')(context, {'id': resource_id})
 
         # NOTE: uses a FRESH context for the package_revise call below, deliberately NOT
-        # reusing `context` from package_create/resource_delete above. HDX's own
-        # resource_delete() (ckanext-hdx_package/ckanext/hdx_package/actions/delete.py)
-        # sets context['defer_commit'] = True directly on whatever context it's given
-        # and never resets it - so reusing that same context object here would make
-        # package_update() skip _manage_datastore_for_uploads() entirely for an unrelated
-        # reason, masking what this test is actually meant to verify.
+        # reusing `context` from package_create/resource_delete above, to keep this
+        # test's setup isolated from the call under test. resource_delete()
+        # (ckanext-hdx_package/ckanext/hdx_package/actions/delete.py) used to set
+        # context['defer_commit'] = True on whatever context it was given and never
+        # restore it, which would have made package_update() wrongly skip
+        # _manage_datastore_for_uploads() here for an unrelated reason - that leak is
+        # now fixed (resource_delete() restores the caller's original defer_commit
+        # value, including popping it back out if it was absent - see
+        # test_resource_delete_restores_defer_commit_on_context), but a fresh context
+        # is still used here for clarity/isolation.
         revise_context = {'ignore_auth': True,
                            'model': model, 'session': model.Session, 'user': 'testsysadmin'}
 
@@ -1466,10 +1470,11 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
         reused_resource_id = created_package_a['resources'][0]['id']
 
         # NOTE: uses a FRESH context for resource_delete/package_create/package_update
-        # below - resource_delete() sets context['defer_commit'] = True on whatever
-        # context it's given and never resets it, which would otherwise mask what this
-        # test is meant to verify (same reasoning as the same-package resurrection test
-        # above).
+        # below, for setup isolation - resource_delete() used to set
+        # context['defer_commit'] = True on whatever context it was given and never
+        # restore it, which would have masked what this test is meant to verify; that
+        # leak is now fixed (see test_resource_delete_restores_defer_commit_on_context
+        # and the same reasoning in the same-package resurrection test above).
         delete_context = {'ignore_auth': True,
                            'model': model, 'session': model.Session, 'user': 'testsysadmin'}
         self._get_action('resource_delete')(delete_context, {'id': reused_resource_id})
