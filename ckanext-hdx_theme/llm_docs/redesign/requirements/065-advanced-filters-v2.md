@@ -86,11 +86,14 @@ Not a checkbox — a pair of tab links, "Datasets [N] | Archived Datasets [N]", 
 and `light/snippets/package_list.html:30`.
 
 Backend: `search_logic.py`:
-- `class ArchivedUrlHelper` (lines 877-935) computes `archived_url` (adds `ext_archived=1`) and
+- `class ArchivedUrlHelper` (lines 881-942) computes `archived_url` (adds `ext_archived=1`) and
   `unarchived_url` (strips it), `show_archived_link`/`show_unarchived_link`,
   `archived_disabled`/`unarchived_disabled` (a tab renders as disabled text instead of a link when
   it would show 0 results), and `redirect_if_needed()` — force-redirects to the archived view if
-  the default (unarchived) view has 0 results but archived datasets exist.
+  the default (unarchived) view has 0 results but archived datasets exist. Its constructor also
+  accepts an optional `default_on_archived_page` flag, used only by non-`/dataset` callers (e.g. a
+  CMS Data List section configured for archived) to lock the toggle when no live `ext_archived`
+  request param is present — unused by and irrelevant to this page.
 - `_search()` (lines 133-219): `ext_archived=1` → `hide_archived = False`; the actual Solr filter is
   applied at lines 217-219 via a tagged `fq` on `extras_archived` (`ARCHIVED_DATASETS_FACET_NAME =
   'archived'`, `helpers/constants.py:37`). Default (`hide_archived=True`) excludes archived

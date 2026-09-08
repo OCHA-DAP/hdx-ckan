@@ -99,13 +99,15 @@ class SearchLogic(object):
         super(SearchLogic, self).__init__()
         self.package_type = package_type
         self.template_data = DictProxy()
+        self._initial_hide_archived = True
 
     def add_archived_url_helper(self):
         full_facet_info = self.template_data.get('full_facet_info', {})
         base_url = self.template_data['other_links']['current_page_url']
         archived_url_helper = ArchivedUrlHelper(full_facet_info.get('num_of_unarchived'),
                                                 full_facet_info.get('num_of_archived'),
-                                                base_url, self._params_nopage())
+                                                base_url, self._params_nopage(),
+                                                default_on_archived_page=not self._initial_hide_archived)
         self.template_data['full_facet_info']['archived_url_helper'] = archived_url_helper
         return archived_url_helper
 
@@ -131,6 +133,8 @@ class SearchLogic(object):
     def _search(self, additional_fq='', additional_facets=None,
                 default_sort_by=DEFAULT_SORTING, num_of_items=DEFAULT_NUMBER_OF_ITEMS_PER_PAGE,
                 ignore_capacity_check=False, use_solr_collapse=False, hide_archived=True):
+
+        self._initial_hide_archived = hide_archived
 
         from ckan.lib.search import SearchError
 
@@ -879,13 +883,15 @@ class ArchivedUrlHelper(object):
     archived_explanation = _('A dataset is archived when it is no longer being actively updated, '
                              'but remains available primarily for historical purposes')
 
-    def __init__(self, num_of_unarchived, num_of_archived, base_search_url, params_no_page):
+    def __init__(self, num_of_unarchived, num_of_archived, base_search_url, params_no_page,
+                 default_on_archived_page=False):
         super(ArchivedUrlHelper, self).__init__()
         self.num_of_unarchived = num_of_unarchived
         self.num_of_archived = num_of_archived
         self.url_for_search = base_search_url
-        self.on_archived_page = next((True for tpl in params_no_page if tpl[0] == 'ext_archived'), False)
-        self.params = (tpl for tpl in params_no_page if tpl[0] != 'ext_archived')
+        self.default_on_archived_page = default_on_archived_page
+        self.on_archived_page = next((True for tpl in params_no_page if tpl[0] == 'ext_archived'), False) or default_on_archived_page
+        self.params = [tpl for tpl in params_no_page if tpl[0] != 'ext_archived']
 
     @property
     def archived_url(self):
@@ -904,14 +910,14 @@ class ArchivedUrlHelper(object):
 
     @property
     def unarchived_url(self):
-        if self.num_of_unarchived > 0:
-            url = url_with_params(self.url_for_search, self.params)
-            return url
-        return None
+        if self.unarchived_disabled:
+            return None
+        url = url_with_params(self.url_for_search, self.params)
+        return url
 
     @property
     def show_unarchived_link(self):
-        if not self.on_archived_page or self.num_of_unarchived == 0:
+        if self.unarchived_disabled or not self.on_archived_page:
             return False
         return True
 
@@ -923,6 +929,8 @@ class ArchivedUrlHelper(object):
 
     @property
     def unarchived_disabled(self):
+        if self.default_on_archived_page:
+            return True
         if self.num_of_unarchived > 0:
             return False
         return True

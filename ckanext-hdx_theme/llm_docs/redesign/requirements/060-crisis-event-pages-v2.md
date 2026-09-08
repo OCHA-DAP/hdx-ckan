@@ -316,8 +316,12 @@ chain. The `data_list` branch of the dispatcher becomes:
   (the wrapper already strips the `#fragment` when building the pagination `base_url` —
   `search/snippets/search_results_wrapper.html:35-37`); in-page search,
   filters, sort and page-size keep working through the existing merge of live request args over
-  the saved filters (§1.2.2). **No changes to `CustomPagesSearchLogic`, `helper.py` or any
-  search logic.**
+  the saved filters (§1.2.2). `helper.py`'s `generate_dataset_results()` was later extended with
+  an `ext_archived` branch (sets `hide_archived=False` when a Data List section's Data URL
+  configures it), and the shared `SearchLogic`/`ArchivedUrlHelper` base class
+  (`ckanext-hdx_search`) was extended with a `default_on_archived_page` lock, fixing the
+  archived toggle's checked state and disabling the non-applicable option on such a page.
+  `CustomPagesSearchLogic` itself was not changed.
 - Layout nuance vs the search/org pages: the two-column search row starts at the `data_list`
   section, below any full-width sections — handled purely in template structure + page LESS.
 

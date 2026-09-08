@@ -113,7 +113,7 @@ Example:
   {% set total_selected = _ns.total %}
 
   {% set archived_url_helper = full_facet_info.get('archived_url_helper') %}
-  {% if archived_url_helper and archived_url_helper.on_archived_page %}
+  {% if archived_url_helper and archived_url_helper.on_archived_page and not archived_url_helper.default_on_archived_page %}
     {% set _ns.pills = _ns.pills + [{'label': 'Archived datasets', 'facet': 'archived', 'value': '', 'url': archived_url_helper.unarchived_url}] %}
   {% endif %}
   {% set applied_pills = _ns.pills %}
