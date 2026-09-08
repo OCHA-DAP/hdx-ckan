@@ -2763,7 +2763,7 @@ class TestManageDatastoreForUploads:
                 {'id': resource_id_ok, 'format': 'CSV'},
             ],
         }
-        context = {FILE_WAS_UPLOADED: {resource_id_fails, resource_id_ok}}
+        context = {FILE_WAS_UPLOADED: [resource_id_fails, resource_id_ok]}
 
         fake_dp_plugin = mock.MagicMock()
         fake_dp_plugin.name = 'datapusher_plus'

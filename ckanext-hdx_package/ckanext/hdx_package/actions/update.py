@@ -512,7 +512,8 @@ def package_update(
                 existing_resource_last_modified.get(resource_id))
             existing_metadata_modified = _normalize_last_modified_for_comparison(
                 existing_resource_metadata_modified.get(resource_id))
-        if resource_id_is_existing and (
+        if resource_id_is_existing and not (
+                resource.get('clear_upload') and not resource.get('upload')) and (
                 (resource_url is not None and not _urls_match_for_comparison(existing_url, resource_url))
                 or (resource_has_last_modified_key and not _last_modified_matches_for_comparison(
                     existing_last_modified, resource_last_modified, existing_metadata_modified))):
