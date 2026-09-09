@@ -316,8 +316,12 @@ chain. The `data_list` branch of the dispatcher becomes:
   (the wrapper already strips the `#fragment` when building the pagination `base_url` —
   `search/snippets/search_results_wrapper.html:35-37`); in-page search,
   filters, sort and page-size keep working through the existing merge of live request args over
-  the saved filters (§1.2.2). **No changes to `CustomPagesSearchLogic`, `helper.py` or any
-  search logic.**
+  the saved filters (§1.2.2). `helper.py`'s `generate_dataset_results()` gained an
+  `ext_archived` branch (hard `+extras_archived:"true"` fq + `hide_archived=False` when a
+  Data List's saved URL pins `ext_archived=1`), and `_populate_template_data()`
+  (`views/light_page.py`) sets `archived_url_helper.on_archived_page = True` for that
+  section so the "Show only" toggle renders correctly. `CustomPagesSearchLogic` and
+  `search_logic.py` are otherwise unchanged.
 - Layout nuance vs the search/org pages: the two-column search row starts at the `data_list`
   section, below any full-width sections — handled purely in template structure + page LESS.
 
@@ -432,7 +436,7 @@ style); heights from the stored style + JS recalibration (D5).
 | Very long / multi-paragraph header description | Clamped at all breakpoints with Show more/Show less (D4); `h.markdown_extract`+`striptags` may flatten paragraph/list boundaries with no separating whitespace — accepted limitation of the reused helper (same one `org-hero.html` uses) |
 | `data_list` with zero results | v2 list header shows count 0 + empty result list (search-page behavior); sidebar facets may be empty — filters form still renders |
 | Saved search URL with unparseable/missing params | v1 parity — `generate_dataset_results` ignores unknown keys; empty `fq` searches everything |
-| Archived saved-search URL | Existing `add_archived_url_helper` redirect fires before render — unchanged |
+| Archived saved-search URL | A `data_list` pinned to `ext_archived=1` sets `on_archived_page = True` directly (`light_page.py`), skipping the `redirect_if_needed()` fallback — toggle renders correctly without it |
 | Iframe `data_url` empty or failing to load | Error div shown by the ported auto-resize module; page otherwise intact |
 | Missing `max_height`/`m_max_height` | Computed style falls back to `400px` height (helper unchanged) |
 | Section with unknown/`empty` type in stored JSON | Skipped silently |

@@ -37,6 +37,10 @@ def _find_dataset_filters(url):
     return filters
 
 
+def is_archived_filter_pinned(saved_filters):
+    values_list = saved_filters.get('ext_archived')
+    return bool(values_list and values_list[0] == '1')
+
 def generate_dataset_results(page_id, type, saved_filters):
     params_nopage = {
         k: v for k, v in request.args.items() if k != 'page'}
@@ -64,8 +68,9 @@ def generate_dataset_results(page_id, type, saved_filters):
         elif key == 'ext_page_size':
             search_params['num_of_items'] = values_list[0]
         elif key == 'ext_archived':
-            if values_list and values_list[0] == '1':
+            if is_archived_filter_pinned(saved_filters):
                 search_params['hide_archived'] = False
+                fq += ' +extras_archived:"true" '
 
     search_params['additional_fq'] = fq
 

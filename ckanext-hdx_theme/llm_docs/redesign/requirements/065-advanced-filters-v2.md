@@ -199,9 +199,11 @@ search-filters.html
   - Archived: full_facet_info.archived_url_helper (new — same object already computed
     server-side for the v1 tabs, just not read by any v2 template yet)
      ↓
-Applied Filters pills = one pill per selected item across all of the above (Archived pill
-appears only when the "Archived" option is selected — "Actively maintained" is the default,
-no-op state and produces no pill, matching how v1 never showed a pill/tab-highlight for it either)
+Applied Filters pills = one pill per selected item across all of the above, filtered to only
+those with a facet `value` or a valid `url` (Archived pill has no `value`, so it appears only
+when "Archived" is selected and `archived_url_helper.unarchived_url` resolves — "Actively
+maintained" is the default, no-op state and produces no pill, matching v1; an archived-only
+scope, e.g. a CMS `data_list` section pinned to `ext_archived=1`, also produces no pill)
      ↓
 Pill click / Archived radio click / Clear all click → all still just navigate to a URL built
 from existing helpers (updateUrl()/clearFacet() for regular filters, archived_url_helper.*_url
@@ -263,7 +265,7 @@ correct at any viewport width within the XL range rather than assuming a fixed c
 
 Pill generation: one pill per currently-selected item across Location, Organisation, Format,
 Topics, and Advanced filters (flat `ext_*` + COD/HPC children), plus an Archived pill when
-`ext_archived=1`. Removing a pill navigates to the same URL its source checkbox/radio-uncheck would
+`ext_archived=1` and a valid `unarchived_url` exists to remove it to. Removing a pill navigates to the same URL its source checkbox/radio-uncheck would
 already produce (`updateUrl(facet, value, false)` for regular filters,
 `archived_url_helper.unarchived_url` for the Archived pill) — no new removal logic, pills are purely
 alternate triggers for existing navigation functions.

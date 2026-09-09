@@ -116,7 +116,14 @@ Example:
   {% if archived_url_helper and archived_url_helper.on_archived_page %}
     {% set _ns.pills = _ns.pills + [{'label': 'Archived datasets', 'facet': 'archived', 'value': '', 'url': archived_url_helper.unarchived_url}] %}
   {% endif %}
-  {% set applied_pills = _ns.pills %}
+
+  {% set _ns_visible = namespace(pills=[]) %}
+  {% for _p in _ns.pills %}
+    {% if _p.value or _p.get('url') %}
+      {% set _ns_visible.pills = _ns_visible.pills + [_p] %}
+    {% endif %}
+  {% endfor %}
+  {% set applied_pills = _ns_visible.pills %}
 
   {# ── v2 dataset list header (title + count + sort/limit at XL) ───────── #}
 

@@ -116,6 +116,7 @@ def _populate_template_data(page_dict, show_switch_to_mobile):
             if section.get('type', '') == 'data_list':
                 try:
                     saved_filters = page_h._find_dataset_filters(section.get('data_url', ''))
+                    archived_pinned = page_h.is_archived_filter_pinned(saved_filters)
 
                     cp_search_logic = CustomPagesSearchLogic(page_dict.get('name'), page_dict.get('type'))
                     search_params = page_h.generate_dataset_results(page_dict.get('id'), page_dict.get('type'),
@@ -126,6 +127,8 @@ def _populate_template_data(page_dict, show_switch_to_mobile):
                     abort(404, _('Page not found'))
 
                 archived_url_helper = cp_search_logic.add_archived_url_helper()
+                if archived_pinned:
+                    archived_url_helper.on_archived_page = True
                 redirect_result = archived_url_helper.redirect_if_needed()
                 if redirect_result:
                     return redirect_result
