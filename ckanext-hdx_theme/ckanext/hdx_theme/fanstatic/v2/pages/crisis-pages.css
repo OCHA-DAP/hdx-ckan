@@ -27,6 +27,5 @@
   font-weight: var(--hdx-fw-regular);
   line-height: var(--hdx-lh-normal);
   color: var(--hdx-neutral-8);
-  text-align: center;
   padding: var(--hdx-space-10) 0;
 }
