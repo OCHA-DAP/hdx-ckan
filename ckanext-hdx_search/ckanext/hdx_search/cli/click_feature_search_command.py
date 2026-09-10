@@ -74,10 +74,10 @@ def _buildIndex(path):
     ## I think this is the only way to go. Please update
     ## when new crisis are added
 
-    index.append({'title': 'West Africa Ebola Outbreak 2014', 'url': h.url_for(
-        'hdx_ebola.read', qualified=True), 'type': 'event'})
-    index.append({'title': 'Nepal Earthquake', 'url': h.url_for('group.read',id='nepal-earthquake',qualified=True),
-                  'type': 'event'})
+    #index.append({'title': 'West Africa Ebola Outbreak 2014', 'url': h.url_for(
+    #    'hdx_ebola.read', qualified=True), 'type': 'event'})
+    #index.append({'title': 'Nepal Earthquake', 'url': h.url_for('group.read',id='nepal-earthquake',qualified=True),
+    #              'type': 'event'})
 
     # pages
 
