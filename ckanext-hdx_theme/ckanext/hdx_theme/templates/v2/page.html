@@ -20,6 +20,7 @@
 {% block meta %}
   {{ super() }}
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="hdx-version" content="{{ h.hdx_version() }}">
 {% endblock %}
 
 {% block bodytag %}{{ super() }} class="hdx-v2"{% endblock %}
