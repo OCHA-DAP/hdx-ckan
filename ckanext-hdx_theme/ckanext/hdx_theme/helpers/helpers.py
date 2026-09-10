@@ -962,6 +962,12 @@ def hdx_get_quick_links_list(archived=None, exclude_crisis=False):
     return result
 
 
+def _parse_signal_campaign_date(value):
+    try:
+        return datetime.datetime.strptime(value, '%m/%d/%Y')
+    except (TypeError, ValueError):
+        return None
+
 def hdx_fetch_last_three_signal_cards():
     from ckanext.hdx_theme.helpers.ui_constants.landing_pages.signals import \
         SIGNAL_CARD_INDICATOR_CATEGORIES
@@ -980,8 +986,10 @@ def hdx_fetch_last_three_signal_cards():
     if csv_reader.fieldnames is None or not all(col in csv_reader.fieldnames for col in required_columns):
         raise Exception('HDX Signals CSV is missing one or more required columns: {}'.format(required_columns))
 
-    rows = list(csv_reader)
-    rows.sort(key=lambda r: (r.get('campaign_date', ''), r.get('date', ''), r.get('location', '')),
+    rows = [row for row in csv_reader
+            if row.get('location') and row.get('indicator_id') and row.get('campaign_date')]
+    rows.sort(key=lambda r: (_parse_signal_campaign_date(r.get('campaign_date')) or datetime.datetime.min,
+                              r.get('date', ''), r.get('location', '')),
               reverse=True)
 
     def _safe_href(value):
@@ -1000,10 +1008,9 @@ def hdx_fetch_last_three_signal_cards():
 
     cards = []
     for row in rows[:3]:
-        try:
-            campaign_date = datetime.datetime.strptime(row.get('campaign_date', ''), '%Y-%m-%d').strftime('%d %B %Y')
-        except ValueError:
-            campaign_date = row.get('campaign_date', '')
+        parsed_campaign_date = _parse_signal_campaign_date(row.get('campaign_date'))
+        campaign_date = parsed_campaign_date.strftime('%d %B %Y') if parsed_campaign_date \
+            else row.get('campaign_date', '')
         cards.append({
             'location': row.get('location', ''),
             'date': campaign_date,
