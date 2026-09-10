@@ -37,7 +37,15 @@ def _find_dataset_filters(url):
     return filters
 
 
-def is_archived_filter_pinned(saved_filters):
+def is_archived_filter_pinned(saved_filters: dict) -> bool:
+    """
+    Check whether a data_list section's saved filters pin the "Archived datasets" state.
+
+    :param saved_filters: filters saved for a data_list section, as returned by `_find_dataset_filters`
+    :type saved_filters: dict
+    :return: True if the saved filters set ext_archived=1
+    :rtype: bool
+    """
     values_list = saved_filters.get('ext_archived')
     return bool(values_list and values_list[0] == '1')
 
