@@ -11,8 +11,16 @@
       overflowItems.forEach(function (item) {
         var valueSpan    = item.querySelector('.c-page-header__meta-value--truncate span');
         var viewMoreLink = item.querySelector('.c-page-header__meta-view-more');
-        if (valueSpan && viewMoreLink && valueSpan.scrollWidth > valueSpan.clientWidth) {
-          viewMoreLink.style.display = 'inline-flex';
+        if (!valueSpan || !viewMoreLink) return;
+
+        function updateOverflow() {
+          viewMoreLink.style.display = valueSpan.scrollWidth > valueSpan.clientWidth ? 'inline-flex' : 'none';
+        }
+
+        if (window.ResizeObserver) {
+          new ResizeObserver(updateOverflow).observe(valueSpan);
+        } else {
+          updateOverflow();
         }
       });
     });
