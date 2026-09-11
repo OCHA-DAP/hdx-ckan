@@ -64,6 +64,23 @@ class TestLandingPages(object):
         assert '<h2 class="hdx-v2-signals-section-heading">Partners</h2>' in response.body
         assert 'landing_pages/partners' in response.body
 
+    @mock.patch('ckanext.hdx_theme.views.landing_pages.cached_last_three_signal_cards',
+                side_effect=Exception('Signals CSV unavailable'))
+    def test_signals_landing_page_omitted_on_fetch_failure(self, mock_cards, app):
+        url = h.url_for('hdx_landing_pages.signals')
+        response = app.get(url)
+
+        assert response.status_code == 200
+        assert "'pageTitle': 'HDX Signals'" in response.body
+
+        assert 'c-signal-card' not in response.body
+        assert 'hdx-v2-signal-slide' not in response.body
+        assert 'hdx-v2-signals-dots' not in response.body
+
+        assert '<h2 class="hdx-v2-signals-section-heading">Data Coverage</h2>' in response.body
+        assert '<h2 class="hdx-v2-signals-section-heading">FAQs</h2>' in response.body
+        assert '<h2 class="hdx-v2-signals-section-heading">Partners</h2>' in response.body
+
     @pytest.mark.usefixtures("hdx_clean_db")
     def test_hapi_landing_page_with_auth(self, app):
         factories.User(name=self.username, sysadmin=True)

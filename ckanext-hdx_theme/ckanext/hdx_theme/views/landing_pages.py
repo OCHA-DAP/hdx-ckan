@@ -52,7 +52,11 @@ def signals():
     partners = SIGNALS_PARTNERS_CONSTANTS
     sections = SIGNALS_SECTIONS_CONSTANTS
     data_coverage = SIGNALS_DATA_COVERAGE_CONSTANTS
-    signal_cards = cached_last_three_signal_cards()
+    try:
+        signal_cards = cached_last_three_signal_cards()
+    except Exception as e:
+        log.warning('Failed to load HDX Signals cards for the Signals landing page, omitting Signals section: %s', e)
+        signal_cards = []
 
     template_data = {
         'partners': partners,

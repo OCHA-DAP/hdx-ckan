@@ -1,3 +1,5 @@
+import logging
+
 from flask import Blueprint
 
 import ckan.plugins.toolkit as tk
@@ -6,6 +8,8 @@ import ckanext.hdx_theme.views.count as count
 from ckan.common import config
 from ckanext.hdx_theme.helpers.signals_cache import cached_last_three_signal_cards
 import json
+
+log = logging.getLogger(__name__)
 
 _ = tk._
 g = tk.g
@@ -105,6 +109,11 @@ def index():
     datasets = json.loads(count.dataset())
     locations = json.loads(count.country())
     sources = json.loads(count.source())
+    try:
+        signal_cards = cached_last_three_signal_cards()
+    except Exception as e:
+        log.warning('Failed to load HDX Signals cards for the homepage, omitting Signals section: %s', e)
+        signal_cards = []
     template_data = {
         'structured_data': homepage_structured_data(),
         'alert_bar': {
@@ -120,7 +129,7 @@ def index():
         'analytics': {
             'analytics_came_from': analytics.came_from(request.args)
         },
-        'signal_cards': cached_last_three_signal_cards(),
+        'signal_cards': signal_cards,
     }
     return render('home/index.html', template_data)
 
