@@ -235,14 +235,14 @@ groups:
         # default: Needs to be empty for tests to work
         example: http://gislayer:5000/services/postgis/{resource_id}/wkb_geometry/vector-tiles/{z}/{x}/{y}.pbf
         description: URL for Resource PBF used in rendering maps
-      - key: hdx.mapbox.baselayer.url
-        default: https://data.humdata.org/mapbox
-        example: https://data.humdata.org/mapbox
-        description: Base Layer URL for Mapbox integration, actual it's the caching URL on our proxy
       - key: hdx.mapbox.baselayer.token
         default: cacheToken
         example: cacheToken or < usual token format >
         description: Provide "cacheToken" if Base URL is HDX caching, as the proxy will inject the token; otherwise add the actual Mapbox Token
+      - key: hdx.mapbox.style
+        default: mapbox://styles/humdata/cmneqc85n005a01ry0xal9ard
+        example: mapbox://styles/humdata/cmneqc85n005a01ry0xal9ard
+        description: Mapbox style URL used by MapLibre shape previews
       - key: hdx.change_detection.layer_url
         example: http://layer:5000/api/create-change-events
         description: Layer Change detection Url
@@ -452,3 +452,10 @@ groups:
         default:
         example: "https://docs.google.com/spreadsheets/d/e/2PACX-123456/pub?gid=1&single=true&output=csv"
         description: "URL to a CSV file of approved tags. Must have one column: 'approved tags'"
+
+  - annotation: HDX Signals
+    options:
+      - key: hdx.signals.csv
+        default:
+        example: "https://github.com/OCHA-DAP/hdx-signals/raw/refs/heads/main/output/hdx_signals_latest3.csv"
+        description: "URL to the HDX Signals CSV. Must have columns: location, indicator_id, date, campaign_date, summary_short, plot, hdx_url, campaign_url"

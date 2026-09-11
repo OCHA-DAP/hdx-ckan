@@ -1,0 +1,451 @@
+{#
+  v2 header — top-bar + navbar
+  Figma: llm_docs/redesign/figma_exports/top-bar.html
+         llm_docs/redesign/figma_exports/navbar.html
+
+  Breakpoints (navbar):
+    SM  < 48rem       — logo + search icon (hidden search field) + hamburger
+    MD  48rem – 79rem — logo + search (21.25rem) + right actions + hamburger
+    XL  ≥ 80rem       — logo + search (25rem) + nav items + right actions
+
+  Analytics: all links carry data-module="hdx_click_stopper" and
+             data-module-link_type="header" (feeds Mixpanel pipeline).
+
+  Params
+  ─────────────────────────────────────────────────
+  minimal {bool}  Logo-only navbar, no top-bar/search/nav items/actions/
+                  hamburger/offcanvas. Used by the auth pages (login,
+                  forgot-password), which show only a teal logo bar per
+                  Figma. default: False
+#}
+
+{% set minimal = minimal if minimal is defined else False %}
+
+<header class="hdx-v2-header">
+
+  {# ── Top-bar ─────────────────────────────────────────────── #}
+  {% if not minimal %}
+  <div class="hdx-v2-top-bar">
+    <div class="hdx-v2-top-bar__inner hdx-v2-container">
+
+      {# Left: OCHA Services dropdown #}
+      <div class="hdx-v2-top-bar__services">
+        <button class="hdx-v2-top-bar__services-trigger"
+                type="button"
+                data-hdx-v2-panel="services"
+                aria-expanded="false"
+                aria-controls="hdx-v2-panel-services"
+                aria-label="{{ _('OCHA services') }}">
+          <span class="hdx-v2-top-bar__services-logo" aria-hidden="true">{% include 'v2/icons/ocha-logo.svg' %}</span>
+          <span class="hdx-v2-top-bar__services-text">{{ _('OCHA Services') }}</span>
+          <span class="hdx-v2-top-bar__services-chevron">{% include 'v2/icons/chevron-down.svg' %}</span>
+        </button>
+
+        <div class="hdx-v2-top-bar__dropdown" id="hdx-v2-panel-services" role="menu" hidden>
+          <div class="hdx-v2-top-bar__dropdown-grid">
+
+          {# Related Platforms #}
+            <div class="hdx-v2-top-bar__dropdown-col">
+              <p class="hdx-v2-top-bar__dropdown-heading">{{ _('Related Platforms') }}</p>
+              <ul class="hdx-v2-top-bar__dropdown-list">
+                <li>
+                  <a href="https://centre.humdata.org/" target="_blank" rel="noopener noreferrer"
+                     data-module="hdx_click_stopper" data-module-link_type="header">Centre for Humanitarian Data</a>
+                </li>
+              </ul>
+            </div>
+
+          {# Other OCHA Services #}
+            <div class="hdx-v2-top-bar__dropdown-col">
+              <p class="hdx-v2-top-bar__dropdown-heading">{{ _('Other OCHA Services') }}</p>
+              <ul class="hdx-v2-top-bar__dropdown-list">
+                <li>
+                  <a href="https://cerf.un.org/" target="_blank" rel="noopener noreferrer"
+                     data-module="hdx_click_stopper" data-module-link_type="header">Central Emergency Response Fund</a>
+                </li>
+                <li>
+                  <a href="https://fts.unocha.org/" target="_blank" rel="noopener noreferrer"
+                     data-module="hdx_click_stopper" data-module-link_type="header">Financial Tracking Service</a>
+                </li>
+                <li>
+                  <a href="https://gdacs.org/" target="_blank" rel="noopener noreferrer"
+                     data-module="hdx_click_stopper" data-module-link_type="header">Global Disaster Alert &amp; Coordination System</a>
+                </li>
+                <li>
+                  <a href="https://humanitarianaction.info/" target="_blank" rel="noopener noreferrer"
+                     data-module="hdx_click_stopper" data-module-link_type="header">Humanitarian Action</a>
+                </li>
+                <li>
+                  <a href="https://www.insarag.org/" target="_blank" rel="noopener noreferrer"
+                     data-module="hdx_click_stopper" data-module-link_type="header">International Search and Rescue Advisory</a>
+                </li>
+              </ul>
+            </div>
+
+          {# Third column — empty heading #}
+            <div class="hdx-v2-top-bar__dropdown-col">
+              <p class="hdx-v2-top-bar__dropdown-heading hdx-v2-top-bar__dropdown-heading--empty">&nbsp;</p>
+              <ul class="hdx-v2-top-bar__dropdown-list">
+                <li>
+                  <a href="https://interagencystandingcommittee.org/" target="_blank" rel="noopener noreferrer"
+                     data-module="hdx_click_stopper" data-module-link_type="header">Inter-Agency Standing Committee</a>
+                </li>
+                <li>
+                  <a href="https://pfdata.unocha.org/" target="_blank" rel="noopener noreferrer"
+                     data-module="hdx_click_stopper" data-module-link_type="header">Pooled Funds Data Hub</a>
+                </li>
+                <li>
+                  <a href="https://reliefweb.int/" target="_blank" rel="noopener noreferrer"
+                     data-module="hdx_click_stopper" data-module-link_type="header">ReliefWeb</a>
+                </li>
+                <li>
+                  <a href="https://response.reliefweb.int/" target="_blank" rel="noopener noreferrer"
+                     data-module="hdx_click_stopper" data-module-link_type="header">ReliefWeb Response</a>
+                </li>
+              </ul>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      {# Right: Documentation link #}
+      <nav class="hdx-v2-top-bar__nav">
+        {% snippet 'v2/components/text-link.html',
+            label=_('Documentation'), href=h.HDX_CONST('DOCUMENTATION_LINKS')['MAIN'],
+            style='primary', size='s', target='_blank',
+            attrs={'data-module': 'hdx_click_stopper', 'data-module-link_type': 'header',
+                   'aria-label': 'documentation link'} %}
+      </nav>
+
+    </div>
+  </div>
+  {% endif %}
+
+  {# ── Navbar ───────────────────────────────────────────────── #}
+  <nav class="hdx-v2-navbar"
+       aria-label="{{ _('Main navigation') }}"
+       {% if c.userobj %}data-logged-in="true"{% endif %}>
+    <div class="hdx-v2-navbar__inner hdx-v2-container">
+
+      {# Logo #}
+      <a class="hdx-v2-navbar__logo" href="{{ h.url_for('/') }}" aria-label="HDX — Humanitarian Data Exchange"
+         data-module="hdx_click_stopper" data-module-link_type="header">
+        {% include 'v2/icons/hdx.svg' %}
+      </a>
+
+      {% if not minimal %}
+      {% if request.path != '/' %}
+      {# Search — visible on XL (25rem) and MD (21.25rem via CSS); hidden on SM #}
+      {# At XL: panel drops inline. At MD/SM: JS opens the fullscreen overlay instead. #}
+      <div class="hdx-v2-navbar__search">
+        {% snippet 'v2/components/autocomplete.html',
+            size='m', name='q',
+            placeholder=_('Search for datasets'),
+            value=c.q if c.q is defined else '',
+            form_action=h.url_for('dataset.search'),
+            search_source='main-nav' %}
+      </div>
+      {% endif %}
+
+      {# Nav items + actions — grouped on the right via margin-left:auto on __nav #}
+      <div class="hdx-v2-navbar__nav">
+        {% snippet 'v2/components/nav-item.html',
+            label=_('Data'),
+            href=h.url_for('dataset.search'),
+            attrs={'data-module': 'hdx_click_stopper', 'data-module-link_type': 'main nav'} %}
+        {% snippet 'v2/components/nav-item.html',
+            label=_('Locations'),
+            href=h.url_for('group.index'),
+            attrs={'data-module': 'hdx_click_stopper', 'data-module-link_type': 'main nav'} %}
+        {% snippet 'v2/components/nav-item.html',
+            label=_('Organisations'),
+            href=h.url_for('organization.index'),
+            attrs={'data-module': 'hdx_click_stopper', 'data-module-link_type': 'main nav'} %}
+
+        {# Products — custom panel, items from quick-links registry #}
+        <div class="hdx-v2-navbar__products">
+          {% snippet 'v2/components/nav-item.html',
+              label=_('Products'),
+              href='#',
+              chevron=True,
+              attrs={'data-hdx-v2-panel': 'products', 'aria-expanded': 'false',
+                     'aria-controls': 'hdx-v2-panel-products'} %}
+          <ul class="hdx-v2-navbar__products-panel" id="hdx-v2-panel-products" hidden>
+            {% for product in h.hdx_get_quick_links_list(archived=False, exclude_crisis=True) %}
+              <li>
+                <a href="{{ product.url }}"
+                   {% if product.newTab %}target="_blank" rel="noopener noreferrer"{% endif %}
+                   data-module="hdx_click_stopper" data-module-link_type="main nav">
+                  {{ product.title }}
+                </a>
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+
+      {# Actions — directly after __nav, no wrapper needed #}
+      <div class="hdx-v2-navbar__actions">
+        {% if request.path != '/' %}
+        {# Search icon — SM only, hidden at MD/XL via navbar.less #}
+        <button class="hdx-v2-navbar__search-icon" type="button"
+                aria-label="{{ _('Search') }}"
+                aria-expanded="false"
+                aria-controls="hdx-search-autocomplete-overlay"
+                data-action="open-search-overlay">
+          {% include 'v2/icons/search.svg' %}
+        </button>
+        {% endif %}
+        {% if c.userobj %}
+          {% set notif = h.hdx_get_user_notifications() %}
+
+          {# Bell + Notifications panel #}
+          <div class="hdx-v2-navbar__bell-wrap">
+            <button class="hdx-v2-navbar__bell" type="button"
+                    aria-label="{{ _('Notifications') }}"
+                    aria-expanded="false"
+                    aria-controls="hdx-v2-panel-notifications"
+                    data-hdx-v2-panel="notifications"
+                    data-notification-count="{{ notif.count }}">
+              <span class="hdx-v2-navbar__bell-icon">{% include 'v2/icons/bell.svg' %}</span>
+              {% if notif.count > 0 %}
+                <span class="hdx-v2-navbar__bell-badge" aria-hidden="true">{{ notif.count }}</span>
+              {% endif %}
+            </button>
+            {% snippet 'v2/navbar-notifications.html' %}
+          </div>
+
+          {# Avatar + User menu panel #}
+          <div class="hdx-v2-navbar__avatar-wrap">
+            <button class="hdx-v2-navbar__avatar-trigger" type="button"
+                    aria-label="{{ _('User menu') }}"
+                    aria-expanded="false"
+                    aria-controls="hdx-v2-panel-user-menu"
+                    data-hdx-v2-panel="user-menu">
+              {% snippet 'v2/components/avatar.html',
+                  size='sm',
+                  initials=c.userobj.display_name[0] | upper,
+                  badge=notif.count > 0 %}
+            </button>
+            {% snippet 'v2/navbar-user-menu.html' %}
+          </div>
+
+          {% set add_data_obj = h.hdx_check_add_data() %}
+          {% snippet 'v2/components/button.html',
+              style='secondary', size='m', label=_('Add data'),
+              tag='a', href=add_data_obj.href,
+              extra_classes='hdx-v2-navbar__add-data contribute-popup-init',
+              attrs={'onclick': add_data_obj.onclick,
+                     'data-module': add_data_obj.data_module,
+                     'data-module-link_type': add_data_obj.data_module_link_type,
+                     'dataset-id': 'null' if h.check_access('package_create') else 'DO_IGNORE'} %}
+        {% else %}
+          {% snippet 'v2/components/button.html',
+              style='secondary', size='m', label=_('Log in'),
+              tag='a', href=h.url_for('hdx_signin.login', came_from=request.environ.get('REQUEST_URI', '')),
+              extra_classes='hdx-v2-navbar__login',
+              attrs={'data-module': 'hdx_click_stopper', 'data-module-link_type': 'header'} %}
+        {% endif %}
+
+        {# Hamburger — MD/SM only, hidden on XL #}
+        <button class="hdx-v2-navbar__hamburger" type="button"
+                aria-label="{{ _('Open menu') }}"
+                aria-label-close="{{ _('Close menu') }}"
+                aria-expanded="false"
+                aria-controls="hdx-v2-offcanvas"
+                data-hdx-v2-panel="offcanvas">
+          <span class="hdx-v2-navbar__icon-menu">{% include 'v2/icons/menu.svg' %}</span>
+          <span class="hdx-v2-navbar__icon-close">{% include 'v2/icons/close.svg' %}</span>
+        </button>
+      </div>
+      {% endif %}
+
+    </div>
+  </nav>
+
+  {% if not minimal %}
+  {# ── Offcanvas — MD/SM slide-out nav panel ───────────────── #}
+  <div class="hdx-v2-offcanvas" id="hdx-v2-offcanvas" aria-hidden="true">
+    <div class="hdx-v2-offcanvas__body">
+
+      {# ── Primary level ─────────────────────────────────── #}
+      <div class="hdx-v2-offcanvas__primary">
+
+        {# User row (logged in) — tapping slides to second level #}
+        {% if c.userobj %}
+          {% set notif = h.hdx_get_user_notifications() %}
+          <button class="hdx-v2-offcanvas__user-row" type="button"
+                  data-hdx-v2-offcanvas-level="user-detail"
+                  aria-label="{{ _('User menu') }}">
+            <span class="hdx-v2-offcanvas__user-left">
+              {% snippet 'v2/components/avatar.html',
+                  size='sm',
+                  initials=c.userobj.display_name[0] | upper,
+                  badge=notif.count > 0 %}
+              <span class="hdx-v2-offcanvas__user-name">{{ c.userobj.display_name }}</span>
+            </span>
+            <span class="hdx-v2-offcanvas__user-chevron">{% include 'v2/icons/chevron-right.svg' %}</span>
+          </button>
+        {% endif %}
+
+        {# Primary nav links #}
+        <nav class="hdx-v2-offcanvas__nav" aria-label="{{ _('Mobile navigation') }}">
+          <a class="hdx-v2-offcanvas__nav-item" href="{{ h.url_for('home.index') }}"
+             data-module="hdx_click_stopper" data-module-link_type="main nav">
+            {{ _('Home') }}
+          </a>
+          <a class="hdx-v2-offcanvas__nav-item" href="{{ h.url_for('dataset.search') }}"
+             data-module="hdx_click_stopper" data-module-link_type="main nav">
+            {{ _('Data') }}
+          </a>
+          <a class="hdx-v2-offcanvas__nav-item" href="{{ h.url_for('group.index') }}"
+             data-module="hdx_click_stopper" data-module-link_type="main nav">
+            {{ _('Locations') }}
+          </a>
+          <a class="hdx-v2-offcanvas__nav-item" href="{{ h.url_for('organization.index') }}"
+             data-module="hdx_click_stopper" data-module-link_type="main nav">
+            {{ _('Organisations') }}
+          </a>
+
+          {# Products — inline expandable; open by default per Figma #}
+          <button class="hdx-v2-offcanvas__nav-item hdx-v2-offcanvas__nav-item--expandable"
+                  type="button"
+                  aria-expanded="true"
+                  aria-controls="offcanvas-products"
+                  data-module="hdx_click_stopper" data-module-link_type="main nav">
+            {{ _('Products') }}
+            <span class="hdx-v2-offcanvas__expand-icon">{% include 'v2/icons/chevron-down.svg' %}</span>
+          </button>
+          <ul class="hdx-v2-offcanvas__subnav" id="offcanvas-products">
+            {% for product in h.hdx_get_quick_links_list(archived=False, exclude_crisis=True) %}
+              <li>
+                <a href="{{ product.url }}"
+                   {% if product.newTab %}target="_blank" rel="noopener noreferrer"{% endif %}
+                   data-module="hdx_click_stopper" data-module-link_type="main nav">
+                  {{ product.title }}
+                </a>
+              </li>
+            {% endfor %}
+          </ul>
+        </nav>
+
+        {# Footer actions — pushed to bottom of panel #}
+        <div class="hdx-v2-offcanvas__footer">
+          {% if not c.userobj %}
+            {% snippet 'v2/components/button.html',
+                style='secondary', size='l', label=_('Login'),
+                tag='a', href=h.url_for('hdx_signin.login', came_from=request.environ.get('REQUEST_URI', '')),
+                attrs={'data-module': 'hdx_click_stopper', 'data-module-link_type': 'main nav'} %}
+          {% endif %}
+        </div>
+
+      </div>{# /.hdx-v2-offcanvas__primary #}
+
+      {# ── Second level — user account (logged in only) ──── #}
+      {% if c.userobj %}
+        <div class="hdx-v2-offcanvas__level" id="hdx-v2-offcanvas-level-user-detail" hidden>
+
+          <button class="hdx-v2-offcanvas__back" type="button" data-hdx-v2-offcanvas-back>
+            {% include 'v2/icons/chevron-left.svg' %}
+            {{ _('Back') }}
+          </button>
+
+          <div class="hdx-v2-offcanvas__user-display">
+            {% snippet 'v2/components/avatar.html',
+                size='sm',
+                initials=c.userobj.display_name[0] | upper %}
+            <span class="hdx-v2-offcanvas__user-name">{{ c.userobj.display_name }}</span>
+          </div>
+
+          {% for section in h.hdx_get_user_menu_sections() %}
+            <button class="hdx-v2-offcanvas__nav-item hdx-v2-offcanvas__nav-item--expandable"
+                    type="button"
+                    aria-expanded="true"
+                    aria-controls="offcanvas-user-{{ section.id }}">
+              {{ section.label }}
+              <span class="hdx-v2-offcanvas__expand-icon">{% include 'v2/icons/chevron-down.svg' %}</span>
+            </button>
+            <ul class="hdx-v2-offcanvas__subnav" id="offcanvas-user-{{ section.id }}">
+              {% for item in section['items'] %}
+                <li>
+                  <a href="{{ item.href }}"
+                     data-module="hdx_click_stopper" data-module-link_type="main nav">
+                    {{ item.label }}
+                  </a>
+                </li>
+              {% endfor %}
+            </ul>
+          {% endfor %}
+
+          <div class="hdx-v2-offcanvas__footer">
+            {% snippet 'v2/components/button.html',
+                style='secondary', size='l', label=_('Logout'),
+                tag='a', href=h.url_for('user.logout'),
+                attrs={'data-module': 'hdx_click_stopper', 'data-module-link_type': 'main nav'} %}
+          </div>
+
+        </div>
+      {% endif %}
+
+    </div>{# /.hdx-v2-offcanvas__body #}
+  </div>
+
+  {# Backdrop — closes the offcanvas on click #}
+  <div class="hdx-v2-offcanvas__backdrop" hidden data-hdx-v2-close="offcanvas"></div>
+
+  {# ── Search autocomplete overlay — MD/SM fullscreen ────────────── #}
+  {# Triggered by: SM search icon (non-homepage), MD navbar input focus,  #}
+  {# or hero autocomplete input focus on the homepage (SM/MD).           #}
+  {# Opened/closed by v2/search-autocomplete.js via hdx-v2-search-filter-overlay--open. #}
+  <div class="hdx-v2-search-filter-overlay" id="hdx-search-autocomplete-overlay" role="dialog" aria-modal="true" aria-label="{{ _('Search') }}">
+    <div class="hdx-v2-search-filter-overlay__header">
+      <span class="hdx-v2-search-filter-overlay__title">{{ _('Search') }}</span>
+      <button type="button"
+              class="hdx-v2-search-filter-overlay__close"
+              data-action="close-search-overlay"
+              aria-label="{{ _('Close search') }}">
+        {% include h.url_for_static('v2/icons/close.svg') %}
+      </button>
+    </div>
+
+    <div class="hdx-v2-search-filter-overlay__body">
+      <form class="hdx-v2-search-filter-overlay__form"
+            id="hdx-search-overlay-form"
+            action="{{ h.url_for('dataset.search') }}"
+            method="get"
+            role="search">
+        <input type="hidden" name="ext_search_source" value="main-nav">
+
+        {% snippet 'v2/components/search-input.html',
+            size='l',
+            name='q',
+            id='hdx-search-overlay-input',
+            placeholder=_('Search for datasets, locations or organisations'),
+            icon_submit=True,
+            attrs={'data-search-managed': ''},
+            autocomplete='off' %}
+
+        <div class="hdx-v2-search-filter-overlay__results c-autocomplete__results"
+             role="listbox"
+             aria-label="{{ _('Search suggestions') }}">
+        </div>
+      </form>
+    </div>
+
+    <div class="hdx-v2-search-filter-overlay__footer">
+      {% snippet 'v2/components/button.html',
+          style='tertiary', size='l', type='text', label=_('Clear'),
+          state='disabled',
+          attrs={'data-action': 'clear-search-overlay'} %}
+
+      {% snippet 'v2/components/button.html',
+          style='primary', size='l', type='text', label=_('View all results'),
+          button_type='submit',
+          attrs={'form': 'hdx-search-overlay-form'} %}
+    </div>
+
+  </div>
+  {% endif %}
+
+</header>

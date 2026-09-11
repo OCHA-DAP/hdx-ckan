@@ -1,0 +1,29 @@
+{#
+  c-notification-item — single notification row (v2)
+  Figma: llm_docs/redesign/figma_exports/notification.html, notifications.html, notifications-xl.html
+  Requirement: llm_docs/redesign/requirements/055-notifications-v2.md
+
+  Required:
+    date          (string) — pre-formatted date (notification.last_date)
+    body          (string, HTML) — pre-rendered message incl. inline link(s); caller-supplied via {% set body %}
+    url           (string) — destination URL; same href as body's inline link(s), used for the trailing arrow link
+    data_personal (bool) — mirrors the inline link's data-module-personal value, applied to the arrow link too
+
+  Optional:
+    sysadmin_tag  (string, default='') — bracket tag e.g. '[membership]'; empty for non-sysadmin viewers
+    for_sysadmin  (bool, default=False) — true → sysadmin oversight highlight
+#}
+<div class="c-notification-item{{ ' c-notification-item--sysadmin' if for_sysadmin }}">
+  <div class="c-notification-item__title">
+    {% if sysadmin_tag %}<span class="c-notification-item__tag">{{ sysadmin_tag }}</span>{% endif %}
+    {{ body | safe }}
+  </div>
+  <div class="c-notification-item__meta">
+    <span class="c-notification-item__date">{{ date }}</span>
+    <a class="c-notification-item__arrow" href="{{ url }}" aria-label="{{ _('View details') }}"
+       data-module="hdx_notifications_main"
+       data-module-personal="{{ 'true' if data_personal else 'false' }}" data-module-type="item">
+      {% include 'v2/icons/arrow-right.svg' %}
+    </a>
+  </div>
+</div>

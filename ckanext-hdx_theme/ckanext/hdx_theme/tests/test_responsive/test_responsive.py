@@ -48,11 +48,16 @@ class TestHDXSearch(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
 
 
     def test_dataset_m_load(self):
-        # user = model.User.by_name('tester')
-        # user.email = 'test@test.com'
-        try:
-            res = self.app.get('/m/dataset/test_dataset_1?force_layout=light')
-        except Exception as ex:
-            assert False
-        assert '\"dataset-light\"' in res.body
+        test_client = self.get_backwards_compatible_test_client()
+        res = test_client.get('/m/dataset/test_dataset_1?force_layout=light')
+        assert res.status_code == 301, '/m/ pages should always permanently redirect to the desktop page'
+
+    # def test_dataset_m_load(self):
+    #     # user = model.User.by_name('tester')
+    #     # user.email = 'test@test.com'
+    #     try:
+    #         res = self.app.get('/m/dataset/test_dataset_1?force_layout=light')
+    #     except Exception as ex:
+    #         assert False
+    #     assert '\"dataset-light\"' in res.body
 

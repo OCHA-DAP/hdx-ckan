@@ -3,7 +3,6 @@ import logging
 from flask import Blueprint
 from six.moves.urllib.parse import urlencode
 
-import ckan.lib.plugins as lib_plugins
 import ckan.model as model
 import ckan.plugins.toolkit as tk
 import ckanext.hdx_package.helpers.analytics as analytics
@@ -64,39 +63,29 @@ def read(id):
         if read_logic.redirect_result:
             return read_logic.redirect_result
 
-        if read_logic.org_meta.is_custom:
-            template_data = _generate_template_data_for_custom_org(read_logic)
-            template_data['analytics'] = {
+        # Standard and custom orgs render the same unified v2 template (task 056)
+        org_dict = read_logic.org_meta.org_dict
+        org_dict.update({
+            'search_template_data': read_logic.search_template_data,
+            'datasets_num': read_logic.search_template_data.get('facets').get('extras_archived').get('fals'),
+            'archived_package_count': read_logic.search_template_data.get('facets').get('extras_archived').get('true'),
+            'allow_req_membership': read_logic.org_meta.allow_req_membership,
+            # 'group_message_info': read_logic.org_meta.group_message_info,
+        })
+
+        template_data = {
+            'org_dict': org_dict,
+            'org_meta': read_logic.org_meta,
+            'analytics': {
                 'analytics_came_from': analytics.came_from(request.args),
                 'analytics_supports_notifications': analytics.supports_notifications(ObjectType.ORGANIZATION,
-                                                                                     read_logic.org_meta.org_dict),
+                                                                                     org_dict),
             }
-            unsubscribe_token = request.args.get('_unsubscribe_token', None)
-            add_unsubscribe_token(unsubscribe_token, ObjectType.ORGANIZATION, read_logic.org_meta.org_dict.get('id'), template_data)
-            result = render('organization/custom/custom_org.html', template_data)
-            return result
-        else:
-            org_dict = read_logic.org_meta.org_dict
-            org_dict.update({
-                'search_template_data': read_logic.search_template_data,
-                'datasets_num': read_logic.search_template_data.get('facets').get('extras_archived').get('fals'),
-                'archived_package_count': read_logic.search_template_data.get('facets').get('extras_archived').get('true'),
-                'allow_req_membership': read_logic.org_meta.allow_req_membership,
-                # 'group_message_info': read_logic.org_meta.group_message_info,
-            })
-
-            template_data = {
-                'org_dict': org_dict,
-                'analytics': {
-                    'analytics_came_from': analytics.came_from(request.args),
-                    'analytics_supports_notifications': analytics.supports_notifications(ObjectType.ORGANIZATION,
-                                                                                         org_dict),
-                }
-            }
-            unsubscribe_token = request.args.get('_unsubscribe_token', None)
-            add_unsubscribe_token(unsubscribe_token, ObjectType.ORGANIZATION, org_dict.get('id'), template_data)
-            template_file = _get_group_template('read_template', 'organization')
-            return render(template_file, template_data)
+        }
+        unsubscribe_token = request.args.get('_unsubscribe_token', None)
+        add_unsubscribe_token(unsubscribe_token, ObjectType.ORGANIZATION, org_dict.get('id'), template_data)
+        template_file = _get_group_template('read_template', 'organization')
+        return render(template_file, template_data)
     except NotFound:
         abort(404, _('Page not found'))
     except NotAuthorized:
@@ -198,6 +187,7 @@ def new_org_template_variables(data_dict):
 
 def stats(id):
     stats_logic = OrganizationStatsLogic(id, g.user, g.userobj)
+    stats_logic.org_meta_dao.fetch_dataset_info()  # datasets_num for the v2 hero stats
     org_dict = stats_logic.org_meta_dao.org_dict
     org_dict.update({
         'allow_req_membership': stats_logic.org_meta_dao.allow_req_membership,
@@ -209,10 +199,9 @@ def stats(id):
         'org_dict': org_dict,
     }
 
-    if stats_logic.is_custom():
-        return render('organization/custom_stats.html', template_data)
-    else:
-        return render('organization/stats.html', template_data)
+    # Standard and custom orgs render the same unified v2 template (task 058,
+    # mirroring the read()/activity() precedent from tasks 056/057)
+    return render('organization/stats.html', template_data)
 
 
 def restore(id):
@@ -275,17 +264,16 @@ def activity_offset(id, offset=0):
     group_activity_stream = get_action('organization_activity_list')(
         context, {'id': org_dict['id'], 'offset': offset})
 
+    # Standard and custom orgs render the same unified v2 template (task 057,
+    # mirroring the read() precedent from task 056)
     extra_vars = {
         'org_dict': org_dict,
         'org_meta': org_meta,
         'group_activity_stream': group_activity_stream,
-
+        'offset': offset,
+        'activity_list_limit': config.get('ckan.activity_list_limit', 31),
     }
-    if org_meta.is_custom:
-        template = 'organization/custom_activity_stream.html'
-    else:
-        template = lib_plugins.lookup_group_plugin('organization').activity_template()
-    return render(template, extra_vars)
+    return render('organization/activity_stream.html', extra_vars)
 
 def download_organization_stats(id):
     """
@@ -338,5 +326,5 @@ hdx_org.add_url_rule(u'/<id>', view_func=read)
 hdx_org.add_url_rule(u'/stats/<id>', view_func=stats)
 hdx_org.add_url_rule(u'/restore/<id>', view_func=restore, methods=[u'POST'])
 hdx_org.add_url_rule(u'/activity/<id>', view_func=activity)
-hdx_org.add_url_rule(u'/activity/<id>/<int:offset>', view_func=activity_offset, defaults={'offset': 0})
+hdx_org.add_url_rule(u'/activity/<id>/<int:offset>', view_func=activity_offset)
 hdx_org.add_url_rule(u'/<id>/download_stats', view_func=download_organization_stats)

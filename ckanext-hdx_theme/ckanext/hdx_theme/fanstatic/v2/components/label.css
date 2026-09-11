@@ -1,0 +1,349 @@
+.c-label {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--hdx-radius-md);
+  font-family: var(--hdx-font-body);
+  font-weight: var(--hdx-fw-regular);
+  line-height: var(--hdx-lh-normal);
+  white-space: nowrap;
+  box-sizing: border-box;
+  text-decoration: none;
+}
+.c-label__icon {
+  line-height: 0;
+  flex-shrink: 0;
+  display: block;
+}
+.c-label__text {
+  position: relative;
+  line-height: 1;
+}
+.c-label--size-m {
+  padding: var(--hdx-space-1) var(--hdx-space-2);
+  gap: var(--hdx-space-13);
+  font-size: var(--hdx-fs-m);
+}
+.c-label--size-m .c-label__icon {
+  width: 1rem;
+}
+.c-label--size-s {
+  padding: var(--hdx-space-15) var(--hdx-space-13);
+  gap: var(--hdx-space-1);
+  font-size: var(--hdx-fs-s);
+}
+.c-label--size-s .c-label__icon {
+  width: 0.875rem;
+}
+.c-label--size-xs {
+  padding: var(--hdx-space-15) var(--hdx-space-1);
+  gap: var(--hdx-space-1);
+  font-size: var(--hdx-fs-xs);
+  min-height: 1.25rem;
+}
+.c-label--size-xs .c-label__icon {
+  width: 0.75rem;
+}
+.c-label--icon-only {
+  padding: 0;
+}
+.c-label--icon-only.c-label--size-m {
+  width: 1.8125rem;
+  height: 1.8125rem;
+}
+.c-label--icon-only.c-label--size-s {
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: var(--hdx-radius-sm);
+}
+.c-label--icon-only.c-label--size-xs {
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: var(--hdx-radius-sm);
+  min-width: 1.25rem;
+}
+.c-label--light {
+  background-color: var(--hdx-neutral-05);
+  color: var(--hdx-neutral-95);
+}
+.c-label--grey {
+  background-color: var(--hdx-neutral-1);
+  color: var(--hdx-neutral-95);
+}
+.c-label--dark {
+  background-color: var(--hdx-neutral-2);
+  color: var(--hdx-neutral-95);
+}
+.c-label--cyan {
+  background-color: var(--hdx-brand-1);
+  color: var(--hdx-brand-85);
+}
+.c-label--yellow {
+  background-color: var(--hdx-warning-1);
+  color: var(--hdx-warning-8);
+}
+.c-label--blue {
+  background-color: var(--hdx-primary-1);
+  color: var(--hdx-primary-9);
+}
+.c-file-type {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-sizing: border-box;
+}
+.c-file-type__icon {
+  line-height: 0;
+  display: block;
+  width: var(--hdx-space-6);
+  max-height: 100%;
+}
+.c-file-type--size-m {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: var(--hdx-radius-md);
+  padding: var(--hdx-space-2);
+}
+.c-file-type--size-m .c-file-type__icon {
+  width: var(--hdx-space-6);
+}
+.c-file-type--size-s {
+  width: var(--hdx-space-8);
+  height: var(--hdx-space-8);
+  border-radius: var(--hdx-radius-sm);
+  padding: var(--hdx-space-2);
+}
+.c-file-type--size-s .c-file-type__icon {
+  width: var(--hdx-space-4);
+}
+.c-file-type--size-xs {
+  width: var(--hdx-space-6);
+  height: var(--hdx-space-6);
+  border-radius: var(--hdx-radius-sm);
+  padding: var(--hdx-space-1);
+}
+.c-file-type--size-xs .c-file-type__icon {
+  width: var(--hdx-space-17);
+}
+.c-file-type--neutral {
+  color: var(--hdx-neutral-8);
+  background-color: var(--hdx-neutral-1);
+}
+.c-file-type--geo {
+  color: var(--hdx-warning-8);
+  background-color: var(--hdx-warning-1);
+}
+.c-file-type--tabular {
+  color: var(--hdx-brand-7);
+  background-color: var(--hdx-brand-1);
+}
+.c-file-type--document {
+  color: var(--hdx-primary-7);
+  background-color: var(--hdx-primary-1);
+}
+.c-file-type--web {
+  color: var(--hdx-error-8);
+  background-color: var(--hdx-error-1);
+}
+.c-tooltip {
+  border-radius: var(--hdx-radius-sm);
+  box-shadow: var(--hdx-shadow-lg);
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: var(--hdx-space-2) var(--hdx-space-3);
+  min-width: 12.5rem;
+  max-width: 18.75rem;
+  isolation: isolate;
+  position: relative;
+  font-family: var(--hdx-font-body);
+}
+.c-tooltip__arrow {
+  width: 1rem;
+  height: 0.5rem;
+  position: absolute;
+  object-fit: contain;
+  z-index: 0;
+  flex-shrink: 0;
+}
+.c-tooltip__arrow--below {
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.c-tooltip__arrow--above {
+  top: -1px;
+  left: 50%;
+  transform: translateX(-50%) rotate(180deg);
+}
+.c-tooltip__text {
+  position: relative;
+  line-height: var(--hdx-lh-normal);
+  z-index: 1;
+  flex-shrink: 0;
+}
+.c-tooltip--dark {
+  background-color: var(--hdx-brand-85);
+  color: var(--hdx-neutral-0);
+  font-size: var(--hdx-fs-s);
+}
+.c-tooltip--dark .c-tooltip__text {
+  align-self: stretch;
+}
+.c-tooltip--dark .c-tooltip__arrow {
+  color: var(--hdx-brand-85);
+}
+.c-tooltip--light {
+  background-color: var(--hdx-neutral-0);
+  color: var(--hdx-neutral-95);
+  padding: var(--hdx-space-2);
+  gap: var(--hdx-space-13);
+  font-size: var(--hdx-fs-s);
+}
+.c-tooltip--light .c-tooltip__arrow {
+  color: var(--hdx-neutral-0);
+}
+.c-tooltip--light .c-tooltip__body {
+  align-self: stretch;
+  justify-content: center;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--hdx-space-13);
+  z-index: 1;
+  flex-shrink: 0;
+}
+.c-tooltip--light .c-tooltip__content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--hdx-space-1);
+}
+.c-tooltip--light .c-tooltip__title {
+  align-self: stretch;
+  font-weight: var(--hdx-fw-medium);
+  line-height: var(--hdx-lh-normal);
+  display: -webkit-inline-box;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  max-height: 3.25rem;
+}
+.c-tooltip--light .c-tooltip__subtitle {
+  align-self: stretch;
+  font-size: var(--hdx-fs-xs);
+  line-height: var(--hdx-lh-normal);
+  color: var(--hdx-neutral-85);
+}
+.c-tooltip--light .c-tooltip__icon-btn {
+  align-self: stretch;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  background-color: var(--hdx-neutral-0);
+  border-radius: var(--hdx-radius-sm);
+  flex-shrink: 0;
+}
+.c-tooltip--light .c-tooltip__icon-btn svg {
+  width: 1.25rem;
+}
+.c-tooltip--graph {
+  position: absolute;
+  background-color: var(--hdx-neutral-0);
+  color: var(--hdx-neutral-8);
+  padding: var(--hdx-space-2);
+  gap: var(--hdx-space-13);
+  font-size: var(--hdx-fs-s);
+}
+.c-tooltip--graph .c-tooltip__arrow {
+  color: var(--hdx-neutral-0);
+}
+.c-tooltip--graph .c-tooltip__text {
+  font-size: var(--hdx-fs-xs);
+  color: var(--hdx-neutral-85);
+  z-index: 1;
+  align-self: stretch;
+  margin-bottom: var(--hdx-space-2);
+}
+.c-tooltip--graph .c-tooltip__legend {
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--hdx-space-1);
+}
+.c-tooltip--graph .c-tooltip__legend-row {
+  align-self: stretch;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--hdx-space-5);
+}
+.c-tooltip--graph .c-tooltip__legend-key {
+  display: flex;
+  align-items: center;
+  gap: var(--hdx-space-2);
+}
+.c-tooltip--graph .c-tooltip__legend-swatch {
+  width: 0.625rem;
+  height: 0.625rem;
+  border-radius: var(--hdx-radius-sm);
+  flex-shrink: 0;
+}
+.c-tooltip--graph .c-tooltip__legend-label {
+  font-weight: var(--hdx-fw-medium);
+  line-height: var(--hdx-lh-normal);
+}
+.c-tooltip--graph .c-tooltip__legend-value {
+  font-weight: var(--hdx-fw-medium);
+  line-height: var(--hdx-lh-normal);
+  color: var(--hdx-neutral-8);
+}
+.c-info-icon {
+  display: inline-flex;
+  align-items: center;
+  color: var(--hdx-neutral-85);
+  cursor: pointer;
+  flex-shrink: 0;
+  background: none;
+  border: none;
+  padding: 0;
+  appearance: none;
+}
+.c-info-icon svg {
+  width: var(--hdx-space-17);
+  height: var(--hdx-space-17);
+}
+.c-tooltip-anchor {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+.c-tooltip-anchor .c-tooltip {
+  position: absolute;
+  z-index: 100;
+  white-space: normal;
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+.c-tooltip-anchor .c-tooltip:not([data-popper-placement]) {
+  bottom: calc(100% + var(--hdx-space-1));
+  right: 0;
+  left: auto;
+}
+.c-tooltip-anchor .c-tooltip[data-popper-placement^="bottom"] .c-tooltip__arrow {
+  top: -1px;
+  bottom: auto;
+  left: 50%;
+  transform: translateX(-50%) rotate(180deg);
+}
+.c-tooltip-anchor .c-tooltip-trigger:hover ~ .c-tooltip,
+.c-tooltip-anchor .c-tooltip-trigger:focus-visible ~ .c-tooltip,
+.c-tooltip-anchor .c-tooltip-trigger.is-open ~ .c-tooltip {
+  visibility: visible;
+  opacity: 1;
+  pointer-events: auto;
+}

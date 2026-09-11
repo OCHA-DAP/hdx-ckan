@@ -1,0 +1,16 @@
+// ============================================================
+// c-divider — full-width 1px horizontal rule
+// Usage: <hr class="c-divider">
+// Modifiers: none — colour and margin overrides live in the calling context
+// ============================================================
+
+.c-divider {
+    display:          block;
+    width:            100%;
+    height:           1px;
+    background-color: var(--hdx-neutral-3);
+    border:           none;
+    margin:           0;
+    flex-shrink:      0;
+    opacity:          1;  // overrides Bootstrap <hr> opacity: 0.25
+}

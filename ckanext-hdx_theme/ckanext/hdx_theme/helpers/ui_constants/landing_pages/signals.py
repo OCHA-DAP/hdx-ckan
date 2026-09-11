@@ -1,4 +1,5 @@
 CONSTANTS = {
+    'HERO_SHORT_TITLE': '''HDX Signals''',
     'HERO_SECTION_TITLE': '''A product that monitors key datasets and generates automated emails when significant, negative changes are detected''',
     'HERO_SECTION_DESCRIPTION': '''We are seeking feedback. Please contact us at <a href="{0}" title="Contact us">hdx-signals@un.org</a>.  Read the HDX Signals impact story <a href="{1}" title="HDX Signals Impact Story">here</a>.''',
 
@@ -33,6 +34,9 @@ CONSTANTS = {
     'RESOURCES_CARD_BUTTON_LINK_REPOSITORY': '''https://github.com/OCHA-DAP/hdx-signals''',
 
     'FAQ_SECTION_TITLE': '''FAQs''',
+
+    'SIGNALS_MAP_SECTION_TITLE': '''Signals Map''',
+    'SIGNALS_MAP_SECTION_DESCRIPTION': '''Datasets monitored by HDX Signals at the moment are as follows:''',
 
     'PARTNERS_SECTION_TITLE': '''Partners''',
 }
@@ -86,3 +90,13 @@ PARTNERS_CONSTANTS = [
     ('idmc', 'IDMC'),
     ('wfp', 'WFP'),
 ]
+
+SIGNAL_CARD_INDICATOR_CATEGORIES = {
+    'acled_conflict': 'Conflict events',
+    'jrc_agricultural_hotspots': 'Agricultural hotspots',
+    'idmc_displacement_conflict': 'Internal displacement',
+    'idmc_displacement_disaster': 'Internal displacement',
+    'acaps_inform_severity': 'INFORM Severity',
+    'ipc_food_insecurity': 'Food insecurity',
+    'wfp_market_monitor': 'Market monitoring',
+}

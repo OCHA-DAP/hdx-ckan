@@ -1,0 +1,33 @@
+// ============================================================
+// c-form-field — generic form field container
+// Wraps label + input/dropdown + error/hint in all v2 forms.
+// ============================================================
+
+@import "../mixins.less";
+
+.c-form-field {
+    display:        flex;
+    flex-direction: column;
+    gap:            var(--hdx-space-2);
+
+    &__label {
+        .hdx-body-m-medium();
+        color:   var(--hdx-neutral-9);
+        display: block;
+    }
+
+    &__required {
+        color: var(--hdx-error-5);
+    }
+
+    &__hint {
+        .hdx-body-s();
+        color:      var(--hdx-neutral-8);
+        text-align: right;
+
+        a {
+            .hdx-link-s();
+            color: var(--hdx-primary-5);
+        }
+    }
+}

@@ -1,0 +1,80 @@
+@import "../mixins.less";
+
+// ============================================================
+// c-accordion — CSS-only accordion via <details> / <summary>
+// Figma source: hapi-xl.html accordion section
+// ============================================================
+
+.c-accordion {
+    border-bottom: 1px solid var(--hdx-neutral-1);
+
+    &__item {
+        border-top: 1px solid var(--hdx-neutral-1);
+    }
+
+    &__trigger {
+        display:         flex;
+        align-items:     center;
+        justify-content: space-between;
+        gap:             var(--hdx-space-8);   // 32px
+        list-style:      none;
+        cursor:          pointer;
+        width:           100%;
+        background:      none;
+        padding:         var(--hdx-space-8) 0;  // 32px top/bottom — click target covers the full row
+        border:          none;
+
+        // Remove browser-default disclosure triangle
+        &::-webkit-details-marker { display: none; }
+        &::marker                 { content: none; }
+
+        &:focus-visible {
+            .hdx-focus-ring();
+            border-radius:  var(--hdx-radius-sm);
+        }
+
+        &:hover .c-accordion__title {
+            color: var(--hdx-neutral-95);
+        }
+    }
+
+    &__title {
+        flex: 1;
+        .hdx-body-m-semibold();
+        color: var(--hdx-neutral-95);
+    }
+
+    &__chevron {
+        flex-shrink: 0;
+        color:       var(--hdx-neutral-85);
+        transition:  transform 0.2s ease;
+        .hdx-motion();
+
+        svg {
+            .hdx-icon-size(var(--hdx-space-5));   // 20px
+            display: block;
+        }
+    }
+
+    &__item[open] &__chevron {
+        transform: rotate(180deg);
+    }
+
+    &__body {
+        overflow: hidden;
+    }
+
+    &__content {
+        padding-top:    var(--hdx-space-4);   // 16px
+        padding-bottom: var(--hdx-space-8);   // 32px — replaces the item's old bottom padding
+        .hdx-body-m();
+        color: var(--hdx-neutral-95);
+
+        a {
+            color:           var(--hdx-primary-5);
+            text-decoration: underline;
+        }
+
+        p { margin-bottom: 0; }
+    }
+}

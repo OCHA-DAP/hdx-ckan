@@ -1,0 +1,125 @@
+{#
+  Snippet: dropdown.html
+  Path:    templates/v2/components/dropdown.html
+
+  Renders a c-dropdown nav-style menu — wrapper div + optional label +
+  trigger button + optional panel (navigate-on-select or checklist).
+
+  For a native <select>-backed form field, use select.html instead —
+  this component split in two because they served unrelated purposes
+  (menu navigation vs. form input) through one flag.
+
+  Parameters
+  ─────────────────────────────────────────────────
+  size          {string}  'm' | 's'  default: 'm'
+  label         {string}  Label text above trigger.  default: '' (hidden)
+  placeholder   {string}  Text shown when no value is selected.  default: 'Dropdown'
+  selected      {string}  Current selected value (if any).  default: ''
+  count         {string}  Active selection count chip, e.g. '(3)'.  default: ''
+  state         {string}  'enabled' | 'active' | 'disabled' | 'filter'  default: 'enabled'
+  icon          {bool}    Show leading filter icon.  default: False
+  icon_src      {string}  Leading icon path.  default: 'v2/icons/placeholder.svg'
+  chevron_src   {string}  Chevron icon path.  default: 'v2/icons/chevron-down.svg'
+  extra_classes {string}  Additional classes on the wrapper div.  default: ''
+  attrs         {dict}    Extra HTML attrs on the wrapper div.  default: {}
+  panel_id      {string}  id of the panel element (for aria-controls on trigger).  default: ''
+  button_attrs  {dict}    Extra HTML attrs on the <button>.  default: {}
+  items         {list}    Panel items. Navigate format: {value, label, active, tooltip?}.
+                          Checklist format: {value, label, count, checked, active,
+                          attrs, extra_classes, children?}.
+                          When non-empty a c-dropdown__panel is rendered.  default: []
+  navigate      {bool}    True → navigate-on-select panel (single choice, e.g. sort,
+                          page size, role change). False → multi-select checklist
+                          panel with checkboxes (e.g. facet filters).  default: False
+  has_search    {bool}    Show search input inside checklist panel.  default: False
+  filter_search_key {string} Value for data-filter-search attribute.  default: ''
+  has_clear     {bool}    Show clear-selection footer in checklist panel.  default: False
+  clear_facet   {string}  Facet key for the clear button (data-facet attr).
+                          Pass 'advanced' to clear all advanced filters.  default: ''
+  ─────────────────────────────────────────────────
+  State → wrapper class mapping:
+    'enabled'  → (no extra class)
+    'active'   → is-open
+    'disabled' → c-dropdown--disabled  (also sets disabled attr on button)
+    'filter'   → c-dropdown--filter
+
+  Example
+
+  {% snippet 'v2/components/dropdown.html',
+      size='m', label='Country', placeholder='Select a country' %}
+
+  {% snippet 'v2/components/dropdown.html',
+      size='m', label='Country', state='filter',
+      selected='Afghanistan', count='(3)' %}
+#}
+
+{% set size             = size             if size             is defined else 'm' %}
+{% set label            = label            if label            is defined else '' %}
+{% set placeholder      = placeholder      if placeholder      is defined else 'Dropdown' %}
+{% set selected         = selected         if selected         is defined else '' %}
+{% set count            = count            if count            is defined else '' %}
+{% set state            = state            if state            is defined else 'enabled' %}
+{% set icon             = icon             if icon             is defined else False %}
+{% set icon_src         = icon_src         if icon_src         is defined else 'v2/icons/placeholder.svg' %}
+{% set chevron_src      = chevron_src      if chevron_src      is defined else 'v2/icons/chevron-down.svg' %}
+{% set panel_id         = panel_id         if panel_id         is defined else '' %}
+{% set extra_classes    = extra_classes    if extra_classes    is defined else '' %}
+{% set attrs            = attrs            if attrs            is defined else {} %}
+{% set button_attrs     = button_attrs     if button_attrs     is defined else {} %}
+{% set items            = items            if items            is defined else [] %}
+{% set navigate         = navigate         if navigate         is defined else False %}
+{% set has_search       = has_search       if has_search       is defined else False %}
+{% set filter_search_key = filter_search_key if filter_search_key is defined else '' %}
+{% set has_clear        = has_clear        if has_clear        is defined else False %}
+{% set clear_facet      = clear_facet      if clear_facet      is defined else '' %}
+
+{% set is_disabled = (state == 'disabled') %}
+{% set is_open     = (state == 'active') %}
+{% set is_filter   = (state == 'filter') %}
+
+{% set classes = ['c-dropdown', 'c-dropdown--size-' ~ size] %}
+{% if is_open     %}{% set classes = classes + ['is-open']     %}{% endif %}
+{% if is_filter   %}{% set classes = classes + ['c-dropdown--filter']   %}{% endif %}
+{% if is_disabled %}{% set classes = classes + ['c-dropdown--disabled'] %}{% endif %}
+{% if extra_classes %}{% set classes = classes + [extra_classes] %}{% endif %}
+
+<div class="{{ classes | join(' ') }}"
+     {% for key, val in attrs.items() %}{{ key }}="{{ val }}" {% endfor %}>
+
+  {% if label %}<span class="c-dropdown__label">{{ label }}</span>{% endif %}
+
+  <button type="button"
+          class="c-dropdown__trigger"
+          {% if is_disabled %}disabled aria-disabled="true"{% endif %}
+          {% if panel_id %}aria-controls="{{ panel_id }}" aria-expanded="{{ 'true' if is_open else 'false' }}"{% endif %}
+          {% for key, val in button_attrs.items() %}{{ key }}="{{ val }}" {% endfor %}>
+
+    {% if icon %}
+      <span class="c-dropdown__trigger-icon">{% include h.url_for_static(icon_src) %}</span>
+    {% endif %}
+
+    <span class="c-dropdown__trigger-value">
+      {{ selected if selected else placeholder }}
+    </span>
+
+    {% if count %}
+      <span class="c-dropdown__trigger-count">{{ count }}</span>
+    {% endif %}
+
+    {% if chevron_src %}
+      <span class="c-dropdown__chevron">{% include h.url_for_static(chevron_src) %}</span>
+    {% endif %}
+  </button>
+
+  {% if items %}
+    {% snippet 'v2/components/dropdown-panel.html',
+        panel_id=panel_id,
+        items=items,
+        navigate=navigate,
+        has_search=has_search,
+        filter_search_key=filter_search_key,
+        has_clear=has_clear,
+        clear_facet=clear_facet %}
+  {% endif %}
+
+</div>

@@ -99,7 +99,7 @@ class TestGettingNotifications(hdx_test_base.HdxBaseTest):
         ]
         for date in dates:
             date['date'] = date_parser.parse(date['datestr'])
-            date['formatted_date'] = date['date'].strftime('%b %-d, %Y')
+            date['formatted_date'] = date['date'].strftime('%d %B %Y')
 
         sorted_dates = sorted(dates, key=lambda d: d['date'], reverse=True)
 

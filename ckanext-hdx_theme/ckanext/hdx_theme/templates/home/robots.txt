@@ -22,17 +22,17 @@ Disallow: /*.xlsx$
 Disallow: /*.tif$
 Disallow: /*.tiff$
 Disallow: /*.geotiff$
-Disallow: /*.shp$ 
-Disallow: /*.kml$ 
-Disallow: /*.kmz$ 
-Disallow: /*.geojson$ 
+Disallow: /*.shp$
+Disallow: /*.kml$
+Disallow: /*.kmz$
+Disallow: /*.geojson$
 # Other filetypes to exclude
 Disallow: /*.geojson$
 Disallow: /*.atom$
 Disallow: /*.rss$
-# Allow sitemaps, but ignore other xmls 
+# Allow sitemaps, but ignore other xmls
 Allow: /sitemap*.xml$
-Disallow: /*.xml$ 
+Disallow: /*.xml$
 #PDFs are allowed
 
 Disallow: /feeds/

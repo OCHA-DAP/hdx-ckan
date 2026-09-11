@@ -1,0 +1,67 @@
+{#
+  Snippet: breadcrumb.html
+  Path:    templates/v2/components/breadcrumb.html
+
+  Renders a c-breadcrumb horizontal trail.
+
+  Parameters
+  ─────────────────────────────────────────────────
+  items         {list}    Ordered list of dicts: {label, href}.
+                          The LAST item is rendered as the current (non-linked) crumb.
+                          All previous items are rendered as links.
+                          A Home link is always prepended as the first crumb.
+                          default: []
+  separator     {string}  Separator character between crumbs.  default: '/'
+  extra_classes {string}  default: ''
+  ─────────────────────────────────────────────────
+  Example
+
+  {% snippet 'v2/components/breadcrumb.html',
+      items=[
+        {'label': 'Sudan',             'href': '/dataset?location=sd'},
+        {'label': 'Humanitarian data', 'href': ''},
+      ] %}
+#}
+
+{% set items         = items         if items         is defined else [] %}
+{% set separator     = separator     if separator     is defined else '/' %}
+{% set extra_classes = extra_classes if extra_classes is defined else '' %}
+
+{% set items = [{'label': _('Home'), 'href': '/'}] + items %}
+
+<nav class="c-breadcrumb{{ ' ' ~ extra_classes if extra_classes }}"
+     aria-label="Breadcrumb"
+     vocab="https://schema.org/"
+     typeof="BreadcrumbList">
+
+  {% for item in items %}
+    {% set is_last   = loop.last %}
+    {% set is_linked = item.href %}
+
+    <span class="c-breadcrumb__item"
+          property="itemListElement"
+          typeof="ListItem">
+
+      {% if is_linked %}
+        {% snippet 'v2/components/text-link.html',
+            label=item.label,
+            href=item.href,
+            style='tertiary',
+            size='xs',
+            attrs={'property': 'item', 'typeof': 'WebPage'},
+            inner_attrs={'property': 'name'} %}
+      {% else %}
+        <span class="c-breadcrumb__current"
+              property="name">{{ item.label }}</span>
+      {% endif %}
+
+      <meta property="position" content="{{ loop.index }}">
+
+      {% if not is_last %}
+        <span class="c-breadcrumb__separator" aria-hidden="true">{{ separator }}</span>
+      {% endif %}
+
+    </span>
+  {% endfor %}
+
+</nav>

@@ -17,8 +17,8 @@ def test_dataviz_page_load(app):
     assert response.status_code == 200
     assert 'dataviz-gallery-1' in response.body
     assert 'dataviz-gallery-2' in response.body
-    assert 'Edit Showcase' not in response.body
+    assert 'Edit' not in response.body
 
     response2 = app.get(url, headers={'Authorization': sysadmin_token})
 
-    assert 'Edit Showcase' in response2.body
+    assert 'Edit' in response2.body

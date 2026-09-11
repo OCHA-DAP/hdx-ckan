@@ -9,6 +9,7 @@ from ckanext.hdx_theme.helpers.ui_constants.landing_pages.hapi import \
 from ckanext.hdx_theme.helpers.ui_constants.landing_pages.signals import \
     DATA_COVERAGE_CONSTANTS as SIGNALS_DATA_COVERAGE_CONSTANTS, SECTIONS_CONSTANTS as SIGNALS_SECTIONS_CONSTANTS, \
     PARTNERS_CONSTANTS as SIGNALS_PARTNERS_CONSTANTS
+from ckanext.hdx_theme.helpers.signals_cache import cached_last_three_signal_cards
 
 abort = tk.abort
 g = tk.g
@@ -51,17 +52,30 @@ def signals():
     partners = SIGNALS_PARTNERS_CONSTANTS
     sections = SIGNALS_SECTIONS_CONSTANTS
     data_coverage = SIGNALS_DATA_COVERAGE_CONSTANTS
+    try:
+        signal_cards = cached_last_three_signal_cards()
+    except Exception as e:
+        log.warning('Failed to load HDX Signals cards for the Signals landing page, omitting Signals section: %s', e)
+        signal_cards = []
 
     template_data = {
         'partners': partners,
         'sections': sections,
         'data_coverage': data_coverage,
         'faq_data': data['faq_data'],
+        'signal_cards': signal_cards,
     }
 
     return render('landing_pages/signals.html', extra_vars=template_data)
 
 
+# TODO: remove this once finished
+def components():
+    # showcase page for redesigned components (v2)
+    return render('v2/components.html', extra_vars={})
+
+
 hdx_landing_pages.add_url_rule(u'/hapi/', view_func=hapi, strict_slashes=False)
 hdx_landing_pages.add_url_rule(u'/hapi/terms/', view_func=hapi_terms, strict_slashes=False)
 hdx_landing_pages.add_url_rule(u'/signals/', view_func=signals, strict_slashes=False)
+hdx_landing_pages.add_url_rule(u'/components/', view_func=components, strict_slashes=False)

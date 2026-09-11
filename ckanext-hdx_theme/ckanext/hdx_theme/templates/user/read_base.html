@@ -38,7 +38,9 @@
   {% if h.check_access('api_token_list', {'user': user['name']}) %}
     {{ h.bs5_build_nav_icon('user.api_tokens', _('API Tokens'), class_='nav-link', id=user.name) }}
   {% endif %}
-  {{ h.bs5_build_nav_icon('hdx_user.notifications', _('Notifications'), class_='nav-link', id=user.name) }}
+  {% if h.check_access('user_update', user) %}
+    {{ h.bs5_build_nav_icon('hdx_user.notifications', _('Notifications'), class_='nav-link', id=user.name) }}
+  {% endif %}
   {% if h.check_access('user_update', user) %}
     {{ h.bs5_build_nav_icon('hdx_user.edit', _('Profile and Password'), class_='nav-link', id=user.name) }}
   {% endif %}

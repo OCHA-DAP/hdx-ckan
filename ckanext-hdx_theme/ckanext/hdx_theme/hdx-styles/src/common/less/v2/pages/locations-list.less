@@ -1,0 +1,233 @@
+// ============================================================
+// locations-list-page.less
+// All Locations (/group/) — v2 page-specific styles
+// ============================================================
+
+@import "../mixins.less";
+
+// ── Hero / TitleKPI block ─────────────────────────────────────
+.hdx-v2-locations-list-hero {
+    background-color: var(--hdx-neutral-0);
+
+    &__body {
+        padding: 0 0 var(--hdx-space-3);
+
+        @media (min-width: @hdx-bp-md) {
+            padding: 0 0 var(--hdx-space-10);
+        }
+    }
+}
+
+// ── Map section ───────────────────────────────────────────────
+.hdx-v2-locations-list-map {
+    position: relative;
+    display: none;
+    background-color: var(--hdx-neutral-0);
+
+    @media (min-width: @hdx-bp-md) {
+        display: block;
+    }
+
+    #map {
+        height: 400px;
+
+        @media (min-width: @hdx-bp-xl) {
+            height: 660px;
+        }
+    }
+}
+
+// ── Map hover — instant ───────────────────────────────────────
+.leaflet-container path {
+    transition: none;
+}
+
+.leaflet-fade-anim .leaflet-popup {
+    transition: none;
+}
+
+// ── Legend ────────────────────────────────────────────────────
+.hdx-v2-locations-list-legend {
+    background-color: var(--hdx-neutral-0);
+
+    &__row {
+        display:     flex;
+        align-items: center;
+        gap:         var(--hdx-space-3);
+        padding:     var(--hdx-space-3) 0;
+        font-size:   var(--hdx-fs-s);
+        color:       var(--hdx-neutral-85);
+
+        @media (min-width: @hdx-bp-xl) {
+            padding: var(--hdx-space-4) 0;
+        }
+    }
+
+    &__square {
+        width:            var(--hdx-space-4);
+        height:           var(--hdx-space-4);
+        border-radius:    var(--hdx-radius-sm);
+        background-color: var(--hdx-brand-1);
+        flex-shrink:      0;
+    }
+}
+
+// ── Controls row (title + filter + sort) ─────────────────────
+.hdx-v2-locations-list-controls {
+    background-color: var(--hdx-neutral-0);
+
+    &__inner {
+        padding: 0;
+
+        @media (min-width: @hdx-bp-md) {
+            padding: var(--hdx-space-8) 0 var(--hdx-space-4);
+        }
+        @media (min-width: @hdx-bp-xl) {
+            display:     flex;
+            align-items: center;
+            gap:         var(--hdx-space-4);
+        }
+    }
+
+    // Aligned with sidebar via same 25% flex proportion at XL
+    &__title {
+        .hdx-section-title();
+        display:       none;
+        margin-bottom: var(--hdx-space-2);
+
+        @media (min-width: @hdx-bp-md) {
+            display: block;
+        }
+
+        @media (min-width: @hdx-bp-xl) {
+            flex:        0 0 25%;
+            flex-shrink: 0;
+        }
+    }
+
+    &__right {
+        display:        flex;
+        flex-direction: column;
+        gap:            var(--hdx-space-4);
+        color:          var(--hdx-neutral-85);
+
+        @media (min-width: @hdx-bp-md) {
+            flex-direction:  row;
+            align-items:     center;
+            justify-content: space-between;
+            gap:             var(--hdx-space-5);
+        }
+
+        @media (min-width: @hdx-bp-xl) {
+            flex: 1;
+        }
+    }
+
+    &__filter {
+        display:     flex;
+        align-items: center;
+        gap:         var(--hdx-space-4);
+        cursor:      pointer;
+    }
+
+    &__filter-label {
+        .hdx-body-s();
+        color:  var(--hdx-neutral-85);
+        cursor: pointer;
+        margin: 0;
+    }
+
+    &__filter-label-full {
+        display: none;
+        @media (min-width: @hdx-bp-xl) { display: inline; }
+    }
+
+    &__filter-label-short {
+        display: inline;
+        @media (min-width: @hdx-bp-xl) { display: none; }
+    }
+
+    &__sort {
+        display:     flex;
+        align-items: center;
+        gap:         var(--hdx-space-2);
+    }
+
+    &__sort-label {
+        .hdx-body-s();
+        color: var(--hdx-neutral-85);
+    }
+
+    &__sort-btns {
+        display: flex;
+        gap:     var(--hdx-space-1);
+    }
+}
+
+// ── Outer row: white background for the sidebar+content area ──
+.hdx-v2-locations-list-row {
+    background-color: var(--hdx-neutral-0);
+}
+
+// ── Columns flex row (gap via generic --gap) ──────────────────
+.hdx-v2-locations-list-columns {
+    width: 100%;
+}
+
+// ── Sidebar (Jump to section) ─────────────────────────────────
+// SM/MD: right side (order:1), natural/content-driven width
+// XL:    left side (order:0), 25% flex width via generic __sidebar
+.hdx-v2-locations-list-sidebar {
+    flex-shrink: 0;              // natural width at SM/MD
+    order:       1;
+    padding-top: var(--hdx-space-8);
+    padding-bottom: var(--hdx-space-8);
+
+    @media (min-width: @hdx-bp-xl) {
+        order: 0;
+    }
+
+    &__heading {
+        .hdx-body-m-semibold();
+        color:   var(--hdx-neutral-95);
+        margin:  0 0 var(--hdx-space-6) 0;
+        display: none;
+
+        @media (min-width: @hdx-bp-xl) {
+            display: block;
+        }
+    }
+
+    .hdx-v2-locations-list-letter-grid {
+        display:        flex;
+        flex-direction: column;
+        gap:            var(--hdx-space-13);
+
+        @media (min-width: @hdx-bp-xl) {
+            display:               grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap:                   var(--hdx-space-3);
+        }
+    }
+}
+
+// ── Content area + letter sections ───────────────────────────
+.hdx-v2-locations-list-content {
+    order:   0;
+    padding: var(--hdx-space-8) 0 var(--hdx-space-24);
+
+    .hdx-v2-locations-list-sections {
+        display:        flex;
+        flex-direction: column;
+        gap:            var(--hdx-space-8);
+
+        .hdx-v2-locations-list-section {
+            .hdx-scroll-offset-header();
+
+            &__heading {
+                .hdx-section-title();
+                margin-bottom: var(--hdx-space-4);
+            }
+        }
+    }
+}

@@ -1,9 +1,11 @@
-$(document).ready(function () {
+document.addEventListener('DOMContentLoaded', function () {
 
-  var $form = $('#signals-form-card form');
-  var $button = $form.find('#mc-embedded-subscribe');
-  var $alert = $form.find('#mc-embedded-subscribe-alert');
-  var $fields = $form.find('#mce-EMAIL, #mce-FNAME, #mce-ORG');
+  var formCard = document.querySelector('.hdx-v2-signals-form-card');
+  if (!formCard) { return; }
+  var form = formCard.querySelector('form');
+  var button = form.querySelector('#mc-embedded-subscribe');
+  var alert = form.querySelector('#mc-embedded-subscribe-alert');
+  var fields = Array.from(form.querySelectorAll('#mce-EMAIL, #mce-FNAME, #mce-ORG'));
 
   var DATASETS_GROUPS = [
     '[4389]'
@@ -58,102 +60,129 @@ $(document).ready(function () {
 
   function select_groups(groups) {
     groups.forEach(function (group) {
-      $form.find('input[name^="group' + group + '"]').prop('checked', true);
+      form.querySelectorAll('input[name^="group' + group + '"]').forEach(function (cb) {
+        cb.checked = true;
+      });
     });
     disable_submit_button();
   }
 
   function unselect_group(groups) {
     groups.forEach(function (group) {
-      $form.find('input[name^="group' + group + '"]').prop('checked', false);
+      form.querySelectorAll('input[name^="group' + group + '"]').forEach(function (cb) {
+        cb.checked = false;
+      });
     });
     disable_submit_button();
   }
 
   function select_values(values) {
     values.forEach(function (value) {
-      $form.find('input[name="group' + value + '"]').prop('checked', true);
+      var cb = form.querySelector('input[name="group' + value + '"]');
+      if (cb) { cb.checked = true; }
     });
     disable_submit_button();
   }
 
   function unselect_values(values) {
     values.forEach(function (value) {
-      $form.find('input[name="group' + value + '"]').prop('checked', false);
+      var cb = form.querySelector('input[name="group' + value + '"]');
+      if (cb) { cb.checked = false; }
     });
     disable_submit_button();
   }
 
   function add_select_buttons(group_label, group) {
-    var select_btn = $('<button type="button" class="btn btn-link p-0 me-2"><small>Select all</small></button>');
-    var unselect_btn = $('<button type="button" class="btn btn-link p-0"><small>Clear all</small></button>');
+    var select_btn = document.createElement('button');
+    select_btn.type = 'button';
+    select_btn.className = 'c-button c-button--tertiary c-button--size-s';
+    select_btn.textContent = 'Select all';
 
-    group_label.append(select_btn);
-    group_label.append(unselect_btn);
+    var unselect_btn = document.createElement('button');
+    unselect_btn.type = 'button';
+    unselect_btn.className = 'c-button c-button--tertiary c-button--size-s';
+    unselect_btn.textContent = 'Clear all';
 
-    select_btn.click(function () {
+    group_label.appendChild(select_btn);
+    group_label.appendChild(unselect_btn);
+
+    select_btn.addEventListener('click', function () {
       select_groups([group]);
     });
-    unselect_btn.click(function () {
+    unselect_btn.addEventListener('click', function () {
       unselect_group([group]);
     });
   }
 
   function disable_submit_button() {
     var dataset_checked = DATASETS_GROUPS.some(function (group) {
-      return $form.find('input[name^="group' + group + '"]:checked').length > 0;
+      return form.querySelectorAll('input[name^="group' + group + '"]:checked').length > 0;
     });
 
     var location_checked = LOCATIONS_GROUPS.some(function (group) {
-      return $form.find('input[name^="group' + group + '"]:checked').length > 0;
+      return form.querySelectorAll('input[name^="group' + group + '"]:checked').length > 0;
     });
 
-    var fields_filled = $fields.toArray().every(function(field) {
-      return $(field).val().trim() !== '';
+    var fields_filled = fields.every(function(field) {
+      return field.value.trim() !== '';
     });
 
     if(dataset_checked && location_checked && fields_filled) {
-      $button.removeClass('disabled').removeAttr('disabled');
-      $alert.addClass('d-none');
+      button.classList.remove('is-disabled');
+      button.removeAttribute('disabled');
+      button.removeAttribute('aria-disabled');
+      alert.style.display = 'none';
     }
     else {
-      $button.addClass('disabled').attr('disabled', 'disabled');
-      $alert.removeClass('d-none');
+      button.classList.add('is-disabled');
+      button.setAttribute('disabled', 'disabled');
+      button.setAttribute('aria-disabled', 'true');
+      alert.style.display = '';
     }
   }
 
-  $form.find('#select-all-datasets').on('click', function () {
-    select_groups(DATASETS_GROUPS);
-  });
-  $form.find('#select-all-locations').on('click', function () {
-    select_values(ALL_LOCATIONS);
-  });
-  $form.find('#select-all-hrp-locations').on('click', function () {
-    select_values(HRP_LOCATIONS);
-  });
-  $form.find('#clear-all-locations').on('click', function () {
-    unselect_values(ALL_LOCATIONS);
-    unselect_values(HRP_LOCATIONS);
-  });
+  var selectAllLocations = form.querySelector('#select-all-locations');
+  if (selectAllLocations) {
+    selectAllLocations.addEventListener('click', function () {
+      select_values(ALL_LOCATIONS);
+    });
+  }
+  var selectAllHrp = form.querySelector('#select-all-hrp-locations');
+  if (selectAllHrp) {
+    selectAllHrp.addEventListener('click', function () {
+      select_values(HRP_LOCATIONS);
+    });
+  }
+  var clearAllLocations = form.querySelector('#clear-all-locations');
+  if (clearAllLocations) {
+    clearAllLocations.addEventListener('click', function () {
+      unselect_values(ALL_LOCATIONS);
+      unselect_values(HRP_LOCATIONS);
+    });
+  }
 
-  $form.find('.mc-field-group').each(function () {
-    var group_label = $(this).find('p.action-buttons');
-    var group_name = $(this).find('input[type="checkbox"]').first().attr('name');
+  form.querySelectorAll('.mc-field-group').forEach(function (group_el) {
+    var group_label = group_el.querySelector('p.action-buttons');
+    var first_cb = group_el.querySelector('input[type="checkbox"]');
 
-    if (group_label.length && group_name) {
-      var group = group_name.split('[')[1].split(']')[0];
+    if (group_label && first_cb) {
+      var group = first_cb.name.split('[')[1].split(']')[0];
       add_select_buttons(group_label, '[' + group + ']');
     }
   });
 
   DATASETS_LOCATIONS_GROUPS.forEach(function (group) {
-    $form.find('input[name^="group' + group + '"]').on('change', function () {
-      disable_submit_button();
+    form.querySelectorAll('input[name^="group' + group + '"]').forEach(function (cb) {
+      cb.addEventListener('change', function () {
+        disable_submit_button();
+      });
     });
   });
 
-  $fields.on('input', function() {
-    disable_submit_button();
+  fields.forEach(function(field) {
+    field.addEventListener('input', function() {
+      disable_submit_button();
+    });
   });
 
 });

@@ -1,0 +1,181 @@
+// ============================================================
+// v2 page layout — container
+// Scoped to .hdx-v2 body class (set via bodyclassname block in v2/page.html)
+// ============================================================
+//
+// Breakpoints (Figma spec):
+//   SM  < 48rem       — fluid, 1rem side padding
+//   MD  48rem–87.5rem — fluid, 3rem side padding
+//   XXL ≥ 87.5rem     — max-width 1320px, centered, 12px side padding
+//
+// Use .hdx-v2-container on __inner elements of full-bleed sections.
+// Do NOT use Bootstrap .container in v2 templates.
+// ============================================================
+
+@import "mixins.less";
+
+@container-padding-xs:  1rem;     // 16px — SM
+@container-padding-md:  3rem;     // 48px — MD through XL
+@container-max-width:   1320px;   // XXL centered, matches Figma XL spec
+
+
+// ── Page background ───────────────────────────────────────────
+// All v2 pages use the light-grey page canvas (Figma: color-gray-100 = #fafbfb).
+// Components that need white surfaces set background-color: var(--hdx-neutral-0) explicitly.
+body.hdx-v2 {
+    font-family: var(--hdx-font-body);
+    background-color: var(--hdx-neutral-01);
+}
+
+.hdx-v2-page-row {
+    @media (min-width: @hdx-bp-md) { min-height: 37.5rem; }
+}
+
+// ── Breadcrumb row ────────────────────────────────────────────
+// Shared across search and dataset pages.
+// A bottom border acts as the visual separator above the page header.
+.hdx-v2-breadcrumb-row {
+    border-bottom: 1px solid var(--hdx-neutral-1);
+
+    &--white {
+        background-color: var(--hdx-neutral-0);
+        border-bottom:    none;
+    }
+}
+
+// ── Flash messages ────────────────────────────────────────────
+// Wraps the h.get_flashed_messages() loop in v2/page.html; each
+// message renders as a c-alert (see components/alert.less).
+.hdx-v2-flash {
+    margin: var(--hdx-space-4) 0;
+}
+
+// Base flex layout used on any v2 two-column page (search, dataset page, etc.)
+// Horizontal gap between columns is set per-page via gap or column padding.
+.hdx-v2-content-columns {
+    display:     flex;
+    align-items: stretch;
+
+    // ── Gap presets ──────────────────────────────────────────
+    &--gap {                    // small gap, larger at XL (locations)
+        gap: var(--hdx-space-3);
+
+        @media (min-width: @hdx-bp-xl) { gap: var(--hdx-space-6); }
+    }
+
+    &--gap-xl {                 // gap only at XL (dataset, resource)
+        @media (min-width: @hdx-bp-xl) { gap: var(--hdx-space-6); }
+    }
+
+    &--stack {                  // column below XL, row at XL (org members/stats)
+        flex-direction: column;
+        gap:            var(--hdx-space-6);
+
+        @media (min-width: @hdx-bp-xl) { flex-direction: row; }
+    }
+
+    // ── Sidebar column — 25% at XL ────────────────────────────
+    &__sidebar {
+        min-width: 0;
+
+        @media (min-width: @hdx-bp-xl) { .v2-sidebar-flex(); }
+
+        &--xl-only {            // hidden below XL (search, dataset, resource, landing)
+            display: none;
+
+            @media (min-width: @hdx-bp-xl) { display: block; }
+        }
+
+        &--sticky { .v2-sidebar-sticky(); }
+
+        &--right  { order: 2; } // after the content column (org members)
+    }
+
+    // ── Content column ────────────────────────────────────────
+    &__content { .v2-content-flex(); }
+}
+
+.hdx-v2-container {
+    max-width:     100%;
+    padding-right: @container-padding-xs;
+    padding-left:  @container-padding-xs;
+
+    @media (min-width: @hdx-bp-md) {
+        padding-right: @container-padding-md;
+        padding-left:  @container-padding-md;
+    }
+
+    @media (min-width: @hdx-bp-xxl) {
+        max-width:     @container-max-width;
+        padding-right: var(--hdx-space-3);
+        padding-left:  var(--hdx-space-3);
+        margin-right:  auto;
+        margin-left:   auto;
+    }
+}
+
+// ── Chart.js canvas wrapper (org stats + dataset page, task 058) ──
+// The canvas sits in an absolutely-positioned holder so Chart.js can
+// shrink as well as grow with the container; the template-rendered
+// c-tooltip--graph floats above the canvas, positioned by JS.
+.hdx-v2-chart {
+    position: relative;
+
+    &__canvas {
+        position: absolute;
+        inset:    0;
+    }
+}
+
+.hdx-v2-chart-tooltip {
+    position:       absolute;
+    top:            0;
+    left:           0;
+    min-width:      0;
+    max-width:      none;
+    white-space:    nowrap;
+    opacity:        0;
+    pointer-events: none;
+    z-index:        5;
+    transition:     opacity 150ms ease;
+    .hdx-motion();
+}
+
+// Contribute popup (Add/Edit Data modal) — toggled by fanstatic/v2/contribute.js
+body.contribute-mode {
+    overflow: hidden;
+}
+// ── Contribute popup (Add/Edit Data modal) ─────────────────────
+// Sizes the iframe-in-popup shell rendered from widget/contribute/details.html.
+// Mirrors the v1 rules in widget/contribute/details.less — same shared template/classes.
+.popup.popup-contribute {
+    z-index:  90000;
+    overflow: auto;
+
+    .content {
+        height:  100%;
+        padding: 0;
+
+        position:     static;
+        left:         auto;
+        top:          auto;
+        margin-left:  auto;
+        margin-right: auto;
+        transform:    none;
+        overflow:     hidden;
+
+        .details-content {
+            height: 100%;
+
+            iframe {
+                border: none;
+                height: 100%;
+                width:  100%;
+            }
+        }
+    }
+}
+
+.js-hide {
+    display: none !important;
+}

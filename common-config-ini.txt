@@ -109,6 +109,7 @@ ckan.csrf_protection.ignore_extensions = false
 
 ## Front-End Settings
 ckan.site_title = Humanitarian Data Exchange
+ckan.template_title_delimiter = |
 ckan.site_logo = /images/homepage/logo-beta-inverted.svg
 ckan.site_description =
 ckan.favicon = /favicon.ico
@@ -246,8 +247,8 @@ hdx.orgrequest.sendmails = true
 hdx.faqrequest.email = hdx@humdata.org
 hdx.cache.onstartup = true
 # DEPRECATED -> hdx.homepage.extrasources = 13
-hdx.mapbox.baselayer.url = https://data.humdata.org/mapbox
 hdx.mapbox.baselayer.token = cacheToken
+hdx.mapbox.style = mapbox://styles/humdata/cmneqc85n005a01ry0xal9ard
 
 ## Chart / Top line num source settings
 
@@ -378,6 +379,7 @@ hdx.notifications.disabled_objects_csv = https://docs.google.com/spreadsheets/d/
 
 hdx.approved_tags.csv = https://docs.google.com/spreadsheets/d/e/2PACX-1vQJKjr25NZAIQELrFnUhVnL-7SxC8SwW9I6usm5Xvwyw00zRC-DhlLh74EVniX732w_BDFoQLrNDKKL/pub?gid=1261258630&single=true&output=csv
 
+hdx.signals.csv = https://github.com/OCHA-DAP/hdx-signals/raw/refs/heads/main/output/hdx_signals_latest3.csv
 
 # Datapusher Plus - HDX specific settings
 hdx.datastore.enabled_objects_csv = https://docs.google.com/spreadsheets/d/e/2PACX-1vStS317Pew-MCRc-6qYJN6nMEGGO2-XvLd7ihvVbXUZX-Nj_0k7HTIekCQicrXI_NUqMTLvf3fGSv8s/pub?gid=0&single=true&output=csv
@@ -392,7 +394,7 @@ ckanext.sitemap.ttl = 28800
 ckanext.sitemap.resources = false
 ckanext.sitemap.groups = true
 ckanext.sitemap.language_alternatives = false
-ckanext.sitemap.custom_uris = /faq /hapi /signals /dataviz-guide /faqs/terms /about/hdx-qa-process /faqs/devs /faqs/licenses
+ckanext.sitemap.custom_uris = /hapi /signals
 
 # DCAT configuration
 # RDF profiles for endpoints (.rdf, .xml, .ttl, .jsonld) - pin to v2 (v3 requires ckanext-scheming)

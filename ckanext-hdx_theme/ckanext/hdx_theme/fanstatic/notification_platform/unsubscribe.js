@@ -1,13 +1,19 @@
-$(document).ready(function () {
-  // unsubscribe
-  var unsubscribeToken = $unsubscribeSubmitButton.data('unsubscribe-token').toLowerCase() !== 'none' ? $unsubscribeSubmitButton.data('unsubscribe-token') : null;
-  var unsubscribeTokenValidated = $unsubscribeSubmitButton.data('unsubscribe-token-validated').toLowerCase() === 'true' ? $unsubscribeSubmitButton.data('unsubscribe-token-validated') : false;
-  var unsubscribeTokenInvalidate = $unsubscribeSubmitButton.data('unsubscribe-token-invalidate').toLowerCase() === 'true' ? $unsubscribeSubmitButton.data('unsubscribe-token-invalidate') : false;
-  var authenticated = $unsubscribeSubmitButton.data('is-authenticated');
+document.addEventListener('DOMContentLoaded', function () {
+  if (!unsubscribeSubmitButton) return;
 
-  const unsubscribeObjectId = $unsubscribeSubmitButton.data('object-id');
-  const unsubscribeObjectName = $unsubscribeSubmitButton.data('object-name');
-  const unsubscribeObjectType = $unsubscribeSubmitButton.data('object-type');
+  var rawToken = unsubscribeSubmitButton.getAttribute('data-unsubscribe-token') || '';
+  var unsubscribeToken = rawToken.toLowerCase() !== 'none' ? rawToken : null;
+
+  var rawValidated = unsubscribeSubmitButton.getAttribute('data-unsubscribe-token-validated') || '';
+  var unsubscribeTokenValidated = rawValidated.toLowerCase() === 'true';
+
+  var rawInvalidate = unsubscribeSubmitButton.getAttribute('data-unsubscribe-token-invalidate') || '';
+  var unsubscribeTokenInvalidate = rawInvalidate.toLowerCase() === 'true';
+
+  var authenticated        = unsubscribeSubmitButton.getAttribute('data-is-authenticated');
+  var unsubscribeObjectId  = unsubscribeSubmitButton.getAttribute('data-object-id');
+  var unsubscribeObjectName = unsubscribeSubmitButton.getAttribute('data-object-name');
+  var unsubscribeObjectType = unsubscribeSubmitButton.getAttribute('data-object-type');
 
   if (unsubscribeTokenInvalidate) {
     hdxUtil.net.removeNotificationSubscribedTarget(unsubscribeObjectId, unsubscribeObjectType);
@@ -15,7 +21,7 @@ $(document).ready(function () {
 
   if (unsubscribeToken) {
     if (unsubscribeTokenValidated) {
-      unsubscribeModal.show();
+      window.hdxV2Drawer('notificationsUnsubscribeDrawer').open();
 
       hdxUtil.analytics.sendNotificationPlatformPopupInteractionEvent(
         'show popup',
@@ -36,36 +42,17 @@ $(document).ready(function () {
     displayNotificationOptoutOption(unsubscribeObjectId, unsubscribeObjectType);
   }
 
-  $unsubscribeSubmitButton.on('click', function (e) {
+  unsubscribeSubmitButton.addEventListener('click', function (e) {
     e.preventDefault();
-
-    var objectId = $(this).data('object-id');
-    var objectName = $(this).data('object-name');
-    var objectType = $(this).data('object-type');
-
-    var unsubscribeToken = $(this).data('unsubscribe-token');
-    var unsubscribeEmail = $(this).data('unsubscribe-email');
-    var unsubscribeSource = $(this).data('unsubscribe-source');
-
-    var authenticated = $(this).data('is-authenticated');
-
-    onUnsubscribeSubmit(objectId, objectName, objectType, unsubscribeToken, unsubscribeEmail, unsubscribeSource, authenticated);
-    return false;
-  });
-  $unsubscribeHubLink.on('click', function (e) {
-    e.preventDefault();
-
-    var objectId = $(this).data('object-id');
-    var objectName = $(this).data('object-name');
-    var objectType = $(this).data('object-type');
-
-    var unsubscribeToken = $(this).data('unsubscribe-token');
-    var unsubscribeEmail = $(this).data('unsubscribe-email');
-    var unsubscribeSource = $(this).data('unsubscribe-source');
-
-    var authenticated = $(this).data('is-authenticated');
-
-    onUnsubscribeSubmit(objectId, objectName, objectType, unsubscribeToken, unsubscribeEmail, unsubscribeSource, authenticated);
-    return false;
+    var btn = e.currentTarget;
+    onUnsubscribeSubmit(
+      btn.getAttribute('data-object-id'),
+      btn.getAttribute('data-object-name'),
+      btn.getAttribute('data-object-type'),
+      btn.getAttribute('data-unsubscribe-token'),
+      btn.getAttribute('data-unsubscribe-email'),
+      btn.getAttribute('data-unsubscribe-source'),
+      btn.getAttribute('data-is-authenticated')
+    );
   });
 });

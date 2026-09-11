@@ -108,9 +108,8 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
         result = self.app.get(test_url, headers={'Authorization': str(testsysadmin.apikey)})
         assert result.status_code == 200
 
-        assert 'Request data directly from the maintainer of this dataset.' in result.body
-
-        assert 'This data is by request only' in result.body
+        assert 'Request only data' in result.body
+        assert 'Request data' in result.body
 
         context['user'] = 'tester'
         data_dict = {

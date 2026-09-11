@@ -1,0 +1,80 @@
+.c-text-link {
+  display: inline;
+  font-family: var(--hdx-font-body);
+  font-weight: var(--hdx-fw-medium);
+  line-height: var(--hdx-lh-normal);
+  text-decoration: underline;
+  cursor: pointer;
+  transition: color 0.15s ease;
+  background: none;
+  border: none;
+  padding: 0;
+}
+.c-text-link:focus-visible {
+  outline: 2px solid var(--hdx-primary-5);
+  outline-offset: 2px;
+  border-radius: 1px;
+}
+.c-text-link--size-xl {
+  font-size: 1.25rem;
+}
+.c-text-link--size-l {
+  font-size: 1.125rem;
+}
+.c-text-link--size-m {
+  font-size: var(--hdx-fs-m);
+}
+.c-text-link--size-s {
+  font-size: var(--hdx-fs-s);
+}
+.c-text-link--size-xs {
+  font-size: var(--hdx-fs-xs);
+}
+.c-text-link--primary {
+  color: var(--hdx-primary-5);
+}
+.c-text-link--primary:hover {
+  color: var(--hdx-neutral-95);
+  text-decoration: underline;
+}
+.c-text-link--primary:active {
+  color: var(--hdx-primary-5);
+}
+.c-text-link--primary[disabled],
+.c-text-link--primary.is-disabled {
+  color: var(--hdx-neutral-7);
+  cursor: not-allowed;
+  pointer-events: none;
+}
+.c-text-link--secondary {
+  color: var(--hdx-neutral-95);
+}
+.c-text-link--secondary:hover {
+  color: var(--hdx-primary-5);
+  text-decoration: underline;
+}
+.c-text-link--secondary:active {
+  color: var(--hdx-primary-5);
+}
+.c-text-link--secondary[disabled],
+.c-text-link--secondary.is-disabled {
+  color: var(--hdx-neutral-7);
+  cursor: not-allowed;
+  pointer-events: none;
+}
+.c-text-link--tertiary {
+  color: var(--hdx-neutral-8);
+}
+.c-text-link--tertiary:hover {
+  color: var(--hdx-primary-5);
+  text-decoration: underline;
+}
+.c-text-link--tertiary:active {
+  color: var(--hdx-primary-5);
+}
+.c-text-link--tertiary[disabled],
+.c-text-link--tertiary.is-disabled {
+  color: var(--hdx-neutral-7);
+  cursor: not-allowed;
+  pointer-events: none;
+}

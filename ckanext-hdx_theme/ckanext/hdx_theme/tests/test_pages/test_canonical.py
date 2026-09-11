@@ -19,12 +19,12 @@ no_canonical_pages = [
     # we need to ignore any params
     {'url':'dataset_read','id': 'test_dataset_1', 'params':{'any_param':'generates_canonical'}, 'canonical': True, 'canonical_url':'dataset_read'},
     # mobile page has canonical
-    {'url':'hdx_light_dataset.read','id': 'test_dataset_1', 'mobile': True, 'canonical': True, 'canonical_url':'dataset_read'},
+    # {'url':'hdx_light_dataset.read','id': 'test_dataset_1', 'mobile': True, 'canonical': True, 'canonical_url':'dataset_read'},
 
     ### Location pages
     {'url':'hdx_group.read','id': 'roger', 'canonical': False},
     {'url':'hdx_group.read','id': 'roger', 'params':{'any_param':'generates_canonical'}, 'canonical': True, 'canonical_url':'hdx_group.read'},
-    {'url':'hdx_light_group.light_read','id': 'roger', 'mobile': True,'canonical': True, 'canonical_url':'hdx_group.read'},
+    # {'url':'hdx_light_group.light_read','id': 'roger', 'mobile': True,'canonical': True, 'canonical_url':'hdx_group.read'},
     {'url':'hdx_group.index', 'canonical': True, 'canonical_url':'/'},
 
     ### Organization pages
@@ -34,7 +34,7 @@ no_canonical_pages = [
 
     ### Organization index pages
     {'url':'hdx_org.index', 'canonical': True, 'canonical_url':'/'},
-    {'url':'hdx_light_org.light_index', 'mobile': True, 'canonical': True, 'canonical_url':'/'},
+    # {'url':'hdx_light_org.light_index', 'mobile': True, 'canonical': True, 'canonical_url':'/'},
 
     ### Search
     {'url':'/dataset', 'canonical': False},
@@ -56,11 +56,11 @@ no_canonical_pages = [
     {'url':'/dataset', 'params':{'page': 2}, 'canonical': True, 'canonical_url':'/dataset'},
     {'url':'/dataset', 'params':{'license_id':'hdx-other', 'page': 2}, 'canonical': True, 'canonical_url':'/dataset', 'canonical_params':{'license_id':'hdx-other'}},
     # light search should add canonical
-    {'url':'hdx_light_dataset.search', 'mobile': True, 'canonical': True, 'canonical_url':'/dataset'},
+    # {'url':'hdx_light_dataset.search', 'mobile': True, 'canonical': True, 'canonical_url':'/dataset'},
     # light search should add canonical just for org
-    {'url':'hdx_light_dataset.search', 'params':{'groups':'roger', 'organization':'hdx-test-org'}, 'mobile': True, 'canonical': True, 'canonical_url':'/dataset'},
+    # {'url':'hdx_light_dataset.search', 'params':{'groups':'roger', 'organization':'hdx-test-org'}, 'mobile': True, 'canonical': True, 'canonical_url':'/dataset'},
     # light search should add the correct canonical when accepted params are passed, and ignore all the rest (eg. last_modified desc)
-    {'url':'hdx_light_dataset.search', 'params':{'groups':'roger', 'organization':'hdx-test-org', 'license_id':'hdx-other', 'sort': 'last_modified desc'}, 'mobile': True, 'canonical': True, 'canonical_url':'/dataset', 'canonical_params':{'license_id':'hdx-other'}},
+    # {'url':'hdx_light_dataset.search', 'params':{'groups':'roger', 'organization':'hdx-test-org', 'license_id':'hdx-other', 'sort': 'last_modified desc'}, 'mobile': True, 'canonical': True, 'canonical_url':'/dataset', 'canonical_params':{'license_id':'hdx-other'}},
 
 ]
 

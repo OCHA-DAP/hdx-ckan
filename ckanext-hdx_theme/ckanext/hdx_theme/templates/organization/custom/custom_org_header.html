@@ -49,7 +49,6 @@
                               {{org_meta.org_dict.display_name}}
                               {% if org_meta.org_dict.state == 'deleted' %}<span class="label label-important">{{ _('Deleted') }}</span>{% endif %}
                             </h1>
-                            {{ h.snippet('notification_platform/buttons.html', object_id=org_meta.org_dict.id, object_type='organization', object_dict=org_meta.org_dict ) }}
                         </div>
                     </div>
                     <div class="row mBottom10">

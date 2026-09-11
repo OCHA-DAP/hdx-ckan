@@ -1,0 +1,28 @@
+@import "../mixins.less";
+
+// ============================================================
+// c-spinner — loading indicator
+// ============================================================
+
+.c-spinner {
+    display:           inline-block;
+    box-sizing:         border-box;
+    border:             2px solid var(--hdx-neutral-2);
+    border-top-color:   var(--hdx-primary-5);
+    border-radius:      50%;
+    animation:          hdx-spin 0.8s linear infinite;
+
+    &--size-s { .hdx-icon-size(var(--hdx-space-4)); }   // 16px
+    &--size-m { .hdx-icon-size(var(--hdx-space-6)); }   // 24px
+    &--size-l { .hdx-icon-size(var(--hdx-space-8)); }   // 32px
+
+    // Standalone loading state — centered in its container, own vertical rhythm
+    &--block {
+        display: block;
+        margin:  var(--hdx-space-8) auto;
+    }
+}
+
+@keyframes hdx-spin {
+    to { transform: rotate(360deg); }
+}

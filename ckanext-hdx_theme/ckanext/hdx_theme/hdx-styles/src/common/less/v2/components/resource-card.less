@@ -1,0 +1,234 @@
+// ============================================================
+// c-resource-card — dataset resource card
+// ============================================================
+// Figma source: llm_docs/redesign/figma_exports/resource-card.html
+// Requirement:  llm_docs/redesign/requirements/resource-card.md
+// ============================================================
+
+@import "../mixins.less";
+
+// ── Local tokens ─────────────────────────────────────────────
+
+@c-resource-card-desc-color: var(--hdx-neutral-85);  // Typography
+
+// ────────────────────────────────────────────────────────────
+// c-resource-card — base
+// ────────────────────────────────────────────────────────────
+
+.c-resource-card {
+    background-color: var(--hdx-neutral-0);
+    border:           1px solid var(--hdx-neutral-1);
+    border-radius:    var(--hdx-radius-sm);
+    box-shadow:       var(--hdx-shadow-sm);
+    display:          flex;
+    flex-direction:   column;
+    gap:              var(--hdx-space-3);  // 12px
+    padding:          var(--hdx-space-4);  // 16px
+    font-family:      var(--hdx-font-body);
+    transition:       border-color 0.15s ease;
+    .hdx-motion();
+    position:         relative;
+
+    &:hover {
+        border-color: var(--hdx-neutral-8);
+    }
+
+    // ── HDX Connect (requestdata) variant ────────────────────
+    &--hdx-connect {
+        background-color: var(--hdx-neutral-05);
+        border-color:     var(--hdx-neutral-1);
+
+        &:hover {
+            border-color: var(--hdx-neutral-2);
+        }
+    }
+
+    &__eye-off {
+        position:        absolute;
+        top:             50%;
+        left:            50%;
+        transform:       translate(-50%, -50%);
+        width:           2.5rem;
+        height:          2.5rem;
+        color:           var(--hdx-neutral-3);
+        pointer-events:  none;
+        display:         flex;
+        align-items:     center;
+        justify-content: center;
+
+        svg {
+            .hdx-icon-size(100%);
+        }
+    }
+
+    // ── __header ─────────────────────────────────────────────
+    &__header {
+        display:        flex;
+        flex-direction: column;
+        align-items:    flex-start;
+        gap:            var(--hdx-space-2);
+    }
+
+    // ── __top ────────────────────────────────────────────────
+    &__top {
+        align-self:      stretch;
+        display:         flex;
+        align-items:     center;
+        justify-content: space-between;
+        gap:             var(--hdx-space-2);
+    }
+
+    // ── __file-type ──────────────────────────────────────────
+    &__file-type {
+        display:     flex;
+        align-items: center;
+        gap:         var(--hdx-space-2);
+
+        // SM: override to xs size (24px square)
+        .c-file-type {
+            width:         var(--hdx-space-6);
+            height:        var(--hdx-space-6);
+            border-radius: var(--hdx-radius-sm);
+            padding:       var(--hdx-space-1);
+
+            .c-file-type__icon {
+                width: var(--hdx-space-3);
+            }
+        }
+
+        @media (min-width: @hdx-bp-md) {
+            // MD+: restore to s size (32px square)
+            .c-file-type {
+                width:         var(--hdx-space-8);
+                height:        var(--hdx-space-8);
+                border-radius: var(--hdx-radius-sm);
+                padding:       var(--hdx-space-2);
+
+                .c-file-type__icon {
+                    width: var(--hdx-space-4);
+                }
+            }
+        }
+    }
+
+    // ── __format-text ────────────────────────────────────────
+    &__format-text {
+        font-size:   var(--hdx-fs-s);  // 14px
+        font-weight: var(--hdx-fw-medium);
+        color:       var(--hdx-neutral-85);
+        line-height: var(--hdx-lh-normal);
+    }
+
+    // ── __tags ───────────────────────────────────────────────
+    &__tags {
+        display:     flex;
+        align-items: center;
+        flex-wrap:   wrap;
+        gap:         var(--hdx-space-2);
+    }
+
+    // ── __title ──────────────────────────────────────────────
+    &__title {
+        align-self:         stretch;
+        .hdx-line-clamp-inline(1);
+        font-size:          var(--hdx-fs-m);  // 16px
+        font-weight:        var(--hdx-fw-semibold);
+        color:              var(--hdx-neutral-95);
+        line-height:        var(--hdx-lh-normal);
+        text-decoration:    none;
+        margin:             0;
+
+        &:hover {
+            color:           var(--hdx-primary-5);
+            text-decoration: underline;
+        }
+
+        @media (min-width: @hdx-bp-md) {
+            font-size: var(--hdx-fs-l);  // 18px
+        }
+    }
+
+    // ── __desc ───────────────────────────────────────────────
+    &__desc {
+        align-self: stretch;
+    }
+
+    // ── __desc-text ──────────────────────────────────────────
+    &__desc-text {
+        font-size:          var(--hdx-fs-s);  // 14px
+        color:              @c-resource-card-desc-color;
+        line-height:        var(--hdx-lh-normal);
+        margin:             0;
+        .hdx-line-clamp(7);   // SM: allow more lines (narrower column)
+
+        &.is-open {
+            .hdx-line-clamp-off();
+        }
+
+        @media (min-width: @hdx-bp-md) {
+            -webkit-line-clamp: 3;
+        }
+
+        .hdx-markdown-content(var(--hdx-space-2));
+
+        a {
+            color: @c-resource-card-desc-color;
+
+            &:hover {
+                color: var(--hdx-primary-5);
+            }
+        }
+    }
+
+    // Show-more button: hidden until JS confirms content is actually clamped
+    &__footer .c-text-button { display: none; }
+    &.is-clamped &__footer .c-text-button { display: inline-flex; }
+
+    // Chevron icon rotation when expanded (show-more button is in __footer,
+    // but is-open is toggled on this root by clamped-text.js)
+    &.is-open .c-text-button__icon {
+        transform:  rotate(180deg);
+        transition: transform 0.15s ease;
+    }
+
+    .c-text-button__icon {
+        transition: transform 0.15s ease;
+        .hdx-motion();
+    }
+
+    // ── __footer ─────────────────────────────────────────────
+    &__footer {
+        display:     flex;
+        align-items: center;
+        flex-wrap:   wrap;
+        gap:         var(--hdx-space-2);
+    }
+
+    // ── __actions ────────────────────────────────────────────
+    &__actions {
+        display:       flex;
+        align-items:   center;
+        flex-wrap:     wrap;
+        gap:           var(--hdx-space-2);
+        margin-left:   auto;            // push actions to the right
+
+        .resource-download-button {
+            width: 10rem;
+
+            .c-button__label {
+                flex-shrink: 1;
+                min-width:   0;
+            }
+        }
+    }
+}
+
+// ────────────────────────────────────────────────────────────
+// c-resource-card-list — vertical list wrapper for resource cards
+// ────────────────────────────────────────────────────────────
+
+.c-resource-card-list {
+    display:        flex;
+    flex-direction: column;
+    gap:            var(--hdx-space-4);
+}

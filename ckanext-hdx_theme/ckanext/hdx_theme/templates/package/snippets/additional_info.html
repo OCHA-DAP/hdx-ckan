@@ -52,7 +52,7 @@
         <div class="dataset-details">
           {{ h.hdx_get_frequency_by_value(pkg_dict.data_update_frequency) }}
           {% if pkg_dict.type == 'dataset' and pkg_dict.data_update_frequency and pkg_dict.is_fresh %}
-            <a href="/faq#auto-faq-Metadata_and_Data_Quality-What_does_the_green_leaf_symbol_mean_-a" target="_blank" class="humanitarianicons-Environment fresh ms-1" title="{{ _('This dataset is up to date') }}" data-module="bs_tooltip" data-module-placement="top" data-bs-toggle="tooltip"></a>
+            <a href="{{ h.HDX_CONST('DOCUMENTATION_LINKS')['QA_PROCESS'] }}/publish-data/preparing-and-publishing-data#check-the-quality-of-the-metadata-before-publishing" target="_blank" class="humanitarianicons-Environment fresh ms-1" title="{{ _('This dataset is up to date') }}" data-module="bs_tooltip" data-module-placement="top" data-bs-toggle="tooltip"></a>
           {% endif %}
         </div>
       </div>
@@ -125,7 +125,7 @@
             <div class="dataset-details  metadata-link">
               {% if pkg_dict.license_id %}
                 <span property="dc:rights"><a
-                  href="{{ h.url_for('hdx_faqs.read', category='licenses') }}">{{ h.hdx_find_license_name(pkg_dict.license_id, pkg_dict.license_title) }}</a></span>
+                  href="{{ h.HDX_CONST('DOCUMENTATION_LINKS')['DATA_LICENSES'] }}" target="_blank">{{ h.hdx_find_license_name(pkg_dict.license_id, pkg_dict.license_title) }}</a></span>
                 {% if pkg_dict.license_id == 'hdx-other' and pkg_dict.license_other %}:{% endif %}
                 {% if pkg_dict.license_id == 'hdx-other' and pkg_dict.license_other %}
                   <span data-module="hdx_show_more"

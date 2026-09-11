@@ -76,7 +76,7 @@ def test_pagination_2_valued_filter(app):
 
     page = response.body
 
-    begin_str = '<a class="page-link" href='
+    begin_str = '<a class="c-pagination__item c-pagination__item--page'
     end_str = '</a>'
     search_item1 = f'organization={ORG_NAME1}'
     search_item2 = f'organization={ORG_NAME2}'

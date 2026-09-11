@@ -1,0 +1,39 @@
+{#
+  Snippet: tabs.html
+  Path:    templates/v2/components/tabs.html
+
+  Renders a c-tabs horizontal tab-navigation row. Each tab is a plain link;
+  the caller marks exactly one item active and pre-filters items by permission
+  via the optional `show` flag (the component itself is permission-agnostic).
+
+  Parameters
+  ──────────────────────────────────────────────────────
+  items          {list}    List of tab dicts:                       required
+                             label   {string}  Tab text.
+                             href    {string}  Target URL.
+                             active  {bool}    Current tab.  default: False
+                             show    {bool}    Render item.  default: True
+  aria_label     {string}  nav aria-label.  default: 'Page sections'
+  extra_classes  {string}  default: ''
+  ──────────────────────────────────────────────────────
+  Example
+
+  {% snippet 'v2/components/tabs.html', items=[
+      {'label': _('Datasets'), 'href': '/organization/org-name', 'active': True},
+      {'label': _('Members'),  'href': '/org/members/org-name', 'show': allow_basic_user_info},
+  ] %}
+#}
+
+{% set items         = items         if items         is defined else [] %}
+{% set aria_label    = aria_label    if aria_label    is defined else _('Page sections') %}
+{% set extra_classes = extra_classes if extra_classes is defined else '' %}
+
+<nav class="c-tabs{{ ' ' ~ extra_classes if extra_classes else '' }}" aria-label="{{ aria_label }}">
+  {% for item in items %}
+    {% if item.show is not defined or item.show %}
+      <a class="c-tab{{ ' is-active' if item.active else '' }}"
+         href="{{ item.href }}"
+         {%- if item.active %} aria-current="page"{% endif %}>{{ item.label }}</a>
+    {% endif %}
+  {% endfor %}
+</nav>

@@ -1,0 +1,422 @@
+// ============================================================
+// Location page (task 063) — header + Data Grid Availability
+// Figma: llm_docs/redesign/figma_exports/*-location-page-datagrids-*.html
+// ============================================================
+@import "../mixins.less";
+
+// ── Header ───────────────────────────────────────────────────
+.hdx-v2-location-header-section {
+    border-bottom: 1px solid var(--hdx-neutral-1);
+}
+
+// ── Data Grid Availability section ──────────────────────────
+// Full-width banded section, sitting in {% block pre_primary %} above the
+// two-column dataset-list row (task 063 round 3, R3-1 — Figma:
+// .header-wrapper-parent, same "full-bleed outer div + hdx-v2-container
+// inner div" pattern as crisis-page.less's .hdx-v2-crisis-iframe-section).
+.hdx-v2-location-datagrid-section {
+    width:            100%;
+    background-color: var(--hdx-neutral-01);
+    border-top:       1px solid var(--hdx-neutral-1);
+    border-bottom:    1px solid var(--hdx-neutral-1);
+    padding:          var(--hdx-space-8) 0;
+
+    @media (min-width: @hdx-bp-md) {
+        padding: var(--hdx-space-10) 0;
+    }
+
+    &__body {
+        display:        flex;
+        flex-direction: column;
+        gap:            var(--hdx-space-6);
+    }
+
+    // Title+description and the KPI/chart column are stacked at SM/MD;
+    // at XL they sit side by side on one row (task 063 round 2, R2-3 —
+    // Figma: location-data-grid.html's .header-wrapper).
+    &__top {
+        display:        flex;
+        flex-direction: column;
+        gap:            var(--hdx-space-6);
+
+        @media (min-width: @hdx-bp-xl) {
+            flex-direction: row;
+            align-items:    flex-start;
+        }
+    }
+
+    // Title+subtitle column, sized to a fixed width at XL so it sits beside
+    // the KPI/chart column.
+    &__header {
+        display:     flex;
+        align-items: flex-start;
+        gap:         var(--hdx-space-3);
+
+        @media (min-width: @hdx-bp-xl) {
+            flex:      0 0 15rem;
+            max-width: 15rem;
+        }
+    }
+
+    &__header-text {
+        flex:      1;
+        min-width: 0;
+    }
+
+    &__title {
+        .hdx-section-title();
+    }
+
+    &__subtitle {
+        .hdx-body-s();
+        color:      var(--hdx-neutral-85);
+        margin-top: var(--hdx-space-1);
+    }
+
+    // KPI stats + chart panel: stacked at SM/MD, side by side at XL
+    // (Figma: .wrapper containing .line-parent + .text-buttons-parent).
+    &__stats-chart {
+        display:        flex;
+        flex-direction: column;
+        flex:           1;
+        min-width:      0;
+        gap:            var(--hdx-space-6);
+
+        @media (min-width: @hdx-bp-xl) {
+            flex-direction:  row;
+            align-items:     flex-start;
+            justify-content: space-between;
+        }
+    }
+
+    &__kpi-row {
+        @media (min-width: @hdx-bp-xl) {
+            flex: 1;
+        }
+    }
+
+    &__chart-panel {
+        display:        flex;
+        flex-direction: column;
+        gap:            var(--hdx-space-3);
+
+        @media (min-width: @hdx-bp-xl) {
+            flex: 0 0 auto;
+        }
+    }
+
+    &__chart {
+        display:        flex;
+        flex-direction: column;
+        gap:            var(--hdx-space-3);
+    }
+
+    // One c-data-grid-status swatch per sub-category, across every
+    // category — replaces the proportional progress bar (task 063
+    // round 3, R3-3 — Figma's squares, not a segmented bar).
+    &__status-row {
+        display:   flex;
+        flex-wrap: wrap;
+        gap:       var(--hdx-space-15);
+    }
+
+    &__legend {
+        display:   flex;
+        flex-wrap: wrap;
+        gap:       var(--hdx-space-4);
+    }
+
+    &__legend-item {
+        display:     flex;
+        align-items: center;
+        gap:         var(--hdx-space-2);
+    }
+
+    &__legend-label {
+        .hdx-body-xs();
+        color: var(--hdx-neutral-8);
+    }
+
+    // The whole category grid is a native <details>/<summary> reveal, hidden
+    // until "Show more" is clicked, so it stays reachable with JavaScript
+    // disabled (location-page.js just keeps every card's own <details> in
+    // step with this one via its `toggle` event). Marker reset matches the
+    // per-card <details> below (.hdx-v2-location-datagrid-card__details).
+    &__reveal-summary {
+        list-style: none;
+
+        &::-webkit-details-marker { display: none; }
+        &::marker                 { content: ""; }
+    }
+
+    &__toggle .c-text-button__icon svg {
+        transition: transform 0.2s ease;
+    }
+
+    &__reveal[open] &__toggle .c-text-button__icon svg {
+        transform: rotate(180deg);
+    }
+
+    &__grid {
+        display:               grid;
+        grid-template-columns: 1fr;
+        align-items:           start;
+        gap:                   var(--hdx-space-5);
+        margin-top:            var(--hdx-space-6);
+
+        @media (min-width: @hdx-bp-xl) {
+            grid-template-columns: repeat(3, 1fr);
+        }
+    }
+
+    // Definitions left, Overview of Data Grids right — both exports agree
+    // (task 063 round 4, R4-4).
+    &__buttons-group {
+        display:         flex;
+        flex-wrap:       wrap;
+        justify-content: space-between;
+        gap:             var(--hdx-space-5);
+        margin-top:      var(--hdx-space-6);
+    }
+}
+
+// ── Category card (templates/v2/completeness-item.html) ──────
+.hdx-v2-location-datagrid-card {
+    display:          flex;
+    flex-direction:   column;
+    gap:              var(--hdx-space-5);
+    padding:          var(--hdx-space-5);
+    background-color: var(--hdx-neutral-0);
+    border:           1px solid var(--hdx-neutral-1);
+    border-radius:    var(--hdx-radius-sm);
+
+    // Hover highlight implies clickability — kept only where the card is
+    // still clickable (mobile); click is desktop-disabled above @hdx-bp-md.
+    @media (max-width: @hdx-bp-md) {
+        &:hover {
+            border-color: var(--hdx-neutral-8);
+        }
+    }
+
+    // Title (left) + status row (right, XL only) on one row —
+    // task 063 round 2, R2-5. No dataset count is shown per-category.
+    &__summary {
+        display:         flex;
+        align-items:     center;
+        justify-content: space-between;
+        gap:             var(--hdx-space-3);
+    }
+
+    &__title-group {
+        display:     flex;
+        align-items: center;
+        gap:         var(--hdx-space-2);
+        flex:        1;
+        min-width:   0;
+
+        // The tooltip-anchor wrapper around the title needs to shrink too,
+        // or the title inside it never hits its own overflow constraint.
+        .c-tooltip-anchor {
+            flex:      1;
+            min-width: 0;
+        }
+    }
+
+    &__icon {
+        display:     inline-flex;
+        flex-shrink: 0;
+        color:       var(--hdx-neutral-8);
+
+        svg { .hdx-icon-size(var(--hdx-space-5)); }
+    }
+
+    // Single line — trims to whatever space the (fixed-size) status row
+    // leaves it, rather than wrapping to a 2nd line (task 063 round 4, R4-4).
+    &__title {
+        .hdx-body-l-semibold();
+        display:       block;
+        overflow:      hidden;
+        text-overflow: ellipsis;
+        white-space:   nowrap;
+        color:         var(--hdx-neutral-95);
+    }
+
+    // Shown at every breakpoint now, per direct instruction (task 063
+    // round 4 — a deliberate divergence from location-data-grid-sm.html,
+    // which shows icon+title only). Sized as a flex-basis share of the
+    // row rather than a fixed width.
+    &__status-row {
+        display:         flex;
+        flex:            0 0 20%;
+        justify-content: flex-end;
+        gap:             var(--hdx-space-15);
+    }
+
+    // Native <details>/<summary> (task 063 round 4, R4-2) — clicking the
+    // summary expands/collapses just this card for free; the global toggle
+    // (location-page.js) drives the `open` property on every card at once.
+    &__details {
+        summary {
+            list-style: none;
+            cursor:     pointer;
+
+            // Click is desktop-disabled (location.js) — cursor reflects that.
+            @media (min-width: @hdx-bp-md) {
+                cursor: default;
+            }
+
+            &::-webkit-details-marker { display: none; }
+            &::marker                 { content: ""; }
+        }
+    }
+
+    &__subcategs {
+        display:        flex;
+        flex-direction: column;
+        gap:            var(--hdx-space-2);
+        margin-top:     var(--hdx-space-2);
+    }
+
+    &__subcateg {
+        display:        flex;
+        flex-direction: column;
+        gap:            var(--hdx-space-13);
+    }
+
+    &__subcateg-title {
+        .hdx-body-s();
+        color:  var(--hdx-neutral-95);
+        cursor: default;
+    }
+
+    &__flag {
+        .hdx-body-s();
+        color: var(--hdx-neutral-8);
+    }
+
+    // Gap between a row's status swatch and its content is wider on SM/MD
+    // than XL in both exports (task 063 round 4, R4-4).
+    &__dataset-row {
+        display:     flex;
+        align-items: flex-start;
+        gap:         var(--hdx-space-4);
+
+        @media (min-width: @hdx-bp-xl) {
+            gap: var(--hdx-space-13);
+        }
+
+        &--complementary {
+            padding-left: var(--hdx-space-5);
+        }
+    }
+
+    &__dataset-info {
+        display:        flex;
+        flex-direction: column;
+        min-width:      0;
+    }
+
+    // Neither export sets a link color here — the underline alone signals
+    // "link"; both inherit a dark neutral, not blue (task 063 round 4, R4-4).
+    &__dataset-name {
+        .hdx-link-xs();
+        color: var(--hdx-neutral-85);
+    }
+
+    &__dataset-org {
+        .hdx-body-xs();
+        color:         var(--hdx-neutral-8);
+        white-space:   nowrap;
+        overflow:      hidden;
+        text-overflow: ellipsis;
+    }
+}
+
+
+// ── Definitions drawer content (v2/location-datagrid-drawer.html) ──────
+.hdx-v2-location-datagrid-drawer {
+
+    &__sticky-top {
+        position:         sticky;
+        top:              var(--drawer-header-height, 0px);
+        z-index:          1;
+        background-color: var(--hdx-neutral-0);
+    }
+
+    &__intro {
+        .hdx-body-m();
+        color:         var(--hdx-neutral-8);
+        margin-bottom: var(--hdx-space-5);
+    }
+
+    &__jump-nav {
+        padding-bottom: var(--hdx-space-5);
+
+        &--desktop {
+            display: none;
+        }
+
+        @media (min-width: @hdx-bp-xl) {
+            &--desktop {
+                display:   flex;
+                flex-wrap: wrap;
+                gap:       var(--hdx-space-3);
+            }
+            &--mobile {
+                display: none;
+            }
+        }
+    }
+
+    &__category {
+        padding: var(--hdx-space-4) 0;
+    }
+
+    &__category-header {
+        display:       flex;
+        align-items:   center;
+        gap:           var(--hdx-space-2);
+        margin-bottom: var(--hdx-space-2);
+    }
+
+    &__category-icon {
+        display:     inline-flex;
+        flex-shrink: 0;
+        color:       var(--hdx-neutral-8);
+
+        svg { .hdx-icon-size(var(--hdx-space-5)); }
+    }
+
+    &__category-title {
+        .hdx-body-m-semibold();
+        color: var(--hdx-neutral-95);
+    }
+
+    &__category-desc {
+        .hdx-body-s();
+        color:         var(--hdx-neutral-8);
+        margin-bottom: var(--hdx-space-4);
+    }
+
+    &__subcateg {
+        display:            grid;
+        grid-template-columns: 7.5rem 1fr;
+        gap:                var(--hdx-space-4);
+        padding:            var(--hdx-space-2) 0;
+    }
+
+    &__subcateg-title {
+        .hdx-body-s();
+        color: var(--hdx-neutral-95);
+    }
+
+    &__subcateg-desc {
+        .hdx-body-s();
+        color: var(--hdx-neutral-8);
+    }
+
+    &__divider {
+        margin: var(--hdx-space-2) 0;
+        opacity: 0.5;
+    }
+}

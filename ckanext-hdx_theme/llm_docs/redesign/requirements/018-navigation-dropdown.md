@@ -1,0 +1,386 @@
+# Task 018: Implement navbar dropdowns (user menu, notifications, products)
+
+Implement the three panel/dropdown surfaces that attach to the navbar: the user account menu, the notifications panel, similarly to the Products nav dropdown. All styles live in `v2/navbar.less` (task 017). JS lives in `v2/navbar.js` (created here).
+
+**Figma source:** `llm_docs/redesign/figma_exports/navigation-dropdown.html`
+
+## Panels overview
+
+| Panel             | Trigger         | Type                    | Width      |
+|-------------------|-----------------|-------------------------|------------|
+| User menu         | Avatar button   | Custom positioned panel | 16rem  |
+| Notifications     | Bell button     | Custom positioned panel | 16rem  |
+| Products dropdown | Products nav-item | Custom positioned panel    | auto       |
+
+## Shared panel tokens (from Figma)
+
+- Background: `#fff`
+- Border: `1px solid #ebeff0`
+- Border-radius: `4px`
+- Shadow: `0px 4px 10px rgba(0,0,0,0.12)`
+- Panel padding: `0.75rem 0.5rem 0.75rem 1rem`
+- Positioned: `absolute; right: 0; top: calc(100% + 0.5rem); z-index: 1050`
+
+## What to create
+
+### `templates/v2/navbar-user-menu.html` (new snippet)
+
+Rendered inside `header.html` after the avatar button. Hidden by default; shown by JS.
+
+```jinja2
+<div class="hdx-v2-user-menu" id="hdx-v2-panel-user-menu" hidden>
+
+  {# Header row: username + close button #}
+  <div class="hdx-v2-user-menu__header">
+    <span class="hdx-v2-user-menu__name">{{ c.userobj.display_name }}</span>
+    <button class="hdx-v2-user-menu__close" type="button"
+            aria-label="{{ _('Close menu') }}"
+            data-hdx-v2-close="user-menu">
+      {% include 'v2/icons/close.svg' %}
+    </button>
+  </div>
+
+  {# Sysadmin dashboard — sysadmin only #}
+  {% if c.userobj.sysadmin %}
+  <div class="hdx-v2-user-menu__section">
+    <button class="hdx-v2-user-menu__section-toggle" type="button"
+            aria-expanded="true" aria-controls="menu-sysadmin">
+      {{ _('Sysadmin dashboard') }}
+      <span class="hdx-v2-user-menu__chevron">{% include 'v2/icons/chevron-down.svg' %}</span>
+    </button>
+    <ul class="hdx-v2-user-menu__section-items" id="menu-sysadmin">
+      <li><a href="{{ h.url_for('admin.index') }}">{{ _('All sysadmins') }}</a></li>
+      <li><a href="{{ h.url_for('user.index') }}">{{ _('All users') }}</a></li>
+      <li><a href="#">{{ _('Carousel') }}</a></li>
+      <li><a href="#">{{ _('HDX Connect Dashboard') }}</a></li>
+      <li><a href="#">{{ _('Custom/Event Pages') }}</a></li>
+      <li><a href="#">{{ _('Quick Links') }}</a></li>
+      <li><a href="#">{{ _('Package Links') }}</a></li>
+      <li><a href="#">{{ _('Email') }}</a></li>
+      <li><a href="{{ h.url_for('admin.config') }}">{{ _('Config') }}</a></li>
+    </ul>
+  </div>
+  {% endif %}
+
+  {# User dashboard #}
+  <div class="hdx-v2-user-menu__section">
+    <button class="hdx-v2-user-menu__section-toggle" type="button"
+            aria-expanded="true" aria-controls="menu-dashboard">
+      {{ _('User dashboard') }}
+      <span class="hdx-v2-user-menu__chevron">{% include 'v2/icons/chevron-down.svg' %}</span>
+    </button>
+    <ul class="hdx-v2-user-menu__section-items" id="menu-dashboard">
+      <li><a href="{{ h.url_for('activity.dashboard') }}">{{ _('Newsfeed') }}</a></li>
+      <li><a href="{{ h.url_for('hdx_user_dashboard.datasets') }}">{{ _('My datasets') }}</a></li>
+      <li><a href="{{ h.url_for('dashboard.organizations') }}">{{ _('My organisations') }}</a></li>
+      <li><a href="{{ h.url_for('dashboard.groups') }}">{{ _('My locations') }}</a></li>
+      <li><a href="{{ h.url_for('requestdata.my_requested_data') }}">{{ _('HDX Connect Requests') }}</a></li>
+    </ul>
+  </div>
+
+  {# User settings #}
+  <div class="hdx-v2-user-menu__section">
+    <button class="hdx-v2-user-menu__section-toggle" type="button"
+            aria-expanded="true" aria-controls="menu-settings">
+      {{ _('User settings') }}
+      <span class="hdx-v2-user-menu__chevron">{% include 'v2/icons/chevron-down.svg' %}</span>
+    </button>
+    <ul class="hdx-v2-user-menu__section-items" id="menu-settings">
+      <li><a href="{{ h.url_for('user.read', id=c.user) }}">{{ _('Datasets') }}</a></li>
+      <li><a href="{{ h.url_for('activity.user_activity', id=c.user) }}">{{ _('Activity stream') }}</a></li>
+      {% if c.userobj.sysadmin %}
+      <li><a href="#">{{ _('User permission') }}</a></li>
+      {% endif %}
+      <li><a href="{{ h.url_for('user.api_tokens', id=c.user) }}">{{ _('API tokens') }}</a></li>
+      <li><a href="{{ h.url_for('hdx_user.notifications') }}">{{ _('Notifications') }}</a></li>
+      <li><a href="{{ h.url_for('user.edit', id=c.user) }}">{{ _('Profile and password') }}</a></li>
+    </ul>
+  </div>
+
+  {# Logout #}
+  {% snippet 'v2/components/button.html',
+      style='tertiary', size='m', label=_('Logout'),
+      tag='a', href=h.url_for('user.logout') %}
+
+</div>
+```
+
+Include in `header.html` immediately after the avatar button, inside `.hdx-v2-navbar__actions`.
+
+### `templates/v2/navbar-notifications.html` (new snippet)
+
+Rendered inside `header.html` after the bell button.
+
+```jinja2
+{% set notif = h.hdx_get_user_notifications() %}
+<div class="hdx-v2-notifications" id="hdx-v2-panel-notifications" hidden>
+
+  <div class="hdx-v2-notifications__header">
+    <span class="hdx-v2-notifications__title">
+      {{ _('Notifications') }}{% if notif.count %} ({{ notif.count }}){% endif %}
+    </span>
+    <button class="hdx-v2-notifications__close" type="button"
+            aria-label="{{ _('Close notifications') }}"
+            data-hdx-v2-close="notifications">
+      {% include 'v2/icons/close.svg' %}
+    </button>
+  </div>
+
+  {% if notif.list %}
+    <ul class="hdx-v2-notifications__list">
+      {% for item in notif.list %}
+        <li class="hdx-v2-notifications__item{% if item.for_sysadmin %} hdx-v2-notifications__item--sysadmin{% endif %}">
+          {% include item.html_template %}
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p class="hdx-v2-notifications__empty">{{ _('No notifications') }}</p>
+  {% endif %}
+
+</div>
+```
+
+Each notification snippet (`item.html_template`) must render:
+- A title string (e.g. "1 membership request for HDX")
+- `item.last_date` formatted as "Jun 3, 2025"
+- An arrow-right icon linking to the relevant action URL
+
+The existing snippets in `light/notifications/` can be adapted to match this structure. The wrapper `<li>` is provided by the loop above; each snippet renders only its inner content.
+
+### Products dropdown ✅ Already implemented in task 017
+
+The Products dropdown was implemented as part of task 017 rather than waiting for this task. Key details of what was built:
+
+- Class used: `hdx-v2-navbar__products-menu` (not `hdx-products-menu` as shown below)
+- Items driven by `h.hdx_get_quick_links_list(archived=False, exclude_crisis=True)` helper (not a static list) — `exclude_crisis` filters out crisis/dashboard-type quick-links (URL prefixes `/event`, `/m/event`, `/dashboards`, `/m/dashboards`), with an explicit carve-out in the helper so `/dashboards/overview-of-data-grids` and `/dashboards/archived-datasets` are always included regardless of that filter. The hardcoded "Archived Dataviz" `/archive` item that used to follow the loop has been removed entirely.
+- `min-width: 14rem` (not 18rem)
+- CSS lives in `navbar.less` / `navbar.css` under `&__products-menu`
+
+The static example below is kept for reference only.
+
+### Products dropdown static example (reference only — superseded by task 017 implementation)
+
+```jinja2
+<ul class="dropdown-menu hdx-products-menu" aria-labelledby="navbar-products-trigger">
+  <li><a class="dropdown-item" href="#"
+         data-module="hdx_click_stopper" data-module-link_type="header">{{ _('HDX HAPI') }}</a></li>
+  <li><a class="dropdown-item" href="#"
+         data-module="hdx_click_stopper" data-module-link_type="header">{{ _('HDX Signals') }}</a></li>
+  <li><a class="dropdown-item" href="#"
+         data-module="hdx_click_stopper" data-module-link_type="header">{{ _('Data Grids') }}</a></li>
+  <li><a class="dropdown-item" href="#"
+         data-module="hdx_click_stopper" data-module-link_type="header">{{ _('Greater Middle East Crisis') }}</a></li>
+  <li><a class="dropdown-item" href="#"
+         data-module="hdx_click_stopper" data-module-link_type="header">{{ _('occupied Palestinian territory – Israel Hostilities') }}</a></li>
+  <li><a class="dropdown-item" href="#"
+         data-module="hdx_click_stopper" data-module-link_type="header">{{ _('Common Operational Datasets (CODs)') }}</a></li>
+  <li><a class="dropdown-item" href="#"
+         data-module="hdx_click_stopper" data-module-link_type="header">{{ _('Dataviz Gallery') }}</a></li>
+  <li><a class="dropdown-item" href="#"
+         data-module="hdx_click_stopper" data-module-link_type="header">{{ _('HDX Dataviz Guidelines') }}</a></li>
+  <li><a class="dropdown-item" href="#"
+         data-module="hdx_click_stopper" data-module-link_type="header">{{ _('Archived') }}</a></li>
+</ul>
+```
+
+Bootstrap handles open/close via `data-bs-toggle="dropdown"` on the nav-item (task 017). No extra JS needed.
+
+### CSS additions to `fanstatic/v2/navbar.css`
+
+```css
+/* ── Shared panel container ───────────────────────────────── */
+.hdx-v2-user-menu,
+.hdx-v2-notifications {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 0.5rem);
+  z-index: 1050;
+  min-width: 16rem;
+  background: #fff;
+  border: 1px solid #ebeff0;
+  border-radius: 4px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.12);
+  padding: 0.75rem 0.5rem 0.75rem 1rem;
+}
+.hdx-v2-user-menu[hidden],
+.hdx-v2-notifications[hidden] { display: none; }
+
+/* Parent must be position:relative for absolute panels */
+.hdx-v2-navbar__bell,
+.hdx-v2-navbar__avatar-trigger { position: relative; }
+
+/* ── User menu ────────────────────────────────────────────── */
+.hdx-v2-user-menu__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #ebeff0;
+  margin-bottom: 0.5rem;
+}
+.hdx-v2-user-menu__name { font-weight: 600; line-height: 130%; flex: 1; }
+.hdx-v2-user-menu__close {
+  width: 1.25rem;
+  height: 1.25rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.hdx-v2-user-menu__section { margin-bottom: 0.25rem; }
+.hdx-v2-user-menu__section-toggle {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-weight: 600;
+  font-size: 0.875rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  padding: 0.125rem 0;
+  font-family: inherit;
+}
+.hdx-v2-user-menu__chevron { width: 1.25rem; transition: transform 0.15s; }
+.hdx-v2-user-menu__section-toggle[aria-expanded="false"] .hdx-v2-user-menu__chevron {
+  transform: rotate(-90deg);
+}
+.hdx-v2-user-menu__section-items {
+  list-style: none;
+  margin: 0;
+  padding: 0 0 0 1rem;
+}
+.hdx-v2-user-menu__section-items[hidden] { display: none; }
+.hdx-v2-user-menu__section-items li { padding: 0.25rem 0; }
+.hdx-v2-user-menu__section-items a {
+  font-size: 0.875rem;
+  color: #101212;
+  text-decoration: none;
+}
+.hdx-v2-user-menu__section-items a:hover { text-decoration: underline; }
+
+/* ── Notifications panel ──────────────────────────────────── */
+.hdx-v2-notifications__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #ebeff0;
+  margin-bottom: 0.5rem;
+}
+.hdx-v2-notifications__title { font-weight: 600; font-size: 0.875rem; flex: 1; }
+.hdx-v2-notifications__close {
+  width: 1.25rem;
+  height: 1.25rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.hdx-v2-notifications__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: 18.75rem;
+  overflow-y: auto;
+}
+.hdx-v2-notifications__item {
+  display: flex;
+  flex-direction: column;
+  border-bottom: 1px solid #ebeff0;
+  padding: 0.5rem 0;
+  font-size: 0.875rem;
+}
+.hdx-v2-notifications__item--sysadmin { background: lightyellow; }
+.hdx-v2-notifications__empty {
+  font-size: 0.875rem;
+  color: #6c757d;
+  margin: 0;
+  padding: 0.5rem 0;
+}
+
+/* ── Products dropdown ────────────────────────────────────── */
+/* Bootstrap .dropdown-menu handles base styles.
+   Scoped override only if needed: */
+.hdx-products-menu { min-width: 18rem; }
+```
+
+### `fanstatic/v2/navbar.js` (new file)
+
+Vanilla JS, self-contained IIFE. Initialize on `DOMContentLoaded`.
+
+**Responsibilities:**
+
+1. **Panel toggle** (`data-hdx-v2-panel` on trigger buttons)
+   - Clicking a trigger removes `hidden` from `#hdx-v2-panel-{value}`, sets `aria-expanded="true"`.
+   - Closes any other open custom panel first.
+   - Second click on same trigger closes the panel.
+
+2. **Panel close** (`data-hdx-v2-close` on close buttons, ESC key, outside click)
+   - Restores `hidden`, sets `aria-expanded="false"` on the trigger.
+   - Outside click: close if click target is outside the panel and its trigger.
+
+3. **User menu section collapse** (`.hdx-v2-user-menu__section-toggle`)
+   - Toggles `hidden` on the sibling `.hdx-v2-user-menu__section-items`.
+   - Flips `aria-expanded` attribute.
+
+4. **Hamburger toggle** (task 019 integration — sets up offcanvas open)
+   - Delegated to the offcanvas JS block (task 019); hamburger `data-hdx-v2-panel="offcanvas"` is handled by rule 1.
+
+No jQuery. No external dependencies.
+
+`fanstatic/webassets.yml` already references `v2/navbar.js` in `v2-page-scripts` — no change needed.
+
+## Decisions Taken
+
+| # | Question | Decision |
+|---|----------|----------|
+| 1 | Products URLs | Driven by `h.hdx_get_quick_links_list(archived=False, exclude_crisis=True)` helper — real URLs from the quick-links registry, no `#` placeholders; crisis/dashboard items excluded (with `/dashboards/overview-of-data-grids` and `/dashboards/archived-datasets` always force-included) |
+| 2 | Sysadmin dashboard URLs | All routes resolved in `h.hdx_get_user_menu_sections()` helper (e.g. `hdx_carousel.show`, `hdx_quick_links.show`, `hdx_user_permission.read`, etc.) — no `#` placeholders remain |
+| 3 | Notification item links | Each `html_template` snippet is included directly via `{% include notification.html_template %}` — link URLs are rendered inside each individual notification snippet |
+| 4 | `close.svg` icon | Confirmed — exists at `v2/icons/close.svg` |
+| 5 | `arrow-right.svg` icon | Confirmed — exists at `v2/icons/arrow-right.svg` |
+
+## Why
+
+The legacy user menu uses Bootstrap `dropstart` with jQuery collapse. The v2 design calls for a custom panel matching precise Figma shadow/border/sizing — not achievable cleanly with Bootstrap's built-in dropdown. The notifications panel replaces the old card-based dropdown with the same pattern. Both reuse the single `navbar.js` controller, keeping JS surface area minimal.
+
+---
+
+## Implementation notes
+
+### Products: migrated from Bootstrap to custom panel system
+
+The spec above left Products on Bootstrap (`data-bs-toggle="dropdown"`). The actual implementation migrated it to the same `data-hdx-v2-panel` system as user menu and notifications:
+
+- Trigger: `data-hdx-v2-panel="products"`, `aria-expanded`, `aria-controls="hdx-v2-panel-products"` on the nav-item
+- Panel: `<ul class="hdx-v2-navbar__products-panel" id="hdx-v2-panel-products" hidden>` — no Bootstrap classes
+- `hdx-v2-navbar__products` wrapper has `position: relative` so the absolute panel is anchored correctly
+
+### User menu sections: Python helper replaces shared template
+
+The spec called for `navbar-user-menu-body.html` as a shared snippet included by both the desktop panel and the mobile offcanvas second level. This was replaced with:
+
+- **`h.hdx_get_user_menu_sections()`** helper in `ckanext-hdx_theme/helpers/helpers.py` — returns a list of `{id, label, items: [{label, href}]}` dicts with all URLs resolved and sysadmin-only entries filtered based on `c.userobj.sysadmin`
+- Registered in `plugin.py` under `get_helpers()`
+- `navbar-user-menu.html` loops over the helper with `hdx-v2-user-menu__*` markup (desktop panel)
+- `navbar-offcanvas.html` second level loops over the helper with `hdx-v2-offcanvas__nav-item--expandable` + `hdx-v2-offcanvas__subnav` markup (see task 019 notes)
+- `navbar-user-menu-body.html` deleted
+
+### LESS: unified shared panel block
+
+All three panels (products, user menu, notifications) share one container rule. Unique properties are split into separate blocks. See current `navbar.less` for the layered structure:
+1. Shared container (position, bg, border, radius, shadow, flex column)
+2. Alignment (right vs left, min-width)
+3. Padding (user-menu + products share asymmetric; notifications symmetric)
+4. Shared header row
+5. Shared close button
+6. Shared link style
+7. Panel-specific blocks (only unique properties)

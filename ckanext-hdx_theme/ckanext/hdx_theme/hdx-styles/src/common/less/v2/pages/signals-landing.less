@@ -1,0 +1,123 @@
+// ============================================================
+// signals-landing-page.less
+// HDX Signals landing page (/signals/) — v2 page-specific styles
+// Figma sources: signals-xl.html, signals-sm.html
+// ============================================================
+
+@import "../mixins.less";
+
+// ── Hero row (off-white background, includes featured cards) ──
+.hdx-v2-signals-header-section {
+    background-color: var(--hdx-neutral-01);
+    padding-bottom:   var(--hdx-space-10);
+
+}
+
+// ── Body row (sidebar + content area — white) ─────────────────
+.hdx-v2-signals-row {
+    background-color: var(--hdx-neutral-0);
+}
+
+// ── Sidebar (visible at XL only) ─────────────────────────────
+.hdx-v2-signals-sidebar {
+    @media (min-width: @hdx-bp-xl) {
+        padding: var(--hdx-space-10) 0;
+    }
+}
+
+// ── Content column ────────────────────────────────────────────
+.hdx-v2-signals-content {
+    padding: var(--hdx-space-10) 0 var(--hdx-space-12);
+}
+
+// ── Section heading ───────────────────────────────────────────
+.hdx-v2-signals-section-heading {
+    .hdx-section-title();
+    margin: 0 0 var(--hdx-space-8);
+}
+
+// ── Section description (intro paragraph) ────────────────────
+.hdx-v2-signals-section-description {
+    .hdx-body-m();
+    color:  var(--hdx-neutral-70);
+    margin: 0 0 var(--hdx-space-8);
+}
+
+// ── Generic section wrapper ───────────────────────────────────
+.hdx-v2-signals-section {
+    padding: var(--hdx-space-8) 0;
+
+    .hdx-scroll-offset-header();
+}
+
+// ── Data Coverage grid (2 cols SM, 3 cols MD+) ────────────────
+.hdx-v2-signals-coverage-grid {
+    display:               grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap:                   var(--hdx-space-4);
+
+    @media (min-width: @hdx-bp-md) {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+// ── Resources contact note ────────────────────────────────────
+.hdx-v2-signals-resources-note {
+    .hdx-body-m();
+    color:      var(--hdx-neutral-70);
+    margin-top: var(--hdx-space-6);
+
+    a {
+      color: inherit;
+    }
+}
+
+// ── Partner logo grid (3 cols all breakpoints → 2 rows of 3) ─
+.hdx-v2-signals-partners-grid {
+    display:               grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap:                   var(--hdx-space-8);
+}
+
+.hdx-v2-signals-map-iframe {
+    width:   100%;
+    height:  600px;
+    border:  none;
+    display: block;
+}
+
+.hdx-v2-signals-partner-logo {
+    .hdx-partner-logo();
+}
+
+// ── Mailchimp signup form card ────────────────────────────────
+.hdx-v2-signals-form-card {
+    border-radius: var(--hdx-radius-sm);
+    padding:       var(--hdx-space-8);
+    background:    var(--hdx-neutral-0);
+
+    // Action-buttons row: wraps both hardcoded and dynamically added c-button elements
+    .action-buttons {
+        display:     flex;
+        flex-wrap:   wrap;
+        align-items: center;
+        gap:         var(--hdx-space-2);
+        margin:      var(--hdx-space-2) 0;
+    }
+
+    // Narrows the Mailchimp embed — same width-narrowing idiom as
+    // .hdx-v2-signup-form-page__card / .hdx-v2-auth-card (task 070 B4,
+    // replaces the Bootstrap col-12 col-md-10 col-lg-8 mx-auto it had).
+    &__inner {
+        width:  100%;
+        margin: 0 auto;
+
+        @media (min-width: @hdx-bp-md) {
+            width: 80%;
+        }
+
+        @media (min-width: @hdx-bp-xl) {
+            width: 50%;
+        }
+    }
+}

@@ -1,0 +1,408 @@
+// ============================================================
+// c-button — BEM component
+// Implements: Buttons + Text Buttons
+// Source: Figma "Visual Redesign / Components / Buttons"
+// ============================================================
+// Dependencies:
+//   @import this file AFTER design-foundations.less is in scope.
+//   All colour/spacing/type tokens come from that file.
+// ============================================================
+
+@import "../mixins.less";
+
+
+// ────────────────────────────────────────────────────────────
+// 1. Local design tokens (mapped from foundations)
+// ────────────────────────────────────────────────────────────
+
+// Sizing — L (40 px)
+@c-button-l-dim:       2.5rem;    // 40 px — height + icon-only width
+@c-button-l-icon:      1.25rem;   // 20 px
+@c-button-l-pad-v:     var(--hdx-space-2);   //  8 px
+@c-button-l-fs:        var(--hdx-fs-m);      // 16 px
+
+// Sizing — M (34 px)
+@c-button-m-dim:       2.125rem;  // 34 px
+@c-button-m-icon:      1rem;      // 16 px
+@c-button-m-fs:        var(--hdx-fs-s);      // 14 px
+
+// Sizing — S (24 px)
+@c-button-s-dim:       1.5rem;    // 24 px
+@c-button-s-icon:      0.875rem;  // 14 px
+@c-button-s-fs:        var(--hdx-fs-xs);     // 12 px
+
+// Shared
+@c-button-radius:      var(--hdx-radius-sm); //  2 px
+@c-button-transition:  background-color 0.15s ease, border-color 0.15s ease,
+                       color 0.15s ease, box-shadow 0.15s ease;
+
+// ────────────────────────────────────────────────────────────
+// 2. c-button — filled / outlined / ghost button
+// ────────────────────────────────────────────────────────────
+
+.c-button {
+    // base layout
+    display:          inline-flex;
+    align-items:      center;
+    justify-content:  center;
+    border-radius:    @c-button-radius;
+    cursor:           pointer;
+    .hdx-body-medium-base();
+    text-decoration:  none;
+    white-space:      nowrap;
+    box-sizing:       border-box;
+    transition:       @c-button-transition;
+    .hdx-motion();
+
+    // reset browser defaults
+    -webkit-appearance: none;
+    appearance:         none;
+    border:             none;
+    background:         none;
+    padding:            0;
+    margin:             0;
+
+    &:focus-visible {
+        .hdx-focus-ring();
+    }
+
+
+    // ── Elements ────────────────────────────────────────────
+
+    &__icon {
+        line-height: 0;
+        flex-shrink: 0;
+        display:     block;
+        // width is set per size modifier; height is auto (aspect-ratio preserved)
+    }
+
+    &__label {
+        overflow:       hidden;
+        text-overflow:  ellipsis;
+        white-space:    nowrap;
+        flex-shrink:    0;
+    }
+
+
+    // ── Size modifiers ───────────────────────────────────────
+
+    &--size-l {
+        height:      @c-button-l-dim;
+        padding:     @c-button-l-pad-v var(--hdx-space-3);  // 12 px
+        gap:         var(--hdx-space-2);  //  8 px
+        font-size:   @c-button-l-fs;
+
+        .c-button__icon { width: @c-button-l-icon; }
+    }
+
+    &--size-m {
+        height:      @c-button-m-dim;
+        padding:     var(--hdx-space-2) var(--hdx-space-2);  //  8 px
+        gap:         var(--hdx-space-13);  //  6 px
+        font-size:   @c-button-m-fs;
+
+        .c-button__icon { width: @c-button-m-icon; }
+    }
+
+    &--size-s {
+        height:      @c-button-s-dim;
+        padding:     var(--hdx-space-1) var(--hdx-space-2);  //  4 px
+        gap:         var(--hdx-space-13);  //  6 px
+        font-size:   @c-button-s-fs;
+
+        .c-button__icon { width: @c-button-s-icon; }
+    }
+
+
+    // ── Icon-only override ───────────────────────────────────
+    // Overrides padding/width to make a square icon-only button.
+    // Apply alongside a size modifier: .c-button--icon-only.c-button--size-l
+
+    &--icon-only {
+        &.c-button--size-l {
+            width:   @c-button-l-dim;
+            padding: @c-button-l-pad-v;  // 8 px all sides → 40×40
+        }
+
+        &.c-button--size-m {
+            width:   @c-button-m-dim;
+            padding: 0;                  // 34×34 — centered, no padding
+        }
+
+        &.c-button--size-s {
+            width:   @c-button-s-dim;
+            padding: 0;                  // 24×24 — centered, no padding
+        }
+    }
+
+
+    // ── Style: primary ───────────────────────────────────────
+
+    &--primary {
+        background-color: var(--hdx-primary-5);   // #1862d8
+        color:            var(--hdx-neutral-0);   // #fff
+
+        &:hover {
+            background-color: var(--hdx-primary-9);   // #05142b  — very dark navy
+            color:            var(--hdx-neutral-0);
+        }
+
+        &:active,
+        &.is-active {
+            background-color: var(--hdx-primary-5);
+            color:            var(--hdx-neutral-0);
+        }
+
+        &[disabled],
+        &.is-disabled {
+            background-color: var(--hdx-neutral-05);  // #f5f7f7
+            color:            var(--hdx-neutral-3);   // #c4d0d1
+            cursor:           not-allowed;
+            pointer-events:   none;
+        }
+    }
+
+
+    // ── Style: secondary ─────────────────────────────────────
+
+    // Text type — white bg, royalblue border
+    &--secondary {
+        background-color: var(--hdx-neutral-0);   // #fff
+        color:            var(--hdx-primary-7);   // #0e3b82 darkslateblue
+        border:           1px solid var(--hdx-primary-5);   // #1862d8
+        box-shadow:       var(--hdx-shadow-sm);
+
+        &:hover {
+            //background-color: var(--hdx-primary-7);   // #0e3b82 — fill
+            color:            var(--hdx-primary-7);
+            //border:           1.5px solid var(--hdx-primary-7);
+            box-shadow:       none;
+        }
+
+        &:active,
+        &.is-active {
+            background-color: var(--hdx-neutral-0);
+            color:            var(--hdx-primary-7);
+            border:           1px solid var(--hdx-primary-7);
+            box-shadow:       none;
+        }
+
+        &[disabled],
+        &.is-disabled {
+            background-color: var(--hdx-neutral-05);
+            color:            var(--hdx-neutral-3);
+            border-color:     transparent;
+            box-shadow:       none;
+            cursor:           not-allowed;
+            pointer-events:   none;
+        }
+
+        // Icon-only variant: transparent bg, no border by default (Figma)
+        &.c-button--icon-only {
+            background-color: transparent;
+            border:           none;
+            box-shadow:       none;
+            color:            var(--hdx-neutral-3);
+
+            &:hover {
+                background-color: var(--hdx-primary-7);
+                color:            var(--hdx-neutral-3);
+                border:           none;
+            }
+
+            &:active {
+                background-color: var(--hdx-primary-5);
+                color:            var(--hdx-neutral-3);
+                border:           none;
+            }
+
+            &[disabled],
+            &.is-disabled {
+                background-color: var(--hdx-neutral-05);
+                border:           none;
+            }
+        }
+    }
+
+
+    // ── Style: tertiary ──────────────────────────────────────
+
+    &--tertiary {
+        background-color: var(--hdx-neutral-0);   // #fff
+        color:            var(--hdx-neutral-8);   // #3f4748
+        border:           1px solid var(--hdx-neutral-2);   // #d8e0e1
+        box-shadow:       var(--hdx-shadow-sm);
+
+        &:hover {
+            background-color: var(--hdx-neutral-01);   // #fafbfb
+            color:            var(--hdx-neutral-8);
+            border-color:     var(--hdx-neutral-8);   // #3f4748
+        }
+
+        &:active,
+        &.is-active {
+            background-color: var(--hdx-neutral-01);
+            color:            var(--hdx-neutral-8);
+            border-color:     var(--hdx-neutral-95);    // #101212
+            box-shadow:       var(--hdx-shadow-none);
+        }
+
+        &[disabled],
+        &.is-disabled {
+            background-color: var(--hdx-neutral-05);
+            color:            var(--hdx-neutral-3);
+            border:           none;
+            box-shadow:       none;
+            cursor:           not-allowed;
+            pointer-events:   none;
+        }
+
+        // Icon-only variant: white bg + shadow, no border (Figma)
+        &.c-button--icon-only {
+            border:  none;
+            color:   var(--hdx-primary-7);
+            // bg and shadow stay as text variant by default
+
+            &:hover {
+                background-color: var(--hdx-neutral-01);
+                color:            var(--hdx-neutral-8);
+                border:           none;
+                box-shadow:       none;
+            }
+
+            &:active {
+                background-color: var(--hdx-neutral-01);
+                color:            var(--hdx-neutral-8);
+                border:           none;
+                box-shadow:       none;
+            }
+
+            &[disabled],
+            &.is-disabled {
+                background-color: var(--hdx-neutral-05);
+                color:            var(--hdx-neutral-3);
+                border:           none;
+                box-shadow:       none;
+            }
+        }
+    }
+}
+
+
+// ────────────────────────────────────────────────────────────
+// 3. c-text-button — underline text + optional icon, no bg/border
+// ────────────────────────────────────────────────────────────
+
+.c-text-button {
+    display:          inline-flex;
+    align-items:      center;
+    cursor:           pointer;
+    .hdx-body-medium-base();
+    text-decoration:  none;      // outer element; underline applied to __label only
+    border:           none;
+    background:       none;
+    padding:          0;
+    margin:           0;
+    box-sizing:       border-box;
+    transition:       color 0.15s ease;
+    .hdx-motion();
+    border-radius:    @c-button-radius;
+
+    -webkit-appearance: none;
+    appearance:         none;
+
+    &[hidden] { display: none; }
+
+    &:focus-visible {
+        .hdx-focus-ring();
+    }
+
+
+    // ── Elements ────────────────────────────────────────────
+
+    &__icon {
+        line-height: 0;
+        flex-shrink: 0;
+        display:     block;
+    }
+
+    &__label {
+        text-decoration: underline;
+        white-space:     nowrap;
+    }
+
+
+    // ── Size modifiers ───────────────────────────────────────
+
+    &--size-l {
+        gap:       var(--hdx-space-2);  //  8 px
+        font-size: @c-button-l-fs;     // 16 px
+
+        .c-text-button__icon { width: @c-button-l-icon; }  // 20 px
+    }
+
+    &--size-m {
+        gap:       var(--hdx-space-1);  //  4 px
+        font-size: @c-button-m-fs;     // 14 px
+
+        .c-text-button__icon { width: @c-button-m-icon; }  // 16 px
+    }
+
+    &--size-s {
+        gap:       var(--hdx-space-15);  //  2 px
+        font-size: @c-button-s-fs;     // 12 px
+
+        .c-text-button__icon { width: @c-button-s-icon; }  // 14 px
+    }
+
+
+    // ── Style: primary ───────────────────────────────────────
+
+    &--primary {
+        color: var(--hdx-primary-5);   // #1862d8
+
+        &:hover  { color: var(--hdx-neutral-95); }   // #101212 — darken
+        &:active { color: var(--hdx-primary-5); }
+
+        &[disabled],
+        &.is-disabled {
+            color:          var(--hdx-neutral-3);   // #c4d0d1
+            cursor:         not-allowed;
+            pointer-events: none;
+        }
+    }
+
+
+    // ── Style: secondary ─────────────────────────────────────
+
+    &--secondary {
+        color: var(--hdx-neutral-95);   // #101212 — near-black
+
+        &:hover  { color: var(--hdx-primary-5); }    // turns blue
+        &:active { color: var(--hdx-primary-5); }
+
+        &[disabled],
+        &.is-disabled {
+            color:          var(--hdx-neutral-3);
+            cursor:         not-allowed;
+            pointer-events: none;
+        }
+    }
+
+
+    // ── Style: tertiary ──────────────────────────────────────
+
+    &--tertiary {
+        color: var(--hdx-neutral-8);   // #3f4748
+
+        &:hover  { color: var(--hdx-primary-5); }    // turns blue
+        &:active { color: var(--hdx-primary-5); }
+
+        &[disabled],
+        &.is-disabled {
+            color:          var(--hdx-neutral-3);
+            cursor:         not-allowed;
+            pointer-events: none;
+        }
+    }
+}

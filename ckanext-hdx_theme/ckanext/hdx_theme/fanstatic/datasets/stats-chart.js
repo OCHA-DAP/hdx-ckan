@@ -128,7 +128,7 @@ $(document).ready(function(){
         if (chartData.length > 0){
             setupDatasetDownloads(datasetDwdId, "#dataset-downloads-chart");
         } else {
-            $("#dataset-downloads-chart-no-data").removeClass('d-none');
+            $("#dataset-downloads-chart-no-data").show();
         }
     }
 });

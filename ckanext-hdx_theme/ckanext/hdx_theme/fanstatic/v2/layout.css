@@ -1,0 +1,142 @@
+body.hdx-v2 {
+  font-family: var(--hdx-font-body);
+  background-color: var(--hdx-neutral-01);
+}
+@media (min-width: 48rem) {
+  .hdx-v2-page-row {
+    min-height: 37.5rem;
+  }
+}
+.hdx-v2-breadcrumb-row {
+  border-bottom: 1px solid var(--hdx-neutral-1);
+}
+.hdx-v2-breadcrumb-row--white {
+  background-color: var(--hdx-neutral-0);
+  border-bottom: none;
+}
+.hdx-v2-flash {
+  margin: var(--hdx-space-4) 0;
+}
+.hdx-v2-content-columns {
+  display: flex;
+  align-items: stretch;
+}
+.hdx-v2-content-columns--gap {
+  gap: var(--hdx-space-3);
+}
+@media (min-width: 80rem) {
+  .hdx-v2-content-columns--gap {
+    gap: var(--hdx-space-6);
+  }
+}
+@media (min-width: 80rem) {
+  .hdx-v2-content-columns--gap-xl {
+    gap: var(--hdx-space-6);
+  }
+}
+.hdx-v2-content-columns--stack {
+  flex-direction: column;
+  gap: var(--hdx-space-6);
+}
+@media (min-width: 80rem) {
+  .hdx-v2-content-columns--stack {
+    flex-direction: row;
+  }
+}
+.hdx-v2-content-columns__sidebar {
+  min-width: 0;
+}
+@media (min-width: 80rem) {
+  .hdx-v2-content-columns__sidebar {
+    flex: 0 0 25%;
+    min-width: 0;
+  }
+}
+.hdx-v2-content-columns__sidebar--xl-only {
+  display: none;
+}
+@media (min-width: 80rem) {
+  .hdx-v2-content-columns__sidebar--xl-only {
+    display: block;
+  }
+}
+.hdx-v2-content-columns__sidebar--sticky {
+  position: sticky;
+  top: var(--hdx-space-12);
+  align-self: flex-start;
+}
+.hdx-v2-content-columns__sidebar--right {
+  order: 2;
+}
+.hdx-v2-content-columns__content {
+  flex: 1;
+  min-width: 0;
+}
+.hdx-v2-container {
+  max-width: 100%;
+  padding-right: 1rem;
+  padding-left: 1rem;
+}
+@media (min-width: 48rem) {
+  .hdx-v2-container {
+    padding-right: 3rem;
+    padding-left: 3rem;
+  }
+}
+@media (min-width: 87.5rem) {
+  .hdx-v2-container {
+    max-width: 1320px;
+    padding-right: var(--hdx-space-3);
+    padding-left: var(--hdx-space-3);
+    margin-right: auto;
+    margin-left: auto;
+  }
+}
+.hdx-v2-chart {
+  position: relative;
+}
+.hdx-v2-chart__canvas {
+  position: absolute;
+  inset: 0;
+}
+.hdx-v2-chart-tooltip {
+  position: absolute;
+  top: 0;
+  left: 0;
+  min-width: 0;
+  max-width: none;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 5;
+  transition: opacity 150ms ease;
+}
+body.contribute-mode {
+  overflow: hidden;
+}
+.popup.popup-contribute {
+  z-index: 90000;
+  overflow: auto;
+}
+.popup.popup-contribute .content {
+  height: 100%;
+  padding: 0;
+  position: static;
+  left: auto;
+  top: auto;
+  margin-left: auto;
+  margin-right: auto;
+  transform: none;
+  overflow: hidden;
+}
+.popup.popup-contribute .content .details-content {
+  height: 100%;
+}
+.popup.popup-contribute .content .details-content iframe {
+  border: none;
+  height: 100%;
+  width: 100%;
+}
+.js-hide {
+  display: none !important;
+}

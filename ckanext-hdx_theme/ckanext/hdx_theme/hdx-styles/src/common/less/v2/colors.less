@@ -1,0 +1,146 @@
+// ============================================================
+// HDX Design Foundations — Color Tokens
+// Source: Figma "Visual Redesign / Foundations / Colors"
+//
+// Naming: @hdx-<palette>-<step>
+//   Steps with a decimal use the digit only, no dot:
+//   0.1 → 01  |  0.5 → 05  |  1.5 → 15  |  8.5 → 85  |  9.5 → 95
+//
+// Palettes
+//   @hdx-brand-*    Brand green (15 steps: 0 – 10)
+//   @hdx-primary-*  Primary blue (13 steps: 0 – 9)
+//   @hdx-neutral-*  Neutrals / grey (16 steps: 0 – 10)
+//   @hdx-success-*  Feedback — success / green (11 steps: 0 – 9)
+//   @hdx-warning-*  Feedback — warning / yellow (11 steps: 0 – 9)
+//   @hdx-error-*    Feedback — error / red (11 steps: 0 – 9)
+//
+// Usage guidance (from Figma):
+//   Brand  → homepage bg, maps (HRP highlight), location label, tabular file format
+//   Primary → buttons, CTA, maps, datagrid viz, doc file format
+//   Neutral → backgrounds, strokes, maps, text, other file formats
+//   Success → "up-to-date" label
+//   Warning → datagrid label, geo file format
+//   Error   → web-services file format
+//
+//   Data-viz colour rules:
+//     1 data type  → primary blue only (shades as needed)
+//     2 data types → neutral grey (base) + brand green (accent)
+//     3 data types → neutral grey (base) + brand green 6 (highlight)
+//                    + brand green 3 (secondary)
+// ============================================================
+
+
+// ------------------------------------------------------------------
+// Brand green  (Figma steps 0 – 10, 15 swatches)
+// ------------------------------------------------------------------
+
+@hdx-brand-0:    #ffffff;  // step  0
+@hdx-brand-05:   #e9f5f1;  // step  0.5
+@hdx-brand-1:    #d4eae4;  // step  1
+@hdx-brand-15:   #bee0d6;  // step  1.5
+@hdx-brand-2:    #a8d5c9;  // step  2
+@hdx-brand-3:    #7dc1ad;  // step  3
+@hdx-brand-4:    #51ac92;  // step  4
+@hdx-brand-5:    #269777;  // step  5  — brand green mid
+@hdx-brand-6:    #1e795f;  // step  6
+@hdx-brand-7:    #18614c;  // step  7
+@hdx-brand-8:    #0f3c30;  // step  8
+@hdx-brand-85:   #0b2d24;  // step  8.5
+@hdx-brand-9:    #081e18;  // step  9
+@hdx-brand-95:   #040f0c;  // step  9.5
+@hdx-brand-10:   #000000;  // step 10  — black
+
+
+// ------------------------------------------------------------------
+// Primary blue  (Figma steps 0 – 9, 13 swatches)
+// ------------------------------------------------------------------
+
+@hdx-primary-0:    #ffffff;  // step  0
+@hdx-primary-05:   #e8effb;  // step  0.5
+@hdx-primary-1:    #d1e0f7;  // step  1
+@hdx-primary-15:   #bad0f3;  // step  1.5
+@hdx-primary-2:    #a3c0ef;  // step  2
+@hdx-primary-3:    #74a1e8;  // step  3
+@hdx-primary-4:    #4681e0;  // step  4
+@hdx-primary-5:    #1862d8;  // step  5  — primary blue
+@hdx-primary-6:    #134ead;  // step  6
+@hdx-primary-7:    #0e3b82;  // step  7
+@hdx-primary-8:    #0a2756;  // step  8
+@hdx-primary-85:   #071d41;  // step  8.5
+@hdx-primary-9:    #05142b;  // step  9
+
+
+// ------------------------------------------------------------------
+// Neutrals / grey  (Figma steps 0 – 10, 16 swatches)
+// ------------------------------------------------------------------
+
+@hdx-neutral-0:    #ffffff;  // step  0
+@hdx-neutral-01:   #fafbfb;  // step  0.1
+@hdx-neutral-05:   #f5f7f7;  // step  0.5
+@hdx-neutral-1:    #ebeff0;  // step  1
+@hdx-neutral-15:   #e2e8e8;  // step  1.5
+@hdx-neutral-2:    #d8e0e1;  // step  2
+@hdx-neutral-3:    #c4d0d1;  // step  3
+@hdx-neutral-4:    #b1c1c2;  // step  4
+@hdx-neutral-5:    #9db1b3;  // step  5
+@hdx-neutral-6:    #7e8e8f;  // step  6
+@hdx-neutral-7:    #5e6a6b;  // step  7
+@hdx-neutral-8:    #3f4748;  // step  8
+@hdx-neutral-85:   #2f3536;  // step  8.5
+@hdx-neutral-9:    #1f2324;  // step  9
+@hdx-neutral-95:   #101212;  // step  9.5
+@hdx-neutral-10:   #000000;  // step 10  — black
+
+
+// ------------------------------------------------------------------
+// Feedback — success / green  (Figma steps 0 – 9, 11 swatches)
+// Used for: up-to-date label
+// ------------------------------------------------------------------
+
+@hdx-success-0:    #ffffff;  // step  0
+@hdx-success-05:   #eaf7f1;  // step  0.5
+@hdx-success-1:    #cff0e0;  // step  1
+@hdx-success-2:    #a8e2c7;  // step  2
+@hdx-success-3:    #7ed3ad;  // step  3
+@hdx-success-4:    #55c493;  // step  4
+@hdx-success-5:    #2f9e6f;  // step  5
+@hdx-success-6:    #26855d;  // step  6
+@hdx-success-7:    #1f6b4b;  // step  7
+@hdx-success-8:    #185239;  // step  8
+@hdx-success-9:    #103828;  // step  9
+
+
+// ------------------------------------------------------------------
+// Feedback — warning / yellow  (Figma steps 0 – 9, 11 swatches)
+// Used for: datagrid label, geo file format
+// ------------------------------------------------------------------
+
+@hdx-warning-0:    #ffffff;  // step  0
+@hdx-warning-05:   #fbf4ea;  // step  0.5
+@hdx-warning-1:    #f6e9d4;  // step  1
+@hdx-warning-2:    #eed2aa;  // step  2
+@hdx-warning-3:    #e5bc7f;  // step  3
+@hdx-warning-4:    #dda555;  // step  4
+@hdx-warning-5:    #d48f2a;  // step  5
+@hdx-warning-6:    #aa7222;  // step  6
+@hdx-warning-7:    #7f5619;  // step  7
+@hdx-warning-8:    #553911;  // step  8
+@hdx-warning-9:    #2a1d08;  // step  9
+
+
+// ------------------------------------------------------------------
+// Feedback — error / red  (Figma steps 0 – 9, 11 swatches)
+// Used for: web-services file format
+// ------------------------------------------------------------------
+
+@hdx-error-0:    #ffffff;  // step  0
+@hdx-error-05:   #f9eceb;  // step  0.5
+@hdx-error-1:    #f3dad7;  // step  1
+@hdx-error-2:    #e7b5af;  // step  2
+@hdx-error-3:    #dc8f86;  // step  3
+@hdx-error-4:    #d06a5e;  // step  4
+@hdx-error-5:    #c44536;  // step  5
+@hdx-error-6:    #9d372b;  // step  6
+@hdx-error-7:    #762920;  // step  7
+@hdx-error-8:    #4e1c16;  // step  8
+@hdx-error-9:    #270e0b;  // step  9

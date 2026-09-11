@@ -1,0 +1,41 @@
+{#
+  Snippet: accordion.html
+  Path:    templates/v2/components/accordion.html
+
+  Renders a c-accordion — CSS-only, <details>/<summary> based.
+  No JS needed for open/close.
+
+  Parameters
+  ─────────────────────────────────────────────────
+  items   {list}  List of dicts: {question, answer, open (bool)}.
+                  Set open=True on the item that should be expanded by default.
+                  `answer` may contain HTML — rendered with |safe.
+                  default: []
+  ─────────────────────────────────────────────────
+  Example
+
+  {% snippet 'v2/components/accordion.html', items=[
+      {'question': 'What is HAPI?', 'answer': 'An API.', 'open': True},
+      {'question': 'Who is it for?', 'answer': 'Developers.', 'open': False},
+  ] %}
+#}
+
+{% set items = items if items is defined else [] %}
+
+<div class="c-accordion">
+  {% for item in items %}
+    <details class="c-accordion__item"{% if item.open %} open{% endif %}>
+      <summary class="c-accordion__trigger"
+               data-ga-event="accordion_toggle"
+               data-ga-label="{{ item.question }}">
+        <span class="c-accordion__title">{{ item.question }}</span>
+        <span class="c-accordion__chevron" aria-hidden="true">{% include 'v2/icons/chevron-down.svg' %}</span>
+      </summary>
+      <div class="c-accordion__body">
+        <div class="c-accordion__content">
+          {{ item.answer | safe }}
+        </div>
+      </div>
+    </details>
+  {% endfor %}
+</div>

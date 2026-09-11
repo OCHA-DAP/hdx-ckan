@@ -1,8 +1,6 @@
-$(document).ready(function () {
-  var cameFromInput = $('#came-from-input');
-
-  if (cameFromInput.length) {
-    var onboardingFlowData = hdxUtil.net.getOnboardingFlowData();
-    cameFromInput.val(JSON.stringify(onboardingFlowData));
+(function () {
+  var input = document.getElementById('came-from-input');
+  if (input) {
+    input.value = JSON.stringify(hdxUtil.net.getOnboardingFlowData());
   }
-});
+})();

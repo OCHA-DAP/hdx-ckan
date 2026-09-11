@@ -1,0 +1,376 @@
+// ============================================================
+// c-selection-item  — filter tag / chip with optional close
+// c-radio           — radio input (native-style)
+// c-toggle          — boolean toggle switch
+// c-graph-point     — chart data-point dot with focus ring
+// ============================================================
+// Figma source: "Selection items / Radio / Toggle / Graph point"
+// ============================================================
+
+@import "../mixins.less";
+
+// ── Palette ──────────────────────────────────────────────────
+@c-sel-light-bg:     var(--hdx-neutral-0);       // #fff
+@c-sel-light-border: var(--hdx-neutral-2);       // #d8e0e1
+@c-sel-cyan-bg:      var(--hdx-brand-1);              // lightcyan
+
+@c-sel-active-border:    var(--hdx-neutral-95);  // #101212
+
+// Radio
+@c-radio-dim:           1rem;              // 16 px
+@c-radio-inner-dim:     0.5rem;            // 8 px
+@c-radio-checked-color: var(--hdx-primary-5);   // royalblue
+
+// Toggle
+@c-toggle-thumb:   0.75rem;    // 12 px
+@c-toggle-off-bg:  var(--hdx-neutral-2);        // #d8e0e1
+
+// Graph point
+@c-gp-dim:         0.5rem;     //  8 px
+@c-gp-focus-dim:   1.5rem;     // 24 px
+
+
+// ────────────────────────────────────────────────────────────
+// 1. c-selection-item — filter chip / tag
+// ────────────────────────────────────────────────────────────
+
+.c-selection-item {
+    display:          inline-flex;
+    align-items:      center;
+    justify-content:  center;
+    width:            auto;
+    max-width:        none;
+    min-width:        0;
+    border-radius:    var(--hdx-radius-sm);
+    box-shadow:       var(--hdx-shadow-sm);
+    text-decoration:  none;
+    background-color: @c-sel-light-bg;
+    border:           1px solid @c-sel-light-border;
+    box-sizing:       border-box;
+    cursor:           pointer;
+    font-family:      var(--hdx-font-body);
+    font-weight:      var(--hdx-fw-medium);
+    color:            var(--hdx-neutral-8);
+    transition:       background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+    .hdx-motion();
+
+    &__icon {
+        line-height: 0;
+        flex-shrink: 0;
+        display:     none;   // hidden unless .c-selection-item--has-icon
+    }
+
+    &__label {
+        overflow:      hidden;
+        text-overflow: ellipsis;
+        white-space:   nowrap;
+    }
+
+    &__count {
+        font-size: var(--hdx-fs-xs);
+        color:     var(--hdx-neutral-8);
+        display:   none;   // shown via --has-count modifier
+    }
+
+    &__close {
+        line-height: 0;
+        flex-shrink: 0;
+        display:     none;   // shown in active state
+    }
+
+    // ── Colour variants ──────────────────────────────────────
+
+    &--light {
+        background-color: @c-sel-light-bg;
+        border-color:     @c-sel-light-border;
+    }
+
+    &--cyan {
+        background-color: @c-sel-cyan-bg;
+        border-color:     var(--hdx-brand-2);  // powderblue
+    }
+
+    // ── State modifiers ──────────────────────────────────────
+
+    &:hover {
+        background-color: var(--hdx-neutral-01);  // #fafbfb
+        border-color:     var(--hdx-neutral-8);  // #3f4748
+        box-shadow:       var(--hdx-shadow-sm);
+
+        &.c-selection-item--cyan {
+            background-color: @c-sel-cyan-bg;
+        }
+    }
+
+    // Active (selected — close icon visible, border near-black)
+    &--active {
+        border-color: @c-sel-active-border;
+        color:        var(--hdx-neutral-95);
+        box-shadow:   none;
+
+        .c-selection-item__close { display: block; }
+
+        &:hover {
+            border-color: @c-sel-active-border;
+        }
+
+        &.c-selection-item--cyan {
+            background-color: @c-sel-cyan-bg;
+        }
+    }
+
+    &--has-icon  .c-selection-item__icon  { display: block; }
+    &--has-count .c-selection-item__count { display: block; }
+
+    // ── Size modifiers ───────────────────────────────────────
+
+    // Large
+    &--size-l {
+        height:    2.5rem;  // 40 px
+        padding:   var(--hdx-space-2) var(--hdx-space-3);  // 8 12
+        gap:       var(--hdx-space-13);              //  6 px
+        font-size: var(--hdx-fs-m);                  // 16 px
+
+        .c-selection-item__icon  { width: 1.25rem; }
+        .c-selection-item__close { width: 1.25rem; }
+    }
+
+    // Medium
+    &--size-m {
+        height:    2.125rem;  // 34 px
+        padding:   var(--hdx-space-2);               // 8 px
+        gap:       var(--hdx-space-1);               // 4 px
+        font-size: var(--hdx-fs-s);                  // 14 px
+
+        .c-selection-item__icon  { width: 1rem; }
+        .c-selection-item__close { width: 1rem; }
+    }
+
+    // Small
+    &--size-s {
+        height:    1.5rem;  // 24 px
+        padding:   var(--hdx-space-13);             //  6 px
+        gap:       var(--hdx-space-1);              //  4 px
+        font-size: var(--hdx-fs-xs);               // 12 px
+
+        .c-selection-item__icon  { width: 0.875rem; }
+        .c-selection-item__close { width: 0.875rem; }
+    }
+}
+
+
+// ────────────────────────────────────────────────────────────
+// 2. c-radio — styled radio input wrapper
+// ────────────────────────────────────────────────────────────
+
+.c-radio {
+    display:     inline-flex;
+    align-items: center;
+    gap:         var(--hdx-space-2);   // 8 px
+    cursor:      pointer;
+    font-family: var(--hdx-font-body);
+    font-size:   var(--hdx-fs-s);
+    line-height: var(--hdx-lh-normal);
+    color:       var(--hdx-neutral-8);
+
+    &__input {
+        width:        @c-radio-dim;
+        height:       @c-radio-dim;
+        position:     relative;
+        flex-shrink:  0;
+    }
+
+    // Outer ring
+    &__ring {
+        position:      absolute;
+        inset:         0;
+        border-radius: 100%;
+        border:        1px solid var(--hdx-neutral-2);  // #d8e0e1
+        box-sizing:    border-box;
+        background:    var(--hdx-neutral-0);
+        transition:    border-color 0.15s ease;
+        .hdx-motion();
+    }
+
+    // Inner dot (checked)
+    &__dot {
+        position:         absolute;
+        top:              50%;
+        left:             50%;
+        transform:        translate(-50%, -50%);
+        width:            @c-radio-inner-dim;
+        height:           @c-radio-inner-dim;
+        border-radius:    100%;
+        background-color: transparent;
+        transition:       background-color 0.15s ease;
+        .hdx-motion();
+    }
+
+    &__body {
+        display:     flex;
+        align-items: center;
+        gap:         var(--hdx-space-13);  // 6 px — tighter than outer 8 px gap
+    }
+
+    &__label { position: relative; line-height: var(--hdx-lh-normal); }
+
+    // ── States ──────────────────────────────────────────────
+
+    &--checked &__ring {
+        border: 1px solid @c-radio-checked-color;
+        background: transparent;
+    }
+
+    &--checked &__dot {
+        background-color: @c-radio-checked-color;
+    }
+
+    // Focus state (keyboard accessibility) — mirrors c-checkbox's pattern
+    input:focus-visible ~ &__input &__ring {
+        .hdx-focus-ring();
+    }
+
+    &--disabled {
+        cursor:         not-allowed;
+        pointer-events: none;
+        color:          var(--hdx-neutral-5);
+    }
+
+    &--disabled &__ring {
+        border-color: var(--hdx-neutral-1);
+    }
+
+    &--disabled&--checked &__dot {
+        background-color: var(--hdx-neutral-2);  // gainsboro
+    }
+
+    &--disabled .c-tooltip-anchor {
+        pointer-events: auto;
+    }
+}
+
+
+// ────────────────────────────────────────────────────────────
+// 3. c-toggle — boolean on/off switch
+// ────────────────────────────────────────────────────────────
+
+.c-toggle {
+    display:         inline-block;
+    position:        relative;
+    width:           2rem;  // 32 px
+    height:          1rem;  // 16 px
+    border-radius:   0.5rem;    // 8 px
+    background-color: @c-toggle-off-bg;
+    overflow:        hidden;
+    cursor:          pointer;
+    padding:         var(--hdx-space-15);  // 2 px inner inset
+    box-sizing:      border-box;
+    transition:      background-color 0.2s ease;
+    .hdx-motion();
+    flex-shrink:     0;
+
+    &__thumb {
+        width:         @c-toggle-thumb;
+        height:        @c-toggle-thumb;
+        border-radius: 66.67px;
+        background-color: var(--hdx-neutral-0);  // white
+        position:      relative;
+        transition:    transform 0.2s ease;
+        .hdx-motion();
+        overflow:      hidden;
+        flex-shrink:   0;
+    }
+
+    // ── States ──────────────────────────────────────────────
+
+    &--on {
+        background-color: var(--hdx-primary-5);  // royalblue
+        display:          flex;
+        align-items:      flex-start;
+        justify-content:  flex-end;
+    }
+
+    &--off {
+        background-color: @c-toggle-off-bg;
+        display:          flex;
+        align-items:      flex-start;
+        justify-content:  flex-start;
+    }
+}
+
+
+// ────────────────────────────────────────────────────────────
+// 4. c-graph-point — chart data point
+// ────────────────────────────────────────────────────────────
+
+.c-graph-point {
+    position: relative;
+    display:  inline-flex;
+    align-items:     center;
+    justify-content: center;
+
+    // Focus halo ring (visible on hover/focus only)
+    &__halo {
+        position:         absolute;
+        width:            @c-gp-focus-dim;
+        height:           @c-gp-focus-dim;
+        border-radius:    50%;
+        background-color: var(--hdx-primary-5);
+        opacity:          0;
+        transition:       opacity 0.15s ease;
+        .hdx-motion();
+        z-index:          0;
+    }
+
+    // Core dot
+    &__dot {
+        position:         relative;
+        width:            @c-gp-dim;
+        height:           @c-gp-dim;
+        border-radius:    50%;
+        background-color: var(--hdx-primary-5);
+        z-index:          1;
+    }
+
+    // ── States ──────────────────────────────────────────────
+
+    &:hover        &__halo,
+    &:focus-visible &__halo {
+        opacity: 0.2;
+    }
+}
+
+// ────────────────────────────────────────────────────────────
+// c-selection-item-grid — grid wrapper for selection items
+// (2 cols SM/MD, 3 cols XL — locations-list page)
+// ────────────────────────────────────────────────────────────
+
+.c-selection-item-grid {
+    display:               grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap:                   var(--hdx-space-2);
+
+    @media (min-width: @hdx-bp-xl) {
+        grid-template-columns: repeat(3, 1fr);
+        gap:                   var(--hdx-space-3);
+    }
+
+    .c-selection-item {
+        width: 100%;
+    }
+}
+
+// ────────────────────────────────────────────────────────────
+// c-selection-item-row — inline wrapping row of selection items
+// (applied filter pills — search page)
+// ────────────────────────────────────────────────────────────
+
+.c-selection-item-row {
+    display:   flex;
+    flex-wrap: wrap;
+    gap:       var(--hdx-space-2);
+
+    .c-selection-item {
+        max-width: 12.5rem;
+    }
+}

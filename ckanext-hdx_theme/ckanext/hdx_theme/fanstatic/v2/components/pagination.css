@@ -1,0 +1,79 @@
+.c-pagination {
+  display: inline-flex;
+}
+.c-pagination__item {
+  background-color: var(--hdx-neutral-0);
+  border: 1px solid var(--hdx-neutral-2);
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-family: var(--hdx-font-body);
+  font-weight: var(--hdx-fw-regular);
+  line-height: var(--hdx-lh-normal);
+  color: var(--hdx-neutral-8);
+  text-decoration: none;
+  transition: background-color 0.15s ease, color 0.15s ease;
+  margin-left: -1px;
+  position: relative;
+}
+.c-pagination__item:first-child {
+  margin-left: 0;
+}
+.c-pagination__item--active {
+  background-color: var(--hdx-neutral-0);
+  color: var(--hdx-neutral-95);
+  font-weight: var(--hdx-fw-medium);
+  z-index: 1;
+}
+.c-pagination__item--active:hover {
+  background-color: var(--hdx-neutral-0);
+  color: var(--hdx-neutral-95);
+}
+.c-pagination__item--prev,
+.c-pagination__item--next {
+  line-height: 0;
+  color: var(--hdx-neutral-5);
+}
+.c-pagination__item--ellipsis {
+  cursor: default;
+}
+.c-pagination__item--ellipsis:hover {
+  background-color: var(--hdx-neutral-0);
+}
+.c-pagination__item:not(.is-disabled):hover {
+  color: var(--hdx-primary-5);
+}
+.c-pagination--size-md .c-pagination__item {
+  width: 2.375rem;
+  font-size: var(--hdx-fs-s);
+}
+.c-pagination--size-md .c-pagination__item--prev,
+.c-pagination--size-md .c-pagination__item--next {
+  padding: var(--hdx-space-1) var(--hdx-space-13);
+}
+.c-pagination--size-md .c-pagination__item--page,
+.c-pagination--size-md .c-pagination__item--active,
+.c-pagination--size-md .c-pagination__item--ellipsis {
+  padding: var(--hdx-space-1) var(--hdx-space-3);
+}
+.c-pagination--size-sm .c-pagination__item {
+  width: 1.75rem;
+  font-size: var(--hdx-fs-xs);
+}
+.c-pagination--size-sm .c-pagination__item--prev,
+.c-pagination--size-sm .c-pagination__item--next {
+  padding: var(--hdx-space-15) var(--hdx-space-13);
+}
+.c-pagination--size-sm .c-pagination__item--page,
+.c-pagination--size-sm .c-pagination__item--active,
+.c-pagination--size-sm .c-pagination__item--ellipsis {
+  padding: var(--hdx-space-15) var(--hdx-space-3);
+}
+.c-pagination--size-md .c-pagination__item img {
+  width: var(--hdx-space-6);
+}
+.c-pagination--size-sm .c-pagination__item img {
+  width: var(--hdx-space-4);
+}

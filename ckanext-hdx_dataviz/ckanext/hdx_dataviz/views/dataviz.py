@@ -30,14 +30,14 @@ def index():
 def _index(template_file, show_switch_to_desktop, show_switch_to_mobile):
 
     search_logic = DatavizSearchLogic()
-    search_logic._search(additional_fq='in_dataviz_gallery:true', default_sort_by='metadata_modified', num_of_items=9)
+    search_logic._search(additional_fq='in_dataviz_gallery:true', default_sort_by='metadata_modified', num_of_items=12)
     _populate_with_data_link(search_logic.template_data.page.items)
     template_data = {'data': search_logic.template_data}
-    carousel_items = _fetch_carousel_items()
-    carousel_items.sort(key=lambda item: item.get('priority'), reverse=True)
-    _populate_with_data_link(carousel_items)
-    _populate_with_after_show_data(carousel_items)
-    template_data['data']['carousel_items'] = carousel_items
+    # carousel_items = _fetch_carousel_items()
+    # carousel_items.sort(key=lambda item: item.get('priority'), reverse=True)
+    # _populate_with_data_link(carousel_items)
+    # _populate_with_after_show_data(carousel_items)
+    # template_data['data']['carousel_items'] = carousel_items
 
     return render(template_file, template_data)
 

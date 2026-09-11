@@ -1,0 +1,27 @@
+{% set notif = h.hdx_get_user_notifications() %}
+<div class="hdx-v2-notifications" id="hdx-v2-panel-notifications" hidden>
+
+  <div class="hdx-v2-notifications__header">
+    <span class="hdx-v2-notifications__title">
+      {{ _('Notifications') }}{% if notif.count %} ({{ notif.count }}){% endif %}
+    </span>
+    <button class="hdx-v2-notifications__close" type="button"
+            aria-label="{{ _('Close notifications') }}"
+            data-hdx-v2-close="notifications">
+      {% include 'v2/icons/close.svg' %}
+    </button>
+  </div>
+
+  {% if notif.list %}
+    <ul class="hdx-v2-notifications__list">
+      {% for notification in notif.list %}
+        <li class="hdx-v2-notifications__item">
+          {% snippet notification.html_template, notification=notification, v2=true %}
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p class="hdx-v2-notifications__empty">{{ _('No notifications') }}</p>
+  {% endif %}
+
+</div>

@@ -109,10 +109,7 @@ def members(id):
     except Exception as ex:
         log.error(str(ex))
         return abort(404, _('Server error'))
-    if org_meta.is_custom:
-        return render('organization/custom_members.html', template_dict)
-    else:
-        return render('organization/members.html', template_dict)
+    return render('organization/members.html', template_dict)
 
 
 def _get_context():

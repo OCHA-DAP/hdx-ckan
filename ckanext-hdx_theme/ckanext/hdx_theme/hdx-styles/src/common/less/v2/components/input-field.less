@@ -1,0 +1,433 @@
+// ============================================================
+// c-search-input — search bar (sizes L and M)
+// c-autocomplete — search input + suggestion panel
+// ============================================================
+// Figma source: "Input field / Search / Autocomplete"
+
+@import "../mixins.less";
+// Note: Figma calls these "Search" (the bar) and "Autocomplete"
+//       (the bar + dropdown panel combo).
+// ============================================================
+
+// ── Local tokens ────────────────────────────────────────────
+
+@c-input-border:              1px solid var(--hdx-neutral-2);        // #d8e0e1
+@c-input-border-color-active: var(--hdx-neutral-8);                  // focus/active border color (outline adds the ring)
+
+@c-input-color-placeholder: var(--hdx-neutral-8);   // #3f4748
+@c-input-color-value:       var(--hdx-neutral-95);  // #101212
+
+@c-input-icon-dim:     1rem;    // 16 px
+
+// L sizing
+@c-input-l-h:    2.5rem;         // 40 px — Figma size spec
+@c-input-l-fs:   var(--hdx-fs-m);      // 16 px
+
+// M sizing
+@c-input-m-fs:   var(--hdx-fs-s);      // 14 px
+
+
+// ────────────────────────────────────────────────────────────
+// 1. c-search-input — the input field itself
+// ────────────────────────────────────────────────────────────
+
+.c-search-input {
+    display:          flex;
+    align-items:      center;
+    border-radius:    var(--hdx-radius-sm);
+    background-color: var(--hdx-neutral-0);  // #fff
+    border:           @c-input-border;
+    box-sizing:       border-box;
+    overflow:         hidden;
+    font-family:      var(--hdx-font-body);
+    transition:       background-color 0.15s ease, border-color 0.15s ease;
+    .hdx-motion();
+
+    input,
+    &__value {
+        flex:         1;
+        border:       none;
+        background:   transparent;
+        font-family:  inherit;
+        color:        @c-input-color-placeholder;
+        line-height: 1;
+        outline:      none;
+        padding:      0;
+        margin:       0;
+
+        &::placeholder { color: @c-input-color-placeholder; }
+
+        // When filled (has value)
+        &:not(:placeholder-shown) { color: @c-input-color-value; }
+    }
+
+    input[type="search"] {
+        appearance:         none;
+        -webkit-appearance: none;
+    }
+
+    &__icon {
+        width:      @c-input-icon-dim;
+        flex-shrink: 0;
+    }
+
+    &__toggle {
+        display:     flex;
+        align-items: center;
+        background:  none;
+        border:      none;
+        padding:     0;
+        cursor:      pointer;
+        color:       inherit;
+        flex-shrink: 0;
+
+        svg {
+            .hdx-icon-size(@c-input-icon-dim);
+            display: block;
+        }
+    }
+
+    // Icon rendered as a submit button (icon_submit=True) — clicking
+    // searches, same as Enter; stays visible alongside the × when filled
+    &__icon--btn {
+        display:         flex;
+        align-items:     center;
+        justify-content: center;
+        background:      none;
+        border:          none;
+        padding:         0;
+        cursor:          pointer;
+        color:           inherit;
+        flex-shrink:     0;
+
+        svg {
+            .hdx-icon-size(@c-input-icon-dim);
+            display: block;
+        }
+
+        &:hover { color: @c-input-color-value; }
+    }
+
+    // Custom clear (×) button — visible only when .c-search-input--filled
+    &__clear {
+        display:     none;    // hidden by default; shown when --filled
+        align-items: center;
+        justify-content: center;
+        background:  none;
+        border:      none;
+        padding:     0;
+        cursor:      pointer;
+        color:       @c-input-color-placeholder;
+        flex-shrink: 0;
+
+        svg {
+            .hdx-icon-size(@c-input-icon-dim);
+            display: block;
+        }
+
+        &:hover { color: @c-input-color-value; }
+    }
+
+    // Companion search icon when clear button is present
+    &__icon--search { display: flex; }
+
+    // When filled: show clear button, hide the search icon
+    &--filled {
+        .c-search-input__clear          { display: flex; }
+        .c-search-input__icon--search   { display: none; }
+    }
+
+    // Suppress native browser search-cancel button (replaced by custom clear)
+    input[type="search"]::-webkit-search-cancel-button {
+        -webkit-appearance: none;
+    }
+
+    // ── States ──────────────────────────────────────────────
+
+    &:hover {
+        background-color: var(--hdx-neutral-01);  // #fafbfb
+        border-color:     var(--hdx-neutral-8);  // darker border for hover feedback
+    }
+
+    &:focus-within,
+    &--active,
+    &--filled {
+        background-color: var(--hdx-neutral-01);  // #fafbfb  (focus / filled)
+        border-color:     @c-input-border-color-active;
+        color:            @c-input-color-value;
+
+        input,
+        .c-search-input__value {
+            color: @c-input-color-value;
+        }
+    }
+
+    // Focus ring — layout-safe outline reads as a 2px border together
+    // with the constant 1px border (replaces the old 2px border-width).
+    &:focus-within {
+        outline:        1px solid @c-input-border-color-active;
+        outline-offset: 0;
+    }
+
+    // ── Size modifiers ───────────────────────────────────────
+
+    &--size-l {
+        height:    @c-input-l-h;
+        padding:   var(--hdx-space-2) var(--hdx-space-3) var(--hdx-space-2) var(--hdx-space-4);  // 8 12 8 16
+        gap:       var(--hdx-space-2);   // 8 px
+        font-size: @c-input-l-fs;
+
+        input,
+        .c-search-input__value { font-size: @c-input-l-fs; }
+    }
+
+    &--size-m {
+        height:    2.125rem;  // 34 px — Figma size spec
+        padding:   var(--hdx-space-2) var(--hdx-space-3);  // 8 12
+        gap:       var(--hdx-space-2);   // 8 px
+        font-size: @c-input-m-fs;
+
+        input,
+        .c-search-input__value { font-size: @c-input-m-fs; }
+    }
+
+    // ── Textarea modifier ────────────────────────────────────
+    // Fixed height per Figma spec (same pattern as @c-input-l-h).
+    &--textarea {
+        height:      6.25rem;  // Figma size spec (border-box)
+        align-items: flex-start;
+
+        textarea {
+            flex:        1;
+            height:      100%;
+            border:      none;
+            background:  transparent;
+            font:        inherit;
+            color:       @c-input-color-placeholder;
+            line-height: var(--hdx-lh-normal);
+            outline:     none;
+            resize:      none;
+            padding:     0;
+            overflow-y:  auto;
+
+            &::placeholder        { color: @c-input-color-placeholder; }
+            &:not(:placeholder-shown) { color: @c-input-color-value; }
+        }
+    }
+
+    // ── Per-field error ──────────────────────────────────────
+    &__error {
+        display: none;
+        width:   100%;
+        .hdx-body-s();
+        color:   var(--hdx-error-6);
+    }
+
+    // Error state — drives both the red border and the error text visibility
+    &--error {
+        border-color: var(--hdx-error-5);
+
+        &:hover,
+        &:focus-within { border-color: var(--hdx-error-5); }
+
+        &:focus-within { outline-color: var(--hdx-error-5); }
+    }
+
+    &--error ~ &__error { display: block; }
+
+    // ── Block modifier — stretch to the container width ──────
+    &--block {
+        width: 100%;
+    }
+
+    // ── Label (rendered above the input by the snippet) ──────
+    &__label {
+        .hdx-body-m-medium();
+        color:   var(--hdx-neutral-9);
+        display: block;
+    }
+
+    &__required {
+        color: var(--hdx-error-5);
+    }
+}
+
+
+// ────────────────────────────────────────────────────────────
+// 2. c-autocomplete — wrapper: input + suggestion panel
+// ────────────────────────────────────────────────────────────
+
+.c-autocomplete {
+    display:        flex;
+    flex-direction: column;
+    align-items:    flex-start;
+    gap:            var(--hdx-space-1);  // 4 px between input and panel
+    position:       relative;
+    width:          100%;
+    text-align:     left;
+
+    // The search input inside autocomplete stretches full width
+    .c-search-input { align-self: stretch; }
+
+    // ── Suggestion panel ────────────────────────────────────
+
+    &__panel {
+        position:         absolute;
+        top:              100%;
+        margin-top:       var(--hdx-space-1);  // 4 px gap below input
+        left:             0;
+        right:            0;
+        z-index:          100;
+        background-color: var(--hdx-neutral-0);
+        border:           0.75px solid var(--hdx-neutral-1);  // 0.75px: hairline — visually softer than the input border
+        border-radius:    var(--hdx-radius-sm);
+        box-shadow:       var(--hdx-shadow-sm);
+        display:          flex;
+        flex-direction:   column;
+        align-items:      flex-start;
+        padding:          var(--hdx-space-3);    // 12 px
+        gap:              var(--hdx-space-3);    // 12 px
+        color:            var(--hdx-neutral-85);
+
+        &[hidden] { display: none; }
+    }
+
+    // Section label ("Search results", "Trending")
+    &__section-title {
+        .hdx-body-s();
+        color: var(--hdx-neutral-85);
+    }
+
+    // Pill chips (tag/location suggestions)
+    &__chips {
+        align-self:  stretch;
+        display:     flex;
+        flex-wrap:   wrap;
+        gap:         var(--hdx-space-1);   // 4 px
+        align-items: center;
+        text-align:  center;
+        color:       var(--hdx-neutral-8);
+    }
+
+    &__chip {
+        display:          flex;
+        align-items:      center;
+        justify-content:  center;
+        padding:          var(--hdx-space-2);   // 8 px
+        border-radius:    var(--hdx-radius-sm);
+        background-color: var(--hdx-neutral-0);
+        border:           @c-input-border;
+        box-shadow:       var(--hdx-shadow-sm);
+        .hdx-body-s-medium();
+        overflow:         hidden;
+        text-overflow:    ellipsis;
+        white-space:      nowrap;
+        cursor:           pointer;
+        transition:       background-color 0.15s ease;
+        .hdx-motion();
+
+        &:hover { background-color: var(--hdx-neutral-01); }
+    }
+
+    // Search results list
+    &__results {
+        align-self:     stretch;
+        display:        flex;
+        flex-direction: column;
+        align-items:    flex-start;
+        gap:            var(--hdx-space-3);   // 12 px
+        color:          var(--hdx-neutral-8);
+    }
+
+    &__result-row {
+        align-self:      stretch;
+        display:         flex;
+        align-items:     center;
+        justify-content: space-between;
+        gap:             var(--hdx-space-3);
+
+        // Keyboard-focus indicator (hover intentionally omitted — c-text-link owns hover)
+        &[aria-selected="true"] {
+            background-color: var(--hdx-neutral-01);
+        }
+    }
+
+    &__result-link {
+        flex:     1;
+        min-width: 0;
+        overflow:  hidden;
+
+        .c-text-link {
+            display: block;
+        }
+    }
+
+    &__result-label {
+        display:       block;
+        min-width:     0;
+        overflow:      hidden;
+        text-overflow: ellipsis;
+        white-space:   nowrap;
+    }
+
+    &__result-count {
+        .hdx-body-s();
+        text-align:  right;
+        color:       var(--hdx-neutral-85);
+        flex-shrink: 0;
+    }
+
+    &__no-results {
+        .hdx-body-s();
+        color:   var(--hdx-neutral-5);
+        padding: var(--hdx-space-2) 0;
+    }
+
+    // "View all results" confirm button at bottom
+    &__confirm-btn {
+        align-self: end;
+    }
+}
+
+
+// ────────────────────────────────────────────────────────────
+// 3. c-form-validator — live feedback list (shown below input)
+// ────────────────────────────────────────────────────────────
+
+.c-form-validator__live-feedback {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--hdx-space-1);
+
+    &[hidden] { display: none; }
+}
+
+.c-form-validator__live-feedback-item {
+    .hdx-body-s();
+    padding-left: var(--hdx-space-5);
+    position: relative;
+
+    &::before {
+        position: absolute;
+        left: 0;
+    }
+
+    &--pass {
+        color: var(--hdx-success-6);
+
+        &::before { content: '✓'; }
+    }
+
+    &--fail {
+        color: var(--hdx-error-6);
+
+        &::before { content: '–'; }
+    }
+
+    &--indent {
+        padding-left: var(--hdx-space-8);
+    }
+}

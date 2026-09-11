@@ -1,7 +1,10 @@
+from unittest import mock
+
 import pytest
 
 import ckan.plugins.toolkit as tk
 import ckan.tests.factories as factories
+import ckanext.hdx_theme.tests.mock_helper as mh
 
 h = tk.h
 ValidationError = tk.ValidationError
@@ -19,16 +22,21 @@ class TestLandingPages(object):
         assert "'pageTitle': 'HDX HAPI Beta'" in response.body
         assert "'authenticated': 'false'" in response.body
 
-        assert 'src="/visualization/hapi-availability/"' in response.body
+        assert 'src="/visualization/hapi-availability-v2/"' in response.body
 
-        assert '<h3 class="heading__title">FAQs</h3>' in response.body
-        assert 'bem-faq__question' in response.body
-        assert 'bem-faq__answer' in response.body
+        assert '<h2 class="hdx-v2-hapi-section-heading">Be Inspired</h2>' in response.body
+        assert 'c-content-card' in response.body
 
-        assert '<h3 class="heading__title">Partners</h3>' in response.body
+        assert '<h2 class="hdx-v2-hapi-section-heading">FAQ</h2>' in response.body
+        assert 'c-accordion__trigger' in response.body
+        assert 'c-accordion__body' in response.body
+
+        assert '<h2 class="hdx-v2-hapi-section-heading">Partners</h2>' in response.body
         assert 'landing_pages/partners' in response.body
 
-    def test_signals_landing_page_without_auth(self, app):
+    @mock.patch('ckanext.hdx_theme.views.landing_pages.cached_last_three_signal_cards',
+                return_value=mh.mock_signal_cards())
+    def test_signals_landing_page_without_auth(self, mock_cards, app):
         url = h.url_for('hdx_landing_pages.signals')
         response = app.get(url)
 
@@ -38,16 +46,40 @@ class TestLandingPages(object):
 
         assert 'id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form"' in response.body
 
-        assert '<h3 class="heading__title">Data Coverage</h3>' in response.body
+        assert 'c-signal-card' in response.body
+        assert 'hdx-v2-signal-slide' in response.body
+        assert 'hdx-v2-signals-dots' in response.body
 
-        assert '<h3 class="heading__title">Resources</h3>' in response.body
+        assert '<h2 class="hdx-v2-signals-section-heading">Data Coverage</h2>' in response.body
 
-        assert '<h3 class="heading__title">FAQs</h3>' in response.body
-        assert 'bem-faq__question' in response.body
-        assert 'bem-faq__answer' in response.body
+        assert '<h2 class="hdx-v2-signals-section-heading">Signals Map</h2>' in response.body
+        assert 'src="https://data.humdata.org/visualization/signals-v2/"' in response.body
 
-        assert '<h3 class="heading__title">Partners</h3>' in response.body
+        assert '<h2 class="hdx-v2-signals-section-heading">Resources</h2>' in response.body
+
+        assert '<h2 class="hdx-v2-signals-section-heading">FAQs</h2>' in response.body
+        assert 'c-accordion__trigger' in response.body
+        assert 'c-accordion__body' in response.body
+
+        assert '<h2 class="hdx-v2-signals-section-heading">Partners</h2>' in response.body
         assert 'landing_pages/partners' in response.body
+
+    @mock.patch('ckanext.hdx_theme.views.landing_pages.cached_last_three_signal_cards',
+                side_effect=Exception('Signals CSV unavailable'))
+    def test_signals_landing_page_omitted_on_fetch_failure(self, mock_cards, app):
+        url = h.url_for('hdx_landing_pages.signals')
+        response = app.get(url)
+
+        assert response.status_code == 200
+        assert "'pageTitle': 'HDX Signals'" in response.body
+
+        assert 'c-signal-card' not in response.body
+        assert 'hdx-v2-signal-slide' not in response.body
+        assert 'hdx-v2-signals-dots' not in response.body
+
+        assert '<h2 class="hdx-v2-signals-section-heading">Data Coverage</h2>' in response.body
+        assert '<h2 class="hdx-v2-signals-section-heading">FAQs</h2>' in response.body
+        assert '<h2 class="hdx-v2-signals-section-heading">Partners</h2>' in response.body
 
     @pytest.mark.usefixtures("hdx_clean_db")
     def test_hapi_landing_page_with_auth(self, app):
@@ -61,8 +93,10 @@ class TestLandingPages(object):
         assert "'pageTitle': 'HDX HAPI Beta'" in response.body
         assert "'authenticated': 'true'" in response.body
 
+    @mock.patch('ckanext.hdx_theme.views.landing_pages.cached_last_three_signal_cards',
+                return_value=mh.mock_signal_cards())
     @pytest.mark.usefixtures("hdx_clean_db")
-    def test_signals_landing_page_with_auth(self, app):
+    def test_signals_landing_page_with_auth(self, mock_cards, app):
         factories.User(name=self.username, sysadmin=True)
         api_token = factories.APIToken(user=self.username, expires_in=2, unit=60 * 60)['token']
         auth = {"Authorization": api_token}
