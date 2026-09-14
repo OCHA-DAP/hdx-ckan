@@ -557,7 +557,7 @@
                 title=showcase.title or showcase.name,
                 description=h.markdown_extract(showcase.notes, extract_length=140),
                 img_url=showcase.image_display_url or showcase.img_url or '',
-                url=showcase.url or h.url_for('showcase_blueprint.read', id=showcase.name),
+                url=showcase.url,
                 read_more_href=h.url_for('showcase_blueprint.read', id=showcase.name),
                 url_is_external=(showcase.url and showcase.url.startswith('http')) %}
           {% endfor %}

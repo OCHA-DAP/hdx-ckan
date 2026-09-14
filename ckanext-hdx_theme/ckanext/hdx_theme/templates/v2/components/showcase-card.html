@@ -41,14 +41,16 @@
       <p class="c-showcase-card__desc">{{ description }}</p>
     {% endif %}
     <div class="c-showcase-card__actions">
-      {% snippet 'v2/components/button.html',
-          label=_('View'),
-          tag='a',
-          href=url,
-          icon_src='v2/icons/link-external.svg',
-          style='secondary',
-          size='m',
-          attrs=({'target': '_blank', 'rel': 'noopener noreferrer'} if url_is_external else {}) %}
+      {% if url %}
+        {% snippet 'v2/components/button.html',
+            label=_('View'),
+            tag='a',
+            href=url,
+            icon_src='v2/icons/link-external.svg',
+            style='secondary',
+            size='m',
+            attrs=({'target': '_blank', 'rel': 'noopener noreferrer'} if url_is_external else {}) %}
+      {% endif %}
       {#
       {% snippet 'v2/components/text-link.html',
           label=_('Read more'),
