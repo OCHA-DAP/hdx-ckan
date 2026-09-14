@@ -179,8 +179,8 @@
           label=_('Sign up to HDX Signals') %}
       {% snippet 'v2/components/button.html',
           style='secondary', type='text', size='m', state='enabled',
-          tag='a', href=h.url_for('hdx_landing_pages.signals') + '#signals-map',
-          label=_('View all Signals') %}
+          tag='a', href="https://data.humdata.org/visualization/signals-v2/",
+          label=_('View all Signals'), attrs={'target': '_blank', 'rel': 'noopener noreferrer'} %}
     </div>
 
 
