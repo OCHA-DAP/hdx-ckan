@@ -1,0 +1,104 @@
+.hdx-v2-resource-row {
+  background-color: var(--hdx-neutral-0);
+}
+.hdx-v2-resource-columns {
+  padding: var(--hdx-space-4) 0 var(--hdx-space-20);
+}
+@media (min-width: 80rem) {
+  .hdx-v2-resource-sidebar {
+    padding: var(--hdx-space-10) 0;
+  }
+}
+@media (min-width: 48rem) {
+  .hdx-v2-resource-content {
+    padding: var(--hdx-space-8) 0;
+  }
+}
+.hdx-v2-resource-section {
+  padding: var(--hdx-space-6) 0;
+}
+@media (min-width: 48rem) {
+  .hdx-v2-resource-section {
+    padding: var(--hdx-space-10) 0;
+  }
+}
+@media (max-width: 80rem) {
+  .hdx-v2-resource-section {
+    scroll-margin-top: 8rem;
+  }
+}
+.hdx-v2-resource-section__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--hdx-space-3);
+}
+.hdx-v2-resource-section__title {
+  font-family: var(--hdx-font-display);
+  font-weight: var(--hdx-fw-semibold);
+  line-height: var(--hdx-lh-normal);
+  color: var(--hdx-neutral-95);
+  margin: 0;
+  font-size: var(--hdx-fs-l);
+}
+@media (min-width: 48rem) {
+  .hdx-v2-resource-section__title {
+    font-size: var(--hdx-fs-xl);
+  }
+}
+.hdx-v2-resource-section__body {
+  padding-top: var(--hdx-space-8);
+}
+.hdx-v2-resource-api {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hdx-space-6);
+}
+@media (min-width: 80rem) {
+  .hdx-v2-resource-api {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: var(--hdx-space-5);
+  }
+}
+.hdx-v2-resource-api__block {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--hdx-space-3);
+}
+@media (min-width: 80rem) {
+  .hdx-v2-resource-api__block {
+    flex: 1;
+    min-width: 0;
+  }
+}
+.hdx-v2-resource-api__group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hdx-space-2);
+}
+.hdx-v2-resource-api__label-row {
+  display: flex;
+  align-items: center;
+  gap: var(--hdx-space-2);
+}
+.hdx-v2-resource-api__label {
+  font-family: var(--hdx-font-body);
+  font-size: var(--hdx-fs-m);
+  font-weight: var(--hdx-fw-semibold);
+  line-height: var(--hdx-lh-normal);
+  color: var(--hdx-neutral-85);
+  margin: 0;
+}
+.hdx-v2-resource-api__value {
+  font-family: var(--hdx-font-body);
+  font-size: var(--hdx-fs-s);
+  color: var(--hdx-neutral-8);
+  margin: 0;
+  line-height: var(--hdx-lh-normal);
+}
+.hdx-v2-resource-api__block .c-text-link {
+  font-size: var(--hdx-fs-s);
+  word-break: break-all;
+}

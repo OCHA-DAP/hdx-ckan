@@ -1,0 +1,69 @@
+{#
+  Snippet: checkbox.html
+  Path:    templates/v2/components/checkbox.html
+
+  Renders a c-checkbox — visual checkbox with state management.
+  Use the semantic input element internally for accessibility.
+
+  Parameters
+  ─────────────────────────────────────────────────────────────
+  id            {string}  Unique identifier.  default: ''
+  checked       {boolean} Whether checked.  default: false
+  disabled      {boolean} Whether disabled.  default: false
+  name          {string}  Form name attr.  default: ''
+  value         {string}  Form value attr.  default: ''
+  attrs         {dict}    Extra attrs on <input>.  default: {}
+                          Use 'data-indeterminate': '' for indeterminate state (JS sets .indeterminate=true).
+  extra_classes {string}  Additional classes.  default: ''
+  label         {string}  Label text rendered after the checkbox span, using class
+                          c-checkbox__label. Supports |safe HTML (e.g. links). default: none
+  required      {bool}    Adds required="required" to the <input>. default: false
+  errors        {list|string}  Error message(s). Adds the c-checkbox--error modifier
+                          and renders text in the trailing .c-checkbox__error span.
+                          default: None
+  ─────────────────────────────────────────────────────────────────────────────
+  Example
+
+  {% snippet 'v2/components/checkbox.html',
+      id='my-checkbox', checked=false, disabled=false %}
+
+  {% snippet 'v2/components/checkbox.html',
+      id='agree-terms', checked=true %}
+#}
+
+{% set id            = id            if id            is defined else '' %}
+{% set checked       = checked       if checked       is defined else false %}
+{% set disabled      = disabled      if disabled      is defined else false %}
+{% set name          = name          if name          is defined else '' %}
+{% set value         = value         if value         is defined else '' %}
+{% set attrs         = attrs         if attrs         is defined else {} %}
+{% set extra_classes = extra_classes if extra_classes is defined else '' %}
+{% set label         = label         if label         is defined else none %}
+{% set required      = required      if required      is defined else false %}
+{% set errors        = errors        if errors        is defined else None %}
+
+{% set classes = ['c-checkbox'] %}
+{% if errors %}{% set classes = classes + ['c-checkbox--error'] %}{% endif %}
+{% if extra_classes %}{% set classes = classes + [extra_classes] %}{% endif %}
+
+<span class="{{ classes | join(' ') }}">
+  <input
+    class="c-checkbox__input"
+    type="checkbox"
+    {% if id %}id="{{ id }}"{% endif %}
+    {% if checked %}checked="checked"{% endif %}
+    {% if disabled %}disabled="disabled"{% endif %}
+    {% if name %}name="{{ name }}"{% endif %}
+    {% if value %}value="{{ value }}"{% endif %}
+    {% if required %}required="required"{% endif %}
+    {% for key, val in attrs.items() %}{{ key }}="{{ val }}" {% endfor %} />
+  <span class="c-checkbox__box">
+    <span class="c-checkbox__icon">{% include h.url_for_static('v2/icons/check.svg') %}</span>
+  </span>
+</span>
+{% if label %}
+
+<label {% if id %}for="{{ id }}"{% endif %}
+       class="c-checkbox__label">{{ label|safe }}{% if required %}<span class="c-checkbox__required" aria-hidden="true"> *</span>{% endif %}</label>
+{% endif %}
+<span class="c-checkbox__error">{% if errors %}{{ errors | join(', ') if errors is iterable and errors is not string else errors }}{% endif %}</span>

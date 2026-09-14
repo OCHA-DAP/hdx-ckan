@@ -1,0 +1,249 @@
+// ============================================================
+// search-filters — filter sidebar, overlay, and filter button
+// for the v2 search/dataset-list page
+// ============================================================
+
+@import "../mixins.less";
+
+// ============================================================
+// hdx-v2-dataset-list — search results card list layout
+// Figma: llm_docs/redesign/figma_exports/dataset-list.html
+// ============================================================
+
+// hdx-v2-list-header — dataset list header (title + controls)
+// ────────────────────────────────────────────────────────────
+
+
+.hdx-v2-list-header {
+    .hdx-list-header-row();
+    margin-bottom: var(--hdx-space-4);  // 16 px below header
+
+    &__left {
+        .hdx-list-header-row-left();
+    }
+
+    &__title {
+        .hdx-section-title();
+
+        // Exception: on the main /dataset search page (emphasize_title=true
+        // in package_list.html), this sub-heading is sized like a page title
+        // — font-size only, weight/color stay from .hdx-section-title() above.
+        &--page-title {
+            .hdx-page-title-font-size();
+        }
+    }
+
+    &__count {
+        .hdx-section-title-count();
+
+        &--page-title {
+            .hdx-page-title-font-size();
+        }
+    }
+
+    &__controls {
+        // MD/SM: hidden — controls move to the filter overlay; XL: visible
+        display: none;
+
+        @media (min-width: @hdx-bp-xl) {
+            display: block;
+        }
+    }
+
+    &__filter-btn {
+        // MD/SM: visible alongside title; XL: hidden (controls shown instead)
+        @media (min-width: @hdx-bp-xl) {
+            display: none;
+        }
+
+    }
+}
+// ────────────────────────────────────────────────────────────
+// hdx-v2-search-bar-row — full-width search input row
+// Sits between the list header and the filter overlay/layout
+// ────────────────────────────────────────────────────────────
+
+.hdx-v2-search-bar-row {
+    width:         100%;
+    margin-bottom: var(--hdx-space-4);  // 16 px gap before the dataset layout
+}
+// ────────────────────────────────────────────────────────────
+// ────────────────────────────────────────────────────────────
+// hdx-v2-search-sidebar — sidebar column
+// ────────────────────────────────────────────────────────────
+
+.hdx-v2-search-sidebar {
+    @media (min-width: @hdx-bp-xl) {
+        border-right: 1px solid var(--hdx-neutral-1);
+        padding:      var(--hdx-space-5)   // 20px top
+                      var(--hdx-space-10)  // 40px right
+                      var(--hdx-space-20)  // 80px bottom — clears sticky anchor nav
+                      0;
+    }
+}
+// ────────────────────────────────────────────────────────────
+// hdx-v2-search-content — content column
+// ────────────────────────────────────────────────────────────
+
+.hdx-v2-search-content {
+    padding: var(--hdx-space-10)  // 40px top
+             0                    // 0 right
+             var(--hdx-space-10)  // 40px bottom
+             var(--hdx-space-10); // 40px left
+
+    // MD (768–1280px): side padding removed — hdx-v2-container provides 3rem sides
+    @media (max-width: @hdx-bp-xl) {
+        padding: var(--hdx-space-8) 0;  // 32px top/bottom
+    }
+
+    // SM (< 768px): hdx-v2-container provides 1rem sides
+    @media (max-width: @hdx-bp-md) {
+        padding: var(--hdx-space-6) 0;  // 24px top/bottom
+    }
+
+    &:only-child {
+        @media (min-width: @hdx-bp-xl) {
+            padding-left: 0;
+        }
+    }
+
+    .hdx-v2-dataset-list {
+        flex:      1;
+        min-width: 0;
+    }
+}
+// ────────────────────────────────────────────────────────────
+// hdx-v2-search-filters — filter panel content
+// Used in both sidebar (LG) and overlay body (MD/SM)
+// ────────────────────────────────────────────────────────────
+
+.hdx-v2-search-filters {
+    display:        flex;
+    flex-direction: column;
+    gap:            var(--hdx-space-6);  // 24 px between filter items
+
+    &__heading {
+        .hdx-heading-h4();
+        color: var(--hdx-neutral-95);
+
+        @media (max-width: @hdx-bp-xl) {
+          display: none;
+        }
+    }
+
+    &__item {
+        // wrapper for each c-dropdown--checklist filter
+    }
+
+    &__group-label {
+        .hdx-body-s();
+        align-self:    stretch;
+        display:       block;
+        color:         var(--hdx-neutral-95);
+        margin-bottom: var(--hdx-space-2);
+    }
+
+    &__radio-group {
+        display:        flex;
+        flex-direction: column;
+        gap:            var(--hdx-space-2);
+    }
+
+}
+// ────────────────────────────────────────────────────────────
+// hdx-v2-advanced-filters — prior implementation (task 065, D5):
+// always-expanded chip list, rendered outside the dropdown shell.
+// Kept for reference / possible future reuse; superseded by the
+// dropdown pattern (Advanced filters reuses .c-dropdown/.c-list-item
+// like Location/Organisation/Format/Topics again).
+// ────────────────────────────────────────────────────────────
+
+// .hdx-v2-advanced-filters {
+//
+//     &__list {
+//         display:   flex;
+//         flex-wrap: wrap;
+//         gap:       var(--hdx-space-1);
+//     }
+//
+//     &__group {
+//         display:        flex;
+//         flex-direction: column;
+//         align-items:    flex-start;
+//         gap:            var(--hdx-space-1);
+//         width:          100%;
+//     }
+//
+//     &__children {
+//         display:        flex;
+//         flex-direction: column;
+//         align-items:    flex-start;
+//         gap:            var(--hdx-space-1);
+//         width:          100%;
+//     }
+//
+//     &__child {
+//         display:     flex;
+//         align-items: center;
+//         gap:         var(--hdx-space-1);  // 4px, icon-to-chip gap
+//         width:       100%;
+//     }
+//
+//     &__indent-icon {
+//         display:     flex;
+//         align-items: center;
+//         flex-shrink: 0;
+//         width:       0.875rem;  // 14px
+//         height:      0.875rem;
+//         color:       var(--hdx-neutral-8);
+//     }
+// }
+// ────────────────────────────────────────────────────────────
+// hdx-v2-applied-filters — applied filter pill row (XL only)
+// ────────────────────────────────────────────────────────────
+
+.hdx-v2-applied-filters {
+    display:       flex;
+    align-items:   center;
+    flex-wrap:     wrap;
+    gap:           var(--hdx-space-2);
+    margin-bottom: var(--hdx-space-4);
+
+    @media (max-width: @hdx-bp-xl) {
+        display: none;
+    }
+
+    &__list {
+        flex:        1;
+        min-width:   0;
+        align-items: flex-start;
+        overflow:    hidden;
+        max-height:  var(--hdx-space-6);
+
+        &--expanded {
+            max-height: none;
+            overflow:   visible;
+        }
+    }
+
+    &__toggle {
+        .c-text-button__icon {
+            transition: transform 0.2s ease;
+            .hdx-motion();
+        }
+
+        &--expanded .c-text-button__icon {
+            transform: rotate(180deg);
+        }
+    }
+}
+// ────────────────────────────────────────────────────────────
+// hdx-v2-pagination-row — centers c-pagination below the dataset list
+// ────────────────────────────────────────────────────────────
+
+.hdx-v2-pagination-row {
+    display:         flex;
+    justify-content: center;
+    margin-top:      var(--hdx-space-8);   // 32px
+    margin-bottom:   var(--hdx-space-10);
+}

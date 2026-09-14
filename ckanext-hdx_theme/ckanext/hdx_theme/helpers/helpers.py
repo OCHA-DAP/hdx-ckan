@@ -1,7 +1,9 @@
+import csv
 import json
 import datetime
 import logging
 import re
+import requests
 import six
 import six.moves.urllib.parse as urlparse
 
@@ -220,6 +222,17 @@ def get_dataset_date_format(date):
     return '-'.join(dates)
 
 
+def hdx_format_date(date_value, with_time=False):
+    """Render a date in the standard v2 date format: '12 December 2022'.
+
+    Accepts anything h.render_datetime accepts (a datetime object or an
+    ISO-formatted string/timestamp). Set with_time=True to also render
+    hours:minutes, e.g. '12 December 2022, 14:30 (UTC)'.
+    """
+    date_format = '%d %B %Y, %H:%M (UTC)' if with_time else '%d %B %Y'
+    return h.render_datetime(date_value, date_format=date_format)
+
+
 def get_group_followers(grp_id):
     result = logic.get_action('group_follower_count')(
         {'model': model, 'session': model.Session},
@@ -369,6 +382,52 @@ def render_date_from_concat_str(_str, separator='-'):
                         result += ' - '
                 except ValueError as e:
                     log.warning(e)
+
+    return result
+
+
+def render_date_range_label(_str, separator='-'):
+    """Format dataset_date as "Data from DD Month YYYY to DD Month YYYY".
+
+    Parses the same concat-string format as render_date_from_concat_str and
+    adds a "Data from … to …" label. Returns an empty string when _str is
+    falsy or unparseable.
+    """
+    def _fmt(dt):
+        try:
+            return dt.strftime('%d %B %Y')
+        except ValueError:
+            month = datetime.date(1900, dt.month, 1).strftime('%B')
+            return '{:02d} {} {}'.format(dt.day, month, dt.year)
+
+    result = ''
+    if not _str:
+        return result
+
+    if 'TO' in _str:
+        parts = []
+        dates_list = str(_str).replace('[', '').replace(']', '').replace(' ', '').split('TO')
+        for date in dates_list:
+            if '*' not in date:
+                _date = datetime.datetime.strptime(date.split('T')[0], '%Y-%m-%d')
+                parts.append(_fmt(_date))
+            else:
+                parts.append(_fmt(datetime.datetime.today()))
+        if len(parts) == 2:
+            result = 'Data from {} to {}'.format(parts[0], parts[1])
+        elif len(parts) == 1:
+            result = 'Data from {}'.format(parts[0])
+    else:
+        dates = []
+        for strdate in _str.split(separator):
+            try:
+                dates.append(_fmt(datetime.datetime.strptime(strdate.strip(), '%m/%d/%Y')))
+            except ValueError:
+                pass
+        if len(dates) == 2:
+            result = 'Data from {} to {}'.format(dates[0], dates[1])
+        elif len(dates) == 1:
+            result = 'Data from {}'.format(dates[0])
 
     return result
 
@@ -774,6 +833,46 @@ def hdx_location_dict(include_world=True):
     return OrderedDict(list(top_locations.items()) + list(bottom_locations.items()))
 
 
+def hdx_get_locations(hrp=None):
+    """
+    Return a filtered list of location groups from the cached group list,
+    ordered by ``display_name`` ascending (accent-aware, via the cache layer).
+
+    Each item in the returned list contains:
+        - id
+        - name
+        - display_name
+        - package_count
+        - hrp (bool) – ``True`` when ``activity_level == 'active'``, ``False`` otherwise
+
+    :param hrp: Optional filter. ``True`` returns only locations with
+                ``activity_level='active'``, ``False`` returns locations where
+                ``activity_level`` is anything other than ``'active'`` (including
+                missing values), ``None`` returns all.
+    :type hrp: bool or None
+    :rtype: list[dict]
+    """
+    try:
+        locations = logic.get_action('cached_group_list')({}, {})
+    except Exception:
+        return []
+
+    result = []
+    for loc in locations:
+        is_hrp = loc.get('activity_level') == 'active'
+        if hrp is not None and is_hrp != hrp:
+            continue
+        result.append({
+            'id': loc['id'],
+            'name': loc['name'],
+            'display_name': loc['display_name'],
+            'package_count': loc.get('package_count'),
+            'hrp': is_hrp,
+        })
+
+    return result
+
+
 def hdx_user_orgs_dict(user_id, include_org_type=False):
     try:
         orgs = _get_action('organization_list_for_user', {'id': user_id})
@@ -850,11 +949,82 @@ def hdx_get_carousel_list():
     return logic.get_action('hdx_carousel_settings_show')({'max_items': 3}, {})
 
 
-def hdx_get_quick_links_list(archived=None):
+def hdx_get_quick_links_list(archived=None, exclude_crisis=False):
     result = logic.get_action('hdx_quick_links_settings_show')({}, {})
     if archived in (True, False):
         result = [item for item in result if item.get('archived',False) == archived]
+    if exclude_crisis:
+        crisis_prefixes = ('/event', '/m/event', '/dashboards', '/m/dashboards')
+        forced_urls = ('/dashboards/overview-of-data-grids', '/dashboards/archived-datasets')
+        result = [item for item in result
+                  if item.get('url', '').lower() in forced_urls
+                  or not item.get('url', '').lower().startswith(crisis_prefixes)]
     return result
+
+
+def _parse_signal_campaign_date(value):
+    try:
+        return datetime.datetime.strptime(value, '%m/%d/%Y')
+    except (TypeError, ValueError):
+        return None
+
+def hdx_fetch_last_three_signal_cards():
+    from ckanext.hdx_theme.helpers.ui_constants.landing_pages.signals import \
+        SIGNAL_CARD_INDICATOR_CATEGORIES
+
+    url = config.get('hdx.signals.csv')
+    if not url:
+        raise Exception('No URL configured for hdx.signals.csv')
+
+    response = requests.get(url, timeout=10)
+    response.raise_for_status()
+    response.encoding = 'utf-8'
+
+    csv_reader = csv.DictReader(response.text.splitlines())
+    required_columns = ['location', 'indicator_id', 'date', 'campaign_date',
+                         'summary_short', 'plot', 'hdx_url', 'campaign_url']
+    if csv_reader.fieldnames is None or not all(col in csv_reader.fieldnames for col in required_columns):
+        raise Exception('HDX Signals CSV is missing one or more required columns: {}'.format(required_columns))
+
+    rows = [row for row in csv_reader
+            if row.get('location') and row.get('indicator_id') and row.get('campaign_date')]
+    rows.sort(key=lambda r: (_parse_signal_campaign_date(r.get('campaign_date')) or datetime.datetime.min,
+                              r.get('date', ''), r.get('location', '')),
+              reverse=True)
+
+    def _safe_href(value):
+        if not value:
+            return '#'
+        parts = urlparse.urlparse(value)
+        if parts.scheme in ('http', 'https') or (parts.scheme == '' and value.startswith('/')):
+            return value
+        return '#'
+
+    def _safe_img_src(value):
+        if not value:
+            return ''
+        parts = urlparse.urlparse(value)
+        return value if parts.scheme in ('http', 'https') else ''
+
+    cards = []
+    for row in rows[:3]:
+        parsed_campaign_date = _parse_signal_campaign_date(row.get('campaign_date'))
+        campaign_date = parsed_campaign_date.strftime('%d %B %Y') if parsed_campaign_date \
+            else row.get('campaign_date', '')
+        cards.append({
+            'location': row.get('location', ''),
+            'date': campaign_date,
+            'type': SIGNAL_CARD_INDICATOR_CATEGORIES.get(row.get('indicator_id'), ''),
+            'title': row.get('summary_short', ''),
+            'description': '',
+            'image_src': _safe_img_src(row.get('plot', '')),
+            'image_alt': row.get('summary_short', ''),
+            'source_label': 'Source',
+            'source_href': _safe_href(row.get('hdx_url', '')),
+            'cta_label': 'See this Signal',
+            'cta_href': _safe_href(row.get('campaign_url', '')),
+        })
+    return cards
 
 
 def _get_context():
@@ -1071,8 +1241,9 @@ def hdx_decode_markup(value):
 
 def hdx_generate_basemap_config_string() -> str:
     conf_dict = {
-        'baseMapUrl': config.get('hdx.mapbox.baselayer.url'),
+        'baseMapUrl': '/mapbox',
         'token': config.get('hdx.mapbox.baselayer.token'),
+        'style': config.get('hdx.mapbox.style'),
     }
     return json.dumps(conf_dict)
 
@@ -1217,3 +1388,100 @@ def hdx_dataset_has_datastore_resources(resource_list: list[Any]) -> bool:
         if resource.get('datastore_active'):
             return True
     return False
+
+
+def hdx_get_user_menu_sections():
+    if not c.userobj:
+        return []
+
+    is_sysadmin = c.userobj.sysadmin
+    sections = []
+
+    if is_sysadmin:
+        sections.append({
+            'id': 'sysadmin',
+            'label': _('Sysadmin Dashboard'),
+            'items': [
+                {'label': _('All Sysadmins'), 'href': h.url_for('admin.index')},
+                {'label': _('All Users'), 'href': h.url_for('user.index')},
+                {'label': _('Carousel'), 'href': h.url_for('hdx_carousel.show')},
+                {'label': _('HDX Connect Dashboard'), 'href': h.url_for('requestdata_ckanadmin.requests_data')},
+                {'label': _('Custom/Event Pages'), 'href': h.url_for('hdx_custom_pages.index')},
+                {'label': _('Quick Links'), 'href': h.url_for('hdx_quick_links.show')},
+                {'label': _('Package Links'), 'href': h.url_for('hdx_package_links.show')},
+                {'label': _('Email'), 'href': h.url_for('requestdata_ckanadmin.email')},
+                {'label': _('Config'), 'href': h.url_for('admin.config')},
+            ],
+        })
+
+    sections.append({
+        'id': 'dashboard',
+        'label': _('User Dashboard'),
+        'items': [
+            {'label': _('Newsfeed'), 'href': h.url_for('activity.dashboard')},
+            {'label': _('My Datasets'), 'href': h.url_for('hdx_user_dashboard.datasets')},
+            {'label': _('My Organisations'), 'href': h.url_for('dashboard.organizations')},
+            {'label': _('My Locations'), 'href': h.url_for('dashboard.groups')},
+            {'label': _('HDX Connect Requests'), 'href': h.url_for('requestdata.my_requested_data', id=c.user)},
+        ],
+    })
+
+    settings_items = [
+        {'label': _('Datasets'), 'href': h.url_for('user.read', id=c.user)},
+        {'label': _('Activity Stream'), 'href': h.url_for('activity.user_activity', id=c.user)},
+    ]
+    if is_sysadmin:
+        settings_items.append({
+            'label': _('User Permission'),
+            'href': h.url_for('hdx_user_permission.read', id=c.user),
+        })
+    settings_items += [
+        {'label': _('API Tokens'), 'href': h.url_for('user.api_tokens', id=c.user)},
+        {'label': _('Notifications'), 'href': h.url_for('hdx_user.notifications', id=c.user)},
+        {'label': _('Profile and Password'), 'href': h.url_for('user.edit', id=c.user)},
+    ]
+    sections.append({
+        'id': 'settings',
+        'label': _('User Settings'),
+        'items': settings_items,
+    })
+
+    return sections
+
+
+def hdx_format_to_icon_category(format_str):
+    tabular  = {'csv', 'xlsx', 'xls', 'ods', 'tsv'}
+    geo      = {'shp', 'geojson', 'kml', 'kmz', 'geopackage', 'gpkg', 'geotiff', 'geodatabase', 'gdb'}
+    document = {'pdf', 'doc', 'docx'}
+    web      = {'html', 'htm', 'xml'}
+    fmt = (format_str or '').lower()
+    if fmt in tabular:  return 'tabular'
+    if fmt in geo:      return 'geo'
+    if fmt in document: return 'document'
+    if fmt in web:      return 'web'
+    return 'neutral'
+
+
+def hdx_format_number_si(n):
+    """Format a number with SI suffixes: 4800 → '4.8k', 1200000 → '1.2M'."""
+    try:
+        n = int(n or 0)
+    except (ValueError, TypeError):
+        return str(n)
+
+    sign = '-' if n < 0 else ''
+    n = abs(n)
+
+    if n >= 1_000_000:
+        val = n / 1_000_000
+        return sign + '{:.4g}M'.format(val)
+
+    if n >= 1_000:
+        val = n / 1_000
+        out = '{:.4g}k'.format(val)
+        # Avoid values like 999,999 → "1000k" (should become "1M").
+        if out.startswith('1000'):
+            return sign + '{:.4g}M'.format(n / 1_000_000)
+        return sign + out
+
+    return sign + str(n)

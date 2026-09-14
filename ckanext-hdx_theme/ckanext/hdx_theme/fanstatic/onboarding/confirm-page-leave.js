@@ -1,31 +1,36 @@
-$(document).ready(function () {
+(function () {
   var shouldPreventBeforeUnload = false;
-  var requiredInputs = $('#user-info-form input[required]');
+  var form = document.getElementById('user-info-form');
+  var requiredInputs = form ? Array.from(form.querySelectorAll('input[required]')) : [];
 
   function checkInputs() {
-    requiredInputs.each(function() {
-      if ($(this).val().trim() !== '') {
-        shouldPreventBeforeUnload = true;
-        return false;
-      }
+    shouldPreventBeforeUnload = requiredInputs.some(function (input) {
+      return input.value.trim() !== '';
     });
   }
 
-  $(window).on('beforeunload', function (e) {
+  window.addEventListener('beforeunload', function (e) {
     if (shouldPreventBeforeUnload) {
       e.preventDefault();
       e.returnValue = '';
     }
   });
 
-  $('#user-info-cancel-button, #user-info-submit-button').on('click', function () {
-    shouldPreventBeforeUnload = false;
+  ['user-info-cancel-button', 'user-info-submit-button'].forEach(function (id) {
+    var btn = document.getElementById(id);
+    if (btn) {
+      btn.addEventListener('click', function () {
+        shouldPreventBeforeUnload = false;
+      });
+    }
   });
 
-  requiredInputs.on('input', function () {
-    shouldPreventBeforeUnload = false;
-    checkInputs();
+  requiredInputs.forEach(function (input) {
+    input.addEventListener('input', function () {
+      shouldPreventBeforeUnload = false;
+      checkInputs();
+    });
   });
 
   checkInputs();
-});
+})();

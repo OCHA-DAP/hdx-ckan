@@ -79,7 +79,7 @@ function prepareMap(countDatasets, openNewWindow){
       opacity: 0.2,
       color: '#ccc',
       fillOpacity: 1.0,
-      fillColor: '#f5837b'
+      fillColor: '#a8d5c9'
     });
     popup.setLatLng(e.latlng);
     popup.setContent("<div class='marker-container'>" +
@@ -97,7 +97,7 @@ function prepareMap(countDatasets, openNewWindow){
       return {
         weight: 0,
         fillOpacity: 0.5,
-        fillColor: '#f5837b'
+        fillColor: '#a8d5c9'
       };
     }
 
@@ -128,7 +128,7 @@ function prepareMap(countDatasets, openNewWindow){
       highlightFeature(e);
       return;
     }
-    openURL("group/" + code);
+    openURL("/group/" + code);
   };
 
   onEachFeature = function(feature, layer) {
@@ -157,9 +157,11 @@ function prepareMap(countDatasets, openNewWindow){
   }
   map = L.map('map', {
     center: [20, 0],
-    zoom: 2,
-    minZoom: 2,
-    maxZoom: 4,
+    zoom: 2.4,
+    zoomSnap: 0.1,
+    zoomDelta: 0.5,
+    minZoom: 2.4,
+    maxZoom: 4.4,
     tileLayer: {
       continuousWorld: false,
       noWrap: false

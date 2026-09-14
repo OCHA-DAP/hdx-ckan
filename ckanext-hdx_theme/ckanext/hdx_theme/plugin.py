@@ -20,6 +20,7 @@ from ckanext.hdx_theme.util.http_exception_helper import FlaskEmailFilter
 from ckanext.hdx_theme.views.archived_quick_links_custom_settings import hdx_archived_quick_links
 from ckanext.hdx_theme.views.colored_page import hdx_colored_page
 from ckanext.hdx_theme.views.count import hdx_count
+from ckanext.hdx_theme.views.crisis_pages import hdx_crisis_pages
 from ckanext.hdx_theme.views.custom_pages import hdx_custom_pages
 from ckanext.hdx_theme.views.custom_settings import hdx_carousel
 from ckanext.hdx_theme.views.ebola import hdx_ebola
@@ -77,7 +78,6 @@ class HDXThemePlugin(plugins.SingletonPlugin):
     # IConfigurer
     def update_config(self, config):
         toolkit.add_template_directory(config, 'templates')
-        toolkit.add_template_directory(config, 'templates_legacy')
         toolkit.add_public_directory(config, 'public')
         # self._add_resource('fanstatic', 'hdx_theme')
         toolkit.add_public_directory(config, 'fanstatic')
@@ -210,6 +210,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'markdown_extract_strip': hdx_helpers.markdown_extract_strip,
             'render_markdown_strip': hdx_helpers.render_markdown_strip,
             'render_date_from_concat_str': hdx_helpers.render_date_from_concat_str,
+            'render_date_range_label': hdx_helpers.render_date_range_label,
             'hdx_version': hdx_helpers.hdx_version,
             'hdx_build_nav_icon_with_message': hdx_helpers.hdx_build_nav_icon_with_message,
             'hdx_build_nav_no_icon': hdx_helpers.hdx_build_nav_no_icon,
@@ -241,6 +242,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'json_dumps': json.dumps,
             'hdx_popular': hdx_helpers.hdx_popular,
             'get_dataset_date_format': hdx_helpers.get_dataset_date_format,
+            'hdx_format_date': hdx_helpers.hdx_format_date,
             'hdx_methodology_list': hdx_helpers.hdx_methodology_list,
             'hdx_license_list': hdx_helpers.hdx_license_list,
             'hdx_location_list': hdx_helpers.hdx_location_list,
@@ -250,6 +252,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             # 'hdx_get_layer_info': hdx_helpers.hdx_get_layer_info,
             'hdx_get_carousel_list': hdx_helpers.hdx_get_carousel_list,
             'hdx_get_quick_links_list': hdx_helpers.hdx_get_quick_links_list,
+            'hdx_get_user_menu_sections': hdx_helpers.hdx_get_user_menu_sections,
             'hdx_get_frequency_by_value': hdx_helpers.hdx_get_frequency_by_value,
             'hdx_is_current_user_a_maintainer': hdx_helpers.hdx_is_current_user_a_maintainer,
             'hdx_dataset_follower_count': hdx_helpers.hdx_dataset_follower_count,
@@ -269,12 +272,15 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'hdx_decode_markup': hdx_helpers.hdx_decode_markup,
             'hdx_generate_basemap_config_string': hdx_helpers.hdx_generate_basemap_config_string,
             'hdx_location_dict': hdx_helpers.hdx_location_dict,
+            'hdx_get_locations': hdx_helpers.hdx_get_locations,
             'hdx_user_orgs_dict': hdx_helpers.hdx_user_orgs_dict,
             'hdx_supports_notifications': hdx_helpers.hdx_supports_notifications,
             'HDX_CONST': const,
             'facet_url_extra_args': hdx_helpers.facet_url_extra_args,
             'build_facet_filter_url': hdx_helpers.build_facet_filter_url,
             'hdx_dataset_has_datastore_resources': hdx_helpers.hdx_dataset_has_datastore_resources,
+            'hdx_format_to_icon_category': hdx_helpers.hdx_format_to_icon_category,
+            'hdx_format_number_si': hdx_helpers.hdx_format_number_si,
         }
 
     def get_actions(self):
@@ -406,7 +412,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
     def get_blueprint(self):
         return [hdx_colored_page, hdx_faqs, hdx_main_faq, hdx_ebola, hdx_global_file_server, hdx_local_image_server,
                 hdx_carousel, hdx_custom_pages, hdx_quick_links, hdx_package_links, hdx_archived_quick_links,
-                hdx_splash, hdx_count, hdx_landing_pages, hdx_redirect_manager]
+                hdx_splash, hdx_count, hdx_landing_pages, hdx_redirect_manager, hdx_crisis_pages]
 
     # IClick
     def get_commands(self):

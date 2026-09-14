@@ -2,7 +2,9 @@
 Wrapper for the list of datasets displayed in search results.
 This snippet contains the details around the list itself. It calls indicator_list.html or package_list.html
 
-packages       - A list of packages to display.
+packages         - A list of packages to display.
+emphasize_title  - If true, passed through to package_list.html to size the
+                    "Datasets" heading like a page title (default: false).
 
 
 Example:
@@ -23,15 +25,29 @@ Example:
 
       {% block package_search_results_list %}
           {{ h.snippet('search/snippets/package_list.html',
-                query=my_c.q, packages=my_c.page.items, packages_count=my_c.page.item_count,
+                query=my_c.q, packages=my_c.page.items, packages_count=my_c.full_facet_info.get('num_of_total_items'),
                 full_facet_info=my_c.full_facet_info,
                 ext_page_size=my_c.ext_page_size, sorting_selected=my_c.sort_by_selected,
-                other_links=my_c.other_links, display_min=display_min, show_url=show_url) }}
+                other_links=my_c.other_links, display_min=display_min, show_url=show_url, v2=v2,
+                emphasize_title=emphasize_title if emphasize_title is defined else False) }}
       {% endblock %}
     </div>
 
     {% block page_pagination %}
+      {% if v2 %}
+        {# the page number is concatenated after base_url, so any #fragment the url
+           generator appends (e.g. the org page's #datasets-section) must be stripped #}
+        {% set base_url = my_c.page._url_generator(page='').split('#')[0] %}
+        <div class="hdx-v2-pagination-row">
+          {% snippet 'v2/components/pagination.html',
+              size='md',
+              current_page=my_c.page.page,
+              total_pages=my_c.page.page_count,
+              base_url=base_url %}
+        </div>
+      {% else %}
         {{ my_c.page.pager(q=my_c.q) }}
+      {% endif %}
     {% endblock %}
 
 </section>

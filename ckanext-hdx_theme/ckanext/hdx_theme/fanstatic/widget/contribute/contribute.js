@@ -41,7 +41,7 @@ function _generateContributeFrame(url) {
   iframe.on('load', function () {
     const iframeDocument = iframe[0].contentDocument || iframe[0].contentWindow.document;
 
-    $(iframeDocument).on('click', '.close-iframe, .new-header a, .breadcrumb a, .hdx-footer a', function (event) {
+    $(iframeDocument).on('click', '.close-iframe, .new-header a, .breadcrumb a, .hdx-v2-breadcrumb-row a, .hdx-footer a', function (event) {
       const url = $(this).attr('href');
       const target = $(this).attr('target');
       if (url !== '#' && target !== '_blank') {

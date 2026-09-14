@@ -1,0 +1,61 @@
+// ============================================================
+// hapi-landing-page.less
+// HDX HAPI landing page (/hapi/) — v2 page-specific styles
+// Figma sources: hapi-xl.html, hapi-md.html, hapi-sm.html
+// ============================================================
+
+@import "../mixins.less";
+
+// ── Hero row (off-white background — #FAFBFB per Figma) ───────
+.hdx-v2-hapi-header-section {
+    background-color: var(--hdx-neutral-01);
+}
+
+// ── Body row (sidebar + content area — white) ─────────────────
+.hdx-v2-hapi-row {
+    background-color: var(--hdx-neutral-0);
+}
+
+// ── Sidebar (padding only — layout via generic columns) ──────
+.hdx-v2-hapi-sidebar {
+    @media (min-width: @hdx-bp-xl) {
+        padding: var(--hdx-space-10) 0;
+    }
+}
+
+// ── Content column ────────────────────────────────────────────
+.hdx-v2-hapi-content {
+    padding: var(--hdx-space-10) 0 var(--hdx-space-12);
+}
+
+// ── Section heading ───────────────────────────────────────────
+.hdx-v2-hapi-section-heading {
+    .hdx-section-title();
+    margin: 0 0 var(--hdx-space-8);
+}
+
+// ── Section wrappers ──────────────────────────────────────────
+.hdx-v2-hapi-section {
+    padding: var(--hdx-space-8) 0;
+
+    .hdx-scroll-offset-header();
+}
+
+// ── Data Availability iframe ──────────────────────────────────
+.hdx-v2-hapi-iframe {
+    width:   100%;
+    height:  1100px;
+    border:  none;
+    display: block;
+}
+
+// ── Partner logo grid ─────────────────────────────────────────
+.hdx-v2-hapi-partners-grid {
+    display:               grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap:                   var(--hdx-space-8);
+}
+
+.hdx-v2-hapi-partner-logo {
+    .hdx-partner-logo();
+}

@@ -26,9 +26,9 @@ class TestBreadcrumbs(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
         result = self.app.get(url)
         page = result.body
 
-        begin_str = '<ol class="breadcrumb" vocab="https://schema.org/" typeof="BreadcrumbList">'
-        end_str = '</ol>'
-        search_strings = ['/dataset', 'Test Indicator 1']
+        begin_str = '<nav class="c-breadcrumb"'
+        end_str = '</nav>'
+        search_strings = ['Hdx Test Org', 'Test Indicator 1']
 
         hdx_test_util.are_strings_in_text(page, search_strings, begin_str, end_str)
 
@@ -37,8 +37,8 @@ class TestBreadcrumbs(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
         result = self.app.get(url)
         page = result.body
 
-        begin_str = '<ol class="breadcrumb" vocab="https://schema.org/" typeof="BreadcrumbList">'
-        end_str = '</ol>'
-        search_strings = ['/dataset', 'Test Dataset 1']
+        begin_str = '<nav class="c-breadcrumb"'
+        end_str = '</nav>'
+        search_strings = ['Hdx Test Org', 'Test Dataset 1']
 
         hdx_test_util.are_strings_in_text(page, search_strings, begin_str, end_str)

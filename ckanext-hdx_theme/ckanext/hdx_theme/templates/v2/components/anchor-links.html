@@ -1,0 +1,120 @@
+{#
+  Snippet: anchor-links.html
+  Path:    templates/snippets/components/navigation/anchor-links.html
+
+  Renders a c-anchor-links vertical sidebar list.
+  Optionally wraps it in a sticky desktop container with a heading, and
+  renders a companion mobile sticky dropdown (c-anchor-links-mobile).
+
+  Parameters
+  ─────────────────────────────────────────────────
+  items                {list}    List of dicts: {label, href, active (bool),
+                                 external (bool, optional)}.
+                                 When external=True the link opens in a new
+                                 tab and shows an external-link icon.
+                                 default: []
+  extra_classes        {string}  Extra classes on the <nav> element.
+                                 default: ''
+  heading              {string}  Optional heading rendered above the nav list inside
+                                 the sticky wrapper. The wrapper always renders so the
+                                 nav is sticky regardless of whether a heading is set.
+                                 default: ''
+  with_mobile_dropdown {bool}    Also renders the mobile sticky dropdown
+                                 (c-anchor-links-mobile) after the desktop nav.
+                                 default: false
+  mobile_only          {bool}    Renders only the mobile sticky dropdown —
+                                 no desktop nav or heading wrapper. Intended
+                                 for use in {% block mobile_sticky_nav %} so
+                                 the dropdown lives outside the hidden sidebar.
+                                 default: false
+  mobile_label         {string}  Fixed label shown on the mobile dropdown's
+                                 toggle button, e.g. 'Jump to sub-categories'
+                                 as a static CTA. When unset, falls back to
+                                 the existing behavior (items[0].label) —
+                                 appropriate for a "current section" style
+                                 nav rather than a plain jump-index.
+                                 default: ''
+  mobile_wrapper_extra_classes {string}
+                                 Extra classes on the .c-anchor-links-mobile
+                                 wrapper div itself (e.g. a scoped modifier
+                                 to opt out of its built-in sticky behavior
+                                 for non-page-level use, such as inside a
+                                 drawer).
+                                 default: ''
+  ─────────────────────────────────────────────────
+  Examples
+
+  Desktop list only (existing usage):
+  {% snippet 'v2/components/anchor-links.html',
+      items=[
+        {'label': 'Overview', 'href': '#overview', 'active': True},
+      ] %}
+
+  Full anchor nav (desktop + mobile dropdown):
+  {% snippet 'v2/components/anchor-links.html',
+      items=ns.anchor_items,
+      heading=_('Dataset details'),
+      with_mobile_dropdown=True %}
+#}
+
+{% set items                 = items                 if items                 is defined else [] %}
+{% set extra_classes         = extra_classes         if extra_classes         is defined else '' %}
+{% set heading               = heading               if heading               is defined else '' %}
+{% set with_mobile_dropdown  = with_mobile_dropdown  if with_mobile_dropdown  is defined else false %}
+{% set mobile_only           = mobile_only           if mobile_only           is defined else false %}
+{% set mobile_label          = mobile_label          if mobile_label          is defined else '' %}
+{% set mobile_wrapper_extra_classes = mobile_wrapper_extra_classes if mobile_wrapper_extra_classes is defined else '' %}
+
+{# ── Desktop nav (with optional sticky wrapper + heading) ─── #}
+
+{% if not mobile_only and items %}
+<div class="c-anchor-links-wrapper">
+  {% if heading %}
+    <p class="c-anchor-links__heading">{{ heading }}</p>
+  {% endif %}
+
+  <nav class="c-anchor-links{{ ' ' ~ extra_classes if extra_classes }}"
+       aria-label="{{ _('Page sections') }}">
+    {% for item in items %}
+      {% set item_class = 'c-anchor-links__item c-anchor-links__item--' ~ ('active' if item.active else 'inactive') %}
+      <a class="{{ item_class }}"
+         href="{{ item.href }}"
+         {% if item.active %}aria-current="true"{% endif %}
+         {% if item.external %}target="_blank" rel="noopener"{% endif %}>
+        <span class="c-anchor-links__border" aria-hidden="true"></span>
+        <div class="c-anchor-links__content">
+          <span class="c-anchor-links__label">{{ item.label }}</span>
+          {% if item.external %}<span class="c-anchor-links__ext-icon" aria-hidden="true">{% include 'v2/icons/open-in-new.svg' %}</span>{% endif %}
+        </div>
+      </a>
+    {% endfor %}
+  </nav>
+</div>
+{% endif %}{# /not mobile_only #}
+
+{# ── Mobile sticky dropdown ──────────────────────────────── #}
+
+{% if (with_mobile_dropdown or mobile_only) and items %}
+  {% set _active_label = mobile_label if mobile_label else (items[0].label if items else '') %}
+  <div class="c-anchor-links-mobile{{ ' ' ~ mobile_wrapper_extra_classes if mobile_wrapper_extra_classes }}"
+       data-module="anchor-dropdown">
+    <button class="c-anchor-links-mobile__toggle"
+            type="button"
+            aria-expanded="false"
+            aria-controls="anchor-dropdown-panel">
+      <span class="c-anchor-links-mobile__label">{{ _active_label }}</span>
+      <span class="c-anchor-links-mobile__chevron" aria-hidden="true">{% include 'v2/icons/chevron-down.svg' %}</span>
+    </button>
+    <ul class="c-anchor-links-mobile__panel"
+        id="anchor-dropdown-panel"
+        hidden>
+      {% for item in items %}
+        <li>
+          <a class="c-anchor-links-mobile__item{% if item.active %} is-active{% endif %}"
+             href="{{ item.href }}"
+             {% if item.external %}target="_blank" rel="noopener"{% endif %}>{{ item.label }}{% if item.external %} <span aria-hidden="true">{% include 'v2/icons/open-in-new.svg' %}</span>{% endif %}</a>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+{% endif %}

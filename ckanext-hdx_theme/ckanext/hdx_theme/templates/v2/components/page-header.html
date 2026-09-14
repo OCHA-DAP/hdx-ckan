@@ -1,0 +1,468 @@
+{#
+  Snippet: page-header.html
+  Path:    templates/v2/components/page-header.html
+
+  Unified page hero header — one generic layout for dataset, resource,
+  org, landing and crisis pages. All differences are param-driven.
+
+  ── Parameters ───────────────────────────────────────────────
+  title               {string}  Title text.  default: ''
+  compact_title       {bool}    Title fixed at 1.5rem, no XL scale-up
+                                (resource pages).  default: False
+  subtitle            {string}  Optional subtitle rendered below title (semibold).  default: ''
+  member_since        {string}  Optional pre-rendered "Member since {date}" line
+                                below the title (org pages).  default: ''
+  description         {string}  Full description.  default: ''
+  org_name            {string}  Organisation display name.  default: ''
+  logo_src            {string}  Logo image URL.  default: ''
+  header_actions      {list}    {label, href, icon_src, attrs, show} dicts —
+                                inline action links in the right card.  default: []
+  header_stats        {list}    {label, value} dicts — count pairs in the right
+                                card, below a divider (org pages).  default: []
+  contact_href        {string}  Link to contact page.  default: '#'
+  download_count      {int}     Approx downloads.  default: 0
+  archived            {bool}    Show "Archived" label.  default: False
+  request_only        {bool}    Show "Request only data" label.  default: False
+  cod_dataset         {bool}    Show "COD+" label.  default: False
+  links_list          {list}    {label, title, url, newTab} dicts.  default: []
+  page_list           {list}    {title, href} dicts - ongoing crisis/event pages this
+                                dataset belongs to (rendered as "Part of {title}" +
+                                "View crisis page" link groups).  default: []
+  supports_notifications {bool} Show "Get notified" button.  default: False
+  state_label_text    {string}  Optional state chip text (e.g. 'draft'),
+                                 rendered right after the title.  default: ''
+  state_label_color   {string}  c-label color for state_label_text.  default: 'grey'
+  title_actions       {list}    {label, href, icon_src, icon_position, style, size} dicts —
+                                horizontal text-button row under the title, separated by "|",
+                                visible from XL only (Locations page).  default: []
+  title_count         {string}  Count badge shown next to the title (Datasets/Dataviz Gallery/
+                                Archived Dataviz list-page titles).  default: ''
+  extra_classes       {string}  Extra classes on the root section.  default: ''
+
+  meta_items          {list}    Metadata strip entries (strip + divider render
+                                only when non-empty). 3 items get the resource-
+                                style --cols-3 grid; otherwise the 4-column
+                                dataset grid. Each item:
+    label            {string}  required — column heading
+    value            {string}  value text.  default: ''
+    value_href       {string}  render value as c-text-link (resource URL).  default: ''
+    chip             {dict}    {text, color} — c-label size xs after the value
+                               (Sub-national / Up to date).  default: None
+    tooltip          {dict}    {text, id, aria_label} — info-icon in the
+                               label row (time period).  default: None
+    copy_value       {string}  when set, a copy-button in the label row copies
+                               this text (resource ID / URL).  default: ''
+    link             {dict}    {label, href} — text-button in the label row
+                               (Location "View all", Source "View more").  default: None
+    link_on_overflow {bool}    link starts hidden; page-header.js reveals it when
+                               the value overflows one line. Implies truncate.  default: False
+    truncate         {bool}    single-line ellipsis value.  default: False
+
+  ── Download CTA / format parameters ─────────────────────────
+  file_format       {string}  Format for file-type icon.  default: ''
+  file_format_text  {string}  Format label next to the icon.  default: ''
+  download_url      {string}  Direct download href.  default: ''
+  can_download      {bool}    Download access check.  default: False
+  download_size     {string}  Pre-formatted size shown in the label.  default: ''
+  resource_type     {string}  GA class suffix on the download button.  default: ''
+  ga_resource_title {string}  GA tracking title.  default: ''
+  ga_resource_id    {string}  GA tracking id.  default: ''
+  export_json_url   {string}  Metadata JSON export URL.  default: ''
+  export_csv_url    {string}  Metadata CSV export URL.  default: ''
+  ─────────────────────────────────────────────────────────────
+#}
+
+{# ── Defaults ──────────────────────────────────────────────── #}
+{% set title               = title               if title               is defined else '' %}
+{% set subtitle            = subtitle            if subtitle            is defined else '' %}
+{% set member_since        = member_since        if member_since        is defined else '' %}
+{% set description         = description         if description         is defined else '' %}
+{% set org_name            = org_name            if org_name            is defined else '' %}
+{% set logo_src            = logo_src            if logo_src            is defined else '' %}
+{% set header_actions      = header_actions      if header_actions      is defined else [] %}
+{% set header_stats        = header_stats        if header_stats        is defined else [] %}
+{% set contact_href        = contact_href        if contact_href        is defined else '#' %}
+{% set download_count      = download_count      if download_count      is defined else 0 %}
+{% set archived            = archived            if archived            is defined else False %}
+{% set request_only        = request_only        if request_only        is defined else False %}
+{% set cod_dataset         = cod_dataset         if cod_dataset         is defined else False %}
+{% set links_list          = links_list          if links_list          is defined else [] %}
+{% set page_list           = page_list           if page_list           is defined else [] %}
+{% set supports_notifications = supports_notifications if supports_notifications is defined else False %}
+{% set meta_items          = meta_items          if meta_items          is defined else [] %}
+{% set title_actions       = title_actions       if title_actions       is defined else [] %}
+{% set title_count         = title_count         if title_count         is defined else '' %}
+{% set compact_title       = compact_title       if compact_title       is defined else False %}
+{% set extra_classes       = extra_classes       if extra_classes       is defined else '' %}
+{% set state_label_text    = state_label_text    if state_label_text    is defined else '' %}
+{% set state_label_color   = state_label_color   if state_label_color   is defined else 'grey' %}
+{% set cta_label           = cta_label           if cta_label           is defined else '' %}
+{% set cta_href            = cta_href            if cta_href            is defined else '' %}
+{% set cta_icon_src        = cta_icon_src        if cta_icon_src        is defined else '' %}
+{% set edit_mode           = edit_mode           if edit_mode           is defined else False %}
+{% set pkg_id              = pkg_id              if pkg_id              is defined else '' %}
+{% set pkg_state           = pkg_state           if pkg_state           is defined else '' %}
+{% set membership          = membership          if membership          is defined else None %}
+{% set hide_membership     = hide_membership     if hide_membership     is defined else True %}
+{% set org_id              = org_id              if org_id              is defined else '' %}
+{% set logo_href           = logo_href           if logo_href           is defined else '' %}
+{% set file_format         = file_format         if file_format         is defined else '' %}
+{% set download_url        = download_url        if download_url        is defined else '' %}
+{% set can_download        = can_download        if can_download        is defined else False %}
+{% set ga_resource_title   = ga_resource_title   if ga_resource_title   is defined else '' %}
+{% set ga_resource_id      = ga_resource_id      if ga_resource_id      is defined else '' %}
+{% set export_json_url     = export_json_url     if export_json_url     is defined else '' %}
+{% set export_csv_url      = export_csv_url      if export_csv_url      is defined else '' %}
+{% set resource_type       = resource_type       if resource_type       is defined else '' %}
+{% set file_format_text    = file_format_text    if file_format_text    is defined else '' %}
+{% set download_size       = download_size       if download_size       is defined else '' %}
+
+{% set ns_actions = namespace(visible=[]) %}
+{% for action in header_actions %}
+  {% if action.show is not defined or action.show %}
+    {% set ns_actions.visible = ns_actions.visible + [action] %}
+  {% endif %}
+{% endfor %}
+{% set org_name_visible = org_name and (
+    not request_only
+    or edit_mode
+    or (not hide_membership and membership and membership.display_group_message)
+  ) %}
+{% set has_card = logo_src or org_name_visible or ns_actions.visible or header_stats %}
+
+<section class="c-page-header{{ ' c-page-header--compact-title' if compact_title else '' }}{{ ' ' ~ extra_classes if extra_classes else '' }}">
+
+  {# ── TOP ─────────────────────────────────────────────────── #}
+  <div class="c-page-header__top{{ '' if has_card else ' c-page-header__top--no-card' }}">
+
+    <div class="c-page-header__left">
+      <div class="c-page-header__description">
+
+        {# File format icon + label — resource #}
+        {% if file_format %}
+        <div class="c-page-header__format">
+          {% snippet 'v2/components/file-type-icon.html', format=file_format, aria_label=file_format_text %}
+          {% if file_format_text %}
+            <span class="c-page-header__format-label">{{ file_format_text | upper }}</span>
+          {% endif %}
+        </div>
+        {% endif %}
+
+        {# Labels row — dataset #}
+        {% if archived or request_only or cod_dataset or links_list or page_list or (pkg_state and pkg_state.startswith('deleted')) %}
+        <div class="c-page-header__labels">
+
+          {% if pkg_state and pkg_state.startswith('deleted') %}
+            {% snippet 'v2/components/label.html', text='Deleted', color='red', size='s' %}
+          {% endif %}
+
+          {% if archived %}
+            {% snippet 'v2/components/label.html',
+                text='Archived', color='dark', size='s',
+                icon=True, icon_src='v2/icons/archive.svg' %}
+          {% endif %}
+
+          {% if request_only %}
+            {% snippet 'v2/components/label.html',
+                text='Request only data', color='yellow', size='s',
+                icon=True, icon_src='v2/icons/lock.svg' %}
+          {% endif %}
+
+          {% if cod_dataset %}
+            {% snippet 'v2/components/label.html', text='COD+', color='grey', size='s' %}
+          {% endif %}
+
+          {% for link in links_list %}
+            <div class="c-page-header__link-group">
+              {% if link.label %}
+                {% snippet 'v2/components/label.html',
+                    text=link.label|replace('This dataset is part', 'Part'),
+                    color='grey', size='s' %}
+              {% endif %}
+              {% snippet 'v2/components/text-button.html',
+                  style='tertiary', size='s', label=link.title,
+                  icon_position='right',
+                  icon_src='v2/icons/arrow-right.svg',
+                  tag='a', href=link.url,
+                  attrs={'target': '_blank' if link.newTab else '_self'} %}
+            </div>
+          {% endfor %}
+
+          {% for pg in page_list %}
+            <div class="c-page-header__link-group">
+              {% snippet 'v2/components/label.html',
+                  text=_('Part of') ~ ' ' ~ pg.title,
+                  color='grey', size='s' %}
+              {% snippet 'v2/components/text-button.html',
+                  style='tertiary', size='s', label=_('View crisis page'),
+                  icon_position='right',
+                  icon_src='v2/icons/arrow-right.svg',
+                  tag='a', href=pg.href %}
+            </div>
+          {% endfor %}
+
+        </div>
+        {% endif %}
+
+        {# Title — omitted when empty (e.g. crisis page show_title=off).
+           title_count wraps it with a count badge (Datasets/Dataviz Gallery/
+           Archived Dataviz list-page titles); otherwise rendered bare. #}
+        {% if title %}
+          {% set title_html %}
+            <h1 class="c-page-header__title"
+                {% if edit_mode %}
+                  data-module="hdx-quick-edit"
+                  data-module-anchor="field_title"
+                  data-module-dataset="{{ pkg_id }}"
+                {% endif %}>{{ title }}</h1>
+          {% endset %}
+          {% if title_count %}
+            <div class="c-page-header__title-row">
+              {{ title_html }}
+              <span class="c-page-header__title-count">{{ title_count }}</span>
+            </div>
+          {% else %}
+            {{ title_html }}
+          {% endif %}
+        {% endif %}
+
+        {# Title actions — optional horizontal text-button row under the title,
+           visible from XL only (e.g. Locations "Interactive map | Alphabetical order") #}
+        {% if title_actions %}
+        <div class="c-page-header__title-actions">
+          {% for action in title_actions %}
+            {% snippet 'v2/components/text-button.html',
+                style=action.style if action.style is defined else 'tertiary',
+                size=action.size if action.size is defined else 'm',
+                label=action.label,
+                icon_position=action.icon_position if action.icon_position is defined else 'left',
+                icon_src=action.icon_src if action.icon_src is defined else '',
+                tag='a', href=action.href %}
+            {% if not loop.last %}
+              <span class="c-page-header__title-action-sep" aria-hidden="true">|</span>
+            {% endif %}
+          {% endfor %}
+        </div>
+        {% endif %}
+
+        {# State chip — optional, independent of the title (e.g. crisis page 'draft') #}
+        {% if state_label_text %}
+          {% snippet 'v2/components/label.html',
+              text=state_label_text, color=state_label_color, size='s' %}
+        {% endif %}
+
+        {# Subtitle — optional semibold paragraph below title #}
+        {% if subtitle %}
+          <p class="c-page-header__subtitle">{{ subtitle }}</p>
+        {% endif %}
+
+        {# Member since — optional muted line below title (org pages) #}
+        {% if member_since %}
+          <p class="c-page-header__member-since">{{ member_since }}</p>
+        {% endif %}
+
+        {# Description + show more — when provided #}
+        {% if description %}
+        <div class="c-page-header__desc"
+             data-module="clamped-text{{ ' hdx-quick-edit' if edit_mode else '' }}"
+             {% if edit_mode %}
+               data-module-anchor="field_notes"
+               data-module-dataset="{{ pkg_id }}"
+             {% endif %}>
+          <div class="c-page-header__desc-text" data-clamped-content>{{ description }}</div>
+          {% snippet 'v2/components/text-button.html',
+              style='tertiary', size='s', label='Show more',
+              icon_position='right',
+              icon_src='v2/icons/chevron-down.svg',
+              tag='button', button_type='button',
+              attrs={'data-clamped-toggle': ''} %}
+        </div>
+        {% endif %}
+
+        {# Optional CTA button — landing pages only (cta_href must be provided) #}
+        {% if cta_href %}
+          {% snippet 'v2/components/button.html',
+              tag='a', href=cta_href,
+              style='primary', type='text', size='m',
+              state='enabled',
+              icon_src=cta_icon_src,
+              label=cta_label %}
+        {% endif %}
+
+      </div>
+      {# end __description #}
+
+      {# CTA block (notifications + download count) — dataset only #}
+      {% if supports_notifications or download_count %}
+      <div class="c-page-header__cta">
+        {% if supports_notifications %}
+          {% snippet 'notification_platform/buttons.html',
+              object_type=notification_object_type if notification_object_type is defined else 'dataset',
+              object_id=notification_object_id if notification_object_id is defined else pkg_id,
+              object_dict=notification_object_dict if notification_object_dict is defined else {} %}
+        {% endif %}
+        {% if download_count %}
+          <div class="c-page-header__downloads">
+            {% include h.url_for_static('v2/icons/trend-up.svg') %}
+            <span>{{ download_count }} downloads</span>
+          </div>
+        {% endif %}
+      </div>
+      {% endif %}
+
+    </div>
+    {# end __left #}
+
+    {# Org card — logo + contact/edit/group-message actions + stats.
+       Repositions via CSS Grid on __top: stacked below __left at SM,
+       right-hand sidebar beside __left at MD+. #}
+    {% if has_card %}
+    <div class="c-page-header__right-card">
+      {% if logo_src %}
+        {% if logo_href %}
+          <a class="c-page-header__logo-link mx-ga-dimension-organization" href="{{ logo_href }}">
+            <img class="c-page-header__logo" src="{{ logo_src }}" alt="{{ org_name if org_name else title }}">
+          </a>
+        {% else %}
+          <img class="c-page-header__logo" src="{{ logo_src }}" alt="{{ org_name if org_name else title }}">
+        {% endif %}
+      {% endif %}
+      {% if org_name %}
+        {% if not request_only %}
+          {% snippet 'v2/components/text-button.html',
+              style='tertiary', size='m', label='Contact the contributor',
+              icon_position='left', icon_src='v2/icons/mail.svg',
+              tag='a', href=contact_href,
+              attrs={'id': 'contact-the-contributor'} %}
+        {% endif %}
+        {% if edit_mode %}
+          {% snippet 'v2/components/text-button.html',
+              style='tertiary', size='m', label='Edit Dataset',
+              icon_position='left', icon_src='v2/icons/edit.svg',
+              tag='a', href='#',
+              extra_classes='contribute-popup-init',
+              attrs={'onclick': "contributeAddDetails('" ~ pkg_id ~ "', 'dataset')",
+                     'dataset-id': pkg_id} %}
+        {% endif %}
+        {% if not hide_membership and membership and membership.display_group_message %}
+          {% snippet 'v2/components/text-button.html',
+              style='tertiary', size='m', label='Group message',
+              icon_position='left', icon_src='v2/icons/message.svg',
+              tag='a', href='#',
+              attrs={'id': 'contact-members'} %}
+        {% endif %}
+      {% endif %}
+      {% if ns_actions.visible %}
+        <div class="c-page-header__card-actions">
+          {% for action in ns_actions.visible %}
+            {% snippet 'v2/components/text-button.html',
+                style='tertiary', size='m', label=action.label,
+                icon_position='left', icon_src=action.icon_src,
+                tag='a', href=action.href if action.href else '#',
+                attrs=action.attrs if action.attrs else {} %}
+          {% endfor %}
+        </div>
+      {% endif %}
+      {% if header_stats %}
+        {% if ns_actions.visible %}<hr class="c-divider">{% endif %}
+        <div class="c-page-header__card-stats">
+          {% for stat in header_stats %}
+            <div class="c-page-header__card-stat">
+              <span class="c-page-header__card-stat-label">{{ stat.label }}</span>
+              <span class="c-page-header__card-stat-value">{{ stat.value }}</span>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+    {% endif %}
+
+  </div>
+  {# end __top #}
+
+  {# ── DOWNLOAD + EXPORT ACTIONS ───────────────────────────── #}
+  {% if can_download %}
+  <div class="c-page-header__cta c-page-header__cta--row">
+
+    {% set _dl_extra = 'ga-download resource-url-analytics resource-type-' ~ resource_type %}
+    {% set _dl_label = _('Download') ~ ' (' ~ download_size ~ ')' if download_size else _('Download') %}
+    {% snippet 'v2/components/button.html',
+        style='primary', size='m',
+        label=_dl_label,
+        icon_position='left',
+        icon_src='v2/icons/download.svg',
+        tag='a', href=download_url,
+        extra_classes=_dl_extra,
+        attrs={'data-resource-name': ga_resource_title, 'data-resource-id': ga_resource_id} %}
+
+    {% if export_json_url and export_csv_url %}
+    {% snippet 'v2/components/dropdown.html',
+        size='m',
+        placeholder=_('Export metadata'),
+        navigate=True,
+        items=[
+          {'value': export_json_url, 'label': _('JSON'), 'active': False},
+          {'value': export_csv_url,  'label': _('CSV'),  'active': False}
+        ] %}
+    {% endif %}
+
+  </div>
+  {% endif %}
+
+  {# ── METADATA STRIP — generic, driven by meta_items ──────── #}
+  {% if meta_items %}
+  <hr class="c-divider">
+  <div class="c-page-header__metadata{{ ' c-page-header__metadata--cols-3' if meta_items|length == 3 else '' }}">
+
+    {% for item in meta_items %}
+    <div class="c-page-header__meta-item"{% if item.link_on_overflow %} data-header-meta-overflow{% endif %}>
+      <div class="c-page-header__meta-label-row">
+        <span class="c-page-header__meta-label">{{ item.label }}</span>
+        {% if item.copy_value %}
+          {% snippet 'v2/components/copy-button.html',
+              value=item.copy_value, style='secondary', size='s',
+              icon_position='left', label=_('Copy') %}
+        {% endif %}
+        {% if item.link %}
+          {% snippet 'v2/components/text-button.html',
+              style='tertiary', size='s', label=item.link.label,
+              icon_position='right', icon_src='v2/icons/arrow-down.svg',
+              tag='a', href=item.link.href,
+              extra_classes='c-page-header__meta-view-more' if item.link_on_overflow else '' %}
+        {% endif %}
+        {% if item.tooltip %}
+          {% snippet 'v2/components/info-icon.html',
+              aria_label=item.tooltip.aria_label,
+              tooltip_text=item.tooltip.text,
+              tooltip_id=item.tooltip.id %}
+        {% endif %}
+      </div>
+      <div class="c-page-header__meta-value{{ ' c-page-header__meta-value--truncate' if item.truncate or item.link_on_overflow else '' }}">
+        {% if item.value_href %}
+          {% snippet 'v2/components/text-link.html',
+              label=item.value, href=item.value_href,
+              style='tertiary', size='xs' %}
+        {% elif item.value %}<span>{{ item.value }}</span>{% endif %}
+        {% if item.chip %}
+          {% snippet 'v2/components/label.html',
+              text=item.chip.text, color=item.chip.color or 'cyan', size='xs' %}
+        {% endif %}
+      </div>
+    </div>
+    {% endfor %}
+
+  </div>
+  {% endif %}{# /meta_items #}
+
+</section>
+
+{# Group message drawer — dataset page (org-card action) + org page header
+   action (org-hero.html header_actions). Posts to the same
+   /membership/contact_members endpoint as the org Members-tab drawer. #}
+{% if not hide_membership and membership and membership.display_group_message %}
+  {% snippet 'v2/group-message-drawer.html',
+      drawer_id='gm-header-drawer',
+      org_id=org_id, pkg_id=pkg_id, title=title,
+      group_topics=membership.data.group_topics,
+      fullname=membership.data.fullname, email=membership.data.email %}
+{% endif %}

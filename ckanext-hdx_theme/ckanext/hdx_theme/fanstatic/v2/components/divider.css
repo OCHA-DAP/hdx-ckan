@@ -1,0 +1,10 @@
+.c-divider {
+  display: block;
+  width: 100%;
+  height: 1px;
+  background-color: var(--hdx-neutral-3);
+  border: none;
+  margin: 0;
+  flex-shrink: 0;
+  opacity: 1;
+}

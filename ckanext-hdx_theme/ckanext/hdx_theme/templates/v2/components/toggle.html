@@ -1,0 +1,56 @@
+{#
+  Snippet: toggle.html
+  Path:    templates/snippets/components/selection/toggle.html
+
+  Renders a c-toggle boolean on/off switch.
+  Wraps a real <input type="checkbox"> for accessibility.
+
+  Parameters
+  ─────────────────────────────────────────────────
+  name          {string}  Input name attr.  default: 'toggle'
+  value         {string}  Input value attr.  default: '1'
+  checked       {bool}    Whether toggled on.  default: False
+  state         {string}  'enabled' | 'disabled'  default: 'enabled'
+  label         {string}  Optional accessible label (visually hidden).
+                          default: ''
+  id            {string}  Input id.  default: same as name
+  extra_classes {string}  default: ''
+  ─────────────────────────────────────────────────
+  Examples
+
+  {% snippet 'snippets/components/selection/toggle.html',
+      name='notifications', label='Enable notifications', checked=True %}
+
+  {% snippet 'snippets/components/selection/toggle.html',
+      name='advanced', label='Advanced mode', checked=False %}
+#}
+
+{% set name          = name          if name          is defined else 'toggle' %}
+{% set value         = value         if value         is defined else '1' %}
+{% set checked       = checked       if checked       is defined else False %}
+{% set state         = state         if state         is defined else 'enabled' %}
+{% set label         = label         if label         is defined else '' %}
+{% set id            = id            if id            is defined else name %}
+{% set extra_classes = extra_classes if extra_classes is defined else '' %}
+
+{% set is_disabled = (state == 'disabled') %}
+
+{% set classes = ['c-toggle', 'c-toggle--' ~ ('on' if checked else 'off')] %}
+{% if is_disabled %}{% set classes = classes + ['is-disabled'] %}{% endif %}
+{% if extra_classes %}{% set classes = classes + [extra_classes] %}{% endif %}
+
+<label class="{{ classes | join(' ') }}"
+       for="{{ id }}"
+       {% if label %}aria-label="{{ label }}"{% endif %}>
+
+  <input type="checkbox"
+         id="{{ id }}"
+         name="{{ name }}"
+         value="{{ value }}"
+         {% if checked     %}checked{% endif %}
+         {% if is_disabled %}disabled{% endif %}
+         style="position:absolute;opacity:0;width:0;height:0;pointer-events:none;">
+
+  <span class="c-toggle__thumb" aria-hidden="true"></span>
+
+</label>

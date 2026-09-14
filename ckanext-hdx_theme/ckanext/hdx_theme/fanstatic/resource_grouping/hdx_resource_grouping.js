@@ -3,7 +3,7 @@
 ckan.module('hdx_resource_grouping', function ($, _) {
   return {
     initialize: function () {
-      const resourceEls = $('.resource-list li.resource-item');
+      const resourceEls = $('.resource-list .resource-item');
       const selectedResourceGroupingLabel = $('#resource-grouping-link-title .selected-grouping-title');
       const processResourceList = function (groupingId) {
         resourceEls.each( (idx, resourceEl) => {
