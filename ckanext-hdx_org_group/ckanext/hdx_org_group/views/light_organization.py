@@ -72,7 +72,7 @@ def _index(template_file, show_switch_to_desktop, show_switch_to_mobile):
 
     # KPI: global platform stats (computed from unfiltered data, orgs with datasets only)
     all_orgs_with_datasets = [o for o in all_orgs_unfiltered if (o.get('package_count') or 0) > 0]
-    kpi_orgs = len(all_orgs_with_datasets)
+    kpi_orgs = len([o for o in all_orgs_unfiltered if (o.get('regular_package_count') or 0) > 0])
     kpi_datasets = sum((o.get('package_count') or 0) for o in all_orgs_with_datasets)
     all_groups = get_action('cached_group_list')(context, {})
     kpi_locations = len([g for g in all_groups if g.get('name') != 'world' and (g.get('package_count') or 0) > 0])
