@@ -16,23 +16,32 @@ class TestLandingPages(object):
 
     def test_hapi_landing_page_without_auth(self, app):
         url = h.url_for('hdx_landing_pages.hapi')
-        response = app.get(url)
+        response = app.get(url, follow_redirects=False)
 
-        assert response.status_code == 200
-        assert "'pageTitle': 'HDX HAPI Beta'" in response.body
-        assert "'authenticated': 'false'" in response.body
+        assert response.status_code == 301
+        assert response.headers['Location'] == 'https://docs.humdata.org/build/overview/hdx-api-overview'
+        # assert response.status_code == 200
+        # assert "'pageTitle': 'HDX HAPI Beta'" in response.body
+        # assert "'authenticated': 'false'" in response.body
+        #
+        # assert 'src="/visualization/hapi-availability-v2/"' in response.body
+        #
+        # assert '<h2 class="hdx-v2-hapi-section-heading">Be Inspired</h2>' in response.body
+        # assert 'c-content-card' in response.body
+        #
+        # assert '<h2 class="hdx-v2-hapi-section-heading">FAQ</h2>' in response.body
+        # assert 'c-accordion__trigger' in response.body
+        # assert 'c-accordion__body' in response.body
+        #
+        # assert '<h2 class="hdx-v2-hapi-section-heading">Partners</h2>' in response.body
+        # assert 'landing_pages/partners' in response.body
 
-        assert 'src="/visualization/hapi-availability-v2/"' in response.body
+    def test_hapi_terms_page_redirects(self, app):
+        url = h.url_for('hdx_landing_pages.hapi_terms')
+        response = app.get(url, follow_redirects=False)
 
-        assert '<h2 class="hdx-v2-hapi-section-heading">Be Inspired</h2>' in response.body
-        assert 'c-content-card' in response.body
-
-        assert '<h2 class="hdx-v2-hapi-section-heading">FAQ</h2>' in response.body
-        assert 'c-accordion__trigger' in response.body
-        assert 'c-accordion__body' in response.body
-
-        assert '<h2 class="hdx-v2-hapi-section-heading">Partners</h2>' in response.body
-        assert 'landing_pages/partners' in response.body
+        assert response.status_code == 301
+        assert response.headers['Location'] == 'https://docs.humdata.org/build/overview/hdx-api-overview'
 
     @mock.patch('ckanext.hdx_theme.views.landing_pages.cached_last_three_signal_cards',
                 return_value=mh.mock_signal_cards())
@@ -87,11 +96,13 @@ class TestLandingPages(object):
         api_token = factories.APIToken(user=self.username, expires_in=2, unit=60 * 60)['token']
         auth = {"Authorization": api_token}
         url = h.url_for('hdx_landing_pages.hapi')
-        response = app.get(url, headers=auth)
+        response = app.get(url, headers=auth, follow_redirects=False)
 
-        assert response.status_code == 200
-        assert "'pageTitle': 'HDX HAPI Beta'" in response.body
-        assert "'authenticated': 'true'" in response.body
+        assert response.status_code == 301
+        assert response.headers['Location'] == 'https://docs.humdata.org/build/overview/hdx-api-overview'
+        # assert response.status_code == 200
+        # assert "'pageTitle': 'HDX HAPI Beta'" in response.body
+        # assert "'authenticated': 'true'" in response.body
 
     @mock.patch('ckanext.hdx_theme.views.landing_pages.cached_last_three_signal_cards',
                 return_value=mh.mock_signal_cards())

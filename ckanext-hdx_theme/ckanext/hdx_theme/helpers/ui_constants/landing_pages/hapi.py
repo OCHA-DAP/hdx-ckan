@@ -106,14 +106,6 @@ DATA_COVERAGE_CONSTANTS = [
     }
 ]
 
-SECTIONS_CONSTANTS = [
-    {'name': 'Data Availability', 'url': '#data-availability'},
-    {'name': 'Be Inspired', 'url': '#be-inspired'},
-    {'name': 'FAQ', 'url': '#faq'},
-    {'name': 'Partners', 'url': '#partners'},
-    {'name': 'Documentation', 'url': 'https://hdx-hapi.readthedocs.io/', 'external': True},
-]
-
 PARTNERS_CONSTANTS = [
     ('acled', 'ACLED'),
     ('fts', 'FTS'),

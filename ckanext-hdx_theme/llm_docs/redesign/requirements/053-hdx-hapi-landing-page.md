@@ -6,6 +6,11 @@ sticky sidebar navigation, new `c-accordion` component, partner logo grid.
 iframe content (keep as-is).
 **Figma sources:** `hapi-xl.html`, `hapi-md.html`, `hapi-sm.html`
 
+**Post-launch:** `/hapi/` and `/hapi/terms/` permanently redirect (301) to
+`https://docs.humdata.org/build/overview/hdx-api-overview`; the v2 UI described in this document
+remains in the codebase (`hapi.html`, `hapi-landing.less`, `PARTNERS_CONSTANTS`/`DATA_COVERAGE_CONSTANTS`)
+but is not rendered by any route.
+
 ---
 
 ## Context
@@ -92,7 +97,7 @@ This is the first v2 landing page, so the patterns established here — custom h
 
 | # | Section | Anchor | Status |
 |---|---|---|---|
-| 1 | Page Header / Hero | — | Redesigned (uses `c-page-header` with subtitle + logo) |
+| 1 | Page Header / Hero | — | Redesigned (uses `c-page-header` with subtitle) |
 | 2 | Data Availability | `#data-availability` | Kept (iframe unchanged) |
 | 3 | Be Inspired | `#be-inspired` | Redesigned (new card style) |
 | 4 | FAQ | `#faq` | Redesigned (new `c-accordion`) |
@@ -107,8 +112,6 @@ This is the first v2 landing page, so the patterns established here — custom h
     h1 "HDX HAPI" (Merriweather) — CONST.HERO_SHORT_TITLE
     subtitle (semibold): CONST.HERO_SECTION_TITLE
     description (regular): CONST.HERO_SECTION_DESCRIPTION (email link)
-  Right (logo card):
-    HAPI logo image
 [body]                             ← hdx-v2-content-columns, bg: var(--hdx-neutral-01)
   [sidebar] (25%, left, sticky via .c-anchor-links-wrapper)
     c-anchor-links (no heading):
@@ -147,7 +150,7 @@ This is the first v2 landing page, so the patterns established here — custom h
 ### SM Layout (`hapi-sm.html`)
 
 - Sidebar: **hidden** — `c-anchor-links-mobile` dropdown
-- Page header: stacked (title + desc + logo box full-width, then sign-up button)
+- Page header: stacked (title + desc, then sign-up button)
 - Be Inspired cards: 2 per row
 - Partner logos: **4 per row** (logo box height: 4.131rem)
 - FAQ accordion: full-width
@@ -159,7 +162,7 @@ This is the first v2 landing page, so the patterns established here — custom h
 | Sidebar | Visible, left, 25% | Hidden | Hidden |
 | Mobile nav dropdown | Hidden | Visible | Visible |
 | Content | `flex: 1` | Full width | Full width |
-| Page header | Horizontal (text left, logo right) | Adjusted widths | Stacked |
+| Page header | Horizontal (text left) | Adjusted widths | Stacked |
 | Be Inspired cards | 2 per row | 2 per row | 2 per row |
 | Partner logos | 5 per row, 7.5rem height | 5 per row | 5 per row |
 | Container padding | 3rem sides | 3rem sides | 1rem sides |
@@ -422,9 +425,9 @@ definition above — the snippet implementation must honour it.
 
 | Breakpoint | Layout |
 |---|---|
-| XL | Flex row: description block (flex: 1) left, logo white-box (~17.375rem) right |
+| XL | Flex row: description block |
 | MD | Same flex row, narrower container |
-| SM | Stacked: description above, logo box full-width below |
+| SM | Stacked: description above |
 
 ### Sidebar
 
@@ -500,7 +503,7 @@ The page must extend `v2/page.html` instead of `page_light.html`.
 | `CONST` | `UI_CONSTANTS` | Unchanged |
 | `faq_data` | View | Unchanged |
 | `partners` | View (`PARTNERS_CONSTANTS`) | Unchanged |
-| `sections` | View (`SECTIONS_CONSTANTS`) | **Update**: add Partners entry (v2 has 5 nav items vs 4 in v1) |
+| `sections` | — | **Removed**. `SECTIONS_CONSTANTS` was dead/unused (`hapi.html` hardcodes `nav_items` itself) |
 
 ---
 
@@ -511,7 +514,7 @@ The page must extend `v2/page.html` instead of `page_light.html`.
 | `<details>` smooth animation not cross-browser | Implement CSS-only first; add JS `max-height` animation via small script if review requires smooth transition |
 | Custom hero section sets no reusable pattern | Document the pattern in the requirements; if a second landing page is needed, propose a `c-landing-hero` component at that point |
 | Partner logo grid at SM: 10 logos = 2×4 + 2 orphans | The last 2 logos will stretch (`flex: 1`) and may look visually unbalanced. Verify against Figma; if unacceptable, use `max-width` cap on logo items or `justify-content: center` on the row |
-| `SECTIONS_CONSTANTS` outdated | v1 has 4 jump nav items; v2 has 5. Must update constants to add Partners and ensure view passes updated `sections` |
+| `SECTIONS_CONSTANTS` outdated | Resolved — `SECTIONS_CONSTANTS`/`sections` removed as dead code; `hapi.html` hardcodes `nav_items` itself |
 | `c-anchor-links` needs `external` flag | The snippet does not currently support `target="_blank"` or an external icon. This must be added before the Documentation link works correctly |
 | First landing page pattern — sets precedent | Document decisions clearly; keep components minimal so they can be evolved without breaking this page |
 
@@ -578,6 +581,18 @@ anchor-links desktop nav self-sticky, consistent with the dataset page. The sepa
 `.v2-sidebar-sticky()` mixin in `mixins.less` is for non-anchor-links sidebars only
 (Search, Locations).
 
+**D12 — HDX HAPI logo image**
+Removed. No `logo_src` passed to `c-page-header`.
+
+**D13 — Superseded by a redirect**
+`/hapi/` and `/hapi/terms/` (`views/landing_pages.py::hapi`/`hapi_terms`) permanently redirect
+(301) to `https://docs.humdata.org/build/overview/hdx-api-overview`. Both view functions keep
+their names; their original bodies are commented out in place (not deleted), along with the
+now-unused `HAPI_PARTNERS_CONSTANTS`/`HAPI_DATA_COVERAGE_CONSTANTS`/`faq_read` imports.
+`hapi.html`, its LESS/CSS bundle, and `helpers/ui_constants/landing_pages/hapi.py` stay in the
+codebase unused rather than being deleted. No internal page linked to `/hapi/` or `/hapi/terms/`
+(confirmed by repo-wide search), so the redirect has no in-app navigation impact.
+
 ---
 
 ## Files Affected
@@ -591,7 +606,7 @@ anchor-links desktop nav self-sticky, consistent with the dataset page. The sepa
 | `ckanext-hdx_theme/…/hdx-styles/src/common/less/v2/components/content-card.less` | **New** — content-card LESS (no `__link` block — link via `c-text-link` snippet) |
 | `ckanext-hdx_theme/…/hdx-styles/src/common/less/v2/pages/hapi-landing.less` | **New** — page LESS; cards `repeat(2, 1fr)`; partners CSS Grid `repeat(5, 1fr)`; bg `var(--hdx-neutral-01)` |
 | `ckanext-hdx_theme/…/fanstatic/webassets.yml` | Add `v2-hapi-landing-page-styles` bundle |
-| `ckanext-hdx_theme/…/helpers/ui_constants/landing_pages/hapi.py` | Added `HERO_SHORT_TITLE`; `FAQ_SECTION_TITLE` = `'FAQ'`; `HERO_SECTION_TITLE` used as subtitle |
+| `ckanext-hdx_theme/…/helpers/ui_constants/landing_pages/hapi.py` | Added `HERO_SHORT_TITLE`; `FAQ_SECTION_TITLE` = `'FAQ'`; `HERO_SECTION_TITLE` used as subtitle; `SECTIONS_CONSTANTS` removed (dead/unused) |
 | `ckanext-hdx_theme/…/templates/v2/components/anchor-links.html` | Add `external` flag; wrapper always renders (sticky unconditional) |
 | `ckanext-hdx_theme/…/templates/v2/components/page-header.html` | Add `subtitle` param + `_has_dataset_meta` flag for conditional divider/metadata strip |
 | `ckanext-hdx_theme/…/hdx-styles/src/common/less/v2/components/page-header.less` | Add `__subtitle` block (`.hdx-body-m-semibold()`, `var(--hdx-neutral-85)`) |
