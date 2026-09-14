@@ -23,7 +23,6 @@
 {% set nav_items = [
   {'label': _('Sign up'),       'href': '#signup',       'active': True},
   {'label': _('Data Coverage'), 'href': '#data-coverage','active': False},
-  {'label': _('Signals Map'),   'href': '#signals-map',  'active': False},
   {'label': _('Resources'),     'href': '#resources',    'active': False},
   {'label': _('FAQ'),           'href': '#faq',          'active': False},
 ] %}
@@ -46,7 +45,6 @@
           description=h.literal(CONST.HERO_SECTION_DESCRIPTION.format(
               'mailto:hdx-signals@un.org',
               'https://data.humdata.org/dataset/2048a947-5714-4220-905b-e662cbcd14c8/resource/029df9aa-c277-4571-9dae-dc9bc33bdd14/download/hdx-signals-impact-story.pdf')),
-          logo_src=h.url_for_static('images/landing_pages/logo_hdx_signals.png'),
           cta_label=_('Sign up'),
           cta_icon_src='v2/icons/bell.svg',
           cta_href='#signup' %}
@@ -105,7 +103,7 @@
     <h2 class="hdx-v2-signals-section-heading">{{ CONST.SIGNUP_SECTION_TITLE }}</h2>
     <p class="hdx-v2-signals-section-description">{{ CONST.SIGNUP_SECTION_DESCRIPTION }}</p>
     <div class="hdx-v2-signals-form-card">
-      <div class="hdx-v2-signals-form-card__inner">
+      <div>
         <div id="mc_embed_shell">
           <div id="mc_embed_signup">
             <form action="https://humdata.us14.list-manage.com/subscribe/post?u=ea3f905d50ea939780139789d&amp;id=e908cb9d48&amp;f_id=006ec2e1f0"
@@ -490,19 +488,6 @@
         </div>
       {% endfor %}
     </div>
-  </div>
-
-  <hr class="c-divider">
-
-  {# Signals Map ───────────────────────────────────────────── #}
-  <div id="signals-map" class="hdx-v2-signals-section">
-    <h2 class="hdx-v2-signals-section-heading">{{ CONST.SIGNALS_MAP_SECTION_TITLE }}</h2>
-    <p class="hdx-v2-signals-section-description">{{ CONST.SIGNALS_MAP_SECTION_DESCRIPTION }}</p>
-    <iframe class="hdx-v2-signals-map-iframe"
-            src="https://data.humdata.org/visualization/signals-v2/"
-            title="{{ _('HDX Signals Map') }}"
-            loading="lazy"
-            allowfullscreen></iframe>
   </div>
 
   <hr class="c-divider">

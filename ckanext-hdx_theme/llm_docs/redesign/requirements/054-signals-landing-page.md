@@ -2,7 +2,7 @@
 
 **Scope:** Migrate the Signals landing page to v2 — full page layout, all content sections,
 sticky sidebar navigation (XL only), new `c-signal-card` component, shared carousel module,
-signal cards section, data coverage grid, signals map iframe, resources, FAQ, partners.
+signal cards section, data coverage grid, resources, FAQ, partners.
 **Excluded:** backend/data changes, signup form restyling (preserve as-is, font: Roboto only),
 analytics changes (preserve all data attrs).
 **Figma sources:** `signals-xl.html`, `signals-md.html`, `signals-sm.html`, `signal-card.html`
@@ -23,10 +23,9 @@ Key differences from HAPI v2:
   `carousel.js` reused by both the homepage and the signals page.
 - **Anchor links XL only** — no `c-anchor-links-mobile` dropdown at MD/SM (also remove from HAPI).
 - **CTA button in hero** — signup anchor button below description in `c-page-header`.
-- **Signals Map section** — separate content section with iframe embed (`https://data.humdata.org/visualization/signals/`).
 
-The v2 Signals page adds 5 anchor nav items: Sign up · Data Coverage ·
-Signals Map · Resources · FAQ. (Partners section has no anchor nav item.)
+The v2 Signals page adds 4 anchor nav items: Sign up · Data Coverage ·
+Resources · FAQ. (Partners section has no anchor nav item.)
 
 ---
 
@@ -123,10 +122,9 @@ SECTIONS_CONSTANTS = [
 | 2 | Featured Signal Cards | — | **New in v2** — 3 static dummy cards |
 | 3 | Signup Form | `#signup` | Preserved (Mailchimp form, font: Roboto only) |
 | 4 | Data Coverage | `#data-coverage` | Redesigned (static grid, same 6 items) |
-| 5 | Signals Map | `#signals-map` | **New in v2** — iframe embed (`https://data.humdata.org/visualization/signals/`) |
-| 6 | Resources | `#resources` | Redesigned (4× `c-content-card`, same 4 cards) |
-| 7 | FAQ | `#faq` | Redesigned (`c-accordion`, same FAQ data) |
-| 8 | Partners | `#partners` | Redesigned (inline logo grid, same 6 logos) |
+| 5 | Resources | `#resources` | Redesigned (4× `c-content-card`, same 4 cards) |
+| 6 | FAQ | `#faq` | Redesigned (`c-accordion`, same FAQ data) |
+| 7 | Partners | `#partners` | Redesigned (inline logo grid, same 6 logos) |
 
 ### XL Layout (`signals-xl.html`)
 
@@ -137,14 +135,11 @@ SECTIONS_CONSTANTS = [
     h1 "HDX Signals" (Merriweather 32px)
     description (regular): CONST.HERO_SECTION_DESCRIPTION (email + story links)
     CTA button: "Sign up" → href="#signup"
-  Right (logo card):
-    Signals logo image
 [body]                                 ← two-column at XL, single-column at MD/SM
   [sidebar] (25%, left, sticky)
-    c-anchor-links (6 items):
+    c-anchor-links (5 items):
       • Sign up         → #signup
       • Data Coverage   → #data-coverage
-      • Signals Map     → #signals-map
       • Resources       → #resources
       • FAQ             → #faq
       • Partners        → #partners
@@ -162,13 +157,9 @@ SECTIONS_CONSTANTS = [
       CSS Grid 3-col (6 static items from DATA_COVERAGE_CONSTANTS)
         Each item: title + organization description + "Learn more" link (no chevron icon)
     [c-divider]
-    [signals-map]
-      section heading "Signals Map"
-      iframe src="https://data.humdata.org/visualization/signals/" loading="lazy"
-    [c-divider]
     [resources]
       section heading "Resources"
-      CSS Grid 2-col (4× c-content-card) — Map, Dataset, Methodology, Repository
+      CSS Grid 2-col (4× c-content-card) — Map, Dataset, Documentation, Repository
     [c-divider]
     [faq]
       section heading (CONST.FAQ_SECTION_TITLE)
@@ -191,7 +182,7 @@ SECTIONS_CONSTANTS = [
 ### SM Layout (`signals-sm.html`)
 
 - Sidebar: **hidden** — no mobile dropdown
-- Page header: stacked (text block above, logo box full-width below; CTA button below description)
+- Page header: stacked (text block above; CTA button below description)
 - Featured signal cards: carousel (1 card visible at a time, `c-signal-card` size `sm`)
 - Data coverage: 2-col grid (same as MD)
 - Logo grid: 3 per row (same)
@@ -202,7 +193,7 @@ SECTIONS_CONSTANTS = [
 |---|---|---|---|
 | Sidebar | Visible, left, 25% | Hidden | Hidden |
 | Mobile nav dropdown | Hidden | **None** | **None** |
-| Page header | Horizontal (text + button left, logo right) | Same, narrower | Stacked |
+| Page header | Horizontal (text + button left) | Same, narrower | Stacked |
 | Featured signal cards | 3-col flex row | Carousel | Carousel (`sm` card size) |
 | Data coverage grid | 3-col | 3-col | 2-col |
 | Resources grid | 2-col | 2-col | 2-col |
@@ -231,13 +222,12 @@ SECTIONS_CONSTANTS = [
 | UI Element | Decision | Justification |
 |---|---|---|
 | Page header / hero | **Extend** `c-page-header` | Add optional `cta_label`/`cta_href` params for the "Sign up" anchor button; same approach as HAPI's `subtitle` extension |
-| Sidebar nav | **Reuse** `c-anchor-links` | XL only; same sticky pattern as HAPI; 6 items |
+| Sidebar nav | **Reuse** `c-anchor-links` | XL only; same sticky pattern as HAPI; 5 items |
 | Mobile nav | **None** | Per confirmed decision — no `c-anchor-links-mobile` on MD/SM |
 | Featured signal cards | **New** `c-signal-card` | Unique structure (chart placeholder, type tag, 2 actions); see Section 4 |
 | Signal cards carousel | **Refactor** `highlights-carousel.js` | Extract shared `carousel.js` module; see Section 5 |
 | Signup form | **Preserve** inline | Full Mailchimp form kept as-is; only add Roboto font override |
 | Data coverage | **Inline grid** | 6 static items; custom CSS grid in page LESS; reuse `c-text-link` for "Learn more"; no chevron icon |
-| Signals map | **iframe** | `<iframe src="https://data.humdata.org/visualization/signals/" loading="lazy">` — same pattern as HAPI's data-availability iframe |
 | Resources cards | **Reuse** `c-content-card` | 4 cards match HAPI's "Be Inspired" pattern exactly |
 | FAQ | **Reuse** `c-accordion` | Same CSS-only pattern as HAPI; first item open |
 | Partner logos | **Inline grid** | 6 static logos; signals-specific CSS (same pattern as HAPI partner grid) |
@@ -595,13 +585,12 @@ Anchor links are visible **only at XL**. No `c-anchor-links-mobile` dropdown at 
 This is a deliberate departure from HAPI v2 (which currently has a mobile dropdown) —
 apply the same change to HAPI when implementing this task.
 
-### nav_items (5 items — Partners has no anchor nav item)
+### nav_items (4 items — Partners has no anchor nav item)
 
 ```jinja2
 {% set nav_items = [
     {'label': _('Sign up'),       'href': '#signup',       'active': True},
     {'label': _('Data Coverage'), 'href': '#data-coverage','active': False},
-    {'label': _('Signals Map'),   'href': '#signals-map',  'active': False},
     {'label': _('Resources'),     'href': '#resources',    'active': False},
     {'label': _('FAQ'),           'href': '#faq',          'active': False},
 ] %}
@@ -678,9 +667,9 @@ cta_href='#signup'
 
 | Breakpoint | Layout |
 |---|---|
-| XL | Flex row: left block (title + desc + CTA button), logo box right (~17.375rem) |
+| XL | Flex row: title + desc + CTA button |
 | MD | Same flex row, narrower container |
-| SM | Stacked: text block above full-width, logo box below full-width, CTA button below description |
+| SM | Stacked: text block above full-width, CTA button below description |
 
 ### Featured Signal Cards
 
@@ -711,14 +700,7 @@ breakpoints, `gap: var(--hdx-space-4)`) — no page-specific grid LESS.
 
 ### Signals Map iframe
 
-```less
-.hdx-v2-signals-map-iframe {
-    width:   100%;
-    height:  600px;
-    border:  none;
-    display: block;
-}
-```
+Removed.
 
 ### Partner Logos
 
@@ -812,15 +794,7 @@ was fully rewritten in vanilla JS (jQuery removed):
 
 ### Signals Map Section
 
-```jinja2
-<div id="signals-map" class="hdx-v2-signals-section">
-  <h2 class="hdx-v2-signals-section-heading">{{ _('Signals Map') }}</h2>
-  <iframe class="hdx-v2-signals-iframe"
-          src="https://data.humdata.org/visualization/signals/"
-          title="{{ _('Signals Map') }}"
-          loading="lazy"></iframe>
-</div>
-```
+Removed.
 
 ### View Function Changes
 
@@ -877,9 +851,7 @@ v2-signals-landing-page-scripts:
 
 ## 11. Decisions Taken
 
-1. **Signals logo image** — Use `h.url_for_static('images/landing_pages/logo_hdx_signals.png')`.
-   File confirmed at `hdx-styles/src/common/images/landing_pages/logo_hdx_signals.png` — same
-   pattern as HAPI which is already working.
+1. **Signals logo image** — Removed. No `logo_src` passed to `c-page-header`.
 
 2. **Signal card image** — Superseded by §4 "Real Data": `image_src` comes from the live CSV feed (`hdx_fetch_last_three_signal_cards()`), not a static placeholder service.
 
@@ -890,9 +862,7 @@ v2-signals-landing-page-scripts:
 4. **Data coverage chevron** — **Removed.** No chevron icon in coverage items — no equivalent
    in v1 with tooltip. Coverage item layout: title + organization text + "Learn more" link only.
 
-5. **Signals Map** — Load an `<iframe>` pointing to
-   `https://data.humdata.org/visualization/signals/` with `loading="lazy"`, using class
-   `hdx-v2-signals-iframe`. Same pattern as HAPI's `hdx-v2-hapi-iframe`.
+5. **Signals Map** — Removed. Map access remains via the Resources section's "Signals Map" card.
 
 6. **Partner logos images** — All 6 PNGs confirmed: `acaps`, `european_comission`, `acled`,
    `ipc`, `idmc`, `wfp` exist in `hdx-styles/src/common/images/landing_pages/partners/`.
@@ -905,6 +875,12 @@ v2-signals-landing-page-scripts:
 8. **CONST access key** — Confirmed. `CONSTANTS` in `signals.py` is registered as
    `SIGNALS_LANDING_PAGE` in `landing_pages/__init__.py`. The accessor
    `h.HDX_CONST('UI_CONSTANTS')['LANDING_PAGES']['SIGNALS_LANDING_PAGE']` resolves correctly.
+
+9. **Resources "Methodology" card** — Renamed to "Documentation". Link unchanged
+   (`https://docs.humdata.org/about/hdx-signals`).
+
+10. **Sign-up form card** — No longer width-narrowed/centered (`hdx-v2-signals-form-card__inner`
+    removed).
 
 ---
 
@@ -926,8 +902,8 @@ v2-signals-landing-page-scripts:
 | File | Change |
 |---|---|
 | `templates/landing_pages/signals.html` | Replace v1 with v2; extend `v2/page.html` |
-| `helpers/ui_constants/landing_pages/signals.py` | `SECTIONS_CONSTANTS` was not updated — dead/unused, since `signals.html` hardcodes `nav_items` itself (same pattern as HAPI) |
-| `views/landing_pages.py` | Pass `signal_cards` from `cached_last_three_signal_cards()` (real data, see §4) |
+| `helpers/ui_constants/landing_pages/signals.py` | `SECTIONS_CONSTANTS` removed — was dead/unused, since `signals.html` hardcodes `nav_items` itself (same pattern as HAPI) |
+| `views/landing_pages.py` | Pass `signal_cards` from `cached_last_three_signal_cards()` (real data, see §4); `sections` var/import removed with `SECTIONS_CONSTANTS` |
 | `fanstatic/v2/highlights-carousel.js` | Refactor to thin wrapper calling `carousel.js` |
 | `fanstatic/webassets.yml` | Add `v2-signals-landing-page-styles` and `v2-signals-landing-page-scripts` bundles |
 | `templates/v2/components.html` | Add `c-signal-card` demo section |

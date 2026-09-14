@@ -7,7 +7,7 @@ import ckanext.hdx_theme.helpers.faq_wordpress as fw
 #     DATA_COVERAGE_CONSTANTS as HAPI_DATA_COVERAGE_CONSTANTS, \
 #     PARTNERS_CONSTANTS as HAPI_PARTNERS_CONSTANTS
 from ckanext.hdx_theme.helpers.ui_constants.landing_pages.signals import \
-    DATA_COVERAGE_CONSTANTS as SIGNALS_DATA_COVERAGE_CONSTANTS, SECTIONS_CONSTANTS as SIGNALS_SECTIONS_CONSTANTS, \
+    DATA_COVERAGE_CONSTANTS as SIGNALS_DATA_COVERAGE_CONSTANTS, \
     PARTNERS_CONSTANTS as SIGNALS_PARTNERS_CONSTANTS
 from ckanext.hdx_theme.helpers.signals_cache import cached_last_three_signal_cards
 
@@ -57,7 +57,6 @@ def signals():
     data = fw.faq_for_category(wp_category_terms)
 
     partners = SIGNALS_PARTNERS_CONSTANTS
-    sections = SIGNALS_SECTIONS_CONSTANTS
     data_coverage = SIGNALS_DATA_COVERAGE_CONSTANTS
     try:
         signal_cards = cached_last_three_signal_cards()
@@ -67,7 +66,6 @@ def signals():
 
     template_data = {
         'partners': partners,
-        'sections': sections,
         'data_coverage': data_coverage,
         'faq_data': data['faq_data'],
         'signal_cards': signal_cards,

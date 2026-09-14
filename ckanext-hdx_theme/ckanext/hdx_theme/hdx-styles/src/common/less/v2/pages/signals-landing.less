@@ -79,23 +79,12 @@
     gap:                   var(--hdx-space-8);
 }
 
-.hdx-v2-signals-map-iframe {
-    width:   100%;
-    height:  600px;
-    border:  none;
-    display: block;
-}
-
 .hdx-v2-signals-partner-logo {
     .hdx-partner-logo();
 }
 
 // ── Mailchimp signup form card ────────────────────────────────
 .hdx-v2-signals-form-card {
-    border-radius: var(--hdx-radius-sm);
-    padding:       var(--hdx-space-8);
-    background:    var(--hdx-neutral-0);
-
     // Action-buttons row: wraps both hardcoded and dynamically added c-button elements
     .action-buttons {
         display:     flex;
@@ -103,21 +92,5 @@
         align-items: center;
         gap:         var(--hdx-space-2);
         margin:      var(--hdx-space-2) 0;
-    }
-
-    // Narrows the Mailchimp embed — same width-narrowing idiom as
-    // .hdx-v2-signup-form-page__card / .hdx-v2-auth-card (task 070 B4,
-    // replaces the Bootstrap col-12 col-md-10 col-lg-8 mx-auto it had).
-    &__inner {
-        width:  100%;
-        margin: 0 auto;
-
-        @media (min-width: @hdx-bp-md) {
-            width: 80%;
-        }
-
-        @media (min-width: @hdx-bp-xl) {
-            width: 50%;
-        }
     }
 }

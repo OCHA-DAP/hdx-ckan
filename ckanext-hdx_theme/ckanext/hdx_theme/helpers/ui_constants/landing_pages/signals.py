@@ -16,15 +16,15 @@ CONSTANTS = {
     'RESOURCES_CARD_TITLE_MAP': '''Signals Map''',
     'RESOURCES_CARD_TEXT_MAP': '''See a visualiziation of present and historic Signals''',
     'RESOURCES_CARD_BUTTON_MAP': '''Learn more''',
-    'RESOURCES_CARD_BUTTON_LINK_MAP': '''https://data.humdata.org/visualization/signals/''',
+    'RESOURCES_CARD_BUTTON_LINK_MAP': '''https://data.humdata.org/visualization/signals-v2/''',
 
     'RESOURCES_CARD_TITLE_DATASET': '''Download HDX Signals dataset on HDX''',
     'RESOURCES_CARD_TEXT_DATASET': '''Explore the full HDX Signals dataset''',
     'RESOURCES_CARD_BUTTON_DATASET': '''Learn more''',
     'RESOURCES_CARD_BUTTON_LINK_DATASET': '''https://data.humdata.org/dataset/hdx-signals''',
 
-    'RESOURCES_CARD_TITLE_METHODOLOGY': '''Methodology''',
-    'RESOURCES_CARD_TEXT_METHODOLOGY': '''Read the HDX Signals methodology''',
+    'RESOURCES_CARD_TITLE_METHODOLOGY': '''Documentation''',
+    'RESOURCES_CARD_TEXT_METHODOLOGY': '''Read the HDX Signals documentation''',
     'RESOURCES_CARD_BUTTON_METHODOLOGY': '''Learn more''',
     'RESOURCES_CARD_BUTTON_LINK_METHODOLOGY': '''https://docs.humdata.org/about/hdx-signals''',
 
@@ -34,9 +34,6 @@ CONSTANTS = {
     'RESOURCES_CARD_BUTTON_LINK_REPOSITORY': '''https://github.com/OCHA-DAP/hdx-signals''',
 
     'FAQ_SECTION_TITLE': '''FAQs''',
-
-    'SIGNALS_MAP_SECTION_TITLE': '''Signals Map''',
-    'SIGNALS_MAP_SECTION_DESCRIPTION': '''Datasets monitored by HDX Signals at the moment are as follows:''',
 
     'PARTNERS_SECTION_TITLE': '''Partners''',
 }
@@ -72,14 +69,6 @@ DATA_COVERAGE_CONSTANTS = [
         "organization": "World Food Programme (WFP)",
         "link": "https://data.humdata.org/dataset/global-market-monitor"
     },
-]
-
-SECTIONS_CONSTANTS = [
-    {'name': 'Signup', 'url': '#signup'},
-    {'name': 'Data Coverage', 'url': '#data-coverage'},
-    {'name': 'Signals map', 'url': 'https://data.humdata.org/visualization/signals/'},
-    {'name': 'Resources', 'url': '#resources'},
-    {'name': 'FAQ', 'url': '#faq'},
 ]
 
 PARTNERS_CONSTANTS = [
