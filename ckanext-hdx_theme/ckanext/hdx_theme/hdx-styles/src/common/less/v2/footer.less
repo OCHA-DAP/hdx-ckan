@@ -1,0 +1,381 @@
+// ============================================================
+// hdx-v2-footer — v2 redesigned footer
+// Figma: llm_docs/redesign/figma_exports/footer.html
+// ============================================================
+//
+// Breakpoints:
+//   SM  < 48rem     — fully stacked
+//   MD  48–79rem    — newsletter + social side by side; nav 3-column
+//   XL  ≥ 80rem     — two-column: branding left / nav grid right
+// ============================================================
+
+@import "mixins.less";
+
+// ── Root ─────────────────────────────────────────────────────
+
+.hdx-v2-footer {
+    background-color: var(--hdx-brand-85);  // dark teal
+    color:            var(--hdx-neutral-0);
+    font-family:      var(--hdx-font-body);
+    font-size:        var(--hdx-fs-s);
+    padding-top:    3.5rem;
+    padding-bottom: 3.5rem;
+
+    @media (min-width: @hdx-bp-md) { padding-top: var(--hdx-space-16); padding-bottom: var(--hdx-space-16); }
+    @media (min-width: @hdx-bp-xl) { padding-top: var(--hdx-space-20); padding-bottom: var(--hdx-space-20); }
+
+    // Override c-text-link colours for dark background
+    .c-text-link {
+        color: var(--hdx-neutral-0);
+        &:hover  { color: var(--hdx-neutral-2); }
+        &:active { color: var(--hdx-neutral-1); }
+    }
+
+
+    // ── Top: branding + nav ──────────────────────────────────
+
+    &__top {
+        display:        flex;
+        flex-direction: column;
+        gap:            var(--hdx-space-8);
+
+        @media (min-width: @hdx-bp-xl) {
+            flex-direction: row;
+            align-items:    stretch;
+            gap:            var(--hdx-space-6);
+        }
+    }
+
+
+    // ── Branding column ──────────────────────────────────────
+
+    &__branding {
+        display:        flex;
+        flex-direction: column;
+        gap:            var(--hdx-space-6);
+
+        @media (min-width: @hdx-bp-xl) {
+            flex:            1;
+            justify-content: space-between;
+        }
+    }
+
+    &__logo-wrap {
+        display:        flex;
+        flex-direction: column;
+        gap:            var(--hdx-space-6);
+    }
+
+    &__logo {
+        width:       7.5rem;
+        line-height: 0;
+        flex-shrink: 0;
+
+        // hdx.svg uses fill="currentColor" — inherits white from .hdx-v2-footer
+        svg { .hdx-icon-size(100%, auto); display: block; }
+    }
+
+    &__tagline {
+        margin:      0;
+        font-size:   1rem;
+        line-height: var(--hdx-lh-normal);
+
+        @media (min-width: @hdx-bp-xl) { font-size: 1.125rem; }
+    }
+
+
+    // ── Actions: newsletter + social ─────────────────────────
+    // SM/XL: stacked; MD (48rem–80rem): side by side (75%/25%)
+
+    &__actions {
+        display:        flex;
+        flex-direction: column;
+        gap:            var(--hdx-space-6);
+
+        @media (min-width: @hdx-bp-md) {
+            flex-direction: row;
+            align-items:    flex-start;
+            gap:            0;
+        }
+
+        @media (min-width: @hdx-bp-xl) {
+            flex-direction: column;
+            gap:            var(--hdx-space-6);
+        }
+    }
+
+    &__newsletter {
+        display:        flex;
+        flex-direction: column;
+        gap:            var(--hdx-space-2);
+        font-size:      1rem;
+
+        @media (min-width: @hdx-bp-md) {
+            flex: 0 0 75%;
+            max-width: 75%;
+        }
+
+        @media (min-width: @hdx-bp-xl) {
+            flex:      none;
+            max-width: none;
+        }
+    }
+
+    &__newsletter-label {
+        margin:      0;
+        line-height: var(--hdx-lh-normal);
+    }
+
+    &__newsletter-row {
+        display:     flex;
+        align-items: center;
+        gap:         var(--hdx-space-2);
+    }
+
+    &__newsletter-row .c-search-input {
+        flex: 1;
+        max-width: 80%;
+
+        @media (min-width: @hdx-bp-xl) {
+          min-width: 100%;
+        }
+    }
+
+    // Ghost/outline subscribe button — overrides c-button base colours
+    &__subscribe-btn {
+        background-color: transparent;
+        color:            var(--hdx-neutral-0);
+        border:           1px solid var(--hdx-neutral-2);
+        white-space:      nowrap;
+
+        &:hover         {
+          background-color: var(--hdx-overlay-white-10);
+          border-color: var(--hdx-neutral-0);
+          color: var(--hdx-neutral-0);
+        }
+        &:active        { background-color: var(--hdx-overlay-white-15); }
+        &:focus-visible { outline-color: var(--hdx-neutral-0); }
+    }
+
+
+    // ── Social links ─────────────────────────────────────────
+
+    &__social {
+        display:     flex;
+        align-items: flex-end;
+        gap:         var(--hdx-space-6);
+
+        @media (min-width: @hdx-bp-md) {
+            flex: 0 0 25%;
+            max-width: 25%;
+        }
+
+        @media (min-width: @hdx-bp-xl) {
+            flex:      none;
+            max-width: none;
+        }
+    }
+
+    &__social-link {
+        display:         flex;
+        align-items:     flex-end;
+        gap:             var(--hdx-space-13);  // 6 px
+        text-decoration: none;
+    }
+
+    &__social-icon {
+        width:       1.25rem;
+        flex-shrink: 0;
+        line-height: 0;
+        color:       var(--hdx-neutral-0);
+
+        svg { .hdx-icon-size(var(--hdx-space-5), auto); display: block; }
+    }
+
+
+    // ── Related-to ───────────────────────────────────────────
+
+    &__related {
+        display:     flex;
+        align-items: flex-start;
+        gap:         var(--hdx-space-2);
+        font-size:   var(--hdx-fs-s);
+        margin-top:  auto;
+    }
+
+    &__related-label {
+        white-space: nowrap;
+        line-height: var(--hdx-lh-normal);
+        flex-shrink: 0;
+    }
+
+
+    // ── External link — icon + text inside one <a> ───────────
+    // Used on "Related to", "Open source", "Blog", "Contact" links.
+
+    &__ext-link {
+        display:     inline-flex;
+        align-items: center;
+        gap:         var(--hdx-space-1);  // 4 px
+    }
+
+    &__ext-icon {
+        flex-shrink: 0;
+        line-height: 0;
+        width:       1rem;
+
+        // link-external.svg uses stroke="currentColor" — no fill override needed
+        svg { .hdx-icon-size(var(--hdx-space-4), auto); }
+    }
+
+
+    // ── Navigation grid ──────────────────────────────────────
+    // SM: stacked; MD: 3 columns equal-width; XL: flex: 1 within __top row
+
+    &__nav {
+        display:        flex;
+        flex-direction: column;
+        gap:            var(--hdx-space-6);
+
+        @media (min-width: @hdx-bp-md) {
+            flex-direction: row;
+            gap:            var(--hdx-space-6);
+        }
+
+        @media (min-width: @hdx-bp-xl) {
+            flex: 1;
+        }
+    }
+
+    &__nav-col {
+        display:        flex;
+        flex-direction: column;
+        align-items:    flex-start;
+        gap:            var(--hdx-space-6);
+
+        @media (min-width: @hdx-bp-md) {
+            flex: 1 1 0;
+        }
+    }
+
+    &__nav-heading {
+        font-family: var(--hdx-font-display);  // Merriweather
+        font-size:   1.5rem;
+        font-weight: var(--hdx-fw-bold);
+        line-height: 120%;
+        color:       var(--hdx-neutral-0);
+        margin:      0;
+    }
+
+    &__nav-list {
+        list-style:     none;
+        margin:         0;
+        padding:        0 var(--hdx-space-3) 0 0;
+        display:        flex;
+        flex-direction: column;
+        align-items:    flex-start;
+        gap:            var(--hdx-space-3);  // 12 px
+    }
+
+
+    // ── Divider — extends c-divider with white colour ────────
+
+    &__divider {
+        background-color: var(--hdx-neutral-0);  // white — overrides c-divider neutral-3
+        margin:           1.75rem 0;
+    }
+
+
+    // ── Bottom bar ───────────────────────────────────────────
+
+    &__bottom {
+        display:        flex;
+        flex-direction: column;
+        gap:            var(--hdx-space-2);
+        font-size:      var(--hdx-fs-xs);  // 12 px
+    }
+
+    &__service {
+        display:        flex;
+        flex-direction: column;
+        gap:            var(--hdx-space-2);
+    }
+
+    &__service-label {
+        margin:      0;
+        line-height: var(--hdx-lh-normal);
+    }
+
+    // SM: stacked (logo above text); MD: flex row, logo | text side by side
+    &__service-detail {
+        display:        flex;
+        flex-direction: column;
+        gap:            var(--hdx-space-3);
+
+        @media (min-width: @hdx-bp-md) {
+            flex-direction: row;
+            align-items:    center;
+        }
+    }
+
+    &__ocha-logo {
+        height:      2.25rem;
+        flex-shrink: 0;
+        line-height: 0;
+
+        // MD and up: Figma shows a vertical separator between logo and description text
+        @media (min-width: @hdx-bp-md) {
+            border-right:  1px solid var(--hdx-neutral-0);
+            padding-right: var(--hdx-space-3);
+        }
+
+        // ocha.svg uses fill="currentColor" — inherits white from .hdx-v2-footer
+        svg { .hdx-icon-size(auto, 100%); display: block; }
+    }
+
+    &__ocha-text {
+        line-height: var(--hdx-lh-normal);
+        margin:      0;
+        flex:        1;
+    }
+
+    &__license {
+        display:        flex;
+        flex-direction: column;
+        align-items:    flex-start;
+        margin-top:     var(--hdx-space-2);
+        margin-bottom:  var(--hdx-space-2);
+        gap:            var(--hdx-space-2);
+
+        @media (min-width: @hdx-bp-md) {
+            flex-direction: row;
+            align-items:    center;
+        }
+    }
+
+    &__license-icon {
+        width:       1.25rem;
+        flex-shrink: 0;
+        line-height: 0;
+
+        // creative-commons.svg uses fill="currentColor" — inherits white from .hdx-v2-footer
+        svg { .hdx-icon-size(var(--hdx-space-5), auto); display: block; }
+    }
+
+    &__license-text {
+        line-height: var(--hdx-lh-normal);
+        margin:      0;
+    }
+
+    &__legal {
+        font-size:       var(--hdx-fs-s);
+        display:         flex;
+        align-items:     center;
+        justify-content: flex-start;
+        gap:             var(--hdx-space-3);
+
+        @media (min-width: @hdx-bp-md) {
+            justify-content: flex-end;
+        }
+    }
+}

@@ -1,0 +1,392 @@
+// ============================================================
+// HDX v2 — LESS Mixins
+// Single entry point for all compile-time LESS utilities.
+// Pulls in breakpoint and typography tokens so callers only
+// need one import to get everything:
+//   @import "mixins.less";         (from less/v2/)
+//   @import "../mixins.less";      (from less/v2/components/)
+//
+// NOTE: foundation.less keeps its own @import "typography.less"
+// to emit the CSS custom-property block; it does not use this file.
+// ============================================================
+
+@import "breakpoints.less";
+@import "typography.less";
+
+
+// ── Page-layout flex rules ─────────────────────────────────────
+// Used by two-column page sidebars (search, dataset, resource).
+
+.v2-sidebar-flex() {
+    flex:      0 0 25%;
+    min-width: 0;
+}
+
+.v2-content-flex() {
+    flex:      1;
+    min-width: 0;
+}
+
+.hdx-hide-scrollbar() {
+    scrollbar-width:    none;          // Firefox
+    -ms-overflow-style: none;          // legacy Edge/IE
+
+    &::-webkit-scrollbar {
+        display: none;                 // Chrome/Safari/Chromium Edge
+    }
+}
+
+// ── Partner-logo image — HAPI/Signals landing-page grids ────────
+// Shared visual rule for the per-image sizing; each landing page
+// keeps its own grid-column-count class alongside this.
+
+.hdx-partner-logo() {
+    max-width:  10rem;
+    max-height: 4rem;
+    width:      100%;
+    height:     auto;
+    object-fit: contain;
+    display:    block;
+    margin:     0 auto;
+}
+
+.v2-sidebar-sticky() {
+    position:   sticky;
+    top:        var(--hdx-space-12);   // 48px — matches .c-anchor-links-wrapper top
+    align-self: flex-start;
+}
+
+// ── Form field-row layout ───────────────────────────────────────
+// Checkbox + label + inline error, two-column grid. Used by the
+// auth, signup, and request-access pages.
+
+.v2-checkbox-row() {
+    display:               grid;
+    grid-template-columns: auto 1fr;
+    column-gap:            var(--hdx-space-3);
+    align-items:           flex-start;
+
+    .c-checkbox__error {
+        grid-column: 2;
+    }
+}
+
+
+// ── Typography — private parametric cores ─────────────────────
+// Prefixed with - to signal "internal — do not call directly".
+// All named mixins delegate here so each 4-property block is
+// defined exactly once per font family.
+
+// Display family (Merriweather): 4-property full style
+.-hdx-display(@fs, @fw) {
+  font-family: var(--hdx-font-display);
+  font-size:   @fs;
+  font-weight: @fw;
+  line-height: var(--hdx-lh-normal);
+}
+
+// Display family: 3-property base (no font-size)
+.-hdx-display-base(@fw) {
+  font-family: var(--hdx-font-display);
+  font-weight: @fw;
+  line-height: var(--hdx-lh-normal);
+}
+
+// Body family (Roboto): 4-property full style
+.-hdx-body(@fs, @fw) {
+  font-family: var(--hdx-font-body);
+  font-size:   @fs;
+  font-weight: @fw;
+  line-height: var(--hdx-lh-normal);
+}
+
+// Body family: 3-property base (no font-size)
+.-hdx-body-base(@fw) {
+  font-family: var(--hdx-font-body);
+  font-weight: @fw;
+  line-height: var(--hdx-lh-normal);
+}
+
+// Link family (Roboto medium + underline): 5-property full style
+.-hdx-link(@fs, @lh) {
+  font-family:     var(--hdx-font-body);
+  font-size:       @fs;
+  font-weight:     var(--hdx-fw-medium);
+  line-height:     @lh;
+  text-decoration: underline;
+}
+
+
+// ── Typography — named type-style mixins ───────────────────────
+
+// Display  (Merriweather, 130% line-height)
+.hdx-display-l()  { .-hdx-display(var(--hdx-fs-4xl), var(--hdx-fw-bold)); }  // 32px bold
+.hdx-display-m()  { .-hdx-display(var(--hdx-fs-3xl), var(--hdx-fw-bold)); }  // 28px bold
+.hdx-display-s()  { .-hdx-display(var(--hdx-fs-2xl), var(--hdx-fw-bold)); }  // 24px bold
+.hdx-display-xs() { .-hdx-display(var(--hdx-fs-xl),  var(--hdx-fw-bold)); }  // 20px bold
+
+// Heading  (Roboto, 130% line-height)
+.hdx-heading-h1() { .-hdx-body(var(--hdx-fs-2xl), var(--hdx-fw-medium));   }  // 24px medium
+.hdx-heading-h2() { .-hdx-body(var(--hdx-fs-xl),  var(--hdx-fw-semibold)); }  // 20px semibold
+.hdx-heading-h3() { .-hdx-body(var(--hdx-fs-l),   var(--hdx-fw-semibold)); }  // 18px semibold
+.hdx-heading-h4() { .-hdx-body(var(--hdx-fs-m),   var(--hdx-fw-semibold)); }  // 16px semibold
+
+// Lead text  (Roboto regular, 130% line-height)
+.hdx-lead() { .-hdx-body(var(--hdx-fs-2xl), var(--hdx-fw-regular)); }  // 24px regular
+
+// Body  (Roboto, 130% line-height)
+//   Sizes: L (18px) / M (16px) / S (14px) / XS (12px)
+//   Weights per size: semibold (600) / medium (500) / regular (400)
+.hdx-body-l-semibold()  { .-hdx-body(var(--hdx-fs-l),  var(--hdx-fw-semibold)); }
+.hdx-body-l-medium()    { .-hdx-body(var(--hdx-fs-l),  var(--hdx-fw-medium));   }
+.hdx-body-l()           { .-hdx-body(var(--hdx-fs-l),  var(--hdx-fw-regular));  }
+
+.hdx-body-m-semibold()  { .-hdx-body(var(--hdx-fs-m),  var(--hdx-fw-semibold)); }
+.hdx-body-m-medium()    { .-hdx-body(var(--hdx-fs-m),  var(--hdx-fw-medium));   }
+.hdx-body-m()           { .-hdx-body(var(--hdx-fs-m),  var(--hdx-fw-regular));  }
+
+.hdx-body-s-semibold()  { .-hdx-body(var(--hdx-fs-s),  var(--hdx-fw-semibold)); }
+.hdx-body-s-medium()    { .-hdx-body(var(--hdx-fs-s),  var(--hdx-fw-medium));   }
+.hdx-body-s()           { .-hdx-body(var(--hdx-fs-s),  var(--hdx-fw-regular));  }
+
+.hdx-body-xs-semibold() { .-hdx-body(var(--hdx-fs-xs), var(--hdx-fw-semibold)); }
+.hdx-body-xs-medium()   { .-hdx-body(var(--hdx-fs-xs), var(--hdx-fw-medium));   }
+.hdx-body-xs()          { .-hdx-body(var(--hdx-fs-xs), var(--hdx-fw-regular));  }
+
+// Link text  (Roboto medium, underlined — use var(--hdx-primary-5) for color)
+//   XL uses 120% line-height; L–XS use 130%.
+.hdx-link-xl() { .-hdx-link(var(--hdx-fs-xl),  var(--hdx-lh-tight));  }  // 20px, 120% lh
+.hdx-link-l()  { .-hdx-link(var(--hdx-fs-l),   var(--hdx-lh-normal)); }  // 18px
+.hdx-link-m()  { .-hdx-link(var(--hdx-fs-m),   var(--hdx-lh-normal)); }  // 16px
+.hdx-link-s()  { .-hdx-link(var(--hdx-fs-s),   var(--hdx-lh-normal)); }  // 14px
+.hdx-link-xs() { .-hdx-link(var(--hdx-fs-xs),  var(--hdx-lh-normal)); }  // 12px
+
+// Base-style mixins (no font-size — for use in component base classes where
+// font-size is controlled by a size modifier rather than the base class)
+.hdx-display-bold-base()    { .-hdx-display-base(var(--hdx-fw-bold));    }
+.hdx-display-regular-base() { .-hdx-display-base(var(--hdx-fw-regular)); }
+.hdx-body-regular-base()    { .-hdx-body-base(var(--hdx-fw-regular));    }
+.hdx-body-medium-base()     { .-hdx-body-base(var(--hdx-fw-medium));     }
+.hdx-body-semibold-base()   { .-hdx-body-base(var(--hdx-fw-semibold));   }
+
+// ── Page-title scale ─────────────────────────────────────────────
+// Canonical top-of-page title scale (24 → 28 → 32px Bold) — shared by
+// c-page-header's hero <h1> and homepage major-section headings.
+
+.hdx-page-title-scale() {
+    .hdx-display-s();   // 24px bold, base (font-family + weight + base size)
+    .hdx-page-title-font-size();
+}
+
+// Font-size ramp only (no weight/family/color) — for title-adjacent elements
+// (list-header counts, the /dataset search page's "Datasets" sub-heading)
+// that need to track the page-title size without adopting its weight/color.
+.hdx-page-title-font-size() {
+    font-size: var(--hdx-fs-2xl);  // 24px base
+
+    @media (min-width: @hdx-bp-md) { font-size: var(--hdx-fs-3xl); }  // 28px
+    @media (min-width: @hdx-bp-xl) { font-size: var(--hdx-fs-4xl); }  // 32px
+}
+
+// ── Section header pattern ─────────────────────────────────────
+// Shared label + heading structure for homepage sections (intro, highlights, etc.)
+
+.hdx-section-header() {
+    display:        flex;
+    width:          100%;
+    flex-direction: column;
+    align-items:    flex-start;
+    gap:            var(--hdx-space-2);
+
+    @media (min-width: @hdx-bp-md) { gap: var(--hdx-space-3); }
+}
+
+.hdx-section-label() {
+    font-family: var(--hdx-font-body);
+    font-size:   var(--hdx-fs-s);
+    line-height: var(--hdx-lh-normal);
+    color:       var(--hdx-neutral-85);
+
+    @media (min-width: @hdx-bp-md) { font-size: var(--hdx-fs-m); }
+    @media (min-width: @hdx-bp-xl) { font-size: var(--hdx-fs-l); }
+}
+
+.hdx-section-heading() {
+    .hdx-page-title-scale();
+    color:  var(--hdx-neutral-95);
+    margin: 0;
+
+    @media (min-width: @hdx-bp-xl) { max-width: 66.67%; }
+}
+
+// ── List header pattern ────────────────────────────────────────
+// Shared count + empty-state structure for page-owned list headers
+// (search page, Archived Dataviz, Dataviz Gallery, c-page-header's
+// title_count badge, org Members tab). Title itself calls
+// .hdx-section-title() (search, Members tab) or is c-page-header's
+// own __title (Dataviz Gallery/Archived Dataviz).
+
+// Row shape: title+count grouped on the left (`-row-left()`), any
+// controls (sort/filter) as a sibling pushed right by the left
+// group's flex:1 — used by the search-page/country/crisis list
+// header and the org Members tab heading row.
+.hdx-list-header-row() {
+    display:     flex;
+    align-items: center;
+    width:       100%;
+}
+
+.hdx-list-header-row-left() {
+    flex:        1;
+    display:     flex;
+    align-items: center;
+    gap:         var(--hdx-space-2);
+}
+
+.hdx-list-header-count() {
+    .hdx-display-regular-base();
+    color: var(--hdx-neutral-8);
+}
+
+// Font-size ramp only — for count badges beside a .hdx-section-title()
+// heading (org Datasets tab, country/crisis pages, Members tab), tracking
+// its 18→20px step without adopting weight/color.
+.hdx-section-title-font-size() {
+    font-size: var(--hdx-fs-l);   // 18px base
+    @media (min-width: @hdx-bp-md) { font-size: var(--hdx-fs-xl); }  // 20px
+}
+
+.hdx-section-title-count() {
+    .hdx-list-header-count();
+    .hdx-section-title-font-size();
+}
+
+.hdx-list-header-empty() {
+    .hdx-body-m();
+    color:      var(--hdx-neutral-8);
+    text-align: center;
+    padding:    var(--hdx-space-10) 0;
+}
+
+// ── Page-section pattern ───────────────────────────────────────
+// Shared padding/header/title/body structure for page-owned detail
+// sections (dataset page, resource page). Sections are separated by
+// <hr class="c-divider"> in each page's template.
+
+.hdx-scroll-offset-header() {
+    @media (max-width: @hdx-bp-xl) { scroll-margin-top: 8rem; }
+}
+
+.hdx-page-section-wrapper() {
+    padding: var(--hdx-space-6) 0;
+
+    @media (min-width: @hdx-bp-md) { padding: var(--hdx-space-10) 0; }
+
+    .hdx-scroll-offset-header();
+}
+
+.hdx-page-section-header() {
+    display:         flex;
+    align-items:     center;
+    justify-content: space-between;
+    gap:             var(--hdx-space-3);
+}
+
+// Canonical in-page sub-section heading (20px Semibold) — shared by
+// dataset/resource sections, org tabs, and HAPI/Signals landing sections.
+// Not for page/list-level titles (see .hdx-page-title-scale() above,
+// a different, larger tier).
+.hdx-section-title() {
+    .-hdx-display(var(--hdx-fs-l), var(--hdx-fw-semibold));   // 18px semibold, base
+    color:  var(--hdx-neutral-95);
+    margin: 0;
+    .hdx-section-title-font-size();
+}
+
+.hdx-page-section-body() {
+    padding-top: var(--hdx-space-8);
+}
+
+// ── Line clamp ──────────────────────────────────────────────────
+// Multi-line text truncation with a trailing ellipsis. `-off()`
+// reverses it (e.g. an `.is-open` expanded state). `-inline()` is a
+// separate variant for the one site (label.less) that needs
+// -webkit-inline-box + text-overflow instead of the block form.
+
+.hdx-line-clamp(@lines) {
+    display:            -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: @lines;
+    overflow:           hidden;
+}
+
+.hdx-line-clamp-off() {
+    -webkit-line-clamp: unset;
+    overflow:           visible;
+}
+
+.hdx-line-clamp-inline(@lines) {
+    display:             -webkit-inline-box;
+    overflow:             hidden;
+    text-overflow:        ellipsis;
+    -webkit-line-clamp:   @lines;
+    -webkit-box-orient:   vertical;
+}
+
+// ── Rendered markdown content ────────────────────────────────────
+// Spacing for the block elements (p, ul, ol, h1-h3) a `h.render_markdown()`
+// string can contain, for use on any element that outputs one of
+// those strings directly. Links inherit the surrounding text color
+// by default — override with an `a { color: ... }` rule after
+// including this mixin if a component needs a different link color.
+// Headings are flattened to one size (16px semibold — same size as the
+// surrounding body text, so a heading is never smaller than its own
+// paragraph text, but bold enough to still read as a heading; h4-h6 are
+// already stripped by CKAN's markdown sanitizer, so only h1-h3 apply).
+.hdx-markdown-content(@gap) {
+    a { color: inherit; }
+
+    h1, h2, h3 { .hdx-body-m-semibold(); margin: 0 0 @gap; }
+    h1:last-child, h2:last-child, h3:last-child { margin-bottom: 0; }
+
+    p, ul, ol { margin: 0 0 @gap; }
+    p:last-child, ul:last-child, ol:last-child { margin-bottom: 0; }
+}
+
+// ── Focus ring ──────────────────────────────────────────────────
+// Keyboard-focus outline. Inverse variant is for dark surfaces
+// (navbar, top bar) where the primary-5 ring has no contrast.
+
+.hdx-focus-ring() {
+    outline:        2px solid var(--hdx-primary-5);
+    outline-offset: 2px;
+}
+
+.hdx-focus-ring-inverse() {
+    outline:        2px solid var(--hdx-neutral-0);
+    outline-offset: 2px;
+}
+
+// ── Icon size ───────────────────────────────────────────────────
+// Shared shape for the ~40 `svg { width: …; height: …; }` sizing
+// blocks across components. Sizes genuinely diverge site to site,
+// so only width/height are pulled out here — any display/flex-shrink/
+// transition lines a given site also carries stay written out at
+// that site, unchanged.
+
+.hdx-icon-size(@w, @h: @w) {
+    width:  @w;
+    height: @h;
+}
+
+// ── Reduced-motion mixin (C-07, V-15) ──────────────────────────
+// Mixed into any rule that sets a `transition`, alongside the
+// --hdx-duration-*/--hdx-ease-* tokens. Currently a no-op pending
+// task 069's follow-up — uncomment the block below to re-enable
+// prefers-reduced-motion support everywhere this mixin is called.
+
+.hdx-motion() {
+    // @media (prefers-reduced-motion: reduce) {
+    //     transition-duration: 0.01ms;
+    // }
+}

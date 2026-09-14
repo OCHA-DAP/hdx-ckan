@@ -1,0 +1,33 @@
+// ============================================================
+// nav-controls.less
+// hdx-v2-nav-controls — sort + results-per-page dropdown pair.
+// Shared by search page and any listing page that uses
+// navigate-on-select dropdowns.
+//   @import "nav-controls.less";         (from less/v2/)
+// ============================================================
+
+@import "mixins.less";
+
+// Outer wrapper aligns the two ctrl-pairs side by side.
+.hdx-v2-nav-controls {
+    display:     flex;
+    align-items: center;
+    gap:         var(--hdx-space-4);
+
+    // Each ctrl-pair is a label + c-dropdown side by side.
+    .hdx-v2-nav-ctrl-pair {
+        display:     flex;
+        align-items: center;
+        gap:         var(--hdx-space-3);
+
+        .hdx-v2-nav-ctrl-label {
+            .hdx-body-s();
+            color:       var(--hdx-neutral-8);
+            white-space: nowrap;
+        }
+
+        .c-dropdown--size-s {
+            width: auto;
+        }
+    }
+}

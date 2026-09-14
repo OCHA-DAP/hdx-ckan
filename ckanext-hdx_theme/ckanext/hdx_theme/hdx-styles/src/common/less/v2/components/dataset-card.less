@@ -1,0 +1,250 @@
+// ============================================================
+// c-dataset-card — dataset search result card
+// ============================================================
+// Figma source: llm_docs/redesign/figma_exports/dataset-card.html
+// Requirement:  llm_docs/redesign/requirements/029-implement-dataset-card-component.md
+// ============================================================
+
+@import "../mixins.less";
+
+// ── Local tokens ─────────────────────────────────────────────
+
+@c-dataset-card-desc-color: var(--hdx-neutral-85);  // Typography — description
+
+// ────────────────────────────────────────────────────────────
+// c-dataset-card — base
+// ────────────────────────────────────────────────────────────
+
+.c-dataset-card {
+    background-color: var(--hdx-neutral-0);
+    border:           1px solid var(--hdx-neutral-1);
+    border-radius:    var(--hdx-radius-sm);
+    box-shadow:       var(--hdx-shadow-sm);
+    overflow:         hidden;
+    display:          flex;
+    flex-direction:   column;
+    align-items:      stretch;
+    transition:       border-color 0.15s ease;
+    .hdx-motion();
+    font-family:      var(--hdx-font-body);
+
+    &:hover {
+        border-color: var(--hdx-neutral-8);
+    }
+
+    // ── __body ───────────────────────────────────────────────
+    &__body {
+        display:   flex;
+        flex-wrap: wrap;             // SM: left + right stack vertically
+        padding:   var(--hdx-space-4);  // 16px
+        gap:       var(--hdx-space-14);  // 10px  (row gap when stacked)
+
+        @media (min-width: @hdx-bp-md) {
+            flex-wrap: nowrap;
+            gap:       var(--hdx-space-10);  // 40px  (column gap at MD+)
+        }
+    }
+
+    // ── __left ───────────────────────────────────────────────
+    &__left {
+        display:        flex;
+        flex-direction: column;
+        align-items:    flex-start;
+        gap:            var(--hdx-space-13);  // 6px
+        width:          100%;        // SM: full width
+
+        @media (min-width: @hdx-bp-md) {
+            flex:      2 0 0%;
+            min-width: 0;
+            width:     auto;
+        }
+    }
+
+    // ── __org ────────────────────────────────────────────────
+    &__org {
+        font-size:     var(--hdx-fs-s);  // 14px
+        color:         var(--hdx-neutral-9);
+        line-height:   var(--hdx-lh-normal);
+        margin:        0;
+        width:         100%;
+        overflow:      hidden;
+        white-space:   nowrap;
+        text-overflow: ellipsis;
+
+        a {
+            color:           inherit;
+            text-decoration: none;
+
+            &:hover {
+              text-decoration: underline;
+              color: var(--hdx-primary-5); // overwrites bootstrap style
+            }
+        }
+    }
+
+    // ── __title ──────────────────────────────────────────────
+    &__title {
+        align-self:         stretch;
+        font-size:          var(--hdx-fs-m);  // 16px  (SM)
+        font-weight:        var(--hdx-fw-semibold);
+        color:              var(--hdx-neutral-95);
+        line-height:        var(--hdx-lh-normal);
+        text-decoration:    none;
+        .hdx-line-clamp(2);   // 2-line clamp (SM)
+        margin:             0;
+
+        &:hover {
+          text-decoration: underline;
+          color: var(--hdx-primary-5);
+        }
+
+        @media (min-width: @hdx-bp-md) {
+            font-size: var(--hdx-fs-l);  // 18px  (MD+)
+        }
+    }
+
+    // ── __desc ───────────────────────────────────────────────
+    &__desc {
+        display: none;              // hidden on SM
+
+        @media (min-width: @hdx-bp-md) {
+            display:        flex;
+            flex-direction: column;
+            align-items:    flex-start;
+            gap:            var(--hdx-space-1);
+            align-self:     stretch;
+        }
+
+        // Show-more button: hidden until JS confirms content is actually clamped
+        .c-text-button { display: none; }
+        &.is-clamped .c-text-button { display: inline-flex; }
+
+        // Rotate chevron icon when expanded
+        &.is-open .c-text-button__icon {
+            transform:  rotate(180deg);
+            transition: transform 0.15s ease;
+        }
+
+        .c-text-button__icon {
+            transition: transform 0.15s ease;
+            .hdx-motion();
+        }
+    }
+
+    &__desc-text {
+        display:     none;
+        font-size:   var(--hdx-fs-xs);  // 12px
+        color:       @c-dataset-card-desc-color;
+        line-height: var(--hdx-lh-normal);
+        margin:      0;
+
+        .hdx-markdown-content(var(--hdx-space-2));
+
+        a {
+          color: @c-dataset-card-desc-color;
+          &:hover {
+            color: var(--hdx-primary-5);
+          }
+        }
+
+        &.is-open { display: block; }
+    }
+
+    // ── __right ──────────────────────────────────────────────
+    &__right {
+        display:        flex;
+        flex-direction: row;        // SM: location + date side by side
+        align-items:    center;
+        flex-wrap:      wrap;
+        gap:            var(--hdx-space-14);  // 10px  (SM: row direction)
+        width:          100%;
+
+        @media (min-width: @hdx-bp-md) {
+            flex-direction: column;
+            align-items:    flex-start;
+            flex-wrap:      nowrap;
+            gap:            var(--hdx-space-3);  // 12px
+            flex:           1 0 0%;
+            min-width:      0;
+            width:          auto;
+        }
+    }
+
+    // ── __locations ──────────────────────────────────────────
+    &__locations {
+        display:     flex;
+        align-items: flex-start;
+        flex-wrap:   wrap;
+        gap:         var(--hdx-space-1);  // 4px
+    }
+
+    // Subnational label wrapper: hidden on SM, visible at MD+
+    &__subnational {
+        display: none;
+
+        @media (min-width: @hdx-bp-md) {
+            display: contents;
+        }
+    }
+
+    // ── __date ───────────────────────────────────────────────
+    &__date {
+        font-size:     var(--hdx-fs-xs);  // 12px
+        color:         var(--hdx-neutral-85);
+        line-height:   var(--hdx-lh-normal);
+        margin:        0;
+        max-width:     100%;
+        overflow:      hidden;
+        text-overflow: ellipsis;
+        white-space:   nowrap;
+    }
+
+    // ── __formats ────────────────────────────────────────────
+    &__formats {
+        display: none;              // hidden on SM
+
+        @media (min-width: @hdx-bp-md) {
+            display:     flex;
+            align-items: flex-start;
+            flex-wrap:   wrap;
+            gap:         var(--hdx-space-1);  // 4px
+            align-self:  stretch;
+
+            .c-label__icon {
+              color: var(--hdx-neutral-85);
+            }
+        }
+    }
+
+    &__formats-more {
+        font-size:   var(--hdx-fs-xs);  // 12px
+        color:       var(--hdx-neutral-85);
+        line-height: var(--hdx-lh-normal);
+        align-self:  center;
+    }
+
+    // ── __footer ─────────────────────────────────────────────
+    &__footer {
+        border-top:  1px solid var(--hdx-neutral-1);
+        padding:     var(--hdx-space-2) var(--hdx-space-4);  // 8px
+        display:     flex;
+        align-items: center;
+    }
+}
+
+// ────────────────────────────────────────────────────────────
+// c-dataset-card-list — vertical list wrapper for dataset cards
+// ────────────────────────────────────────────────────────────
+
+.c-dataset-card-list {
+    display:        flex;
+    flex-direction: column;
+    gap:            var(--hdx-space-4);
+
+    // Search highlight — text matched by the highlight.js module.
+    // The legacy rule lives in deprecated.css (page-styles bundle),
+    // which is not loaded on v2 pages.
+    .highlight {
+        background-color: var(--hdx-warning-1);
+    }
+}

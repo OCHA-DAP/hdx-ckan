@@ -1,0 +1,101 @@
+// ============================================================
+// c-text-link — inline typographic hyperlink
+// ============================================================
+// Figma source: "Text link"
+//
+// Distinct from c-text-button (has icon support, more button-
+// like). c-text-link is a purely inline text element: underline,
+// colour change on state, no icon, no padding/background.
+// ============================================================
+
+@import "../mixins.less";
+
+// ────────────────────────────────────────────────────────────
+// c-text-link
+// ────────────────────────────────────────────────────────────
+
+.c-text-link {
+    display:         inline;
+    .hdx-body-medium-base();
+    text-decoration: underline;
+    cursor:          pointer;
+    transition:      color 0.15s ease;
+    .hdx-motion();
+    background:      none;
+    border:          none;
+    padding:         0;
+
+    &:focus-visible {
+        .hdx-focus-ring();
+        border-radius:  1px;
+    }
+
+    // ── Size modifiers ───────────────────────────────────────
+    // Figma spec shows 5 sizes: 20, 18, 16, 14, 12 px
+
+    &--size-xl  { font-size: 1.25rem;  }  // 20 px
+    &--size-l   { font-size: 1.125rem; }  // 18 px
+    &--size-m   { font-size: var(--hdx-fs-m);  }  // 16 px
+    &--size-s   { font-size: var(--hdx-fs-s);  }  // 14 px
+    &--size-xs  { font-size: var(--hdx-fs-xs); }  // 12 px
+
+
+    // ── Style: primary ───────────────────────────────────────
+
+    &--primary {
+        color: var(--hdx-primary-5);  // #1862d8
+
+        &:hover  {
+          color: var(--hdx-neutral-95);  // #101212
+          text-decoration: underline; // overwrites page-extra-light-styles
+        }
+        &:active { color: var(--hdx-primary-5); }  // back to blue on active
+
+        &[disabled],
+        &.is-disabled {
+            color:          var(--hdx-neutral-7);   // #9db1b3
+            cursor:         not-allowed;
+            pointer-events: none;
+        }
+    }
+
+
+    // ── Style: secondary ─────────────────────────────────────
+
+    &--secondary {
+        color: var(--hdx-neutral-95);  // #101212
+
+        &:hover  {
+          color: var(--hdx-primary-5);  // #1862d8
+          text-decoration: underline; // overwrites page-extra-light-styles
+        }
+        &:active { color: var(--hdx-primary-5); }
+
+        &[disabled],
+        &.is-disabled {
+            color:          var(--hdx-neutral-7);
+            cursor:         not-allowed;
+            pointer-events: none;
+        }
+    }
+
+
+    // ── Style: tertiary ──────────────────────────────────────
+
+    &--tertiary {
+        color: var(--hdx-neutral-8);  // #3f4748
+
+        &:hover  {
+          color: var(--hdx-primary-5);
+          text-decoration: underline; // overwrites page-extra-light-styles
+        }
+        &:active { color: var(--hdx-primary-5); }
+
+        &[disabled],
+        &.is-disabled {
+            color:          var(--hdx-neutral-7);
+            cursor:         not-allowed;
+            pointer-events: none;
+        }
+    }
+}

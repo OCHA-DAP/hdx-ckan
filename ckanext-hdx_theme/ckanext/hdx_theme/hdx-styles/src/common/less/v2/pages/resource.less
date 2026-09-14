@@ -1,0 +1,111 @@
+// ============================================================
+// resource-page.less
+// Layout for the v2 resource detail page.
+// Compiled output: fanstatic/v2/resource-page.css
+// ============================================================
+
+@import "../mixins.less";
+
+// ── Outer row background ─────────────────────────────────────
+.hdx-v2-resource-row {
+    background-color: var(--hdx-neutral-0);
+}
+
+// ── Two-column layout wrapper (gap via generic --gap-xl) ─────
+.hdx-v2-resource-columns {
+    padding: var(--hdx-space-4) 0 var(--hdx-space-20); // 80px bottom ensures page scrolls past last anchor section
+}
+
+// ── Sidebar (anchor nav — padding only) ──────────────────────
+.hdx-v2-resource-sidebar {
+    @media (min-width: @hdx-bp-xl) {
+        padding: var(--hdx-space-10) 0; // 40px top/bottom
+    }
+}
+
+// ── Content area ─────────────────────────────────────────────
+.hdx-v2-resource-content {
+    @media (min-width: @hdx-bp-md) {
+        padding: var(--hdx-space-8) 0;
+    }
+}
+
+// ── Section wrapper (Resource preview / Data dictionary / API access) ──
+.hdx-v2-resource-section {
+    .hdx-page-section-wrapper();
+
+    &__header {
+        .hdx-page-section-header();
+    }
+
+    &__title {
+        .hdx-section-title();
+    }
+
+    &__body {
+        .hdx-page-section-body();
+    }
+}
+// ============================================================
+// API access section
+// SM/MD: blocks stack vertically; XL: three blocks side by side.
+// ============================================================
+
+.hdx-v2-resource-api {
+    display:        flex;
+    flex-direction: column; // SM/MD: stack
+    gap:            var(--hdx-space-6);
+
+    @media (min-width: @hdx-bp-xl) {
+        flex-direction: row; // XL: side by side
+        align-items:    flex-start;
+        gap:            var(--hdx-space-5); // 20px
+    }
+
+    // Each block: full-width on SM/MD; flex:1 on XL
+    &__block {
+        display:        flex;
+        flex-direction: column;
+        align-items:    flex-start; // prevent buttons stretching full-width
+        gap:            var(--hdx-space-3); // 12px
+
+        @media (min-width: @hdx-bp-xl) {
+            flex:      1;
+            min-width: 0;
+        }
+    }
+
+    // Label + value stacked, gap:8px (web-design-group in figma)
+    &__group {
+        display:        flex;
+        flex-direction: column;
+        gap:            var(--hdx-space-2); // 8px
+    }
+
+    // Label + "More info" text-button side by side (web-design-container in figma)
+    &__label-row {
+        display:     flex;
+        align-items: center;
+        gap:         var(--hdx-space-2); // 8px
+    }
+
+    &__label {
+        .hdx-body-m-semibold();
+        color:       var(--hdx-neutral-85);
+        margin:      0;
+    }
+
+    &__value {
+        font-family: var(--hdx-font-body);
+        font-size:   var(--hdx-fs-s); // 14px
+        color:       var(--hdx-neutral-8);
+        margin:      0;
+        line-height: var(--hdx-lh-normal);
+    }
+
+    // Example query URL text-link (no extra_classes — targeted via parent)
+    &__block .c-text-link {
+        font-size:  var(--hdx-fs-s); // 14px
+        word-break: break-all;
+    }
+}

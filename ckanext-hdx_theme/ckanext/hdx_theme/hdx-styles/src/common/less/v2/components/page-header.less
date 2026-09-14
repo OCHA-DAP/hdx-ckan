@@ -1,0 +1,445 @@
+@import "../mixins.less";
+
+// ============================================================
+// c-page-header — unified page hero header (dataset + resource)
+// Figma: llm_docs/redesign/figma_exports/dataset-page-header.html
+// ============================================================
+
+.c-page-header {
+    display:          flex;
+    flex-direction:   column;
+    gap:              var(--hdx-space-6);
+    padding:          var(--hdx-space-6) 0;
+
+    @media (min-width: @hdx-bp-md) {
+        gap:     var(--hdx-space-8);
+        padding: var(--hdx-space-8) 0;
+    }
+
+    @media (min-width: @hdx-bp-xl) {
+        gap:     var(--hdx-space-10);
+        padding: var(--hdx-space-10) 0;
+    }
+    // ── Top row — CSS Grid so __left (description) and __right-card
+    //    (org card) can reposition across breakpoints as single elements:
+    //    stacked at SM, side-by-side sidebar at MD+. ──────────────────
+
+    &__top {
+        display:               grid;
+        grid-template-columns: 1fr;
+        grid-template-areas:   "desc"
+                                "card";
+        gap:                   var(--hdx-space-6);
+
+        @media (min-width: @hdx-bp-md) {
+            grid-template-columns: 1fr 25%;
+            grid-template-areas:   "desc card";
+            align-items:           flex-start;
+            gap:                   var(--hdx-space-6);
+        }
+
+        // No org card (e.g. landing pages, Locations) — description
+        // column takes the full width instead of leaving a 25% gap.
+        &--no-card {
+            @media (min-width: @hdx-bp-md) {
+                grid-template-columns: 1fr;
+                grid-template-areas:   "desc";
+            }
+        }
+    }
+    // ── Left column (description) ─────────────────────────────
+
+    &__left {
+        grid-area:      desc;
+        display:        flex;
+        flex-direction: column;
+        gap:            var(--hdx-space-6);
+        min-width:      0;
+
+        @media (min-width: @hdx-bp-md) {
+            gap: var(--hdx-space-10);
+        }
+    }
+    // ── Description block ────────────────────────────────────
+
+    &__description {
+        display:        flex;
+        flex-direction: column;
+        align-items:    flex-start;
+        gap:            var(--hdx-space-3);
+    }
+    // ── Labels row ───────────────────────────────────────────
+
+    &__labels {
+        display:     flex;
+        flex-wrap:   wrap;
+        align-items: center;
+        gap:         var(--hdx-space-2);
+
+        @media (min-width: @hdx-bp-md) {
+            gap: var(--hdx-space-13) var(--hdx-space-2);
+        }
+
+        @media (min-width: @hdx-bp-xl) {
+            gap: var(--hdx-space-3);
+        }
+    }
+
+    &__link-group {
+        display:     flex;
+        align-items: center;
+        gap:         var(--hdx-space-1);
+    }
+    // ── Title ────────────────────────────────────────────────
+
+    &__title {
+        .hdx-page-title-scale();
+        color:         var(--hdx-neutral-95);
+        margin:        0;
+        word-break:    break-word;
+        overflow-wrap: anywhere;
+    }
+
+    // ── Title row — title + count badge (list-page titles) ─────
+    &__title-row {
+        display:     flex;
+        align-items: center;
+        gap:         var(--hdx-space-2);
+    }
+
+    &__title-count {
+        .hdx-list-header-count();
+        .hdx-page-title-font-size();
+    }
+
+    // ── Title actions — "Interactive map | Alphabetical order" ─
+    // style text-button row under the title. XL only (Locations).
+    &__title-actions {
+        display: none;
+
+        @media (min-width: @hdx-bp-xl) {
+            display:     flex;
+            align-items: center;
+            gap:         var(--hdx-space-3);
+        }
+    }
+
+    &__title-action-sep {
+        color: var(--hdx-neutral-5);
+    }
+    // ── Subtitle ─────────────────────────────────────────────
+
+    &__subtitle {
+        .hdx-body-m-semibold();
+        color:  var(--hdx-neutral-85);
+        margin: 0;
+    }
+    // ── Member since — muted line below title (org pages) ────
+
+    &__member-since {
+        .hdx-body-s();                      // 14 px — Figma .web-design
+        color:  var(--hdx-neutral-8);       // #3f4748
+        margin: 0;
+    }
+    // ── Description text + show-more ─────────────────────────
+
+    &__desc {
+        display:        flex;
+        flex-direction: column;
+        align-items:    flex-start;
+        gap:            var(--hdx-space-2);
+        align-self:     stretch;
+
+        // Show-more button: hidden until JS confirms content is actually clamped
+        .c-text-button { display: none; }
+        &.is-clamped .c-text-button { display: inline-flex; }
+
+        &.is-open .c-text-button__icon {
+            transform:  rotate(180deg);
+            transition: transform 0.15s ease;
+            .hdx-motion();
+        }
+    }
+
+    &__desc-text {
+        .hdx-body-m();
+        color:              var(--hdx-neutral-85);
+        margin:             0;
+        .hdx-line-clamp(3);
+        .hdx-markdown-content(var(--hdx-space-4));
+    }
+
+    &__desc-text.is-open {
+        .hdx-line-clamp-off();
+    }
+    // ── CTA block ────────────────────────────────────────────
+
+    &__cta {
+        display:        flex;
+        flex-direction: column;
+        align-items:    flex-start;
+        gap:            var(--hdx-space-2);
+    }
+
+    &__notify-btn {
+        // Shown/hidden by notification_platform JS — do not add display here.
+    }
+
+    &__downloads {
+        display:     flex;
+        align-items: center;
+        gap:         var(--hdx-space-1);
+        .hdx-body-s();                  // 14 px regular
+        color:       var(--hdx-neutral-8);
+
+        svg {
+            .hdx-icon-size(0.9375rem);   // 15 px — Figma spec, no matching token
+            flex-shrink: 0;
+        }
+    }
+    // ── Right card (org logo + contact) — single element, repositioned
+    //    via __top's grid-area (stacked at SM, 25% sidebar at MD+ —
+    //    same proportion as .v2-sidebar-flex() elsewhere). ────────────
+
+    &__right-card {
+        grid-area:        card;
+        background-color: var(--hdx-neutral-0);
+        border-radius:    var(--hdx-radius-md);
+        display:          flex;
+        flex-direction:   column;
+        align-items:      flex-start;
+        gap:              var(--hdx-space-2);
+        padding:          var(--hdx-space-2) var(--hdx-space-3);
+        min-width:        0;
+
+        @media (min-width: @hdx-bp-md) {
+            gap:     var(--hdx-space-4);
+            padding: var(--hdx-space-4);
+        }
+
+        @media (min-width: @hdx-bp-xl) {
+            padding: var(--hdx-space-6);
+        }
+    }
+
+    &__logo {
+        max-width:       100%;
+        height:          4rem;              // 64 px — Figma spec
+        object-fit:      contain;
+        object-position: center;
+        display:         block;
+    }
+
+    &__logo-link {
+        display: block;
+        width:   fit-content;
+        cursor:  pointer;
+
+        &:focus-visible {
+            .hdx-focus-ring();
+            border-radius: var(--hdx-radius-sm);
+        }
+
+        .c-page-header__logo {
+            margin: 0;
+        }
+    }
+    // ── Right-card action links (org pages) ──────────────────
+
+    &__card-actions {
+        display:        flex;
+        flex-direction: column;
+        align-items:    flex-start;
+        gap:            var(--hdx-space-2);        // 8 px — Figma .text-buttons-parent
+    }
+    // ── Right-card count stats (org pages) ───────────────────
+
+    &__card-stats {
+        display:    flex;
+        align-self: stretch;
+        gap:        var(--hdx-space-4);            // 16 px — Figma .metadata-item-parent
+        color:      var(--hdx-neutral-85);         // #2f3536
+        padding-top: var(--hdx-space-3);
+        padding-bottom: var(--hdx-space-3);
+    }
+
+    &__card-stat {
+        flex:           1;
+        display:        flex;
+        flex-direction: column;
+    }
+
+    &__card-stat-label {
+        .hdx-body-s-semibold();                    // 14 px / 600 — Figma .metadata-label
+    }
+
+    &__card-stat-value {
+        .hdx-body-semibold-base();                 // Figma: 24 px / 600 / 130%
+        font-size: var(--hdx-fs-2xl);
+        padding:   var(--hdx-space-1) 0;           // 4 px 0 — Figma value wrapper
+
+        @media (max-width: @hdx-bp-md) {
+            font-size: var(--hdx-fs-xl);           // 20 px SM — Figma .metadata (compact card)
+        }
+    }
+    // ── Metadata strip ───────────────────────────────────────
+
+    &__metadata {
+        display:     flex;
+        flex-wrap:   wrap;
+        align-items: flex-start;
+        gap:         var(--hdx-space-6);
+        .hdx-body-s();                      // 14 px SM/MD
+        color:       var(--hdx-neutral-85);
+
+        @media (min-width: @hdx-bp-xl) {
+            // Grid: Location spans sidebar+gap so item 2 aligns with content area
+            display: grid;
+            grid-template-columns: calc(25% + var(--hdx-space-6)) repeat(3, 1fr);
+            font-size: var(--hdx-fs-xs);    // 12 px XL
+            gap:       0;
+        }
+    }
+
+    &__meta-item {
+        width:          100%;               // SM: each item full width
+        flex:           none;
+        display:        flex;
+        flex-direction: column;
+
+        @media (min-width: @hdx-bp-md) {
+            width: calc(50% - var(--hdx-space-3));  // MD: 2 columns
+        }
+
+        @media (min-width: @hdx-bp-xl) {
+            width:         auto;
+            min-width:     0;
+            padding-right: var(--hdx-space-6);      // spacing via padding (grid ignores flex)
+
+            &:last-child { padding-right: 0; margin-top: 0; }
+        }
+    }
+
+    &__meta-label-row {
+        display:     flex;
+        align-items: center;
+        gap:         var(--hdx-space-1);
+        padding:     var(--hdx-space-15) 0;
+    }
+
+    &__meta-label {
+        .hdx-body-s-semibold();
+        color: var(--hdx-neutral-85);
+    }
+
+    &__meta-value {
+        display:     flex;
+        flex-wrap:   wrap;
+        align-items: center;
+        .hdx-body-s();                      // 14 px regular
+        gap:         var(--hdx-space-1) var(--hdx-space-13);
+        padding:     var(--hdx-space-1) 0;
+        line-height: var(--hdx-lh-normal);
+
+        // Single truncated line (e.g. source)
+        &--truncate {
+            flex-wrap: nowrap;
+            overflow:  hidden;
+
+            span {
+                white-space:   nowrap;
+                overflow:      hidden;
+                text-overflow: ellipsis;
+            }
+        }
+    }
+
+    &__meta-view-more {
+        display: none;  // JS reveals when the value overflows
+    }
+    // ── Format icon + label row ──────────────────────────────
+
+    &__format {
+        display:     flex;
+        align-items: center;
+        gap:         var(--hdx-space-2);
+    }
+
+    &__format-label {
+        .hdx-body-s-medium();
+        color: var(--hdx-neutral-85);
+    }
+    // ── Compact title — fixed at 1.5rem, no XL scale-up ──────
+
+    &--compact-title {
+        .c-page-header__title {
+            font-size: var(--hdx-fs-2xl); // 1.5rem
+        }
+    }
+    // ── CTA row variant (download + export) ──────────────────
+
+    &__cta--row {
+        flex-direction: row;
+        align-items:    center;
+        gap:            var(--hdx-space-3);
+
+        // Dropdown must not stretch full-width in flex row
+        .c-dropdown { width: fit-content; }
+    }
+    // ── 3-column metadata strip (resource-style) ─────────────
+    // SM: stacked. MD: 2 per row (items 1+2, then item 3 below).
+    // XL: CSS grid aligned with sidebar (calc(25% + gap)) / 1fr / 2fr.
+
+    &__metadata--cols-3 {
+        gap: 0;
+
+        @media (min-width: @hdx-bp-xl) {
+            grid-template-columns: calc(25% + var(--hdx-space-6)) 1fr 2fr;
+        }
+
+        .c-page-header__meta-item {
+            // SM: full width, stacked
+            width:          100%;
+            min-width:      0;
+            gap:            var(--hdx-space-1);
+            padding-bottom: var(--hdx-space-4);
+            padding-right:  0;
+
+            // MD: two per row (items 1+2), item 3 full-width below
+            @media (min-width: @hdx-bp-md) {
+                width:          50%;
+                padding-right:  var(--hdx-space-6);
+                padding-bottom: 0;
+                &:last-child { width: 100%; padding-right: 0; }
+            }
+
+            // XL: grid handles column widths; padding-right provides spacing
+            @media (min-width: @hdx-bp-xl) {
+                width:         auto;
+                padding-top:   0;
+                padding-right: var(--hdx-space-6);
+                &:last-child { padding-right: 0; }
+            }
+        }
+
+        .c-page-header__meta-label-row {
+            padding: 0;
+            gap:     var(--hdx-space-2);
+        }
+
+        // Meta value: truncated by default; text-link values allow wrapping
+        .c-page-header__meta-value {
+            display:       block;
+            gap:           0;
+            padding:       0;
+            overflow:      hidden;
+            text-overflow: ellipsis;
+            white-space:   nowrap;
+        }
+
+        .c-page-header__meta-value .c-text-link {
+            word-break:  break-all;
+            white-space: normal;
+        }
+    }
+}

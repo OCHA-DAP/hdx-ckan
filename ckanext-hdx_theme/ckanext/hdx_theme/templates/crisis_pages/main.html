@@ -1,0 +1,60 @@
+{% extends "v2/page.html" %}
+
+{% set content_class = 'hdx-v2-content-columns__content' %}
+
+{% block subtitle %}{{ _('Crisis Pages') }}{% endblock %}
+
+{% block styles %}
+  {{ super() }}
+  {% asset 'hdx_theme/v2-crisis-pages-page-styles' %}
+{% endblock %}
+
+{% block breadcrumb_items %}
+  {% snippet 'v2/components/breadcrumb.html',
+      items=[
+        {'label': _('Products'), 'href': ''},
+        {'label': _('Crisis Pages'), 'href': ''},
+      ] %}
+{% endblock %}
+
+{# No sidebar #}
+{% block secondary %}{% endblock %}
+
+{% block primary %}
+  <div class="hdx-v2-crisis-pages">
+    {% snippet 'v2/components/page-header.html',
+        title=_('HDX Crisis Pages') %}
+
+    <div class="hdx-v2-crisis-pages__section">
+      <h2 class="hdx-v2-crisis-pages__section-title">{{ _('Ongoing') }}</h2>
+      {% if data.ongoing_list %}
+        {% for item in data.ongoing_list %}
+          {% snippet 'v2/components/text-button.html',
+              style='tertiary', size='m', label=item.title,
+              icon_position='right', icon_src='v2/icons/arrow-right.svg',
+              tag='a', href=item.url,
+              extra_classes='hdx-v2-crisis-pages__row' %}
+          {% if not loop.last %}<hr class="c-divider">{% endif %}
+        {% endfor %}
+      {% else %}
+        <p class="hdx-v2-crisis-pages__empty">{{ _('No ongoing crisis pages.') }}</p>
+      {% endif %}
+    </div>
+
+    <div class="hdx-v2-crisis-pages__section">
+      <h2 class="hdx-v2-crisis-pages__section-title">{{ _('Archived') }}</h2>
+      {% if data.archived_list %}
+        {% for item in data.archived_list %}
+          {% snippet 'v2/components/text-button.html',
+              style='tertiary', size='m', label=item.title,
+              icon_position='right', icon_src='v2/icons/arrow-right.svg',
+              tag='a', href=item.url,
+              extra_classes='hdx-v2-crisis-pages__row' %}
+          {% if not loop.last %}<hr class="c-divider">{% endif %}
+        {% endfor %}
+      {% else %}
+        <p class="hdx-v2-crisis-pages__empty">{{ _('No archived crisis pages.') }}</p>
+      {% endif %}
+    </div>
+  </div>
+{% endblock %}

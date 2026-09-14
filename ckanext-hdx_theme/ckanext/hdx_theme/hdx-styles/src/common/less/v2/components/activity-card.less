@@ -1,0 +1,181 @@
+// ============================================================
+// c-activity-card — activity card component
+// ============================================================
+// Figma source: llm_docs/redesign/figma_exports/hdx-activity-card.html
+// ============================================================
+@import "../mixins.less";
+
+// ── Local tokens ────────────────────────────────────────────
+
+// Size: lg
+@c-activity-card-lg-padding:      var(--hdx-space-8);  // 32px
+@c-activity-card-lg-gap:          var(--hdx-space-12); // 48px
+@c-activity-card-lg-header-gap:   var(--hdx-space-6);  // 24px
+@c-activity-card-lg-body-gap:     var(--hdx-space-4);  // 16px
+@c-activity-card-lg-heading-fs:   var(--hdx-fs-3xl);   // 28px
+@c-activity-card-lg-subtitle-fs:  var(--hdx-fs-l);     // 18px
+
+// Size: md
+@c-activity-card-md-padding:      var(--hdx-space-6);  // 24px
+@c-activity-card-md-gap:          var(--hdx-space-10); // 40px
+@c-activity-card-md-header-gap:   var(--hdx-space-5);  // 20px
+@c-activity-card-md-body-gap:     var(--hdx-space-4);  // 16px
+@c-activity-card-md-heading-fs:   var(--hdx-fs-2xl);   // 24px
+@c-activity-card-md-subtitle-fs:  var(--hdx-fs-m);     // 16px
+
+// Size: sm
+@c-activity-card-sm-padding:      var(--hdx-space-5);  // 20px
+@c-activity-card-sm-gap:          var(--hdx-space-8);  // 32px
+@c-activity-card-sm-header-gap:   var(--hdx-space-4);  // 16px
+@c-activity-card-sm-body-gap:     var(--hdx-space-3);  // 12px
+@c-activity-card-sm-heading-fs:   var(--hdx-fs-xl);    // 20px
+@c-activity-card-sm-subtitle-fs:  var(--hdx-fs-m);     // 16px
+// ────────────────────────────────────────────────────────────
+// c-activity-card — base
+// ────────────────────────────────────────────────────────────
+
+.c-activity-card {
+    background-color: var(--hdx-neutral-01);
+    border:           1px solid var(--hdx-neutral-1);
+    border-radius:    var(--hdx-radius-sm);
+    box-shadow:       var(--hdx-shadow-sm);
+    overflow:         hidden;
+    display:          flex;
+    flex-direction:   column;
+    align-items:      flex-start;
+    transition:       border-color 0.15s ease;
+    .hdx-motion();
+
+    // ── States ──────────────────────────────────────────────
+    &:hover {
+        border-color: var(--hdx-neutral-8);
+    }
+
+    // ── Elements ────────────────────────────────────────────
+    &__header {
+        align-self:      stretch;
+        display:         flex;
+        flex-direction:  column;
+        align-items:     flex-start;
+        justify-content: flex-end;
+    }
+
+    &__icon {
+        display:     block;
+        line-height: 0;
+        flex-shrink: 0;
+        color:       var(--hdx-neutral-5);
+        width:       1.5rem;  // 24px
+
+        svg {
+            .hdx-icon-size(100%, auto);
+            display: block;
+        }
+    }
+
+    &__body {
+        align-self:     stretch;
+        display:        flex;
+        flex-direction: column;
+        align-items:    flex-start;
+    }
+
+    &__heading {
+        align-self:  stretch;
+        .hdx-display-bold-base();
+        color:       var(--hdx-neutral-95);
+        margin:      0;
+    }
+
+    &__subtitle {
+        align-self:  stretch;
+        font-family: var(--hdx-font-body);
+        line-height: var(--hdx-lh-normal);
+        color:       var(--hdx-neutral-8);
+        margin:      0;
+    }
+
+    &__footer {
+        max-width: 12.5rem;  // 200px
+    }
+
+    // ── Size modifiers ──────────────────────────────────────
+
+    &--size-lg {
+        padding: @c-activity-card-lg-padding;
+        gap:     @c-activity-card-lg-gap;
+
+        .c-activity-card__header   { gap: @c-activity-card-lg-header-gap; }
+        .c-activity-card__body     { gap: @c-activity-card-lg-body-gap; }
+        .c-activity-card__heading  { font-size: @c-activity-card-lg-heading-fs; }
+        .c-activity-card__subtitle { font-size: @c-activity-card-lg-subtitle-fs; }
+    }
+
+    &--size-md {
+        padding: @c-activity-card-md-padding;
+        gap:     @c-activity-card-md-gap;
+
+        .c-activity-card__header   { gap: @c-activity-card-md-header-gap; }
+        .c-activity-card__body     { gap: @c-activity-card-md-body-gap; }
+        .c-activity-card__heading  { font-size: @c-activity-card-md-heading-fs; }
+        .c-activity-card__subtitle { font-size: @c-activity-card-md-subtitle-fs; }
+    }
+
+    &--size-sm {
+        padding: @c-activity-card-sm-padding;
+        gap:     @c-activity-card-sm-gap;
+
+        .c-activity-card__header   { gap: @c-activity-card-sm-header-gap; }
+        .c-activity-card__body     { gap: @c-activity-card-sm-body-gap; }
+        .c-activity-card__heading  { font-size: @c-activity-card-sm-heading-fs; }
+        .c-activity-card__subtitle { font-size: @c-activity-card-sm-subtitle-fs; }
+    }
+
+    &--size-responsive {
+        padding: @c-activity-card-sm-padding;
+        gap:     @c-activity-card-sm-gap;
+
+        .c-activity-card__header   { gap: @c-activity-card-sm-header-gap; }
+        .c-activity-card__body     { gap: @c-activity-card-sm-body-gap; }
+        .c-activity-card__heading  { font-size: @c-activity-card-sm-heading-fs; }
+        .c-activity-card__subtitle { font-size: @c-activity-card-sm-subtitle-fs; }
+
+        @media (min-width: @hdx-bp-md) {
+            padding: @c-activity-card-md-padding;
+            gap:     @c-activity-card-md-gap;
+
+            .c-activity-card__header   { gap: @c-activity-card-md-header-gap; }
+            .c-activity-card__body     { gap: @c-activity-card-md-body-gap; }
+            .c-activity-card__heading  { font-size: @c-activity-card-md-heading-fs; }
+            .c-activity-card__subtitle { font-size: @c-activity-card-md-subtitle-fs; }
+        }
+
+        @media (min-width: @hdx-bp-xl) {
+            padding: @c-activity-card-lg-padding;
+            gap:     @c-activity-card-lg-gap;
+
+            .c-activity-card__header   { gap: @c-activity-card-lg-header-gap; }
+            .c-activity-card__body     { gap: @c-activity-card-lg-body-gap; }
+            .c-activity-card__heading  { font-size: @c-activity-card-lg-heading-fs; }
+            .c-activity-card__subtitle { font-size: @c-activity-card-lg-subtitle-fs; }
+        }
+    }
+}
+
+// ────────────────────────────────────────────────────────────
+// c-activity-card-list — equal-width card row (column at SM)
+// ────────────────────────────────────────────────────────────
+
+.c-activity-card-list {
+    align-self:     stretch;
+    display:        flex;
+    flex-direction: column;
+    gap:            var(--hdx-space-3);
+
+    @media (min-width: @hdx-bp-md) {
+        flex-direction: row;
+        gap:            var(--hdx-space-5);
+    }
+
+    > .c-activity-card { flex: 1; }
+}

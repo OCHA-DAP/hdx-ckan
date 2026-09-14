@@ -175,15 +175,28 @@ def cache_only_if_truthy_wrapper(region: CacheRegion, *args, **kwargs):
             cached_value = region.get(key)
             if cached_value is not NO_VALUE:
                 return cached_value
-            # Call the original function
-            result = f(*fn_args, **fn_kwargs)
+
+            try:
+                result = f(*fn_args, **fn_kwargs)
+            except Exception as e:
+                log.error(f'Error refreshing value for key "{key}": {e}')
+                stale = region.get(key, ignore_expiration=True)
+                if stale is not NO_VALUE:
+                    log.warning(f'Serving stale value for key "{key}" after failed refresh')
+                    return stale
+                raise
 
             # Cache the result only if it's truthy
             if result:
                 log.info(f'Caching result for key "{key}"')
                 region.set(key, result)
-            else:
-                log.warning(f'Not caching result for key "{key}" because returned value was: {result}')
+                return result
+
+            log.warning(f'Not caching result for key "{key}" because returned value was: {result}')
+            stale = region.get(key, ignore_expiration=True)
+            if stale is not NO_VALUE:
+                log.warning(f'Serving stale value for key "{key}" after empty refresh')
+                return stale
 
             return result
 

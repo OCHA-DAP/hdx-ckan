@@ -1,0 +1,31 @@
+{#
+  Snippet: spinner.html
+  Path:    templates/v2/components/spinner.html
+
+  Renders a c-spinner loading indicator.
+
+  Parameters
+  ──────────────────────────────────────────────────────
+  size          {string}  'l' | 'm' | 's'                default: 'm'
+  label         {string}  Visually-hidden status text    default: _('Loading…')
+  extra_classes {string}  Additional CSS classes          default: ''
+  attrs         {dict}    Extra HTML attributes           default: {}
+  ──────────────────────────────────────────────────────
+  Example
+
+  {% snippet 'v2/components/spinner.html', size='m' %}
+#}
+
+{% set size          = size          if size          is defined else 'm' %}
+{% set label         = label         if label         is defined else _('Loading…') %}
+{% set extra_classes = extra_classes if extra_classes is defined else '' %}
+{% set attrs         = attrs         if attrs         is defined else {} %}
+
+{% set classes = ['c-spinner', 'c-spinner--size-' ~ size] %}
+{% if extra_classes %}
+  {% set classes = classes + [extra_classes] %}
+{% endif %}
+
+<span class="{{ classes | join(' ') }}" role="status"{% for key, val in attrs.items() %} {{ key }}="{{ val }}"{% endfor %}>
+  <span class="sr-only">{{ label }}</span>
+</span>

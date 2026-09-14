@@ -3,10 +3,21 @@ Created on Nov 12, 2014
 
 @author: alexandru-m-g
 '''
+import re
 
+def _normalize_whitespace(text):
+    return re.sub(r'\s+', ' ', text).strip()
 
 def are_strings_in_text(text, search_strings,
-                        begin_str=None, end_str=None):
+                        begin_str=None, end_str=None, normalize=False):
+
+    if normalize:
+        text = _normalize_whitespace(text)
+        if begin_str:
+            begin_str = _normalize_whitespace(begin_str)
+        if end_str:
+            end_str = _normalize_whitespace(end_str)
+        search_strings = [_normalize_whitespace(s) for s in search_strings]
 
     start = 0
     end = len(text)

@@ -1,0 +1,29 @@
+.c-spinner {
+  display: inline-block;
+  box-sizing: border-box;
+  border: 2px solid var(--hdx-neutral-2);
+  border-top-color: var(--hdx-primary-5);
+  border-radius: 50%;
+  animation: hdx-spin 0.8s linear infinite;
+}
+.c-spinner--size-s {
+  width: var(--hdx-space-4);
+  height: var(--hdx-space-4);
+}
+.c-spinner--size-m {
+  width: var(--hdx-space-6);
+  height: var(--hdx-space-6);
+}
+.c-spinner--size-l {
+  width: var(--hdx-space-8);
+  height: var(--hdx-space-8);
+}
+.c-spinner--block {
+  display: block;
+  margin: var(--hdx-space-8) auto;
+}
+@keyframes hdx-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

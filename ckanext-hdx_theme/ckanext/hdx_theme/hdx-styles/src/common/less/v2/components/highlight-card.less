@@ -1,0 +1,57 @@
+// ============================================================
+// c-highlight-card — homepage curated highlights card
+// Figma: llm_docs/redesign/figma_exports/hdx-highlights-xl.html
+// ============================================================
+@import "../mixins.less";
+
+.c-highlight-card {
+    display:          flex;
+    flex-direction:   column;
+    width:            100%;
+    text-decoration:  none;
+    color:            inherit;
+    border:           1px solid var(--hdx-neutral-1);
+    border-radius:    var(--hdx-radius-sm);
+    box-shadow:       var(--hdx-shadow-sm);
+    padding:          var(--hdx-space-4);
+    gap:              var(--hdx-space-3);
+    background-color: var(--hdx-neutral-0);
+
+    &__image {
+        align-self:    stretch;
+        height:        10rem;
+        border-radius: var(--hdx-radius-sm);
+        object-fit:    cover;
+        flex-shrink:   0;
+        display:       block;
+        width:         100%;
+        max-width:     100%;   // prevent intrinsic image width from widening the flex item
+
+        &--placeholder {
+            background-color: var(--hdx-neutral-5);
+        }
+    }
+
+    &__body {
+        display:        flex;
+        flex-direction: column;
+        align-items:    flex-start;
+        gap:            var(--hdx-space-2);
+        align-self:     stretch;
+    }
+
+    &__title {
+        .hdx-body-m-semibold();
+        color:         var(--hdx-neutral-95);
+        align-self:    stretch;
+        overflow:      hidden;
+        text-overflow: ellipsis;
+        white-space:   nowrap;
+    }
+
+    &__subtitle {
+        .hdx-body-s();
+        color:      var(--hdx-neutral-85);
+        align-self: stretch;
+    }
+}

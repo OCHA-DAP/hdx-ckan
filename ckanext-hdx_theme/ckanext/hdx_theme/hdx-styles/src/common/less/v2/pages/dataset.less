@@ -1,0 +1,291 @@
+// ============================================================
+// dataset.less
+// Styles for the full v2 dataset page.
+// Compiled output: fanstatic/v2/dataset.css
+// ============================================================
+
+@import "../mixins.less";
+
+.hdx-v2-dataset-row {
+  background-color: var(--hdx-neutral-0);
+}
+
+// ── Dataset sidebar (padding only — layout via generic columns) ──
+.hdx-v2-dataset-sidebar {
+    @media (min-width: @hdx-bp-xl) {
+        padding: var(--hdx-space-12) 0;
+    }
+}
+// ── Section wrapper ───────────────────────────────────────────
+// Sections are separated by <hr class="c-divider"> in the template.
+.hdx-v2-dataset-section {
+    .hdx-page-section-wrapper();
+
+    &__header {
+        .hdx-page-section-header();
+    }
+
+    &__title-row {
+        display:     flex;
+        align-items: center;
+        gap:         var(--hdx-space-3);
+    }
+
+    &__left {
+        .hdx-list-header-row-left();
+    }
+
+    &__title {
+        .hdx-section-title();
+    }
+
+    &__count {
+        .hdx-section-title-count();
+    }
+
+    &__chevron {
+        flex-shrink: 0;
+        color:       var(--hdx-neutral-85);
+        transition:  transform 0.2s ease;
+        .hdx-motion();
+
+        svg {
+            .hdx-icon-size(var(--hdx-space-5));
+            display: block;
+        }
+    }
+
+    &__body {
+        .hdx-page-section-body();
+    }
+
+    // Collapsible variant
+    &--collapsible {
+        .hdx-v2-dataset-section__header {
+            cursor:      pointer;
+            user-select: none;
+
+            &:hover .hdx-v2-dataset-section__title {
+                color: var(--hdx-primary-5);
+            }
+        }
+
+        &:not(.is-open) {
+            .hdx-v2-dataset-section__body {
+                display: none;
+            }
+
+            .hdx-v2-dataset-section__chevron {
+                transform: rotate(180deg);
+            }
+        }
+    }
+}
+
+// ── Interactive data (custom dataviz) ──────────────────────────
+.hdx-v2-custom-dataviz {
+    &__toolbar {
+        display:         flex;
+        justify-content: flex-end;
+        margin-bottom:   var(--hdx-space-4);
+    }
+
+    &__iframe {
+        width:  100%;
+        height: 31.25rem; // 500px
+        border: none;
+    }
+}
+// ── Metadata grid ─────────────────────────────────────────────
+.hdx-v2-dataset-metadata {
+    display:        flex;
+    flex-direction: column;
+    gap:            var(--hdx-space-10);
+
+    &__grid {
+        display:               grid;
+        grid-template-columns: 1fr;
+        gap:                   var(--hdx-space-4);
+
+        @media (min-width: @hdx-bp-md) {
+            grid-template-columns: repeat(3, 1fr);
+            gap:                   var(--hdx-space-6);
+        }
+    }
+
+    &__cell,
+    &__full {
+        display:        flex;
+        flex-direction: column;
+        gap:            var(--hdx-space-1);
+
+        .hdx-scroll-offset-header();
+
+        // Show-more button (Location/Methodology/Caveats/License/Source):
+        // hidden until JS confirms the value is actually clamped.
+        .c-text-button { display: none; }
+        &.is-clamped .c-text-button { display: inline-flex; }
+
+        &.is-open .c-text-button__icon {
+            transform:  rotate(180deg);
+            transition: transform 0.15s ease;
+            .hdx-motion();
+        }
+    }
+
+    &__label {
+        .hdx-heading-h4();
+        color: var(--hdx-neutral-85);
+    }
+
+    &__label-row {
+        display:     flex;
+        align-items: center;
+        gap:         var(--hdx-space-1);
+    }
+
+    &__value {
+        .hdx-body-m();
+        color: var(--hdx-neutral-85);
+        word-break: break-word;
+        .hdx-markdown-content(var(--hdx-space-4));
+
+        &--tags {
+            display:   flex;
+            flex-wrap: wrap;
+            gap:       var(--hdx-space-1);
+        }
+
+        &--break {
+            word-break: break-all;
+        }
+
+        &--clamped {
+            .hdx-line-clamp(3);
+
+            &.is-open {
+                .hdx-line-clamp-off();
+            }
+        }
+    }
+
+    &__no-data {
+        display: none;
+    }
+
+    &__downloads {
+        @media (min-width: @hdx-bp-md) {
+            width: 50%;
+        }
+
+        @media (min-width: @hdx-bp-xl) {
+            width: 33%;
+        }
+    }
+
+    &__downloads #dataset-downloads-chart {
+        margin-top: var(--hdx-space-2);
+        min-height: 4rem;
+    }
+}
+
+// ── Shape/GIS preview map ───────────────────────────────────────
+.hdx-v2-dataset-map {
+    height:        25rem;
+    margin-bottom: var(--hdx-space-4);
+
+    &__config {
+        display: none;
+    }
+}
+
+// Elements below are created/classed by shape-view.js itself
+// (MapLibre GL custom controls), not by a template — class names
+// must stay in sync with fanstatic/v2/pages/shape-view.js.
+.map-info {
+    padding:       var(--hdx-space-2) var(--hdx-space-3);
+    .hdx-body-xs();
+    color:         var(--hdx-neutral-0);
+    background:    rgba(51, 51, 51, 0.5);
+    box-shadow:    var(--hdx-shadow-sm);
+    border-radius: var(--hdx-radius-sm);
+    max-height:    20rem;
+    overflow-y:    auto;
+
+    table {
+        td:first-of-type {
+            max-width: 12.5rem;
+
+            + td {
+                max-width: 15.625rem;
+            }
+        }
+    }
+
+    td {
+        color:         var(--hdx-neutral-0);
+        overflow-wrap: break-word;
+    }
+
+    h4 {
+        .hdx-body-xs-medium();
+        margin: 0 0 var(--hdx-space-1);
+        color:  var(--hdx-neutral-0);
+    }
+}
+
+.layers-control {
+    &-toggle {
+        background-image:    url("/images/maps/layers-2x.png");
+        background-position: 50% 50%;
+        background-repeat:   no-repeat;
+        background-size:     26px 26px;
+        display:             block;
+        height:              44px;
+        width:               44px;
+    }
+
+    &-list {
+        display: none;
+        padding: var(--hdx-space-1);
+
+        .layer-control {
+            display: block;
+            padding: var(--hdx-space-1);
+
+            > input[type='checkbox'] {
+                margin-right: var(--hdx-space-1);
+            }
+        }
+    }
+
+    &:hover > &-list {
+        display: block;
+    }
+    &:hover > &-toggle {
+        display: none;
+    }
+}
+
+// Elements below are created/classed by quick-edit.js itself, not by a
+// template — class names must stay in sync with
+// fanstatic/v2/components/quick-edit.js.
+.quick-edit {
+    position: relative;
+
+    .quick-link {
+        position:       absolute;
+        top:            0;
+        right:          0;
+        opacity:        0;
+        pointer-events: none;
+        transition:     opacity 0.15s ease;
+        .hdx-motion();
+    }
+
+    &:hover .quick-link,
+    &:focus-within .quick-link {
+        opacity:        1;
+        pointer-events: auto;
+    }
+}

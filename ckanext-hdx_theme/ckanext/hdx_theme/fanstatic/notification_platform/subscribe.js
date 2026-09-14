@@ -1,44 +1,44 @@
-$(document).ready(function () {
-  // notification platform data
-  const $notificationPlatformData = $('#notification_platform_data');
-  const subscribeObjectId = $notificationPlatformData.data('object-id');
-  const subscribeObjectName = $notificationPlatformData.data('object-name');
-  const subscribeObjectType = $notificationPlatformData.data('object-type');
-  const authenticated = $notificationPlatformData.data('is-authenticated');
+document.addEventListener('DOMContentLoaded', function () {
+  var notificationPlatformData = document.getElementById('notification_platform_data');
+  if (!notificationPlatformData) return;
 
-  if($signupForm) {
-    $signupForm.on('submit', function (e) {
+  var subscribeObjectId   = notificationPlatformData.getAttribute('data-object-id');
+  var subscribeObjectName = notificationPlatformData.getAttribute('data-object-name');
+  var subscribeObjectType = notificationPlatformData.getAttribute('data-object-type');
+  var authenticated       = notificationPlatformData.getAttribute('data-is-authenticated');
+
+  if (signupForm) {
+    signupForm.addEventListener('submit', function (e) {
+      if (e.defaultPrevented) return;
       e.preventDefault();
       onSignupSubmit(subscribeObjectId, subscribeObjectName, subscribeObjectType, authenticated);
-      return false;
-    });
-  }
-  if($signupSubmitButton) {
-    $signupSubmitButton.on('click', function (e) {
-      e.preventDefault();
-      onSignupSubmit(subscribeObjectId, subscribeObjectName, subscribeObjectType, authenticated);
-      return false;
     });
   }
 
-  if($actionMenuButton) {
-    $actionMenuButton.on('click', function (e) {
+  if (signupSubmitButton) {
+    signupSubmitButton.addEventListener('click', function (e) {
+      e.preventDefault();
+      signupForm.requestSubmit();
+    });
+  }
+
+  if (actionMenuButton) {
+    actionMenuButton.addEventListener('click', function (e) {
       e.preventDefault();
       showNotificationsSignupModal('action menu', subscribeObjectId, subscribeObjectName, subscribeObjectType, authenticated);
-      return false;
-    });
-  }
-  if($floatingButton) {
-    $floatingButton.on('click', function (e) {
-      e.preventDefault();
-      showNotificationsSignupModal('floating button', subscribeObjectId, subscribeObjectName, subscribeObjectType, authenticated);
-      return false;
     });
   }
 
-  if($notificationsSignupModal) {
-    $notificationsSignupModal.on('hide.bs.modal', function () {
-      $signupFormPopupSourceInput.val('');
+  if (floatingButton) {
+    floatingButton.addEventListener('click', function (e) {
+      e.preventDefault();
+      showNotificationsSignupModal('floating button', subscribeObjectId, subscribeObjectName, subscribeObjectType, authenticated);
+    });
+  }
+
+  if (signupDrawer) {
+    signupDrawer.addEventListener('drawer:close', function () {
+      if (signupFormPopupSourceInput) signupFormPopupSourceInput.value = '';
     });
   }
 });

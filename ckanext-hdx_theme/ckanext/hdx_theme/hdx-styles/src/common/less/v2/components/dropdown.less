@@ -1,0 +1,428 @@
+// ============================================================
+// c-dropdown — select trigger + panel overlay
+// c-dropdown-calendar — month-picker overlay
+// ============================================================
+// Figma source: "Dropdown"
+// ============================================================
+@import "../mixins.less";
+
+// ── Local tokens ────────────────────────────────────────────
+@c-dropdown-bg:            var(--hdx-neutral-0);        // #fff
+@c-dropdown-bg-hover:      var(--hdx-neutral-01);       // #fafbfb
+@c-dropdown-bg-active:     var(--hdx-neutral-01);       // #fafbfb
+
+@c-dropdown-border:        1px solid var(--hdx-neutral-2);              // #d8e0e1
+@c-dropdown-border-color-hover:  var(--hdx-neutral-8);                  // darker border for hover feedback
+
+@c-dropdown-text:          var(--hdx-neutral-8);         // #3f4748
+
+@c-dropdown-panel-border:  0.75px solid var(--hdx-neutral-1);  // 0.8px: hairline — visually lighter than the trigger border
+@c-dropdown-panel-shadow:  var(--hdx-shadow-sm);
+
+// Size M
+@c-dropdown-m-fs:   var(--hdx-fs-s);    // 14 px
+@c-dropdown-m-h:    2.125rem;           // 34 px — Figma size spec
+@c-dropdown-m-pad:  var(--hdx-space-2) var(--hdx-space-2) var(--hdx-space-2) var(--hdx-space-14); // 8 8 8 10
+
+// Size S
+@c-dropdown-s-fs:   var(--hdx-fs-xs);   // 12 px
+
+
+// ────────────────────────────────────────────────────────────
+// 1. c-dropdown — wrapper
+// ────────────────────────────────────────────────────────────
+
+.c-dropdown {
+    display:         flex;
+    flex-direction:  column;
+    align-items:     flex-start;
+    position:        relative;
+    width:           100%;
+
+    // ── Label ───────────────────────────────────────────────
+    &__label {
+        align-self:  stretch;
+        font-family: var(--hdx-font-body);
+        font-weight: var(--hdx-fw-regular);
+        color:       var(--hdx-neutral-95);
+        line-height: 1;
+    }
+
+    // ── Trigger (the select box) ─────────────────────────────
+    &__trigger {
+        align-self:       stretch;
+        display:          flex;
+        align-items:      center;
+        border-radius:    var(--hdx-radius-sm);
+        background-color: @c-dropdown-bg;
+        border:           @c-dropdown-border;
+        box-sizing:       border-box;
+        box-shadow:       @c-dropdown-panel-shadow;
+        cursor:           pointer;
+        text-align:       left;
+        transition:       background-color 0.15s ease, border-color 0.15s ease;
+        .hdx-motion();
+        color:            var(--hdx-neutral-8);
+
+        &:hover {
+            background-color: @c-dropdown-bg-hover;
+            border-color:     @c-dropdown-border-color-hover;
+            box-shadow:       @c-dropdown-panel-shadow;
+        }
+
+        &:focus-visible {
+            .hdx-focus-ring();
+        }
+    }
+
+    // Trigger icon (optional filter/leading icon — hidden until present)
+    &__trigger-icon {
+        width:     1rem;
+        height:    1rem;
+        flex-shrink: 0;
+        line-height: 0;
+    }
+
+    // Trigger text value
+    &__trigger-value {
+        flex:        1;
+        font-family: var(--hdx-font-body);
+        font-weight: var(--hdx-fw-medium);
+        line-height: 1;
+        overflow:    hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    // Active count chip (e.g. "Afghanistan (3)")
+    &__trigger-count {
+        font-size:   var(--hdx-fs-s);
+        color:       var(--hdx-primary-5);
+        font-weight: var(--hdx-fw-medium);
+        line-height: 1;
+        white-space: nowrap;
+        overflow:    hidden;
+        text-overflow: ellipsis;
+    }
+
+    // Chevron icon
+    &__chevron {
+        width:      1rem;
+        flex-shrink: 0;
+        transition: transform 0.2s ease;
+        .hdx-motion();
+        line-height: 0;
+
+        .c-dropdown.is-open & {
+            transform: rotate(180deg);
+        }
+    }
+
+    // ── State modifiers on trigger ───────────────────────────
+
+    // Open/active
+    &.is-open &__trigger,
+    &--active &__trigger {
+        //background-color: @c-dropdown-bg-active !important;
+        //border-color:     var(--hdx-primary-5) !important;
+        //box-shadow:       none !important;
+    }
+
+    // Disabled
+    &--disabled &__trigger {
+        background-color: @c-dropdown-bg;
+        border-color:     var(--hdx-neutral-1);
+        box-shadow:       none;
+        cursor:           not-allowed;
+        pointer-events:   none;
+        color:            var(--hdx-neutral-7);  // #9db1b3
+    }
+
+    // Filter-active: near-black border to signal active selection
+    &--filter &__trigger {
+        background-color: @c-dropdown-bg-active;
+        border:           1px solid var(--hdx-neutral-95);  // #101212
+        box-shadow:       none;
+        color:            var(--hdx-neutral-95);
+    }
+
+    // Error state (native mode only renders the error text today)
+    &--error &__select {
+        border-color: var(--hdx-error-5);
+    }
+
+    &__error {
+        .hdx-body-s();
+        color:      var(--hdx-error-6);
+        display:    none;
+        margin-top: var(--hdx-space-2);
+    }
+
+    &--error ~ &__error { display: block; }
+
+    // ── Native <select> mode ─────────────────────────────────
+    // POST-safe select styled to match the trigger button,
+    // with an absolutely positioned chevron overlay.
+
+    &--native {
+        gap: 0;
+
+        .c-dropdown__select {
+            align-self:         stretch;
+            appearance:         none;
+            -webkit-appearance: none;
+            height:             @c-dropdown-m-h;
+            padding:            @c-dropdown-m-pad;
+            padding-right:      var(--hdx-space-8);   // 32px: accounts for chevron icon
+            border-radius:      var(--hdx-radius-sm);
+            background-color:   @c-dropdown-bg;
+            border:             @c-dropdown-border;
+            box-shadow:         @c-dropdown-panel-shadow;
+            box-sizing:         border-box;
+            .hdx-body-s-medium();
+            line-height:        1;
+            color:              @c-dropdown-text;
+            cursor:             pointer;
+            width:              100%;
+            transition:         background-color 0.15s ease, border-color 0.15s ease;
+            .hdx-motion();
+
+            &:hover {
+                background-color: @c-dropdown-bg-hover;
+                border-color:     @c-dropdown-border-color-hover;
+            }
+        }
+
+        .c-dropdown__chevron {
+            position:       absolute;
+            right:          var(--hdx-space-2);
+            top:            calc(@c-dropdown-m-h / 2);
+            transform:      translateY(-50%);
+            pointer-events: none;
+            color:          @c-dropdown-text;
+
+            svg {
+                .hdx-icon-size(var(--hdx-space-4));
+                display: block;
+            }
+        }
+    }
+
+    // ── Size modifiers ───────────────────────────────────────
+
+    &--size-m {
+        gap: var(--hdx-space-2);   // 8 px between label and trigger
+
+        .c-dropdown__label      { font-size: @c-dropdown-m-fs; }
+        .c-dropdown__trigger    { height: @c-dropdown-m-h; padding: @c-dropdown-m-pad; gap: var(--hdx-space-1); font-size: @c-dropdown-m-fs; }  //  4 px
+        .c-dropdown__trigger-value { font-size: @c-dropdown-m-fs; }
+    }
+
+    &--size-s {
+        gap: var(--hdx-space-1);   // 4 px between label and trigger
+
+        .c-dropdown__label      { font-size: @c-dropdown-s-fs; }
+        .c-dropdown__trigger    { height: 1.75rem; padding: var(--hdx-space-13) var(--hdx-space-2) var(--hdx-space-13) var(--hdx-space-14); gap: var(--hdx-space-1); font-size: @c-dropdown-s-fs; }  // 6 8 6 10
+        .c-dropdown__trigger-value { font-size: @c-dropdown-s-fs; }
+        .c-dropdown__chevron    { width: 0.875rem; }
+    }
+
+    // ── Link-trigger modifier (task 059) ─────────────────────
+    // Trigger looks like an underlined text link (+ chevron) instead of a
+    // select box; the panel keeps its own width under the link.
+
+    &--link {
+        display: inline-flex;
+        width:   auto;
+
+        .c-dropdown__trigger {
+            .hdx-link-s();
+            align-self:       auto;
+            display:          inline-flex;
+            align-items:      center;
+            gap:              var(--hdx-space-1);
+            height:           auto;
+            padding:          0;
+            background:       none;
+            border:           none;
+            box-shadow:       none;
+            color:            var(--hdx-neutral-95);
+
+            &:hover,
+            &:focus-visible {
+                background: none;
+                border:     none;
+                box-shadow: none;
+                color:      var(--hdx-primary-5);   // match c-text-button hover
+            }
+        }
+
+        .c-dropdown__chevron {
+            display: inline-flex;
+            color:   inherit;   // follows the trigger's hover color
+
+            svg {
+                .hdx-icon-size(var(--hdx-space-4));   // 16 px — Figma trailing chevron
+                display: block;
+            }
+        }
+
+        .c-dropdown__panel {
+            left:      0;
+            right:     auto;
+            min-width: 11rem;
+            white-space: nowrap;
+        }
+    }
+
+
+    // ── Overlay panel ───────────────────────────────────────
+
+    &__panel {
+        position:         absolute;
+        top:              calc(100% + var(--hdx-space-1)); // 4 px below trigger
+        left:             0;
+        right:            0;
+        min-width:        auto;
+        max-width:        22rem;
+        z-index:          200;
+        background-color: @c-dropdown-bg;
+        border:           @c-dropdown-panel-border;
+        border-radius:    var(--hdx-radius-sm);
+        box-shadow:       @c-dropdown-panel-shadow;
+        display:          flex;
+        flex-direction:   column;
+        align-items:      center;
+        padding:          var(--hdx-space-2) var(--hdx-space-14); // 8 10
+        gap:              var(--hdx-space-3);               // 12 px
+        font-size:        @c-dropdown-m-fs;
+        color:            var(--hdx-neutral-8);
+
+        .c-search-input {
+          width: 100%;
+        }
+    }
+
+    // Scrollable list area
+    &__list-wrap {
+        align-self: stretch;
+        color:      var(--hdx-neutral-95);
+    }
+
+    &__list {
+        display:        flex;
+        flex-direction: column;
+        gap:            var(--hdx-space-13); // 6 px
+        padding-left:   0;
+        padding-right:  var(--hdx-space-13); // 6 px — keeps counts clear of the scrollbar
+        max-height:     20rem;
+        overflow-y:     auto;
+        overflow-x:     hidden;
+    }
+
+    // Confirm + clear footer
+    &__footer {
+        align-self:     stretch;
+        display:        flex;
+        flex-direction: column;
+        align-items:    center;
+        gap:            var(--hdx-space-2); // 8 px
+    }
+
+    // Empty state
+    &__list--empty {
+        font-size: var(--hdx-fs-s);
+        color:     var(--hdx-neutral-7);
+        padding:   var(--hdx-space-1) 0;
+    }
+}
+
+
+// ────────────────────────────────────────────────────────────
+// 2. c-dropdown-calendar — month picker panel
+// ────────────────────────────────────────────────────────────
+
+.c-dropdown-calendar {
+    background-color: @c-dropdown-bg;
+    border:           @c-dropdown-panel-border;
+    border-radius:    var(--hdx-radius-sm);
+    box-shadow:       @c-dropdown-panel-shadow;
+    display:          flex;
+    flex-direction:   column;
+    align-items:      flex-start;
+    padding:          var(--hdx-space-2) var(--hdx-space-14) var(--hdx-space-3); // 8 10 12
+    font-size:        var(--hdx-fs-s);
+    color:            var(--hdx-neutral-8);
+
+    &__header {
+        align-self:      stretch;
+        display:         flex;
+        align-items:     center;
+        justify-content: space-between;
+        margin-bottom:   var(--hdx-space-2); // 8 px
+    }
+
+    &__year {
+        font-weight: var(--hdx-fw-medium);
+        line-height: var(--hdx-lh-normal);
+    }
+
+    &__nav-btn {
+        width:            2.125rem;
+        height:           2.125rem;
+        border-radius:    var(--hdx-radius-sm);
+        border:           none;
+        background:       transparent;
+        display:          flex;
+        align-items:      center;
+        justify-content:  center;
+        cursor:           pointer;
+
+        img { width: 1.25rem; }
+
+        &:hover { background-color: var(--hdx-neutral-01); }
+    }
+
+    &__grid {
+        align-self:            stretch;
+        display:               grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap:                   var(--hdx-space-3); // 12 px
+    }
+
+    &__month-btn {
+        display:          flex;
+        align-items:      center;
+        justify-content:  center;
+        height:           @c-dropdown-m-h;
+        padding:          var(--hdx-space-2);   // 8 px
+        border-radius:    var(--hdx-radius-sm);
+        background-color: @c-dropdown-bg;
+        border:           @c-dropdown-border;
+        box-sizing:       border-box;
+        box-shadow:       @c-dropdown-panel-shadow;
+        cursor:           pointer;
+        .hdx-body-s-medium();
+        overflow:         hidden;
+        text-overflow:    ellipsis;
+        white-space:      nowrap;
+        transition:       background-color 0.15s ease, border-color 0.15s ease;
+        .hdx-motion();
+
+        &:hover {
+            background-color: var(--hdx-neutral-01);
+            border-color:     @c-dropdown-border-color-hover;
+        }
+
+        &.is-active {
+            background-color: var(--hdx-primary-5);
+            border-color:     var(--hdx-primary-5);
+            color:            var(--hdx-neutral-0);
+        }
+    }
+}
+
+// ── Inline modifier — natural width instead of stretching ───
+.c-dropdown--inline {
+    width: auto;
+}

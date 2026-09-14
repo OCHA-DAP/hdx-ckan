@@ -1,0 +1,109 @@
+{#
+  Snippet: text-field.html
+  Path:    templates/v2/components/text-field.html
+
+  Renders a generic form text field (split out of search-input.html, which
+  now only covers the search-box use). Pass type='password' to enable the
+  eye / eye-off toggle (requires v2-components-scripts).
+
+  Parameters
+  ─────────────────────────────────────────────────
+  size          {string}  'l' | 'm'    default: 'l'
+  placeholder   {string}  Input placeholder text.  default: ''
+  value         {string}  Pre-filled value.  default: ''
+  state         {string}  'enabled' | 'active' | 'filled'
+                          default: 'enabled'
+  name          {string}  input name attr.  default: 'q'
+  id            {string}  input id attr.   default: ''
+  type          {string}  input type attr. 'text' | 'email' | 'password' | 'number' …
+                          default: 'text'. When 'password', renders an
+                          interactive eye toggle.
+  autocomplete  {string}  autocomplete attr value.  default: ''
+  extra_classes {string}  default: ''
+  attrs         {dict}    Extra HTML attrs on the wrapper div.  default: {}
+  input_attrs   {dict}    Extra HTML attrs on the <input>/<textarea>.  default: {}
+  multiline     {bool}    When True, renders a <textarea> instead of <input>.
+                          Skips the password toggle entirely.  default: False
+  rows          {int}     Number of textarea rows. Only used when multiline=True.
+                          default: 4
+  errors        {list|string}  Error message(s) to display below the input.
+                          Renders a .c-search-input__error span.  default: None
+  label         {string}  Label text rendered above the input as .c-search-input__label.
+                          default: None
+  required      {bool}    Appends a red asterisk inside the label (only when label is set).
+                          default: False
+  ─────────────────────────────────────────────────
+  Examples
+
+  {% snippet 'v2/components/text-field.html',
+      type='email', name='email', label='Email address', required=True %}
+
+  {% snippet 'v2/components/text-field.html',
+      type='password', name='password',
+      placeholder='Enter password', autocomplete='current-password' %}
+#}
+
+{% set size          = size          if size          is defined else 'l' %}
+{% set placeholder   = placeholder   if placeholder   is defined else '' %}
+{% set value         = value         if value         is defined else '' %}
+{% set state         = state         if state         is defined else 'enabled' %}
+{% set name          = name          if name          is defined else 'q' %}
+{% set id            = id            if id            is defined else '' %}
+{% set type          = type          if type          is defined else 'text' %}
+{% set autocomplete  = autocomplete  if autocomplete  is defined else '' %}
+{% set extra_classes = extra_classes if extra_classes is defined else '' %}
+{% set attrs         = attrs         if attrs         is defined else {} %}
+{% set input_attrs   = input_attrs   if input_attrs   is defined else {} %}
+{% set multiline     = multiline     if multiline     is defined else False %}
+{% set rows          = rows          if rows          is defined else 4 %}
+{% set errors        = errors        if errors        is defined else None %}
+{% set label         = label         if label         is defined else none %}
+{% set required      = required      if required      is defined else false %}
+
+{% set classes = ['c-search-input', 'c-search-input--size-' ~ size] %}
+{% if state == 'active' %}{% set classes = classes + ['c-search-input--active']    %}{% endif %}
+{% if state == 'filled' %}{% set classes = classes + ['c-search-input--filled']    %}{% endif %}
+{% if multiline        %}{% set classes = classes + ['c-search-input--textarea']   %}{% endif %}
+{% if extra_classes    %}{% set classes = classes + [extra_classes]                %}{% endif %}
+{% if errors           %}{% set classes = classes + ['c-search-input--error']      %}{% endif %}
+
+{% if label %}
+<label class="c-search-input__label" {% if id %}for="{{ id }}"{% endif %}>
+  {{ label }}{% if required %}<span class="c-search-input__required" aria-hidden="true"> *</span>{% endif %}
+</label>
+{% endif %}
+<div class="{{ classes | join(' ') }}"
+     {% for key, val in attrs.items() %}{{ key }}="{{ val }}"{% endfor %}>
+
+  {% if multiline %}
+    <textarea name="{{ name }}"
+              {% if id %}id="{{ id }}"{% endif %}
+              placeholder="{{ placeholder }}"
+              rows="{{ rows }}">{{ value }}</textarea>
+  {% else %}
+    <input type="{{ type }}"
+           name="{{ name }}"
+           {% if id %}id="{{ id }}"{% endif %}
+           placeholder="{{ placeholder }}"
+           value="{{ value }}"
+           {% if autocomplete %}autocomplete="{{ autocomplete }}"{% else %}autocomplete="off"{% endif %}
+           {% if required %}required="required"{% endif %}
+           {% for key, val in input_attrs.items() %}{{ key }}="{{ val }}" {% endfor %}>
+
+    {% if type == 'password' %}
+      <button class="c-search-input__icon c-search-input__toggle"
+              type="button"
+              aria-label="Show password">
+        <span class="c-search-input__toggle-eye">
+          {% include h.url_for_static('v2/icons/eye.svg') %}
+        </span>
+        <span class="c-search-input__toggle-eye-off" hidden>
+          {% include h.url_for_static('v2/icons/eye-off.svg') %}
+        </span>
+      </button>
+    {% endif %}
+  {% endif %}
+
+</div>
+<span class="c-search-input__error">{% if errors %}{{ errors | join(', ') if errors is iterable and errors is not string else errors }}{% endif %}</span>
+<ul class="c-form-validator__live-feedback" hidden></ul>

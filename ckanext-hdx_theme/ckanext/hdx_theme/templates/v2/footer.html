@@ -1,0 +1,248 @@
+{#
+  v2 footer
+  Figma: llm_docs/redesign/figma_exports/footer.html
+
+  Breakpoints:
+    SM  < 48rem      — fully stacked
+    MD  48–79rem     — newsletter + social on one row; nav 3-column
+    XL  ≥ 80rem      — two-column: branding left / nav grid right
+
+  Analytics: all links carry data-module="hdx_click_stopper" and
+             data-module-link_type="footer" (feeds Mixpanel pipeline).
+#}
+
+{% set mailchimp_action = "//humdata.us14.list-manage.com/subscribe/post?u=ea3f905d50ea939780139789d&id=99796325d1" %}
+{% set docs_links = h.HDX_CONST('DOCUMENTATION_LINKS') %}
+
+<footer class="hdx-v2-footer">
+  <div class="hdx-v2-container">
+
+  {# ── Top: branding + nav ──────────────────────────────────── #}
+  <div class="hdx-v2-footer__top">
+
+    {# ── Branding column ──────────────────────────────────── #}
+    <div class="hdx-v2-footer__branding">
+
+      <div class="hdx-v2-footer__logo-wrap">
+        <span class="hdx-v2-footer__logo" aria-label="HDX">{% include 'v2/icons/hdx.svg' %}</span>
+        <p class="hdx-v2-footer__tagline">Find, share and use humanitarian data all in one place</p>
+      </div>
+
+      {# Newsletter + social — SM/XL: stacked; MD: 75%/25% side by side (footer.less) #}
+      <div class="hdx-v2-footer__actions">
+        <div class="hdx-v2-footer__newsletter">
+          <p class="hdx-v2-footer__newsletter-label">Subscribe to our mailing list</p>
+          <div id="mc_embed_signup">
+            <form action="{{ mailchimp_action }}" method="post"
+                  id="mc-embedded-subscribe-form"
+                  name="mc-embedded-subscribe-form"
+                  class="validate" target="_blank" novalidate>
+              <div class="hdx-v2-footer__newsletter-row">
+                {% snippet 'v2/components/text-field.html',
+                    size='m', state='enabled',
+                    type='email', name='EMAIL', id='mce-EMAIL',
+                    placeholder=_('Enter your email'), value='' %}
+                {% snippet 'v2/components/button.html',
+                    style='secondary', type='text', size='m',
+                    state='enabled',
+                    label=_('Subscribe'), button_type='submit',
+                    extra_classes='hdx-v2-footer__subscribe-btn',
+                    attrs={'name': 'subscribe', 'id': 'mc-embedded-subscribe'} %}
+              </div>
+              <div id="mce-responses" class="clear">
+                <div class="response" id="mce-error-response" style="display:none"></div>
+                <div class="response" id="mce-success-response" style="display:none"></div>
+              </div>
+              {# Honeypot — do not remove this or risk form bot signups
+              <div>
+                <input type="text" name="b_83487eb1105d72ff2427e4bd7_6fd988326c" tabindex="-1" value="">
+              </div>
+              #}
+            </form>
+          </div>
+        </div>
+
+        <div class="hdx-v2-footer__social">
+          <a href="https://github.com/OCHA-DAP"
+             target="_blank" rel="noopener noreferrer"
+             class="hdx-v2-footer__social-link"
+             data-module="hdx_click_stopper"
+             data-module-link_type="footer">
+            <span class="hdx-v2-footer__social-icon" aria-hidden="true">{% include 'v2/icons/github.svg' %}</span>
+            <span class="c-text-link c-text-link--primary c-text-link--size-s">GitHub</span>
+          </a>
+          <a href="https://linkedin.com/company/ocha-centre-for-humanitarian-data"
+             target="_blank" rel="noopener noreferrer"
+             class="hdx-v2-footer__social-link"
+             data-module="hdx_click_stopper"
+             data-module-link_type="footer">
+            <span class="hdx-v2-footer__social-icon" aria-hidden="true">{% include 'v2/icons/linkedin.svg' %}</span>
+            <span class="c-text-link c-text-link--primary c-text-link--size-s">LinkedIn</span>
+          </a>
+        </div>
+      </div>{# /actions #}
+
+      {#
+      <div class="hdx-v2-footer__related">
+        <span class="hdx-v2-footer__related-label">Related to</span>
+        <a href="https://centre.humdata.org"
+           target="_blank" rel="noopener noreferrer"
+           class="c-text-link c-text-link--primary c-text-link--size-s hdx-v2-footer__ext-link"
+           data-module="hdx_click_stopper"
+           data-module-link_type="footer">
+          <span class="hdx-v2-footer__ext-icon" aria-hidden="true">{% include 'v2/icons/link-external.svg' %}</span>Centre for Humanitarian Data
+        </a>
+      </div>
+      #}
+
+    </div>{# /branding #}
+
+    {# ── Navigation grid ──────────────────────────────────── #}
+    <nav class="hdx-v2-footer__nav" aria-label="Footer navigation">
+
+        {# Data column #}
+        <div class="hdx-v2-footer__nav-col">
+          <p class="hdx-v2-footer__nav-heading">Data</p>
+          <ul class="hdx-v2-footer__nav-list">
+            <li>
+              {% snippet 'v2/components/text-link.html',
+                  label='Explore data', href=h.url_for('dataset.search'),
+                  style='primary', size='s',
+                  attrs={'data-module': 'hdx_click_stopper', 'data-module-link_type': 'footer'} %}
+            </li>
+            <li>
+              {% snippet 'v2/components/text-link.html',
+                  label='Locations', href=h.url_for('group.index'),
+                  style='primary', size='s',
+                  attrs={'data-module': 'hdx_click_stopper', 'data-module-link_type': 'footer'} %}
+            </li>
+            <li>
+              {% snippet 'v2/components/text-link.html',
+                  label='Organisations', href=h.url_for('organization.index'),
+                  style='primary', size='s',
+                  attrs={'data-module': 'hdx_click_stopper', 'data-module-link_type': 'footer'} %}
+            </li>
+          </ul>
+        </div>
+
+        {# Products column — populated from the header quick-links registry #}
+        <div class="hdx-v2-footer__nav-col">
+          <p class="hdx-v2-footer__nav-heading">Products</p>
+          <ul class="hdx-v2-footer__nav-list">
+            {% for product in h.hdx_get_quick_links_list(archived=False, exclude_crisis=True) %}
+            <li>
+              {% snippet 'v2/components/text-link.html',
+                  label=product.title, href=product.url,
+                  style='primary', size='s',
+                  attrs={'data-module': 'hdx_click_stopper', 'data-module-link_type': 'footer',
+                         'target': '_blank' if product.newTab else '_self'} %}
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+
+        {# Resources column #}
+        <div class="hdx-v2-footer__nav-col">
+          <p class="hdx-v2-footer__nav-heading">Resources</p>
+          <ul class="hdx-v2-footer__nav-list">
+            <li>
+              {% snippet 'v2/components/text-link.html',
+                  label='Documentation', href=docs_links['MAIN'],
+                  style='primary', size='s',
+                  attrs={'data-module': 'hdx_click_stopper', 'data-module-link_type': 'footer'} %}
+            </li>
+            <li>
+              {% snippet 'v2/components/text-link.html',
+                  label='QA Process', href=docs_links['QA_PROCESS'],
+                  style='primary', size='s',
+                  attrs={'data-module': 'hdx_click_stopper', 'data-module-link_type': 'footer'} %}
+            </li>
+            <li>
+              <a href="https://github.com/OCHA-DAP"
+                 target="_blank" rel="noopener noreferrer"
+                 class="c-text-link c-text-link--primary c-text-link--size-s hdx-v2-footer__ext-link"
+                 data-module="hdx_click_stopper"
+                 data-module-link_type="footer">
+                <span class="hdx-v2-footer__ext-icon" aria-hidden="true">{% include 'v2/icons/link-external.svg' %}</span>Open source
+              </a>
+            </li>
+            <li>
+              {% snippet 'v2/components/text-link.html',
+                  label='Build with HDX',
+                  href=docs_links['RESOURCES_FOR_DEVELOPERS'],
+                  style='primary', size='s',
+                  attrs={'data-module': 'hdx_click_stopper', 'data-module-link_type': 'footer'} %}
+            </li>
+            <li>
+              {% snippet 'v2/components/text-link.html',
+                  label='Data Licenses',
+                  href=docs_links['DATA_LICENSES'],
+                  style='primary', size='s',
+                  attrs={'data-module': 'hdx_click_stopper', 'data-module-link_type': 'footer'} %}
+            </li>
+            <li>
+              <a href="https://centre.humdata.org/category/blog/"
+                 target="_blank" rel="noopener noreferrer"
+                 class="c-text-link c-text-link--primary c-text-link--size-s hdx-v2-footer__ext-link"
+                 data-module="hdx_click_stopper"
+                 data-module-link_type="footer">
+                <span class="hdx-v2-footer__ext-icon" aria-hidden="true">{% include 'v2/icons/link-external.svg' %}</span>Blog
+              </a>
+            </li>
+            <li>
+              <a href="https://centre.humdata.org/contact-us/"
+                 target="_blank" rel="noopener noreferrer"
+                 class="c-text-link c-text-link--primary c-text-link--size-s hdx-v2-footer__ext-link"
+                 data-module="hdx_click_stopper"
+                 data-module-link_type="footer">
+                <span class="hdx-v2-footer__ext-icon" aria-hidden="true">{% include 'v2/icons/link-external.svg' %}</span>Contact
+              </a>
+            </li>
+          </ul>
+        </div>
+
+    </nav>{# /nav #}
+
+  </div>{# /top #}
+
+  <hr class="c-divider hdx-v2-footer__divider">
+
+  {# ── Bottom bar ───────────────────────────────────────────── #}
+  <div class="hdx-v2-footer__bottom">
+
+    <div class="hdx-v2-footer__service">
+      <p class="hdx-v2-footer__service-label">Service provided by</p>
+      <div class="hdx-v2-footer__service-detail">
+        <span class="hdx-v2-footer__ocha-logo" aria-label="OCHA">{% include 'v2/icons/ocha.svg' %}</span>
+        <p class="hdx-v2-footer__ocha-text">
+          OCHA coordinates the global emergency response to save lives and protect people in humanitarian
+          crises. We advocate for effective and principled humanitarian action by all, for all.
+        </p>
+      </div>
+    </div>
+
+    <div class="hdx-v2-footer__license">
+      <span class="hdx-v2-footer__license-icon" aria-hidden="true">{% include 'v2/icons/creative-commons.svg' %}</span>
+      <p class="hdx-v2-footer__license-text">
+        Except where otherwise noted, content on this site is licensed under a
+        Creative Commons BY 4.0 International license.
+      </p>
+    </div>
+
+    <div class="hdx-v2-footer__legal">
+      {% snippet 'v2/components/text-link.html',
+          label='Terms of Service',
+          href=docs_links['TERMS_OF_SERVICE'],
+          style='primary', size='s',
+          attrs={'data-module': 'hdx_click_stopper', 'data-module-link_type': 'footer'} %}
+      {% snippet 'v2/components/text-link.html',
+          label='Privacy Policy',
+          href=docs_links['TERMS_OF_SERVICE'] + '#privacy-notice',
+          style='primary', size='s',
+          attrs={'data-module': 'hdx_click_stopper', 'data-module-link_type': 'footer'} %}
+    </div>
+
+  </div>{# /bottom #}
+
+  </div>{# /hdx-v2-container #}
+</footer>

@@ -8,11 +8,14 @@ hide_resources - If true hides the resources (default: false).
 banner         - If true displays a popular banner (default: false).
 truncate       - The length to trucate the description to (default: 180)
 truncate_title - The length to truncate the title to (default: 80).
+emphasize_title - If true, sizes the "Datasets" heading (and its count) like
+                  a page title instead of a section title (default: false;
+                  set only by the main /dataset search page).
 
 Example:
 
 {{ h.snippet('search/snippets/package_list.html',
-                query=my_c.q, packages=my_c.page.items, packages_count=my_c.page.item_count,
+                query=my_c.q, packages=my_c.page.items, packages_count=my_c.full_facet_info.get('num_of_total_items'),
                 full_facet_info=my_c.full_facet_info,
                 ext_page_size=my_c.ext_page_size, sorting_selected=my_c.sort_by_selected,
                 other_links=my_c.other_links, display_min=display_min) }}
@@ -30,6 +33,7 @@ Example:
 
 <div style="display: none;" id="analytics-number-of-results">{{packages_count}}</div>
 {%  set current_page_url = other_links.get('current_page_url') if 'current_page_url' in other_links else '' %}
+{% if not v2 %}
 <form id="dataset-filter-form" style="display: inline;">
 
     <div id="base-filter-location" style="display: none;">{{current_page_url}}</div>
@@ -75,7 +79,154 @@ Example:
 
     </div>
 </form>
+{% endif %}
 
+{# ─── v2: filter overlay, filter button, sidebar layout ────────────────── #}
+{% if v2 %}
+  {% set facet_list = full_facet_info.get('facets', {}) %}
+
+  {# Count selected items across all filters.
+     HPC (vocab_Topics) children are excluded from the advanced loop — already
+     captured by the main vocab_Topics facet above to avoid double-counting. #}
+  {% set _ns = namespace(total=0, pills=[]) %}
+  {% for _fk in ['groups', 'organization', 'res_format', 'vocab_Topics'] %}
+    {% for _fsi in facet_list.get(_fk, {}).get('items', []) | selectattr('selected') %}
+      {% set _ns.total = _ns.total + 1 %}
+      {% set _ns.pills = _ns.pills + [{'label': _fsi.display_name, 'facet': _fk, 'value': _fsi.name}] %}
+    {% endfor %}
+  {% endfor %}
+  {% for _fi in facet_list.get('featured', {}).get('items', []) %}
+    {% if _fi.get('items') %}
+      {% if _fi.get('category_key') == 'cod_level' %}
+        {% for _si in _fi['items'] %}
+          {% if _si.selected %}
+            {% set _ns.total = _ns.total + 1 %}
+            {% set _ns.pills = _ns.pills + [{'label': _si.display_name, 'facet': _si.category_key, 'value': _si.name}] %}
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+    {% elif _fi.selected %}
+      {% set _ns.total = _ns.total + 1 %}
+      {% set _ns.pills = _ns.pills + [{'label': _fi.display_name, 'facet': _fi.get('category_key', 'featured'), 'value': _fi.name}] %}
+    {% endif %}
+  {% endfor %}
+  {% set total_selected = _ns.total %}
+
+  {% set archived_url_helper = full_facet_info.get('archived_url_helper') %}
+  {% if archived_url_helper and archived_url_helper.on_archived_page %}
+    {% set _ns.pills = _ns.pills + [{'label': 'Archived datasets', 'facet': 'archived', 'value': '', 'url': archived_url_helper.unarchived_url}] %}
+  {% endif %}
+
+  {% set _ns_visible = namespace(pills=[]) %}
+  {% for _p in _ns.pills %}
+    {% if _p.value or _p.get('url') %}
+      {% set _ns_visible.pills = _ns_visible.pills + [_p] %}
+    {% endif %}
+  {% endfor %}
+  {% set applied_pills = _ns_visible.pills %}
+
+  {# ── v2 dataset list header (title + count + sort/limit at XL) ───────── #}
+
+  {% set emphasize_title = emphasize_title if emphasize_title is defined else False %}
+
+  <div class="hdx-v2-list-header">
+    <div class="hdx-v2-list-header__left">
+      <strong class="hdx-v2-list-header__title{{ ' hdx-v2-list-header__title--page-title' if emphasize_title else '' }}">{{ _('Datasets') }}</strong>
+      <span class="hdx-v2-list-header__count{{ ' hdx-v2-list-header__count--page-title' if emphasize_title else '' }}">{{ h.localised_number(packages_count) }}</span>
+    </div>
+    <div class="hdx-v2-list-header__controls">
+      {% snippet 'v2/search-nav-controls.html',
+          sorting_selected=sorting_selected,
+          ext_page_size=ext_page_size,
+          admin_view=admin_view,
+          panel_suffix='hdr' %}
+    </div>
+    <div class="hdx-v2-list-header__filter-btn">
+      {% snippet 'v2/components/dropdown.html',
+          size='m',
+          placeholder='Filter',
+          count='(' ~ total_selected ~ ')' if total_selected > 0 else '',
+          state='filter' if total_selected > 0 else 'enabled',
+          icon=True,
+          icon_src='v2/icons/filter.svg',
+          chevron_src='',
+          panel_id='hdx-filter-overlay',
+          extra_classes='c-dropdown--inline',
+          button_attrs={'data-module': 'filter-btn'} %}
+    </div>
+  </div>
+
+  {# ── v2 search bar row ───────────────────────────────────────────────── #}
+  <form class="hdx-v2-search-bar-row" id="dataset-filter-form">
+    {% snippet 'v2/components/search-input.html',
+        name='q',
+        id='headerSearch',
+        size='m',
+        icon_submit=True,
+        state='filled' if searchValue else 'enabled',
+        placeholder=_('Search for datasets'),
+        value=searchValue,
+        autocomplete='off',
+        extra_classes='c-search-input--block' %}
+  </form>
+
+  {% if applied_pills %}
+    <div class="hdx-v2-applied-filters">
+      {% snippet 'v2/components/text-link.html',
+          style='secondary', size='xs',
+          label='Clear all',
+          attrs={'data-action': 'clear-filters'} %}
+      <div class="hdx-v2-applied-filters__list c-selection-item-row">
+        {% for pill in applied_pills %}
+          {% snippet 'v2/components/selection-item.html',
+              label=pill.label, size='s', state='active', tag='button',
+              attrs={'data-action': 'remove-pill', 'data-facet': pill.facet, 'data-value': pill.value, 'data-url': pill.get('url', '')} %}
+        {% endfor %}
+      </div>
+      {% snippet 'v2/components/text-button.html',
+          style='tertiary', size='s', tag='button', icon_position='right',
+          label='Show more', icon_src='v2/icons/chevron-down.svg',
+          attrs={'data-action': 'toggle-pill-overflow', 'hidden': 'hidden'},
+          extra_classes='hdx-v2-applied-filters__toggle' %}
+    </div>
+  {% endif %}
+
+  {# ── MD/SM full-screen filter overlay ────────────────────────────────── #}
+  <div class="hdx-v2-search-filter-overlay" id="hdx-filter-overlay">
+    <div class="hdx-v2-search-filter-overlay__header">
+      <span class="hdx-v2-search-filter-overlay__title">Filters</span>
+      <button type="button"
+              class="hdx-v2-search-filter-overlay__close"
+              data-action="close-overlay"
+              aria-label="Close filters">
+        {% include h.url_for_static('v2/icons/close.svg') %}
+      </button>
+    </div>
+    <div class="hdx-v2-search-filter-overlay__body">
+      <div class="hdx-v2-overlay-nav-controls">
+        {% snippet 'v2/search-nav-controls.html',
+            sorting_selected=sorting_selected,
+            ext_page_size=ext_page_size,
+            admin_view=admin_view,
+            panel_suffix='ovl' %}
+      </div>
+      <div class="hdx-v2-search-filters">
+        {% snippet 'v2/search-filters.html', facet_list=facet_list, archived_url_helper=archived_url_helper %}
+      </div>
+    </div>
+    <div class="hdx-v2-search-filter-overlay__footer">
+      {% snippet 'v2/components/button.html',
+          style='tertiary', size='l', label='Clear filters',
+          state='enabled' if total_selected > 0 else 'disabled',
+          attrs={'data-action': 'clear-filters'} %}
+      {% snippet 'v2/components/button.html',
+          style='primary', size='l', label='Show results',
+          attrs={'data-action': 'show-results'} %}
+    </div>
+  </div>
+
+{% else %}
+{# v1: Bootstrap row/col ─────────────────────────────────────── #}
 <div class="row">
     <div id="search-page-filters" class="col-3">
       <form id="search-page-filters-form" autocomplete="off">
@@ -96,11 +247,13 @@ Example:
           {% endif %}
       </form>
     </div>
-    <div id="search-page-results" class="col-9">
+{% endif %}
+
+    <div id="search-page-results" class="{% if not v2 %}col-9{% endif %}">
         {% if packages %}
             <div class="search-list">
                 {% block search_list %}
-                <ul class="hdx-bs3 list-items {{ list_class or 'dataset-list unstyled' }}">
+                {% if v2 %}<div class="hdx-v2-dataset-list">{% else %}<ul class="hdx-bs3 list-items {{ list_class or 'dataset-list unstyled' }}">{% endif %}
 
                     {% if admin_view %}
                       <li class="list-items dataset-item ">
@@ -122,6 +275,17 @@ Example:
                     {% endif %}
 
                     {% block package %}
+                      {% if v2 %}
+                      <div class="c-dataset-card-list">
+                        {% for package in packages %}
+                          {% set package_item_snippet = 'search/snippets/package_item_v2.html' %}
+                          {% if admin_view %}
+                            {% set package_item_snippet = 'search/snippets/package_item_admin.html' %}
+                          {% endif %}
+                          {% snippet package_item_snippet, query=query, package=package, item_class=item_class, hide_resources=hide_resources, banner=banner, truncate=truncate, truncate_title=truncate_title, show_my_links=show_my_links, show_edit_link=show_edit_link, loop=loop %}
+                        {% endfor %}
+                      </div>
+                      {% else %}
                       {% for package in packages %}
                         {% set package_item_snippet = 'search/snippets/package_item.html' %}
                         {% if admin_view %}
@@ -129,8 +293,9 @@ Example:
                         {% endif %}
                         {% snippet package_item_snippet, query=query, package=package, item_class=item_class, hide_resources=hide_resources, banner=banner, truncate=truncate, truncate_title=truncate_title, show_my_links=show_my_links, show_edit_link=show_edit_link, loop=loop %}
                       {% endfor %}
+                      {% endif %}
                     {% endblock %}
-                </ul>
+                {% if v2 %}</div>{% else %}</ul>{% endif %}
                 {% endblock %}
             </div>
         {% else %}
@@ -143,4 +308,4 @@ Example:
             </div>
         {% endif %}
     </div>
-</div>
+{% if not v2 %}</div>{% endif %}

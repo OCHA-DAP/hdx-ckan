@@ -1,13 +1,18 @@
-{% extends "page.html" %}
-{% import 'macros/form.html' as form %}
+{% extends "v2/page.html" %}
+
+{% set outer_row_class = 'hdx-v2-search-row' %}
+{% set sidebar_class   = 'hdx-v2-content-columns__sidebar hdx-v2-content-columns__sidebar--xl-only hdx-v2-content-columns__sidebar--sticky hdx-v2-search-sidebar' %}
+{% set content_class   = 'hdx-v2-content-columns__content hdx-v2-search-content' %}
 
 {% block styles %}
   {{ super() }}
-  {% asset 'hdx_theme/dataset-styles' %}
-  {% asset 'hdx_theme/dataset-search-styles' %}
+  {% asset 'hdx_theme/v2-search-page-styles' %}
 {% endblock %}
 
-{% set page_has_mobile_version = True %}
+{% block scripts %}
+  {{ super() }}
+  {% asset 'hdx_theme/v2-search-page-scripts' %}
+{% endblock %}
 
 {% set canonical_params = h.filter_search_seo_category_keys(data.full_facet_info.get('selected_categ_keys')) %}
 {% set canonical_info = h.generate_canonical_link(request.path, request.args, canonical_url, canonical_params, no_params) %}
@@ -18,8 +23,6 @@
   {% set show_url = (not add_canonical) %}
 {% endif %}
 {% block links %}
-  <link rel="alternate" media="{{ h.HDX_CONST('MOBILE_MEDIA') }}" href="{{ h.hdx_switch_url_path(force=False) }}">
-  
   {# Filter out org/location filters from SEO and limit to max 2 content filters #}
   {% set canonical_params = h.filter_search_seo_category_keys(data.full_facet_info.get('selected_categ_keys')) %}
   {% set canonical_url = "/dataset"  %}
@@ -40,7 +43,6 @@
 {% block subtitle %}{{page_title}}{% endblock %}
 {% block meta %}
     {{ super() }}
-    <meta name="viewport" content="width=1260">
     {% if filters_no < 1 %}
       <meta name="description" content="Explore a comprehensive collection of humanitarian datasets curated by HDX. Access reliable data to support crisis response and informed decision-making." />
     {% else %}
@@ -48,35 +50,40 @@
     {% endif %}
 {% endblock %}
 
-{% block breadcrumb_content %}
-  {% snippet "snippets/active_breadcrumb_item.html", title=_('Datasets'), position=2 %}
+{% block breadcrumb_items %}
+  {% snippet 'v2/components/breadcrumb.html',
+      items=[{'label': _('Datasets'), 'href': ''}] %}
 {% endblock %}
 
 {% block primary_content %}
     {% block search_results_wrapper %}
-        <div id="search-recs" class="d-none"></div>
         {% snippet 'search/snippets/search_results_wrapper.html',
-                            tracking_enabled=g.tracking_enabled, my_c=data or c, display_min=true, 
-                            show_url=show_url %}
+                            tracking_enabled=g.tracking_enabled, my_c=data or c, display_min=true,
+                            show_url=show_url, v2=true, emphasize_title=true %}
 
     {% endblock %}
   {% block package_search_results_api %}
   {% endblock %}
 {% endblock %}
 
-{% block secondary %}
+{% block secondary_content %}
+  <form id="search-page-filters-form" autocomplete="off">
+    <aside class="hdx-v2-search-filters">
+      {% snippet 'v2/search-filters.html',
+          facet_list=(data or c).full_facet_info.get('facets', {}),
+          archived_url_helper=(data or c).full_facet_info.get('archived_url_helper') %}
+      {% set ext_after_metadata_modified = h.hdx_get_request_param('ext_after_metadata_modified', None) %}
+      {% if ext_after_metadata_modified %}
+        <input id="ext_after_metadata_modified" type="hidden"
+               name="ext_after_metadata_modified" value="{{ ext_after_metadata_modified }}"/>
+      {% endif %}
+      {% set ext_batch = h.hdx_get_request_param('ext_batch', None) %}
+      {% if ext_batch %}
+        <input id="ext_batch" type="hidden" name="ext_batch" value="{{ ext_batch }}"/>
+      {% endif %}
+    </aside>
+  </form>
 {% endblock %}
-
-
-{% block scripts2 %}
-  {{ super() }}
-{#  {% resource 'hdx_theme/bs_tooltip.js' %}#}
-{#  {% resource 'hdx_theme/jquery.highlight' %}#}
-{#  {% resource 'hdx_theme/jquery.expander' %}#}
-{#  {% resource 'hdx_theme/search/search_page.js' %} DOESN't SEEM TO BE USED ANYMORE #}
-
-{% endblock %}
-
 
 {% block  global_dataset_input_search%}
 	{% if c.other_links and c.other_links.params_noq %}
