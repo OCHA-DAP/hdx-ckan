@@ -964,7 +964,7 @@ def hdx_get_quick_links_list(archived=None, exclude_crisis=False):
 
 def _parse_signal_campaign_date(value):
     try:
-        return datetime.datetime.strptime(value, '%m/%d/%Y')
+        return datetime.datetime.strptime(value, '%Y-%m-%d')
     except (TypeError, ValueError):
         return None
 
