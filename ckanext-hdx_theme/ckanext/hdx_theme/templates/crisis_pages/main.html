@@ -47,8 +47,10 @@
         {% for item in data.archived_list %}
           {% snippet 'v2/components/text-button.html',
               style='tertiary', size='m', label=item.title,
-              icon_position='right', icon_src='v2/icons/arrow-right.svg',
+              icon_position='right',
+              icon_src='v2/icons/link-external.svg' if item.newTab else 'v2/icons/arrow-right.svg',
               tag='a', href=item.url,
+              attrs=({'target': '_blank', 'rel': 'noopener noreferrer'} if item.newTab else {}),
               extra_classes='hdx-v2-crisis-pages__row' %}
           {% if not loop.last %}<hr class="c-divider">{% endif %}
         {% endfor %}

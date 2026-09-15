@@ -18,11 +18,12 @@ def _prepare_crisis_page_lists(quick_links):
     archived_list = []
     for link in quick_links:
         url = link.get('url') or ''
-        if not url.lower().startswith(_CRISIS_URL_PREFIXES):
+        is_archived = link.get('archived', False)
+        if not is_archived and not url.lower().startswith(_CRISIS_URL_PREFIXES):
             continue
         item = {'id': link.get('id'), 'title': (link.get('title') or '').strip(),
-                'url': url, 'order': link.get('order', 0)}
-        if link.get('archived', False):
+                'url': url, 'order': link.get('order', 0), 'newTab': link.get('newTab', False)}
+        if is_archived:
             archived_list.append(item)
         else:
             ongoing_list.append(item)

@@ -22,10 +22,12 @@ offcanvas in `v2/header.html`) as an immediate, separate change in this same wor
 **not** renamed or repointed here.
 
 Separately, the intent is a new "Crisis Pages" concept: a page listing crisis pages, split into
-Ongoing and Archived sections, sourced from the Quick Links config (`hdx_quick_links_settings_show`)
-— specifically its items whose `url` starts with `/event` or `/m/event` — split by each item's own
-`archived` flag. This is new scope — no such listing exists anywhere in the codebase today (only
-single-page detail routes `/event/<id>` and `/dashboards/<id>` exist; there is no index).
+Ongoing and Archived sections, sourced from the Quick Links config (`hdx_quick_links_settings_show`).
+Ongoing is scoped to items whose `url` starts with `/event` or `/m/event`; Archived lists any item
+with `archived: true` regardless of `url`, so non-crisis archived quick links (e.g. archived viz
+tools) surface here too now that `/archive` redirects to this page (D19). This is new scope — no
+such listing exists anywhere in the codebase today (only single-page detail routes `/event/<id>` and
+`/dashboards/<id>` exist; there is no index).
 
 Decisions confirmed with the requester are listed in §8.
 
@@ -36,10 +38,11 @@ Decisions confirmed with the requester are listed in §8.
 - **Data model** — Quick Links (`hdx_quick_links_settings_show` action,
   `ckanext-hdx_theme/ckanext/hdx_theme/helpers/actions.py`), a JSON list stored under CKAN's generic
   `system_info` key `hdx.quick_links.config`. Each item: `{id, title, url, order, newTab, archived,
-  buttonText (optional)}` — no category/type field. "Crisis-ness" is inferred purely from `url`
-  starting with `/event` or `/m/event`, the same heuristic already used (inverted, to exclude these
-  URLs from the Products nav menu) by `hdx_get_quick_links_list(exclude_crisis=True)` in
-  `helpers/helpers.py`.
+  buttonText (optional)}` — no category/type field. "Crisis-ness" (used to scope the **Ongoing**
+  section only) is inferred purely from `url` starting with `/event` or `/m/event`, the same
+  heuristic already used (inverted, to exclude these URLs from the Products nav menu) by
+  `hdx_get_quick_links_list(exclude_crisis=True)` in `helpers/helpers.py`. The **Archived** section
+  applies no URL filter — any item with `archived: true` qualifies.
 - **Underlying CMS pages** — crisis page *content* itself (the individual `/event/<id>` pages) still
   lives in the separate `Page` model (`ckanext-hdx_pages/ckanext/hdx_pages/model.py`, `type='event'`,
   `status` `'ongoing'`/`'archived'`) via the unrelated `read_event`/`page_list` code paths; this
@@ -75,17 +78,21 @@ the first-pass implementation rather than being held pending a design.
 ## 3. Confirmed Structure
 
 - **Route**: `/crisis-pages`, blueprint `hdx_crisis_pages` — a single view, no params. (D7)
-- **View**: call `hdx_quick_links_settings_show` (action), keep items whose `url` starts with
-  `/event` or `/m/event`, split into two lists by each item's own `archived` flag, each sorted by the
-  item's own `order` field, ascending. (D10, D15, D20)
+- **View**: call `hdx_quick_links_settings_show` (action). Ongoing = items whose `url` starts with
+  `/event` or `/m/event` and `archived` is falsy. Archived = any item with `archived: true`,
+  regardless of `url`. Each list sorted by the item's own `order` field, ascending. (D2, D10, D15,
+  D20)
 - **Template**: extends `v2/page.html`, no-sidebar single-column layout — same base pattern as
   `archived_quick_links/main.html` (066).
 - **Two stacked sections** (not a `c-tabs` toggle), "Ongoing" first, "Archived" second — each a plain
   `<h2>` heading (`.hdx-section-title()`, no item count) above a row list using the same
   `v2/components/text-button.html` + `c-divider` pattern established in `066-archived-dataviz-v2.md`
-  §3, each row linking to `item.url` (`/event/<name>`) with the internal-navigation icon convention
-  (`arrow-right.svg`, right-positioned, no `target` attribute) rather than 066's external-link icon,
-  rows ordered per D10. (D8, D16)
+  §3, rows ordered per D10. Ongoing rows link to `item.url` (`/event/<name>`) with the
+  internal-navigation icon convention (`arrow-right.svg`, right-positioned, no `target` attribute).
+  Archived rows use that same convention per-item when `item.newTab` is falsy, and 066's
+  external-link convention (`link-external.svg` + `target="_blank" rel="noopener noreferrer"`) when
+  `item.newTab` is true, since Archived can now include non-crisis, externally-opening quick links.
+  (D8, D16)
 - **Breadcrumb**: `Home / Products / Crisis Pages`, mirroring 066's `Home / Products / Archived
   Dataviz` pattern — "Products" unlinked, per the `060-crisis-event-pages-v2.md` D9 precedent.
 - **Page heading**: "HDX Crisis Pages", no intro/subtitle copy. (D13)
@@ -141,9 +148,11 @@ reflow concerns — this is a text row list, not a grid), per the stacked-sectio
   retitling of `/archive`'s own v2 UI (`066-archived-dataviz-v2.md`, unchanged in the codebase). Once
   this page exists, `/archive` itself permanently redirects (301) here rather than rendering that UI —
   see D19.
-- **D2 — Scope: crisis pages only (confirmed):** Quick Links items whose `url` starts with `/event`
-  or `/m/event` only. `/dashboards`-prefixed items (currently just "Overview of Data Grids") are out
-  of scope.
+- **D2 — Scope (confirmed):** Ongoing is scoped to Quick Links items whose `url` starts with
+  `/event` or `/m/event` only (`/dashboards`-prefixed items, currently just "Overview of Data
+  Grids", are out of scope). Archived is not URL-scoped — any Quick Links item with `archived: true`
+  qualifies, covering non-crisis archived items too (e.g. archived viz tools), since `/archive` no
+  longer has its own listing (D19).
 - **D3 — Ongoing / Archived split (confirmed):** Uses each Quick Links item's own `archived` boolean
   field.
 - **D4 — No backend action changes (confirmed):** No changes to `hdx_quick_links_settings_show`
@@ -173,9 +182,12 @@ reflow concerns — this is a text row list, not a grid), per the stacked-sectio
   admin-added Quick Links entry, consistent with D5.
 - **D15 — Row title source (confirmed):** Each row's label is the Quick Links item's own `title`
   field, verbatim (`.strip()`'d defensively), with no lookup against the underlying `Page.title`.
-- **D16 — Row link icon (confirmed):** Rows use `arrow-right.svg`, right-positioned, no `target`
-  attribute — the internal-navigation convention already used for `page_list` links in
-  `page-header.html`, not `066`'s external-link icon/`target="_blank"` (its rows point off-site).
+- **D16 — Row link icon (confirmed):** Ongoing rows use `arrow-right.svg`, right-positioned, no
+  `target` attribute — the internal-navigation convention already used for `page_list` links in
+  `page-header.html`. Archived rows use that same convention when the item's own `newTab` is falsy,
+  or `066`'s external-link convention (`link-external.svg` + `target="_blank" rel="noopener
+  noreferrer"`) when `newTab` is true, since Archived also contains non-crisis items that may point
+  off-site.
 - **D17 — Section heading counts (confirmed):** No item count next to "Ongoing" / "Archived" — plain
   text headings only.
 - **D18 — Empty-state copy (confirmed):** "No ongoing crisis pages." / "No archived crisis pages." —
