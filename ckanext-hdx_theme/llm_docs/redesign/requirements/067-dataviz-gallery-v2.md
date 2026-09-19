@@ -64,7 +64,8 @@ These were resolved directly with the user before finalizing this doc — see De
   existing labels (Last Modified, Last Added, Relevance, Name Asc/Desc, Trending, Most Downloads) —
   Figma's shown default label ("Last added") is not adopted. Change the results-per-page values from
   v1's **9/18/27** to **12/24/36** (new default 12, matching Figma's displayed default) — confirmed
-  safe: `SearchLogic._search()` casts `ext_page_size` to `int` with no whitelist/min/max check
+  safe: `SearchLogic._search()` casts `ext_page_size` to `int` with no whitelist or max check
+  (values below 1 fall back to the page's default)
   (`ckanext-hdx_search/controller_logic/search_logic.py`), and the `[9, 18, 27]` list is a plain Jinja
   literal in `dataviz/index.html`, not a backend-enforced set — so this is a template-only change, still
   multiples of 3 for the 3-column grid (D6). Keep the exact existing backend query param names (`q`,

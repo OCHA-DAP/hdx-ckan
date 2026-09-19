@@ -45,6 +45,10 @@
 .c-pagination__item:not(.is-disabled):hover {
   color: var(--hdx-primary-5);
 }
+.c-pagination__item.is-disabled {
+  color: var(--hdx-neutral-3);
+  cursor: not-allowed;
+}
 .c-pagination--size-md .c-pagination__item {
   width: 2.375rem;
   font-size: var(--hdx-fs-s);

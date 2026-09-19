@@ -49,7 +49,7 @@ The `pager()` method accepts `format="~2~"` (radius 2 around current), `symbol_p
 The HDX search path uses `SearchLogic` (not `ckan/views/dataset.py` directly). A custom `pager_url` closure is created and wired into the `Page` object:
 
 ```python
-# search_logic.py:274–279
+# search_logic.py:276–281
 def _get_pager_function(self, package_type):
     def pager_url(q=None, page=None):
         params = list(self._params_nopage())
@@ -57,7 +57,7 @@ def _get_pager_function(self, package_type):
         return self._search_url(params, package_type)
     return pager_url
 
-# search_logic.py:417–421
+# search_logic.py:416–420
 def _params_nopage(self):
     params_to_skip = ['_show_filters']
     return [(k, v) for k, v in request.args.items(multi=True)
@@ -132,7 +132,7 @@ Parameters:
 | Active page | `var(--hdx-neutral-0)` #fff | `1px solid var(--hdx-neutral-2)` #d8e0e1 | `var(--hdx-neutral-95)` #101212 | **500** |
 | Prev / Next | `var(--hdx-neutral-0)` #fff | `1px solid var(--hdx-neutral-2)` #d8e0e1 | `var(--hdx-neutral-95)` #101212 | 400 |
 | Ellipsis | `var(--hdx-neutral-0)` #fff | `1px solid var(--hdx-neutral-2)` #d8e0e1 | `var(--hdx-neutral-8)` #3f4748 | 400 |
-| Disabled (prev on p.1, next on last) | Same | Same | Same | — |
+| Disabled (prev on p.1, next on last) | Same | Same | `var(--hdx-neutral-3)` #c4d0d1, `cursor: not-allowed` | 400 |
 
 Active page differentiation: **darker + bolder text only** — same white background, no accent color. This is the intentional Figma design.
 
@@ -282,9 +282,9 @@ Snippet: v2/components/pagination.html
 **Read-only (no changes):**
 | File | Why referenced |
 |---|---|
-| `ckanext-hdx_theme/ckanext/hdx_theme/templates/v2/components/pagination.html` | Component to be called — no changes needed |
+| `ckanext-hdx_theme/ckanext/hdx_theme/templates/v2/components/pagination.html` | Component to be called; disabled prev/next are `<span>` (no `href`) |
 | `ckanext-hdx_theme/ckanext/hdx_theme/hdx-styles/src/common/less/v2/components/pagination.less` | Source for component styles |
-| `ckanext-hdx_search/ckanext/hdx_search/controller_logic/search_logic.py` | `_get_pager_function` / `_params_nopage` — URL generation origin, no changes |
+| `ckanext-hdx_search/ckanext/hdx_search/controller_logic/search_logic.py` | `_get_pager_function` / `_params_nopage` — URL generation origin; `_page_number` uses `h.get_page_number` (400 when `page < 1`) |
 | `ckan/lib/pagination.py` | `BasePage._url_generator` attribute — no changes |
 
 ---
@@ -320,7 +320,7 @@ Same as above — `sort=field+asc/desc` is already preserved by `_params_nopage(
 - All styles via design tokens (`var(--hdx-*)`) — no hardcoded hex values or pixel sizes
 - Hover states via CSS `:hover` pseudo-class only — no JS-toggled classes (`is-hovered`, etc.)
 - No inline styles
-- `c-pagination` component template must not be modified
+- Disabled prev/next render as `<span>` (no `href`) — never an `<a>` pointing at page 0 or `total_pages + 1`
 - Non-v2 pages must continue to use `Page.pager()` unchanged
 - No new Python helpers or plugin registrations needed
 

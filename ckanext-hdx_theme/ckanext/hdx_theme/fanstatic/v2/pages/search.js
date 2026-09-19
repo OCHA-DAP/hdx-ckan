@@ -90,7 +90,7 @@
             groupUrl.searchParams.append(group, child.value);
           });
         }
-        groupUrl.searchParams.set('page', '1');
+        groupUrl.searchParams.delete('page');
         window.location.href = groupUrl.toString();
         return;
       }
