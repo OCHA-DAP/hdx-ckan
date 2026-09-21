@@ -232,7 +232,7 @@ rq==1.16.2
     # via -r requirements.in
 s3transfer==0.10.4
     # via boto3
-semver==2.13.0
+semver==3.1.0
     # via -r requirements.in
 simplejson==3.19.2
     # via -r requirements.in
