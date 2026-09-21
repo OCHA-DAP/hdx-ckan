@@ -220,6 +220,8 @@ class SearchLogic(object):
 
             try:
                 limit = 1 if self._is_facet_only_request() else int(request.args.get('ext_page_size', num_of_items))
+                if limit < 1:
+                    limit = num_of_items
             except:
                 limit = num_of_items
 
@@ -409,10 +411,7 @@ class SearchLogic(object):
             self.template_data.filters_are_selected = False
 
     def _page_number(self):
-        try:
-            return int(request.args.get('page', 1))
-        except ValueError:
-            abort(400, ('"page" parameter must be an integer'))
+        return h.get_page_number(request.args)
 
     def _params_nopage(self):
         params_to_skip = ['_show_filters']

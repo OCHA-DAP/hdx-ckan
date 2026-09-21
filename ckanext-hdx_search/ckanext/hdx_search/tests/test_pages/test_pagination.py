@@ -86,3 +86,42 @@ def test_pagination_2_valued_filter(app):
 
     count_org2 = hdx_test_util.count_string_occurrences(page, search_item2, begin_str, end_str)
     assert count_org2 == 1
+
+
+@pytest.mark.usefixtures('keep_db_tables_on_clean', 'clean_db', 'clean_index', 'setup_data')
+def test_pagination_no_out_of_range_links(app):
+    '''
+    The disabled prev/next arrows must not carry an href. A "page=0" link reaches
+    Solr as a negative "start" offset and fails with a 500.
+    '''
+    url = _url_for('hdx_dataset.search', ext_page_size=1)
+
+    first_page = app.get(url).body
+    assert 'page=0' not in first_page
+    assert 'c-pagination__item--prev is-disabled' in first_page
+
+    last_page = app.get(url + '&page=2').body
+    assert 'page=3' not in last_page
+    assert 'c-pagination__item--next is-disabled' in last_page
+
+
+@pytest.mark.usefixtures('keep_db_tables_on_clean', 'clean_db', 'clean_index', 'setup_data')
+@pytest.mark.parametrize('page', ['0', '-5', 'abc'])
+def test_pagination_rejects_invalid_page(app, page):
+    '''
+    A page below 1 must not render page-1 content under a second URL, and must not
+    reach Solr as a negative "start" offset.
+    '''
+    url = _url_for('hdx_dataset.search') + f'?page={page}'
+    assert app.get(url).status_code == 400
+
+
+@pytest.mark.usefixtures('keep_db_tables_on_clean', 'clean_db', 'clean_index', 'setup_data')
+@pytest.mark.parametrize('ext_page_size', ['0', '-5', 'abc'])
+def test_pagination_tolerates_invalid_page_size(app, ext_page_size):
+    '''
+    ext_page_size below 1 used to 500: 0 divided by zero in h.Page, negatives were
+    rejected by the "rows" validator. Both now fall back to the default page size.
+    '''
+    url = _url_for('hdx_dataset.search') + f'?ext_page_size={ext_page_size}'
+    assert app.get(url).status_code == 200
