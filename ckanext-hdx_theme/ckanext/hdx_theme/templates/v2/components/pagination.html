@@ -36,12 +36,18 @@
      aria-label="Pagination">
 
   {# Prev #}
-  <a class="c-pagination__item c-pagination__item--prev{{ ' is-disabled' if is_first }}"
-     href="{{ base_url }}{{ current_page - 1 }}"
-     {% if is_first %}aria-disabled="true" tabindex="-1"{% endif %}
-     aria-label="Previous page">
-    {% include h.url_for_static(prev_icon_src) %}
-  </a>
+  {% if is_first %}
+    <span class="c-pagination__item c-pagination__item--prev is-disabled"
+          aria-hidden="true">
+      {% include h.url_for_static(prev_icon_src) %}
+    </span>
+  {% else %}
+    <a class="c-pagination__item c-pagination__item--prev"
+       href="{{ base_url }}{{ current_page - 1 }}"
+       aria-label="Previous page">
+      {% include h.url_for_static(prev_icon_src) %}
+    </a>
+  {% endif %}
 
   {# Pages — show up to 5, with ellipsis #}
   {% set window = 2 %}
@@ -63,12 +69,18 @@
   {% endfor %}
 
   {# Next #}
-  <a class="c-pagination__item c-pagination__item--next{{ ' is-disabled' if is_last }}"
-     href="{{ base_url }}{{ current_page + 1 }}"
-     {% if is_last %}aria-disabled="true" tabindex="-1"{% endif %}
-     aria-label="Next page">
-    {% include h.url_for_static(next_icon_src) %}
-  </a>
+  {% if is_last %}
+    <span class="c-pagination__item c-pagination__item--next is-disabled"
+          aria-hidden="true">
+      {% include h.url_for_static(next_icon_src) %}
+    </span>
+  {% else %}
+    <a class="c-pagination__item c-pagination__item--next"
+       href="{{ base_url }}{{ current_page + 1 }}"
+       aria-label="Next page">
+      {% include h.url_for_static(next_icon_src) %}
+    </a>
+  {% endif %}
 
 </nav>
 {% endif %}
