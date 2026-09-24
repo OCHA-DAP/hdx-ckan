@@ -36,6 +36,25 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
+  document.addEventListener('click', function (e) {
+    var downloadButton = e.target.closest('.resource-download-button');
+    if (!downloadButton) return;
+
+    if (downloadButton.getAttribute('data-dataset-supports-notifications') !== 'true') return;
+
+    var downloadDatasetId = downloadButton.getAttribute('data-dataset-id');
+    var subscribedTargets = hdxUtil.net.getNotificationSubscribedObjects('dataset');
+    if (subscribedTargets[downloadDatasetId]) return;
+
+    showNotificationsSignupModal(
+      'download',
+      downloadDatasetId,
+      downloadButton.getAttribute('data-dataset-name'),
+      'dataset',
+      downloadButton.getAttribute('data-is-authenticated')
+    );
+  });
+
   if (signupDrawer) {
     signupDrawer.addEventListener('drawer:close', function () {
       if (signupFormPopupSourceInput) signupFormPopupSourceInput.value = '';
