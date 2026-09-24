@@ -7,6 +7,7 @@ import pytest
 import mock
 
 import ckan.tests.factories as factories
+import ckan.tests.helpers as helpers
 import ckan.plugins.toolkit as tk
 import ckan.model as model
 
@@ -78,6 +79,98 @@ class TestMemberActions(hdx_test_base.HdxBaseTest):
         assert 'org_num' in result_basic_user_info
         assert 'grp_num' in result_basic_user_info
         assert len(result_basic_user_info) == 9
+
+    def test_member_list_object_type_user_requires_org_permission(self):
+        '''Under the deployed auth config (ckan.auth.public_user_details=false,
+        see common-config-ini.txt), group_show already rejects object_type=
+        'user' calls from anyone without org read permission - anonymous or
+        logged-in non-member alike. This is pre-existing behavior (not part
+        of this PR); this test locks in the assumption so member_list's own
+        redaction logic is not mistakenly exercised/tested through a request
+        shape that never reaches it in production.'''
+        member = factories.User(name='mlreq_member', fullname='ML Req Member',
+                                 email='mlreq_member@test.test')
+        org = factories.Organization(
+            name='mlreq-test-org',
+            users=[{'name': member['name'], 'capacity': 'member'}],
+            hdx_org_type=ORGANIZATION_TYPE_LIST[0][1],
+            org_url='https://hdx.hdxtest.org/'
+        )
+        assert org
+
+        outsider = factories.User(name='mlreq_outsider', fullname='ML Req Outsider',
+                                   email='mlreq_outsider@test.test')
+
+        with helpers.changed_config('ckan.auth.public_user_details', False):
+            for context in (
+                {'model': model, 'session': model.Session},  # anonymous
+                {'user': outsider['name'], 'model': model, 'session': model.Session},  # logged-in non-member
+            ):
+                with pytest.raises(tk.NotAuthorized):
+                    self._get_action('member_list')(
+                        context,
+                        {'id': org['id'], 'object_type': 'user',
+                         'user_info': True, 'sysadmin_info': True}
+                    )
+
+    def test_member_list_rejects_anonymous_requester(self):
+        '''member_list must reject anonymous (not logged in) requesters
+        outright - not just strip the fullname/sysadmin columns - mirroring
+        organization_show's own rejection of anonymous include_users calls.
+        Uses the same request shape as the org members page's own fallback
+        (views/members.py:69-73, include_users=False, no object_type) since
+        that is the shape that would otherwise bypass group_show and reach
+        this action's body under the deployed auth config.'''
+        member = factories.User(name='mlhide_member', fullname='ML Hide Member',
+                                 email='mlhide_member@test.test')
+        org = factories.Organization(
+            name='mlhide-test-org',
+            users=[{'name': member['name'], 'capacity': 'member'}],
+            hdx_org_type=ORGANIZATION_TYPE_LIST[0][1],
+            org_url='https://hdx.hdxtest.org/'
+        )
+        assert org
+
+        with helpers.changed_config('ckan.auth.public_user_details', False):
+            with pytest.raises(tk.NotAuthorized):
+                self._get_action('member_list')(
+                    {'model': model, 'session': model.Session},
+                    {'id': org['id'], 'include_users': False,
+                     'user_info': True, 'sysadmin_info': True}
+                )
+
+    def test_member_list_shows_user_info_to_any_logged_in_requester(self):
+        '''For iteration 1, any logged-in requester (even a non-member) still
+        receives member fullname/sysadmin info when requested through the
+        include_users=False shape - only anonymous requesters are restricted
+        for now. Restricting this to actual org members/sysadmins is
+        deferred to iteration 2.'''
+        member = factories.User(name='mlshow_member', fullname='ML Show Member',
+                                 email='mlshow_member@test.test')
+        org = factories.Organization(
+            name='mlshow-test-org',
+            users=[{'name': member['name'], 'capacity': 'member'}],
+            hdx_org_type=ORGANIZATION_TYPE_LIST[0][1],
+            org_url='https://hdx.hdxtest.org/'
+        )
+        assert org
+
+        outsider = factories.User(name='mlshow_outsider', fullname='ML Show Outsider',
+                                   email='mlshow_outsider@test.test')
+
+        with helpers.changed_config('ckan.auth.public_user_details', False):
+            result = self._get_action('member_list')(
+                {'user': outsider['name'], 'model': model, 'session': model.Session},
+                {'id': org['id'], 'include_users': False,
+                 'user_info': True, 'sysadmin_info': True}
+            )
+
+        assert result
+        for member_row in result:
+            assert len(member_row) == 6, (
+                'A logged-in requester should still receive user identity/sysadmin info '
+                'in iteration 1, but got: {}'.format(member_row)
+            )
 
     def _admin_create(self):
         context = {'ignore_auth': True,
