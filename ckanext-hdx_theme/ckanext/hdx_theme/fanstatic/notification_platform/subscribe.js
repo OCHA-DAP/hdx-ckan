@@ -39,6 +39,7 @@ document.addEventListener('DOMContentLoaded', function () {
   document.addEventListener('click', function (e) {
     var downloadButton = e.target.closest('.resource-download-button');
     if (!downloadButton) return;
+    if (!downloadButton.closest('.c-resource-card')) return;
 
     if (downloadButton.getAttribute('data-dataset-supports-notifications') !== 'true') return;
 
