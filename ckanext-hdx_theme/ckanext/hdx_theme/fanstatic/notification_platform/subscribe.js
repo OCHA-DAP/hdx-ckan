@@ -37,7 +37,10 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   document.addEventListener('click', function (e) {
-    var downloadButton = e.target.closest('.resource-download-button');
+    var clickTarget = e.target instanceof Element ? e.target : e.target.parentElement;
+    if (!clickTarget) return;
+
+    var downloadButton = clickTarget.closest('.resource-download-button');
     if (!downloadButton) return;
     if (!downloadButton.closest('.c-resource-card')) return;
 
