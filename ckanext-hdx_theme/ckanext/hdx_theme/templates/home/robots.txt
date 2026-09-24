@@ -1,19 +1,17 @@
 User-agent: *
-{% block all_user_agents -%}
 Disallow: /dataset/rate/
 Disallow: /revision/
 Disallow: /dataset/*/history
 Disallow: /api/
 Disallow: /user/*/api-tokens
 Crawl-Delay: 10
-{%- endblock %}
-
-{% block additional_user_agents -%}
+# Sign-in pages, in every language
+Disallow: /sign-in
+Disallow: /*/sign-in
 # Block map tile providers and GIS resources
 Disallow: /gis
 Disallow: /mapbox
 Disallow: /mapbox-base-tiles
-
 # Tabular data files
 Disallow: /*.csv$
 Disallow: /*.xls$
@@ -27,16 +25,13 @@ Disallow: /*.kml$
 Disallow: /*.kmz$
 Disallow: /*.geojson$
 # Other filetypes to exclude
-Disallow: /*.geojson$
 Disallow: /*.atom$
 Disallow: /*.rss$
-# Allow sitemaps, but ignore other xmls
+Disallow: /feeds/
+# Allow sitemaps, but ignore other XML files
 Allow: /sitemap*.xml$
 Disallow: /*.xml$
-#PDFs are allowed
-
-Disallow: /feeds/
-
+# PDFs are allowed
 # Sitemap locations (one per row)
 Sitemap: https://data.humdata.org/sitemap.xml
-{%- endblock %}
+
