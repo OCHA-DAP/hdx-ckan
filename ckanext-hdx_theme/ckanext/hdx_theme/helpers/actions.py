@@ -63,6 +63,23 @@ def member_list(context: Context, data_dict: DataDict) -> ActionResult.MemberLis
     # User must be able to update the group to remove a member from it
     _check_access('group_show', context, data_dict)
 
+    requester = context.get('user')
+    if not requester:
+        raise logic.NotAuthorized(
+            _('User %s not authorized to read members of group %s') % (requester, group.name))
+
+    allowed_user_info = bool(requester)
+    # Iteration 2 TODO: restrict identity/sysadmin info to org members
+    # (member/editor/admin) or sysadmins only, instead of any logged-in user.
+    # is_sysadmin = bool(requester) and authz.is_sysadmin(requester)
+    # is_org_member = bool(requester) and authz.has_user_permission_for_group_or_org(
+    #     group.name, requester, 'read')
+    # allowed_user_info = is_sysadmin or is_org_member
+
+    # Anonymous requesters are rejected above; logged-in users may request identity/sysadmin info.
+    show_user_info = show_user_info and allowed_user_info
+    show_sysadmin_info = show_sysadmin_info and allowed_user_info
+
     q = model.Session.query(model.Member, model.User). \
         filter(model.Member.table_id == model.User.id). \
         filter(model.Member.group_id == group.id). \
