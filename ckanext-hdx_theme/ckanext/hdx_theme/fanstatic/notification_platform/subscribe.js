@@ -36,6 +36,29 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
+  document.addEventListener('click', function (e) {
+    var clickTarget = e.target instanceof Element ? e.target : e.target.parentElement;
+    if (!clickTarget) return;
+
+    var downloadButton = clickTarget.closest('.resource-download-button');
+    if (!downloadButton) return;
+    if (!downloadButton.closest('.c-resource-card')) return;
+
+    if (downloadButton.getAttribute('data-dataset-supports-notifications') !== 'true') return;
+
+    var downloadDatasetId = downloadButton.getAttribute('data-dataset-id');
+    var subscribedTargets = hdxUtil.net.getNotificationSubscribedObjects('dataset');
+    if (subscribedTargets[downloadDatasetId]) return;
+
+    showNotificationsSignupModal(
+      'download',
+      downloadDatasetId,
+      downloadButton.getAttribute('data-dataset-name'),
+      'dataset',
+      downloadButton.getAttribute('data-is-authenticated')
+    );
+  });
+
   if (signupDrawer) {
     signupDrawer.addEventListener('drawer:close', function () {
       if (signupFormPopupSourceInput) signupFormPopupSourceInput.value = '';
