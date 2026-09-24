@@ -24,6 +24,7 @@ from typing import Any, Optional, Union
 from collections import OrderedDict
 from ckan.lib import munge
 from ckan.plugins import toolkit
+from ckan.types import Context
 from ckanext.hdx_package.helpers.caching import cached_objects_with_notifications, cached_objects_without_notifications
 from ckanext.hdx_package.helpers.freshness_calculator import UPDATE_FREQ_INFO, UPDATE_FREQ_NEVER
 from ckanext.hdx_package.helpers.p_code_filters_helper import are_new_p_code_filters_enabled
@@ -33,6 +34,7 @@ from ckanext.hdx_users.notifications_subscription_model import ObjectType
 _ = toolkit._
 request = toolkit.request
 c = toolkit.c
+current_user = toolkit.current_user
 config = toolkit.config
 ungettext = toolkit.ungettext
 
@@ -248,14 +250,18 @@ def hdx_dataset_follower_count(pkg_id):
 
 
 def get_group_members(grp_id):
+    context: Context = {'model': model, 'session': model.Session, 'user': current_user.name}
     try:
         member_list = logic.get_action('member_list')(
-            {'model': model, 'session': model.Session},
+            context,
             {'id': grp_id, 'object_type': 'user'})
     except logic.NotAuthorized:
-        member_list = logic.get_action('member_list')(
-            {'model': model, 'session': model.Session},
-            {'id': grp_id, 'include_users': False})
+        try:
+            member_list = logic.get_action('member_list')(
+                context,
+                {'id': grp_id, 'include_users': False})
+        except logic.NotAuthorized:
+            return 0
     return len(member_list)
 
 
