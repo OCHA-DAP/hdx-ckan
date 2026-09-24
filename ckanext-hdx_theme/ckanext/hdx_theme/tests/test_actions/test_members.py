@@ -79,6 +79,62 @@ class TestMemberActions(hdx_test_base.HdxBaseTest):
         assert 'grp_num' in result_basic_user_info
         assert len(result_basic_user_info) == 9
 
+    def test_member_list_hides_user_info_from_anonymous_requester(self):
+        '''member_list should not reveal member fullname/sysadmin info to an
+        anonymous (not logged in) requester, even if user_info/sysadmin_info
+        are requested. (Iteration 1: gate is "logged in or not"; restricting
+        to org members/sysadmins only is deferred to iteration 2.)'''
+        member = factories.User(name='mlhide_member', fullname='ML Hide Member',
+                                 email='mlhide_member@test.test')
+        org = factories.Organization(
+            name='mlhide-test-org',
+            users=[{'name': member['name'], 'capacity': 'member'}],
+            hdx_org_type=ORGANIZATION_TYPE_LIST[0][1],
+            org_url='https://hdx.hdxtest.org/'
+        )
+        assert org
+
+        result = self._get_action('member_list')(
+            {'model': model, 'session': model.Session},
+            {'id': org['id'], 'object_type': 'user', 'user_info': True, 'sysadmin_info': True}
+        )
+
+        assert result
+        for member_row in result:
+            assert len(member_row) == 4, (
+                'An anonymous requester must not receive user identity/sysadmin info, '
+                'but got: {}'.format(member_row)
+            )
+
+    def test_member_list_shows_user_info_to_any_logged_in_requester(self):
+        '''For iteration 1, any logged-in requester (even a non-member) still
+        receives member fullname/sysadmin info when requested - only
+        anonymous requesters are restricted for now.'''
+        member = factories.User(name='mlshow_member', fullname='ML Show Member',
+                                 email='mlshow_member@test.test')
+        org = factories.Organization(
+            name='mlshow-test-org',
+            users=[{'name': member['name'], 'capacity': 'member'}],
+            hdx_org_type=ORGANIZATION_TYPE_LIST[0][1],
+            org_url='https://hdx.hdxtest.org/'
+        )
+        assert org
+
+        outsider = factories.User(name='mlshow_outsider', fullname='ML Show Outsider',
+                                   email='mlshow_outsider@test.test')
+
+        result = self._get_action('member_list')(
+            {'user': outsider['name'], 'model': model, 'session': model.Session},
+            {'id': org['id'], 'object_type': 'user', 'user_info': True, 'sysadmin_info': True}
+        )
+
+        assert result
+        for member_row in result:
+            assert len(member_row) == 6, (
+                'A logged-in requester should still receive user identity/sysadmin info '
+                'in iteration 1, but got: {}'.format(member_row)
+            )
+
     def _admin_create(self):
         context = {'ignore_auth': True,
                         'model': model, 'session': model.Session, 'user': 'nouser'}
