@@ -1,13 +1,10 @@
 User-agent: *
-{% block all_user_agents -%}
 Disallow: /dataset/rate/
 Disallow: /revision/
 Disallow: /dataset/*/history
 Disallow: /api/
 Disallow: /user/*/api-tokens
 Crawl-Delay: 10
-{%- endblock %}
-{% block additional_user_agents -%}
 # Sign-in pages, in every language
 Disallow: /sign-in
 Disallow: /*/sign-in
@@ -37,4 +34,4 @@ Disallow: /*.xml$
 # PDFs are allowed
 # Sitemap locations (one per row)
 Sitemap: https://data.humdata.org/sitemap.xml
-{% endblock %}
+
