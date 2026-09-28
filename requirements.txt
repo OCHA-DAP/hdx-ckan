@@ -177,7 +177,7 @@ pyld==2.0.4
     #   ckanext-dcat
 pyotp==2.6.0
     # via -r requirements.in
-pyparsing==3.1.2
+pyparsing==3.3.3
     # via
     #   -r requirements.in
     #   rdflib
