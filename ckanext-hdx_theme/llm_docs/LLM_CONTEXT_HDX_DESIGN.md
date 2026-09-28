@@ -186,7 +186,8 @@ Example page-specific template (light search):
 - **Template**: `ckanext-hdx_theme/ckanext/hdx_theme/templates/package/hdx_read.html`
   - Extends `v2/page.html`.
   - Includes `notification_platform/modals.html` (renders subscribe/unsubscribe drawers) and `notification_platform/buttons.html` (via `page-header.html`).
-- **Core assets**: `hdx_theme/v2-dataset-page-styles`, `hdx_theme/v2-dataset-page-scripts` (section accordion).
+  - Includes `v2/data-use-survey-drawer.html` when the organisation has a `user_survey_url`: a resource card Download click opens the "HDX data use survey" drawer (intro + "Not now" / "Take the survey"; the latter loads the survey iframe) until the survey is completed; while pending it takes precedence over the download-triggered notifications drawer.
+- **Core assets**: `hdx_theme/v2-dataset-page-styles`, `hdx_theme/v2-dataset-page-scripts` (section accordion + `v2/data-use-survey-drawer.js`).
 
 ---
 

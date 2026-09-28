@@ -593,6 +593,10 @@
       unsubscribe_email=unsubscribe_email, unsubscribe_token_invalidate=unsubscribe_token_invalidate
   %}
 
+  {% if pkg.user_survey_url %}
+    {% snippet 'v2/data-use-survey-drawer.html', pkg=pkg %}
+  {% endif %}
+
 {% endblock %}
 
 {% block post_primary %}

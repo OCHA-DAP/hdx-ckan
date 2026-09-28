@@ -118,6 +118,9 @@ body.is-drawer-open {
   gap: var(--hdx-space-5);
   padding-top: var(--hdx-space-4);
 }
+.c-drawer-form[hidden] {
+  display: none;
+}
 .c-drawer-form__description {
   font-family: var(--hdx-font-body);
   font-size: var(--hdx-fs-m);
