@@ -70,6 +70,7 @@
       request_attrs=request_attrs if hdx_connect else {},
       download_extra_classes='resource-url-analytics ga-download resource-download-button',
       download_attrs={
+        'target':                              '_blank',
         'data-resource-id':                    res.id,
         'data-resource-name':                  h.resource_display_name(res),
         'data-dataset-id':                     pkg.id,
