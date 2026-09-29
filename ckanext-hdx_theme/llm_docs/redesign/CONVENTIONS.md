@@ -304,7 +304,7 @@ Update ARIA attributes whenever state changes:
 
 Overlays that block page content (offcanvas drawer, modal, full-screen overlay) must:
 1. Move focus inside on open (use `window.hdxV2.FocusTrap` — shared in `v2/utils.js`)
-2. Trap Tab/Shift+Tab within the overlay
+2. Trap Tab/Shift+Tab within the overlay (`FocusTrap` also pulls focus back on `focusin` outside, since Tab inside a cross-origin iframe never reaches the page)
 3. Close on Escape
 4. Return focus to the triggering element on close
 
