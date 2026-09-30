@@ -818,7 +818,7 @@ v2-signals-landing-page-styles:
   output: ckanext-hdx_theme/%(version)s_v2-signals-landing-page-styles.css
   <<: *common-css
   contents:
-    - v2/signals-landing-page.css
+    - v2/pages/signals-landing.css
     - v2/components/signal-card.css
 
 v2-signals-landing-page-scripts:
@@ -892,7 +892,7 @@ v2-signals-landing-page-scripts:
 |---|---|
 | `templates/v2/components/signal-card.html` | New `c-signal-card` component snippet |
 | `less/v2/components/signal-card.less` | Signal card LESS |
-| `less/v2/signals-landing-page.less` | Page-specific LESS |
+| `less/v2/pages/signals-landing.less` | Page-specific LESS |
 | `fanstatic/v2/pages/signals-landing.css` | Compiled output (generated) |
 | `fanstatic/v2/carousel.js` | Generic shared carousel module |
 | `fanstatic/v2/signals-carousel.js` | Thin init wrapper for signals carousel |

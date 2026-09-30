@@ -144,7 +144,7 @@
     // so the handler above can't stop focus leaving through one. Pull it
     // back if it lands outside the trap anyway.
     this._focusHandler = function (e) {
-      if (activeTraps[activeTraps.length - 1] !== self || el.contains(e.target)) return;
+      if (activeTraps[activeTraps.length - 1] !== self || el.contains(e.target) || e.target.tagName === 'IFRAME') return;
       var current = window.hdxV2.getFocusable(el);
       (current[0] || el).focus();
     };

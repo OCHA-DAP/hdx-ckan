@@ -2,7 +2,7 @@
   Snippet: data-use-survey-drawer.html
   Path:    templates/v2/data-use-survey-drawer.html
 
-  "HDX data use survey" c-drawer — v2 replacement for the
+  "HDX Data Use Survey" c-drawer — v2 replacement for the
   widget/onboarding/data-use-survey.html popup. Opens on v2 resource card
   Download clicks with an intro and "Not now" / "Take the survey" buttons;
   "Take the survey" swaps the intro for the organisation's user_survey_url
@@ -25,7 +25,7 @@
 
 {% call h.snippet('v2/components/drawer.html',
     drawer_id='dataUseSurveyDrawer',
-    title=_('HDX data use survey')) %}
+    title=_('HDX Data Use Survey')) %}
   <div class="c-drawer-form" data-survey-intro>
     <p class="c-drawer-form__text">{{ intro_text }}</p>
     <div class="c-drawer-form__buttons">
@@ -40,10 +40,10 @@
     </div>
   </div>
   {# src is set by JS on "Take the survey", once the hdx_* placeholders in the survey url are filled in #}
-  <iframe class="hdx-v2-data-use-survey"
+  <iframe class="hdx-v2-data-use-survey-drawer__iframe"
           hidden
           data-survey-url="{{ pkg.user_survey_url }}"
           data-org-name="{{ pkg.organization.name }}"
           data-dataset-url="{{ h.url_for('dataset.read', id=pkg.name, qualified=True) }}"
-          title="{{ _('HDX data use survey') }}"></iframe>
+          title="{{ _('HDX Data Use Survey') }}"></iframe>
 {% endcall %}

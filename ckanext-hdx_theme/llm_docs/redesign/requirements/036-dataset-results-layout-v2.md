@@ -60,10 +60,10 @@ Legacy `container mainContent` / `hdx-wrapper wrapper` / `contentBackground` rem
 
 | File | Class | Value |
 |---|---|---|
-| `v2/search.less` | `.hdx-v2-search-layout` | `display:flex; gap:24px; align-items:flex-start` |
-| `v2/search.less` | `.hdx-v2-search-filters` (inside layout) | `flex-shrink:0; width:15rem (240px)` at ≥1280px; `display:none` at <1280px |
+| `v2/pages/search.less` | `.hdx-v2-search-layout` | `display:flex; gap:24px; align-items:flex-start` |
+| `v2/pages/search.less` | `.hdx-v2-search-filters` (inside layout) | `flex-shrink:0; width:15rem (240px)` at ≥1280px; `display:none` at <1280px |
 | `v2/layout.less` | `.hdx-v2-container` | SM: 1rem padding; MD+: 3rem padding; XXL: max-width 1320px |
-| `v2/search.less` | `.hdx-v2-pagination-row` | `display:flex; justify-content:center; margin-top:32px` |
+| `v2/pages/search.less` | `.hdx-v2-pagination-row` | `display:flex; justify-content:center; margin-top:32px` |
 
 ### Structural problems
 

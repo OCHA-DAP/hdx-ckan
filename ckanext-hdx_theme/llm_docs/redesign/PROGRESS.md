@@ -92,7 +92,7 @@ CSS custom property equivalents (`--hdx-*`) are defined in `v2/foundation.css` (
 | Dataset search | `search/search.html` | Extends `v2/page.html`; uses `v2=true` gate for v2 UI; Archived toggle + Applied Filters pills (XL) — see `requirements/065-advanced-filters-v2.md` |
 | Dataset page | `package/hdx_read.html` | Extends `v2/page.html`; full page implemented — see `requirements/038-dataset-page.md` |
 | Resource page | `package/resource_read.html` | Extends `v2/page.html`; full page implemented — see `requirements/040-resource-page.md` |
-| All Locations | `light/group/index.html` | Extends `v2/page.html`; sidebar + sort JS in `v2/all-locations-page.js` |
+| All Locations | `light/group/index.html` | Extends `v2/page.html`; sidebar + sort JS in `v2/pages/locations-list.js` |
 | All Organisations | `organization/index.html` | Extends `v2/page.html`; org card with clamped-text, KPI row, url-nav.js |
 | Contact Contributor | `package/contact_contributor.html` | Extends `v2/page.html`; single-column; `select.html` dropdown + `text-field.html` textarea; `breadcrumb_row_class` white; see `requirements/050-contact-contributor-v2.md` |
 | Signup — value-proposition | `onboarding/signup/value-proposition.html` | Extends `v2/page.html`; `c-signup-tier` cards; `hdx_click_stopper` analytics preserved |
@@ -192,47 +192,59 @@ Exception: `info-icon.html` has no dedicated LESS/CSS — it composes existing `
 
 Bundle configuration:
 - `hdx_theme/v2-components-styles` — standalone design system bundle (tokens + components), no Bootstrap
-  - Contents: `v2/foundation.css`, then component CSS files: `divider`, `activity-card`, `data-grid-status`, `dataset-card`, `dataviz-card`, `resource-card`, `org-list-card`, `member-list-card`, `avatar-badge`, `buttons`, `checkbox`, `copy-button`, `dropdown`, `input-field`, `label`, `letter-anchor`, `list-item`, `nav-item`, `notification-item`, `anchor-links`, `pagination`, `breadcrumb`, `page-header`, `selection`, `showcase-card`, `text-link`, `highlight-card`, `overlay`, `signup-tier`, `step-pager`, `content-card`, `accordion`, `stats-card`
+  - Contents: `v2/foundation.css`, `v2/overlay.css`, then component CSS files: `accordion`, `activity-card`, `activity-item`, `alert`, `anchor-links`, `avatar-badge`, `breadcrumb`, `buttons`, `checkbox`, `content-card`, `copy-button`, `data-grid-status`, `dataset-card`, `dataviz-card`, `divider`, `drawer`, `dropdown`, `form-field`, `highlight-card`, `input-field`, `label`, `letter-anchor`, `list-item`, `member-list-card`, `nav-item`, `notification-item`, `org-list-card`, `page-header`, `pagination`, `resource-card`, `selection`, `showcase-card`, `signup-tier`, `spinner`, `stats-card`, `step-pager`, `table`, `tabs`, `signal-card`, `text-link`
   - Kept separate for non-page contexts (component previews, embedded widgets)
 - `hdx_theme/v2-page-styles` ✅ Full page bundle: preloads `v2-components-styles`, then adds:
   - `vendor/bootstrap5/css/bootstrap.css`
-  - `v2/layout.css` — Bootstrap container overrides aligned to Figma grid specs, scoped to `.hdx-v2`
-  - `v2/top-bar.css` — top-bar styles (OCHA services dropdown, documentation link)
   - `v2/footer.css` — footer styles
+  - `v2/layout.css` — Bootstrap container overrides aligned to Figma grid specs, scoped to `.hdx-v2`
+  - `v2/nav-controls.css` — shared sort + results-per-page dropdown pair
   - `v2/navbar.css` — main navbar styles (logo, search, nav items, actions, offcanvas)
-- `hdx_theme/v2-components-scripts` ✅ Contains: `input-field.js` (password toggle, renamed from `password-toggle.js`), `clamped-text.js` (show-more/less), `dropdown.js`, `page-header.js`, `anchor-links.js` (smooth scroll + mobile dropdown + active tracking), `copy-button.js`
-- `hdx_theme/v2-page-scripts` ✅ Contains `v2/navbar.js` (navbar + offcanvas, FocusTrap inlined) + `v2/search-autocomplete.js`; preloads `v2-search-scripts` (MiniSearch/feature-index)
+  - `v2/top-bar.css` — top-bar styles (OCHA services dropdown, documentation link)
+- `hdx_theme/v2-components-scripts` ✅ Contains: `v2/utils.js` (shared `window.hdxV2.*` helpers incl. `FocusTrap`, loaded first), then `alert.js`, `anchor-links.js` (smooth scroll + mobile dropdown + active tracking), `clamped-text.js` (show-more/less), `copy-button.js`, `drawer.js`, `dropdown.js`, `input-field.js` (password toggle), `page-header.js`, `tooltip.js`, `toggle.js`
+- `hdx_theme/v2-page-scripts` ✅ Contains `v2/contribute.js` + `v2/group-message-drawer.js` + `v2/navbar.js` (navbar + offcanvas, uses `window.hdxV2.FocusTrap`) + `v2/search-autocomplete.js`; preloads `v2-components-scripts` and `v2-search-scripts` (MiniSearch/feature-index)
 - `hdx_theme/v2-search-scripts` — global lib bundle: MiniSearch, normalize.js, feature-index; auto-loaded via `v2-page-scripts` preload
-- `hdx_theme/v2-search-page-styles` — search page: adds `v2/search-page.css`
-- `hdx_theme/v2-search-page-scripts` — search page: adds `highlight.js` + `v2/url-nav.js` + `v2/search-page.js` (`url-nav.js` is a shared nav-param module also used by the org list page and the org members page)
-- `hdx_theme/v2-dataset-page-styles` — dataset page: adds `v2/dataset-page.css`
-- `hdx_theme/v2-dataset-page-scripts` — dataset page: adds `v2/dataset-page.js` (section accordion)
-- `hdx_theme/v2-resource-page-styles` — resource page: adds `v2/resource-page.css`
-- `hdx_theme/v2-resource-page-scripts` — resource page: adds `v2/resource-page.js` (Data dictionary AJAX
+- `hdx_theme/v2-search-page-styles` — search page: adds `v2/pages/search.css`
+- `hdx_theme/v2-search-page-scripts` — search page: adds `jquery.highlight.js` + `highlight.js` + `v2/url-nav.js` + `v2/pages/search.js` (`url-nav.js` is a shared nav-param module also used by the org list page, the org members page and the dataviz gallery)
+- `hdx_theme/v2-dataset-page-styles` — dataset page: adds `v2/pages/dataset.css`
+- `hdx_theme/v2-dataset-page-scripts` — dataset page: adds `v2/pages/dataset.js` (section accordion) + `v2/data-use-survey-drawer.js` (data use survey drawer)
+- `hdx_theme/v2-quick-edit-scripts` — dataset page: adds `v2/components/quick-edit.js`
+- `hdx_theme/v2-shape-view-scripts` — dataset page, loaded only when the dataset has shapes: preloads `charting-scripts`, adds `v2/pages/shape-view.js`
+- `hdx_theme/v2-resource-page-styles` — resource page: adds `v2/pages/resource.css`
+- `hdx_theme/v2-resource-page-scripts` — resource page: preloads `v2-datatable-scripts`, adds `v2/pages/resource.js` (Data dictionary AJAX
   load via `datastore_info`; loaded only when `res.datastore_active`)
-- `hdx_theme/v2-home-page-styles` — homepage: adds `v2/home-page.css` + `v2/bar-chart.css`
-- `hdx_theme/v2-home-page-scripts` — homepage: adds Hammer.js, `v2/highlights-carousel.js`, `v2/bar-chart.js`
-- `hdx_theme/v2-all-locations-page-styles` — All Locations page: adds `v2/all-locations-page.css`
-- `hdx_theme/v2-all-locations-page-scripts` — All Locations page: adds `v2/all-locations-page.js` (HRP filter + A-Z/Z-A sort)
-- `hdx_theme/v2-org-list-page-styles` — All Organisations page: adds `v2/org-list-page.css` (org-list-card styles come from the preloaded `v2-components-styles` bundle)
-- `hdx_theme/v2-org-list-page-scripts` — All Organisations page: adds `v2/url-nav.js` + `v2/org-list-page.js`
-- `hdx_theme/v2-org-page-styles` — Organization page (all tabs, 056–059): adds `v2/org-page.css` (hero band, activity/stats sections, members layout incl. the invite tags widget)
-- `hdx_theme/v2-org-members-page-scripts` — Organization page Members tab: adds `v2/url-nav.js` + `v2/org-members-page.js` (change-role/approve dropdown wiring, drawers + invisible reCAPTCHA, invite tags-autocomplete)
-- `hdx_theme/v2-chart-scripts` — Chart.js lib bundle (`chartjs/*` + `v2/charts.js`); loaded by the org page Stats tab
-- `hdx_theme/v2-contact-contributor-page-styles` — Contact Contributor page: adds `v2/contact-contributor-page.css`
-- `hdx_theme/v2-signup-page-styles` — Signup flow pages: adds `v2/signup-page.css`; loaded on all 5 signup pages
-- `hdx_theme/v2-hapi-landing-page-styles` — HAPI landing page: adds `v2/hapi-landing-page.css`
+- `hdx_theme/v2-datatable-scripts` — DataTables lib (`vendor/datatables-2.3.8/dataTables.min.js`); preloaded by `v2-resource-page-scripts`
+- `hdx_theme/v2-home-page-styles` — homepage: adds `v2/bar-chart.css` + `v2/pages/home.css`
+- `hdx_theme/v2-home-page-scripts` — homepage: adds `v2/highlights-carousel.js`, `v2/bar-chart.js`; requires `v2-carousel-scripts` loaded first in the template
+- `hdx_theme/v2-locations-list-page-styles` — All Locations page: adds Leaflet CSS, `browse_/browse.css` + `v2/pages/locations-list.css`
+- `hdx_theme/v2-locations-list-page-scripts` — All Locations page: adds Leaflet, `map_base.js`, `browse_/*` + `v2/pages/locations-list.js` (HRP filter + A-Z/Z-A sort)
+- `hdx_theme/v2-location-page-styles` / `-scripts` — Location page: adds `v2/pages/location.css` / `v2/pages/location.js`
+- `hdx_theme/v2-crisis-page-styles` / `-scripts` — Crisis/event pages: adds `v2/pages/crisis.css` / `v2/pages/crisis.js`
+- `hdx_theme/v2-crisis-pages-page-styles` — Crisis Pages page: adds `v2/pages/crisis-pages.css`
+- `hdx_theme/v2-org-list-page-styles` — All Organisations page: adds `v2/pages/org-list.css` (org-list-card styles come from the preloaded `v2-components-styles` bundle)
+- `hdx_theme/v2-org-list-page-scripts` — All Organisations page: adds `v2/url-nav.js` + `v2/pages/org-list.js`
+- `hdx_theme/v2-org-page-styles` — Organization page (all tabs, 056–059): adds `v2/pages/org.css` (hero band, activity/stats sections, members layout incl. the invite tags widget)
+- `hdx_theme/v2-org-members-page-scripts` — Organization page Members tab: adds `v2/url-nav.js` + `v2/pages/org-members.js` (change-role/approve dropdown wiring, drawers + invisible reCAPTCHA, invite tags-autocomplete)
+- `hdx_theme/v2-chart-scripts` — Chart.js lib bundle (`chartjs/*` + `v2/charts.js`); loaded by the org page Stats tab and the dataset page
+- `hdx_theme/v2-message-form-page-styles` — Contact Contributor + Request Data Access pages: adds `v2/pages/message-form.css`
+- `hdx_theme/v2-contact-contributor-page-scripts` — Contact Contributor page: adds `v2/pages/contact-contributor.js`
+- `hdx_theme/v2-request-access-page-styles` / `-scripts` — Request Data Access page: adds `v2/pages/request-access.css` / `v2/pages/request-access.js`
+- `hdx_theme/v2-signup-page-styles` — Signup flow pages: adds `v2/pages/signup.css`; loaded on all 5 signup pages
+- `hdx_theme/v2-verify-email-page-scripts` — Signup verify-email page: adds `v2/pages/verify-email.js`
+- `hdx_theme/v2-hapi-landing-page-styles` — HAPI landing page: adds `v2/pages/hapi-landing.css`
 - `hdx_theme/v2-carousel-scripts` — shared carousel lib: `vendor/hammer/hammer.js` + `v2/carousel.js`; loaded explicitly by each page template that uses the carousel (no preload)
-- `hdx_theme/v2-signals-landing-page-styles` — Signals landing page: adds `v2/signals-landing-page.css` + `v2/components/signal-card.css`
+- `hdx_theme/v2-signals-carousel-styles` — Signals carousel: adds `v2/signals-carousel.css`; loaded by the homepage and the Signals landing page
+- `hdx_theme/v2-signals-landing-page-styles` — Signals landing page: adds `v2/pages/signals-landing.css`
 - `hdx_theme/v2-signals-landing-page-scripts` — Signals landing page: adds `v2/signals-carousel.js` + `landing_pages/hdx_signals.js`; requires `v2-carousel-scripts` loaded first in the template
 - `hdx_theme/v2-signup-scripts` — Signup scripts: `onboarding/came-from-input.js` (vanilla JS rewrite in place) + `onboarding/confirm-page-leave.js` (vanilla JS rewrite in place); loaded on user-info and change-email pages
 - `hdx_theme/v2-form-validator-scripts` — Form validation: vanilla JS validator (`v2/form-validator.js`); activated by `data-hdx-v2-form-validator` on `<form>` elements; loaded by notification platform templates and signup form pages (user-info, change-email)
-- `hdx_theme/v2-error-page-styles` — 404/403/Server Error page: adds `v2/error-page.css`; no scripts bundle (page has no interactive behavior)
-- `hdx_theme/v2-auth-page-styles` — Login + forgot-password pages: adds `v2/auth-page.css` (shared card/navbar-shell styling, loaded by both templates)
-- `hdx_theme/v2-login-page-scripts` — Login page: adds `v2/login-page.js` (lockout/MFA pre-checks, required-field gating, remember-me cookie prefill)
-- `hdx_theme/v2-forgot-password-page-scripts` — Forgot-password page: adds `v2/forgot-password-page.js` (AJAX submit, invisible reCAPTCHA, recover/confirmation card swap)
-- `hdx_theme/v2-archived-dataviz-page-styles` — Archived Dataviz page: adds `v2/archived-dataviz-page.css`; no scripts bundle (page has no interactive behavior)
-- `hdx_theme/v2-dataviz-gallery-page-styles` / `-scripts` — Dataviz Gallery page: adds `v2/dataviz-gallery-page.css` / `v2/url-nav.js`
+- `hdx_theme/v2-error-page-styles` — 404/403/Server Error page: adds `v2/pages/error.css`; no scripts bundle (page has no interactive behavior)
+- `hdx_theme/v2-auth-page-styles` — Login, forgot-password + perform-reset pages: adds `v2/pages/auth.css` (shared card/navbar-shell styling, loaded by all three templates)
+- `hdx_theme/v2-login-page-scripts` — Login page: adds `v2/pages/login.js` (lockout/MFA pre-checks, required-field gating, remember-me cookie prefill)
+- `hdx_theme/v2-forgot-password-page-scripts` — Forgot-password page: adds `v2/pages/forgot-password.js` (AJAX submit, invisible reCAPTCHA, recover/confirmation card swap)
+- `hdx_theme/v2-perform-reset-page-scripts` — Perform-reset (set new password) page: adds `v2/pages/perform-reset.js`
+- `hdx_theme/v2-archived-dataviz-page-styles` — Archived Dataviz page: adds `v2/pages/archived-dataviz.css`; no scripts bundle (page has no interactive behavior)
+- `hdx_theme/v2-dataviz-gallery-page-styles` / `-scripts` — Dataviz Gallery page: adds `v2/pages/dataviz-gallery.css` / `v2/url-nav.js`
 
 ---
 

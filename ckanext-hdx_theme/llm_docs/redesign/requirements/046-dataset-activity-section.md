@@ -17,7 +17,7 @@ The Figma design (`figma_exports/activity-item.html`) replaces FA icons entirely
 use the **same visual structure** — only the action text and subject link differ.
 
 The activity data is loaded via **AJAX**, not server-side rendering. When the accordion is
-opened, `dataset-page.js` calls `/api/3/action/hdx_package_activity_stream`, which renders a
+opened, `pages/dataset.js` calls `/api/3/action/hdx_package_activity_stream`, which renders a
 Jinja snippet server-side and returns raw HTML. That HTML is injected into
 `.dataset-activity-wrapper` via `$(wrapper).html(response.result)`. The `hdx_activities`
 template variable in `dataset.py` is always `[]` and the static `{% snippet %}` call in
@@ -247,7 +247,7 @@ also uses the v2 template:
 **`hdx_read.html:475–477`** — the "See more in your dashboard" link is removed. It was
 overwritten by AJAX anyway and is not part of the v2 design.
 
-**`dataset-page.js:58`** — the empty-state check is updated from `.activity` to
+**`pages/dataset.js`** — the empty-state check is updated from `.activity` to
 `.c-activity-stream`:
 
 ```js
@@ -535,7 +535,7 @@ activity items (unlike dataset cards). Long dataset titles wrap naturally.
 | Breaking v1 rendering on org/group/user pages | None | `activity_stream.html` unchanged; v2 snippet only called from `hdx_read.html` |
 | Missing LESS typography mixins (`hdx-body-xs`) | Low | Confirmed: `.hdx-body-s-semibold()`, `.hdx-body-s()`, `.hdx-body-xs()` all exist |
 | `#c4d0d1` token resolved | None | Used as `var(--hdx-neutral-3)` CSS custom property in LESS component |
-| `dataset-page.js` empty-state check targets old `.activity` class | High (will break) | Updated `dataset-page.js:58` to `.find('.c-activity-stream')` |
+| `pages/dataset.js` empty-state check targets old `.activity` class | High (will break) | Updated `pages/dataset.js` to `.find('.c-activity-stream')` |
 | `hdx_package_activity_stream` renders v1 HTML | High (blocks v2) | Changed `helpers/actions.py:744` to render `activity-stream.html` |
 
 ---
@@ -570,7 +570,7 @@ All questions resolved — no open items remain.
    static path in `dataset.py` remains `= []` and is not restored in this task.
 
 7. **Pagination** — `limit=7` is enforced by the JS call
-   (`dataset-page.js:54`: `limit: 7`). All returned items are rendered; no
+   (`pages/dataset.js`: `limit: 7`). All returned items are rendered; no
    additional pagination needed in the template.
 
 8. **"See more in your dashboard" link** — **Removed for v2.** The link lived inside
@@ -580,7 +580,7 @@ All questions resolved — no open items remain.
 9. **Section header styling** — Confirmed unchanged. The accordion header already uses
    `hdx-v2-dataset-section__title`; no modifications needed.
 
-10. **JS empty-state check** — Update `dataset-page.js:58` from `.find('.activity')` to
+10. **JS empty-state check** — Update `pages/dataset.js` from `.find('.activity')` to
     `.find('.c-activity-stream')` to match the v2 container class.
 
 ---

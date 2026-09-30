@@ -493,7 +493,7 @@ The page must extend `v2/page.html` instead of `page_light.html`.
 
 | Bundle | Contents |
 |---|---|
-| `v2-hapi-landing-page-styles` | `hapi-landing-page.less` (imports accordion.less, divider.less) |
+| `v2-hapi-landing-page-styles` | `pages/hapi-landing.less` (imports accordion.less, divider.less) |
 | `v2-hapi-landing-page-scripts` | Only if accordion JS enhancement is needed |
 
 ### Data Passed to Template

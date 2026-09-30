@@ -297,7 +297,7 @@ Use `size='m'` to match the height of existing v2 header controls (dropdowns at 
 - **v1 untouched**: The v1 search bar (lines 33–77) remains unchanged; no `{% if not v2 %}` wrapper needed
 - **Placement within v2 block**: A new search row inserted after `hdx-v2-list-header` (line 105–129), before the filter overlay (line 131)
 - **Form wrapper**: New `<form id="dataset-filter-form">` wraps the v2 search input (required for analytics serialization)
-- **CSS**: New class `hdx-v2-search-bar` (or similar) scoped to the v2 search row; breakpoint rules in `v2/search.less`
+- **CSS**: New class `hdx-v2-search-bar` (or similar) scoped to the v2 search row; breakpoint rules in `v2/pages/search.less`
 
 ---
 

@@ -267,8 +267,8 @@ implementation begins if pixel-level Figma fidelity is required there.
   unused by any v2 page — confirmed by grep that no template still loads it for the pages this task
   touches (§8).
 - **Template wiring:** `organization/stats.html` loads `v2-chart-scripts` only. `package/hdx_read.html`
-  loads `v2-chart-scripts` + `v2-dataset-page-scripts` (the latter is just `v2/dataset-page.js`'s
-  accordion logic).
+  loads `v2-chart-scripts` + `v2-dataset-page-scripts` (the latter is `v2/pages/dataset.js`'s
+  accordion logic + `v2/data-use-survey-drawer.js`).
 - **Lifecycle:** load → Chart.js bundle parses on page load → the page's own init script reads the
   embedded JSON hidden divs → constructs each `new Chart(ctx, {...})` → no update/refetch lifecycle
   is needed since there's no AJAX (matches v1 exactly — chart state is fully determined at page
@@ -332,7 +332,7 @@ not re-decided here.
 | D10 | KPI copy: no "Last 30 days" sublabel on the total-downloads card (per the XL export; the value is all-time), but the MD/SM "…from this organisation" wording is used at all breakpoints | Requester's explicit choice, resolving a conflict between the XL and MD/SM exports (MD/SM wrongly show "Last 30 days" under the all-time total) |
 | D11 | Custom orgs unified: the stats view renders one template for standard + custom orgs (056/057 precedent); `custom_stats.html` is left orphaned on disk | Requester's explicit choice, overriding this doc's earlier keep-the-branch position (§1.1) |
 | D12 | `chartjs-adapter-date-fns.bundle.min.js` (self-contained build) is vendored so charts use Chart.js's native time scale | Requester's explicit choice over a category-axis workaround that would have avoided the extra vendored file |
-| D13 | Chart.js + plugins vendored under `fanstatic/v2/chartjs/` in a `v2-chart-scripts` bundle, which also carries the page JS, `v2/charts.js`; `v2/dataset-page.js` keeps only its non-chart accordion logic (v1 `organization_/stats.js` and `datasets/stats-chart.js` are left untouched/orphaned, not rewritten in place) | Requester's explicit choices — v1 bundles/files stay untouched, and v1 `dataset-scripts` is dropped from the v2 dataset page (its only live role there was the C3 chart; its other handlers target markup that no longer exists) |
+| D13 | Chart.js + plugins vendored under `fanstatic/v2/chartjs/` in a `v2-chart-scripts` bundle, which also carries the page JS, `v2/charts.js`; `v2/pages/dataset.js` keeps only its non-chart accordion logic (v1 `organization_/stats.js` and `datasets/stats-chart.js` are left untouched/orphaned, not rewritten in place) | Requester's explicit choices — v1 bundles/files stay untouched, and v1 `dataset-scripts` is dropped from the v2 dataset page (its only live role there was the C3 chart; its other handlers target markup that no longer exists) |
 | D14 | The three KPI stat cards are a new `c-stats-card` component (borderless white card, semibold label, optional sublabel, 24px body-font value) | Requester's explicit choice over reusing/extending the visually-different `c-kpi-card` |
 | D15 | Chart tooltips reuse the existing `c-tooltip--graph` component — template-rendered per chart, driven by a Chart.js external-tooltip handler; call sites must pass a non-empty `graph_title` so the date/title row renders (an empty value silently removes `.c-tooltip__text` from the DOM, breaking the tooltip's date display) | Requester pointed at the already-implemented tooltip component instead of introducing a new one |
 | D16 | Bar-chart dataset labels render as dark text (per Figma) with a pointer cursor and primary-color hover, not v1's always-blue link color | Requester's explicit choice, keeping Figma's colors while preserving clickability (D2) |
@@ -346,7 +346,7 @@ not re-decided here.
 | `ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/v2/chartjs/` | **New** — vendored `chart.umd.js` (4.5.0), `chartjs-adapter-date-fns.bundle.min.js` (D12), `chartjs-plugin-zoom.min.js` (2.2.0, D7) |
 | `ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/v2/charts.js` | **New** — all four charts (A–D): `setupDatasetDownloads` (D3), `initPageviewsChart`/`initTopDownloadsChart`, clickable-label hit-test plugin (D6), zoom/pan (D7), single-dataset branch, dataset-page call site; token colors read with no fallback literal, `tokenPx()` for numeric px config |
 | `ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/v2/pages/dataset.js` | Chart-init code removed (now in `charts.js`, self-initializing); keeps only the section-accordion logic |
-| `ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/webassets.yml` | `v2-chart-scripts` carries the vendor libs + `v2/charts.js`; `v2-dataset-page-scripts` is just `v2/dataset-page.js`; `v2-components-styles` gains `stats-card.css`; all v1 bundles untouched (D13) |
+| `ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/webassets.yml` | `v2-chart-scripts` carries the vendor libs + `v2/charts.js`; `v2-dataset-page-scripts` is `v2/pages/dataset.js` + `v2/data-use-survey-drawer.js`; `v2-components-styles` gains `stats-card.css`; all v1 bundles untouched (D13) |
 | `ckanext-hdx_theme/ckanext/hdx_theme/templates/organization/stats.html` | Replaced with the v2 template: `v2/page.html` shell + `org-hero.html` (Stats tab active), `c-stats-card` KPIs, chart cards, "See documentation" link (D1), re-placed XLSX prompt (D4) |
 | `ckanext-hdx_org_group/ckanext/hdx_org_group/views/organization.py` | `stats()` unified for standard + custom orgs (D11); fetches `datasets_num` for the hero stats |
 | `ckanext-hdx_theme/ckanext/hdx_theme/templates/v2/components/stats-card.html` | **New** — `c-stats-card` component (D14) |

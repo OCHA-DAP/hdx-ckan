@@ -486,7 +486,7 @@ v2-components-styles:
 v2-resource-page-styles:
     output: ckanext-hdx_theme/%(version)s_v2-resource-page-styles.css
     contents:
-        - v2/resource-page.css
+        - v2/pages/resource.css
 ```
 
 ### Load in `resource_read.html`:
@@ -515,7 +515,7 @@ No page-specific scripts block needed — all JS is in `v2-components-scripts`, 
 | `fanstatic/v2/components/copy-button.css` | CSS | Copy button styles (in `v2-components-styles`) |
 | `fanstatic/v2/pages/resource.css` | CSS | Resource page layout |
 | `less/v2/components/copy-button.less` | LESS | Source for `copy-button.css` |
-| `less/v2/pages/resource.less` | LESS | Source for `resource-page.css` |
+| `less/v2/pages/resource.less` | LESS | Source for `pages/resource.css` |
 
 ### Files to Modify
 

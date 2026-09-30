@@ -368,7 +368,7 @@ Same component as MD: right-side vertical sidebar with letter anchors. The "Jump
 
 - `c-toggle` component with label to the left
 - Toggled on → hide all items where `is_hrp=False`; also hide letter headings with no visible items; update disabled state of letter anchors
-- Implemented client-side in `all-locations-page.js`
+- Implemented client-side in `pages/locations-list.js`
 - Toggle uses `c-toggle` — confirmed by Figma `.toggle`/`.switch` pattern
 
 ### Sort by
@@ -498,7 +498,7 @@ Same component as MD: right-side vertical sidebar with letter anchors. The "Jump
 |---|---|
 | Grouping divergence | Test accent normalisation against v1 sort order |
 | `datagrid_count` KPI unavailable | ✅ Implemented in `group_read_logic.py` |
-| JS filtering/sorting complexity | ✅ Toggle and sort are independent state; implemented in `all-locations-page.js` |
+| JS filtering/sorting complexity | ✅ Toggle and sort are independent state; implemented in `pages/locations-list.js` |
 | Sidebar sticky on XL | ✅ `position: sticky; top: 0; align-self: flex-start` — works at all breakpoints |
 | X letter anchor | ✅ X excluded from `all_letters`; no render needed |
 | SM sort buttons | ✅ Sort buttons rendered at all breakpoints; no SM-specific hiding |

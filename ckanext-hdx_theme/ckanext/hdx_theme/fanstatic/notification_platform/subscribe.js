@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (downloadButton.getAttribute('data-dataset-supports-notifications') !== 'true') return;
 
     // A pending data use survey takes precedence (v2/data-use-survey-drawer.js)
-    if (window.hdxV2DataUseSurvey && window.hdxV2DataUseSurvey.isPending()) return;
+    if (window.hdxV2 && window.hdxV2.dataUseSurvey && window.hdxV2.dataUseSurvey.isPending()) return;
 
     var downloadDatasetId = downloadButton.getAttribute('data-dataset-id');
     var subscribedTargets = hdxUtil.net.getNotificationSubscribedObjects('dataset');

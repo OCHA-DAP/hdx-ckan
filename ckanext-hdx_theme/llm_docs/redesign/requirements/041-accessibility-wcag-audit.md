@@ -59,7 +59,7 @@ The complete v2 implementation surface area across all pages, layout templates, 
 | `fanstatic/v2/components/page-header.js` | v2-components-scripts | Dataset, resource pages |
 | `fanstatic/v2/navbar.js` | v2-page-scripts | All v2 pages |
 | `fanstatic/v2/pages/search.js` | v2-search-scripts | Search page |
-| `fanstatic/v2/pages/dataset.js` | v2-dataset-scripts | Dataset page |
+| `fanstatic/v2/pages/dataset.js` | v2-dataset-page-scripts | Dataset page |
 
 #### Icons
 
@@ -316,7 +316,7 @@ Add `.sr-only` and `.sr-only--focusable` utility classes to `foundation.less` if
 
 ### R-02 — Focus trap utility (shared module)
 
-Create `fanstatic/v2/components/focus-trap.js` — a single lightweight `FocusTrap` class consumed by both `navbar.js` (offcanvas) and `dropdown.js`.
+Shared `window.hdxV2.FocusTrap` in `fanstatic/v2/utils.js` — a single lightweight `FocusTrap` class consumed by both `navbar.js` (offcanvas) and `components/drawer.js`.
 
 Minimal interface:
 
@@ -577,7 +577,7 @@ Every page that renders `v2/header.html` must include the skip-to-main-content l
 
 ### RF-01 — Shared focus trap module
 
-Create `fanstatic/v2/components/focus-trap.js` as a standalone class (see R-02). Import into `navbar.js` and `dropdown.js`. Prevents duplication of focus-trap logic across multiple files.
+Shared `window.hdxV2.FocusTrap` in `fanstatic/v2/utils.js` (see R-02), used by `navbar.js` and `components/drawer.js`. Prevents duplication of focus-trap logic across multiple files.
 
 ### RF-02 — `sr-only` utility in `foundation.less`
 

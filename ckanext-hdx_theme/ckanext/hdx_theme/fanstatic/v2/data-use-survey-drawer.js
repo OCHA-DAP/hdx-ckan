@@ -1,5 +1,5 @@
 // ============================================================
-// data-use-survey-drawer.js — "HDX data use survey" c-drawer
+// data-use-survey-drawer.js — "HDX Data Use Survey" c-drawer
 // Renders from templates/v2/data-use-survey-drawer.html (dataset page,
 // only when the organisation has a user_survey_url). v2 port of the
 // survey popup in resource-list.js: a v2 resource card Download click
@@ -17,11 +17,11 @@ document.addEventListener('DOMContentLoaded', function () {
   if (!drawer) return;
   var intro = drawer.querySelector('[data-survey-intro]');
   var startButton = drawer.querySelector('[data-survey-start]');
-  var iframe = drawer.querySelector('.hdx-v2-data-use-survey');
+  var iframe = drawer.querySelector('.hdx-v2-data-use-survey-drawer__iframe');
 
   var orgName = iframe.getAttribute('data-org-name');
   // Same key as resource-list.js, so a survey completed on v1 stays completed.
-  var SURVEY_KEY = '/organization:' + 'hdx-data-use-survey-popup-' + orgName;
+  var SURVEY_KEY = '/organization:hdx-data-use-survey-popup-' + orgName;
   var resourceId = '';
   var loadCount = 0;
 
@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', function () {
       .replaceAll('hdx_resource_id', resourceId);
   }
 
-  window.hdxV2DataUseSurvey = { isPending: isPending };
+  window.hdxV2.dataUseSurvey = { isPending: isPending };
 
   startButton.addEventListener('click', function () {
     hdxUtil.analytics.sendSurveyEvent('confirm popup');

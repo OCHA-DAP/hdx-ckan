@@ -140,7 +140,7 @@ sending mixpanel events. GA deals with search differently / automatically"*):
 4. If any mapped param has a value, fires `mixpanel.track("search", ...)` with page title, result
    count (`#analytics-number-of-results`), and search-box location. This fires on page load after
    navigation, not per click — consistent with every filter change being a full reload today.
-5. `v2/search-page.js` has zero analytics calls of its own; the generic page-load tracker above is
+5. `v2/pages/search.js` has zero analytics calls of its own; the generic page-load tracker above is
    the only mechanism currently wired to v2 filters.
 
 No `data-ga-*` attributes exist on any filter/facet markup. GTM `dataLayer` pushes are used for

@@ -376,9 +376,9 @@ second instance undefined behavior; v1 had the same constraint implicitly). See 
 | Section dispatcher | **New page-scoped snippet** — `templates/v2/crisis-section.html` | Replaces `section_item.html`; not a `c-*` component (057 precedent) |
 | Header KPI box, resource list, You-might-also-like, Layer dropdown, Back to top, share button | **Not implemented** | D2/D3/D6/D8 |
 
-Assets: new `v2-crisis-page-styles` (compiled `v2/crisis-page.css`; LESS source
+Assets: new `v2-crisis-page-styles` (compiled `v2/pages/crisis.css`; LESS source
 `hdx-styles/src/common/less/v2/pages/crisis.less`, page classes `hdx-v2-crisis-*`) and
-`v2-crisis-page-scripts` (`v2/crisis-page.js`); page also loads `v2-search-page-styles` +
+`v2-crisis-page-scripts` (`v2/pages/crisis.js`); page also loads `v2-search-page-styles` +
 `v2-search-page-scripts` (dataset list, like the org Datasets tab). No edits to any v1 bundle.
 
 ---
