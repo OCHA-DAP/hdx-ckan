@@ -210,7 +210,7 @@ At SM: title + date only. No description, no metadata.
 | `templates/v2/components/org-list-card.html` | Org card snippet |
 | `templates/v2/components.html` | Add org-list-card demo section |
 | `hdx-styles/…/v2/components/org-list-card.less` | Org card LESS |
-| `hdx-styles/…/v2/org-list-page.less` | Page LESS (imports `nav-controls.less`) |
+| `hdx-styles/…/v2/pages/org-list.less` | Page LESS (imports `nav-controls.less`) |
 | `fanstatic/v2/pages/org-list.js` | Search Enter handler (`hdxSetNavParam`) |
 | `fanstatic/v2/url-nav.js` | Shared `setNavParam` + `[data-nav-key]` click handler |
 
@@ -487,7 +487,7 @@ documented in the `components.html` demo page.
 | `ckanext-hdx_theme/…/templates/v2/components/org-list-card.html` | New org card snippet |
 | `ckanext-hdx_theme/…/templates/v2/components.html` | Add org-list-card demo section |
 | `ckanext-hdx_theme/…/hdx-styles/src/…/v2/components/org-list-card.less` | New card LESS |
-| `ckanext-hdx_theme/…/hdx-styles/src/…/v2/org-list-page.less` | New page LESS (imports `nav-controls.less`) |
+| `ckanext-hdx_theme/…/hdx-styles/src/…/v2/pages/org-list.less` | New page LESS (imports `nav-controls.less`) |
 | `ckanext-hdx_theme/…/hdx-styles/src/…/v2/nav-controls.less` | New shared nav-controls LESS (also used by search-page) |
 | `ckanext-hdx_theme/…/fanstatic/v2/pages/org-list.js` | New search Enter handler |
 | `ckanext-hdx_theme/…/fanstatic/v2/url-nav.js` | New shared `setNavParam` module |
@@ -496,4 +496,4 @@ documented in the `components.html` demo page.
 | `ckanext-hdx_theme/…/plugin.py` | Register `hdx_format_number_si` helper |
 | `ckanext-hdx_org_group/…/views/light_organization.py` | Add `kpi_datasets`, `kpi_orgs`, `kpi_locations` to `template_data` |
 | `ckanext-hdx_theme/…/fanstatic/v2/pages/search.js` | Extract `setNavParam` → `url-nav.js` (use `window.hdxSetNavParam`) |
-| `ckanext-hdx_theme/…/hdx-styles/src/…/v2/search-page.less` | Extract nav-controls block → `nav-controls.less` |
+| `ckanext-hdx_theme/…/hdx-styles/src/…/v2/pages/search.less` | Extract nav-controls block → `nav-controls.less` |

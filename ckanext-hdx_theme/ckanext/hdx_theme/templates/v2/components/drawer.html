@@ -20,13 +20,14 @@
 #}
 
 {% set title = title if title is defined else '' %}
+{% set title_id = drawer_id ~ '-title' %}
 
-<div class="c-drawer" id="{{ drawer_id }}" aria-hidden="true" role="dialog" aria-modal="true">
+<div class="c-drawer" id="{{ drawer_id }}" aria-hidden="true" role="dialog" aria-modal="true"{% if title %} aria-labelledby="{{ title_id }}"{% endif %}>
   <div class="c-drawer__overlay" data-drawer-close></div>
   <div class="c-drawer__container" tabindex="-1">
     <div class="c-drawer__header">
       {% if title %}
-        <span class="c-drawer__title">{{ title }}</span>
+        <span class="c-drawer__title" id="{{ title_id }}">{{ title }}</span>
       {% endif %}
       <button class="c-drawer__close" aria-label="Close" data-drawer-close>
         {% include 'v2/icons/close.svg' %}

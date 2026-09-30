@@ -186,7 +186,8 @@ Example page-specific template (light search):
 - **Template**: `ckanext-hdx_theme/ckanext/hdx_theme/templates/package/hdx_read.html`
   - Extends `v2/page.html`.
   - Includes `notification_platform/modals.html` (renders subscribe/unsubscribe drawers) and `notification_platform/buttons.html` (via `page-header.html`).
-- **Core assets**: `hdx_theme/v2-dataset-page-styles`, `hdx_theme/v2-dataset-page-scripts` (section accordion).
+  - Includes `v2/data-use-survey-drawer.html` when the organisation has a `user_survey_url`: a resource card Download click opens the "HDX Data Use Survey" drawer (intro + "Not now" / "Take the survey"; the latter loads the survey iframe) until the survey is completed; while pending it takes precedence over the download-triggered notifications drawer.
+- **Core assets**: `hdx_theme/v2-dataset-page-styles`, `hdx_theme/v2-dataset-page-scripts` (section accordion + `v2/data-use-survey-drawer.js`).
 
 ---
 
@@ -203,7 +204,7 @@ Example page-specific template (light search):
 
 - **Template**: `ckanext-hdx_theme/ckanext/hdx_theme/templates/light/group/index.html`
   - Extends `v2/page.html`. Single-column layout.
-- **Core assets**: `hdx_theme/v2-all-locations-page-styles`, `hdx_theme/v2-all-locations-page-scripts` (HRP filter + A-Z/Z-A sort toggle).
+- **Core assets**: `hdx_theme/v2-locations-list-page-styles`, `hdx_theme/v2-locations-list-page-scripts` (HRP filter + A-Z/Z-A sort toggle).
 
 ---
 
@@ -246,7 +247,7 @@ Example page-specific template (light search):
   default (gray) and primary (blue) variants, numbered feature badges; `v2/components/step-pager.html`
   (`c-step-pager`) — horizontal 3-step progress bar, pure CSS (no JS).
 - **Core assets**:
-  - `hdx_theme/v2-signup-page-styles` — page layout (`v2/signup-page.css`) — all 5 pages
+  - `hdx_theme/v2-signup-page-styles` — page layout (`v2/pages/signup.css`) — all 5 pages
   - `hdx_theme/v2-signup-scripts` — `onboarding/came-from-input.js` + `onboarding/confirm-page-leave.js` (both converted to vanilla JS in place) — user-info and change-email pages
   - `hdx_theme/v2-form-validator-scripts` — `v2/form-validator.js` — user-info and change-email pages
   - Legacy `hdx-verify-email-scripts` — verify-email page only
@@ -267,7 +268,7 @@ Example page-specific template (light search):
 - **Core assets**:
   - `hdx_theme/v2-carousel-scripts` — Hammer.js + `carousel.js`; loaded explicitly in template before page scripts.
   - `hdx_theme/v2-signals-landing-page-scripts` — `v2/signals-carousel.js` (carousel init) + `landing_pages/hdx_signals.js` (form logic: vanilla JS, `is-disabled` class for submit button).
-  - `hdx_theme/v2-signals-landing-page-styles` — `v2/signals-landing-page.css` + `v2/components/signal-card.css`.
+  - `hdx_theme/v2-signals-landing-page-styles` — `v2/pages/signals-landing.css` (`signal-card` styles come from `v2-components-styles`).
 
 ---
 

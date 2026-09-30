@@ -197,7 +197,7 @@ expand/collapse behavior (§1.3).
       extra_classes='hdx-v2-archived-dataviz__row' %}
   ```
   This is the same pattern already used for outbound links in `v2/components/page-header.html`. The
-  `extra_classes` param drives row vertical padding in `archived-dataviz-page.less`.
+  `extra_classes` param drives row vertical padding in `pages/archived-dataviz.less`.
 - **Divider between rows** → `<hr class="c-divider">` between non-last items, matching the loop
   pattern already used in `v2/location-datagrid-drawer.html`:
   ```jinja2
@@ -244,7 +244,7 @@ strictly a template-layer migration.
 - A small page-specific LESS partial for the title+count header and row-list spacing, following the
   precedent that each page owns its own small BEM classes for this kind of one-off header block
   (`hdx-v2-list-header`-style) rather than introducing a new shared `c-*` component for a
-  single-use pattern. `hdx_theme/v2-archived-dataviz-page-styles` → `less/v2/archived-dataviz-page.less`,
+  single-use pattern. `hdx_theme/v2-archived-dataviz-page-styles` → `less/v2/pages/archived-dataviz.less`,
   registered in `webassets.yml` — styles only, no scripts bundle (page has no interactive behavior).
 
 ### Do not

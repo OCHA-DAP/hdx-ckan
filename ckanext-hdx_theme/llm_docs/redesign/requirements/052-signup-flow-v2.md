@@ -659,7 +659,7 @@ New bundles added. `v2-form-validator-scripts` already existed — no changes to
 v2-signup-page-styles:
   output: v2-signup-page-styles.css
   contents:
-    - v2/signup-page.css
+    - v2/pages/signup.css
 
 # Step 1 (user-info) and Step 2b (change-email) form pages
 v2-signup-scripts:

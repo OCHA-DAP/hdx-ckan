@@ -39,7 +39,7 @@ Migrate the search results dataset list to the v2 layout system and replace indi
 | `helpers/helpers.py` | New `render_date_range_label()` helper |
 | `plugin.py` | Registered `render_date_range_label` |
 
-`package_item.html` is **untouched** — migration is progressive. No new webassets bundle needed; `v2/styles.css` is already included in `v2-page-styles`.
+`package_item.html` is **untouched** — migration is progressive. No new webassets bundle needed; `v2/components/dataset-card.css` is already included in `v2-components-styles` (preloaded by `v2-page-styles`).
 
 **Referenced (read-only):**
 - `hdx-styles/src/common/less/v2/components/dataset-card.less` — no changes needed
@@ -236,7 +236,7 @@ formats_overflow = max(0, total - MAX_VISIBLE)
 
 ### Page Base
 - Extends `v2/page.html` (same pattern as homepage)
-- CSS lives in `v2/styles.css` — already bundled in `v2-page-styles`. No new bundle needed.
+- CSS lives in `v2/components/dataset-card.css` — already bundled in `v2-components-styles` (preloaded by `v2-page-styles`). No new bundle needed.
 
 ### Results Section Structure
 
@@ -326,7 +326,7 @@ No equivalent field. **Dropped from list view** (D8) — visible on the dataset 
 | D4 | Date string format | **New helper** `render_date_range_label` → `"Data from 22 Jan 2020 to 09 Mar 2023"` |
 | D5 | Location availability and display | `package.groups` is reliably present; `"Multiple locations"` for >1 group |
 | D6 | Max visible format badges | **3**; remainder shown as `+N` |
-| D7 | Query highlighting | **Preserved** — `query` param added to `c-dataset-card`; `.highlight` CSS added to `v2/styles.css` |
+| D7 | Query highlighting | **Preserved** — `query` param added to `c-dataset-card`; `.highlight` CSS added to `v2/components/dataset-card.css` |
 | D8 | `page_list` / `links_list` | **Dropped from list view** — visible on dataset detail page only |
 
 ---

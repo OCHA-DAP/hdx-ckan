@@ -435,7 +435,7 @@ Form elements inside the drawer body stretch to fill the available width (`align
 | Small screen scrollable content | `.c-drawer__body` has `overflow-y: auto`; `.c-drawer__header` is sticky at top of container |
 | Multiple drawers on page | Each `HdxDrawer` instance scoped to its own ID; ESC handler checks `.is-open` on each |
 | Verification / unsubscribed drawers have no form | Body renders text-only content; drawer structure the same |
-| Focus trap | Full ARIA focus trap implemented in `drawer.js`: Tab/Shift+Tab cycle through all focusable elements within the drawer; ESC closes. `lastFocus` restored on close. Required in Phase 1. |
+| Focus trap | Full ARIA focus trap implemented in `drawer.js` via the shared `window.hdxV2.FocusTrap` (`v2/utils.js`): Tab/Shift+Tab cycle through all focusable elements within the drawer; ESC closes. `lastFocus` restored on close. Required in Phase 1. |
 
 ---
 

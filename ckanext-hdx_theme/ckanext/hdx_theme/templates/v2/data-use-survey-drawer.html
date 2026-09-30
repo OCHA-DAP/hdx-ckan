@@ -1,0 +1,49 @@
+{#
+  Snippet: data-use-survey-drawer.html
+  Path:    templates/v2/data-use-survey-drawer.html
+
+  "HDX Data Use Survey" c-drawer — v2 replacement for the
+  widget/onboarding/data-use-survey.html popup. Opens on v2 resource card
+  Download clicks with an intro and "Not now" / "Take the survey" buttons;
+  "Take the survey" swaps the intro for the organisation's user_survey_url
+  in an iframe. Shown until the user completes the survey. Render only when
+  pkg.user_survey_url is set.
+  JS: fanstatic/v2/data-use-survey-drawer.js
+
+  Parameters
+  ─────────────────────────────────────────────────
+  pkg  {dict}  Required. Package dict (user_survey_url, organization, name).
+  ─────────────────────────────────────────────────
+#}
+
+{% set org_name = pkg.organization.title or pkg.organization.name %}
+{% if org_name != 'HDX' %}
+  {% set intro_text = _('Please take 30 seconds to help HDX and {0} understand your interest in this data.').format(org_name) %}
+{% else %}
+  {% set intro_text = _('Please take 30 seconds to help HDX understand your interest in this data.') %}
+{% endif %}
+
+{% call h.snippet('v2/components/drawer.html',
+    drawer_id='dataUseSurveyDrawer',
+    title=_('HDX Data Use Survey')) %}
+  <div class="c-drawer-form" data-survey-intro>
+    <p class="c-drawer-form__text">{{ intro_text }}</p>
+    <div class="c-drawer-form__buttons">
+      {{ h.snippet('v2/components/button.html',
+          style='tertiary',
+          label=_('Not now'),
+          attrs={'data-drawer-close': ''}) }}
+      {{ h.snippet('v2/components/button.html',
+          style='primary',
+          label=_('Take the survey'),
+          attrs={'data-survey-start': ''}) }}
+    </div>
+  </div>
+  {# src is set by JS on "Take the survey", once the hdx_* placeholders in the survey url are filled in #}
+  <iframe class="hdx-v2-data-use-survey-drawer__iframe"
+          hidden
+          data-survey-url="{{ pkg.user_survey_url }}"
+          data-org-name="{{ pkg.organization.name }}"
+          data-dataset-url="{{ h.url_for('dataset.read', id=pkg.name, qualified=True) }}"
+          title="{{ _('HDX Data Use Survey') }}"></iframe>
+{% endcall %}

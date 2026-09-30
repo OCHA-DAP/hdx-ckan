@@ -219,7 +219,7 @@ base component). This modifier overrides the base styles for the textarea case:
 Rewrite `contact_contributor.html` in-place to extend `v2/page.html` directly. No `{% if v2 %}` gate — this page had no v1 re-use requirement. All v1 content removed; analytics blocks preserved.
 
 This page's layout CSS (row/content/column/header/form/dataset-name/buttons) lives in the shared
-`message-form-page.less` (`v2-message-form-page-styles` bundle), also used by Request Access —
+`pages/message-form.less` (`v2-message-form-page-styles` bundle), also used by Request Access —
 this page has no page-specific LESS file of its own.
 
 ### Data flow (unchanged from v1)

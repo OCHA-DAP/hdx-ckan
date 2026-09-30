@@ -161,7 +161,7 @@ folded into this task after the initial migration per §12 Decision 5, reusing t
   already is for the forgot-password page's own expired-link redirect.
 - Analytics: kept untracked — `mixpanel_init`/`google_analytics_init`/`hotjar_init` all blanked, same
   as before and as the sibling pages (§1.5, §11).
-- Styling: reuses `hdx_theme/v2-auth-page-styles` (`auth-page.less`'s `hdx-v2-auth-card` BEM elements)
+- Styling: reuses `hdx_theme/v2-auth-page-styles` (`pages/auth.less`'s `hdx-v2-auth-card` BEM elements)
   as-is; no new LESS.
 
 ### 1.5 Analytics (today)
@@ -297,7 +297,7 @@ close glyph as the XL `[X]`, per context).
 | reCAPTCHA | Invisible v2, bound to submit button | Unchanged (§12 Decision 2) — Figma's visible checkbox mock is not implemented |
 | Perform reset — new password | `#field-password` (`password1`), plain `<input required>`, label "Password" | `text-field.html` with `type='password'` — same eye toggle as login's password field |
 | Perform reset — confirm password | `#field-confirm-password` (`password2`), plain `<input required>`, label "Confirm" | `text-field.html` with `type='password'`, label changed to "Confirm password" (Decision 15) |
-| Perform reset — submit gating | `requiredFieldsFormValidator` (required-only) | New `v2/perform-reset-page.js`, same required-only gating — signup's live strength/match checklist deliberately not adopted (Decision 14) |
+| Perform reset — submit gating | `requiredFieldsFormValidator` (required-only) | New `v2/pages/perform-reset.js`, same required-only gating — signup's live strength/match checklist deliberately not adopted (Decision 14) |
 | Perform reset — server error | `h.flash_error(...)`/`h.flash(..., category='alert-error')` only, no `errors` dict | Unchanged — surfaced via the inherited `v2/page.html` flash block (§1.4), no per-field `errors` prop wired since core never passes one |
 
 No validation *logic* changes anywhere in this table — every row is a rendering-target change onto

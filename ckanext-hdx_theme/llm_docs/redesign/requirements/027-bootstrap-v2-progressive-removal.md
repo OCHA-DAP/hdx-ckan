@@ -86,7 +86,7 @@ Approach:
 `templates/v2/header.html` uses `d-md-none` to hide the search icon at MD and above.
 
 Replacement:
-- Add a display-hiding rule to `navbar.less` (or a header-specific block in `styles.less`) scoped to the relevant BEM element, using `@media (min-width: @hdx-bp-md) { display: none; }`
+- Add a display-hiding rule to `navbar.less` scoped to the relevant BEM element, using `@media (min-width: @hdx-bp-md) { display: none; }`
 - Remove `d-md-none` from the template
 
 No other utility classes in `header.html` need replacing at this stage (dropdown structure uses Bootstrap JS only; class names there are Bootstrap data-attribute hooks, not layout/utility classes).
