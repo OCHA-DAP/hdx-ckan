@@ -1672,6 +1672,7 @@ v2-dataset-page-scripts:
   output: ckanext-hdx_theme/%(version)s_v2-dataset-page-scripts.js
   contents:
     - v2/pages/dataset.js
+    - v2/data-use-survey-drawer.js
 
 v2-search-scripts:
   <<: *common-js

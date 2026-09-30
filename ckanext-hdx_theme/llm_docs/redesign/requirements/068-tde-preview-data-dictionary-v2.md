@@ -41,9 +41,9 @@ actual page:
   a missing style.** `resource_read.html`'s "API access" section markup
   (`resource_read.html:143-154`) depends on `.hdx-v2-dataset-section__header`'s
   `display:flex;justify-content:space-between` rule to push the button right — but that rule lives in
-  `dataset-page.less:19-88`, compiled into `dataset-page.css`, bundled only as `v2-dataset-page-styles`
+  `pages/dataset.less`, compiled into `pages/dataset.css`, bundled only as `v2-dataset-page-styles`
   (`webassets.yml:1596-1600`). `resource_read.html` never loads that bundle (`resource_read.html:48-51`
-  only loads `v2-resource-page-styles`, i.e. `resource-page.css`, which defines no
+  only loads `v2-resource-page-styles`, i.e. `pages/resource.css`, which defines no
   `.hdx-v2-dataset-section*` rules at all). Figma's export confirms intent:
   `.api-access-parent { justify-content: space-between; ... }` in `resource-page-xl.html` (the accompanying
   `gap: -9.5rem` on the same rule is a static-export artifact of Figma's absolute-position-to-flex
@@ -109,15 +109,15 @@ doc — see Decisions below.
   `table.html:37-63`) — the same "snippet defines the class contract, JS produces matching markup" pattern
   `047` already established for the iframe case, just without the iframe problem here.
 - **D4 — API access button fix (confirmed): factor the shared section-header properties into
-  `mixins.less`.** `resource-page.less` carries its own `.hdx-v2-resource-section` block (own
+  `mixins.less`.** `pages/resource.less` carries its own `.hdx-v2-resource-section` block (own
   `display:flex;justify-content:space-between` rule on `&__header`), fixing the alignment bug without
-  depending on `dataset-page.less`/`v2-dataset-page-styles` at all. The padding/scroll-margin/`&__header`/
+  depending on `pages/dataset.less`/`v2-dataset-page-styles` at all. The padding/scroll-margin/`&__header`/
   `&__title`/`&__body` properties shared between `.hdx-v2-dataset-section` and `.hdx-v2-resource-section`
   are factored into mixins in `mixins.less` (`.hdx-page-section-wrapper()`,
   `.hdx-page-section-header()`, `.hdx-page-section-body()`), called from each page's own BEM block —
   matching the existing "List header pattern" precedent for page-owned, verbatim-duplicated styling
   (`CONVENTIONS.md`). The section title itself calls the broader-scope `.hdx-section-title()` mixin
-  (also used by org/HAPI/Signals/country/Locations). `dataset-page.less` keeps its extra `&__title-row`,
+  (also used by org/HAPI/Signals/country/Locations). `pages/dataset.less` keeps its extra `&__title-row`,
   `&__chevron`, and `&--collapsible` variant layered on top of the mixin calls.
 - **D5 — Resource-type detection / conditional logic (confirmed): reuse `res.datastore_active`, no new
   detection.** It is already computed by CKAN core and already gates the existing "API access" section
@@ -273,7 +273,7 @@ own `$.ajax()`/`fetch()`. What is shared is a CSRF-token-lookup helper:
 `ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/base/hdx-util-lib.js:113-133` —
 `hdxUtil.net.getCsrfFieldName()`, `getCsrfToken()`, `getCsrfTokenAsObject()` (returns
 `{'X-CSRFToken': token}`), reading the two meta tags rendered in `base.html`. Loaded on every page,
-referenced by ~20 other JS files (v2 dataset-page.js, org-members-page.js, etc.) for their own POST calls.
+referenced by ~20 other JS files (v2 pages/dataset.js, pages/org-members.js, etc.) for their own POST calls.
 Two other, independent implementations of the same meta-tag lookup exist in CKAN core
 (`ckan.Client` in `public/base/javascript/client.js`, and `htmx-csrf.js`) but are not used by any v2/HDX
 preview code.
@@ -309,9 +309,9 @@ Covered in Context above and §6 in full. Key file: `ckanext-hdx_package/ckanext
 ```
 
 `.hdx-v2-dataset-section__header` (`display:flex; justify-content:space-between`) is defined only in
-`dataset-page.less:32-37`, bundled only as `v2-dataset-page-styles` (`webassets.yml:1596-1600`), which
+`pages/dataset.less`, bundled only as `v2-dataset-page-styles` (`webassets.yml:1596-1600`), which
 `resource_read.html` never loads (`resource_read.html:48-51` loads only `v2-resource-page-styles` /
-`resource-page.css`, which has no `.hdx-v2-dataset-section*` rules). Net effect: the flex rule never
+`pages/resource.css`, which has no `.hdx-v2-dataset-section*` rules). Net effect: the flex rule never
 applies on a live resource page, so the header falls back to block flow (h2, then the button anchor
 stacked below it) instead of a flex row with the button pushed right. Fix: D4.
 
@@ -495,7 +495,7 @@ not a candidate for future extension.
 
 | What | Why |
 |---|---|
-| `dataset-page.less`'s `.hdx-v2-dataset-section` block → new shared components partial (D4) | Fixes the button-alignment bug without shipping unrelated dataset-page-only CSS to the resource page |
+| `pages/dataset.less`'s `.hdx-v2-dataset-section` block → new shared components partial (D4) | Fixes the button-alignment bug without shipping unrelated dataset-page-only CSS to the resource page |
 | `hdx_csv_preview.js` / `hdx_csv_preview_view.html` | Add the `datastore_active` branch (§4) — same files task 047 already touched, no new files needed for TDE itself |
 
 **Built:** a `c-spinner` component (D11), used for the Data Dictionary AJAX load and the TDE branch's fetch

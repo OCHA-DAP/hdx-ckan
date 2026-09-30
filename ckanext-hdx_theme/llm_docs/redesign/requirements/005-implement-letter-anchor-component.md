@@ -14,7 +14,7 @@ Extract letter anchors from `c-nav-item` into a dedicated standalone component. 
 - Sizes: `lg` (large, 2.3125rem) and `sm` (small, 1.5rem)
 
 **Out:**
-- Navigation item component (`navigation.less` unchanged)
+- Navigation item component (`nav-item.less` unchanged)
 - List/grid layout, sorting or filtering logic
 
 ## Requirements
@@ -40,6 +40,6 @@ Extract letter anchors from `c-nav-item` into a dedicated standalone component. 
    - `extra_classes` (string): additional CSS classes, default: ''
 
 4. Ensure proper styling hierarchy.
-   - Move `c-letter-anchor` rules from `navigation.less` to new `letter-anchor.less`
-   - Remove letter anchor rules from `navigation.less` (only nav-item, anchor-links, pagination, breadcrumb remain)
+   - Put `c-letter-anchor` rules in new `letter-anchor.less`
+   - No letter anchor rules remain in `nav-item.less` / `anchor-links.less` / `pagination.less` / `breadcrumb.less`
    - Preserve exact visual appearance and token usage

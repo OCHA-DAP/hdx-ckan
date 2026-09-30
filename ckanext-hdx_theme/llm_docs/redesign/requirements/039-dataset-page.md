@@ -406,7 +406,12 @@ No "See more in your dashboard" link — dropped. `fanstatic/v2/pages/dataset.js
     unsubscribe_token_validated=unsubscribe_token_validated,
     unsubscribe_email=unsubscribe_email,
     unsubscribe_token_invalidate=unsubscribe_token_invalidate %}
+
+{% if pkg.user_survey_url and pkg.user_survey_url != 'None' %}
+  {% snippet 'v2/data-use-survey-drawer.html', pkg=pkg %}
+{% endif %}
 ```
+The data use survey drawer opens on resource-card Download clicks until the survey is completed; while pending it takes precedence over the download-triggered signup drawer.
 
 ---
 
@@ -480,7 +485,7 @@ Used in both `page-header.html` (header metadata strip) and the inlined metadata
 
 ---
 
-### `fanstatic/v2/pages/dataset.js` — in `v2-dataset-scripts`
+### `fanstatic/v2/pages/dataset.js` — in `v2-dataset-page-scripts`
 
 Contains **only section accordion logic** (all anchor/scroll logic is in `anchor-links.js` above).
 
@@ -496,7 +501,7 @@ Targets `.hdx-v2-dataset-section--collapsible .hdx-v2-dataset-section__header`.
 ## CSS: `fanstatic/v2/pages/dataset.css`
 
 Compiled from LESS source at `hdx-styles/src/common/less/v2/pages/dataset.less`.
-Register in new `v2-dataset-styles` bundle (preloads `v2-page-styles`).
+Register in new `v2-dataset-page-styles` bundle.
 
 ### Layout classes
 
@@ -613,32 +618,33 @@ No v2-specific CSS overrides. The `activity_stream.html` snippet provides its ow
 `v2-components-scripts` gets `v2/components/anchor-links.js` (after `page-header.js`).
 `v2-components-styles` gets `v2/components/showcase-card.css` (after `selection.css`).
 
-After `v2-search-scripts` block:
+`v2-dataset-page-styles` after `v2-search-page-styles`; `v2-dataset-page-scripts` before `v2-search-scripts`:
 
 ```yaml
-v2-dataset-styles:
-    output: %(version)s_v2-dataset-styles.css
-    preload: v2-page-styles
-    contents:
-        - v2/dataset.css
+v2-dataset-page-styles:
+  output: ckanext-hdx_theme/%(version)s_v2-dataset-page-styles.css
+  <<: *common-css
+  contents:
+    - v2/pages/dataset.css
 
-v2-dataset-scripts:
-    output: %(version)s_v2-dataset-scripts.js
-    preload: v2-page-scripts
-    contents:
-        - v2/dataset.js
+v2-dataset-page-scripts:
+  <<: *common-js
+  output: ckanext-hdx_theme/%(version)s_v2-dataset-page-scripts.js
+  contents:
+    - v2/pages/dataset.js
+    - v2/data-use-survey-drawer.js
 ```
 
 Load in `hdx_read.html`:
 ```jinja
 {% block styles %}
   {{ super() }}
-  {% asset 'hdx_theme/v2-dataset-styles' %}
+  {% asset 'hdx_theme/v2-dataset-page-styles' %}
 {% endblock %}
 
 {% block scripts %}
   {{ super() }}
-  {% asset 'hdx_theme/v2-dataset-scripts' %}
+  {% asset 'hdx_theme/v2-dataset-page-scripts' %}
 {% endblock %}
 ```
 
@@ -694,7 +700,7 @@ Standard `{% set items = items + [...] %}` fails in Jinja2 due to scoping — us
 |------|------|-------|
 | `templates/v2/components/showcase-card.html` | Jinja template | Showcase card component |
 | `fanstatic/v2/components/anchor-links.js` | JavaScript | Smooth scroll, anchor dropdown, active tracking (in `v2-components-scripts`) |
-| `fanstatic/v2/pages/dataset.js` | JavaScript | Section accordions only (in `v2-dataset-scripts`) |
+| `fanstatic/v2/pages/dataset.js` | JavaScript | Section accordions only (in `v2-dataset-page-scripts`) |
 | `fanstatic/v2/pages/dataset.css` | CSS | Dataset page styles |
 | `fanstatic/v2/components/showcase-card.css` | CSS | Showcase card component styles |
 | `hdx-styles/src/common/less/v2/pages/dataset.less` | LESS | Source for `dataset.css` |
@@ -718,7 +724,7 @@ Standard `{% set items = items + [...] %}` fails in Jinja2 due to scoping — us
 | `hdx-styles/src/common/less/v2/components/anchor-links.less` | Added `.c-anchor-links-wrapper`, `.c-anchor-links__heading`, `.c-anchor-links-mobile` blocks |
 | `hdx-styles/src/common/less/v2/components/resource-card.less` | Added `.resource-list` / `.resource-item` reset styles |
 | `fanstatic/v2/components/page-header.js` | Tooltip: target `.c-info-icon` + toggle `.is-open`; `.c-tooltip-anchor` wrapper; overflow reveal uses `[data-header-meta-overflow]` |
-| `fanstatic/webassets.yml` | Added `anchor-links.js` to `v2-components-scripts`; `showcase-card.css` to `v2-components-styles`; new `v2-dataset-styles`/`v2-dataset-scripts` bundles |
+| `fanstatic/webassets.yml` | Added `anchor-links.js` to `v2-components-scripts`; `showcase-card.css` to `v2-components-styles`; new `v2-dataset-page-styles`/`v2-dataset-page-scripts` bundles |
 
 ---
 

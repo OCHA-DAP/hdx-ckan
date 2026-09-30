@@ -593,6 +593,10 @@
       unsubscribe_email=unsubscribe_email, unsubscribe_token_invalidate=unsubscribe_token_invalidate
   %}
 
+  {% if pkg.user_survey_url and pkg.user_survey_url != 'None' %}
+    {% snippet 'v2/data-use-survey-drawer.html', pkg=pkg %}
+  {% endif %}
+
 {% endblock %}
 
 {% block post_primary %}
@@ -606,7 +610,6 @@
   {% if shapes %}
     {% asset 'hdx_theme/v2-shape-view-scripts' %}
   {% endif %}
-{#  {{ h.snippet('widget/onboarding/data-use-survey.html', id="dataUseSurveyPopup", pkg=pkg) }}#}
   {% asset 'hdx_theme/v2-quick-edit-scripts' %}
 {#  {% resource 'hdx_theme/confirm-ajax.js' %}#}
 {% endblock %}

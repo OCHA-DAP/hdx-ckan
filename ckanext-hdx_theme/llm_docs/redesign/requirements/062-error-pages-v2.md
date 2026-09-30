@@ -177,7 +177,7 @@ maintenance page is logo + heading + body copy only.
 `v2-page-styles` (which preloads `v2-components-styles` — design tokens, `buttons.css`, and every
 other component's CSS) loads via the inherited `styles` block. Page-specific layout (the centered
 logo/heading/body/CTA column) lives in its own small bundle, `v2-error-page-styles`
-(`v2/error-page.css` only), registered in `webassets.yml`. **No JS bundle** — the page has no
+(`v2/pages/error.css` only), registered in `webassets.yml`. **No JS bundle** — the page has no
 interactive behavior, so `{% block scripts %}` is emptied out entirely.
 
 **For the maintenance page:** no build pipeline involvement whatsoever — see §5.

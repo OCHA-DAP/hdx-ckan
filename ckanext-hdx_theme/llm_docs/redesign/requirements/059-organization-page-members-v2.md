@@ -453,7 +453,7 @@ dropped pagination).
 | Group message popup | **Rebuild in `c-drawer`** + v2 form primitives + reCAPTCHA (D6) | Replaces the v1 select2/reCAPTCHA popup; links stay on role-section headers |
 | Sidebar bio card | Page-level markup (`hdx-v2-org-members-*`), composing `c-avatar` + text links (D18: confirmed) | One-off; promote to a component only if reused later |
 
-Asset wiring: page CSS into `v2/org-page.css` (LESS source `v2/org-page.less`) like 056–058;
+Asset wiring: page CSS into `v2/pages/org.css` (LESS source `v2/pages/org.less`) like 056–058;
 component CSS/JS into `v2-components-styles`/`-scripts`; reuse `v2-search-page-scripts` for
 `url-nav.js`, which the generalized nav controls keep using (D4 — matching how the datasets tab
 already loads it). New JS (approve/decline AJAX port, invite tags-autocomplete, drawer content
@@ -471,7 +471,7 @@ wiring for change-role / remove / group message) goes under `fanstatic/v2/` — 
 | **SM (< 48rem)** | Single column | Same order as MD (D14: search bar included) | **Stacked**: info block, then actions row left-aligned below | Stacked below the list (D14: included) |
 
 - Member cards render inside the v1 role-grouped sections (D6) at all breakpoints.
-- Breakpoints via `@hdx-bp-*` LESS variables only; layout lives in `org-page.less` page classes +
+- Breakpoints via `@hdx-bp-*` LESS variables only; layout lives in `pages/org.less` page classes +
   `member-list-card.less` media queries. No Bootstrap classes anywhere.
 - Ellipsis behavior (name/username/meta/stats single-line truncation) applies at all breakpoints
   per Figma; full values exposed via `title=`.
@@ -557,6 +557,6 @@ task and are folded into §§2–11 (D-numbers are kept as reference ids used th
 | `hdx-styles/src/common/less/v2/components/member-list-card.less` | **NEW** — §3 (compiled CSS added to `v2-components-styles`) |
 | `hdx-styles/src/common/less/v2/pages/org.less` | Members-page layout classes (`hdx-v2-org-members-*`), sidebar/two-column rules |
 | `ckanext-hdx_theme/.../fanstatic/v2/pages/org-members.js` | Approve/decline AJAX port, change-role hidden-form POST wiring, remove/leave + group-message drawer wiring incl. invisible reCAPTCHA (D6/D9), invite tags-autocomplete JS (D10) |
-| `ckanext-hdx_theme/.../fanstatic/webassets.yml` | `member-list-card.css` appended to `v2-components-styles`; new `v2-org-members-page-scripts` bundle (`url-nav.js` + `org-members-page.js`) |
+| `ckanext-hdx_theme/.../fanstatic/webassets.yml` | `member-list-card.css` appended to `v2-components-styles`; new `v2-org-members-page-scripts` bundle (`url-nav.js` + `pages/org-members.js`) |
 | `ckanext-hdx_org_group/.../views/members.py` | D1 template unification only — no page slicing (D2: no pagination). **No other view/auth/action changes** |
 | v1 files (`member_item.html`, `edit_member.html`, `add_member.html`, `search_form_new.html`, `organization_/members.js`, v1 bundles) | **Untouched** — superseded for this page, never edited |

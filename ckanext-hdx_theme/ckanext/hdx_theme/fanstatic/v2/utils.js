@@ -36,6 +36,7 @@
     'input:not([disabled])',
     'select:not([disabled])',
     'textarea:not([disabled])',
+    'iframe:not([tabindex="-1"])',
     '[tabindex]:not([tabindex="-1"])'
   ].join(', ');
 
@@ -101,6 +102,10 @@
     }
   };
 
+  // Active traps, most recent last. Only the most recent one acts, so
+  // stacked traps never fight over focus.
+  var activeTraps = [];
+
   // Traps Tab/Shift+Tab focus inside `element`, and returns focus to
   // `triggerElement` on deactivate. Shared by navbar.js (offcanvas) and
   // components/drawer.js — promoted here once a second consumer needed it
@@ -109,15 +114,20 @@
     this.element        = element;
     this.triggerElement = triggerElement;
     this._handler       = null;
+    this._focusHandler  = null;
   };
 
   window.hdxV2.FocusTrap.prototype.activate = function () {
+    var self = this;
     var el   = this.element;
+    this._release();
+    activeTraps.push(this);
+
     var list = window.hdxV2.getFocusable(el);
     if (list.length) list[0].focus();
 
     this._handler = function (e) {
-      if (e.key !== 'Tab') return;
+      if (e.key !== 'Tab' || activeTraps[activeTraps.length - 1] !== self) return;
       var current = window.hdxV2.getFocusable(el);
       if (!current.length) { e.preventDefault(); return; }
       var first = current[0];
@@ -129,13 +139,33 @@
       }
     };
     document.addEventListener('keydown', this._handler);
+
+    // Tab keydowns inside a cross-origin iframe never reach this document,
+    // so the handler above can't stop focus leaving through one. Pull it
+    // back if it lands outside the trap anyway.
+    this._focusHandler = function (e) {
+      if (activeTraps[activeTraps.length - 1] !== self || el.contains(e.target) || e.target.tagName === 'IFRAME') return;
+      var current = window.hdxV2.getFocusable(el);
+      (current[0] || el).focus();
+    };
+    document.addEventListener('focusin', this._focusHandler);
   };
 
-  window.hdxV2.FocusTrap.prototype.deactivate = function () {
+  window.hdxV2.FocusTrap.prototype._release = function () {
+    var index = activeTraps.indexOf(this);
+    if (index !== -1) activeTraps.splice(index, 1);
     if (this._handler) {
       document.removeEventListener('keydown', this._handler);
       this._handler = null;
     }
+    if (this._focusHandler) {
+      document.removeEventListener('focusin', this._focusHandler);
+      this._focusHandler = null;
+    }
+  };
+
+  window.hdxV2.FocusTrap.prototype.deactivate = function () {
+    this._release();
     if (this.triggerElement) this.triggerElement.focus();
   };
 

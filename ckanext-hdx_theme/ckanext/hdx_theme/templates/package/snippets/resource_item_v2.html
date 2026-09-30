@@ -8,8 +8,9 @@
   (no li qualifier) so this div is compatible.
 
   All download-tracking data attributes are forwarded to the Download button
-  via resource-card's download_attrs param so resource-list.js still fires
-  on .resource-download-button clicks.
+  via resource-card's download_attrs param, read on .resource-download-button
+  clicks by GA (ga-download), notification_platform/subscribe.js and
+  v2/data-use-survey-drawer.js.
 
   For hdx_connect (request-data-type) resources, request_attrs wires the same
   click-tracking (hdx_click_stopper) and, for anonymous users, onboarding-flow
@@ -70,12 +71,12 @@
       request_attrs=request_attrs if hdx_connect else {},
       download_extra_classes='resource-url-analytics ga-download resource-download-button',
       download_attrs={
+        'target':                              '_blank',
         'data-resource-id':                    res.id,
         'data-resource-name':                  h.resource_display_name(res),
         'data-dataset-id':                     pkg.id,
         'data-dataset-name':                   pkg.name,
         'data-dataset-supports-notifications': supports_notifications | lower,
-        'data-user-survey-url':                pkg.user_survey_url or '',
         'data-is-authenticated':               current_user.is_authenticated,
         'tracking-type':                       res.url_type or ''
       }

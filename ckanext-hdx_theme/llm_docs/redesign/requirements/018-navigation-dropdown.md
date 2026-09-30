@@ -371,7 +371,7 @@ The spec called for `navbar-user-menu-body.html` as a shared snippet included by
 - **`h.hdx_get_user_menu_sections()`** helper in `ckanext-hdx_theme/helpers/helpers.py` — returns a list of `{id, label, items: [{label, href}]}` dicts with all URLs resolved and sysadmin-only entries filtered based on `c.userobj.sysadmin`
 - Registered in `plugin.py` under `get_helpers()`
 - `navbar-user-menu.html` loops over the helper with `hdx-v2-user-menu__*` markup (desktop panel)
-- `navbar-offcanvas.html` second level loops over the helper with `hdx-v2-offcanvas__nav-item--expandable` + `hdx-v2-offcanvas__subnav` markup (see task 019 notes)
+- `header.html` (offcanvas) second level loops over the helper with `hdx-v2-offcanvas__nav-item--expandable` + `hdx-v2-offcanvas__subnav` markup (see task 019 notes)
 - `navbar-user-menu-body.html` deleted
 
 ### LESS: unified shared panel block
