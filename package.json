@@ -11,7 +11,7 @@
     "dompurify": "^3.2.4",
     "htmx.org": "^1.9.11",
     "jquery": "^3.7.1",
-    "moment": "^2.30.1",
+    "moment": "^2.31.0",
     "qs": "^6.12.0"
   },
   "devDependencies": {
