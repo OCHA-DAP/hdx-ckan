@@ -301,10 +301,17 @@ Example:
         {% else %}
             <div class="list-items search-form">
                 {% set src_msg = 'for \"'+ searchValue +'\"' if searchValue else ''  %}
+                {% if not v2 %}
                 <form id="dataset-filter-form" style="display: none;">
                     <input name="q" type="hidden" value="{{searchValue}}">
                 </form>
+                {% endif %}
                 <h2>Sorry no datasets found for current filter selection {# and {{src_msg}} #}</h2>
+                {% if v2 %}
+                  {% snippet 'v2/components/text-link.html',
+                      label=_('Clear filters'), style='primary', size='m',
+                      attrs={'data-action': 'clear-filters'} %}
+                {% endif %}
             </div>
         {% endif %}
     </div>

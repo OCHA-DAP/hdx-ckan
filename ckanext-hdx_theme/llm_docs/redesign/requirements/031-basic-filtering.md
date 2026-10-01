@@ -32,6 +32,7 @@ using the existing `c-dropdown`, `c-checkbox`, and `c-button` component system.
 - Active count badge on MD/SM filter button (total selected items across all filters including advanced)
 - "Clear selection" per-filter (inside panel, center-aligned)
 - "Clear filters" global (MD/SM overlay footer, clears all params including advanced)
+- "Clear filters" text link under the 0-result "Sorry no datasets found…" message (same params)
 - Search within filter option list — shown only when a filter has > 8 items (MiniSearch + `toNormalForm`)
 
 ### Excluded

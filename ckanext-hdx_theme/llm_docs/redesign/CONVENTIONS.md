@@ -406,6 +406,18 @@ The `--white` modifier is defined in `layout.less`. Do **not** override `{% bloc
 
 ---
 
+## Entity search pages — filters vs empty state
+
+Entity pages (org, country) render the filter aside and the dataset list when there are results or the request narrows the search (a facet param, `q`, or a filtering `ext_*`); otherwise they show the entity's own empty state (`hdx-v2-<page>-page-empty`):
+
+```jinja2
+{% if template_data.page.items or template_data.filters_are_selected %}
+```
+
+A page filtered to 0 keeps its filters and the "Sorry … Clear filters" message.
+
+---
+
 ## `v2=True` gate policy
 
 Pages are gated with `{% if v2 %}` during rollout and promoted to always-v2 when v1 is retired for that page. Do not remove a gate without a deliberate, documented decision.

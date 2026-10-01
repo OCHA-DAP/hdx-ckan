@@ -39,6 +39,7 @@ FEATURED_FACETS = [
     P_CODED_DATASET_FACET_NAME, HDX_HAPI_DATA_FACET_NAME, TABULAR_DATA_DATASETS_FACET_NAME
 ]
 FEATURED_FACET_PARAMS = ['ext_' + item for item in FEATURED_FACETS]
+NON_FILTER_EXTRAS = ('ext_page_size', 'ext_search_source')
 
 _validate = dict_fns.validate
 _check_access = logic.check_access
@@ -200,7 +201,7 @@ class SearchLogic(object):
             if self.template_data.fields_grouped.get(UPDATE_STATUS_URL_FILTER):
                 search_extras[UPDATE_STATUS_URL_FILTER] = self.template_data.fields_grouped[UPDATE_STATUS_URL_FILTER]
 
-            self._set_filters_are_selected_flag()
+            self._set_filters_are_selected_flag(q, search_extras)
 
             fq_list = [self._create_filter_query(key, ' OR '.join(value_list))
                        for key, value_list in tagged_fq_dict.items()]
@@ -403,12 +404,11 @@ class SearchLogic(object):
             url = h.url_for('{0}_search'.format(package_type))
         return url_with_params(url, params)
 
-    def _set_filters_are_selected_flag(self):
-        if len(self.template_data.fields_grouped) > 0 \
-                and ('_show_filters' not in request.args or request.args['_show_filters'] != 'false'):
-            self.template_data.filters_are_selected = True
-        else:
-            self.template_data.filters_are_selected = False
+    def _set_filters_are_selected_flag(self, q, search_extras):
+        self.template_data.filters_are_selected = bool(
+            self.template_data.fields_grouped
+            or q.strip()
+            or any(key not in NON_FILTER_EXTRAS for key in search_extras))
 
     def _page_number(self):
         return h.get_page_number(request.args)
