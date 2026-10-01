@@ -189,6 +189,8 @@ interactive behavior, so `{% block scripts %}` is emptied out entirely.
 `error_document_template.html` extends `v2/page.html` directly:
 
 - `{% block header %}` and `{% block footer %}` are emptied out — no nav chrome.
+- `{% set quick_links = [] %}` at the top — no quick-links query, so the page renders even after a
+  failed DB transaction.
 - `{% block scripts %}` is emptied out — no JS.
 - `{% block styles %}` calls `{{ super() }}` (inherited fonts + `v2-page-styles`), then loads
   `v2-error-page-styles` (§3).

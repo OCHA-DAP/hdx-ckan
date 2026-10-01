@@ -396,6 +396,16 @@ The `--white` modifier is defined in `layout.less`. Do **not** override `{% bloc
 
 ---
 
+## `quick_links` — header/footer Products menus
+
+`page.html` fetches the quick links once (`quick_links`) and passes them to `v2/header.html` and `v2/footer.html`. A page that doesn't render those menus (error page, auth pages) sets this at the top, so it runs no quick-links query and the error page renders even after a failed DB transaction:
+
+```jinja2
+{% set quick_links = [] %}
+```
+
+---
+
 ## `v2=True` gate policy
 
 Pages are gated with `{% if v2 %}` during rollout and promoted to always-v2 when v1 is retired for that page. Do not remove a gate without a deliberate, documented decision.

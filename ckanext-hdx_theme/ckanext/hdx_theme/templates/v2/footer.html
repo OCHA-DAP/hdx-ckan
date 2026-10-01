@@ -9,10 +9,17 @@
 
   Analytics: all links carry data-module="hdx_click_stopper" and
              data-module-link_type="footer" (feeds Mixpanel pipeline).
+
+  Params
+  ─────────────────────────────────────────────────
+  quick_links {list}  Products column items. default:
+                      h.hdx_get_quick_links_list(archived=False,
+                      exclude_crisis=True)
 #}
 
 {% set mailchimp_action = "//humdata.us14.list-manage.com/subscribe/post?u=ea3f905d50ea939780139789d&id=99796325d1" %}
 {% set docs_links = h.HDX_CONST('DOCUMENTATION_LINKS') %}
+{% set quick_links = quick_links if quick_links is defined else h.hdx_get_quick_links_list(archived=False, exclude_crisis=True) %}
 
 <footer class="hdx-v2-footer">
   <div class="hdx-v2-container">
@@ -129,7 +136,7 @@
         <div class="hdx-v2-footer__nav-col">
           <p class="hdx-v2-footer__nav-heading">Products</p>
           <ul class="hdx-v2-footer__nav-list">
-            {% for product in h.hdx_get_quick_links_list(archived=False, exclude_crisis=True) %}
+            {% for product in quick_links %}
             <li>
               {% snippet 'v2/components/text-link.html',
                   label=product.title, href=product.url,
