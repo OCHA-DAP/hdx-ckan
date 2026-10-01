@@ -577,7 +577,7 @@ Every page that renders `v2/header.html` must include the skip-to-main-content l
 
 ### RF-01 — Shared focus trap module
 
-Shared `window.hdxV2.FocusTrap` in `fanstatic/v2/utils.js` (see R-02), used by `navbar.js` and `components/drawer.js`. Prevents duplication of focus-trap logic across multiple files.
+Shared `window.hdxV2.FocusTrap` in `fanstatic/v2/utils.js` (see R-02), used by `navbar.js`, `components/drawer.js` and `pages/search.js` (filter overlay). Prevents duplication of focus-trap logic across multiple files.
 
 ### RF-02 — `sr-only` utility in `foundation.less`
 

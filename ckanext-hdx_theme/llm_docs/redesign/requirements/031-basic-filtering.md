@@ -53,7 +53,7 @@ using the existing `c-dropdown`, `c-checkbox`, and `c-button` component system.
 ### No duplicated or conditional Jinja blocks
 
 `package_list.html` defines blocks at the **top level** (outside `{% if v2 %}`).
-`facet_list` is set before the block so both the sidebar and the overlay can access it:
+`facet_list` is set before the block so the v2 block (filter count, applied pills) can access it:
 
 ### Preserve backend logic strictly
 
