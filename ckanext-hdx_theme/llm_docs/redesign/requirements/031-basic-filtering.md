@@ -162,6 +162,7 @@ On button click → full-page overlay:
 
 - Click → add `hdx-v2-search-filter-overlay--open` to overlay, trap focus, prevent body scroll
 - Click ✕ or "Show results" → remove modifier, restore scroll, return focus to trigger
+- Escape → closes an open filter panel first, then the overlay (same as ✕)
 - "Clear filters" → remove all filter params (main + advanced) from URL, navigate
 
 ---
@@ -254,7 +255,7 @@ Template renders hierarchy — parent "select all" row + indented children for c
 | File | Role |
 |---|---|
 | `templates/v2/search-filters.html` | Shared filter panel — all 5 dropdowns inlined (no separate composite component) |
-| `templates/search/snippets/package_list.html` | Top-level v2/v1 layout branch: v2 block computes `total_selected` once, renders filter overlay + button, and wraps sidebar + dataset list; v1 uses `row`/`col-3` |
+| `templates/search/snippets/package_list.html` | Top-level v2/v1 layout branch: v2 block computes `total_selected` once, renders filter overlay (an empty slot the sidebar form moves into below 80rem) + button, and wraps sidebar + dataset list; v1 uses `row`/`col-3` |
 | `templates/search/snippets/search_results_wrapper.html` | Thin wrapper — passes `full_facet_info` + `v2` flag into `package_list.html` via `h.snippet`; no filter logic |
 | `templates/v2/components/dropdown.html` | Full-wrapper component: trigger + panel delegation; single `items` list + `navigate` bool; delegates panel rendering to `dropdown-panel.html` |
 | `templates/v2/components/dropdown-panel.html` | Panel overlay; `navigate=False` for checklist filters, `navigate=True` for navigate-on-select (sort/limit); items + children flattened before render |
@@ -263,7 +264,7 @@ Template renders hierarchy — parent "select all" row + indented children for c
 | `less/v2/pages/search.less` | Layout styles (search-layout, sidebar, overlay, filter-btn-row); overlay footer button overrides |
 | `less/v2/components/dropdown.less` | `c-dropdown` trigger + panel structural styles; `c-dropdown__list-item*` removed (use `c-list-item` from list-item.less) |
 | `less/v2/components/list-item.less` | `c-list-item--parent` (bold) and `c-list-item--child` (24px indent) modifiers |
-| `fanstatic/v2/pages/search.js` | All filter/overlay JS (dropdown open/close, checkbox→URL, group toggle, MiniSearch, overlay open/close) |
+| `fanstatic/v2/pages/search.js` | All filter/overlay JS (dropdown open/close, checkbox→URL, group toggle, MiniSearch, overlay open/close, focus trap, Escape, form move across 80rem) |
 | `fanstatic/webassets.yml` | `v2-search-page-styles` bundle (`v2/pages/search.css`) + `v2-search-page-scripts` bundle (`v2/pages/search.js`) — separate from `v2-components-*` |
 
 ---
@@ -288,7 +289,7 @@ package_list.html  (top-level v2/v1 branch)
     ③ hdx-v2-search-filter-overlay#hdx-filter-overlay  (fixed, MD/SM; sibling of layout)
          ├── header (title + close btn)
          ├── body > hdx-v2-overlay-nav-controls (sort + results-per-page)
-         │         > div.hdx-v2-search-filters > search-filters.html
+         │         > div[data-filter-panel-slot]  (the ④ form moves here below 80rem)
          └── footer (Clear filters [tertiary/disabled-when-0] + Show results [primary])
     ④ hdx-v2-search-layout (flex row)
          ├── form > aside.hdx-v2-search-filters  (LG sidebar)

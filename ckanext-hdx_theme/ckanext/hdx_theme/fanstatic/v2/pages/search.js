@@ -1,6 +1,8 @@
 (function () {
   'use strict';
 
+  var BP_XL = '(min-width: 80rem)';
+
   var FILTER_PARAMS = ['groups', 'organization', 'res_format', 'vocab_Topics'];
 
   // vocab_Topics is included here too (as well as in FILTER_PARAMS) because
@@ -251,36 +253,76 @@
 
     if (!overlay) return;
 
+    var form = document.getElementById('search-page-filters-form');
+    var slot = overlay.querySelector('[data-filter-panel-slot]');
+    var home = form && form.parentNode;
+    var xl   = window.matchMedia(BP_XL);
+    var trap = new window.hdxV2.FocusTrap(overlay, null);
+
+    function isOpen() {
+      return overlay.classList.contains('hdx-v2-search-filter-overlay--open');
+    }
+
     function openOverlay() {
       overlay.classList.add('hdx-v2-search-filter-overlay--open');
       document.body.style.overflow = 'hidden';
       if (filterBtn) filterBtn.setAttribute('aria-expanded', 'true');
-      var firstFocusable = overlay.querySelector('button, [href], input');
-      if (firstFocusable) firstFocusable.focus();
+      trap.activate();
     }
 
-    function closeOverlay() {
+    function closeOverlay(returnFocus) {
       overlay.classList.remove('hdx-v2-search-filter-overlay--open');
       document.body.style.overflow = '';
+      trap.deactivate();
       if (filterBtn) {
         filterBtn.setAttribute('aria-expanded', 'false');
+        if (returnFocus) filterBtn.focus();
+      }
+    }
+
+    function placeForm(focused) {
+      if (!form || !slot || !home) return;
+      var target = xl.matches ? home : slot;
+      if (form.parentNode !== target) target.appendChild(form);
+      if (!focused) return;
+      if (xl.matches) {
+        focused.focus();
+      } else if (filterBtn) {
         filterBtn.focus();
       }
+    }
+
+    placeForm(null);
+
+    xl.addEventListener('change', function () {
+      var focused = form && form.contains(document.activeElement) ? document.activeElement : null;
+      if (xl.matches && isOpen()) closeOverlay(false);
+      placeForm(focused);
+    });
+
+    if (form) {
+      form.addEventListener('submit', function (e) { e.preventDefault(); });
     }
 
     if (filterBtn) {
       filterBtn.addEventListener('click', openOverlay);
     }
 
+    document.addEventListener('keydown', function (e) {
+      if (e.key !== 'Escape' || !isOpen()) return;
+      if (overlay.querySelector('.c-dropdown.is-open')) return;
+      closeOverlay(true);
+    }, true);
+
     document.addEventListener('click', function (e) {
       if (!e.target.closest) return;
 
       if (e.target.closest('[data-action="close-overlay"]')) {
-        closeOverlay();
+        closeOverlay(true);
         return;
       }
       if (e.target.closest('[data-action="show-results"]')) {
-        closeOverlay();
+        closeOverlay(true);
         return;
       }
       if (e.target.closest('[data-action="clear-filters"]')) {

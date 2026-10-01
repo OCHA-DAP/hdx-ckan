@@ -139,7 +139,7 @@ When a dropdown opens, focus is not moved into it. When it closes (click-outside
 *WCAG 2.4.3 Focus Order*
 
 **`search.js` filter overlay — GOOD (reference pattern)**
-The filter overlay correctly moves focus to the first focusable element on open and restores focus to the filter button on close. This is the correct pattern to replicate in `dropdown.js` and `navbar.js`.
+The filter overlay moves focus inside on open, traps Tab with `hdxV2.FocusTrap`, closes on Escape (an open filter panel first) and restores focus to the filter button on close. This is the correct pattern to replicate in `dropdown.js` and `navbar.js`.
 
 ---
 
