@@ -9,6 +9,7 @@ import urllib.parse
 import html
 
 import ckan.lib.helpers as h
+import ckan.model as model
 import ckanext.hdx_theme.tests.test_controller.test_responsive_redirect as test_responsive_redirect
 
 log = logging.getLogger(__name__)
@@ -55,6 +56,17 @@ no_canonical_pages = [
     # search should ignore pagination
     {'url':'/dataset', 'params':{'page': 2}, 'canonical': True, 'canonical_url':'/dataset'},
     {'url':'/dataset', 'params':{'license_id':'hdx-other', 'page': 2}, 'canonical': True, 'canonical_url':'/dataset', 'canonical_params':{'license_id':'hdx-other'}},
+    # two values of one filter are kept once each
+    {'url':'/dataset', 'params':{'groups':'roger', 'license_id':['hdx-other', 'cc-by']}, 'canonical': True, 'canonical_url':'/dataset', 'canonical_params':{'license_id':['hdx-other', 'cc-by']}},
+    {'url':'/dataset', 'params':{'license_id':['hdx-other', 'cc-by'], 'page': 2}, 'canonical': True, 'canonical_url':'/dataset', 'canonical_params':{'license_id':['hdx-other', 'cc-by']}},
+    {'url':'/dataset', 'params':{'license_id':['hdx-other', 'cc-by']}, 'canonical': False},
+    # a repeated filter value generates canonical without the repeat
+    {'url':'/dataset', 'params':{'groups':'roger', 'license_id':['hdx-other', 'hdx-other']}, 'canonical': True, 'canonical_url':'/dataset', 'canonical_params':{'license_id':'hdx-other'}},
+    {'url':'/dataset', 'params':{'license_id':['hdx-other', 'hdx-other']}, 'canonical': True, 'canonical_url':'/dataset', 'canonical_params':{'license_id':'hdx-other'}},
+    {'url':'/dataset', 'params':{'license_id':['hdx-other', 'cc-by', 'hdx-other', 'cc-by']}, 'canonical': True, 'canonical_url':'/dataset', 'canonical_params':{'license_id':['hdx-other', 'cc-by']}},
+    {'url':'/dataset', 'params':{'license_id':['hdx-other', 'cc-by', 'hdx-other', 'cc-by'], 'page': 2}, 'canonical': True, 'canonical_url':'/dataset', 'canonical_params':{'license_id':['hdx-other', 'cc-by']}},
+    # more than 2 filter values generate canonical without params
+    {'url':'/dataset', 'params':{'groups':'roger', 'license_id':['hdx-other', 'cc-by', 'cc-by-igo']}, 'canonical': True, 'canonical_url':'/dataset'},
     # light search should add canonical
     # {'url':'hdx_light_dataset.search', 'mobile': True, 'canonical': True, 'canonical_url':'/dataset'},
     # light search should add canonical just for org
@@ -69,6 +81,16 @@ class TestCanonicalLinks(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
     def _load_plugins(cls):
         hdx_test_base.load_plugin(
             'hdx_search hdx_org_group hdx_package hdx_users hdx_user_extra hdx_pages hdx_theme')
+
+    @classmethod
+    def _create_test_data(cls):
+        super(TestCanonicalLinks, cls)._create_test_data()
+        context = {'ignore_auth': True, 'model': model, 'session': model.Session, 'user': 'testsysadmin'}
+        for license_id in ('cc-by', 'cc-by-igo'):
+            package = hdx_test_with_inds_and_orgs.get_packages()[2]
+            package.pop('license_other')
+            package.update({'name': 'test_dataset_' + license_id.replace('-', '_'), 'license_id': license_id})
+            cls._get_action('package_create')(context, package)
 
     @pytest.mark.parametrize(
         "item",

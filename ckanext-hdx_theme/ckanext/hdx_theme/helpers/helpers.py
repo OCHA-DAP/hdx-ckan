@@ -103,11 +103,16 @@ def generate_canonical_link(request_path, request_args, canonical_url=None, para
     # or if we have a different path (on mobile)
     add_canonical = len(extra_args) > 0 or request_path != canonical_url
 
+    if params and request_args and not add_canonical:
+        requested = [(param, value) for param in dict.fromkeys(params)
+                     for value in request_args.getlist(param)]
+        add_canonical = len(requested) != len(set(requested))
+
     if add_canonical and params and request_args:
         query_parts = []
-        for param in params:
+        for param in dict.fromkeys(params):
             values = request_args.getlist(param)
-            for value in values:
+            for value in dict.fromkeys(values):
                 if value is not None:
                     query_parts.append(f"{param}={quote_plus(str(value))}")
 
