@@ -352,7 +352,7 @@ Add `data-hdx-v2-form-validator` to a `<form>` element. The validator (`fanstati
 
 **Error display — `c-search-input` fields**: the validator adds `c-search-input--error` to the input wrapper; a sibling `<span class="c-search-input__error">` (always rendered by the snippet, empty by default) is revealed via the CSS sibling rule `&--error ~ &__error { display: block }`. Server-side errors pre-populate the span and pre-add the modifier class from the template. No `style.display` manipulation — CSS drives visibility entirely.
 
-**Error display — `c-checkbox` fields**: same pattern — `c-checkbox--error` on the `.c-checkbox` wrapper drives a sibling `<span class="c-checkbox__error">` via CSS. The snippet always renders the empty span after the label.
+**Error display — `c-checkbox` fields**: same pattern — `c-checkbox--error` on the `.c-checkbox` wrapper drives a sibling `<span class="c-checkbox__error">` via CSS. The snippet renders the empty span after the label, unless `error_slot=false` (list-item checklist rows, never validated).
 
 Pass `data-validation-error="…"` (via `input_attrs` / `attrs`) for the inline error text. Fields using `data-live-feedback` use the `c-form-validator__live-feedback` panel as the primary error UI and may omit `data-validation-error`.
 
