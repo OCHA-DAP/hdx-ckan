@@ -348,8 +348,8 @@ class SearchLogic(object):
         # get_action('populate_related_items_count')(
         #     context, {'pkg_dict_list': query['results']})
 
-        if self.package_type == 'dataset':
-            get_action('populate_showcase_items_count')(context, {'pkg_dict_list': query['results']})
+        # if self.package_type == 'dataset':
+        #     get_action('populate_showcase_items_count')(context, {'pkg_dict_list': query['results']})
 
         self.template_data.page = h.Page(
             collection=query['results'],
