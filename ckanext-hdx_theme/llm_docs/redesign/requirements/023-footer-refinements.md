@@ -10,7 +10,7 @@ Refine the existing v2 footer implementation to better align with the Figma spec
 
 ### `templates/v2/footer.html`
 
-- **REQ-2 — SVG social icons.** Replace `<i class="fa-brands fa-github ...">` and `<i class="fa-brands fa-linkedin-in ...">` with inline SVG includes. Both files exist in `templates/v2/icons/`:
+- **REQ-2 — SVG social icons.** Replace `<i class="fa-brands fa-github ...">` and `<i class="fa-brands fa-linkedin-in ...">` with inline SVG includes. Both files exist in `fanstatic/v2/icons/`:
   ```jinja2
   {% include 'v2/icons/github.svg' %}
   {% include 'v2/icons/linkedin.svg' %}

@@ -61,7 +61,7 @@
     {% if required %}required="required"{% endif %}
     {% for key, val in attrs.items() %}{{ key }}="{{ val }}" {% endfor %} />
   <span class="c-checkbox__box">
-    <span class="c-checkbox__icon">{% include h.url_for_static('v2/icons/check.svg') %}</span>
+    <span class="c-checkbox__icon">{{ h.hdx_v2_icon('v2/icons/check.svg') }}</span>
   </span>
 </span>
 {% if label %}

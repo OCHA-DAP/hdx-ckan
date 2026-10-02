@@ -54,7 +54,7 @@
     <span class="c-tooltip__text">{{ text }}</span>
 
     {% if arrow %}
-      <span class="c-tooltip__arrow c-tooltip__arrow--{{ arrow }}">{% include h.url_for_static(arrow_src) %}</span>
+      <span class="c-tooltip__arrow c-tooltip__arrow--{{ arrow }}">{{ h.hdx_v2_icon(arrow_src) }}</span>
     {% endif %}
 
   {# ── Light / map card ────────────────────────────── #}
@@ -73,13 +73,13 @@
       {% if flag_src %}
 
         <div class="c-tooltip__icon-btn" aria-hidden="true">
-          {% include h.url_for_static(flag_src) %}
+          {{ h.hdx_v2_icon(flag_src) }}
         </div>
       {% endif %}
     </div>
 
     {% if arrow %}
-      <span class="c-tooltip__arrow c-tooltip__arrow--{{ arrow }}">{% include h.url_for_static(arrow_src) %}</span>
+      <span class="c-tooltip__arrow c-tooltip__arrow--{{ arrow }}">{{ h.hdx_v2_icon(arrow_src) }}</span>
     {% endif %}
 
     {% if action_label %}
@@ -110,7 +110,7 @@
     {% endif %}
 
     {% if arrow %}
-      <span class="c-tooltip__arrow c-tooltip__arrow--{{ arrow }}">{% include h.url_for_static(arrow_src) %}</span>
+      <span class="c-tooltip__arrow c-tooltip__arrow--{{ arrow }}">{{ h.hdx_v2_icon(arrow_src) }}</span>
     {% endif %}
 
   {% endif %}

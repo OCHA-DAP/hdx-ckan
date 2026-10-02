@@ -35,7 +35,7 @@
           aria-label="{{ aria_label }}"
           aria-expanded="false"
           {% if tooltip_id %}aria-describedby="{{ tooltip_id }}"{% endif %}>
-    {% include h.url_for_static(icon_src) %}
+    {{ h.hdx_v2_icon(icon_src) }}
   </button>
   {% if tooltip_text %}
     {% snippet 'v2/components/tooltip.html',

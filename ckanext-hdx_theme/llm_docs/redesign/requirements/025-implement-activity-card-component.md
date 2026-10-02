@@ -78,7 +78,7 @@ Create a reusable activity card component with an icon, heading, subtitle, and C
 
 8. Icon rendering — use inline SVG pattern consistent with all other v2 components.
    - HTML: `<span class="c-activity-card__icon" aria-hidden="true">{% include h.url_for_static(icon_src) %}</span>`
-   - Icons live in `templates/v2/icons/*.svg` (not `fanstatic/`). The `{% include h.url_for_static() %}` pattern resolves and inlines them at render time.
+   - Icons live in `fanstatic/v2/icons/*.svg`; `{{ h.hdx_v2_icon(path) }}` renders them.
    - SVGs use `currentColor` for strokes — icon colour is inherited from the surrounding context.
 
 9. Define local LESS tokens at the top of the file, mapped from global foundations.

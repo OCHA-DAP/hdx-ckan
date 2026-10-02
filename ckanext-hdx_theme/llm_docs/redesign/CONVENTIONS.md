@@ -356,9 +356,9 @@ setTimeout(function () { statusEl.textContent = ''; }, 2000);
 |---|---|---|
 | v2 components | `{% snippet 'v2/components/...' %}` | Always — enables parameterisation |
 | v2 layout sections (header, footer) | `{% snippet 'v2/...' %}` | Consistency |
-| Inline SVG icons | `{% include h.url_for_static(path) %}` | Inlines SVG markup at render time |
+| SVG icons | `{{ h.hdx_v2_icon('v2/icons/<name>.svg') }}` | Files live in `fanstatic/v2/icons/` |
 
-Never use `{% include %}` for parameterised v2 templates. The only accepted `{% include %}` pattern in v2 is SVG inlining via `h.url_for_static()`.
+Never use `{% include %}` in v2 — not for parameterised templates, not for icons.
 
 Components render an `attrs` dict with a separating space before each attribute:
 

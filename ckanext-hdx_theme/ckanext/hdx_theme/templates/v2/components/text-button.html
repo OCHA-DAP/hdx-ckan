@@ -91,7 +91,7 @@
 {# ── Icon markup ──────────────────────────────────────────── #}
 {% if icon_src %}
   {% set icon_markup %}
-    <span class="c-text-button__icon">{% include h.url_for_static(icon_src) %}</span>
+    <span class="c-text-button__icon">{{ h.hdx_v2_icon(icon_src) }}</span>
   {% endset %}
 {% endif %}
 

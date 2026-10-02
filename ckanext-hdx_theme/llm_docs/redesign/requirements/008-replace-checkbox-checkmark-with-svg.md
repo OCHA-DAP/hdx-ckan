@@ -10,7 +10,7 @@ Replace the CSS `::after` pseudo-element checkmark in `.c-checkbox__box` with `v
 
 - `ckanext-hdx_theme/ckanext/hdx_theme/templates/v2/components/checkbox.html`
 - `ckanext-hdx_theme/ckanext/hdx_theme/hdx-styles/src/common/less/v2/components/checkbox.less`
-- `ckanext-hdx_theme/ckanext/hdx_theme/templates/v2/icons/check.svg` (already added, read-only)
+- `ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/v2/icons/check.svg` (already added, read-only)
 
 **Out:**
 - Component API (parameters unchanged)

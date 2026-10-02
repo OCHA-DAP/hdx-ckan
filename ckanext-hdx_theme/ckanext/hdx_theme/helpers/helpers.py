@@ -2,6 +2,7 @@ import csv
 import json
 import datetime
 import logging
+import os
 import re
 import requests
 import six
@@ -1496,3 +1497,19 @@ def hdx_format_number_si(n):
         return sign + out
 
     return sign + str(n)
+
+
+_V2_ICON_PATH = re.compile(r'^v2/icons/([a-z0-9-]+/)*[a-z0-9-]+\.svg$')
+_V2_ICONS_ROOT = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'fanstatic')
+_v2_icons = {}
+
+
+def hdx_v2_icon(path):
+    """Render a v2 icon, e.g. hdx_v2_icon('v2/icons/check.svg') (files live in fanstatic/v2/icons)."""
+    icon = _v2_icons.get(path)
+    if icon is None:
+        if not _V2_ICON_PATH.match(path or ''):
+            raise ValueError('Invalid v2 icon path: {}'.format(path))
+        with open(os.path.join(_V2_ICONS_ROOT, path), encoding='utf-8') as f:
+            icon = _v2_icons[path] = h.literal(f.read())
+    return icon

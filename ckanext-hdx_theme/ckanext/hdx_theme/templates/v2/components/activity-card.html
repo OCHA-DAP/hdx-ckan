@@ -76,7 +76,7 @@
   <div class="c-activity-card__header">
     {% if icon_src %}
       <span class="c-activity-card__icon" aria-hidden="true">
-        {% include h.url_for_static(icon_src) %}
+        {{ h.hdx_v2_icon(icon_src) }}
       </span>
     {% endif %}
     <div class="c-activity-card__body">

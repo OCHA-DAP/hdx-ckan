@@ -47,7 +47,7 @@
         {% if feature.number is defined %}
           <span class="c-signup-tier__feature-badge">{{ feature.number }}</span>
         {% else %}
-          <span class="c-signup-tier__feature-icon">{% include h.url_for_static('v2/icons/check-circle-fill.svg') %}</span>
+          <span class="c-signup-tier__feature-icon">{{ h.hdx_v2_icon('v2/icons/check-circle-fill.svg') }}</span>
         {% endif %}
         {% if feature.analytics_attrs is defined %}
           <span class="c-signup-tier__feature-text"{% for key, val in feature.analytics_attrs.items() %} {{ key }}="{{ val }}"{% endfor %}>

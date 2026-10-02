@@ -44,8 +44,8 @@ No layout or spacing changes are needed — the existing size-l styles already m
    ```
 
    Existing icons to use (already in the repo):
-   - `templates/v2/icons/eye.svg`
-   - `templates/v2/icons/eye-off.svg`
+   - `fanstatic/v2/icons/eye.svg`
+   - `fanstatic/v2/icons/eye-off.svg`
 
 4. Update the doc comment to document the two new parameters and the password example.
 
