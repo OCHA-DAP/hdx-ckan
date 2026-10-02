@@ -89,8 +89,8 @@ a simple WSGI-app listener config with no static-error-page directives.
   `base.html`'s `<head>`, outside any `{% block %}` (~line 177) — so every page that extends
   `base.html`, v1 or v2, pays for it. A repo-wide grep across `templates/v2/` and
   `hdx-styles/src/common/less/v2/` for `fa-`/`class="fa`/`"fas `/`"far `/`"fab ` returns **zero**
-  matches: v2 does not use Font Awesome anywhere, it exclusively inlines SVGs (e.g.
-  `v2/components/button.html`'s `{% include h.url_for_static(icon_src) %}` pattern, and the real
+  matches: v2 does not use Font Awesome anywhere, it exclusively uses SVG icons (e.g.
+  `v2/components/button.html`'s `{{ h.hdx_v2_icon(icon_src) }}` pattern, and the real
   HDX logo mark at `fanstatic/v2/icons/hdx.svg`). No template anywhere overrides `links`/`styles` to
   drop it, and it isn't structurally possible to do so without editing `base.html` itself. **This is
   pre-existing dead weight, not something introduced or fixable by this task** — see §8.

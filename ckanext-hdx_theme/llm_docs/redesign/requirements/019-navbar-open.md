@@ -48,7 +48,7 @@ Markup lives inline at the end of `header.html`, outside `<nav class="hdx-v2-nav
               initials=c.userobj.display_name[0] | upper,
               badge=notif.count > 0 %}
           <span class="hdx-v2-offcanvas__user-name">{{ c.userobj.display_name }}</span>
-          <span class="hdx-v2-offcanvas__user-chevron">{% include 'v2/icons/chevron-right.svg' %}</span>
+          <span class="hdx-v2-offcanvas__user-chevron">{{ h.hdx_v2_icon('v2/icons/chevron-right.svg') }}</span>
         </button>
       {% endif %}
 
@@ -77,7 +77,7 @@ Markup lives inline at the end of `header.html`, outside `<nav class="hdx-v2-nav
                 aria-expanded="true"
                 aria-controls="offcanvas-products">
           {{ _('Products') }}
-          <span class="hdx-v2-offcanvas__expand-chevron">{% include 'v2/icons/chevron-down.svg' %}</span>
+          <span class="hdx-v2-offcanvas__expand-chevron">{{ h.hdx_v2_icon('v2/icons/chevron-down.svg') }}</span>
         </button>
         <ul class="hdx-v2-offcanvas__subnav" id="offcanvas-products">
           <li><a href="#" data-module="hdx_click_stopper" data-module-link_type="header">{{ _('HDX HAPI') }}</a></li>
@@ -107,7 +107,7 @@ Markup lives inline at the end of `header.html`, outside `<nav class="hdx-v2-nav
     {% if c.userobj %}
       <div class="hdx-v2-offcanvas__level" id="hdx-v2-offcanvas-level-user-detail" hidden>
         <button class="hdx-v2-offcanvas__back" type="button" data-hdx-v2-offcanvas-back>
-          {% include 'v2/icons/chevron-left.svg' %}
+          {{ h.hdx_v2_icon('v2/icons/chevron-left.svg') }}
           {{ _('Back') }}
         </button>
         {# Reuse desktop user menu snippet — no duplication #}
@@ -325,7 +325,7 @@ Instead, the second level renders the user menu sections using the same expandab
           type="button" aria-expanded="true"
           aria-controls="offcanvas-user-{{ section.id }}">
     {{ section.label }}
-    <span class="hdx-v2-offcanvas__expand-icon">{% include 'v2/icons/chevron-down.svg' %}</span>
+    <span class="hdx-v2-offcanvas__expand-icon">{{ h.hdx_v2_icon('v2/icons/chevron-down.svg') }}</span>
   </button>
   <ul class="hdx-v2-offcanvas__subnav" id="offcanvas-user-{{ section.id }}">
     {% for item in section.items %}

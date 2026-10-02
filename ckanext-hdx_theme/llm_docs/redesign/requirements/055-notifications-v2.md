@@ -163,7 +163,7 @@ This *is* the "alternative (partial reuse)" the task asks for if full consolidat
     <a class="c-notification-item__arrow" href="{{ url }}" aria-label="{{ _('View details') }}"
        data-module="hdx_notifications_main"
        data-module-personal="{{ 'true' if data_personal else 'false' }}" data-module-type="item">
-      {% include 'v2/icons/arrow-right.svg' %}
+      {{ h.hdx_v2_icon('v2/icons/arrow-right.svg') }}
     </a>
   </div>
 </div>

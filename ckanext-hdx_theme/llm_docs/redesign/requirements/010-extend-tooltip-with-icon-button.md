@@ -1,8 +1,8 @@
 # Task 010: Extend c-tooltip light variant with optional right-side icon button
 
-Add an optional icon slot on the right side of the `c-tooltip--light` body row, matching the Figma "tooltip-location-map" design. The slot renders a small inline SVG icon (e.g. a country flag) inside a white-background container that stretches the full height of the body row.
+Add an optional icon slot on the right side of the `c-tooltip--light` body row, matching the Figma "tooltip-location-map" design. The slot renders a small SVG icon (e.g. a country flag) inside a white-background container that stretches the full height of the body row.
 
-The existing `flag_src` parameter is repurposed for this slot (right side, inline SVG). There is no separate `icon_btn_src` param.
+The existing `flag_src` parameter is repurposed for this slot (right side, SVG icon). There is no separate `icon_btn_src` param.
 
 ## Reference
 
@@ -16,14 +16,14 @@ Key measurements from Figma:
 
 ### `templates/v2/components/tooltip.html`
 
-- Update `flag_src` doc comment: right-side optional inline SVG icon path (default: `''`).
+- Update `flag_src` doc comment: right-side optional SVG icon path (default: `''`).
 - Remove the left-side `<img class="c-tooltip__flag">` block.
-- Inside `c-tooltip__body`, render `c-tooltip__icon-btn` **after** `c-tooltip__content` using inline SVG include:
+- Inside `c-tooltip__body`, render `c-tooltip__icon-btn` **after** `c-tooltip__content` using `h.hdx_v2_icon`:
 
   ```html
   {% if flag_src %}
     <div class="c-tooltip__icon-btn" aria-hidden="true">
-      {% include h.url_for_static(flag_src) %}
+      {{ h.hdx_v2_icon(flag_src) }}
     </div>
   {% endif %}
   ```
@@ -64,4 +64,4 @@ Add one `light` tooltip example that passes `flag_src`:
 
 ## Why
 
-The Figma design places a country-flag SVG inside a self-stretching white container to the right of the title/subtitle block. Reusing `flag_src` for this slot keeps the API minimal — one param covers the icon whether or not a title/subtitle is present. Inline SVG (via `{% include %}`) is consistent with how other icons are rendered in the component system.
+The Figma design places a country-flag SVG inside a self-stretching white container to the right of the title/subtitle block. Reusing `flag_src` for this slot keeps the API minimal — one param covers the icon whether or not a title/subtitle is present. `h.hdx_v2_icon` is consistent with how other icons are rendered in the component system.
