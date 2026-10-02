@@ -58,6 +58,11 @@
     window.location.href = url.toString();
   }
 
+  function hasClearableFilters() {
+    var params = new URL(window.location.href).searchParams;
+    return FILTER_PARAMS.concat(ADVANCED_FILTER_PARAMS).some(function (param) { return params.has(param); });
+  }
+
   // Dropdown open/close is handled by v2/components/dropdown.js (globally).
 
   // ── SearchFilters init ───────────────────────────────────────────────────────
@@ -68,6 +73,12 @@
     document.querySelectorAll('[data-indeterminate]').forEach(function (input) {
       input.indeterminate = true;
     });
+
+    if (hasClearableFilters()) {
+      document.querySelectorAll('[data-reveal-if-clearable]').forEach(function (link) {
+        link.hidden = false;
+      });
+    }
 
     // Delegated: regular checkbox change → URL update
     document.addEventListener('change', function (e) {
@@ -295,9 +306,13 @@
     placeForm(null);
 
     xl.addEventListener('change', function () {
-      var focused = form && form.contains(document.activeElement) ? document.activeElement : null;
+      var active  = document.activeElement;
+      var focused = form && form.contains(active) ? active : null;
       if (xl.matches && isOpen()) closeOverlay(false);
       placeForm(focused);
+      if (focused || !active || active === document.body || active.getClientRects().length) return;
+      var fallback = xl.matches ? (form && window.hdxV2.getFocusable(form)[0]) : filterBtn;
+      if (fallback) fallback.focus();
     });
 
     if (form) {

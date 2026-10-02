@@ -55,8 +55,8 @@
       var trigger = e.target.closest && e.target.closest('.c-dropdown__trigger');
       if (!trigger) return;
       var dd     = trigger.closest('.c-dropdown');
-      var isOpen = dd && dd.classList.contains('is-open');
-      if (!dd) return;
+      if (!dd || !dd.querySelector('.c-dropdown__panel')) return;
+      var isOpen = dd.classList.contains('is-open');
       if (isOpen) { closeDropdown(dd, false); } else { openDropdown(dd, false); }
     });
 
@@ -65,10 +65,10 @@
       if (e.key !== 'Enter' && e.key !== ' ') return;
       var trigger = e.target.closest && e.target.closest('.c-dropdown__trigger');
       if (!trigger) return;
-      e.preventDefault();
       var dd     = trigger.closest('.c-dropdown');
-      var isOpen = dd && dd.classList.contains('is-open');
-      if (!dd) return;
+      if (!dd || !dd.querySelector('.c-dropdown__panel')) return;
+      e.preventDefault();
+      var isOpen = dd.classList.contains('is-open');
       if (isOpen) { closeDropdown(dd, true); } else { openDropdown(dd, true); }
     });
 

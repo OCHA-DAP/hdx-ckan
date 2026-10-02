@@ -308,7 +308,7 @@ Example:
                 {% if v2 %}
                   {% snippet 'v2/components/text-link.html',
                       label=_('Clear filters'), style='primary', size='m',
-                      attrs={'data-action': 'clear-filters'} %}
+                      attrs={'data-action': 'clear-filters', 'data-reveal-if-clearable': '', 'hidden': 'hidden'} %}
                 {% endif %}
             </div>
         {% endif %}

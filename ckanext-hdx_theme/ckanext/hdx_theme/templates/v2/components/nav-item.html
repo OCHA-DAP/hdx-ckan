@@ -40,7 +40,7 @@
 <a class="{{ classes | join(' ') }}"
    href="{{ href }}"
    {% if is_disabled %}aria-disabled="true" tabindex="-1"{% endif %}
-   {% for key, val in attrs.items() %}{{ key }}="{{ val }}"{% endfor %}>
+   {% for key, val in attrs.items() %} {{ key }}="{{ val }}"{% endfor %}>
 
   <span class="c-nav-item__label">{{ label }}</span>
 
