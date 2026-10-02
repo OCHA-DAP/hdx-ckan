@@ -36,7 +36,12 @@ Create a reusable, accessible checkbox component used standalone and as a buildi
    - `disabled` (boolean): whether checkbox is disabled, default: false
    - `name` (string): form name attribute, default: ''
    - `value` (string): form value attribute, default: ''
+   - `attrs` (dict): extra attributes on the `<input>` (`'data-indeterminate': ''` for the indeterminate state), default: {}
    - `extra_classes` (string): additional CSS classes, default: ''
+   - `label` (string): label text after the checkbox (`c-checkbox__label`, supports `|safe` HTML), default: none
+   - `required` (boolean): adds `required="required"` to the `<input>`, default: false
+   - `errors` (list or string): error message(s); adds `c-checkbox--error` and fills the trailing `.c-checkbox__error` span, default: None
+   - `error_slot` (boolean): render the trailing `.c-checkbox__error` span, which `form-validator.js` writes into, default: true
 
 4. Ensure accessibility.
    - Use proper `<label>` association with `for` attribute

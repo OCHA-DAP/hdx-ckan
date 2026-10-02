@@ -17,6 +17,8 @@
 #}
 {% extends "v2/page.html" %}
 
+{% set quick_links = [] %}
+
 {%- block styles %}
   {{ super() }}
   {% asset 'hdx_theme/v2-error-page-styles' %}

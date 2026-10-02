@@ -73,7 +73,7 @@
 </label>
 {% endif %}
 <div class="{{ classes | join(' ') }}"
-     {% for key, val in attrs.items() %}{{ key }}="{{ val }}"{% endfor %}>
+     {% for key, val in attrs.items() %} {{ key }}="{{ val }}"{% endfor %}>
 
   {% if multiline %}
     <textarea name="{{ name }}"

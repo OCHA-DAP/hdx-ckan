@@ -192,7 +192,7 @@ Example:
   {% endif %}
 
   {# ── MD/SM full-screen filter overlay ────────────────────────────────── #}
-  <div class="hdx-v2-search-filter-overlay" id="hdx-filter-overlay">
+  <div class="hdx-v2-search-filter-overlay" id="hdx-filter-overlay" role="dialog" aria-modal="true" aria-label="{{ _('Filters') }}">
     <div class="hdx-v2-search-filter-overlay__header">
       <span class="hdx-v2-search-filter-overlay__title">Filters</span>
       <button type="button"
@@ -210,9 +210,7 @@ Example:
             admin_view=admin_view,
             panel_suffix='ovl' %}
       </div>
-      <div class="hdx-v2-search-filters">
-        {% snippet 'v2/search-filters.html', facet_list=facet_list, archived_url_helper=archived_url_helper %}
-      </div>
+      <div data-filter-panel-slot></div>
     </div>
     <div class="hdx-v2-search-filter-overlay__footer">
       {% snippet 'v2/components/button.html',
@@ -301,10 +299,17 @@ Example:
         {% else %}
             <div class="list-items search-form">
                 {% set src_msg = 'for \"'+ searchValue +'\"' if searchValue else ''  %}
+                {% if not v2 %}
                 <form id="dataset-filter-form" style="display: none;">
                     <input name="q" type="hidden" value="{{searchValue}}">
                 </form>
+                {% endif %}
                 <h2>Sorry no datasets found for current filter selection {# and {{src_msg}} #}</h2>
+                {% if v2 %}
+                  {% snippet 'v2/components/text-link.html',
+                      label=_('Clear filters'), style='primary', size='m',
+                      attrs={'data-action': 'clear-filters', 'data-reveal-if-clearable': '', 'hidden': 'hidden'} %}
+                {% endif %}
             </div>
         {% endif %}
     </div>

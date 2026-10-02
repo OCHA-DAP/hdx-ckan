@@ -59,7 +59,7 @@
 {% if extra_classes    %}{% set classes = classes + [extra_classes]                %}{% endif %}
 
 <div class="{{ classes | join(' ') }}"
-     {% for key, val in attrs.items() %}{{ key }}="{{ val }}"{% endfor %}>
+     {% for key, val in attrs.items() %} {{ key }}="{{ val }}"{% endfor %}>
 
   <input type="search"
          name="{{ name }}"

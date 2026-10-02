@@ -101,14 +101,14 @@
   class="{{ classes | join(' ') }}"
   href="{{ href }}"
   {% if is_disabled %}aria-disabled="true" tabindex="-1"{% endif %}
-  {% for key, val in attrs.items() %}{{ key }}="{{ val }}"{% endfor %}
+  {% for key, val in attrs.items() %} {{ key }}="{{ val }}"{% endfor %}
 >
 {% else %}
 <button
   type="{{ button_type }}"
   class="{{ classes | join(' ') }}"
   {% if is_disabled %}disabled aria-disabled="true"{% endif %}
-  {% for key, val in attrs.items() %}{{ key }}="{{ val }}"{% endfor %}
+  {% for key, val in attrs.items() %} {{ key }}="{{ val }}"{% endfor %}
 >
 {% endif %}
 

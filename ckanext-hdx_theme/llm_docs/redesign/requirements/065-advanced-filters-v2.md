@@ -326,8 +326,8 @@ possible future reuse.
 - **XL**: sidebar (existing) gains the Archived radio at the bottom of `search-filters.html`;
   Applied Filters pill row appears in the results header, above the dataset grid.
 - **MD / SM**: existing overlay (task 031) gains the same Archived radio at the bottom of the same
-  shared `search-filters.html` include — no separate markup needed since both call sites already
-  render this one file. No pills at MD/SM — the existing "Filter (N)" button badge already
+  shared `search-filters.html` include — no separate markup needed since the panel is rendered once
+  (sidebar form) and moved into the overlay below 80rem. No pills at MD/SM — the existing "Filter (N)" button badge already
   communicates active-filter count at these breakpoints, per explicit task scope ("applied pills
   only on XL").
 

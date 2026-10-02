@@ -139,7 +139,7 @@ When a dropdown opens, focus is not moved into it. When it closes (click-outside
 *WCAG 2.4.3 Focus Order*
 
 **`search.js` filter overlay — GOOD (reference pattern)**
-The filter overlay correctly moves focus to the first focusable element on open and restores focus to the filter button on close. This is the correct pattern to replicate in `dropdown.js` and `navbar.js`.
+The filter overlay moves focus inside on open, traps Tab with `hdxV2.FocusTrap`, closes on Escape (an open filter panel first) and restores focus to the filter button on close. This is the correct pattern to replicate in `dropdown.js` and `navbar.js`.
 
 ---
 
@@ -577,7 +577,7 @@ Every page that renders `v2/header.html` must include the skip-to-main-content l
 
 ### RF-01 — Shared focus trap module
 
-Shared `window.hdxV2.FocusTrap` in `fanstatic/v2/utils.js` (see R-02), used by `navbar.js` and `components/drawer.js`. Prevents duplication of focus-trap logic across multiple files.
+Shared `window.hdxV2.FocusTrap` in `fanstatic/v2/utils.js` (see R-02), used by `navbar.js`, `components/drawer.js` and `pages/search.js` (filter overlay). Prevents duplication of focus-trap logic across multiple files.
 
 ### RF-02 — `sr-only` utility in `foundation.less`
 

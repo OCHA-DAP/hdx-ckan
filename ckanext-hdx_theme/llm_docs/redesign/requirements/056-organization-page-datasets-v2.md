@@ -386,7 +386,7 @@ This is the same sidebar/overlay breakpoint contract already established for the
 
 | Case | Expected behavior |
 |---|---|
-| Org with zero datasets | Preserve v1 message ("There are no datasets currently uploaded to this organisation.") + "Add Data" link, styled with v2 tokens |
+| Org with zero datasets | Preserve v1 message ("There are no datasets currently uploaded to this organisation.") + "Add Data" link, styled with v2 tokens. Shown only when nothing in the request narrows the search (`filters_are_selected`); an org filtered to 0 keeps the filters + list + "Sorry … Clear filters" |
 | Org without a website (`org_url` empty) | Hide the "Visit website" link entirely (cleaner than v1's current self-referential fallback to the org's own page — flagged as a minor, low-risk improvement, not a functional change worth a blocking question) |
 | No permissions (anonymous/non-member visitor) | Header action row shows only "Visit website" (if set); Members and Requested Data tabs hidden; matches `xl-org-page.html`'s 3-tab (Datasets/Activity/Stats) capture exactly |
 | Notifications disabled for this org | Hide "Get notified" CTA entirely, per existing `hdx_supports_notifications()` result |
