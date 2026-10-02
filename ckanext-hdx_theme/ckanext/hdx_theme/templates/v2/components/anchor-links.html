@@ -84,7 +84,7 @@
         <span class="c-anchor-links__border" aria-hidden="true"></span>
         <div class="c-anchor-links__content">
           <span class="c-anchor-links__label">{{ item.label }}</span>
-          {% if item.external %}<span class="c-anchor-links__ext-icon" aria-hidden="true">{% include 'v2/icons/open-in-new.svg' %}</span>{% endif %}
+          {% if item.external %}<span class="c-anchor-links__ext-icon" aria-hidden="true">{{ h.hdx_v2_icon('v2/icons/open-in-new.svg') }}</span>{% endif %}
         </div>
       </a>
     {% endfor %}
@@ -103,7 +103,7 @@
             aria-expanded="false"
             aria-controls="anchor-dropdown-panel">
       <span class="c-anchor-links-mobile__label">{{ _active_label }}</span>
-      <span class="c-anchor-links-mobile__chevron" aria-hidden="true">{% include 'v2/icons/chevron-down.svg' %}</span>
+      <span class="c-anchor-links-mobile__chevron" aria-hidden="true">{{ h.hdx_v2_icon('v2/icons/chevron-down.svg') }}</span>
     </button>
     <ul class="c-anchor-links-mobile__panel"
         id="anchor-dropdown-panel"
@@ -112,7 +112,7 @@
         <li>
           <a class="c-anchor-links-mobile__item{% if item.active %} is-active{% endif %}"
              href="{{ item.href }}"
-             {% if item.external %}target="_blank" rel="noopener"{% endif %}>{{ item.label }}{% if item.external %} <span aria-hidden="true">{% include 'v2/icons/open-in-new.svg' %}</span>{% endif %}</a>
+             {% if item.external %}target="_blank" rel="noopener"{% endif %}>{{ item.label }}{% if item.external %} <span aria-hidden="true">{{ h.hdx_v2_icon('v2/icons/open-in-new.svg') }}</span>{% endif %}</a>
         </li>
       {% endfor %}
     </ul>

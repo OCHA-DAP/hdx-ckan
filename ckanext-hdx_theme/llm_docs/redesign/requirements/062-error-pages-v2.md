@@ -89,9 +89,9 @@ a simple WSGI-app listener config with no static-error-page directives.
   `base.html`'s `<head>`, outside any `{% block %}` (~line 177) — so every page that extends
   `base.html`, v1 or v2, pays for it. A repo-wide grep across `templates/v2/` and
   `hdx-styles/src/common/less/v2/` for `fa-`/`class="fa`/`"fas `/`"far `/`"fab ` returns **zero**
-  matches: v2 does not use Font Awesome anywhere, it exclusively inlines SVGs (e.g.
-  `v2/components/button.html`'s `{% include h.url_for_static(icon_src) %}` pattern, and the real
-  HDX logo mark at `templates/v2/icons/hdx.svg`). No template anywhere overrides `links`/`styles` to
+  matches: v2 does not use Font Awesome anywhere, it exclusively uses SVG icons (e.g.
+  `v2/components/button.html`'s `{{ h.hdx_v2_icon(icon_src) }}` pattern, and the real
+  HDX logo mark at `fanstatic/v2/icons/hdx.svg`). No template anywhere overrides `links`/`styles` to
   drop it, and it isn't structurally possible to do so without editing `base.html` itself. **This is
   pre-existing dead weight, not something introduced or fixable by this task** — see §8.
 - `c-button` (`hdx-styles/src/common/less/v2/components/buttons.less` +
@@ -211,7 +211,7 @@ interactive behavior, so `{% block scripts %}` is emptied out entirely.
 no CKAN template, no route, no build step, no dependency on this repo's asset pipeline:
 
 - Inline `<style>` block only — no external stylesheet.
-- Inline `<svg>` — the real `templates/v2/icons/hdx.svg` content embedded directly (three
+- Inline `<svg>` — the real `fanstatic/v2/icons/hdx.svg` content embedded directly (three
   `fill="currentColor"` paths in one `<svg viewBox="0 0 121 40">`), not an `<img src>` reference.
 - One `<link>` to Google Fonts (Merriweather 700 + Roboto 400/500) — the **only** permitted external
   network request, per the requester's explicit decision (§10).

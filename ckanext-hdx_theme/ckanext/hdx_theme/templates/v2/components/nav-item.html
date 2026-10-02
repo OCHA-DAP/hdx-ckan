@@ -45,7 +45,7 @@
   <span class="c-nav-item__label">{{ label }}</span>
 
   {% if chevron %}
-    <span class="c-nav-item__chevron">{% include h.url_for_static(chevron_src) %}</span>
+    <span class="c-nav-item__chevron">{{ h.hdx_v2_icon(chevron_src) }}</span>
   {% endif %}
 
 </a>

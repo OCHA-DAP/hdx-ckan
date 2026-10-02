@@ -29,7 +29,7 @@
                data-ga-event="accordion_toggle"
                data-ga-label="{{ item.question }}">
         <span class="c-accordion__title">{{ item.question }}</span>
-        <span class="c-accordion__chevron" aria-hidden="true">{% include 'v2/icons/chevron-down.svg' %}</span>
+        <span class="c-accordion__chevron" aria-hidden="true">{{ h.hdx_v2_icon('v2/icons/chevron-down.svg') }}</span>
       </summary>
       <div class="c-accordion__body">
         <div class="c-accordion__content">

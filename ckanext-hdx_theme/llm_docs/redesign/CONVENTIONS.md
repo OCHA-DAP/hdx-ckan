@@ -313,12 +313,12 @@ Dropdowns (non-modal): move focus to first item on keyboard-triggered open; retu
 
 ### SVG icons
 
-All inline SVG icons must carry `aria-hidden="true" focusable="false"`. Icon-only interactive elements require an `aria-label` on the parent `<button>` or `<a>`.
+`h.hdx_v2_icon` renders every icon with `aria-hidden="true" focusable="false"`. Icon-only interactive elements require an `aria-label` on the parent `<button>` or `<a>`.
 
 ```html
 <!-- decorative icon inside labeled button -->
 <button aria-label="Close menu">
-  <svg aria-hidden="true" focusable="false" ...></svg>
+  {{ h.hdx_v2_icon('v2/icons/close.svg') }}
 </button>
 ```
 
@@ -356,9 +356,9 @@ setTimeout(function () { statusEl.textContent = ''; }, 2000);
 |---|---|---|
 | v2 components | `{% snippet 'v2/components/...' %}` | Always — enables parameterisation |
 | v2 layout sections (header, footer) | `{% snippet 'v2/...' %}` | Consistency |
-| Inline SVG icons | `{% include h.url_for_static(path) %}` | Inlines SVG markup at render time |
+| SVG icons | `{{ h.hdx_v2_icon('v2/icons/<name>.svg') }}` | Files live in `fanstatic/v2/icons/` (adding one: `_tools/README.md` there) |
 
-Never use `{% include %}` for parameterised v2 templates. The only accepted `{% include %}` pattern in v2 is SVG inlining via `h.url_for_static()`.
+Never use `{% include %}` in v2 — not for parameterised templates, not for icons.
 
 Components render an `attrs` dict with a separating space before each attribute:
 
@@ -422,6 +422,19 @@ Entity pages (org, country) render the filter aside and the dataset list when th
 ```
 
 A page filtered to 0 keeps its filters and the "Sorry … Clear filters" message.
+
+---
+
+## Render cost — search and listing pages
+
+Bots crawl `/dataset`, org, country and crisis pages heavily, and their cost grows with every facet item rendered.
+
+- **Render once.** Never render a component twice for different breakpoints (double cost, duplicate ids); render it once and move it with JS (`matchMedia`, as `search.js` does with `#search-page-filters-form`) or restyle it with CSS.
+- **Keep loop snippets lean.** A snippet rendered per facet item runs hundreds of times: no empty optional elements (add an opt-out like `checkbox.html`'s `error_slot`), icons only via `h.hdx_v2_icon`, no queries.
+- **Query once per page.** Fetch shared data in the page and pass it down (see `quick_links`); never call a DB or Solr helper from a snippet that renders more than once.
+- **No unused work.** When a template stops reading a value, remove the action or query that computes it.
+- **No crawl traps.** v2 filters are JS-driven so bots can't follow combinations; don't add plain links that combine filters, and keep `generate_canonical_link` (pinned by `test_canonical.py`) in step with new filter params.
+- **Measure.** Compare SQL count, HTML size and render time before and after.
 
 ---
 

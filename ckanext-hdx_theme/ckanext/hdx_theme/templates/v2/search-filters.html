@@ -175,7 +175,7 @@
           <div class="hdx-v2-advanced-filters__children">
             {% for child in item.children %}
               <div class="hdx-v2-advanced-filters__child">
-                <span class="hdx-v2-advanced-filters__indent-icon">{% include h.url_for_static('v2/icons/indent.svg') %}</span>
+                <span class="hdx-v2-advanced-filters__indent-icon">{{ h.hdx_v2_icon('v2/icons/indent.svg') }}</span>
                 {% snippet 'v2/components/selection-item.html',
                     label=child.label, size='m', tag='button',
                     state='active' if child.checked else 'enabled',

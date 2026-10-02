@@ -32,20 +32,20 @@ No layout or spacing changes are needed — the existing size-l styles already m
              type="button"
              aria-label="Show password">
        <span class="c-search-input__toggle-eye">
-         {% include h.url_for_static('v2/icons/eye.svg') %}
+         {{ h.hdx_v2_icon('v2/icons/eye.svg') }}
        </span>
        <span class="c-search-input__toggle-eye-off" hidden>
-         {% include h.url_for_static('v2/icons/eye-off.svg') %}
+         {{ h.hdx_v2_icon('v2/icons/eye-off.svg') }}
        </span>
      </button>
    {% else %}
-     <span class="c-search-input__icon">{% include h.url_for_static(icon_src) %}</span>
+     <span class="c-search-input__icon">{{ h.hdx_v2_icon(icon_src) }}</span>
    {% endif %}
    ```
 
    Existing icons to use (already in the repo):
-   - `templates/v2/icons/eye.svg`
-   - `templates/v2/icons/eye-off.svg`
+   - `fanstatic/v2/icons/eye.svg`
+   - `fanstatic/v2/icons/eye-off.svg`
 
 4. Update the doc comment to document the two new parameters and the password example.
 

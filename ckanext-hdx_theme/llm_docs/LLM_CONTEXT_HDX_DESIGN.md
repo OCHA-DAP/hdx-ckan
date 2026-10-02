@@ -306,6 +306,7 @@ Example page-specific template (light search):
 - **Template**: `ckanext-hdx_theme/ckanext/hdx_theme/templates/v2/components.html`
   - Extends `templates/v2/page.html` (v2 layout scaffold).
   - **Purpose**: Demo page rendering all v2 components side-by-side for development verification.
+- **Route disabled**: uncomment it in `views/landing_pages.py` to use it locally.
 - **Core assets**:
   - `hdx_theme/v2-components-styles` — all v2 component styles (loaded by `v2/page.html`).
   - `hdx_theme/v2-components-scripts` — all v2 component JS (loaded by `v2/page.html`).

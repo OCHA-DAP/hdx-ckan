@@ -97,7 +97,7 @@
           {% for key, val in button_attrs.items() %}{{ key }}="{{ val }}" {% endfor %}>
 
     {% if icon %}
-      <span class="c-dropdown__trigger-icon">{% include h.url_for_static(icon_src) %}</span>
+      <span class="c-dropdown__trigger-icon">{{ h.hdx_v2_icon(icon_src) }}</span>
     {% endif %}
 
     <span class="c-dropdown__trigger-value">
@@ -109,7 +109,7 @@
     {% endif %}
 
     {% if chevron_src %}
-      <span class="c-dropdown__chevron">{% include h.url_for_static(chevron_src) %}</span>
+      <span class="c-dropdown__chevron">{{ h.hdx_v2_icon(chevron_src) }}</span>
     {% endif %}
   </button>
 
