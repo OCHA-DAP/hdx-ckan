@@ -32,7 +32,7 @@ using the existing `c-dropdown`, `c-checkbox`, and `c-button` component system.
 - Active count badge on MD/SM filter button (total selected items across all filters including advanced)
 - "Clear selection" per-filter (inside panel, center-aligned)
 - "Clear filters" global (MD/SM overlay footer, clears all params including advanced)
-- "Clear filters" text link under the 0-result "Sorry no datasets found…" message (same params)
+- "Clear filters" text link under the 0-result "Sorry no datasets found…" message (same params; shown only when the URL has one of them)
 - Search within filter option list — shown only when a filter has > 8 items (MiniSearch + `toNormalForm`)
 
 ### Excluded
@@ -160,7 +160,7 @@ On button click → full-page overlay:
 
 ### Filter button click (MD/SM)
 
-- Click → add `hdx-v2-search-filter-overlay--open` to overlay, trap focus, prevent body scroll
+- Click, Enter or Space → add `hdx-v2-search-filter-overlay--open` to overlay, trap focus, prevent body scroll
 - Click ✕ or "Show results" → remove modifier, restore scroll, return focus to trigger
 - Escape → closes an open filter panel first, then the overlay (same as ✕)
 - "Clear filters" → remove all filter params (main + advanced) from URL, navigate

@@ -305,10 +305,11 @@ Update ARIA attributes whenever state changes:
 Overlays that block page content (offcanvas drawer, modal, full-screen overlay) must:
 1. Move focus inside on open (use `window.hdxV2.FocusTrap` — shared in `v2/utils.js`)
 2. Trap Tab/Shift+Tab within the overlay (`FocusTrap` also pulls focus back on `focusin` outside, since Tab inside a cross-origin iframe never reaches the page; focus landing on an iframe outside, e.g. a reCAPTCHA challenge, is left alone)
-3. Close on Escape
+3. Close on Escape (an overlay that contains `c-dropdown`s listens in the capture phase and returns while one is open, so each Escape closes one layer: the panel first, then the overlay)
 4. Return focus to the triggering element on close
+5. When a breakpoint hides or moves the focused control, keep focus on it if it moved, otherwise move it to the nearest visible equivalent (the control that now holds that UI); never leave it on the page body
 
-Dropdowns (non-modal): move focus to first item on keyboard-triggered open; return focus to trigger on close.
+Dropdowns (non-modal): move focus to first item on keyboard-triggered open; return focus to trigger on close. A `c-dropdown` rendered without `items` (no panel) is a styled button: `dropdown.js` doesn't manage it; its owner handles click/Enter/Space and `aria-expanded`.
 
 ### SVG icons
 
@@ -358,6 +359,12 @@ setTimeout(function () { statusEl.textContent = ''; }, 2000);
 | Inline SVG icons | `{% include h.url_for_static(path) %}` | Inlines SVG markup at render time |
 
 Never use `{% include %}` for parameterised v2 templates. The only accepted `{% include %}` pattern in v2 is SVG inlining via `h.url_for_static()`.
+
+Components render an `attrs` dict with a separating space before each attribute:
+
+```jinja2
+{% for key, val in attrs.items() %} {{ key }}="{{ val }}"{% endfor %}
+```
 
 ---
 
