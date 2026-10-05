@@ -27,7 +27,7 @@
         data-copy-value="{{ value }}"
         aria-label="{{ label if label else _('Copy to clipboard') }}">
   {% if icon_position %}
-    <span class="c-copy-button__icon">{% include h.url_for_static('v2/icons/copy.svg') %}</span>
+    <span class="c-copy-button__icon">{{ h.hdx_v2_icon('v2/icons/copy.svg') }}</span>
 
   {% endif %}
   <span class="c-copy-button__label">{{ label }}</span>

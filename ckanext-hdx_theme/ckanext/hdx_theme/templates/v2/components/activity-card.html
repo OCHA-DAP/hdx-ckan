@@ -12,7 +12,7 @@
   state         {string}  'enabled'
                           default: 'enabled'
 
-  icon_src      {string}  Path to icon image, resolved via h.url_for_static().
+  icon_src      {string}  Path to icon image, rendered via h.hdx_v2_icon().
                           Pass '' to omit the icon.
                           default: ''
 
@@ -76,7 +76,7 @@
   <div class="c-activity-card__header">
     {% if icon_src %}
       <span class="c-activity-card__icon" aria-hidden="true">
-        {% include h.url_for_static(icon_src) %}
+        {{ h.hdx_v2_icon(icon_src) }}
       </span>
     {% endif %}
     <div class="c-activity-card__body">

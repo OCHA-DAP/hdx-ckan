@@ -27,7 +27,9 @@
   items         {list}    Panel items. Navigate format: {value, label, active, tooltip?}.
                           Checklist format: {value, label, count, checked, active,
                           attrs, extra_classes, children?}.
-                          When non-empty a c-dropdown__panel is rendered.  default: []
+                          When non-empty a c-dropdown__panel is rendered. Without
+                          items, dropdown.js leaves the trigger to its owner (e.g.
+                          the search Filter button).  default: []
   navigate      {bool}    True → navigate-on-select panel (single choice, e.g. sort,
                           page size, role change). False → multi-select checklist
                           panel with checkboxes (e.g. facet filters).  default: False
@@ -95,7 +97,7 @@
           {% for key, val in button_attrs.items() %}{{ key }}="{{ val }}" {% endfor %}>
 
     {% if icon %}
-      <span class="c-dropdown__trigger-icon">{% include h.url_for_static(icon_src) %}</span>
+      <span class="c-dropdown__trigger-icon">{{ h.hdx_v2_icon(icon_src) }}</span>
     {% endif %}
 
     <span class="c-dropdown__trigger-value">
@@ -107,7 +109,7 @@
     {% endif %}
 
     {% if chevron_src %}
-      <span class="c-dropdown__chevron">{% include h.url_for_static(chevron_src) %}</span>
+      <span class="c-dropdown__chevron">{{ h.hdx_v2_icon(chevron_src) }}</span>
     {% endif %}
   </button>
 

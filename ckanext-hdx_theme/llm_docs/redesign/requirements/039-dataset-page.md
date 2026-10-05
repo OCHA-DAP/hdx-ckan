@@ -350,7 +350,7 @@ Grid layout:
   <div class="hdx-v2-dataset-section__header"
        role="button" tabindex="0" aria-expanded="false" aria-controls="activity-body">
     <h2 class="hdx-v2-dataset-section__title">{{ _('Activity') }}</h2>
-    <span class="hdx-v2-dataset-section__chevron" aria-hidden="true">{% include 'v2/icons/chevron-down.svg' %}</span>
+    <span class="hdx-v2-dataset-section__chevron" aria-hidden="true">{{ h.hdx_v2_icon('v2/icons/chevron-down.svg') }}</span>
   </div>
   <div class="hdx-v2-dataset-section__body" id="activity-body">
     <div class="dataset-activity-wrapper" data-fetched="false" data-dataset-id="{{ pkg.id }}">
@@ -460,7 +460,7 @@ Used in both `page-header.html` (header metadata strip) and the inlined metadata
 
 **Template**:
 ```jinja
-<span class="c-info-icon" tabindex="0" aria-label="{{ _('More info about ...') }}">{% include 'v2/icons/info-circle.svg' %}</span>
+<span class="c-info-icon" tabindex="0" aria-label="{{ _('More info about ...') }}">{{ h.hdx_v2_icon('v2/icons/info-circle.svg') }}</span>
 {% snippet 'v2/components/tooltip.html', variant='dark', arrow='', text=_('...') %}
 ```
 

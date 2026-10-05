@@ -434,7 +434,7 @@ style); heights from the stored style + JS recalibration (D5).
 | First `description`-type section's `long_description` empty/whitespace | Section is still promoted (and excluded from the section flow) but header shows no description — same net result as if it were absent |
 | More than one `description`-type section | Only the first is promoted into the header; the 2nd+ renders inline as a normal text section, unchanged |
 | Very long / multi-paragraph header description | Clamped at all breakpoints with Show more/Show less (D4); `h.markdown_extract`+`striptags` may flatten paragraph/list boundaries with no separating whitespace — accepted limitation of the reused helper (same one `org-hero.html` uses) |
-| `data_list` with zero results | v2 list header shows count 0 + empty result list (search-page behavior); sidebar facets may be empty — filters form still renders |
+| `data_list` with zero results | v2 list header shows count 0 + empty result list (search-page behavior); sidebar facets may be empty — filters form still renders; the "Sorry…" message has a "Clear filters" link when there's a filter to clear |
 | Saved search URL with unparseable/missing params | v1 parity — `generate_dataset_results` ignores unknown keys; empty `fq` searches everything |
 | Archived saved-search URL | A `data_list` pinned to `ext_archived=1` sets `on_archived_page = True` directly (`light_page.py`), skipping the `redirect_if_needed()` fallback — toggle renders correctly without it |
 | Iframe `data_url` empty or failing to load | Error div shown by the ported auto-resize module; page otherwise intact |

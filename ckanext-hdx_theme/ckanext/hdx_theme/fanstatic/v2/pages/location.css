@@ -1,6 +1,14 @@
 .hdx-v2-location-header-section {
   border-bottom: 1px solid var(--hdx-neutral-1);
 }
+.hdx-v2-location-page-empty {
+  font-family: var(--hdx-font-body);
+  font-size: var(--hdx-fs-m);
+  font-weight: var(--hdx-fw-regular);
+  line-height: var(--hdx-lh-normal);
+  color: var(--hdx-neutral-85);
+  padding: var(--hdx-space-6) 0;
+}
 .hdx-v2-location-datagrid-section {
   width: 100%;
   background-color: var(--hdx-neutral-01);

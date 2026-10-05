@@ -48,7 +48,7 @@ Markup lives inline at the end of `header.html`, outside `<nav class="hdx-v2-nav
               initials=c.userobj.display_name[0] | upper,
               badge=notif.count > 0 %}
           <span class="hdx-v2-offcanvas__user-name">{{ c.userobj.display_name }}</span>
-          <span class="hdx-v2-offcanvas__user-chevron">{% include 'v2/icons/chevron-right.svg' %}</span>
+          <span class="hdx-v2-offcanvas__user-chevron">{{ h.hdx_v2_icon('v2/icons/chevron-right.svg') }}</span>
         </button>
       {% endif %}
 
@@ -77,7 +77,7 @@ Markup lives inline at the end of `header.html`, outside `<nav class="hdx-v2-nav
                 aria-expanded="true"
                 aria-controls="offcanvas-products">
           {{ _('Products') }}
-          <span class="hdx-v2-offcanvas__expand-chevron">{% include 'v2/icons/chevron-down.svg' %}</span>
+          <span class="hdx-v2-offcanvas__expand-chevron">{{ h.hdx_v2_icon('v2/icons/chevron-down.svg') }}</span>
         </button>
         <ul class="hdx-v2-offcanvas__subnav" id="offcanvas-products">
           <li><a href="#" data-module="hdx_click_stopper" data-module-link_type="header">{{ _('HDX HAPI') }}</a></li>
@@ -107,7 +107,7 @@ Markup lives inline at the end of `header.html`, outside `<nav class="hdx-v2-nav
     {% if c.userobj %}
       <div class="hdx-v2-offcanvas__level" id="hdx-v2-offcanvas-level-user-detail" hidden>
         <button class="hdx-v2-offcanvas__back" type="button" data-hdx-v2-offcanvas-back>
-          {% include 'v2/icons/chevron-left.svg' %}
+          {{ h.hdx_v2_icon('v2/icons/chevron-left.svg') }}
           {{ _('Back') }}
         </button>
         {# Reuse desktop user menu snippet — no duplication #}
@@ -299,10 +299,10 @@ Add to the existing IIFE the following behaviors:
 
 | # | Question | Decision |
 |---|----------|----------|
-| 1 | Back-button icon | Shipped as `chevron-left.svg`, not `arrow-left.svg` — `arrow-left.svg` exists in `templates/v2/icons/` but is unused |
-| 2 | `chevron-right.svg` path — confirm icon exists | Confirmed — `chevron-right.svg` exists in `templates/v2/icons/` |
+| 1 | Back-button icon | Shipped as `chevron-left.svg`, not `arrow-left.svg` — `arrow-left.svg` exists in `fanstatic/v2/icons/` but is unused |
+| 2 | `chevron-right.svg` path — confirm icon exists | Confirmed — `chevron-right.svg` exists in `fanstatic/v2/icons/` |
 | 3 | Body scroll lock — verify no conflict with existing page scroll logic | Implemented via `document.body.style.overflow = 'hidden'` / `''`; no conflicts observed |
-| 4 | Products URLs — all `#`, real URLs needed before launch | Resolved — products are rendered dynamically via `h.hdx_get_quick_links_list(archived=False, exclude_crisis=True)`; no hardcoded `#` URLs remain. Crisis/dashboard items are excluded (`/dashboards/overview-of-data-grids` and `/dashboards/archived-datasets` always force-included); the hardcoded "Archived Dataviz" item after the loop has been removed entirely |
+| 4 | Products URLs — all `#`, real URLs needed before launch | Resolved — products are rendered dynamically via `h.hdx_get_quick_links_list(archived=False, exclude_crisis=True)`, called once in `v2/page.html` and passed as `quick_links`; no hardcoded `#` URLs remain. Crisis/dashboard items are excluded (`/dashboards/overview-of-data-grids` and `/dashboards/archived-datasets` always force-included); the hardcoded "Archived Dataviz" item after the loop has been removed entirely |
 | 5 | Hamburger icon swap — swap SVG or use CSS transform on single icon | CSS class approach chosen: `.is-open` added to the hamburger button; icon swap handled via CSS without JS SVG manipulation |
 
 ## Why
@@ -325,7 +325,7 @@ Instead, the second level renders the user menu sections using the same expandab
           type="button" aria-expanded="true"
           aria-controls="offcanvas-user-{{ section.id }}">
     {{ section.label }}
-    <span class="hdx-v2-offcanvas__expand-icon">{% include 'v2/icons/chevron-down.svg' %}</span>
+    <span class="hdx-v2-offcanvas__expand-icon">{{ h.hdx_v2_icon('v2/icons/chevron-down.svg') }}</span>
   </button>
   <ul class="hdx-v2-offcanvas__subnav" id="offcanvas-user-{{ section.id }}">
     {% for item in section.items %}

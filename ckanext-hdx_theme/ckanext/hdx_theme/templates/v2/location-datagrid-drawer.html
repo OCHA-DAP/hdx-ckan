@@ -69,7 +69,7 @@
       {% set category_icon_path = ('v2/icons/humanitarian-data-grids/' ~ category_icons[loop.index0]) if loop.index0 < category_icons | length else 'v2/icons/placeholder.svg' %}
       <div class="hdx-v2-location-datagrid-drawer__category-header">
         <span class="hdx-v2-location-datagrid-drawer__category-icon" aria-hidden="true">
-          {% include h.url_for_static(category_icon_path) %}
+          {{ h.hdx_v2_icon(category_icon_path) }}
         </span>
         <span class="hdx-v2-location-datagrid-drawer__category-title">{{ category.title }}</span>
       </div>

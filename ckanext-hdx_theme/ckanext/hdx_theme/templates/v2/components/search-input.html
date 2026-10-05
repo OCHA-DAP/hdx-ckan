@@ -59,7 +59,7 @@
 {% if extra_classes    %}{% set classes = classes + [extra_classes]                %}{% endif %}
 
 <div class="{{ classes | join(' ') }}"
-     {% for key, val in attrs.items() %}{{ key }}="{{ val }}"{% endfor %}>
+     {% for key, val in attrs.items() %} {{ key }}="{{ val }}"{% endfor %}>
 
   <input type="search"
          name="{{ name }}"
@@ -71,22 +71,22 @@
 
   {% if show_clear %}
     <button class="c-search-input__clear" type="button" aria-label="{{ _('Clear search') }}">
-      {% include h.url_for_static('v2/icons/close.svg') %}
+      {{ h.hdx_v2_icon('v2/icons/close.svg') }}
     </button>
     {% if show_icon and icon_submit %}
       {# no --search modifier: the submit icon stays visible alongside the × #}
       <button class="c-search-input__icon c-search-input__icon--btn" type="submit" aria-label="{{ _('Search') }}">
-        {% include h.url_for_static(icon_src) %}
+        {{ h.hdx_v2_icon(icon_src) }}
       </button>
     {% elif show_icon %}
-      <span class="c-search-input__icon c-search-input__icon--search">{% include h.url_for_static(icon_src) %}</span>
+      <span class="c-search-input__icon c-search-input__icon--search">{{ h.hdx_v2_icon(icon_src) }}</span>
     {% endif %}
   {% elif show_icon and icon_submit %}
     <button class="c-search-input__icon c-search-input__icon--btn" type="submit" aria-label="{{ _('Search') }}">
-      {% include h.url_for_static(icon_src) %}
+      {{ h.hdx_v2_icon(icon_src) }}
     </button>
   {% elif show_icon %}
-    <span class="c-search-input__icon">{% include h.url_for_static(icon_src) %}</span>
+    <span class="c-search-input__icon">{{ h.hdx_v2_icon(icon_src) }}</span>
   {% endif %}
 
 </div>

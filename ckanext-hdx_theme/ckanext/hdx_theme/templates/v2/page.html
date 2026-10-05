@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% set quick_links = quick_links if quick_links is defined else h.hdx_get_quick_links_list(archived=False, exclude_crisis=True) %}
+
 {%- block styles %}
   {{ super() }}
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -53,7 +55,7 @@
     {% endif %}
 
     {% block header_core %}
-      {% snippet 'v2/header.html' %}
+      {% snippet 'v2/header.html', quick_links=quick_links %}
     {% endblock %}
   {% endblock %}
 
@@ -120,7 +122,7 @@
   {% endblock -%}
 
   {%- block footer %}
-    {% snippet 'v2/footer.html' %}
+    {% snippet 'v2/footer.html', quick_links=quick_links %}
   {% endblock -%}
 {%- endblock -%}
 

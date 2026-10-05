@@ -45,18 +45,18 @@
 {% if tag == 'a' %}
 <a class="{{ classes | join(' ') }}"
    href="{{ href }}"
-   {% for key, val in attrs.items() %}{{ key }}="{{ val }}"{% endfor %}>
+   {% for key, val in attrs.items() %} {{ key }}="{{ val }}"{% endfor %}>
 {% elif tag == 'button' %}
 <button type="button"
         class="{{ classes | join(' ') }}"
-        {% for key, val in attrs.items() %}{{ key }}="{{ val }}"{% endfor %}>
+        {% for key, val in attrs.items() %} {{ key }}="{{ val }}"{% endfor %}>
 {% else %}
 <span class="{{ classes | join(' ') }}"
-      {% for key, val in attrs.items() %}{{ key }}="{{ val }}"{% endfor %}>
+      {% for key, val in attrs.items() %} {{ key }}="{{ val }}"{% endfor %}>
 {% endif %}
 
   {% if icon or icon_only %}
-    <span class="c-label__icon">{% include h.url_for_static(icon_src) %}</span>
+    <span class="c-label__icon">{{ h.hdx_v2_icon(icon_src) }}</span>
   {% endif %}
 
   {% if not icon_only %}

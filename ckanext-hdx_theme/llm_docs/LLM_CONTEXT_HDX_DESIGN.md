@@ -69,7 +69,7 @@ There are three active layout base templates. The goal is to maintain exactly th
   - Loads Google Fonts and `hdx_theme/v2-page-styles`; legacy onboarding and `page-scripts` bundles commented out.
   - `{% block toolbar %}` renders the breadcrumb row; pages override only `{% block breadcrumb_items %}` inside it. Set `breadcrumb_row_class` to add modifier classes on the row div (e.g. `'hdx-v2-breadcrumb-row--white'` for white background, no bottom border).
   - Flash messages use `hdx-v2-flash {{ category }}` class (no Bootstrap `.alert`).
-  - Includes `v2/header.html` and `v2/footer.html` via `{% snippet %}`.
+  - Includes `v2/header.html` and `v2/footer.html` via `{% snippet %}`, passing `quick_links` fetched once at the top (pages without those menus set it to `[]`).
   - Target base for all pages once the v2 redesign is complete.
 
 ## Header and footer composition (HDX theme)
@@ -306,6 +306,7 @@ Example page-specific template (light search):
 - **Template**: `ckanext-hdx_theme/ckanext/hdx_theme/templates/v2/components.html`
   - Extends `templates/v2/page.html` (v2 layout scaffold).
   - **Purpose**: Demo page rendering all v2 components side-by-side for development verification.
+- **Route disabled**: uncomment it in `views/landing_pages.py` to use it locally.
 - **Core assets**:
   - `hdx_theme/v2-components-styles` — all v2 component styles (loaded by `v2/page.html`).
   - `hdx_theme/v2-components-scripts` — all v2 component JS (loaded by `v2/page.html`).
@@ -352,7 +353,7 @@ Add `data-hdx-v2-form-validator` to a `<form>` element. The validator (`fanstati
 
 **Error display — `c-search-input` fields**: the validator adds `c-search-input--error` to the input wrapper; a sibling `<span class="c-search-input__error">` (always rendered by the snippet, empty by default) is revealed via the CSS sibling rule `&--error ~ &__error { display: block }`. Server-side errors pre-populate the span and pre-add the modifier class from the template. No `style.display` manipulation — CSS drives visibility entirely.
 
-**Error display — `c-checkbox` fields**: same pattern — `c-checkbox--error` on the `.c-checkbox` wrapper drives a sibling `<span class="c-checkbox__error">` via CSS. The snippet always renders the empty span after the label.
+**Error display — `c-checkbox` fields**: same pattern — `c-checkbox--error` on the `.c-checkbox` wrapper drives a sibling `<span class="c-checkbox__error">` via CSS. The snippet renders the empty span after the label, unless `error_slot=false` (list-item checklist rows, never validated).
 
 Pass `data-validation-error="…"` (via `input_attrs` / `attrs`) for the inline error text. Fields using `data-live-feedback` use the `c-form-validator__live-feedback` panel as the primary error UI and may omit `data-validation-error`.
 

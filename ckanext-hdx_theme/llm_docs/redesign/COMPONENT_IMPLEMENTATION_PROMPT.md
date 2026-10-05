@@ -61,7 +61,7 @@ Use a consistent naming convention, for example:
 Available icon example:
 - `placeholder.svg` (used in Figma as a generic icon reference)
 ### Icon rules:
-- Icons must be included via reusable markup (e.g. <img>, <use>, or CKAN-compatible include/snippet system depending on existing project conventions).
+- Icons must be rendered with `{{ h.hdx_v2_icon('v2/icons/<name>.svg') }}` (or passed as a component's `icon_src`).
 - Do NOT hardcode SVG markup inside components.
 - Ensure icons are fully scalable and inherit correct sizing from BEM modifiers.
 - Icon positioning (left/right) must follow component props exactly.

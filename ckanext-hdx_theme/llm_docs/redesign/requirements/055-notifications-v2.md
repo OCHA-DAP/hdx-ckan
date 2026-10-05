@@ -163,7 +163,7 @@ This *is* the "alternative (partial reuse)" the task asks for if full consolidat
     <a class="c-notification-item__arrow" href="{{ url }}" aria-label="{{ _('View details') }}"
        data-module="hdx_notifications_main"
        data-module-personal="{{ 'true' if data_personal else 'false' }}" data-module-type="item">
-      {% include 'v2/icons/arrow-right.svg' %}
+      {{ h.hdx_v2_icon('v2/icons/arrow-right.svg') }}
     </a>
   </div>
 </div>
@@ -173,7 +173,7 @@ This *is* the "alternative (partial reuse)" the task asks for if full consolidat
 
 **Click targets:** two independent clickable elements per row — the inline text link inside `body`, and the trailing arrow, both pointing at the same destination and firing the same `item`-type analytics event (duplicate tracking on the same destination is expected/acceptable, matching two distinct click affordances). The row/card background itself is **not** a click target — Figma's arrow does not imply whole-row click.
 
-**Reuse:** `arrow-right.svg` already exists at `templates/v2/icons/arrow-right.svg` — no new icon asset needed. Typography reuses `.hdx-body-s()` (title/body) and `.hdx-body-xs()` (date), consistent with `c-activity-item`'s own use of these mixins.
+**Reuse:** `arrow-right.svg` already exists at `fanstatic/v2/icons/arrow-right.svg` — no new icon asset needed. Typography reuses `.hdx-body-s()` (title/body) and `.hdx-body-xs()` (date), consistent with `c-activity-item`'s own use of these mixins.
 
 ---
 

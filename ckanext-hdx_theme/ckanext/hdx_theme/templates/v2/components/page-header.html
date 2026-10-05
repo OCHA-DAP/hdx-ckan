@@ -303,7 +303,7 @@
         {% endif %}
         {% if download_count %}
           <div class="c-page-header__downloads">
-            {% include h.url_for_static('v2/icons/trend-up.svg') %}
+            {{ h.hdx_v2_icon('v2/icons/trend-up.svg') }}
             <span>{{ download_count }} downloads</span>
           </div>
         {% endif %}

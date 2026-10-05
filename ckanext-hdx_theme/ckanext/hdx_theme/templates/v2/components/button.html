@@ -21,7 +21,7 @@
                           (rendered as aria-label instead).
                           default: ''
 
-  icon_src      {string}  Path to the SVG icon, resolved via h.url_for_static().
+  icon_src      {string}  Path to the SVG icon, rendered via h.hdx_v2_icon().
                           Pass to render an icon; omit for none.
                           default: not set (no icon)
 
@@ -117,7 +117,7 @@
 {# ── Icon markup (shared sub-template) ───────────────────── #}
 {% if icon_src %}
   {% set icon_markup %}
-    <span class="c-button__icon">{% include h.url_for_static(icon_src) %}</span>
+    <span class="c-button__icon">{{ h.hdx_v2_icon(icon_src) }}</span>
   {% endset %}
 {% endif %}
 

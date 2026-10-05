@@ -254,7 +254,7 @@
          role="button" tabindex="0"
          aria-expanded="true" aria-controls="metadata-body">
       <h2 class="hdx-v2-dataset-section__title">{{ _('Metadata') }}</h2>
-      <span class="hdx-v2-dataset-section__chevron" aria-hidden="true">{% include 'v2/icons/chevron-down.svg' %}</span>
+      <span class="hdx-v2-dataset-section__chevron" aria-hidden="true">{{ h.hdx_v2_icon('v2/icons/chevron-down.svg') }}</span>
     </div>
     <div class="hdx-v2-dataset-section__body" id="metadata-body">
       {% set metadata_edit_mode = h.check_access('package_update', {'id': pkg.id}) %}
@@ -548,7 +548,7 @@
            role="button" tabindex="0"
            aria-expanded="true" aria-controls="showcases-body">
         <h2 class="hdx-v2-dataset-section__title">{{ _('Showcases') }}</h2>
-        <span class="hdx-v2-dataset-section__chevron" aria-hidden="true">{% include 'v2/icons/chevron-down.svg' %}</span>
+        <span class="hdx-v2-dataset-section__chevron" aria-hidden="true">{{ h.hdx_v2_icon('v2/icons/chevron-down.svg') }}</span>
       </div>
       <div class="hdx-v2-dataset-section__body" id="showcases-body">
         <div class="c-showcase-card-grid">
@@ -574,7 +574,7 @@
          role="button" tabindex="0"
          aria-expanded="false" aria-controls="activity-body">
       <h2 class="hdx-v2-dataset-section__title">{{ _('Activity') }}</h2>
-      <span class="hdx-v2-dataset-section__chevron" aria-hidden="true">{% include 'v2/icons/chevron-down.svg' %}</span>
+      <span class="hdx-v2-dataset-section__chevron" aria-hidden="true">{{ h.hdx_v2_icon('v2/icons/chevron-down.svg') }}</span>
     </div>
     <div class="hdx-v2-dataset-section__body" id="activity-body">
       <div class="dataset-activity-wrapper" data-fetched="false" data-dataset-id="{{ pkg.id }}">

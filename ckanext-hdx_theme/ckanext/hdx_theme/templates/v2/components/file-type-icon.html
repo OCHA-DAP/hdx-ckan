@@ -50,5 +50,5 @@
 
 <span class="{{ classes | join(' ') }}"
       {% if aria_label %}role="img" aria-label="{{ aria_label }}"{% endif %}>
-  <span class="c-file-type__icon">{% include h.url_for_static(icon_src) %}</span>
+  <span class="c-file-type__icon">{{ h.hdx_v2_icon(icon_src) }}</span>
 </span>

@@ -65,7 +65,7 @@
 
 {# ── Filter sidebar (XL) — same contract as the search page ── #}
 {% block secondary_content %}
-  {% if org_dict.search_template_data.page.items %}
+  {% if org_dict.search_template_data.page.items or org_dict.search_template_data.filters_are_selected %}
     <form id="search-page-filters-form" autocomplete="off">
       <aside class="hdx-v2-search-filters">
         {% snippet 'v2/search-filters.html',
@@ -87,7 +87,7 @@
 
 {# ── Org-scoped dataset list, controls and pagination ──────── #}
 {% block primary_content %}
-  {% if org_dict.search_template_data.page.items %}
+  {% if org_dict.search_template_data.page.items or org_dict.search_template_data.filters_are_selected %}
     {% snippet 'search/snippets/search_results_wrapper.html',
         tracking_enabled=g.tracking_enabled, my_c=org_dict.search_template_data, v2=true %}
   {% else %}
