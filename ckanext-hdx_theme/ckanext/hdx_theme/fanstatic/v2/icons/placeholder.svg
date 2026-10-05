@@ -1,0 +1,6 @@
+<svg aria-hidden="true" focusable="false" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+<symbol id="i" viewBox="0 0 16 16">
+<circle cx="8.00039" cy="8.00015" r="6.6" stroke="currentColor" stroke-width="1.2"/>
+</symbol>
+<use href="#i"/>
+</svg>

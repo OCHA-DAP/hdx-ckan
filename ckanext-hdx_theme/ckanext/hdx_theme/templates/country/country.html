@@ -39,7 +39,7 @@
 {% endblock %}
 
 {% block secondary_content %}
-  {% if data.country_dict.template_data.page.items %}
+  {% if data.country_dict.template_data.page.items or data.country_dict.template_data.filters_are_selected %}
     <form id="search-page-filters-form" autocomplete="off">
       <aside class="hdx-v2-search-filters">
         {% snippet 'v2/search-filters.html',
@@ -276,7 +276,7 @@
           <details class="hdx-v2-location-datagrid-section__reveal" data-datagrid-reveal>
             <summary class="hdx-v2-location-datagrid-section__reveal-summary hdx-v2-location-datagrid-section__toggle c-text-button c-text-button--primary c-text-button--size-m">
               <span class="c-text-button__label">{{ _('Show more') }}</span>
-              <span class="c-text-button__icon">{% include h.url_for_static('v2/icons/chevron-down.svg') %}</span>
+              <span class="c-text-button__icon">{{ h.hdx_v2_icon('v2/icons/chevron-down.svg') }}</span>
             </summary>
 
             <div class="hdx-v2-location-datagrid-section__grid">
@@ -308,7 +308,13 @@
 
 {% block primary_content %}
     <span id="dataset-filter-start"></span>
-    {% snippet 'search/snippets/search_results_wrapper.html', tracking_enabled=g.tracking_enabled, my_c=data.country_dict.template_data, v2=true %}
+    {% if data.country_dict.template_data.page.items or data.country_dict.template_data.filters_are_selected %}
+      {% snippet 'search/snippets/search_results_wrapper.html', tracking_enabled=g.tracking_enabled, my_c=data.country_dict.template_data, v2=true %}
+    {% else %}
+      <div class="hdx-v2-location-page-empty">
+        <p>{{ _('There are no datasets currently uploaded for this location.') }}</p>
+      </div>
+    {% endif %}
 
     {% snippet "notification_platform/modals.html",
         object_type='group',

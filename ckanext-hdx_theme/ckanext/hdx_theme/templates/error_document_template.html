@@ -17,6 +17,8 @@
 #}
 {% extends "v2/page.html" %}
 
+{% set quick_links = [] %}
+
 {%- block styles %}
   {{ super() }}
   {% asset 'hdx_theme/v2-error-page-styles' %}
@@ -32,7 +34,7 @@
 {% block main_content %}
   <div class="hdx-v2-error-page">
     <div class="hdx-v2-error-page__content">
-      <span class="hdx-v2-error-page__logo" aria-hidden="true">{% include 'v2/icons/hdx.svg' %}</span>
+      <span class="hdx-v2-error-page__logo" aria-hidden="true">{{ h.hdx_v2_icon('v2/icons/hdx.svg') }}</span>
       <div class="hdx-v2-error-page__text">
         <h1 class="hdx-v2-error-page__heading">
           {%- if h.hdx_check_http_response(code, 404) -%}

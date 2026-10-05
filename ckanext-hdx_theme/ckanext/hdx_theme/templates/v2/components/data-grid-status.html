@@ -60,7 +60,7 @@
         {% if aria_label %}aria-label="{{ aria_label }}"{% else %}aria-hidden="true"{% endif %}
         {% if has_tooltip %}aria-describedby="{{ tooltip_id }}" tabindex="0"{% endif %}>
     {% if state == 'complementary' %}
-      <span class="c-data-grid-status__indent-icon" aria-hidden="true">{% include h.url_for_static('v2/icons/indent.svg') %}</span>
+      <span class="c-data-grid-status__indent-icon" aria-hidden="true">{{ h.hdx_v2_icon('v2/icons/indent.svg') }}</span>
     {% else %}
       <span class="c-data-grid-status__mark" aria-hidden="true"></span>
     {% endif %}

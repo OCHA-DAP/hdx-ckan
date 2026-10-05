@@ -73,7 +73,7 @@
 </label>
 {% endif %}
 <div class="{{ classes | join(' ') }}"
-     {% for key, val in attrs.items() %}{{ key }}="{{ val }}"{% endfor %}>
+     {% for key, val in attrs.items() %} {{ key }}="{{ val }}"{% endfor %}>
 
   {% if multiline %}
     <textarea name="{{ name }}"
@@ -95,10 +95,10 @@
               type="button"
               aria-label="Show password">
         <span class="c-search-input__toggle-eye">
-          {% include h.url_for_static('v2/icons/eye.svg') %}
+          {{ h.hdx_v2_icon('v2/icons/eye.svg') }}
         </span>
         <span class="c-search-input__toggle-eye-off" hidden>
-          {% include h.url_for_static('v2/icons/eye-off.svg') %}
+          {{ h.hdx_v2_icon('v2/icons/eye-off.svg') }}
         </span>
       </button>
     {% endif %}

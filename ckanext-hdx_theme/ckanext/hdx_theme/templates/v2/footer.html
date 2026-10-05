@@ -9,10 +9,17 @@
 
   Analytics: all links carry data-module="hdx_click_stopper" and
              data-module-link_type="footer" (feeds Mixpanel pipeline).
+
+  Params
+  ─────────────────────────────────────────────────
+  quick_links {list}  Products column items. default:
+                      h.hdx_get_quick_links_list(archived=False,
+                      exclude_crisis=True)
 #}
 
 {% set mailchimp_action = "//humdata.us14.list-manage.com/subscribe/post?u=ea3f905d50ea939780139789d&id=99796325d1" %}
 {% set docs_links = h.HDX_CONST('DOCUMENTATION_LINKS') %}
+{% set quick_links = quick_links if quick_links is defined else h.hdx_get_quick_links_list(archived=False, exclude_crisis=True) %}
 
 <footer class="hdx-v2-footer">
   <div class="hdx-v2-container">
@@ -24,7 +31,7 @@
     <div class="hdx-v2-footer__branding">
 
       <div class="hdx-v2-footer__logo-wrap">
-        <span class="hdx-v2-footer__logo" aria-label="HDX">{% include 'v2/icons/hdx.svg' %}</span>
+        <span class="hdx-v2-footer__logo" aria-label="HDX">{{ h.hdx_v2_icon('v2/icons/hdx.svg') }}</span>
         <p class="hdx-v2-footer__tagline">Find, share and use humanitarian data all in one place</p>
       </div>
 
@@ -68,7 +75,7 @@
              class="hdx-v2-footer__social-link"
              data-module="hdx_click_stopper"
              data-module-link_type="footer">
-            <span class="hdx-v2-footer__social-icon" aria-hidden="true">{% include 'v2/icons/github.svg' %}</span>
+            <span class="hdx-v2-footer__social-icon" aria-hidden="true">{{ h.hdx_v2_icon('v2/icons/github.svg') }}</span>
             <span class="c-text-link c-text-link--primary c-text-link--size-s">GitHub</span>
           </a>
           <a href="https://linkedin.com/company/ocha-centre-for-humanitarian-data"
@@ -76,7 +83,7 @@
              class="hdx-v2-footer__social-link"
              data-module="hdx_click_stopper"
              data-module-link_type="footer">
-            <span class="hdx-v2-footer__social-icon" aria-hidden="true">{% include 'v2/icons/linkedin.svg' %}</span>
+            <span class="hdx-v2-footer__social-icon" aria-hidden="true">{{ h.hdx_v2_icon('v2/icons/linkedin.svg') }}</span>
             <span class="c-text-link c-text-link--primary c-text-link--size-s">LinkedIn</span>
           </a>
         </div>
@@ -90,7 +97,7 @@
            class="c-text-link c-text-link--primary c-text-link--size-s hdx-v2-footer__ext-link"
            data-module="hdx_click_stopper"
            data-module-link_type="footer">
-          <span class="hdx-v2-footer__ext-icon" aria-hidden="true">{% include 'v2/icons/link-external.svg' %}</span>Centre for Humanitarian Data
+          <span class="hdx-v2-footer__ext-icon" aria-hidden="true">{{ h.hdx_v2_icon('v2/icons/link-external.svg') }}</span>Centre for Humanitarian Data
         </a>
       </div>
       #}
@@ -129,7 +136,7 @@
         <div class="hdx-v2-footer__nav-col">
           <p class="hdx-v2-footer__nav-heading">Products</p>
           <ul class="hdx-v2-footer__nav-list">
-            {% for product in h.hdx_get_quick_links_list(archived=False, exclude_crisis=True) %}
+            {% for product in quick_links %}
             <li>
               {% snippet 'v2/components/text-link.html',
                   label=product.title, href=product.url,
@@ -163,7 +170,7 @@
                  class="c-text-link c-text-link--primary c-text-link--size-s hdx-v2-footer__ext-link"
                  data-module="hdx_click_stopper"
                  data-module-link_type="footer">
-                <span class="hdx-v2-footer__ext-icon" aria-hidden="true">{% include 'v2/icons/link-external.svg' %}</span>Open source
+                <span class="hdx-v2-footer__ext-icon" aria-hidden="true">{{ h.hdx_v2_icon('v2/icons/link-external.svg') }}</span>Open source
               </a>
             </li>
             <li>
@@ -186,7 +193,7 @@
                  class="c-text-link c-text-link--primary c-text-link--size-s hdx-v2-footer__ext-link"
                  data-module="hdx_click_stopper"
                  data-module-link_type="footer">
-                <span class="hdx-v2-footer__ext-icon" aria-hidden="true">{% include 'v2/icons/link-external.svg' %}</span>Blog
+                <span class="hdx-v2-footer__ext-icon" aria-hidden="true">{{ h.hdx_v2_icon('v2/icons/link-external.svg') }}</span>Blog
               </a>
             </li>
             <li>
@@ -195,7 +202,7 @@
                  class="c-text-link c-text-link--primary c-text-link--size-s hdx-v2-footer__ext-link"
                  data-module="hdx_click_stopper"
                  data-module-link_type="footer">
-                <span class="hdx-v2-footer__ext-icon" aria-hidden="true">{% include 'v2/icons/link-external.svg' %}</span>Contact
+                <span class="hdx-v2-footer__ext-icon" aria-hidden="true">{{ h.hdx_v2_icon('v2/icons/link-external.svg') }}</span>Contact
               </a>
             </li>
           </ul>
@@ -213,7 +220,7 @@
     <div class="hdx-v2-footer__service">
       <p class="hdx-v2-footer__service-label">Service provided by</p>
       <div class="hdx-v2-footer__service-detail">
-        <span class="hdx-v2-footer__ocha-logo" aria-label="OCHA">{% include 'v2/icons/ocha.svg' %}</span>
+        <span class="hdx-v2-footer__ocha-logo" aria-label="OCHA">{{ h.hdx_v2_icon('v2/icons/ocha.svg') }}</span>
         <p class="hdx-v2-footer__ocha-text">
           OCHA coordinates the global emergency response to save lives and protect people in humanitarian
           crises. We advocate for effective and principled humanitarian action by all, for all.
@@ -222,7 +229,7 @@
     </div>
 
     <div class="hdx-v2-footer__license">
-      <span class="hdx-v2-footer__license-icon" aria-hidden="true">{% include 'v2/icons/creative-commons.svg' %}</span>
+      <span class="hdx-v2-footer__license-icon" aria-hidden="true">{{ h.hdx_v2_icon('v2/icons/creative-commons.svg') }}</span>
       <p class="hdx-v2-footer__license-text">
         Except where otherwise noted, content on this site is licensed under a
         Creative Commons BY 4.0 International license.

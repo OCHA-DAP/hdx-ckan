@@ -30,7 +30,7 @@
         <span class="c-drawer__title" id="{{ title_id }}">{{ title }}</span>
       {% endif %}
       <button class="c-drawer__close" aria-label="Close" data-drawer-close>
-        {% include 'v2/icons/close.svg' %}
+        {{ h.hdx_v2_icon('v2/icons/close.svg') }}
       </button>
     </div>
     <div class="c-drawer__body">

@@ -36,7 +36,7 @@ Rendered inside `header.html` after the avatar button. Hidden by default; shown 
     <button class="hdx-v2-user-menu__close" type="button"
             aria-label="{{ _('Close menu') }}"
             data-hdx-v2-close="user-menu">
-      {% include 'v2/icons/close.svg' %}
+      {{ h.hdx_v2_icon('v2/icons/close.svg') }}
     </button>
   </div>
 
@@ -46,7 +46,7 @@ Rendered inside `header.html` after the avatar button. Hidden by default; shown 
     <button class="hdx-v2-user-menu__section-toggle" type="button"
             aria-expanded="true" aria-controls="menu-sysadmin">
       {{ _('Sysadmin dashboard') }}
-      <span class="hdx-v2-user-menu__chevron">{% include 'v2/icons/chevron-down.svg' %}</span>
+      <span class="hdx-v2-user-menu__chevron">{{ h.hdx_v2_icon('v2/icons/chevron-down.svg') }}</span>
     </button>
     <ul class="hdx-v2-user-menu__section-items" id="menu-sysadmin">
       <li><a href="{{ h.url_for('admin.index') }}">{{ _('All sysadmins') }}</a></li>
@@ -67,7 +67,7 @@ Rendered inside `header.html` after the avatar button. Hidden by default; shown 
     <button class="hdx-v2-user-menu__section-toggle" type="button"
             aria-expanded="true" aria-controls="menu-dashboard">
       {{ _('User dashboard') }}
-      <span class="hdx-v2-user-menu__chevron">{% include 'v2/icons/chevron-down.svg' %}</span>
+      <span class="hdx-v2-user-menu__chevron">{{ h.hdx_v2_icon('v2/icons/chevron-down.svg') }}</span>
     </button>
     <ul class="hdx-v2-user-menu__section-items" id="menu-dashboard">
       <li><a href="{{ h.url_for('activity.dashboard') }}">{{ _('Newsfeed') }}</a></li>
@@ -83,7 +83,7 @@ Rendered inside `header.html` after the avatar button. Hidden by default; shown 
     <button class="hdx-v2-user-menu__section-toggle" type="button"
             aria-expanded="true" aria-controls="menu-settings">
       {{ _('User settings') }}
-      <span class="hdx-v2-user-menu__chevron">{% include 'v2/icons/chevron-down.svg' %}</span>
+      <span class="hdx-v2-user-menu__chevron">{{ h.hdx_v2_icon('v2/icons/chevron-down.svg') }}</span>
     </button>
     <ul class="hdx-v2-user-menu__section-items" id="menu-settings">
       <li><a href="{{ h.url_for('user.read', id=c.user) }}">{{ _('Datasets') }}</a></li>
@@ -122,7 +122,7 @@ Rendered inside `header.html` after the bell button.
     <button class="hdx-v2-notifications__close" type="button"
             aria-label="{{ _('Close notifications') }}"
             data-hdx-v2-close="notifications">
-      {% include 'v2/icons/close.svg' %}
+      {{ h.hdx_v2_icon('v2/icons/close.svg') }}
     </button>
   </div>
 
@@ -153,7 +153,7 @@ The existing snippets in `light/notifications/` can be adapted to match this str
 The Products dropdown was implemented as part of task 017 rather than waiting for this task. Key details of what was built:
 
 - Class used: `hdx-v2-navbar__products-menu` (not `hdx-products-menu` as shown below)
-- Items driven by `h.hdx_get_quick_links_list(archived=False, exclude_crisis=True)` helper (not a static list) — `exclude_crisis` filters out crisis/dashboard-type quick-links (URL prefixes `/event`, `/m/event`, `/dashboards`, `/m/dashboards`), with an explicit carve-out in the helper so `/dashboards/overview-of-data-grids` and `/dashboards/archived-datasets` are always included regardless of that filter. The hardcoded "Archived Dataviz" `/archive` item that used to follow the loop has been removed entirely.
+- Items driven by `h.hdx_get_quick_links_list(archived=False, exclude_crisis=True)` helper (not a static list), called once in `v2/page.html` and passed as `quick_links` — `exclude_crisis` filters out crisis/dashboard-type quick-links (URL prefixes `/event`, `/m/event`, `/dashboards`, `/m/dashboards`), with an explicit carve-out in the helper so `/dashboards/overview-of-data-grids` and `/dashboards/archived-datasets` are always included regardless of that filter. The hardcoded "Archived Dataviz" `/archive` item that used to follow the loop has been removed entirely.
 - `min-width: 14rem` (not 18rem)
 - CSS lives in `navbar.less` / `navbar.css` under `&__products-menu`
 
@@ -342,7 +342,7 @@ No jQuery. No external dependencies.
 
 | # | Question | Decision |
 |---|----------|----------|
-| 1 | Products URLs | Driven by `h.hdx_get_quick_links_list(archived=False, exclude_crisis=True)` helper — real URLs from the quick-links registry, no `#` placeholders; crisis/dashboard items excluded (with `/dashboards/overview-of-data-grids` and `/dashboards/archived-datasets` always force-included) |
+| 1 | Products URLs | Driven by `h.hdx_get_quick_links_list(archived=False, exclude_crisis=True)` helper, called once in `v2/page.html` and passed as `quick_links` — real URLs from the quick-links registry, no `#` placeholders; crisis/dashboard items excluded (with `/dashboards/overview-of-data-grids` and `/dashboards/archived-datasets` always force-included) |
 | 2 | Sysadmin dashboard URLs | All routes resolved in `h.hdx_get_user_menu_sections()` helper (e.g. `hdx_carousel.show`, `hdx_quick_links.show`, `hdx_user_permission.read`, etc.) — no `#` placeholders remain |
 | 3 | Notification item links | Each `html_template` snippet is included directly via `{% include notification.html_template %}` — link URLs are rendered inside each individual notification snippet |
 | 4 | `close.svg` icon | Confirmed — exists at `v2/icons/close.svg` |

@@ -1,0 +1,6 @@
+<svg aria-hidden="true" focusable="false" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+<symbol id="i" viewBox="0 0 16 16">
+<path d="M4.75 7.25H17.25M5.75 16.25L9.25003 3.75M10.75 16.25L14.25 3.75M2.75 12.75H15.25" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+</symbol>
+<use href="#i"/>
+</svg>

@@ -24,7 +24,7 @@ Create a reusable activity card component with an icon, heading, subtitle, and C
      ```
      .c-activity-card
        .c-activity-card__header     ← column flex; contains icon and body
-         .c-activity-card__icon     ← inline SVG via {% include %}
+         .c-activity-card__icon     ← SVG icon via h.hdx_v2_icon
          .c-activity-card__body     ← column flex; contains heading and subtitle
            .c-activity-card__heading
            .c-activity-card__subtitle
@@ -67,7 +67,7 @@ Create a reusable activity card component with an icon, heading, subtitle, and C
 
 7. Create CKAN snippet with parameters.
    - `size` (string): `'lg'` | `'md'` | `'sm'` | `'responsive'`, default: `'md'`
-   - `icon_src` (string): path to icon SVG (e.g. `'v2/icons/search.svg'`), resolved via `h.url_for_static()` and inlined with `{% include %}`. Pass `''` to omit. default: `''`
+   - `icon_src` (string): path to icon SVG (e.g. `'v2/icons/search.svg'`), rendered via `h.hdx_v2_icon()`. Pass `''` to omit. default: `''`
    - `heading` (string): card heading text, default: `''`
    - `subtitle` (string): subtitle/description text, default: `''`
    - `button_label` (string): button CTA text. Pass `''` to omit the footer. default: `''`
@@ -76,9 +76,9 @@ Create a reusable activity card component with an icon, heading, subtitle, and C
    - `button_attrs` (dict): extra attributes forwarded to the button, default: `{}`
    - `extra_classes` (string): additional CSS classes, default: `''`
 
-8. Icon rendering — use inline SVG pattern consistent with all other v2 components.
-   - HTML: `<span class="c-activity-card__icon" aria-hidden="true">{% include h.url_for_static(icon_src) %}</span>`
-   - Icons live in `templates/v2/icons/*.svg` (not `fanstatic/`). The `{% include h.url_for_static() %}` pattern resolves and inlines them at render time.
+8. Icon rendering — use `h.hdx_v2_icon`, consistent with all other v2 components.
+   - HTML: `<span class="c-activity-card__icon" aria-hidden="true">{{ h.hdx_v2_icon(icon_src) }}</span>`
+   - Icons live in `fanstatic/v2/icons/*.svg`; `{{ h.hdx_v2_icon(path) }}` renders them.
    - SVGs use `currentColor` for strokes — icon colour is inherited from the surrounding context.
 
 9. Define local LESS tokens at the top of the file, mapped from global foundations.

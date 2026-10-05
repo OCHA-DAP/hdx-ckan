@@ -63,7 +63,7 @@ The complete v2 implementation surface area across all pages, layout templates, 
 
 #### Icons
 
-60+ SVG icon files under `templates/v2/icons/`.
+60+ SVG icon files under `fanstatic/v2/icons/`.
 
 ### What was excluded
 
@@ -86,8 +86,8 @@ Heading order across all five pages must be verified. The page-header component 
 *WCAG 1.3.1 Info and Relationships*
 
 **SVG icons — MAJOR**
-60+ SVG icons are included inline throughout v2 templates. Decorative icons (appearing beside text labels, inside labeled buttons) must carry `aria-hidden="true"` to prevent screen readers from reading out meaningless path data. Informative icons used as the sole accessible name of an action (icon-only buttons) require an accessible name via `<title>` inside the SVG or `aria-label` on the parent `<button>`.
-Applies to all uses of icons from `templates/v2/icons/`.
+60+ SVG icons are rendered throughout v2 templates. Decorative icons (appearing beside text labels, inside labeled buttons) must carry `aria-hidden="true"` to prevent screen readers from reading out meaningless path data. Informative icons used as the sole accessible name of an action (icon-only buttons) require an accessible name via `<title>` inside the SVG or `aria-label` on the parent `<button>`.
+Applies to all uses of icons from `fanstatic/v2/icons/`.
 *WCAG 1.1.1 Non-text Content*
 
 **Form label association** — AUDIT TARGET
@@ -139,7 +139,7 @@ When a dropdown opens, focus is not moved into it. When it closes (click-outside
 *WCAG 2.4.3 Focus Order*
 
 **`search.js` filter overlay — GOOD (reference pattern)**
-The filter overlay correctly moves focus to the first focusable element on open and restores focus to the filter button on close. This is the correct pattern to replicate in `dropdown.js` and `navbar.js`.
+The filter overlay moves focus inside on open, traps Tab with `hdxV2.FocusTrap`, closes on Escape (an open filter panel first) and restores focus to the filter button on close. This is the correct pattern to replicate in `dropdown.js` and `navbar.js`.
 
 ---
 
@@ -447,7 +447,7 @@ For any use on normal-size text (< 18px regular / < 14px bold):
 </button>
 ```
 
-Apply consistently across all icon usages in v2 templates. The icon template files under `templates/v2/icons/` should be updated to accept an `aria_hidden` parameter defaulting to `"true"`.
+Apply consistently across all icon usages in v2 templates. `h.hdx_v2_icon` adds `aria-hidden="true" focusable="false"` to every icon.
 
 ---
 
@@ -577,7 +577,7 @@ Every page that renders `v2/header.html` must include the skip-to-main-content l
 
 ### RF-01 — Shared focus trap module
 
-Shared `window.hdxV2.FocusTrap` in `fanstatic/v2/utils.js` (see R-02), used by `navbar.js` and `components/drawer.js`. Prevents duplication of focus-trap logic across multiple files.
+Shared `window.hdxV2.FocusTrap` in `fanstatic/v2/utils.js` (see R-02), used by `navbar.js`, `components/drawer.js` and `pages/search.js` (filter overlay). Prevents duplication of focus-trap logic across multiple files.
 
 ### RF-02 — `sr-only` utility in `foundation.less`
 

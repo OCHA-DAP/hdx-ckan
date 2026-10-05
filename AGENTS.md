@@ -13,6 +13,7 @@ These files contain essential context about the project's architecture, design s
 - Avoid unrelated refactors, renames, or formatting-only edits.
 - Keep public interfaces and config contracts stable unless change is required.
 - If behavior must change, clearly explain what changed and why.
+- Search and listing pages are heavily crawled by bots: measure changes to them before and after.
 
 ## How to use
 1. Read every file in [`ckanext-hdx_theme/llm_docs/`](ckanext-hdx_theme/llm_docs/) at the start of each session.

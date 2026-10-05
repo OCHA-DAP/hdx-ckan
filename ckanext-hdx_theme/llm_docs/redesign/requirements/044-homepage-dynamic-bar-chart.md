@@ -112,7 +112,7 @@ section itself:
         <div class="hdx-v2-barchart__label">
           <span class="hdx-v2-barchart__label-name">{{ loc.display_name | e }}</span>
           <span class="hdx-v2-barchart__label-count">{{ loc.package_count }} datasets</span>
-          <span class="hdx-v2-barchart__dot" aria-hidden="true">{% include 'v2/icons/dot.svg' %}</span>
+          <span class="hdx-v2-barchart__dot" aria-hidden="true">{{ h.hdx_v2_icon('v2/icons/dot.svg') }}</span>
         </div>
         <div class="hdx-v2-barchart__bar"></div>
       </div>
@@ -125,7 +125,7 @@ section itself:
 
 **Notes:**
 - `__inner` uses `hdx-v2-container` like other sections.
-- The dot uses `v2/icons/dot.svg` included inline (not `c-graph-point`).
+- The dot uses `v2/icons/dot.svg` (not `c-graph-point`).
 - Each bar-group renders its own label directly (name/count as real text, not JS-injected) — the label never moves; only its opacity toggles when its group becomes/stops being active.
 - A hidden `sr-only` node with `aria-live="polite"` is updated by JS on each cycle so screen readers still announce country/count changes, since the visible per-bar labels no longer swap text.
 - `is-active` is applied purely by JS at load (`bar-chart.js` activates a random bar-group on `DOMContentLoaded`) — no bar-group is pre-marked active by Jinja.
@@ -337,9 +337,9 @@ shrink-to-fit bounded by the narrow bar-group as containing block — collapsing
 wraps (always short), the name wraps only past 9rem (real HRP names run up to ~35-40 chars, e.g.
 "Democratic Republic of the Congo", so long outliers wrapping to a 2nd line is expected).
 
-### Dot indicator — inline SVG
+### Dot indicator — SVG icon
 
-The dot uses `v2/icons/dot.svg` included directly in the template (not `c-graph-point`). The SVG contains a 24px white halo ring (20% opacity) and an 8px white inner dot (90% opacity) — both rendered white on the teal background. Sized via `__dot` CSS class (`var(--hdx-space-6)` × `var(--hdx-space-6)`).
+The dot uses `v2/icons/dot.svg` (via `h.hdx_v2_icon`, not `c-graph-point`). The SVG contains a 24px halo ring (20% opacity) and an 8px inner dot (90% opacity) in `currentColor`, which inherits white from `.hdx-v2-barchart__label`. Sized via `__dot` CSS class (`var(--hdx-space-6)` × `var(--hdx-space-6)`).
 
 ---
 
@@ -395,7 +395,7 @@ Use existing breakpoint tokens `@hdx-bp-xl` and `@hdx-bp-md` (do not introduce n
 
 | Element | Existing | Decision |
 |---|---|---|
-| Dot indicator | `v2/icons/dot.svg` template | **Inline SVG** — 24px halo + 8px dot baked into the SVG as white ellipses; no `c-graph-point` |
+| Dot indicator | `v2/icons/dot.svg` | **SVG icon** — 24px halo + 8px dot as `currentColor` ellipses (inherit white); no `c-graph-point` |
 | Animation cycling | None in v2 | **New** — `setInterval` + CSS opacity transition, minimal vanilla JS |
 | Vertical bar chart | None (C3.js/D3 exist but are heavyweight) | **New** — pure CSS flex + height percentage; no chart library |
 | Fade `@keyframes` reference | `fadeInAnimation` in `onboarding.less` | Reference only — use CSS `transition` instead of `@keyframes` for cycling |

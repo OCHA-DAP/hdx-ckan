@@ -49,5 +49,5 @@ Create a list item component supporting two types: plain text lists and checklis
 
 4. Ensure semantic structure.
    - For `list` type: wrap in appropriate semantic element or use div with proper ARIA if needed
-   - For `checklist` type: include checkbox component, ensure proper label association
+   - For `checklist` type: include checkbox component (with `error_slot=false`, no error span), ensure proper label association
    - Support optional `href` to make items clickable links

@@ -21,6 +21,8 @@
   errors        {list|string}  Error message(s). Adds the c-checkbox--error modifier
                           and renders text in the trailing .c-checkbox__error span.
                           default: None
+  error_slot    {bool}    Render the trailing .c-checkbox__error span, which
+                          form-validator.js writes into. default: true
   ─────────────────────────────────────────────────────────────────────────────
   Example
 
@@ -41,6 +43,7 @@
 {% set label         = label         if label         is defined else none %}
 {% set required      = required      if required      is defined else false %}
 {% set errors        = errors        if errors        is defined else None %}
+{% set error_slot    = error_slot    if error_slot    is defined else true %}
 
 {% set classes = ['c-checkbox'] %}
 {% if errors %}{% set classes = classes + ['c-checkbox--error'] %}{% endif %}
@@ -58,7 +61,7 @@
     {% if required %}required="required"{% endif %}
     {% for key, val in attrs.items() %}{{ key }}="{{ val }}" {% endfor %} />
   <span class="c-checkbox__box">
-    <span class="c-checkbox__icon">{% include h.url_for_static('v2/icons/check.svg') %}</span>
+    <span class="c-checkbox__icon">{{ h.hdx_v2_icon('v2/icons/check.svg') }}</span>
   </span>
 </span>
 {% if label %}
@@ -66,4 +69,4 @@
 <label {% if id %}for="{{ id }}"{% endif %}
        class="c-checkbox__label">{{ label|safe }}{% if required %}<span class="c-checkbox__required" aria-hidden="true"> *</span>{% endif %}</label>
 {% endif %}
-<span class="c-checkbox__error">{% if errors %}{{ errors | join(', ') if errors is iterable and errors is not string else errors }}{% endif %}</span>
+{% if error_slot %}<span class="c-checkbox__error">{% if errors %}{{ errors | join(', ') if errors is iterable and errors is not string else errors }}{% endif %}</span>{% endif %}

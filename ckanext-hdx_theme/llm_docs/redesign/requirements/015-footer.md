@@ -62,7 +62,7 @@ v2-page-styles:
 | 1 | Privacy policy URL | `https://docs.humdata.org/about/hdx-terms-of-service#privacy-notice` |
 | 2 | Documentation URL | `https://docs.humdata.org` |
 | 3 | Data column URLs | Resolved to real CKAN routes: `h.url_for('dataset.search')`, `h.url_for('group.index')`, `h.url_for('organization.index')` |
-| 4 | Products column URLs | Driven by `h.hdx_get_quick_links_list(archived=False, exclude_crisis=True)` helper — real URLs from the quick-links registry, no hardcoded placeholders; crisis/dashboard items excluded (with `/dashboards/overview-of-data-grids` and `/dashboards/archived-datasets` always force-included) |
+| 4 | Products column URLs | Driven by `h.hdx_get_quick_links_list(archived=False, exclude_crisis=True)` helper, called once in `v2/page.html` and passed as `quick_links` — real URLs from the quick-links registry, no hardcoded placeholders; crisis/dashboard items excluded (with `/dashboards/overview-of-data-grids` and `/dashboards/archived-datasets` always force-included) |
 
 ## Why
 

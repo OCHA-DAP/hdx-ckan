@@ -305,19 +305,20 @@ Update ARIA attributes whenever state changes:
 Overlays that block page content (offcanvas drawer, modal, full-screen overlay) must:
 1. Move focus inside on open (use `window.hdxV2.FocusTrap` — shared in `v2/utils.js`)
 2. Trap Tab/Shift+Tab within the overlay (`FocusTrap` also pulls focus back on `focusin` outside, since Tab inside a cross-origin iframe never reaches the page; focus landing on an iframe outside, e.g. a reCAPTCHA challenge, is left alone)
-3. Close on Escape
+3. Close on Escape (an overlay that contains `c-dropdown`s listens in the capture phase and returns while one is open, so each Escape closes one layer: the panel first, then the overlay)
 4. Return focus to the triggering element on close
+5. When a breakpoint hides or moves the focused control, keep focus on it if it moved, otherwise move it to the nearest visible equivalent (the control that now holds that UI); never leave it on the page body
 
-Dropdowns (non-modal): move focus to first item on keyboard-triggered open; return focus to trigger on close.
+Dropdowns (non-modal): move focus to first item on keyboard-triggered open; return focus to trigger on close. A `c-dropdown` rendered without `items` (no panel) is a styled button: `dropdown.js` doesn't manage it; its owner handles click/Enter/Space and `aria-expanded`.
 
 ### SVG icons
 
-All inline SVG icons must carry `aria-hidden="true" focusable="false"`. Icon-only interactive elements require an `aria-label` on the parent `<button>` or `<a>`.
+`h.hdx_v2_icon` renders every icon with `aria-hidden="true" focusable="false"`. Icon-only interactive elements require an `aria-label` on the parent `<button>` or `<a>`.
 
 ```html
 <!-- decorative icon inside labeled button -->
 <button aria-label="Close menu">
-  <svg aria-hidden="true" focusable="false" ...></svg>
+  {{ h.hdx_v2_icon('v2/icons/close.svg') }}
 </button>
 ```
 
@@ -355,9 +356,15 @@ setTimeout(function () { statusEl.textContent = ''; }, 2000);
 |---|---|---|
 | v2 components | `{% snippet 'v2/components/...' %}` | Always — enables parameterisation |
 | v2 layout sections (header, footer) | `{% snippet 'v2/...' %}` | Consistency |
-| Inline SVG icons | `{% include h.url_for_static(path) %}` | Inlines SVG markup at render time |
+| SVG icons | `{{ h.hdx_v2_icon('v2/icons/<name>.svg') }}` | Files live in `fanstatic/v2/icons/` (adding one: `_tools/README.md` there) |
 
-Never use `{% include %}` for parameterised v2 templates. The only accepted `{% include %}` pattern in v2 is SVG inlining via `h.url_for_static()`.
+Never use `{% include %}` in v2 — not for parameterised templates, not for icons.
+
+Components render an `attrs` dict with a separating space before each attribute:
+
+```jinja2
+{% for key, val in attrs.items() %} {{ key }}="{{ val }}"{% endfor %}
+```
 
 ---
 
@@ -393,6 +400,41 @@ Pages that need a white breadcrumb row (no bottom border) set:
 ```
 
 The `--white` modifier is defined in `layout.less`. Do **not** override `{% block toolbar %}` to hardcode the class — set this variable instead.
+
+---
+
+## `quick_links` — header/footer Products menus
+
+`page.html` fetches the quick links once (`quick_links`) and passes them to `v2/header.html` and `v2/footer.html`. A page that doesn't render those menus (error page, auth pages) sets this at the top, so it runs no quick-links query and the error page renders even after a failed DB transaction:
+
+```jinja2
+{% set quick_links = [] %}
+```
+
+---
+
+## Entity search pages — filters vs empty state
+
+Entity pages (org, country) render the filter aside and the dataset list when there are results or the request narrows the search (a facet param, `q`, or a filtering `ext_*`); otherwise they show the entity's own empty state (`hdx-v2-<page>-page-empty`):
+
+```jinja2
+{% if template_data.page.items or template_data.filters_are_selected %}
+```
+
+A page filtered to 0 keeps its filters and the "Sorry … Clear filters" message.
+
+---
+
+## Render cost — search and listing pages
+
+Bots crawl `/dataset`, org, country and crisis pages heavily, and their cost grows with every facet item rendered.
+
+- **Render once.** Never render a component twice for different breakpoints (double cost, duplicate ids); render it once and move it with JS (`matchMedia`, as `search.js` does with `#search-page-filters-form`) or restyle it with CSS.
+- **Keep loop snippets lean.** A snippet rendered per facet item runs hundreds of times: no empty optional elements (add an opt-out like `checkbox.html`'s `error_slot`), icons only via `h.hdx_v2_icon`, no queries.
+- **Query once per page.** Fetch shared data in the page and pass it down (see `quick_links`); never call a DB or Solr helper from a snippet that renders more than once.
+- **No unused work.** When a template stops reading a value, remove the action or query that computes it.
+- **No crawl traps.** v2 filters are JS-driven so bots can't follow combinations; don't add plain links that combine filters, and keep `generate_canonical_link` (pinned by `test_canonical.py`) in step with new filter params.
+- **Measure.** Compare SQL count, HTML size and render time before and after.
 
 ---
 
