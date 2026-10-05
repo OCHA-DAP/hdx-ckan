@@ -43,7 +43,7 @@ States to cover (all shown in Figma):
        {% if hint %}
          <span class="c-radio__hint-wrap">
            <span class="c-radio__hint" aria-hidden="true">
-             {% include h.url_for_static(hint_src) %}
+             {{ h.hdx_v2_icon(hint_src) }}
            </span>
            {% if hint_text %}
              {% snippet 'v2/components/tooltip.html',
@@ -55,7 +55,7 @@ States to cover (all shown in Figma):
    {% endif %}
    ```
 
-3. **Remove the old `<img class="c-radio__hint">` block** — it is replaced by the inline SVG above.
+3. **Remove the old `<img class="c-radio__hint">` block** — it is replaced by the SVG icon above.
 
 4. **Update the doc comment** to document `hint_text`, the updated `hint_src` default, and add a tooltip example:
 
@@ -101,7 +101,7 @@ All changes are inside the existing `.c-radio { … }` block.
    }
    ```
 
-3. **Update `&__hint`** — switch from `<img>` sizing to inline SVG sizing:
+3. **Update `&__hint`** — switch from `<img>` sizing to SVG icon sizing:
 
    ```less
    &__hint {
@@ -149,9 +149,9 @@ Extend the existing radio demo block with hint+tooltip variants covering all fou
 
 - All existing `c-radio` usages without `hint=True` must remain unchanged.
 - `hint=True` without `hint_text` renders the icon only — no tooltip markup is emitted.
-- Use `v2/icons/info-circle.svg` as inline SVG (`{% include %}`), not `<img>`. This matches the rest of the v2 icon system and allows `color: inherit` to apply.
+- Use `v2/icons/info-circle.svg` via `h.hdx_v2_icon`, not `<img>`. This matches the rest of the v2 icon system and allows `color: inherit` to apply.
 - No new JS required — tooltip show/hide is pure CSS (`:hover`).
 
 ## Why
 
-The Figma groups the label text and info icon inside a sub-wrapper with a tighter 6px gap, while the radio circle sits 8px away from that group — matching the existing `gap: var(--hdx-space-2)` on `.c-radio`. A `__body` wrapper is the minimal structural change needed to reproduce this. Inline SVG replaces `<img>` so the icon inherits the disabled muted color automatically via `color: inherit`, without any additional state rules.
+The Figma groups the label text and info icon inside a sub-wrapper with a tighter 6px gap, while the radio circle sits 8px away from that group — matching the existing `gap: var(--hdx-space-2)` on `.c-radio`. A `__body` wrapper is the minimal structural change needed to reproduce this. An SVG icon (`h.hdx_v2_icon`) replaces `<img>` so the icon inherits the disabled muted color automatically via `color: inherit`, without any additional state rules.

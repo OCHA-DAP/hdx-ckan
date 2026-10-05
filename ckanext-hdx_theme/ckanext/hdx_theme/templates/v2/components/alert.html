@@ -33,7 +33,7 @@
   <span class="c-alert__message">{{ message }}</span>
   {% if dismissible %}
     <button type="button" class="c-alert__close" data-alert-close aria-label="{{ _('Dismiss') }}">
-      {% include 'v2/icons/close.svg' %}
+      {{ h.hdx_v2_icon('v2/icons/close.svg') }}
     </button>
   {% endif %}
 </div>

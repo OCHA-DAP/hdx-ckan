@@ -63,7 +63,7 @@ The complete v2 implementation surface area across all pages, layout templates, 
 
 #### Icons
 
-60+ SVG icon files under `templates/v2/icons/`.
+60+ SVG icon files under `fanstatic/v2/icons/`.
 
 ### What was excluded
 
@@ -86,8 +86,8 @@ Heading order across all five pages must be verified. The page-header component 
 *WCAG 1.3.1 Info and Relationships*
 
 **SVG icons — MAJOR**
-60+ SVG icons are included inline throughout v2 templates. Decorative icons (appearing beside text labels, inside labeled buttons) must carry `aria-hidden="true"` to prevent screen readers from reading out meaningless path data. Informative icons used as the sole accessible name of an action (icon-only buttons) require an accessible name via `<title>` inside the SVG or `aria-label` on the parent `<button>`.
-Applies to all uses of icons from `templates/v2/icons/`.
+60+ SVG icons are rendered throughout v2 templates. Decorative icons (appearing beside text labels, inside labeled buttons) must carry `aria-hidden="true"` to prevent screen readers from reading out meaningless path data. Informative icons used as the sole accessible name of an action (icon-only buttons) require an accessible name via `<title>` inside the SVG or `aria-label` on the parent `<button>`.
+Applies to all uses of icons from `fanstatic/v2/icons/`.
 *WCAG 1.1.1 Non-text Content*
 
 **Form label association** — AUDIT TARGET
@@ -447,7 +447,7 @@ For any use on normal-size text (< 18px regular / < 14px bold):
 </button>
 ```
 
-Apply consistently across all icon usages in v2 templates. The icon template files under `templates/v2/icons/` should be updated to accept an `aria_hidden` parameter defaulting to `"true"`.
+Apply consistently across all icon usages in v2 templates. `h.hdx_v2_icon` adds `aria-hidden="true" focusable="false"` to every icon.
 
 ---
 

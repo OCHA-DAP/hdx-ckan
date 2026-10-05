@@ -82,7 +82,7 @@
 {% endif %}
 
   {% if icon %}
-    <span class="c-selection-item__icon">{% include h.url_for_static(icon_src) %}</span>
+    <span class="c-selection-item__icon">{{ h.hdx_v2_icon(icon_src) }}</span>
   {% endif %}
 
   <span class="c-selection-item__label">{{ label }}</span>
@@ -92,7 +92,7 @@
   {% endif %}
 
   {% if state == 'active' %}
-    <span class="c-selection-item__close">{% include h.url_for_static(close_src) %}</span>
+    <span class="c-selection-item__close">{{ h.hdx_v2_icon(close_src) }}</span>
   {% endif %}
 
 {% if tag == 'a' %}</a>

@@ -36,7 +36,7 @@ Rendered inside `header.html` after the avatar button. Hidden by default; shown 
     <button class="hdx-v2-user-menu__close" type="button"
             aria-label="{{ _('Close menu') }}"
             data-hdx-v2-close="user-menu">
-      {% include 'v2/icons/close.svg' %}
+      {{ h.hdx_v2_icon('v2/icons/close.svg') }}
     </button>
   </div>
 
@@ -46,7 +46,7 @@ Rendered inside `header.html` after the avatar button. Hidden by default; shown 
     <button class="hdx-v2-user-menu__section-toggle" type="button"
             aria-expanded="true" aria-controls="menu-sysadmin">
       {{ _('Sysadmin dashboard') }}
-      <span class="hdx-v2-user-menu__chevron">{% include 'v2/icons/chevron-down.svg' %}</span>
+      <span class="hdx-v2-user-menu__chevron">{{ h.hdx_v2_icon('v2/icons/chevron-down.svg') }}</span>
     </button>
     <ul class="hdx-v2-user-menu__section-items" id="menu-sysadmin">
       <li><a href="{{ h.url_for('admin.index') }}">{{ _('All sysadmins') }}</a></li>
@@ -67,7 +67,7 @@ Rendered inside `header.html` after the avatar button. Hidden by default; shown 
     <button class="hdx-v2-user-menu__section-toggle" type="button"
             aria-expanded="true" aria-controls="menu-dashboard">
       {{ _('User dashboard') }}
-      <span class="hdx-v2-user-menu__chevron">{% include 'v2/icons/chevron-down.svg' %}</span>
+      <span class="hdx-v2-user-menu__chevron">{{ h.hdx_v2_icon('v2/icons/chevron-down.svg') }}</span>
     </button>
     <ul class="hdx-v2-user-menu__section-items" id="menu-dashboard">
       <li><a href="{{ h.url_for('activity.dashboard') }}">{{ _('Newsfeed') }}</a></li>
@@ -83,7 +83,7 @@ Rendered inside `header.html` after the avatar button. Hidden by default; shown 
     <button class="hdx-v2-user-menu__section-toggle" type="button"
             aria-expanded="true" aria-controls="menu-settings">
       {{ _('User settings') }}
-      <span class="hdx-v2-user-menu__chevron">{% include 'v2/icons/chevron-down.svg' %}</span>
+      <span class="hdx-v2-user-menu__chevron">{{ h.hdx_v2_icon('v2/icons/chevron-down.svg') }}</span>
     </button>
     <ul class="hdx-v2-user-menu__section-items" id="menu-settings">
       <li><a href="{{ h.url_for('user.read', id=c.user) }}">{{ _('Datasets') }}</a></li>
@@ -122,7 +122,7 @@ Rendered inside `header.html` after the bell button.
     <button class="hdx-v2-notifications__close" type="button"
             aria-label="{{ _('Close notifications') }}"
             data-hdx-v2-close="notifications">
-      {% include 'v2/icons/close.svg' %}
+      {{ h.hdx_v2_icon('v2/icons/close.svg') }}
     </button>
   </div>
 

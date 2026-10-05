@@ -10,10 +10,10 @@ Refine the existing v2 footer implementation to better align with the Figma spec
 
 ### `templates/v2/footer.html`
 
-- **REQ-2 — SVG social icons.** Replace `<i class="fa-brands fa-github ...">` and `<i class="fa-brands fa-linkedin-in ...">` with inline SVG includes. Both files exist in `templates/v2/icons/`:
+- **REQ-2 — SVG social icons.** Replace `<i class="fa-brands fa-github ...">` and `<i class="fa-brands fa-linkedin-in ...">` with SVG icons (`h.hdx_v2_icon`). Both files exist in `fanstatic/v2/icons/`:
   ```jinja2
-  {% include 'v2/icons/github.svg' %}
-  {% include 'v2/icons/linkedin.svg' %}
+  {{ h.hdx_v2_icon('v2/icons/github.svg') }}
+  {{ h.hdx_v2_icon('v2/icons/linkedin.svg') }}
   ```
   Both SVGs use `fill="currentColor"` and inherit white from the footer context automatically.
 
@@ -111,7 +111,7 @@ Refine the existing v2 footer implementation to better align with the Figma spec
   {% if type == 'password' %}
     … toggle button …
   {% elif show_icon %}
-    <span class="c-search-input__icon">{% include h.url_for_static(icon_src) %}</span>
+    <span class="c-search-input__icon">{{ h.hdx_v2_icon(icon_src) }}</span>
   {% endif %}
   ```
 
@@ -136,4 +136,4 @@ Recompile from `footer.less` after all LESS changes.
 
 ## Why
 
-The initial footer implementation (task 015) used FontAwesome for social icons, a custom raw `<input>` for the newsletter, and fixed max-widths rather than the Bootstrap grid. This task replaces those with existing v2 design system components (`c-search-input`, `button.html`, `c-text-link`, inline SVG icons) and aligns layout constraints with the Bootstrap grid — consistent with how other v2 components are built.
+The initial footer implementation (task 015) used FontAwesome for social icons, a custom raw `<input>` for the newsletter, and fixed max-widths rather than the Bootstrap grid. This task replaces those with existing v2 design system components (`c-search-input`, `button.html`, `c-text-link`, SVG icons) and aligns layout constraints with the Bootstrap grid — consistent with how other v2 components are built.

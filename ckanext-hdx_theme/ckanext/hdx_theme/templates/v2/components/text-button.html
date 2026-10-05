@@ -18,7 +18,7 @@
   label         {string}  Visible text label (always required).
                           default: ''
 
-  icon_src      {string}  Path to the SVG icon, resolved via h.url_for_static().
+  icon_src      {string}  Path to the SVG icon, rendered via h.hdx_v2_icon().
                           Pass to render an icon; omit for none.
                           default: not set (no icon)
 
@@ -91,7 +91,7 @@
 {# ── Icon markup ──────────────────────────────────────────── #}
 {% if icon_src %}
   {% set icon_markup %}
-    <span class="c-text-button__icon">{% include h.url_for_static(icon_src) %}</span>
+    <span class="c-text-button__icon">{{ h.hdx_v2_icon(icon_src) }}</span>
   {% endset %}
 {% endif %}
 

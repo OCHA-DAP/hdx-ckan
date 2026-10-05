@@ -281,6 +281,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'hdx_dataset_has_datastore_resources': hdx_helpers.hdx_dataset_has_datastore_resources,
             'hdx_format_to_icon_category': hdx_helpers.hdx_format_to_icon_category,
             'hdx_format_number_si': hdx_helpers.hdx_format_number_si,
+            'hdx_v2_icon': hdx_helpers.hdx_v2_icon,
         }
 
     def get_actions(self):

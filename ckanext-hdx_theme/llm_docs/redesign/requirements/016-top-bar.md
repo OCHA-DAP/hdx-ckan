@@ -17,7 +17,7 @@ Implement the thin utility top bar in `v2/header.html` as part of the `hdx-v2` p
 
 Full implementation. Two sections inside a flex row:
 
-1. **OCHA Services trigger** (`__services`) — OCHA logo (inline SVG include, `v2/icons/ocha-logo.svg`, 1.313rem × 1.125rem) + "OCHA Services" text + chevron-down icon (`v2/icons/chevron-down.svg`). Entire group is a `<button>` Bootstrap dropdown trigger (`data-bs-toggle="dropdown"`). Dropdown panel (`__dropdown`) has since diverged from `header-global.html` (v1, left untouched) — v2's own link set: Related Platforms (1 link), Other OCHA Services (5 links), third column with an empty heading (4 links). No "See all" button. All dropdown links carry `data-module="hdx_click_stopper"` and `data-module-link_type="header"`.
+1. **OCHA Services trigger** (`__services`) — OCHA logo (SVG icon, `v2/icons/ocha-logo.svg`, 1.313rem × 1.125rem) + "OCHA Services" text + chevron-down icon (`v2/icons/chevron-down.svg`). Entire group is a `<button>` Bootstrap dropdown trigger (`data-bs-toggle="dropdown"`). Dropdown panel (`__dropdown`) has since diverged from `header-global.html` (v1, left untouched) — v2's own link set: Related Platforms (1 link), Other OCHA Services (5 links), third column with an empty heading (4 links). No "See all" button. All dropdown links carry `data-module="hdx_click_stopper"` and `data-module-link_type="header"`.
 
 2. **Navigation links** (`__nav`) — "Documentation" link using `{% snippet 'v2/components/text-link.html' %}` with `data-module="hdx_click_stopper"` and `data-module-link_type="header"`. URL TBD, placeholder `#`.
 
@@ -25,7 +25,7 @@ Key decisions:
 - User auth section (Log in / Sign up / avatar) is out of scope — belongs to the main navigation bar task.
 - Trigger uses `<button>` (not `<a href="#">`) for accessibility.
 - Dropdown open state not shown in Figma; dropdown panel is ported from production header with v2 BEM styling.
-- Chevron: inline `{% include 'v2/icons/chevron-down.svg' %}`.
+- Chevron: `{{ h.hdx_v2_icon('v2/icons/chevron-down.svg') }}`.
 - Bootstrap 5 dropdown JS manages show/hide — no custom JS needed.
 
 ### `hdx-styles/src/common/less/v2/top-bar.less` (new file)

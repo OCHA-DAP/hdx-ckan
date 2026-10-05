@@ -39,13 +39,13 @@
   {% if is_first %}
     <span class="c-pagination__item c-pagination__item--prev is-disabled"
           aria-hidden="true">
-      {% include h.url_for_static(prev_icon_src) %}
+      {{ h.hdx_v2_icon(prev_icon_src) }}
     </span>
   {% else %}
     <a class="c-pagination__item c-pagination__item--prev"
        href="{{ base_url }}{{ current_page - 1 }}"
        aria-label="Previous page">
-      {% include h.url_for_static(prev_icon_src) %}
+      {{ h.hdx_v2_icon(prev_icon_src) }}
     </a>
   {% endif %}
 
@@ -72,13 +72,13 @@
   {% if is_last %}
     <span class="c-pagination__item c-pagination__item--next is-disabled"
           aria-hidden="true">
-      {% include h.url_for_static(next_icon_src) %}
+      {{ h.hdx_v2_icon(next_icon_src) }}
     </span>
   {% else %}
     <a class="c-pagination__item c-pagination__item--next"
        href="{{ base_url }}{{ current_page + 1 }}"
        aria-label="Next page">
-      {% include h.url_for_static(next_icon_src) %}
+      {{ h.hdx_v2_icon(next_icon_src) }}
     </a>
   {% endif %}
 

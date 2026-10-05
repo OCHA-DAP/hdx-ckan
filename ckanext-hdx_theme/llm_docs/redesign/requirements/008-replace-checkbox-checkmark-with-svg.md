@@ -10,7 +10,7 @@ Replace the CSS `::after` pseudo-element checkmark in `.c-checkbox__box` with `v
 
 - `ckanext-hdx_theme/ckanext/hdx_theme/templates/v2/components/checkbox.html`
 - `ckanext-hdx_theme/ckanext/hdx_theme/hdx-styles/src/common/less/v2/components/checkbox.less`
-- `ckanext-hdx_theme/ckanext/hdx_theme/templates/v2/icons/check.svg` (already added, read-only)
+- `ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/v2/icons/check.svg` (already added, read-only)
 
 **Out:**
 - Component API (parameters unchanged)
@@ -22,8 +22,8 @@ Replace the CSS `::after` pseudo-element checkmark in `.c-checkbox__box` with `v
 1. **Remove `::after` from `.c-checkbox__box`.**
    Delete the `&::after` block and its disabled+checked override (`border-color` on `::after`).
 
-2. **Add the icon to the template using `{% include h.url_for_static(...) %}`.**
-   Inside `.c-checkbox__box`, add a `<span class="c-checkbox__icon">` containing `{% include h.url_for_static('v2/icons/check.svg') %}`. This matches the pattern used in `label.html`, `nav-item.html`, and other v2 components.
+2. **Add the icon to the template using `{{ h.hdx_v2_icon(...) }}`.**
+   Inside `.c-checkbox__box`, add a `<span class="c-checkbox__icon">` containing `{{ h.hdx_v2_icon('v2/icons/check.svg') }}`. This matches the pattern used in `label.html`, `nav-item.html`, and other v2 components.
 
 3. **Size and color the icon via CSS.**
    - `check.svg` has viewBox `0 0 10 7`; shipped sizing sets only `width: 0.55rem` on the span, height left to intrinsic aspect ratio.
