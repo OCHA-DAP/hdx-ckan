@@ -18,15 +18,14 @@ mismatches between that framing and reality — the same failure mode already do
 actual page:
 
 - **Data Dictionary does not exist anywhere in HDX**, v1 or v2. It was explicitly logged as out of scope
-  when the resource page was migrated (`040-resource-page.md:281-284`, "❌ OUT OF SCOPE — not
-  implemented"). This is net-new construction, not a migration.
+  when the resource page was migrated (`040-resource-page.md` §6). This is net-new construction, not a migration.
 - **There is no existing datastore-backed preview to migrate.** Today's "Data Explorer" preview
   (`hdx_office_preview` plugin, `view_type: recline_view`) is chosen purely by file format
-  (`plugin.py:28-32`, checks `resource['format'].lower()` against a fixed list) and always fetches from an
+  (`can_view()` in `plugin.py`, checks `resource['format'].lower()` against a fixed list) and always fetches from an
   **external HXL-proxy service** (`GET /hxl/api/data-preview.json?rows=0&sheet=0&url={resourceUrl}`,
-  `hdx_csv_preview.js:1-27`) — never from `datastore_search`, regardless of `res.datastore_active`. The
+  `loadFromHxlProxy()` in `hdx_csv_preview.js`) — never from `datastore_search`, regardless of `res.datastore_active`. The
   one resource view that genuinely is datastore-gated, `HDXChartViewsPlugin` ("Line / Bar Chart",
-  `ckanext-hdx_package/ckanext/hdx_package/plugin.py:769-853`, `can_view` checks
+  `ckanext-hdx_package/ckanext/hdx_package/plugin.py`, `can_view` checks
   `resource.get('datastore_active')`), is dead code: its declared templates
   (`new_views/chart_view.html`, `new_views/chart_view_form.html`) don't exist anywhere in the repository,
   and `ckanext-hdx_package` has no `templates/` directory at all. It is not a usable precedent.
@@ -39,23 +38,23 @@ actual page:
   pipeline TDE Preview branches inside (see Decisions, D1).
 - **The "See documentation" button misalignment has a confirmed root cause that is a CSS-loading bug, not
   a missing style.** `resource_read.html`'s "API access" section markup
-  (`resource_read.html:143-154`) depends on `.hdx-v2-dataset-section__header`'s
+  (`#api-access` in `resource_read.html`) depends on `.hdx-v2-dataset-section__header`'s
   `display:flex;justify-content:space-between` rule to push the button right — but that rule lives in
   `pages/dataset.less`, compiled into `pages/dataset.css`, bundled only as `v2-dataset-page-styles`
-  (`webassets.yml:1596-1600`). `resource_read.html` never loads that bundle (`resource_read.html:48-51`
+  (`webassets.yml`). `resource_read.html` never loads that bundle (its `styles` block
   only loads `v2-resource-page-styles`, i.e. `pages/resource.css`, which defines no
   `.hdx-v2-dataset-section*` rules at all). Figma's export confirms intent:
   `.api-access-parent { justify-content: space-between; ... }` in `resource-page-xl.html` (the accompanying
   `gap: -9.5rem` on the same rule is a static-export artifact of Figma's absolute-position-to-flex
   conversion — the same class of noise flagged in prior docs, not a value to carry over).
 - **CSRF turned out to be a red herring, then a genuine access-control question.** Flask-WTF's
-  `CSRFProtect` (wired in `ckan/config/middleware/flask_app.py:31,65,255-268`) only guards unsafe HTTP
+  `CSRFProtect` (wired in `ckan/config/middleware/flask_app.py`) only guards unsafe HTTP
   methods (`WTF_CSRF_METHODS` defaults to POST/PUT/PATCH/DELETE) — GET requests are exempt from CSRF
   checking entirely, and CKAN core's own `datastore_search`/`datastore_info`/`datastore_search_sql` auth
-  functions (`ckanext/datastore/logic/auth.py:50-73`) are decorated `@auth_allow_anonymous_access` and
+  functions (`ckanext/datastore/logic/auth.py`) are decorated `@auth_allow_anonymous_access` and
   delegate to `resource_show`/`package_show`, which succeed for anonymous users on public resources.
   However, **HDX deliberately overrides this**: a chained auth function in
-  `ckanext-hdx_package/ckanext/hdx_package/actions/authorize.py:186-229` — added under ticket **HDX-10974**
+  `ckanext-hdx_package/ckanext/hdx_package/actions/authorize.py` (`_datastore_search_only_for_authenticated_users()`) — added under ticket **HDX-10974**
   ("only authenticated users should be allowed to access the datastore_search\* actions") — unconditionally
   rejects any anonymous caller (`context.get('auth_user_obj').is_authenticated` false) with
   `{'success': False, 'msg': 'Action {name} requires an authenticated user'}` **before** CKAN core's own
@@ -72,14 +71,14 @@ doc — see Decisions below.
 ## Decisions Taken
 
 - **D1 — TDE Preview architecture (confirmed): branch inside the existing preview, not a new
-  section/view.** Figma shows exactly one "Resource preview" table/section on the page (`resource-page-xl.html`
-  lines ~207-235 header, ~230-960 table), not two toggleable variants — so the existing
+  section/view.** Figma shows exactly one "Resource preview" table/section on the page (`resource-page-xl.html`),
+  not two toggleable variants — so the existing
   `hdx_office_preview` plugin/iframe/DataTables pipeline from task 047 stays the single "Resource preview"
   section. Inside it, branch on `resource.datastore_active` (already computed server-side and already
   available wherever `resource_read.html` renders the preview): if datastore-active, fetch from
   `datastore_search` (see D12 for the actual pagination mechanism shipped); otherwise keep today's
   HXL-proxy fetch completely unchanged. No new `IResourceView` plugin, no change to `resource_read.html`'s
-  "first non-`hdx_hxl_preview` view" selection logic (`resource_read.html:12-19`) — there is still exactly
+  "first non-`hdx_hxl_preview` view" selection logic (`_data_explorer` in `resource_read.html`) — there is still exactly
   one `ResourceView` row per resource, so no view-selection ambiguity is introduced.
 - **D2 — Anonymous access mechanism (confirmed, per brief, accepted trade-off): CSRF token as the
   anonymous-access exception to HDX-10974.** Modify the chained auth override in `authorize.py` so that,
@@ -92,7 +91,7 @@ doc — see Decisions below.
   touched — it keeps HDX-10974's authenticated-only behavior exactly as today. **This is a security
   trade-off, not a neutral fix, and must not be understated**: every visitor — including anonymous ones —
   already receives a valid, working CSRF token simply by loading any HDX page
-  (`ckan/templates/base.html:27-28`, `ckanext-hdx_theme/.../templates/base.html:107-108` render the CSRF
+  (`ckan/templates/base.html`, `ckanext-hdx_theme/.../templates/base.html` render the CSRF
   meta tags unconditionally, session-bound, regardless of login state). So this change does not require
   "being a logged-in user," only "having loaded a page on the site first" — a materially weaker bar than
   HDX-10974's original intent. The user was shown this trade-off explicitly (alongside a safer alternative
@@ -106,7 +105,7 @@ doc — see Decisions below.
   (`c-table`) component structure directly — there is no iframe-isolation reason to duplicate its CSS the
   way `047` had to for the DataTables preview. The JS renderer produces markup matching `c-table`'s class
   contract (`.c-table-container` / `.c-table__scroll` / `table.c-table` / `<thead>`/`<tbody>`, per
-  `table.html:37-63`) — the same "snippet defines the class contract, JS produces matching markup" pattern
+  `table.html`) — the same "snippet defines the class contract, JS produces matching markup" pattern
   `047` already established for the iframe case, just without the iframe problem here.
 - **D4 — API access button fix (confirmed): factor the shared section-header properties into
   `mixins.less`.** `pages/resource.less` carries its own `.hdx-v2-resource-section` block (own
@@ -121,7 +120,7 @@ doc — see Decisions below.
   `&__chevron`, and `&--collapsible` variant layered on top of the mixin calls.
 - **D5 — Resource-type detection / conditional logic (confirmed): reuse `res.datastore_active`, no new
   detection.** It is already computed by CKAN core and already gates the existing "API access" section
-  (`resource_read.html:100,117,142`, `{% if res.datastore_active %}`). The same flag gates: (a) the
+  (`resource_read.html`, `{% if res.datastore_active %}`). The same flag gates: (a) the
   TDE-vs-CSV branch inside the preview JS (D1), and (b) whether the new Data Dictionary section and its
   anchor-nav entry render at all (a Data Dictionary is only meaningful for a datastore-active resource —
   `datastore_info` on a non-datastore resource returns an empty/error schema).
@@ -172,38 +171,38 @@ doc — see Decisions below.
 
 ### 1.1 Resource page template
 
-`ckanext-hdx_theme/ckanext/hdx_theme/templates/package/resource_read.html` (216 lines, the only
+`ckanext-hdx_theme/ckanext/hdx_theme/templates/package/resource_read.html` (the only
 resource-read template HDX ships — it fully overrides CKAN core's, `ckanext.datastore`'s, and
 `ckanext.tabledesigner`'s same-named templates via a hard `{% extends "v2/page.html" %}`, not
 `{% ckan_extends %}`, so none of those extensions' own additions ever render). Sections, in DOM order:
 
-| Block | Lines | Content |
-|---|---|---|
-| Breadcrumb | 54-61 | Org → Dataset → Resource |
-| Page header (`pre_primary`) | 64-92 | `v2/components/page-header.html` — icon, title, description, download button, export-metadata dropdown, 3-item metadata strip |
-| Anchor-nav sidebar (`secondary`) / mobile dropdown (`primary`, top) | 95-122 | Built from `_data_explorer` and `res.datastore_active` (see 1.4) |
-| Resource preview | 124-139 | `{% if _data_explorer and h.check_access('hdx_resource_download', res) %}` → `package/snippets/resource_view.html` |
-| API access | 141-213 | `{% if res.datastore_active %}` → token link, resource ID + copy, example query, "See documentation" button |
+| Block | Content |
+|---|---|
+| Breadcrumb | Org → Dataset → Resource |
+| Page header (`pre_primary`) | `v2/components/page-header.html` — icon, title, description, download button, export-metadata dropdown, 3-item metadata strip |
+| Anchor-nav sidebar (`secondary`) / mobile dropdown (`primary`, top) | Built from `_data_explorer` and `res.datastore_active` (see 1.4) |
+| Resource preview | `{% if _data_explorer and h.check_access('hdx_resource_download', res) %}` → `package/snippets/resource_view.html` |
+| API access | `{% if res.datastore_active %}` → token link, resource ID + copy, example query, "See documentation" button |
 
 Data Dictionary and "Other Resources" are both absent — both explicitly logged out of scope in
-`040-resource-page.md:281-289`.
+`040-resource-page.md` §6–7.
 
 ### 1.2 CSV/HXL preview pipeline ("Data Explorer")
 
 Two distinct preview plugins exist; only one is the "CSV/HXL preview" in scope here (the other, Quick
 Charts, is explicitly excluded from v2 via the `_v.view_type != 'hdx_hxl_preview'` filter,
-`resource_read.html:15`):
+`_data_explorer` in `resource_read.html`):
 
 | Plugin | `view_type` | Title | `can_view` | `requires_datastore` |
 |---|---|---|---|---|
-| `ckanext-hdx_office_preview/plugin.py:16-25` | `recline_view` | "Data Explorer" | format in `{xls, xlsx, doc, docx, ppt, pptx, odt, ods, odp, csv}` (`plugin.py:28-32`) | `False` |
+| `Hdx_Office_PreviewPlugin` (`ckanext-hdx_office_preview/plugin.py`) | `recline_view` | "Data Explorer" | format in `{xls, xlsx, doc, docx, ppt, pptx, odt, ods, odp, csv}` (`can_view()` in `plugin.py`) | `False` |
 | `ckanext-hdx_hxl_preview/plugin.py` | `hdx_hxl_preview` | "Quick Charts" | always `True` | `False`, excluded from v2 |
 
 Rendering pipeline for the in-scope preview:
 
 ```
-resource_read.html:132  → {% snippet 'package/snippets/resource_view.html' %}
-resource_view.html:52   → <iframe data-module="data-viewer" src=...>
+resource_read.html  → {% snippet 'package/snippets/resource_view.html' %}
+resource_view.html  → <iframe data-module="data-viewer" src=...>
   (module: fanstatic/modules/data-viewer2.js — iframe resize + `data-viewer-error` pubsub handler)
 [inside iframe] hdx_csv_preview_view.html  (extends v2/page.html, loads DataTables 2.x)
   <table id="hdx-csv-table"></table>
@@ -216,10 +215,10 @@ hdx_csv_preview.js:
     })
 ```
 
-- `previewUrl`'s `resourceUrl` comes from a hidden div (`hdx_csv_preview_view.html:10`) rendering
+- `previewUrl`'s `resourceUrl` comes from a hidden div (`#resource-url` in `hdx_csv_preview_view.html`) rendering
   `h.url_for('resource.download', ...)` — the resource's own download URL, not a datastore reference.
 - `/hxl/api/data-preview.json` is proxied to an **external HXL Proxy service**
-  (`ckanext-hdx_theme/ckanext/hdx_theme/hxl/proxy.py:16`, `config.get('hdx.hxlproxy.url')`), fetching and
+  (`ckanext-hdx_theme/ckanext/hdx_theme/hxl/proxy.py`, `config.get('hdx.hxlproxy.url')`), fetching and
   parsing the raw resource file on the fly — this works for any CSV/XLS regardless of
   `datastore_active` and never touches `datastore_search`.
 - All rows are fetched in one call (`rows=0` = unlimited); pagination (`pageLength: 10`) is client-side,
@@ -233,9 +232,9 @@ hdx_csv_preview.js:
 
 ### 1.3 Dead code note: `HDXChartViewsPlugin`
 
-`ckanext-hdx_package/ckanext/hdx_package/plugin.py:769-853` — `view_type: hdx_chart_view`, title
+`ckanext-hdx_package/ckanext/hdx_package/plugin.py` — `view_type: hdx_chart_view`, title
 "Line / Bar Chart", `can_view` gated on `resource.get('datastore_active') or resource.get('url') ==
-'_datastore_only_resource'` (`plugin.py:795-798`), `requires_datastore: True`. This is the only
+'_datastore_only_resource'`, `requires_datastore: True`. This is the only
 genuinely datastore-gated view in the codebase, but its declared templates
 (`new_views/chart_view.html`, `new_views/chart_view_form.html`) do not exist anywhere in the repo, and
 `ckanext-hdx_package` has no `templates/` directory at all — invoking this view would 500. It is still
@@ -248,15 +247,15 @@ No `resource.formatted_format` anywhere in this codebase. Format-to-preview mapp
 `can_view(data_dict)`, keyed on raw `resource['format'].lower()` (§1.2/1.3). The one flag genuinely
 signaling "this resource has queryable tabular data in the datastore" is
 **`res.datastore_active`**, already used to gate the API access section
-(`resource_read.html:100,117,142`) and the anchor-nav "API" entry. `_data_explorer`
-(`resource_read.html:12-19`) is computed independently — "first `resource_views` entry whose `view_type` is
+(`resource_read.html`) and the anchor-nav "API" entry. `_data_explorer`
+(`resource_read.html`) is computed independently — "first `resource_views` entry whose `view_type` is
 not `hdx_hxl_preview` and whose format isn't `txt`/`text/plain`/`plain`" — and is unrelated to `datastore_active`; a CSV resource that later becomes
 datastore-active still has exactly one `ResourceView` row (the office-preview one), so there's no
 "two eligible views" ambiguity to resolve (D5).
 
 ### 1.5 Table component (`c-table`)
 
-- Snippet: `templates/v2/components/table.html` (37 lines) — renders
+- Snippet: `templates/v2/components/table.html` — renders
   `.c-table-container > .c-table__scroll > table.c-table` from `headers`/`rows` params.
 - LESS: `hdx-styles/src/common/less/v2/components/table.less`, compiled to
   `fanstatic/v2/components/table.css`, part of the `v2-components-styles` bundle (already loaded on every
@@ -270,7 +269,7 @@ datastore-active still has exactly one `ResourceView` row (the office-preview on
 
 No shared "call the action API" wrapper exists anywhere in the codebase — every call site hand-rolls its
 own `$.ajax()`/`fetch()`. What is shared is a CSRF-token-lookup helper:
-`ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/base/hdx-util-lib.js:113-133` —
+`ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/base/hdx-util-lib.js` —
 `hdxUtil.net.getCsrfFieldName()`, `getCsrfToken()`, `getCsrfTokenAsObject()` (returns
 `{'X-CSRFToken': token}`), reading the two meta tags rendered in `base.html`. Loaded on every page,
 referenced by ~20 other JS files (v2 pages/dataset.js, pages/org-members.js, etc.) for their own POST calls.
@@ -280,24 +279,24 @@ preview code.
 
 ### 1.7 CSRF handling
 
-CKAN's stock Flask-WTF `CSRFProtect`, unmodified in mechanism by HDX (`flask_app.py:31,65,255-268`,
+CKAN's stock Flask-WTF `CSRFProtect`, unmodified in mechanism by HDX (`flask_app.py`,
 config defaults `WTF_CSRF_ENABLED=True`, `WTF_CSRF_FIELD_NAME=_csrf_token`,
 `WTF_CSRF_METHODS=[POST,PUT,PATCH,DELETE]`, `WTF_CSRF_HEADERS=[X-CSRFToken, X-CSRF-Token]`). Token is
 delivered via two meta tags rendered unconditionally in `base.html` (both CKAN core's and HDX theme's
 copy), regardless of login state. HDX's only prior CSRF-adjacent changes are unrelated to this feature: a
 config toggle (`ckan.csrf_protection.ignore_extensions`, currently `false` in this deployment) that could
 bulk-exempt plugin blueprints, and a server-side CSRF-field stripper for form dicts
-(`ckan/logic/__init__.py:158-172`, `ckanext-hdx_package/.../csrf_field_remover.py`). Neither is relevant to
+(`checks_and_delete_if_csrf_token_in_forms()` in `ckan/logic/__init__.py`, `ckanext-hdx_package/.../csrf_field_remover.py`). Neither is relevant to
 D2's mechanism, which calls Flask-WTF's `validate_csrf()` directly inside a chained auth function rather
 than relying on `CSRFProtect`'s automatic enforcement.
 
 ### 1.8 Datastore auth (HDX-10974)
 
-Covered in Context above and §6 in full. Key file: `ckanext-hdx_package/ckanext/hdx_package/actions/authorize.py:186-229`.
+Covered in Context above and §6 in full. Key file: `ckanext-hdx_package/ckanext/hdx_package/actions/authorize.py`.
 
 ### 1.9 API access section markup + the button-alignment bug
 
-`resource_read.html:143-154`:
+`#api-access` in `resource_read.html`:
 
 ```jinja
 <section class="hdx-v2-dataset-section" id="api-access">
@@ -309,8 +308,8 @@ Covered in Context above and §6 in full. Key file: `ckanext-hdx_package/ckanext
 ```
 
 `.hdx-v2-dataset-section__header` (`display:flex; justify-content:space-between`) is defined only in
-`pages/dataset.less`, bundled only as `v2-dataset-page-styles` (`webassets.yml:1596-1600`), which
-`resource_read.html` never loads (`resource_read.html:48-51` loads only `v2-resource-page-styles` /
+`pages/dataset.less`, bundled only as `v2-dataset-page-styles` (`webassets.yml`), which
+`resource_read.html` never loads (its `styles` block loads only `v2-resource-page-styles` /
 `pages/resource.css`, which has no `.hdx-v2-dataset-section*` rules). Net effect: the flex rule never
 applies on a live resource page, so the header falls back to block flow (h2, then the button anchor
 stacked below it) instead of a flex row with the button pushed right. Fix: D4.
@@ -330,17 +329,17 @@ Files: `resource-page-xl.html`, `resource-page-md.html`, `resource-page-sm.html`
   preview** (generic sortable table + compact pager, same sample-data shape as `resource-preview-table.html`
   — Date/Location/Locality/Activity Type/Beneficiary/IDPs/etc.) → divider → **Data dictionary** (its own
   table, distinct columns) → divider → **API access**.
-- **Resource preview table** (`resource-page-xl.html` ~207-960): `.table > .table-header
+- **Resource preview table** (`resource-page-xl.html`): `.table > .table-header
   (.table-cell-header × N, each with a `.table-sorter` chevron pair) + .wrapper (alternating-background
   `.component-N` rows) + a compact numbered pager (`.pagination-item`, chevrons + page numbers). This is
   the same structure `047` already mapped to `c-table`/DataTables — no new table design needed for the TDE
   branch, it's the same visual output regardless of which data source feeds it (D1).
-- **Data dictionary table** (`resource-page-xl.html:963-1002`, `data-scroll-to="dataDictionaryContainer"`):
+- **Data dictionary table** (`resource-page-xl.html`, `data-scroll-to="dataDictionaryContainer"`):
   same `.table`/`.table-header`/`.table-cell-header` structure as Resource preview, with **5 columns**:
   `Title`, `Column name`, `Data type`, `Unit of measure`, `Description`. Sample rows shown: `Year / year /
   "Year (YYYY)" / - / -` and `University / university / Text / - / -` — "Unit of measure" is dropped and
   "Data type" renders `field.type` verbatim rather than Figma's friendlier sample string (D7, D8).
-- **API access** (`resource-page-xl.html:1270-1313`): `.api-access-parent` wraps the "API access" title and
+- **API access** (`resource-page-xl.html`): `.api-access-parent` wraps the "API access" title and
   a "See documentation" button, with `justify-content: space-between` in the export's own CSS — confirming
   the button should be right-aligned (D4). The accompanying `gap: -9.5rem` on the same rule is a Figma
   static-export artifact (absolute-position-to-flex conversion noise), not an intentional value.
@@ -399,7 +398,7 @@ the anonymous-access header).
 **Integration** (D1): same `hdx_office_preview` plugin, same iframe, same DataTables 2.x instance as
 today's CSV preview — not a new resource view or section. `hdx_csv_preview_view.html` needs
 `resource.datastore_active` and `resource.id` made available to the iframe (currently it only exposes the
-resource's download URL via a hidden div, `hdx_csv_preview_view.html:10`) so `hdx_csv_preview.js` can
+resource's download URL via a hidden div, `#resource-url` in `hdx_csv_preview_view.html`) so `hdx_csv_preview.js` can
 branch:
 
 - **`datastore_active` true**: call `datastore_search`. Response `result.fields[]`/`result.records[]` feed
@@ -410,7 +409,7 @@ branch:
 
 **Pagination — shipped as fetch-everything-once, not server-side (D12).** CKAN core defaults to
 **100 rows per request** and hard-caps at **32000** unless `ckan.datastore.search.rows_max` is configured
-higher (`ckanext/datastore/logic/action.py:566-570,674`, confirmed; not set in this deployment's config
+higher (`datastore_search()` in `ckanext/datastore/logic/action.py`, confirmed; not set in this deployment's config
 files). The datastore-active branch requests `limit=32000` in a single `datastore_search` call
 (`DATASTORE_FETCH_ALL_LIMIT`) and hands all rows to DataTables, which paginates client-side at
 `pageLength: 10` — visually identical to today's HXL-proxy behavior, just pointed at `datastore_search`
@@ -438,7 +437,7 @@ Per D5: `res.datastore_active` — already computed by CKAN core, already consum
 No new server-side detection logic is introduced. No ambiguity between "two eligible resource views"
 arises, because the branch lives **inside** the single existing `recline_view` `ResourceView` row's
 rendering, not in `resource_read.html`'s view-selection logic (`_data_explorer`,
-`resource_read.html:12-19`), which is untouched.
+`resource_read.html`), which is untouched.
 
 ---
 
@@ -448,7 +447,7 @@ Per D2. This section states the mechanism precisely because it is a security-rel
 the user with an explicit trade-off — it must not be softened or generalized in implementation.
 
 - **How the token is obtained (client)**: the existing shared helper,
-  `hdxUtil.net.getCsrfTokenAsObject()` (`hdx-util-lib.js:113-133`) — no new client-side CSRF mechanism.
+  `hdxUtil.net.getCsrfTokenAsObject()` (`hdx-util-lib.js`) — no new client-side CSRF mechanism.
 - **How it is passed**: as an `X-CSRFToken` request header on the `fetch`/`$.ajax` **GET** calls to
   `datastore_search` and `datastore_info` (§3, §4). GET is used deliberately (matching the existing
   anonymous-GET precedent in CKAN core's `resource-view-filters.js` select2 dropdowns) — this call does
@@ -461,13 +460,13 @@ the user with an explicit trade-off — it must not be softened or generalized i
   first attempts `flask_wtf.csrf.validate_csrf(token)` (token read from
   `flask.request.headers.get('X-CSRFToken')` / `X-CSRF-Token`) — on success, falls through to
   `next_auth(context, data_dict)` (CKAN core's own anonymous-permissive `resource_show`-delegating check,
-  `ckanext/datastore/logic/auth.py:50-73`); on failure or missing token, returns the existing rejection
+  `ckanext/datastore/logic/auth.py`); on failure or missing token, returns the existing rejection
   message unchanged. Authenticated calls are entirely unaffected — the `is_authenticated` branch still
   short-circuits straight to `next_auth` exactly as today.
 
 **Security trade-off — stated explicitly, not glossed over (D2)**: CSRF tokens are issued to **every**
-visitor, authenticated or not, simply by loading any HDX page (`base.html:27-28`,
-`hdx_theme/.../base.html:107-108`). So this change does not require authentication, only "has loaded a
+visitor, authenticated or not, simply by loading any HDX page (`base.html`,
+`hdx_theme/.../base.html`). So this change does not require authentication, only "has loaded a
 page on this site" — a materially weaker bar than HDX-10974's original, ticketed intent
 ("only authenticated users should be allowed to access the datastore_search\* actions"). It does **not**
 open these actions to arbitrary third-party/anonymous API scraping in the way *removing* HDX-10974

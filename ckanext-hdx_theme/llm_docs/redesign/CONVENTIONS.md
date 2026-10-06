@@ -297,7 +297,8 @@ Update ARIA attributes whenever state changes:
 |-------|-----------|
 | Panel open/closed | `aria-expanded="true/false"` on the trigger |
 | Widget hidden/visible | `aria-hidden="true/false"` |
-| Current nav item | `aria-current="true"` |
+| Link to the current page (nav-item, tabs, pagination) | `aria-current="page"` |
+| Current in-page anchor (anchor-links) | `aria-current="true"` |
 | Tooltip association | `aria-describedby` on trigger, `id` + `role="tooltip"` on tooltip element |
 
 ### Focus management

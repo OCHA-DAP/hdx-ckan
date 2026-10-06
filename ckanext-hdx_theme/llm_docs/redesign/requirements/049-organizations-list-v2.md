@@ -226,6 +226,7 @@ At SM: title + date only. No description, no metadata.
 |---|---|---|---|
 | `org` | dict | required | Organisation dict from `page.items` |
 | `member_count` | int | 0 | Pre-fetched member count |
+| `role` / `member_since` / `last_updated` | string | not set | Optional line parts under the title, rendered only when passed (task 072); this page passes `member_since=org.created` |
 
 **No `size` param** — breakpoint handled by CSS.
 **No `state` param** — hover is CSS-only.
@@ -238,7 +239,7 @@ At SM: title + date only. No description, no metadata.
 {% set title       = org.title or org.display_name %}
 {% set href        = h.url_for('hdx_org.read', id=org.name) %}
 {% set description = h.markdown_extract(org.description, extract_length=0) | striptags if org.description else '' %}
-{% set created     = h.render_datetime(org.created) if org.created else _('Unknown') %}
+{# meta_parts: only the passed role / member_since / last_updated parts #}
 {% set datasets    = org.package_count or 0 %}
 
 <div class="c-org-list-card">
@@ -246,7 +247,7 @@ At SM: title + date only. No description, no metadata.
 
     <div class="c-org-list-card__left">
       <a class="c-org-list-card__title" href="{{ href }}">{{ title }}</a>
-      <span class="c-org-list-card__date">{{ _('Member since') }} {{ created }}</span>
+      {% if meta_parts %}<span class="c-org-list-card__date">{{ meta_parts | join(' - ') }}</span>{% endif %}
 
       {% if description %}
         <div class="c-org-list-card__description" data-module="clamped-text">
@@ -348,7 +349,8 @@ moves it visually before `__right`.
 {% for org in page.items %}
   {% snippet 'v2/components/org-list-card.html',
       org=org,
-      member_count=h.get_group_members(org.id) %}
+      member_count=h.get_group_members(org.id),
+      member_since=org.created %}
 {% endfor %}
 ```
 

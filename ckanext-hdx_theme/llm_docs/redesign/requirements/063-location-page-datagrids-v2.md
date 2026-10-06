@@ -40,7 +40,7 @@ straightforward migration before any code is written.
 | D2 | Legend content matches Figma exactly: the drawer becomes a pure category/sub-category **definitions glossary** (no color swatches, no checkboxes). The color/status key moves permanently to the new inline 4-item `.chart-legend` next to the stacked bar chart in the page header. v1's CSS-hover "Show legend" floating panel (`completeness_legend.html`) is retired entirely. | Requester's explicit choice, resolving a genuine content-model mismatch: v1's current legend is a 3-color swatch key ("What do the Data Grids measure?"); Figma's drawer (`sm-location-page-datagrids-drawer.html`, mirrored by `drawer-legend-sm.html`) is a glossary of all 6 categories + ~20 sub-categories with descriptive text and no color swatches at all. Splitting the two concerns — color key inline, definitions in the drawer — is the only reading that uses every piece of Figma content without inventing anything. |
 | D3 | **One unified, responsive v2 template** — satisfied via the existing global `/m` → desktop 301 redirect (`check_redirect_needed` in `light_redirect.py`), not by literally merging the two templates. `light_group.py`'s `light_read` view is decorated with `check_redirect_needed`, which redirects any `/m`-prefixed request to the non-light URL before the view body ever runs — so `/m/group/<id>` never actually renders `light/group/read.html`; it always redirects to `country/country.html` (v2). `light/group/read.html` is dead code, unreachable in production, not something this task needs to touch further. | Requester's explicit choice, matching task 048's approach (direct replacement) rather than 056-058's gated rollout. |
 | D4 | The "Datasets" browse/filter/results section that appears directly below the grid in every Figma export (sidebar filters, dataset cards, pagination — distinct from the excluded "You might also like" block further down) **is in scope for this doc**, documented as a reuse of the existing shared search-results snippet, not new work. With 0 results and nothing in the request narrowing the search (`filters_are_selected`), the section is replaced by "There are no datasets currently uploaded for this location." (`.hdx-v2-location-page-empty`, no link). | Requester's explicit choice. "Full location page layout" is stated as included scope, and the section is visually present on every one of the 7 exports; per §1.8, it already reuses the exact snippet `organization/read.html` (task 056) calls with `v2=true` — there is no new UI to design here, only wiring to confirm. |
-| D5 | The conditional "Key Figures" topline-stats-carousel + Leaflet crisis map block (`country/key-figures.html`, `country.html` lines ~102–186, `drawMap()`/C3 sparklines in `country.js`) is **out of scope** — left rendering as v1, untouched by this task. | Requester's explicit choice. This block sits between the header and the Data Grid section on today's page but appears in none of the 7 Figma exports, and the task's own page-structure outline lists only "Header/Intro" and "Data Grids" — treating it as a separate, deferred concern (comparable to how task 048 left v1 map markup in place, "not redesigned") avoids silently dropping a working feature under the guise of this task. |
+| D5 | The conditional "Key Figures" topline-stats-carousel + Leaflet crisis map block (`country/key-figures.html`, `country.html`, `drawMap()`/C3 sparklines in `country.js`) is **out of scope** — left rendering as v1, untouched by this task. | Requester's explicit choice. This block sits between the header and the Data Grid section on today's page but appears in none of the 7 Figma exports, and the task's own page-structure outline lists only "Header/Intro" and "Data Grids" — treating it as a separate, deferred concern (comparable to how task 048 left v1 map markup in place, "not redesigned") avoids silently dropping a working feature under the guise of this task. |
 | D6 | The chart-legend's "N/A" percentage is computed via a **pure Jinja2 aggregation** over the already-fetched `category.data_series` — no changes to `data_completeness.py`. Superseded by D9 for the per-category display: each category card renders one real swatch per actual sub-category state (no separate mini-progress-bar model). When a location has zero N/A sub-categories, the page-level chart's 4th legend swatch is hidden rather than always shown. | Requester's explicit choice. Keeps the "no backend changes" constraint intact (§3.1, R1); hiding at zero avoids showing an always-present but meaningless "N/A: 0%" swatch. |
 | D7 | Hover tooltips on `.data-grid-checkbox` status swatches are **per-dataset only** (reusing `dataset.general_comment`, per D1/§3.5). The static header-level chart-legend swatches and each category card's own summary swatch do **not** get any tooltip content. | Requester's explicit choice, confirming v1's existing behavior (only per-dataset rows carry "Limitations" text) rather than inventing new tooltip copy for swatches that aren't tied to one specific dataset. |
 | D8 | The 3-stat divided KPI row (§2.3: "Total datasets in the Data Grid" / "Organisations contributing" / "Sub-categories available & up-to-date") **extends `c-stats-card`** (task 058), adapted from a card grid to a single borderless flex row with vertical-line separators, rather than extending `c-kpi-card` or introducing new page-scoped markup. | Requester's explicit choice. Reuses the existing borderless-card visual language (already the closest fit per §3.3) instead of adding a fourth distinct "stats row" pattern to the codebase. |
@@ -92,7 +92,7 @@ them) is superseded by CSS-driven responsive behavior.
 
 ### 1.3 Header / Intro (current v1)
 
-`country.html:35-100` (`{% block crisis_data %}`):
+`country.html` (`{% block crisis_data %}`):
 
 ```jinja2
 <h1 class="country-title">{{ data.country_dict.display_name }}</h1>
@@ -119,7 +119,7 @@ has a 1:1 conceptual match:
 
 ### 1.4 Data Grid section (current v1)
 
-`country.html:187-239`:
+`country.html` (`{% if data.data_completeness %}`):
 
 ```jinja2
 {% if data.data_completeness %}
@@ -144,7 +144,7 @@ has a 1:1 conceptual match:
 {% endif %}
 ```
 
-`country/completeness_list.html` (97 lines) — the grid body, a Bootstrap `col-12 col-md-4` 3-per-row grid
+`country/completeness_list.html` — the grid body, a Bootstrap `col-12 col-md-4` 3-per-row grid
 of `.data-item` category cards:
 
 ```jinja2
@@ -217,7 +217,7 @@ touched or migrated here.
 .show-completeness-legend:hover ~ .completeness-legend { display: block; }
 ```
 
-`country/completeness_legend.html` (30 lines) is a static floating panel: "What do the Data Grids measure?"
+`country/completeness_legend.html` is a static floating panel: "What do the Data Grids measure?"
 intro text + a 3-state color-swatch key (available/up-to-date, available/not-up-to-date, unavailable). This
 is **not** JS-driven and **not** a drawer — hovering the "Show legend" link is the entire mechanism. Per D2,
 this whole panel is retired in v2.
@@ -226,8 +226,7 @@ this whole panel is retired in v2.
 
 All data-completeness content is Jinja2-rendered from the initial page response. Data flow:
 `country_helper._get_data_completeness()` → `caching.cached_data_completeness()` →
-`DataCompleteness.get_config()` (`ckanext-hdx_org_group/ckanext/hdx_org_group/helpers/data_completeness.py`,
-329 lines), which:
+`DataCompleteness.get_config()` (`ckanext-hdx_org_group/ckanext/hdx_org_group/helpers/data_completeness.py`), which:
 
 1. Fetches a **per-country YAML config** from an external URL (`hdx.datagrid.config_url_pattern` setting) —
    defines the 6 categories, their sub-categories, and Solr include/exclude rules per sub-category.
@@ -254,7 +253,7 @@ navigation until the tracking call resolves/times out.
 
 | Event (`link_type`) | Where | Logged-in behavior |
 |---|---|---|
-| `data grid dataset` | Every dataset link in `completeness_list.html:69` | Tracked for all users |
+| `data grid dataset` | Every dataset link in `completeness_list.html` | Tracked for all users |
 | `data grid add data` | "Add Data" link, logged-out only | Logged-in users get a plain `onclick="contributeAddDetails(...)"` call — **not tracked today** (existing asymmetry, preserve as-is) |
 
 **The expand/collapse checkbox has zero analytics tracking today** — per D12, v2 does not add tracking here
@@ -264,7 +263,7 @@ either.
 
 Confirmed: this section — visible directly below the Data Grid in every one of the 7 Figma exports, and
 structurally distinct from the excluded "You might also like" `.signals` block further down the same page
-— renders via the **same shared snippet** `organization/read.html:86-87` (task 056) already calls with
+— renders via the **same shared snippet** `organization/read.html` (task 056) already calls with
 `v2=true`:
 
 ```jinja2
@@ -613,7 +612,7 @@ itself), with the global toggle just setting `.open` on every card's `<details>`
 |---|---|
 | **R1 — N/A-state vs. "no backend changes" constraint (HIGH)** | The new 4-state chart-legend needs an "N/A" count that `data_completeness.py` explicitly excludes from its stats today. Per D6, this is a pure-Jinja2 aggregation with zero Python changes — must be validated during implementation, not assumed to just work. |
 | **R2 — Two new/extended components built simultaneously (MEDIUM)** | The status swatch (new) and the KPI/stat-row (extends `c-stats-card`, D8) are both needed for this one page with no existing precedent to copy wholesale. |
-| **R3 — Template ancestor-chain migration (MEDIUM)** | `country.html` currently extends `crisis/crisis-base.html` → v1 `page.html`. Re-parenting to `v2/page.html` means re-implementing every page-wide block the v1 shell currently provides — breadcrumb, `{% block analytics_group_names %}`/`{% block analytics_group_ids %}`/`{% block analytics_came_from %}`/`{% block analytics_supports_notifications %}` (all present in `country.html:4-11` — must be preserved per CONVENTIONS' "Preserve analytics and functional logic" rule), SEO blocks (`{% block subtitle %}`, `{% block meta %}`), and the mobile/desktop `{% block links %}` alternate-media link. |
+| **R3 — Template ancestor-chain migration (MEDIUM)** | `country.html` currently extends `crisis/crisis-base.html` → v1 `page.html`. Re-parenting to `v2/page.html` means re-implementing every page-wide block the v1 shell currently provides — breadcrumb, `{% block analytics_group_names %}`/`{% block analytics_group_ids %}`/`{% block analytics_came_from %}`/`{% block analytics_supports_notifications %}` (all present in `country.html` — must be preserved per CONVENTIONS' "Preserve analytics and functional logic" rule), SEO blocks (`{% block subtitle %}`, `{% block meta %}`), and the mobile/desktop `{% block links %}` alternate-media link. |
 | **R4 — Missing 6th category icon (LOW)** | Only 5 of 6 category SVG icons exist (§6.1) — "Geography & Infrastructure" uses the existing generic `location.svg` (D15). |
 | **R5 — Complementary-dataset visual treatment (LOW)** | `dataset.is_complementary` has a v1 CSS hook — per D13, it maps to the indent-icon treatment in the new sub-category rows (§3.6). |
 | **R6 — Shared script left untouched (LOW)** | `country.js`'s `onDataCompletenessExpand` is orphaned (the v1 checkbox it bound to no longer renders) rather than extracted — simpler than editing a shared file that still serves the out-of-scope Key Figures/map block (D5). |

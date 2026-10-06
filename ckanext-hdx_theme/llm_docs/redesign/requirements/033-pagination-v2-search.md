@@ -49,7 +49,7 @@ The `pager()` method accepts `format="~2~"` (radius 2 around current), `symbol_p
 The HDX search path uses `SearchLogic` (not `ckan/views/dataset.py` directly). A custom `pager_url` closure is created and wired into the `Page` object:
 
 ```python
-# search_logic.py:276–281
+# search_logic.py
 def _get_pager_function(self, package_type):
     def pager_url(q=None, page=None):
         params = list(self._params_nopage())
@@ -57,7 +57,7 @@ def _get_pager_function(self, package_type):
         return self._search_url(params, package_type)
     return pager_url
 
-# search_logic.py:416–420
+# search_logic.py
 def _params_nopage(self):
     params_to_skip = ['_show_filters']
     return [(k, v) for k, v in request.args.items(multi=True)
@@ -74,7 +74,7 @@ This mechanism is already tested: `ckanext-hdx_search/tests/test_pages/test_pagi
 
 ### Current template rendering point
 
-**File:** `ckanext-hdx_theme/ckanext/hdx_theme/templates/search/snippets/search_results_wrapper.html:33–35`
+**File:** `ckanext-hdx_theme/ckanext/hdx_theme/templates/search/snippets/search_results_wrapper.html`
 
 ```jinja2
 {% block page_pagination %}
@@ -82,7 +82,7 @@ This mechanism is already tested: `ckanext-hdx_search/tests/test_pages/test_pagi
 {% endblock %}
 ```
 
-This block is reached for every page load (v2 and non-v2). The `v2` variable is available here — it is passed as `v2=true` from `search/search.html:62` via `h.snippet(...)`.
+This block is reached for every page load (v2 and non-v2). The `v2` variable is available here — it is passed as `v2=true` from the `search_results_wrapper` block of `search/search.html` via `h.snippet(...)`.
 
 ### v2 conditional wiring (confirmed)
 
@@ -118,7 +118,7 @@ Parameters:
 
 **Critical constraint:** The component builds each page link as `href="{{ base_url }}{{ p }}"`. This means `base_url` must be the complete URL prefix up to and including `page=` — e.g. `/dataset?q=water&organization=wfp&page=`. If `base_url` omits any active params, those params are silently dropped when navigating to the next page.
 
-**Styles:** `fanstatic/v2/components/pagination.css` (compiled from `pagination.less:131–218`). Already bundled in `v2-components-styles`. **No new CSS file needed.**
+**Styles:** `fanstatic/v2/components/pagination.css` (compiled from `pagination.less`). Already bundled in `v2-components-styles`. **No new CSS file needed.**
 
 ---
 
@@ -206,7 +206,7 @@ Subclass or modify `ckan/lib/pagination.py` to render `c-pagination` markup dire
 
 **File:** `ckanext-hdx_theme/ckanext/hdx_theme/templates/search/snippets/search_results_wrapper.html`
 
-Replace lines 33–35:
+Replace the `page_pagination` block:
 ```jinja2
 {% block page_pagination %}
     {{ my_c.page.pager(q=my_c.q) }}

@@ -62,8 +62,8 @@ if read_logic.org_meta.is_custom:
 else:
     # ... render('organization/read.html', ...)
 ```
-(`views/organization.py:67-90`). `is_custom` comes from the org extras flag `custom_org`
-(`org_meta_dao.py::OrgMetaDao.__process_custom()`, lines 164-177) — a manually-toggled admin
+(`read()` in `views/organization.py`). `is_custom` comes from the org extras flag `custom_org`
+(`org_meta_dao.py::OrgMetaDao.__process_custom()`) — a manually-toggled admin
 checkbox ("Use custom organisation page"), not a hardcoded org list. It also unlocks two JSON
 extras blobs: `customization` (image_sq, image_rect, highlight_color, logo_bg_color,
 topline_resource) and `visualization_config` (embedded/embedded-preview iframe settings).
@@ -106,13 +106,13 @@ triggers an existing JS-driven flow. v2 must call the exact same handler, unchan
 
 | Boolean | Check | Computed in |
 |---|---|---|
-| `can_edit` | `check_access('organization_update', {'id': org_id})` | `organization_read_logic.py:104`, `org_meta_dao.py:125` |
-| `can_create_dataset` | `check_access('package_create', {'organization_id': org_id, 'owner_org': org_id})` | `organization_read_logic.py:105-108`, `org_meta_dao.py:126-128` |
-| `allow_basic_user_info` | `check_access('hdx_basic_user_info')` (= just logged in) | `organization_read_logic.py:101`; auth fn in `hdx_theme/helpers/auth.py:39-41` |
-| `allow_req_membership` | `not user_in_org_or_group(org_id) and allow_basic_user_info` | `organization_read_logic.py:102` |
-| `display_group_message` | current user is themselves a member (`hdx_member_list`) | `org_meta_dao.py::fetch_group_message_topics()` → `hdx_package/helpers/membership_data.py:50` |
-| "Get notified" visible | `hdx_supports_notifications('organization', org_id, org_dict)` — a **business rule**, not an ACL | `hdx_theme/helpers/helpers.py:1167` |
-| Requested Data tab visible | `check_access('organization_update', {'id': org_dict.id})` (same as `can_edit`) | `custom_org.html:53` / `read_base.html` equivalent |
+| `can_edit` | `check_access('organization_update', {'id': org_id})` | `organization_read_logic.py::OrgReadLogic.read()`, `org_meta_dao.py::OrgMetaDao.fetch_permissions()` |
+| `can_create_dataset` | `check_access('package_create', {'organization_id': org_id, 'owner_org': org_id})` | `organization_read_logic.py::OrgReadLogic.read()`, `org_meta_dao.py::OrgMetaDao.fetch_permissions()` |
+| `allow_basic_user_info` | `check_access('hdx_basic_user_info')` (= just logged in) | `organization_read_logic.py::OrgReadLogic.read()`; auth fn in `hdx_theme/helpers/auth.py` |
+| `allow_req_membership` | `not user_in_org_or_group(org_id) and allow_basic_user_info` | `organization_read_logic.py::OrgReadLogic.read()` |
+| `display_group_message` | current user is themselves a member (`hdx_member_list`) | `org_meta_dao.py::fetch_group_message_topics()` → `hdx_package/helpers/membership_data.py::get_message_groups()` |
+| "Get notified" visible | `hdx_supports_notifications('organization', org_id, org_dict)` — a **business rule**, not an ACL | `hdx_theme/helpers/helpers.py` |
+| Requested Data tab visible | `check_access('organization_update', {'id': org_dict.id})` (same as `can_edit`) | `content_primary_nav` in `custom_org.html` / `read_base.html` equivalent |
 
 The pattern is belt-and-braces: computed once in `OrgReadLogic`/`OrgMetaDao`, passed as plain
 booleans into templates, and in a few spots re-checked with `h.check_access(...)` directly. v2

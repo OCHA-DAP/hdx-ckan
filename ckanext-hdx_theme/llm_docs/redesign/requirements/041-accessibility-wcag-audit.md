@@ -497,7 +497,8 @@ Every state change that affects the user's understanding of the UI must update a
 | Checked / unchecked | `aria-checked="true/false"` |
 | Selected / unselected | `aria-selected="true/false"` |
 | Hidden / visible (structural) | `aria-hidden="true/false"` |
-| Current item in nav/list | `aria-current="true"` |
+| Link to the current page (nav-item, tabs, pagination) | `aria-current="page"` |
+| Current in-page anchor (anchor-links) | `aria-current="true"` |
 
 ---
 

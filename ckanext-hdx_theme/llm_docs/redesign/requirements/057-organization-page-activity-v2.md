@@ -64,7 +64,7 @@ visually disconnected from the v2 hero a visitor just saw on the Datasets tab.
 
 ### 1.2 Routing / view (today) — the one `is_custom` branch task 056 did NOT unify
 
-`ckanext-hdx_org_group/ckanext/hdx_org_group/views/organization.py:237-278`:
+`ckanext-hdx_org_group/ckanext/hdx_org_group/views/organization.py`:
 ```python
 def activity(id):
     return activity_offset(id)
@@ -88,7 +88,7 @@ hdx_org.add_url_rule(u'/activity/<id>', view_func=activity)
 hdx_org.add_url_rule(u'/activity/<id>/<int:offset>', view_func=activity_offset, defaults={'offset': 0})
 ```
 Unlike `read()` (unified by 056 into one template for standard+custom orgs, `views/
-organization.py:67-90`), `activity_offset()` **still branches on `org_meta.is_custom`** to pick
+organization.py`), `activity_offset()` **still branches on `org_meta.is_custom`** to pick
 between two templates. Per D8, this branch is removed: the view renders one unified template
 regardless of `is_custom`, the same template-selection-only edit 056 made to this same file for
 `read()`.
@@ -119,7 +119,7 @@ There is also a generic v2 numbered pager, `v2/components/pagination.html`, alre
 |---|---|
 | `ckanext-hdx_theme/ckanext/hdx_theme/templates/v2/components/activity-item.html` | `c-activity-item` — single reusable timeline item (dot+line, actor/action/subject/time) |
 | `.../templates/v2/activity-stream.html` | Orchestrator: loops `activity_stream`, dispatches all **23** CKAN activity types via one `{% if/elif %}` chain, calls `activity-item.html` per item, wraps in `.c-activity-stream` |
-| `.../helpers/actions.py:737-748` (`hdx_package_activity_stream`) | AJAX action: `package_activity_list(limit=7)` → renders `v2/activity-stream.html` server-side → returns HTML |
+| `.../helpers/actions.py` (`hdx_package_activity_stream`) | AJAX action: `package_activity_list(limit=7)` → renders `v2/activity-stream.html` server-side → returns HTML |
 | `.../fanstatic/v2/pages/dataset.js` (`fetchActivitiesIfNeeded`) | On the dataset page's collapsible Activity accordion first-open, POSTs to `hdx_package_activity_stream`, injects the HTML |
 | `ckanext-hdx_theme/ckanext/hdx_theme/hdx-styles/src/common/less/v2/components/activity-item.less` | `.c-activity-item` (`__timeline/__line/__dot/__content/__actor/__action/__time`) + `.c-activity-stream` (flex column, `__empty` state) |
 
@@ -221,15 +221,15 @@ existing dispatcher (§4) instead of the v1 FA-icon-stack macros.
    to `v2/activity-stream.html` (root of `v2/`, alongside `header.html`/`footer.html`/`page.html` —
    not nested under `v2/components/` — the file was simply misfiled under `package/` when built for
    task 046). Its **one existing caller**,
-   `helpers/actions.py:744` (`hdx_package_activity_stream`), is updated to the new path. No logic
+   `helpers/actions.py` (`hdx_package_activity_stream`), is updated to the new path. No logic
    inside the file changes.
 2. The new org Activity v2 template calls it exactly the way the dataset page does:
    ```jinja
    {% snippet 'v2/activity-stream.html',
        activity_stream=group_activity_stream, id=org_dict.id, object_type='organization' %}
    ```
-   using the `group_activity_stream` variable the view already provides today (`views/
-   organization.py:271`) — **no new view-layer data shape is needed**, just a new template
+   using the `group_activity_stream` variable the view already provides today (`activity_offset()` in `views/
+   organization.py`) — **no new view-layer data shape is needed**, just a new template
    consuming the existing `extra_vars`.
 3. Because the dispatcher is already type-generic (§1.4), no new `{% elif %}` branches are required
    to support org-relevant activity types (org edits, dataset changes within the org, tag/follow
@@ -268,7 +268,7 @@ Per D1: a plain **server-rendered "Load more" link**, not AJAX-append and not th
 |---|---|---|
 | Breadcrumb | **Reuse as-is** — `v2/components/breadcrumb.html` | Same 3-item usage as the Datasets tab (056 §Component Strategy) |
 | Org hero | **Reuse as-is** — `v2/components/page-header.html` | Already extended by 056 with everything the org page needs (`member_since`, `header_actions`, `header_stats`); no new params required for Activity. (`header_stats` is no longer passed here — see 056's "KPI-style cards?" — the hero no longer shows a Datasets/Members count.) |
-| Tabs bar | **Reuse as-is** — `v2/components/tabs.html`, mark `Activity` item `active: true` | Same `items` list already defined in `organization/read.html:110-117` (or its Activity-tab equivalent) — no component change, just which item gets `active` |
+| Tabs bar | **Reuse as-is** — `v2/components/tabs.html`, mark `Activity` item `active: true` | Same `items` list already defined in the `pre_primary` block of `organization/read.html` (or its Activity-tab equivalent) — no component change, just which item gets `active` |
 | Activity item | **Reuse as-is** — `v2/components/activity-item.html` (`c-activity-item`) | §3 — visually matches Figma exactly, zero extension needed |
 | Activity dispatcher | **Relocate**, don't duplicate — `package/snippets/activity_stream_v2.html` → `v2/activity-stream.html` (D2, D6) | Already generic across all 23 types (§1.4/§4); relocating avoids a second copy of 23 type-branches while fixing the semantically-odd "package" naming for an org-page consumer |
 | Section heading | **New, minimal** — static title, no accordion behavior (D3) | Figma's chevron styling doesn't apply once there's no sibling content to collapse against |
@@ -294,7 +294,7 @@ itself doesn't change between tabs.
 
 | Risk | Mitigation |
 |---|---|
-| Breaking the dataset page's Activity accordion when relocating the shared dispatcher (D2) | Single known call site (`helpers/actions.py:744`); update it in the same change that moves the file; no logic inside the file is touched |
+| Breaking the dataset page's Activity accordion when relocating the shared dispatcher (D2) | Single known call site (`hdx_package_activity_stream` in `helpers/actions.py`); update it in the same change that moves the file; no logic inside the file is touched |
 | `activity_offset()`'s `is_custom` branch unified into one template call (D8) leaves `custom_activity_stream.html` uncalled from this route | Accepted per D9 — the file is kept in place (unused/orphaned by this route) rather than deleted, matching the precedent of keeping superseded templates around until a dedicated cleanup pass |
 | Missing activity types on the org feed | Not expected — the dispatcher is already generic and covers all 23 types (§1.4); confirmed by direct code audit, not inferred |
 | "Load more" dead-end click when activity count is an exact multiple of the page limit (§5) | Documented as a known, accepted edge case (D5); not a blocking defect either way (worst case: one extra click shows an empty page) |
@@ -319,7 +319,7 @@ itself doesn't change between tabs.
 | # | Decision | Rationale |
 |---|---|---|
 | D1 | Pagination is a server-rendered "Load more" anchor to the next offset (full page reload) — not AJAX-append, not the generic numbered `v2/components/pagination.html` | Matches Figma's plain-link styling with no new JS; requester's explicit choice over the AJAX and generic-pager alternatives |
-| D2 | The type-dispatch orchestrator `package/snippets/activity_stream_v2.html` is relocated to `v2/activity-stream.html`; the dataset page's one call site (`helpers/actions.py:744`) is updated to match. No dispatch logic is duplicated. | Requester's explicit choice over calling the package-scoped file in place from the org template |
+| D2 | The type-dispatch orchestrator `package/snippets/activity_stream_v2.html` is relocated to `v2/activity-stream.html`; the dataset page's one call site (`hdx_package_activity_stream` in `helpers/actions.py`) is updated to match. No dispatch logic is duplicated. | Requester's explicit choice over calling the package-scoped file in place from the org template |
 | D3 | The "Activity" section heading is a static title with no collapse/accordion behavior, despite Figma styling it like the dataset page's collapsible sections | The Activity tab is a full standalone page — collapsing its only content would hide everything with nothing else visible |
 | D4 | No GA/analytics data-attributes are added to activity items in this task | Requester's explicit choice; stays consistent with the pre-existing gap on the dataset page's `c-activity-item`, flagged rather than silently perpetuated |
 | D5 | The "Load more" has-more heuristic stays frontend-only (compare returned count to the configured limit) rather than adding a `has_more` boolean computed view-side | Requester's explicit choice; keeps the task within its "no backend/data changes" scope. Accepted edge case: an org with exactly a multiple of the limit's worth of activity gets one dead-end click on an empty page |
@@ -336,7 +336,7 @@ itself doesn't change between tabs.
 | File | Change |
 |---|---|
 | `ckanext-hdx_theme/ckanext/hdx_theme/templates/package/snippets/activity_stream_v2.html` | Relocated to `v2/activity-stream.html` (D2, D6); contents unchanged |
-| `ckanext-hdx_theme/ckanext/hdx_theme/helpers/actions.py:744` | `hdx_package_activity_stream` updated to render the new relocated path |
+| `ckanext-hdx_theme/ckanext/hdx_theme/helpers/actions.py` | `hdx_package_activity_stream` updated to render the new relocated path |
 | `ckanext-hdx_theme/ckanext/hdx_theme/templates/organization/activity_stream.html` | Replaced with a v2 template: extends `v2/page.html`, reuses `page-header.html` + `tabs.html` (Activity active), calls the relocated activity-stream snippet, adds the "Load more" link, empty-state copy per D10 |
 | `ckanext-hdx_theme/ckanext/hdx_theme/templates/organization/custom_activity_stream.html` | Kept in place, unused/orphaned by this route (D9) — no edit |
 | `ckanext-hdx_org_group/ckanext/hdx_org_group/views/organization.py` (`activity_offset`) | `is_custom` branch removed; renders the new unified v2 template for all orgs (D8) |

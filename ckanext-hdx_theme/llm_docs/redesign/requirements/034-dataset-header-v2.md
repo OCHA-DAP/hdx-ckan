@@ -21,7 +21,7 @@ Existing functionality (query params, backend logic, analytics) must remain inta
 
 The current header lives entirely in:
 
-`ckanext-hdx_theme/ckanext/hdx_theme/templates/search/snippets/package_list.html` **lines 36–76**
+`ckanext-hdx_theme/ckanext/hdx_theme/templates/search/snippets/package_list.html`
 
 It is wrapped in `<form id="dataset-filter-form">` / `<div id="dataset-filter-start">` and contains:
 
@@ -31,9 +31,9 @@ It is wrapped in `<form id="dataset-filter-form">` / `<div id="dataset-filter-st
 | Header search input (`#headerSearch`) | **Out of scope** |
 | Show filter toggle switch | LG only, v1 Bootstrap switch |
 | Sort dropdown | Via `{% snippet 'search/snippets/package_search_order.html' %}` |
-| Results per page dropdown | Inline in `package_list.html` lines 52–74 |
+| Results per page dropdown | Inline in `package_list.html` |
 
-The v2 block (`{% if v2 %}`) currently starts at **line 80** of `package_list.html`, covering the filter overlay, filter button row, and two-column layout. The header at lines 36–76 is v1 and shared unconditionally.
+The v2 block (`{% if v2 %}`) of `package_list.html` covers the filter overlay, filter button row, and two-column layout. The `#dataset-filter-start` header is v1 and shared unconditionally.
 
 The page entry point for v2 is `search/search.html` → `search_results_wrapper.html` → `package_list.html`.
 
@@ -78,17 +78,17 @@ The v1 snippet renders a Bootstrap dropdown with class `control-order-by orderDr
 
 | Detail | Value |
 |--------|-------|
-| Options | `[10, 25, 50, 100]` (hardcoded in `package_list.html` line 52) |
+| Options | `[10, 25, 50, 100]` (hardcoded in `package_list.html`) |
 | Default | `10` |
 | Query param | `ext_page_size` |
-| Template var | `c.ext_page_size` (set in `search_logic.py` line 222) |
-| Backend | `ckanext-hdx_search/…/search_logic.py` line 222: `int(request.args.get('ext_page_size', num_of_items))` |
+| Template var | `c.ext_page_size` (set in `SearchLogic._search()` in `search_logic.py`) |
+| Backend | `ckanext-hdx_search/…/search_logic.py` (`SearchLogic._search()`): `int(request.args.get('ext_page_size', num_of_items))` |
 | UI | Radio-button Bootstrap dropdown, class `control-items-per-page control-order-by` |
-| JS handler | `fanstatic/datasets/list-header.js` line 109 (`getFilterUrlNew()`) |
+| JS handler | `fanstatic/datasets/list-header.js` (`getFilterUrlNew()`) |
 
 ### 2.5 Analytics
 
-- Mixpanel tracking for sort and results-per-page changes is currently **not active** — commented out in `fanstatic/google-analytics.js` lines 65–74.
+- Mixpanel tracking for sort and results-per-page changes is currently **not active** — commented out in `mixpanelMapping` in `fanstatic/google-analytics.js`.
 - v2 filter tracking is also commented out in `fanstatic/v2/pages/search.js`.
 
 ### 2.6 v2 dropdown component
@@ -114,7 +114,7 @@ Size S specs: 12px font, 24px height, padding 6/8/6/10px, gap 4px. Panel renderi
 
 ### 2.7 Filter overlay (already implemented)
 
-`package_list.html` lines 103–128 / `v2/search-filters.html` / `search.less`
+`package_list.html` (`#hdx-filter-overlay`) / `v2/search-filters.html` / `search.less`
 
 - Fixed full-screen, `z-index: 500`, shown on MD/SM (< `@hdx-bp-xl` = 80rem/1280px)
 - Structure: header ("Filters" + close) → scrollable body (filter dropdowns) → footer ("Clear filters" + "Show results")
@@ -234,7 +234,7 @@ Add a `navigate_on_select` param to `dropdown.html` emitting a data attribute; J
 
 **Use Option B.**
 
-1. Add a new v2 header block in `package_list.html` inside `{% if v2 %}`, placed before the existing filter-overlay block (line 80).
+1. Add a new v2 header block in `package_list.html` inside `{% if v2 %}`, placed before the existing filter-overlay block.
 2. Render `<h1>Datasets</h1>` (static) and `packages_count` formatted with `h.localised_number()`.
 3. Use `v2/components/dropdown.html` (size=s, no label param, no left icon) for both controls. The labels ("Results per page", "Sort by") are rendered as separate `<span>` elements in the header layout, not as the component's built-in `label` param.
 4. Add a new v2-scoped JS handler that reads list-item selection from the dropdown panel and immediately calls `replaceParam('sort', value)` / `replaceParam('ext_page_size', value)` + resets `page=1`.

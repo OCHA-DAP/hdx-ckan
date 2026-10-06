@@ -76,7 +76,7 @@ requirements drafting).
 ### 1.1 Route and view logic
 
 - Route `/archive`, blueprint `hdx_archived_quick_links`, registered in
-  `ckanext-hdx_theme/ckanext/hdx_theme/plugin.py:412`.
+  `get_blueprint()` in `ckanext-hdx_theme/ckanext/hdx_theme/plugin.py`.
 - `ckanext-hdx_theme/ckanext/hdx_theme/views/archived_quick_links_custom_settings.py::show()`
   builds `archived_items_list` from two sources, concatenated:
   - `_prepare_archived_viz_list(viz_list)` — Quick Links settings entries (action

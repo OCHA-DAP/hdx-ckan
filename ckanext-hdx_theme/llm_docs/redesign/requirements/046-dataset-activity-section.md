@@ -7,7 +7,7 @@
 ## Context
 
 The v2 dataset page already has an activity accordion shell in
-`templates/package/hdx_read.html` (lines 465–477). It is collapsible, starts closed
+`templates/package/hdx_read.html`. It is collapsible, starts closed
 (`aria-expanded="false"`), and currently calls the **v1** `activity_stream.html` snippet,
 which renders `<li>` elements with FontAwesome icon stacks. That markup is incompatible
 with the Figma redesign.
@@ -23,7 +23,7 @@ Jinja snippet server-side and returns raw HTML. That HTML is injected into
 template variable in `dataset.py` is always `[]` and the static `{% snippet %}` call in
 `hdx_read.html` is a dead call — it only renders an empty-state message at page load.
 
-The real rendering path is: accordion opens → JS → API action (`helpers/actions.py:744`) →
+The real rendering path is: accordion opens → JS → API action (`hdx_package_activity_stream` in `helpers/actions.py`) →
 renders `activity-stream.html` → returns HTML → JS injects into wrapper.
 
 ---
@@ -37,7 +37,7 @@ renders `activity-stream.html` → returns HTML → JS injects into wrapper.
 | `ckanext-hdx_theme/.../templates/package/snippets/activity_stream.html` | v1 dispatcher with macros | ❌ Do not modify |
 | `ckanext/activity/templates/snippets/activities/*.html` | 23 per-type v1 item templates | ❌ Do not modify |
 | `ckanext-hdx_theme/.../templates/snippets/activity_item.html` | Legacy dashboard item | ❌ Do not modify |
-| `ckanext-hdx_theme/.../templates/package/hdx_read.html` (line 474) | Dataset page — calls the snippet | ✅ Change snippet name only |
+| `ckanext-hdx_theme/.../templates/package/hdx_read.html` | Dataset page — calls the snippet | ✅ Change snippet name only |
 
 ### v1 item HTML structure (for reference)
 
@@ -220,7 +220,7 @@ The `is_last` flag is **not** a parameter — last-item line termination is hand
 
 ### What is replaced
 
-**`helpers/actions.py:744`** — the `hdx_package_activity_stream` action currently renders
+**`helpers/actions.py`** — the `hdx_package_activity_stream` action currently renders
 `activity_stream.html`. This is the actual AJAX rendering path.
 
 ```python
@@ -231,7 +231,7 @@ return tk.render('package/snippets/activity_stream.html', {...})
 return tk.render('v2/activity-stream.html', {...})
 ```
 
-**`hdx_read.html:474`** — the static snippet call is updated so the page-load empty state
+**`hdx_read.html`** — the static snippet call is updated so the page-load empty state
 also uses the v2 template:
 
 ```jinja2
@@ -244,7 +244,7 @@ also uses the v2 template:
     activity_stream=hdx_activities, id=pkg.id, object_type='package' %}
 ```
 
-**`hdx_read.html:475–477`** — the "See more in your dashboard" link is removed. It was
+**`hdx_read.html`** — the "See more in your dashboard" link is removed. It was
 overwritten by AJAX anyway and is not part of the v2 design.
 
 **`pages/dataset.js`** — the empty-state check is updated from `.activity` to
@@ -262,7 +262,7 @@ var $activities = $(wrapper).find('.c-activity-stream');
 
 - `activity_stream.html` — untouched; still called on org, group, user, dashboard pages
 - All 23 per-type templates in `ckanext/activity/` — untouched
-- The accordion shell in `hdx_read.html` (lines 464–471) — unchanged
+- The accordion shell in `hdx_read.html` — unchanged
 
 ### What is new
 
@@ -315,7 +315,7 @@ No `{% if v2 %}` wrapping is needed around the snippet call.
 
 ### "See more in your dashboard" link
 
-The conditional link at `hdx_read.html:475–477` sits **inside** `.dataset-activity-wrapper`.
+The conditional link at `hdx_read.html` sits **inside** `.dataset-activity-wrapper`.
 Because `$(wrapper).html(response.result)` replaces the entire wrapper contents on AJAX
 success, this link is overwritten once activities load. **Decision: remove the link for v2.**
 The accordion body will contain only the AJAX-injected activity stream.
@@ -536,7 +536,7 @@ activity items (unlike dataset cards). Long dataset titles wrap naturally.
 | Missing LESS typography mixins (`hdx-body-xs`) | Low | Confirmed: `.hdx-body-s-semibold()`, `.hdx-body-s()`, `.hdx-body-xs()` all exist |
 | `#c4d0d1` token resolved | None | Used as `var(--hdx-neutral-3)` CSS custom property in LESS component |
 | `pages/dataset.js` empty-state check targets old `.activity` class | High (will break) | Updated `pages/dataset.js` to `.find('.c-activity-stream')` |
-| `hdx_package_activity_stream` renders v1 HTML | High (blocks v2) | Changed `helpers/actions.py:744` to render `activity-stream.html` |
+| `hdx_package_activity_stream` renders v1 HTML | High (blocks v2) | Changed `helpers/actions.py` to render `activity-stream.html` |
 
 ---
 
@@ -565,7 +565,7 @@ All questions resolved — no open items remain.
    `var(--hdx-neutral-85)` for text color.
 
 6. **AJAX architecture** — Activities are loaded via AJAX through `hdx_package_activity_stream`
-   (`helpers/actions.py:744`). This file IS in scope. The fix is to change the rendered
+   (`helpers/actions.py`). This file IS in scope. The fix is to change the rendered
    snippet from `activity_stream.html` to `activity-stream.html`. The `hdx_activities`
    static path in `dataset.py` remains `= []` and is not restored in this task.
 
@@ -600,9 +600,9 @@ All questions resolved — no open items remain.
 
 | File | Change |
 |---|---|
-| `ckanext-hdx_theme/.../templates/package/hdx_read.html` | Line 474: change snippet name to `activity-stream.html`; remove lines 475–477 (dashboard link) |
-| `ckanext-hdx_theme/ckanext/hdx_theme/helpers/actions.py` | Line 744: render `activity-stream.html` instead of `activity_stream.html` |
-| `ckanext-hdx_theme/.../fanstatic/v2/pages/dataset.js` | Line 58: `.find('.activity')` → `.find('.c-activity-stream')` |
+| `ckanext-hdx_theme/.../templates/package/hdx_read.html` | Change snippet name to `activity-stream.html`; remove the dashboard link |
+| `ckanext-hdx_theme/ckanext/hdx_theme/helpers/actions.py` | `hdx_package_activity_stream`: render `activity-stream.html` instead of `activity_stream.html` |
+| `ckanext-hdx_theme/.../fanstatic/v2/pages/dataset.js` | `.find('.activity')` → `.find('.c-activity-stream')` |
 | `ckanext-hdx_theme/.../fanstatic/webassets.yml` | Add `v2/components/activity-item.css` to `v2-components-styles` bundle |
 
 ## Files NOT to Touch
