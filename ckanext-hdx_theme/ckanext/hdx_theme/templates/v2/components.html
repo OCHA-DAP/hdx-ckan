@@ -1428,6 +1428,16 @@
           label='Disabled', href='#', status='disabled' %}
     </div>
 
+    <h2 class="demo-subsection__heading">Nav items — size s (vertical menu)</h2>
+    <div class="demo-max-width-m">
+      {% snippet 'v2/components/nav-item.html',
+          label='Newsfeed', href='#', size='s' %}
+      {% snippet 'v2/components/nav-item.html',
+          label='My Organisations', href='#', size='s', status='active' %}
+      {% snippet 'v2/components/nav-item.html',
+          label='Profile and Password', href='#', size='s' %}
+    </div>
+
     <h2 class="demo-subsection__heading">Anchor links (sidebar)</h2>
     <div class="demo-row demo-row--flex-start">
       <div class="demo-anchor-links-sidebar">
@@ -2211,7 +2221,8 @@
             'package_count': 4800,
             'created': '2023-10-31T00:00:00'
           },
-          member_count=12 %}
+          member_count=12,
+          member_since='2023-10-31T00:00:00' %}
     </div>
 
     {# ── No description ───────────────────────────────────────── #}
@@ -2225,7 +2236,8 @@
             'package_count': 293,
             'created': '2019-03-15T00:00:00'
           },
-          member_count=5 %}
+          member_count=5,
+          member_since='2019-03-15T00:00:00' %}
     </div>
 
     {# ── Minimal — short title, no description, 0 members ──────── #}
@@ -2239,7 +2251,24 @@
             'package_count': 17,
             'created': '2014-06-01T00:00:00'
           },
-          member_count=0 %}
+          member_count=0,
+          member_since='2014-06-01T00:00:00' %}
+    </div>
+
+    {# ── Dashboard variant — role + last updated (My Organisations) ── #}
+    <h2 class="demo-subsection__heading">Dashboard — role + last updated</h2>
+    <div class="demo-row demo-row--flex-start">
+      {% snippet 'v2/components/org-list-card.html',
+          org={
+            'title': 'Example Organisation for Humanitarian Data',
+            'name': 'example-organisation',
+            'description': '',
+            'package_count': 293,
+            'created': '2019-03-15T00:00:00'
+          },
+          member_count=5,
+          role=_('Admin'),
+          last_updated='2023-10-31T00:00:00' %}
     </div>
 
   </section>

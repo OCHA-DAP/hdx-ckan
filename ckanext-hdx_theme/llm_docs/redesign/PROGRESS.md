@@ -110,6 +110,7 @@ CSS custom property equivalents (`--hdx-*`) are defined in `v2/foundation.css` (
 | Archived Dataviz | `archived_quick_links/main.html` | Extends `v2/page.html`; single-column; title+count header, outbound-link row list via `text-button.html` + `c-divider`; see `requirements/066-archived-dataviz-v2.md` |
 | Dataviz Gallery | `dataviz/index.html` | Extends `v2/page.html`; single-column; `c-dataviz-card` grid, `search-nav-controls.html` reused for sort/page-size (12/24/36); see `requirements/067-dataviz-gallery-v2.md` |
 | Request access | `package/request_access.html` | Extends `v2/page.html`; see `requirements/061-hdx-connect-flow-v2.md` |
+| My Organisations (user dashboard) | `user/dashboard_organizations.html` | Extends `v2/user-dashboard-base.html` (shared left menu via `c-nav-item` size s, for the dashboard/settings pages); sibling dashboard/settings pages still v1; see `requirements/072-user-dashboard-my-organisations-v2.md` |
 
 ### Pages in holding state (on `page_light.html`)
 
@@ -139,7 +140,7 @@ Each page below extends `page_light.html`, manually overrides `{% block styles %
 - [x] Avatar + badge
 - [x] Dropdown
 - [x] Input field
-- [x] Navigation
+- [x] Navigation — nav item `size` m (navbar) / s (vertical menu, user dashboard sidebar)
 - [x] Selection
 - [x] Text link
 - [x] Breadcrumb
@@ -156,7 +157,7 @@ Each page below extends `page_light.html`, manually overrides `{% block styles %
 - [x] Anchor links — extended with `heading`, `with_mobile_dropdown` params; mobile sticky dropdown (`c-anchor-links-mobile`) styles in `components/anchor-links.less`; wrapper always renders (no heading required for sticky); supports `external` flag for new-tab links with icon
 - [x] Info icon — `info-icon.html` snippet encapsulating the `c-tooltip-anchor` + `c-info-icon` button + tooltip pattern; HTML-only (no dedicated LESS/CSS)
 - [x] KPI card — `kpi-card.html` / `kpi-card.css`; label + optional info icon + bold value; used on All Locations and All Organisations pages
-- [x] Org list card — `org-list-card.html` / `org-list-card.css`; title + date + expandable description + dataset/member counts; used on All Organisations page
+- [x] Org list card — `org-list-card.html` / `org-list-card.css`; title + optional `role`/`member_since`/`last_updated` line + expandable description + dataset/member counts; used on All Organisations and My Organisations pages
 - [x] Step pager — `step-pager.html` / `step-pager.css`; horizontal 3-step progress indicator; pure CSS (no JS); used on all signup form pages
 - [x] Signup tier — `signup-tier.html` / `signup-tier.css`; tier selection card for value-proposition page; default and primary (blue) variants; numbered feature badges or checkmark icons
 - [x] Content card — `content-card.html` / `content-card.less`; title + description + `c-text-link`; used in HAPI Be Inspired section
@@ -221,6 +222,7 @@ Bundle configuration:
 - `hdx_theme/v2-location-page-styles` / `-scripts` — Location page: adds `v2/pages/location.css` / `v2/pages/location.js`
 - `hdx_theme/v2-crisis-page-styles` / `-scripts` — Crisis/event pages: adds `v2/pages/crisis.css` / `v2/pages/crisis.js`
 - `hdx_theme/v2-crisis-pages-page-styles` — Crisis Pages page: adds `v2/pages/crisis-pages.css`
+- `hdx_theme/v2-user-dashboard-page-styles` — User dashboard/settings pages (via `v2/user-dashboard-base.html`): adds `v2/pages/user-dashboard.css`; loaded after `v2-search-page-styles`, whose sidebar/content classes the base reuses
 - `hdx_theme/v2-org-list-page-styles` — All Organisations page: adds `v2/pages/org-list.css` (org-list-card styles come from the preloaded `v2-components-styles` bundle)
 - `hdx_theme/v2-org-list-page-scripts` — All Organisations page: adds `v2/url-nav.js` + `v2/pages/org-list.js`
 - `hdx_theme/v2-org-page-styles` — Organization page (all tabs, 056–059): adds `v2/pages/org.css` (hero band, activity/stats sections, members layout incl. the invite tags widget)

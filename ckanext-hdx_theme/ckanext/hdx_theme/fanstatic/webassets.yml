@@ -1844,3 +1844,9 @@ v2-crisis-pages-page-styles:
   <<: *common-css
   contents:
     - v2/pages/crisis-pages.css
+
+v2-user-dashboard-page-styles:
+  output: ckanext-hdx_theme/%(version)s_v2-user-dashboard-page-styles.css
+  <<: *common-css
+  contents:
+    - v2/pages/user-dashboard.css
