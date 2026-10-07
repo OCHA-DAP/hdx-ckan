@@ -89,7 +89,7 @@ There are three active layout base templates. The goal is to maintain exactly th
 - `ckanext-hdx_theme/ckanext/hdx_theme/templates/v2/header.html` — top-bar + responsive navbar (fully implemented)
 - `ckanext-hdx_theme/ckanext/hdx_theme/templates/v2/footer.html` — dark-teal footer panel (fully implemented)
 
-Pages in holding state on `page_light.html` (org/join, etc.) manually override `{% block header_core %}` to include the legacy `header-mobile.html`. The following pages have been migrated to `v2/page.html`: homepage, dataset search, dataset page, resource page, all locations, all organisations, organization page (Datasets / Activity / Stats / Members tabs; HDX Connect tab postponed), contact contributor, signup flow (all five pages), HAPI landing page, Signals landing page, and My Organisations (user dashboard, via `v2/user-dashboard-base.html`). See [**redesign/PROGRESS.md**](redesign/PROGRESS.md) for the full holding-state and migrated-pages lists.
+Pages in holding state on `page_light.html` (org/join, etc.) manually override `{% block header_core %}` to include the legacy `header-mobile.html`. The following pages have been migrated to `v2/page.html`: homepage, dataset search, dataset page, resource page, all locations, all organisations, organization page (Datasets / Activity / Stats / Members tabs; HDX Connect tab postponed), contact contributor, signup flow (all five pages), HAPI landing page, Signals landing page, and My Organisations and My Datasets (user dashboard, via `v2/user-dashboard-base.html`). See [**redesign/PROGRESS.md**](redesign/PROGRESS.md) for the full holding-state and migrated-pages lists.
 
 ## BEM components (HDX custom UI blocks)
 
@@ -221,6 +221,15 @@ Example page-specific template (light search):
 - **Template**: `ckanext-hdx_theme/ckanext/hdx_theme/templates/user/dashboard_organizations.html`
   - Extends `v2/user-dashboard-base.html` (left menu at XL from `h.hdx_get_user_dashboard_nav_sections()`, breadcrumb, `<title>`), which extends `v2/page.html`. Children set `user_nav_active` and `page_label`.
 - **Core assets**: `hdx_theme/v2-search-page-styles` (sidebar/content layout classes), `hdx_theme/v2-user-dashboard-page-styles`.
+
+---
+
+### My Datasets dashboard (`/dashboard/datasets`)
+
+- **Template**: `ckanext-hdx_theme/ckanext/hdx_theme/templates/user/dashboard_datasets.html`
+  - Extends `v2/user-dashboard-base.html`; the search-page filters (plus an Update status dropdown) fill `{% block tertiary_content %}`, the right-hand column.
+  - List: `search_results_wrapper.html` with `admin_view=true`, `title_size='dashboard'` and `list_subtitle`; cards via `package_item_v2.html`'s `admin_view` branch.
+- **Core assets**: as My Organisations, plus `hdx_theme/v2-search-page-scripts`.
 
 ---
 

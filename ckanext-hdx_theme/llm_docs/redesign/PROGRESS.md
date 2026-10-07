@@ -110,7 +110,8 @@ CSS custom property equivalents (`--hdx-*`) are defined in `v2/foundation.css` (
 | Archived Dataviz | `archived_quick_links/main.html` | Extends `v2/page.html`; single-column; title+count header, outbound-link row list via `text-button.html` + `c-divider`; see `requirements/066-archived-dataviz-v2.md` |
 | Dataviz Gallery | `dataviz/index.html` | Extends `v2/page.html`; single-column; `c-dataviz-card` grid, `search-nav-controls.html` reused for sort/page-size (12/24/36); see `requirements/067-dataviz-gallery-v2.md` |
 | Request access | `package/request_access.html` | Extends `v2/page.html`; see `requirements/061-hdx-connect-flow-v2.md` |
-| My Organisations (user dashboard) | `user/dashboard_organizations.html` | Extends `v2/user-dashboard-base.html` (shared left menu via `c-nav-item` size s, for the dashboard/settings pages); sibling dashboard/settings pages still v1; see `requirements/072-user-dashboard-my-organisations-v2.md` |
+| My Organisations (user dashboard) | `user/dashboard_organizations.html` | Extends `v2/user-dashboard-base.html` (shared left menu via `c-nav-item` size s, for the dashboard/settings pages); other sibling dashboard/settings pages still v1; see `requirements/072-user-dashboard-my-organisations-v2.md` |
+| My Datasets (user dashboard) | `user/dashboard_datasets.html` | Extends `v2/user-dashboard-base.html`; search-page filters in the new right-hand `tertiary_content` column; list via `search_results_wrapper.html` with `admin_view` (c-dataset-card `labels` + actions, per-card delete `c-drawer`); see `requirements/073-user-dashboard-my-datasets-v2.md` |
 
 ### Pages in holding state (on `page_light.html`)
 
@@ -151,7 +152,7 @@ Each page below extends `page_light.html`, manually overrides `{% block styles %
 - [x] Search + autocomplete
 - [x] File type indicators
 - [x] Tooltips
-- [x] Dataset card (with shared clamped-text.js toggle)
+- [x] Dataset card (with shared clamped-text.js toggle; optional `labels` top row and `caller()` actions row, task 073)
 - [x] Resource card
 - [x] Showcase card
 - [x] Anchor links — extended with `heading`, `with_mobile_dropdown` params; mobile sticky dropdown (`c-anchor-links-mobile`) styles in `components/anchor-links.less`; wrapper always renders (no heading required for sticky); supports `external` flag for new-tab links with icon

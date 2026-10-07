@@ -242,12 +242,16 @@ The search page's header block (`hdx-v2-list-header`) and the org Members tab's 
 (`hdx-v2-org-members__header`) share the same row shape via `.hdx-list-header-row()` /
 `.hdx-list-header-row-left()` in `mixins.less` — title+count grouped left, sort/filter controls
 pushed right by the left group's `flex:1`. Their titles call `.hdx-section-title()` like every
-other in-page heading, *except* on the main `/dataset` search page, where an `emphasize_title`
-param bumps the title (and its count) to the page-title font-size scale instead. Dataviz Gallery
+other in-page heading. `package_list.html`'s `title_size` param changes that: `'page'` (main
+`/dataset` search page) bumps the title and count to the page-title font-size scale, and
+`'dashboard'` (My Datasets) uses `.hdx-dashboard-title()` with a `.hdx-body-m()` count. The
+`.hdx-dashboard-title()` / `.hdx-dashboard-subtitle()` mixins are shared with the 072 user
+dashboard header. `list_subtitle` adds a full-width `__subtitle` line; the header row wraps, so
+the controls drop under the title in a narrow column. Dataviz Gallery
 and Archived Dataviz reuse `c-page-header` directly (`title` + `title_count` params) instead. The
 count styling is factored into `.hdx-list-header-count()` (base: family/weight/color, no size) plus
 `.hdx-section-title-count()` (adds the 18→20px ramp, used by the default list-header and Members
-tab) or `.hdx-page-title-font-size()` directly (24/28/32px, used by the `emphasize_title` variant
+tab) or `.hdx-page-title-font-size()` directly (24/28/32px, used by `title_size='page'`
 and `c-page-header`'s own `title_count` badge).
 
 ---
@@ -381,6 +385,8 @@ Components render an `attrs` dict with a separating space before each attribute:
 ```
 
 Leaving any of these unset produces an unclassed wrapper div and makes CSS targeting impossible.
+
+**Right-hand column:** fill `{% block tertiary_content %}` and set `tertiary_class`. `page.html` renders it as a third div after the content column, only when the block is non-empty (like `secondary_content`). My Datasets uses it for the filters; `user-dashboard-base.html` sets `tertiary_class`.
 
 **Single-column pages** (no sidebar): set `content_class` only. `page.html` applies `content_class` whenever it is defined (the former guard `and secondary_block_output != ''` was removed). Use the generic content class — it provides `flex: 1; min-width: 0`:
 

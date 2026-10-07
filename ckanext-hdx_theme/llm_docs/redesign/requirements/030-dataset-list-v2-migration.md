@@ -22,7 +22,7 @@ Migrate the search results dataset list to the v2 layout system and replace indi
 - Items-per-page selector
 - Archived tabs
 - Results count / "no results" state
-- Admin view (`package_item_admin.html`)
+- Admin view (`admin_view`, task 073)
 - Light/mobile theme (`light/snippets/package_list.html`)
 
 ---
@@ -32,7 +32,7 @@ Migrate the search results dataset list to the v2 layout system and replace indi
 | File | Change |
 |---|---|
 | `templates/search/search.html` | Extends `v2/page.html` |
-| `templates/search/snippets/package_list.html` | Results `<ul>` replaced with `<div class="c-dataset-card-list">`; routes to `package_item_v2.html` for non-admin view |
+| `templates/search/snippets/package_list.html` | Results `<ul>` replaced with `<div class="c-dataset-card-list">`; routes every v2 row to `package_item_v2.html` (admin rows via its `admin_view` branch, task 073) |
 | `templates/search/snippets/package_item_v2.html` | **New.** Maps `package` → `c-dataset-card` params; calls `v2/components/dataset-card.html` |
 | `templates/v2/components/dataset-card.html` | Extended: `query` param for highlight support; `requestdata` format type |
 | `less/v2/components/dataset-card.less` | Owns the `.c-dataset-card-list` wrapper layout and its `.highlight` rule |
@@ -291,7 +291,7 @@ No equivalent field. **Dropped from list view** (D8) — visible on the dataset 
 | Query text highlighting | `data-module="highlight"` JS module | Add `query` param to component (Gap 1) |
 | Dataset URL routing | `h.url_for('dataset.read', id=package.name)` | Preserved in `title_href` |
 | Org URL routing | `h.url_for('organization.read', ...)` | Preserved in `org_href` |
-| Edit link (admin view) | `show_edit_link` → `package_item_admin.html` | Out of scope; handled by existing admin snippet |
+| Edit link (admin view) | `admin_view` | Out of scope; `package_item_v2.html`'s `admin_view` branch (task 073) |
 
 ---
 

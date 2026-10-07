@@ -4,9 +4,10 @@
 // used on the dataset/org page header (page-header.html — triggers
 // #contact-members, #group-message-org-action) and the org Members
 // tab (organization/members.html — per-role [data-gm-topic] triggers,
-// drawer id 'group-message-drawer'). Any number of instances can
-// coexist on the same page; each is scoped by its own recaptcha
-// widget id.
+// drawer id 'group-message-drawer'). The dataset page also opens
+// 'gm-header-drawer' on load for a #group-message link (My Datasets
+// dashboard). Any number of instances can coexist on the same page;
+// each is scoped by its own recaptcha widget id.
 // ============================================================
 (function () {
   'use strict';
@@ -164,6 +165,11 @@
       form.addEventListener('change', function () { validate(drawer); });
       tryRenderRecaptcha(drawer, 20);
     });
+
+    if (window.location.hash === '#group-message' && document.getElementById('gm-header-drawer') && window.hdxV2Drawer) {
+      window.hdxV2Drawer('gm-header-drawer').open();
+      history.replaceState(null, '', window.location.pathname + window.location.search);
+    }
   });
 
 })();

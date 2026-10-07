@@ -2015,7 +2015,7 @@
   ══════════════════════════════════════════════════════ #}
   <section class="demo-section" id="dataset-card">
     <h1 class="demo-section__title">Dataset Card</h1>
-    <p class="demo-section__subtitle">responsive · two-column (MD+) · stacked (SM) · description toggle</p>
+    <p class="demo-section__subtitle">responsive · two-column (MD+) · stacked (SM) · description toggle · labels · actions</p>
 
     {# ── Full card — all features enabled ─────────────── #}
     <h2 class="demo-subsection__heading">Full card — location, subnational, description, mixed formats, overflow</h2>
@@ -2065,6 +2065,55 @@
           title_href='#',
           location='Democratic Republic of the Congo',
           date_range='Data from 03 Apr 2024 to 15 Apr 2024' %}
+    </div>
+
+    {# ── Labels + actions — My Datasets dashboard ─────── #}
+    <h2 class="demo-subsection__heading">Labels + actions — status badge, frequency, overdue date, management actions</h2>
+    <div class="demo-row demo-row--flex-start">
+      {% call h.snippet('v2/components/dataset-card.html',
+          org_name='Example Organisation',
+          title='Sudan — Example Monthly Market Monitoring Dataset 2024',
+          title_href='#',
+          description='This example dataset tracks monthly market prices across sample locations.',
+          labels=[
+            {'color': 'dark', 'size': 'xs', 'icon_src': 'v2/icons/lock.svg', 'icon_only': True, 'attrs': {'aria-label': 'Private dataset'}},
+            {'text': 'Expected update frequency: Every month', 'color': 'light', 'size': 'xs'},
+            {'text': 'Update by Jun 1 2026', 'color': 'yellow', 'size': 'xs', 'icon': True, 'icon_src': 'v2/icons/time-clock.svg'},
+          ]) %}
+        <div class="c-dataset-card__actions-group">
+          {% snippet 'v2/components/text-button.html',
+              style='tertiary', size='s', tag='button',
+              label='Delete', icon_src='v2/icons/delete.svg' %}
+          {% snippet 'v2/components/text-button.html',
+              style='tertiary', size='s', tag='button', label='Archive' %}
+        </div>
+        <div class="c-dataset-card__actions-group">
+          {% snippet 'v2/components/button.html',
+              style='tertiary', size='s', tag='a', href='#',
+              icon_src='v2/icons/mail.svg', label='Send a group message' %}
+          {% snippet 'v2/components/button.html',
+              style='primary', size='s', label='Update' %}
+        </div>
+      {% endcall %}
+    </div>
+
+    {# ── Labels + single actions group — member-role maintainer ── #}
+    <h2 class="demo-subsection__heading">Labels + single actions group — up-to-date date, member-role maintainer (group aligns right)</h2>
+    <div class="demo-row demo-row--flex-start">
+      {% call h.snippet('v2/components/dataset-card.html',
+          org_name='Example Organisation',
+          title='Sudan — Example Weekly Displacement Tracking Dataset 2024',
+          title_href='#',
+          labels=[
+            {'text': 'Expected update frequency: Every week', 'color': 'light', 'size': 'xs'},
+            {'text': 'Update by Oct 20 2026', 'color': 'light', 'size': 'xs', 'icon': True, 'icon_src': 'v2/icons/time-clock.svg'},
+          ]) %}
+        <div class="c-dataset-card__actions-group">
+          {% snippet 'v2/components/button.html',
+              style='tertiary', size='s', tag='a', href='#',
+              icon_src='v2/icons/mail.svg', label='Send a group message' %}
+        </div>
+      {% endcall %}
     </div>
 
   </section>

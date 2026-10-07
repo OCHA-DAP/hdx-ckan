@@ -4,7 +4,9 @@
 
   Shared filter panel — renders the "Filter by" heading and five
   filter dropdowns (Location, Organisation, Format, Topics, Advanced
-  filters), plus (when wired) the archived "Show only" toggle. Included in
+  filters), plus (when wired) the archived "Show only" toggle. An "Update
+  status" dropdown is prepended when facet_list has 'ext_update_status'
+  (only the My Datasets dashboard search returns it). Included in
   both the LG inline sidebar and the MD/SM overlay body.
 
   Parameters
@@ -28,6 +30,9 @@
   {'key': 'res_format',   'label': 'Format',        'placeholder': 'All formats'},
   {'key': 'vocab_Topics', 'label': 'Topics',        'placeholder': 'All topics'},
 ] %}
+{% if 'ext_update_status' in facet_list %}
+  {% set filter_defs = [{'key': 'ext_update_status', 'label': 'Update status', 'placeholder': 'All statuses'}] + filter_defs %}
+{% endif %}
 
 <span class="hdx-v2-search-filters__heading">Filter by</span>
 

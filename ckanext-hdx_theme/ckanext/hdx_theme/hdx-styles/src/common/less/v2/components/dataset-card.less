@@ -82,6 +82,29 @@
         }
     }
 
+    // ── __top ────────────────────────────────────────────────
+    &__top {
+        display:         flex;
+        flex-wrap:       wrap;
+        align-items:     center;
+        justify-content: space-between;
+        gap:             var(--hdx-space-13) var(--hdx-space-5);  // 6px row / 20px column
+        width:           100%;
+
+        .c-dataset-card__org {
+            width:     auto;
+            max-width: 100%;
+        }
+    }
+
+    // ── __labels ─────────────────────────────────────────────
+    &__labels {
+        display:     flex;
+        flex-wrap:   wrap;
+        align-items: center;
+        gap:         var(--hdx-space-2);  // 8px
+    }
+
     // ── __title ──────────────────────────────────────────────
     &__title {
         align-self:         stretch;
@@ -221,6 +244,27 @@
         color:       var(--hdx-neutral-85);
         line-height: var(--hdx-lh-normal);
         align-self:  center;
+    }
+
+    // ── __actions ────────────────────────────────────────────
+    &__actions {
+        display:         flex;
+        flex-wrap:       wrap;
+        align-items:     center;
+        justify-content: space-between;
+        gap:             var(--hdx-space-3) var(--hdx-space-5);  // 12px row / 20px column
+        padding:         0 var(--hdx-space-4) var(--hdx-space-4);  // 16px
+    }
+
+    &__actions-group {
+        display:     flex;
+        flex-wrap:   wrap;
+        align-items: center;
+        gap:         var(--hdx-space-3);  // 12px
+
+        &:only-child {
+            margin-left: auto;
+        }
     }
 
     // ── __footer ─────────────────────────────────────────────

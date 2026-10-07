@@ -4,9 +4,9 @@
 and left menu for the user dashboard and user settings pages, built now and adopted only by this page.
 The v2 header user menu is aligned to the same menu (D6).
 
-**Excluded:** Migrating the sibling dashboard/settings pages (Newsfeed, My Activity Stream, My Datasets,
+**Excluded:** Migrating the sibling dashboard/settings pages (Newsfeed, My Activity Stream,
 HDX Connect Requests, User Permission, API Tokens, Notifications, Profile and Password). They stay v1
-with their tab bars. Also excluded: pagination (D8), follower counts (D11), pending join requests, and
+with their tab bars. My Datasets is task 073. Also excluded: pagination (D8), follower counts (D11), pending join requests, and
 any backend/view change.
 
 **Figma sources:** `xl-user-dashboard-my-organisation.html` (XL only; there are no MD/SM exports)
@@ -225,7 +225,7 @@ HDX, "Member since" means the **org's** `created` date (`c-org-list-card`, `v2/o
 | D6 Header menu | `hdx_get_user_menu_sections()` keeps its Sysadmin Dashboard section and builds its dashboard/settings sections from the new helper, so both menus stay identical, labels included ("Activity and Content", "Account and Settings", "Notifications settings"). Section ids are unchanged (DOM ids `desk-*` / `offcanvas-user-*` keep working). |
 | D7 Breadcrumb | Home / Activity and Content (links to `activity.dashboard`, the group's first item) / My Organisations. |
 | D8 Pagination | None (parity). Figma's pager is dropped; no view is added. |
-| D9 Header | `<h1>` uses `.hdx-display-s()` (fixed 24px, as in Figma) in neutral-95. Subtitle uses `.hdx-body-s()` in neutral-85, `space-13` below the title. The button sits `space-8` from the text; header to list is `space-6`. Figma's hidden count, "Results per page", "Sort by" and chevron are omitted. v1's untranslated `title` on the button is dropped. |
+| D9 Header | `<h1>` uses `.hdx-dashboard-title()` (`.hdx-display-s()`, fixed 24px, as in Figma) in neutral-95. Subtitle uses `.hdx-dashboard-subtitle()` (`.hdx-body-s()`) in neutral-85, `space-13` below the title. The button sits `space-8` from the text; header to list is `space-6`. Figma's hidden count, "Results per page", "Sort by" and chevron are omitted. v1's untranslated `title` on the button is dropped. |
 | D10 Card API | `c-org-list-card` gets optional `role` (a translated label), `member_since` and `last_updated` (raw dates). **Each part renders only when passed**, joined with `' - '`: "Admin - Last updated on 31 October 2023". Dates use `h.hdx_format_date`, with `_('Unknown')` for an empty or unparseable value. My Organisations passes `role` (mapping `sysadmin`/`admin`/`editor`/`member` → `_('Sysadmin')`/`_('Admin')`/`_('Editor')`/`_('Member')`) and `last_updated=org.dataset_last_updated`. All Orgs and the components demo pass `member_since=org.created`, so their output is unchanged. |
 | D11 Card content | Subscribers/followers are omitted. The rest of the card's behaviour is accepted as-is: plain-text counts, title link without a sort param, description behind "Show more" and nothing when empty. Card visuals stay as 049 shipped them (no Figma width/ellipsis/alignment deltas). |
 | D12 Empty state | The header and button always render. Below them, v1's four lines of copy appear verbatim as four `<p>` (no heading) with no second button, styled with `.hdx-list-header-empty()`. |

@@ -14,7 +14,6 @@ Example:
 (_('Trending'), 'pageviews_last_14_days desc', _('Trending')),
 (_('Most Downloads'), 'total_res_downloads desc', _('Most Downloads'))]
 %}
-{% if admin_view %} {% set nothing=sorting.insert(0, (_('Due for Update'), 'due_date asc', _('Due for Update'))) %}{% endif %}
 {% set extra_class = class if class else 'float-end' %}
 
 {% set sorting_selected = sort_param if sort_param else h.HDX_CONST('DEFAULT_SORTING') %}

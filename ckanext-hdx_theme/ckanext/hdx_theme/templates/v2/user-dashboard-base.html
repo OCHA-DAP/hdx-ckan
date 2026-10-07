@@ -8,12 +8,14 @@
     user_nav_active  {string}  Item id from h.hdx_get_user_dashboard_nav_sections()
                                (e.g. 'my_organisations')
     page_label       {string}  Page name for the breadcrumb and <title>
-  and fill {% block primary %}.
+  and fill {% block primary %}. Optionally fill {% block tertiary_content %}
+  for a right-hand column (XL only, sticky), e.g. My Datasets' filters.
 #}
 
 {% set outer_row_class = 'hdx-v2-search-row' %}
 {% set sidebar_class   = 'hdx-v2-content-columns__sidebar hdx-v2-content-columns__sidebar--xl-only hdx-v2-content-columns__sidebar--sticky hdx-v2-search-sidebar' %}
 {% set content_class   = 'hdx-v2-content-columns__content hdx-v2-search-content' %}
+{% set tertiary_class  = 'hdx-v2-content-columns__sidebar hdx-v2-content-columns__sidebar--xl-only hdx-v2-content-columns__sidebar--sticky hdx-v2-search-sidebar hdx-v2-search-sidebar--right' %}
 
 {% set user_nav_sections = h.hdx_get_user_dashboard_nav_sections() %}
 {% set user_nav = namespace(section=none) %}

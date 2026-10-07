@@ -16,6 +16,8 @@
 
 .hdx-v2-list-header {
     .hdx-list-header-row();
+    flex-wrap:     wrap;
+    row-gap:       var(--hdx-space-13);  // 6 px
     margin-bottom: var(--hdx-space-4);  // 16 px below header
 
     &__left {
@@ -25,20 +27,33 @@
     &__title {
         .hdx-section-title();
 
-        // Exception: on the main /dataset search page (emphasize_title=true
+        // Exception: on the main /dataset search page (title_size='page'
         // in package_list.html), this sub-heading is sized like a page title
         // — font-size only, weight/color stay from .hdx-section-title() above.
-        &--page-title {
+        &--page {
             .hdx-page-title-font-size();
+        }
+
+        &--dashboard {
+            .hdx-dashboard-title();
         }
     }
 
     &__count {
         .hdx-section-title-count();
 
-        &--page-title {
+        &--page {
             .hdx-page-title-font-size();
         }
+
+        &--dashboard {
+            .hdx-body-m();
+        }
+    }
+
+    &__subtitle {
+        .hdx-dashboard-subtitle();
+        flex-basis: 100%;
     }
 
     &__controls {
@@ -80,6 +95,17 @@
                       var(--hdx-space-20)  // 80px bottom — clears sticky anchor nav
                       0;
     }
+
+    &--right {
+        @media (min-width: @hdx-bp-xl) {
+            border-right: 0;
+            border-left:  1px solid var(--hdx-neutral-1);
+            padding:      var(--hdx-space-5)   // 20px top
+                          0                    // 0 right
+                          var(--hdx-space-20)  // 80px bottom
+                          var(--hdx-space-10); // 40px left
+        }
+    }
 }
 // ────────────────────────────────────────────────────────────
 // hdx-v2-search-content — content column
@@ -104,6 +130,12 @@
     &:only-child {
         @media (min-width: @hdx-bp-xl) {
             padding-left: 0;
+        }
+    }
+
+    &:not(:last-child) {
+        @media (min-width: @hdx-bp-xl) {
+            padding-right: var(--hdx-space-10);  // 40px
         }
     }
 

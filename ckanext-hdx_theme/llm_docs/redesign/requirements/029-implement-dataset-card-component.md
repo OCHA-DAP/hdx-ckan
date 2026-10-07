@@ -121,6 +121,10 @@ Rendered when there are more file formats than the visible set:
 | `show_others_href` | string | `'#'` | Footer link URL |
 | `query` | string | `''` | Search term to highlight in title/description via the `highlight` JS module |
 | `extra_classes` | string | `''` | Additional CSS classes on root `.c-dataset-card` element |
+| `labels` | list | `[]` | `c-label` param dicts; when non-empty the org line becomes a `__top` row (org left, `__labels` right, wrapping under the org) |
+| `caller()` | block | — | Optional `__actions` row below the body; children are `__actions-group` divs at opposite ends; a single group aligns right |
+
+`__right` renders only when `location`, `date_range` or `formats` is set.
 
 ## JS Behavior
 

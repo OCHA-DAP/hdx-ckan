@@ -215,6 +215,8 @@ Add before any block definitions:
 
 The generic `hdx-v2-content-columns__sidebar*` modifiers (`--xl-only`, `--sticky`) come from a later, shared layout convention (`layout.less`) that postdates this task.
 
+The same filters can also sit in a right-hand column (`tertiary_content` + `tertiary_class`, with `hdx-v2-search-sidebar--right`), as on My Datasets (073).
+
 Add secondary block with sidebar filters:
 
 ```jinja2

@@ -1,71 +1,33 @@
-{% extends "user/dashboard.html" %}
+{% extends "v2/user-dashboard-base.html" %}
 
-{% block dashboard_activity_stream_context %}{% endblock %}
+{% set user_nav_active = 'my_datasets' %}
+{% set page_label      = _('My Datasets') %}
+{% set has_filters     = search_data.page.items or search_data.filters_are_selected %}
 
 {% block scripts %}
   {{ super() }}
-{#  {% resource 'hdx_theme/jquery.highlight' %}#}
-{#  {% resource 'hdx_theme/jquery.expander' %}#}
-
+  {% asset 'hdx_theme/v2-search-page-scripts' %}
 {% endblock %}
 
-{% block add_action_content %}
-  {% if h.check_access('package_create') %}
-  {# if c.userobj.sysadmin #}
-    <li>{% link_for _('Add Dataset'), controller='package', action='new', class_="btn btn-primary", icon="plus-sign-alt" %}</li>
-  {# endif #}
+{% block tertiary_content %}
+  {% if has_filters %}
+    <form id="search-page-filters-form" autocomplete="off">
+      <aside class="hdx-v2-search-filters">
+        {% snippet 'v2/search-filters.html',
+            facet_list=search_data.full_facet_info.get('facets', {}),
+            archived_url_helper=search_data.full_facet_info.get('archived_url_helper') %}
+      </aside>
+    </form>
   {% endif %}
 {% endblock %}
 
-{% block page_header_inner %}
-{% endblock %}
-
-
-{#
-  {% block page_header_inner %}
-    {% set sorting = [
-          (_('Name Ascending'), 'title asc'),
-          (_('Name Descending'), 'title desc'),
-          (_('Last Modified'), 'metadata_modified desc') ]
-        %}
-    {% set sorting_option = c.sort_by_selected or 'metadata_modified desc' %}
-    {% resource 'hdx_theme/order-by-dropdown.js' %}
-    {% if sorting %}
-      <form class="list-items search-form" method="get" data-module="select-switch" style="margin-top: 10px;">
-        <div class="form-select control-order-by mTop10">
-          <label for="field-order-by" class="uppercase">{{ _('Order by') }}</label>
-          <div class="dropdown orderDropdown">
-            <button id="field-order-by" class="dropdown-toggle sspBold16" data-toggle="dropdown">
-              <span class="dropdown-toggle-text">
-                {% for label, value in sorting %}
-                    {% if sorting_option == value %} {{ label }} {% endif %}
-                {% endfor %}
-              </span>
-              <b class="caret"></b>
-            </button>
-            <ul class="dropdown-menu dropdown-inverse" role="menu" style="max-height: 241px; overflow-y: auto;">
-              {% for label, value in sorting %}
-                {% if label and value %}
-                  <li><a tabindex="-1" val="{{ value }}">{{ label }}</a></li>
-                {% endif %}
-              {% endfor %}
-            </ul>
-          </div>
-        </div>
-      </form>
-    {% endif %}
-  {% endblock %}
-
-#}
-
-{% block primary_content_inner %}
-  {# This is a little different because the query is run through SQLAlchemy, not Solr #}
-{% set my_c = search_data %}
-  <div style="min-height: 120px;">
-      {{ h.snippet('search/snippets/package_list.html',
-                query=my_c.q, packages=my_c.page.items, full_facet_info=my_c.full_facet_info,
-                ext_page_size=my_c.ext_page_size, sorting_selected=my_c.sort_by_selected,
-                other_links=my_c.other_links, admin_view=True) }}
-      {{ my_c.page.pager() }}
-  </div>
+{% block primary %}
+  {% snippet 'search/snippets/search_results_wrapper.html',
+      tracking_enabled=g.tracking_enabled, my_c=search_data, v2=true,
+      admin_view=true,
+      list_title=page_label,
+      list_subtitle=_('Datasets you own or manage'),
+      title_tag='h1',
+      title_size='dashboard',
+      show_filters=has_filters %}
 {% endblock %}
