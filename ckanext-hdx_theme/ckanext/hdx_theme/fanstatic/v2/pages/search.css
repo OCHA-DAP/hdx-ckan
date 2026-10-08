@@ -87,10 +87,13 @@
   flex-basis: 100%;
 }
 .hdx-v2-list-header__controls {
+  margin-left: auto;
+}
+.hdx-v2-list-header__controls--xl-only {
   display: none;
 }
 @media (min-width: 80rem) {
-  .hdx-v2-list-header__controls {
+  .hdx-v2-list-header__controls--xl-only {
     display: block;
   }
 }

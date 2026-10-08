@@ -112,6 +112,7 @@ CSS custom property equivalents (`--hdx-*`) are defined in `v2/foundation.css` (
 | Request access | `package/request_access.html` | Extends `v2/page.html`; see `requirements/061-hdx-connect-flow-v2.md` |
 | My Organisations (user dashboard) | `user/dashboard_organizations.html` | Extends `v2/user-dashboard-base.html` (shared left menu via `c-nav-item` size s, for the dashboard/settings pages); other sibling dashboard/settings pages still v1; see `requirements/072-user-dashboard-my-organisations-v2.md` |
 | My Datasets (user dashboard) | `user/dashboard_datasets.html` | Extends `v2/user-dashboard-base.html`; search-page filters in the new right-hand `tertiary_content` column; list via `search_results_wrapper.html` with `admin_view` (c-dataset-card `labels` + actions, per-card delete `c-drawer`); see `requirements/073-user-dashboard-my-datasets-v2.md` |
+| HDX Connect Requests (user dashboard) | `requestdata/my_requested_data.html` | Extends `v2/user-dashboard-base.html`; HDX core override of the `ckanext-requestdata` view; New / Open cards grouped per dataset (`c-request-card` + `c-request-item`), Archived `c-request-archive` grid, Reply / Decline `c-drawer`s; title and section headings via `v2/list-header.html`, Archived sort (`?order_by=`) in its heading row at every width (no Filter overlay, as on the other sort-only pages); see `requirements/074-user-dashboard-hdx-connect-requests-v2.md` |
 
 ### Pages in holding state (on `page_light.html`)
 
@@ -168,6 +169,7 @@ Each page below extends `page_light.html`, manually overrides `{% block styles %
 - [x] Notification item — `notification-item.html` / `notification-item.less`; title + optional sysadmin bracket tag + meta row (date + arrow link); `.c-notification-item--sysadmin` highlight modifier; used in the navbar notifications dropdown
 - [x] Stats card — `stats-card.html` / `stats-card.less`; KPI figure + label card; used on the org page Stats tab
 - [x] Member list card — `member-list-card.html` / `member-list-card.less`; avatar + profile links + role/registered line + counters, `caller()` actions body, `--stacked` variant; used on the org page Members tab
+- [x] Request card / item / archive — `request-card.html`, `request-item.html`, `request-archive.html` + `request-archive-row.html` / `request-card.less`, `request-item.less`, `request-archive.less`; HDX Connect dataset group card, one request (avatar, chips with tooltip, clamped message quote, footer bar with `caller()` actions or archived status), and the Archive `<details>` grid; used on the HDX Connect Requests dashboard (task 074)
 - [x] Data grid status — `data-grid-status.html` / `data-grid-status.less`; presentational availability swatch (not a real checkbox); used by the location page Data Grid Availability feature (task 063)
 - [x] Dataviz card — `dataviz-card.html` / `dataviz-card.less`; thumbnail + title + clamped description + date/DATA-link footer + gated Edit link; own `c-dataviz-card-grid` wrapper; used on the Dataviz Gallery page (task 067)
 - [x] Alert — `alert.html` / `alert.less`; 4 variants (success/warning/info/error), dismissible by default; shared across page-level flash banners and form/drawer messages
@@ -194,7 +196,7 @@ Exception: `info-icon.html` has no dedicated LESS/CSS — it composes existing `
 
 Bundle configuration:
 - `hdx_theme/v2-components-styles` — standalone design system bundle (tokens + components), no Bootstrap
-  - Contents: `v2/foundation.css`, `v2/overlay.css`, then component CSS files: `accordion`, `activity-card`, `activity-item`, `alert`, `anchor-links`, `avatar-badge`, `breadcrumb`, `buttons`, `checkbox`, `content-card`, `copy-button`, `data-grid-status`, `dataset-card`, `dataviz-card`, `divider`, `drawer`, `dropdown`, `form-field`, `highlight-card`, `input-field`, `label`, `letter-anchor`, `list-item`, `member-list-card`, `nav-item`, `notification-item`, `org-list-card`, `page-header`, `pagination`, `resource-card`, `selection`, `showcase-card`, `signup-tier`, `spinner`, `stats-card`, `step-pager`, `table`, `tabs`, `signal-card`, `text-link`
+  - Contents: `v2/foundation.css`, `v2/overlay.css`, then component CSS files: `accordion`, `activity-card`, `activity-item`, `alert`, `anchor-links`, `avatar-badge`, `breadcrumb`, `buttons`, `checkbox`, `content-card`, `copy-button`, `data-grid-status`, `dataset-card`, `dataviz-card`, `divider`, `drawer`, `dropdown`, `form-field`, `highlight-card`, `input-field`, `label`, `letter-anchor`, `list-item`, `member-list-card`, `nav-item`, `notification-item`, `org-list-card`, `page-header`, `pagination`, `request-archive`, `request-card`, `request-item`, `resource-card`, `selection`, `showcase-card`, `signup-tier`, `spinner`, `stats-card`, `step-pager`, `table`, `tabs`, `signal-card`, `text-link`
   - Kept separate for non-page contexts (component previews, embedded widgets)
 - `hdx_theme/v2-page-styles` ✅ Full page bundle: preloads `v2-components-styles`, then adds:
   - `vendor/bootstrap5/css/bootstrap.css`
@@ -203,7 +205,7 @@ Bundle configuration:
   - `v2/nav-controls.css` — shared sort + results-per-page dropdown pair
   - `v2/navbar.css` — main navbar styles (logo, search, nav items, actions, offcanvas)
   - `v2/top-bar.css` — top-bar styles (OCHA services dropdown, documentation link)
-- `hdx_theme/v2-components-scripts` ✅ Contains: `v2/utils.js` (shared `window.hdxV2.*` helpers incl. `FocusTrap`, loaded first), then `alert.js`, `anchor-links.js` (smooth scroll + mobile dropdown + active tracking), `clamped-text.js` (show-more/less), `copy-button.js`, `drawer.js`, `dropdown.js`, `input-field.js` (password toggle), `page-header.js`, `tooltip.js`, `toggle.js`
+- `hdx_theme/v2-components-scripts` ✅ Contains: `v2/utils.js` (shared `window.hdxV2.*` helpers incl. `FocusTrap`, `setDisabled`, `showAlert`, loaded first), then `alert.js`, `anchor-links.js` (smooth scroll + mobile dropdown + active tracking), `clamped-text.js` (show-more/less), `copy-button.js`, `drawer.js`, `dropdown.js`, `input-field.js` (password toggle), `page-header.js`, `tooltip.js`, `toggle.js`
 - `hdx_theme/v2-page-scripts` ✅ Contains `v2/contribute.js` + `v2/group-message-drawer.js` + `v2/navbar.js` (navbar + offcanvas, uses `window.hdxV2.FocusTrap`) + `v2/search-autocomplete.js`; preloads `v2-components-scripts` and `v2-search-scripts` (MiniSearch/feature-index)
 - `hdx_theme/v2-search-scripts` — global lib bundle: MiniSearch, normalize.js, feature-index; auto-loaded via `v2-page-scripts` preload
 - `hdx_theme/v2-search-page-styles` — search page: adds `v2/pages/search.css`
@@ -224,6 +226,7 @@ Bundle configuration:
 - `hdx_theme/v2-crisis-page-styles` / `-scripts` — Crisis/event pages: adds `v2/pages/crisis.css` / `v2/pages/crisis.js`
 - `hdx_theme/v2-crisis-pages-page-styles` — Crisis Pages page: adds `v2/pages/crisis-pages.css`
 - `hdx_theme/v2-user-dashboard-page-styles` — User dashboard/settings pages (via `v2/user-dashboard-base.html`): adds `v2/pages/user-dashboard.css`; loaded after `v2-search-page-styles`, whose sidebar/content classes the base reuses
+- `hdx_theme/v2-hdx-connect-page-styles` / `-scripts` — HDX Connect Requests dashboard: adds `v2/pages/hdx-connect.css` / `v2/url-nav.js` + `v2/pages/hdx-connect.js` (sort, drawers, Reply / Decline / Yes / No)
 - `hdx_theme/v2-org-list-page-styles` — All Organisations page: adds `v2/pages/org-list.css` (org-list-card styles come from the preloaded `v2-components-styles` bundle)
 - `hdx_theme/v2-org-list-page-scripts` — All Organisations page: adds `v2/url-nav.js` + `v2/pages/org-list.js`
 - `hdx_theme/v2-org-page-styles` — Organization page (all tabs, 056–059): adds `v2/pages/org.css` (hero band, activity/stats sections, members layout incl. the invite tags widget)

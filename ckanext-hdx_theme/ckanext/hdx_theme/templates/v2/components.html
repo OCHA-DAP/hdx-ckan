@@ -33,6 +33,7 @@
   {'label': 'Dataviz Card', 'href': '#dataviz-card'},
   {'label': 'Organisation List Card', 'href': '#org-list-card'},
   {'label': 'Member List Card', 'href': '#member-list-card'},
+  {'label': 'Request Card / Item / Archive', 'href': '#request-card'},
   {'label': 'Notification Item', 'href': '#notification-item'},
   {'label': 'Activity Item', 'href': '#activity-item'},
   {'label': 'Table', 'href': '#table'},
@@ -2394,6 +2395,81 @@
         {% snippet 'v2/components/text-button.html',
             style='secondary', size='m', tag='button',
             label='Decline' %}
+      {% endcall %}
+    </div>
+
+  </section>
+
+
+  {# ══════════════════════════════════════════════════════
+     REQUEST CARD / REQUEST ITEM / REQUEST ARCHIVE
+  ══════════════════════════════════════════════════════ #}
+  <section class="demo-section" id="request-card">
+    <h1 class="demo-section__title">Request Card / Item / Archive</h1>
+    <p class="demo-section__subtitle">HDX Connect requests (task 074) · c-request-card groups c-request-item rows per dataset · c-request-archive grid with &lt;details&gt; rows</p>
+
+    {% set demo_message = 'I am working on a regional report on access to basic services and would like to use this dataset to map facilities across the provinces, cross-referenced with other publicly available sources. The data will only be used for this research, will not be redistributed and will be properly cited in the final publication. Please let me know if you need any further details about the project or its timeline.' %}
+
+    <h2 class="demo-subsection__heading">Card with New + Open requests ("Maintained by" line)</h2>
+    <div class="demo-row demo-row--column">
+      <div class="c-request-card-list">
+        {% call h.snippet('v2/components/request-card.html',
+            title='Example Dataset — Health Facilities', title_href='#',
+            maintainer_label='Example Maintainer', maintainer_href='#') %}
+          {% call h.snippet('v2/components/request-item.html',
+              avatar_initials='JD', name='Jane Doe', profile_url='#',
+              org_name='Example Organisation', org_href='#', country='Kenya',
+              org_type='Academic / Research', verified=True, tooltip_id='demo-request-verified-1',
+              requested_date='4 May 2026', message=demo_message, intended_use='Academic') %}
+            {% snippet 'v2/components/button.html',
+                style='primary', size='s', label='Reply', icon_src='v2/icons/reply.svg' %}
+            {% snippet 'v2/components/text-button.html',
+                style='secondary', size='s', tag='button', label='Decline' %}
+          {% endcall %}
+          {% call h.snippet('v2/components/request-item.html',
+              avatar_initials='AE', name='Alex Example', profile_url='#',
+              org_name='Sample Foundation', country='Peru',
+              org_type='National NGO', verified=False, tooltip_id='demo-request-verified-2',
+              requested_date='2 May 2026', message='Short message that fits without a Show more toggle.',
+              intended_use='Programming') %}
+            <div class="c-request-item__actions-group">
+              <span>Did you share the data?</span>
+              {% snippet 'v2/components/button.html', style='tertiary', size='s', label='Yes' %}
+              {% snippet 'v2/components/button.html', style='tertiary', size='s', label='No' %}
+            </div>
+          {% endcall %}
+        {% endcall %}
+      </div>
+    </div>
+
+    <h2 class="demo-subsection__heading">Archive grid (rows collapsed by default; status chips Shared / Not Shared / Denied)</h2>
+    <div class="demo-row demo-row--column">
+      {% call h.snippet('v2/components/request-archive.html') %}
+        {% call h.snippet('v2/components/request-archive-row.html',
+            title='Example Dataset — Health Facilities', requests=10, replied=9, declined=1, shared=3) %}
+          {% snippet 'v2/components/request-item.html',
+              variant='archived',
+              avatar_initials='JD', name='Jane Doe', profile_url='#',
+              org_name='Example Organisation', country='Kenya',
+              org_type='Academic / Research', verified=True, tooltip_id='demo-request-verified-3',
+              requested_date='25 March 2026', message=demo_message, intended_use='Academic',
+              status={'text': 'Data Shared', 'color': 'cyan'}, status_date='28 March 2026' %}
+          {% snippet 'v2/components/request-item.html',
+              variant='archived',
+              avatar_initials='AE', name='Alex Example', profile_url='#',
+              requested_date='20 March 2026', message='Request without the requester extras (older data).',
+              status={'text': 'Data Not Shared', 'color': 'dark'}, status_date='22 March 2026' %}
+          {% snippet 'v2/components/request-item.html',
+              variant='archived',
+              avatar_initials='SS', name='Sam Sample', profile_url='#',
+              org_name='Sample Foundation', country='Peru',
+              org_type='National NGO', verified=False, tooltip_id='demo-request-verified-4',
+              requested_date='18 March 2026', message='Could you share the latest version?', intended_use='Media',
+              status={'text': 'Request Denied', 'color': 'yellow'}, status_date='19 March 2026' %}
+        {% endcall %}
+        {% call h.snippet('v2/components/request-archive-row.html',
+            title='Example Dataset With A Much Longer Title That Truncates With An Ellipsis In The Archive Grid', requests=4, replied=2, declined=2, shared=1) %}
+        {% endcall %}
       {% endcall %}
     </div>
 

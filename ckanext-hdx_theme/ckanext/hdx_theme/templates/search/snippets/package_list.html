@@ -133,43 +133,19 @@ Example:
 
   {# ── v2 dataset list header (title + count + sort/limit at XL) ───────── #}
 
-  {% set list_title     = list_title     if list_title     is defined else _('Datasets') %}
-  {% set list_subtitle  = list_subtitle  if list_subtitle  is defined else '' %}
-  {% set title_tag      = title_tag      if title_tag      is defined else 'strong' %}
-  {% set title_size     = title_size     if title_size     is defined else 'section' %}
   {% set show_filters   = show_filters   if show_filters   is defined else True %}
 
-  <div class="hdx-v2-list-header">
-    <div class="hdx-v2-list-header__left">
-      <{{ title_tag }} class="hdx-v2-list-header__title{{ ' hdx-v2-list-header__title--' ~ title_size if title_size != 'section' else '' }}">{{ list_title }}</{{ title_tag }}>
-      <span class="hdx-v2-list-header__count{{ ' hdx-v2-list-header__count--' ~ title_size if title_size != 'section' else '' }}">{{ h.localised_number(packages_count) }}</span>
-    </div>
-    <div class="hdx-v2-list-header__controls">
-      {% snippet 'v2/search-nav-controls.html',
-          sorting_selected=sorting_selected,
-          ext_page_size=ext_page_size,
-          admin_view=admin_view,
-          panel_suffix='hdr' %}
-    </div>
-    {% if show_filters %}
-      <div class="hdx-v2-list-header__filter-btn">
-        {% snippet 'v2/components/dropdown.html',
-            size='m',
-            placeholder='Filter',
-            count='(' ~ total_selected ~ ')' if total_selected > 0 else '',
-            state='filter' if total_selected > 0 else 'enabled',
-            icon=True,
-            icon_src='v2/icons/filter.svg',
-            chevron_src='',
-            panel_id='hdx-filter-overlay',
-            extra_classes='c-dropdown--inline',
-            button_attrs={'data-module': 'filter-btn'} %}
-      </div>
-    {% endif %}
-    {% if list_subtitle %}
-      <p class="hdx-v2-list-header__subtitle">{{ list_subtitle }}</p>
-    {% endif %}
-  </div>
+  {% snippet 'v2/list-header.html',
+      count=packages_count,
+      list_title=list_title,
+      list_subtitle=list_subtitle,
+      title_tag=title_tag,
+      title_size=title_size,
+      show_filters=show_filters,
+      total_selected=total_selected,
+      sorting_selected=sorting_selected,
+      ext_page_size=ext_page_size,
+      admin_view=admin_view %}
 
   {# ── v2 search bar row ───────────────────────────────────────────────── #}
   <form class="hdx-v2-search-bar-row" id="dataset-filter-form">
@@ -208,36 +184,11 @@ Example:
 
   {# ── MD/SM full-screen filter overlay ────────────────────────────────── #}
   {% if show_filters %}
-  <div class="hdx-v2-search-filter-overlay" id="hdx-filter-overlay" role="dialog" aria-modal="true" aria-label="{{ _('Filters') }}">
-    <div class="hdx-v2-search-filter-overlay__header">
-      <span class="hdx-v2-search-filter-overlay__title">Filters</span>
-      <button type="button"
-              class="hdx-v2-search-filter-overlay__close"
-              data-action="close-overlay"
-              aria-label="Close filters">
-        {{ h.hdx_v2_icon('v2/icons/close.svg') }}
-      </button>
-    </div>
-    <div class="hdx-v2-search-filter-overlay__body">
-      <div class="hdx-v2-overlay-nav-controls">
-        {% snippet 'v2/search-nav-controls.html',
-            sorting_selected=sorting_selected,
-            ext_page_size=ext_page_size,
-            admin_view=admin_view,
-            panel_suffix='ovl' %}
-      </div>
-      <div data-filter-panel-slot></div>
-    </div>
-    <div class="hdx-v2-search-filter-overlay__footer">
-      {% snippet 'v2/components/button.html',
-          style='tertiary', size='l', label='Clear filters',
-          state='enabled' if total_selected > 0 else 'disabled',
-          attrs={'data-action': 'clear-filters'} %}
-      {% snippet 'v2/components/button.html',
-          style='primary', size='l', label='Show results',
-          attrs={'data-action': 'show-results'} %}
-    </div>
-  </div>
+    {% snippet 'v2/filter-overlay.html',
+        total_selected=total_selected,
+        sorting_selected=sorting_selected,
+        ext_page_size=ext_page_size,
+        admin_view=admin_view %}
   {% endif %}
 
 {% else %}

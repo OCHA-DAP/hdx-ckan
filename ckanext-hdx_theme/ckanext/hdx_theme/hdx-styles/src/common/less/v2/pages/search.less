@@ -57,11 +57,15 @@
     }
 
     &__controls {
-        // MD/SM: hidden — controls move to the filter overlay; XL: visible
-        display: none;
+        margin-left: auto;
 
-        @media (min-width: @hdx-bp-xl) {
-            display: block;
+        // MD/SM: hidden — controls move to the filter overlay; XL: visible
+        &--xl-only {
+            display: none;
+
+            @media (min-width: @hdx-bp-xl) {
+                display: block;
+            }
         }
     }
 

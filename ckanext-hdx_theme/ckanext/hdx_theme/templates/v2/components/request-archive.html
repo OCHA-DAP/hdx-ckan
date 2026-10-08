@@ -1,0 +1,36 @@
+{#
+  Snippet: request-archive.html
+  Path:    templates/v2/components/request-archive.html
+
+  HDX Connect Archive grid (task 074): bordered box with a visual column
+  header row (Dataset · Requests · Replied · Denied · Shared, hidden below
+  MD and from assistive tech) and the request-archive-row.html rows of its
+  caller() body. Styles: request-archive.less (also c-request-archive-row).
+
+  Parameters
+  ─────────────────────────────────────────────────
+  extra_classes {string}  default: ''
+  caller()      block     The request-archive-row.html rows.
+  ─────────────────────────────────────────────────
+  Example
+
+  {% call h.snippet('v2/components/request-archive.html') %}
+    {% call h.snippet('v2/components/request-archive-row.html',
+        title='Example dataset', requests=10, replied=9, declined=1, shared=3) %}
+      {% snippet 'v2/components/request-item.html', variant='archived', ... %}
+    {% endcall %}
+  {% endcall %}
+#}
+
+{% set extra_classes = extra_classes if extra_classes is defined else '' %}
+
+<div class="c-request-archive{{ ' ' ~ extra_classes if extra_classes else '' }}">
+  <div class="c-request-archive__header" aria-hidden="true">
+    <span class="c-request-archive__heading">{{ _('Dataset') }}</span>
+    <span class="c-request-archive__heading">{{ _('Requests') }}</span>
+    <span class="c-request-archive__heading">{{ _('Replied') }}</span>
+    <span class="c-request-archive__heading">{{ _('Denied') }}</span>
+    <span class="c-request-archive__heading">{{ _('Shared') }}</span>
+  </div>
+  {% if caller is defined %}{{ caller() }}{% endif %}
+</div>

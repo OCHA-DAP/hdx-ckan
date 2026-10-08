@@ -133,7 +133,7 @@ Rendered when there are more file formats than the visible set:
 **On "Show more" click:**
 1. Toggle `is-open` class on `.c-dataset-card__desc-text` — CSS controls `display: none` / `display: block`
 2. Toggle button label text: `"Show more"` ↔ `"Show less"`
-3. Chevron rotates via CSS (`&.is-open .c-text-button__icon { transform: rotate(180deg); }`) — no icon-src swap in JS
+3. Chevron rotates via CSS (`.hdx-clamp-toggle()` in `mixins.less`: `.is-open` rotates the toggle's icon 180°) — no icon-src swap in JS
 
 No height animation required. The module does not need to run at SM breakpoint since `.c-dataset-card__desc` is hidden in CSS at that size.
 

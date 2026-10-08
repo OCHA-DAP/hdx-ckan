@@ -255,7 +255,7 @@ Template renders hierarchy — parent "select all" row + indented children for c
 | File | Role |
 |---|---|
 | `templates/v2/search-filters.html` | Shared filter panel — all 5 dropdowns inlined (no separate composite component), plus Update status when its facet is present (task 073) |
-| `templates/search/snippets/package_list.html` | Top-level v2/v1 layout branch: v2 block computes `total_selected` once, renders filter overlay (an empty slot the sidebar form moves into below 80rem) + button, and wraps sidebar + dataset list; v1 uses `row`/`col-3` |
+| `templates/search/snippets/package_list.html` | Top-level v2/v1 layout branch: v2 block computes `total_selected` once, renders the filter overlay (`v2/filter-overlay.html`, an empty slot the sidebar form moves into below 80rem) + button (`v2/list-header.html`), and wraps sidebar + dataset list; v1 uses `row`/`col-3` |
 | `templates/search/snippets/search_results_wrapper.html` | Thin wrapper — passes `full_facet_info` + `v2` flag into `package_list.html` via `h.snippet`; no filter logic |
 | `templates/v2/components/dropdown.html` | Full-wrapper component: trigger + panel delegation; single `items` list + `navigate` bool; delegates panel rendering to `dropdown-panel.html` |
 | `templates/v2/components/dropdown-panel.html` | Panel overlay; `navigate=False` for checklist filters, `navigate=True` for navigate-on-select (sort/limit); items + children flattened before render |

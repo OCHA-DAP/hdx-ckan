@@ -12,14 +12,6 @@
 
   var EMAIL_RE = /\S+@\S+\.\S+/;
 
-  function csrfHeaders() {
-    try {
-      return window.hdxUtil && window.hdxUtil.net.getCsrfTokenAsObject();
-    } catch (e) {
-      return {};
-    }
-  }
-
   // ── Change role — one-click role dropdown ──────────────────
   document.addEventListener('click', function (e) {
     var item = e.target.closest && e.target.closest('[data-role-value]');
@@ -37,7 +29,7 @@
   function processRequest(payload, onDone) {
     fetch('/api/action/member_request_process', {
       method: 'POST',
-      headers: Object.assign({ 'Content-Type': 'application/json' }, csrfHeaders()),
+      headers: Object.assign({ 'Content-Type': 'application/json' }, window.hdxUtil.net.getCsrfTokenAsObject()),
       body: JSON.stringify(payload)
     })
       .then(function (r) { if (!r.ok) throw new Error('request failed'); return r.json(); })

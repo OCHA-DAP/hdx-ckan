@@ -75,3 +75,4 @@
 | 071 | [crisis-pages-v2](071-crisis-pages-v2.md)                                                                       | implemented | |
 | 072 | [user-dashboard-my-organisations-v2](072-user-dashboard-my-organisations-v2.md)                                 | implemented | |
 | 073 | [user-dashboard-my-datasets-v2](073-user-dashboard-my-datasets-v2.md)                                           | implemented | |
+| 074 | [user-dashboard-hdx-connect-requests-v2](074-user-dashboard-hdx-connect-requests-v2.md)                         | implemented | |

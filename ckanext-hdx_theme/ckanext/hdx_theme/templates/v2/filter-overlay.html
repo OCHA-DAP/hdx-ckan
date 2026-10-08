@@ -1,0 +1,64 @@
+{#
+  Snippet: filter-overlay.html
+  Path:    templates/v2/filter-overlay.html
+
+  MD/SM full-screen filter overlay (#hdx-filter-overlay): "Filters" header
+  + close, the sort / page-size controls, a [data-filter-panel-slot] that
+  pages/search.js moves #search-page-filters-form into below XL, and the
+  "Clear filters" / "Show results" footer. Opened by the list header's
+  Filter button (v2/list-header.html). Open / close / Escape / focus trap:
+  the "FilterOverlay init" block in fanstatic/v2/pages/search.js (bundle
+  v2-search-page-scripts). Render it once per page: the id is fixed.
+  Styles: overlay.less (.hdx-v2-search-filter-overlay).
+
+  Parameters
+  ─────────────────────────────────────────────────
+  total_selected    {int}     Selected filters; 0 disables "Clear filters".
+                              default: 0
+  sorting_selected, ext_page_size, admin_view, sorting_options,
+  show_page_size, sort_key
+                              Forwarded to v2/search-nav-controls.html
+                              (see its header for defaults).
+  ─────────────────────────────────────────────────
+  Example
+
+  {% snippet 'v2/filter-overlay.html',
+      sorting_selected=sorting_selected, ext_page_size=ext_page_size,
+      total_selected=total_selected %}
+#}
+
+{% set total_selected = total_selected if total_selected is defined else 0 %}
+
+<div class="hdx-v2-search-filter-overlay" id="hdx-filter-overlay" role="dialog" aria-modal="true" aria-label="{{ _('Filters') }}">
+  <div class="hdx-v2-search-filter-overlay__header">
+    <span class="hdx-v2-search-filter-overlay__title">Filters</span>
+    <button type="button"
+            class="hdx-v2-search-filter-overlay__close"
+            data-action="close-overlay"
+            aria-label="Close filters">
+      {{ h.hdx_v2_icon('v2/icons/close.svg') }}
+    </button>
+  </div>
+  <div class="hdx-v2-search-filter-overlay__body">
+    <div class="hdx-v2-overlay-nav-controls">
+      {% snippet 'v2/search-nav-controls.html',
+          sorting_selected=sorting_selected,
+          ext_page_size=ext_page_size,
+          admin_view=admin_view,
+          sorting_options=sorting_options,
+          show_page_size=show_page_size,
+          sort_key=sort_key,
+          panel_suffix='ovl' %}
+    </div>
+    <div data-filter-panel-slot></div>
+  </div>
+  <div class="hdx-v2-search-filter-overlay__footer">
+    {% snippet 'v2/components/button.html',
+        style='tertiary', size='l', label='Clear filters',
+        state='enabled' if total_selected > 0 else 'disabled',
+        attrs={'data-action': 'clear-filters'} %}
+    {% snippet 'v2/components/button.html',
+        style='primary', size='l', label='Show results',
+        attrs={'data-action': 'show-results'} %}
+  </div>
+</div>

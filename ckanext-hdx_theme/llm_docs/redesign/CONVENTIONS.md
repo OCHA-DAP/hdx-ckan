@@ -157,7 +157,7 @@ Use `is-*` classes only for persistent states set by the server or JavaScript.
 | Focus | `:focus-visible` in LESS |
 | Pressed | `:active` in LESS |
 | Selected / current | `is-active` class (server or JS) |
-| Unavailable | `is-disabled` class (server or JS) |
+| Unavailable | `is-disabled` class (server or JS); JS: `window.hdxV2.setDisabled(el, disabled)` |
 | Expanded | `is-open` class (JS only) |
 | Scroll lock (body) while an overlay is open | `is-<component>-open` class on `<body>` (JS only), e.g. `is-drawer-open` |
 
@@ -206,7 +206,8 @@ message and request approve/decline, org member add/remove/invite flash).
   status message.
 - Visibility contract: visible by default; JS-managed instances render with
   `hidden=True` and toggle the `hidden` **attribute** (`alert.hidden = false`).
-  No `is-visible`/display classes.
+  No `is-visible`/display classes. `window.hdxV2.showAlert(alertEl, text)`
+  (`utils.js`) sets the message and unhides the alert.
 - Dismissible by default (renders a `.c-alert__close` button); pass
   `dismissible=False` only when there's a specific reason an instance
   shouldn't be dismissed independently of the surrounding form/drawer.
@@ -238,11 +239,16 @@ hero `<h1>` and the homepage's section headings (`.hdx-section-heading()`).
 
 ## List header pattern — `.hdx-list-header-count()` / `-empty()`
 
-The search page's header block (`hdx-v2-list-header`) and the org Members tab's heading row
-(`hdx-v2-org-members__header`) share the same row shape via `.hdx-list-header-row()` /
+The list header block (`hdx-v2-list-header`, shared snippet `v2/list-header.html`, rendered by
+`package_list.html` and by the HDX Connect Requests page for its title and section headings) and the
+org Members tab's heading row (`hdx-v2-org-members__header`) share the same row shape via `.hdx-list-header-row()` /
 `.hdx-list-header-row-left()` in `mixins.less` — title+count grouped left, sort/filter controls
-pushed right by the left group's `flex:1`. Their titles call `.hdx-section-title()` like every
-other in-page heading. `package_list.html`'s `title_size` param changes that: `'page'` (main
+pushed right by the left group's `flex:1`. Its controls and the MD/SM overlay (`v2/filter-overlay.html`,
+`#hdx-filter-overlay`) render `v2/search-nav-controls.html`, whose `sort_key` / `page_size_key` set the URL
+params the dropdowns navigate on (default `sort` / `ext_page_size`). The controls are XL-only
+(`__controls--xl-only`) when the list header renders the Filter button, and visible at every width otherwise
+(sort-only lists keep the sort beside the list). Their titles call `.hdx-section-title()` like every
+other in-page heading. The list header's `title_size` param changes that: `'page'` (main
 `/dataset` search page) bumps the title and count to the page-title font-size scale, and
 `'dashboard'` (My Datasets) uses `.hdx-dashboard-title()` with a `.hdx-body-m()` count. The
 `.hdx-dashboard-title()` / `.hdx-dashboard-subtitle()` mixins are shared with the 072 user
@@ -529,7 +535,7 @@ files:
 
 - `c-<name>-list` — vertical flex list (`c-dataset-card-list`,
   `c-resource-card-list`, `c-org-list-card-list`, `c-member-list-card-list`,
-  `c-activity-card-list`, `c-stats-card-list`)
+  `c-request-card-list`, `c-activity-card-list`, `c-stats-card-list`)
 - `c-<name>-grid` — grid (`c-content-card-grid`, `c-selection-item-grid`,
   `c-showcase-card-grid`, `c-dataviz-card-grid`)
 - `c-<name>-row` — inline flex-wrap row (`c-kpi-card-row`, `c-selection-item-row`)
@@ -549,6 +555,8 @@ Page LESS keeps only page-rhythm concerns around the wrapper (e.g.
 ## Inline single-consumer utilities
 
 If a utility class or function has exactly one consumer and no realistic reuse case, inline it into the consumer rather than maintaining a separate component file. Promote it to a shared module (`utils.js`) the moment a second consumer needs the same logic — never copy it. (`FocusTrap` started inlined into `navbar.js` from `focus-trap.js`; once `components/drawer.js` needed the same Tab-trap logic, it moved to `window.hdxV2.FocusTrap` in `utils.js`.)
+
+CSRF headers for `fetch` POSTs: call `window.hdxUtil.net.getCsrfTokenAsObject()` directly (`base/hdx-util-lib.js`, in the `hdx_theme/ckan` bundle that `base.html` loads on every page) — no local wrapper functions.
 
 ---
 

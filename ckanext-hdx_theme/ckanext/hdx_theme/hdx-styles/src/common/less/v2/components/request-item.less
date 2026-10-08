@@ -1,0 +1,120 @@
+// ============================================================
+// c-request-item — one HDX Connect request (task 074)
+// Compiled output: fanstatic/v2/components/request-item.css
+// Figma: llm_docs/redesign/figma_exports/xl-user-dashboard-hdx-connect-requests.html,
+//        sm-user-dashboard-hdx-connect.html
+// ============================================================
+@import "../mixins.less";
+
+.c-request-item {
+    display:        flex;
+    flex-direction: column;
+    border-top:     1px solid var(--hdx-neutral-1);
+
+    &__body {
+        display:     flex;
+        align-items: flex-start;
+        gap:         var(--hdx-space-4);
+        padding:     var(--hdx-space-4);
+
+        .c-avatar { flex-shrink: 0; }
+    }
+
+    &__content {
+        flex:           1;
+        min-width:      0;
+        display:        flex;
+        flex-direction: column;
+        gap:            var(--hdx-space-14);
+    }
+
+    &__requester {
+        .hdx-body-s();
+        color:  var(--hdx-neutral-85);
+        margin: 0;
+    }
+
+    &__name {
+        .hdx-body-s-medium();
+        color: var(--hdx-neutral-95);
+    }
+
+    &__labels {
+        display:     flex;
+        flex-wrap:   wrap;
+        align-items: center;
+        gap:         var(--hdx-space-2);
+    }
+
+    &__date {
+        .hdx-body-xs();
+        color:  var(--hdx-neutral-8);
+        margin: 0;
+    }
+
+    &__message {
+        display:        flex;
+        flex-direction: column;
+        align-items:    flex-start;
+        gap:            var(--hdx-space-1);
+        align-self:     stretch;
+
+        .hdx-clamp-toggle();
+    }
+
+    &__quote {
+        .hdx-quote();
+        align-self: stretch;
+    }
+
+    &__message-text {
+        margin: 0;
+        .hdx-line-clamp(3);
+        .hdx-quote-marks();
+
+        &.is-open {
+            .hdx-line-clamp-off();
+        }
+    }
+
+    &__footer {
+        display:          flex;
+        flex-wrap:        wrap;
+        align-items:      center;
+        gap:              var(--hdx-space-2) var(--hdx-space-4);
+        padding:          var(--hdx-space-3);
+        background-color: var(--hdx-neutral-1);
+        .hdx-body-xs();
+        color:            var(--hdx-neutral-8);
+    }
+
+    &__meta {
+        flex:        1 1 auto;
+        display:     flex;
+        flex-wrap:   wrap;
+        align-items: center;
+        gap:         var(--hdx-space-1);
+        margin:      0;
+    }
+
+    &__intended-use {
+        .hdx-body-xs-semibold();
+    }
+
+    &__actions {
+        display:     flex;
+        align-items: center;
+        gap:         var(--hdx-space-4);
+        margin-left: auto;
+    }
+
+    &__actions-group {
+        display:     flex;
+        align-items: center;
+        gap:         var(--hdx-space-2);
+    }
+
+    &--archived &__body {
+        background-color: var(--hdx-neutral-05);
+    }
+}

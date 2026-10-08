@@ -108,10 +108,8 @@
     // ── __title ──────────────────────────────────────────────
     &__title {
         align-self:         stretch;
-        font-size:          var(--hdx-fs-m);  // 16px  (SM)
-        font-weight:        var(--hdx-fw-semibold);
+        .hdx-body-m-semibold();
         color:              var(--hdx-neutral-95);
-        line-height:        var(--hdx-lh-normal);
         text-decoration:    none;
         .hdx-line-clamp(2);   // 2-line clamp (SM)
         margin:             0;
@@ -138,20 +136,7 @@
             align-self:     stretch;
         }
 
-        // Show-more button: hidden until JS confirms content is actually clamped
-        .c-text-button { display: none; }
-        &.is-clamped .c-text-button { display: inline-flex; }
-
-        // Rotate chevron icon when expanded
-        &.is-open .c-text-button__icon {
-            transform:  rotate(180deg);
-            transition: transform 0.15s ease;
-        }
-
-        .c-text-button__icon {
-            transition: transform 0.15s ease;
-            .hdx-motion();
-        }
+        .hdx-clamp-toggle();
     }
 
     &__desc-text {

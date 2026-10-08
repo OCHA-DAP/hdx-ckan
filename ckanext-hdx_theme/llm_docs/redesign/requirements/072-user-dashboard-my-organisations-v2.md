@@ -5,8 +5,8 @@ and left menu for the user dashboard and user settings pages, built now and adop
 The v2 header user menu is aligned to the same menu (D6).
 
 **Excluded:** Migrating the sibling dashboard/settings pages (Newsfeed, My Activity Stream,
-HDX Connect Requests, User Permission, API Tokens, Notifications, Profile and Password). They stay v1
-with their tab bars. My Datasets is task 073. Also excluded: pagination (D8), follower counts (D11), pending join requests, and
+User Permission, API Tokens, Notifications, Profile and Password). They stay v1
+with their tab bars. My Datasets is task 073; HDX Connect Requests is task 074. Also excluded: pagination (D8), follower counts (D11), pending join requests, and
 any backend/view change.
 
 **Figma sources:** `xl-user-dashboard-my-organisation.html` (XL only; there are no MD/SM exports)

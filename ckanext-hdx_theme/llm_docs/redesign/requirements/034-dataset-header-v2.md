@@ -33,7 +33,7 @@ It is wrapped in `<form id="dataset-filter-form">` / `<div id="dataset-filter-st
 | Sort dropdown | Via `{% snippet 'search/snippets/package_search_order.html' %}` |
 | Results per page dropdown | Inline in `package_list.html` |
 
-The v2 block (`{% if v2 %}`) of `package_list.html` covers the filter overlay, filter button row, and two-column layout. The `#dataset-filter-start` header is v1 and shared unconditionally.
+The v2 block (`{% if v2 %}`) of `package_list.html` covers the filter overlay (`v2/filter-overlay.html`), the list header with the filter button (`v2/list-header.html`), and two-column layout. The `#dataset-filter-start` header is v1 and shared unconditionally.
 
 The page entry point for v2 is `search/search.html` → `search_results_wrapper.html` → `package_list.html`.
 
@@ -114,7 +114,7 @@ Size S specs: 12px font, 24px height, padding 6/8/6/10px, gap 4px. Panel renderi
 
 ### 2.7 Filter overlay (already implemented)
 
-`package_list.html` (`#hdx-filter-overlay`) / `v2/search-filters.html` / `search.less`
+`v2/filter-overlay.html` (`#hdx-filter-overlay`) / `v2/search-filters.html` / `search.less`
 
 - Fixed full-screen, `z-index: 500`, shown on MD/SM (< `@hdx-bp-xl` = 80rem/1280px)
 - Structure: header ("Filters" + close) → scrollable body (filter dropdowns) → footer ("Clear filters" + "Show results")
@@ -328,4 +328,4 @@ The `c-dropdown` wrapper uses `flex-direction: column`, so the built-in `label=`
 
 ### Sort panel right-anchored
 
-`[data-nav-key="sort"] .c-dropdown__panel` uses `right: 0; left: auto` so the panel opens to the LEFT and never overflows past the right viewport edge on small screens.
+In the MD/SM overlay, the sort pair's panel (`.hdx-v2-overlay-nav-controls .hdx-v2-nav-ctrl-pair:last-child .c-dropdown__panel`, `overlay.less`) uses `right: 0; left: auto` so it opens to the LEFT and never overflows past the right viewport edge.

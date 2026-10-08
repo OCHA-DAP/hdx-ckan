@@ -347,6 +347,22 @@
     -webkit-box-orient:   vertical;
 }
 
+// ── Clamp toggle ────────────────────────────────────────────────
+
+.hdx-clamp-toggle(@toggle: ~'.c-text-button') {
+    @{toggle} { display: none; }
+    &.is-clamped @{toggle} { display: inline-flex; }
+
+    @{toggle} .c-text-button__icon {
+        transition: transform 0.15s ease;
+        .hdx-motion();
+    }
+
+    &.is-open @{toggle} .c-text-button__icon {
+        transform: rotate(180deg);
+    }
+}
+
 // ── Rendered markdown content ────────────────────────────────────
 // Spacing for the block elements (p, ul, ol, h1-h3) a `h.render_markdown()`
 // string can contain, for use on any element that outputs one of
@@ -365,6 +381,21 @@
 
     p, ul, ol { margin: 0 0 @gap; }
     p:last-child, ul:last-child, ol:last-child { margin-bottom: 0; }
+}
+
+// ── Quote ───────────────────────────────────────────────────────
+
+.hdx-quote() {
+    .hdx-body-s();
+    color:       var(--hdx-neutral-85);
+    border-left: 2px solid var(--hdx-neutral-1);
+    padding:     var(--hdx-space-2) var(--hdx-space-6);
+    margin:      0;
+}
+
+.hdx-quote-marks() {
+    &::before { content: '\201C'; }
+    &::after  { content: '\201D'; }
 }
 
 // ── Focus ring ──────────────────────────────────────────────────

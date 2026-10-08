@@ -1,0 +1,87 @@
+{#
+  Snippet: hdx-connect-request.html
+  Path:    templates/v2/hdx-connect-request.html
+
+  Maps one request dict from the ckanext-requestdata views (extras parsed
+  with h.load_json) to a c-request-item (task 074), with the footer for its
+  state: Reply / Decline (new — open the drawers of
+  v2/hdx-connect-drawers.html), "Did you share the data?" + Yes / No (open),
+  or the status chip + date (archive). JS: fanstatic/v2/pages/hdx-connect.js
+
+  Parameters
+  ─────────────────────────────────────────────────
+  item   {dict}    One request.  Required.
+  state  {string}  'new' | 'open' | 'archive'.  Required.
+  ─────────────────────────────────────────────────
+  Example
+
+  {% snippet 'v2/hdx-connect-request.html', item=item, state='new' %}
+#}
+
+{% set extras     = h.load_json(item.extras) if item.extras else {} %}
+{% set org_id     = extras.get('organization_id') %}
+{% set org_name   = extras.get('organization_name') %}
+{% set org_type   = extras.get('organization_type') %}
+{% set name_parts = (item.sender_name or '').split() %}
+
+{% set params = {
+  'avatar_initials': name_parts[:2] | map('first') | join,
+  'name': item.sender_name,
+  'profile_url': h.url_for('user.read', id=item.sender_user_id),
+  'org_name': org_name or '',
+  'org_href': h.url_for('organization.read', id=org_id) if org_id and org_id != org_name else '',
+  'country': extras.get('country') or '',
+  'org_type': h.hdx_organization_type_get_value(org_type) if org_type else '',
+  'verified': (true if extras.get('organization_member') else false) if extras else none,
+  'tooltip_id': 'request-verified-' ~ item.id,
+  'requested_date': h.render_datetime(item.created_at, date_format='%-d %B %Y'),
+  'message': item.message_content,
+  'intended_use': extras.get('intend') or '',
+} %}
+
+{% if state == 'archive' %}
+  {% if item.rejected %}
+    {% set status = {'text': _('Request Denied'), 'color': 'yellow'} %}
+  {% elif item.data_shared %}
+    {% set status = {'text': _('Data Shared'), 'color': 'cyan'} %}
+  {% else %}
+    {% set status = {'text': _('Data Not Shared'), 'color': 'dark'} %}
+  {% endif %}
+  {{ h.snippet('v2/components/request-item.html',
+      variant='archived', status=status,
+      status_date=h.render_datetime(item.modified_at, date_format='%-d %B %Y'),
+      **params) }}
+{% else %}
+  {% call h.snippet('v2/components/request-item.html', **params) %}
+    {% if state == 'new' %}
+      {% set request_data = h.dump_json({
+        'id': item.id,
+        'package_id': item.package_id,
+        'send_to': item.email_address,
+        'package_name': item.title,
+        'maintainers': h.dump_json(item.maintainers or []),
+        'requested_by': item.sender_name,
+        'sender_id': item.sender_user_id,
+        'message': item.message_content,
+      }) %}
+      {% snippet 'v2/components/button.html',
+          style='primary', size='s', label=_('Reply'),
+          icon_src='v2/icons/reply.svg',
+          attrs={'data-hdx-connect-action': 'reply', 'data-hdx-connect-request': request_data} %}
+      {% snippet 'v2/components/text-button.html',
+          style='secondary', size='s', tag='button', label=_('Decline'),
+          attrs={'data-hdx-connect-action': 'decline', 'data-hdx-connect-request': request_data} %}
+    {% else %}
+      {% set request_data = h.dump_json({'id': item.id, 'package_id': item.package_id}) %}
+      <div class="c-request-item__actions-group">
+        <span>{{ _('Did you share the data?') }}</span>
+        {% snippet 'v2/components/button.html',
+            style='tertiary', size='s', label=_('Yes'),
+            attrs={'data-hdx-connect-shared': 'true', 'data-hdx-connect-request': request_data} %}
+        {% snippet 'v2/components/button.html',
+            style='tertiary', size='s', label=_('No'),
+            attrs={'data-hdx-connect-shared': 'false', 'data-hdx-connect-request': request_data} %}
+      </div>
+    {% endif %}
+  {% endcall %}
+{% endif %}
