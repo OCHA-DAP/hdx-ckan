@@ -1,0 +1,79 @@
+// ============================================================
+// pages/user-dashboard.less
+// User dashboard and settings pages (v2/user-dashboard-base.html)
+// — v2 page-specific styles
+// Figma: llm_docs/redesign/figma_exports/xl-user-dashboard-my-organisation.html
+// ============================================================
+
+@import "../mixins.less";
+
+// ── Left menu ─────────────────────────────────────────────────
+.hdx-v2-user-dashboard-nav {
+    display:        flex;
+    flex-direction: column;
+    gap:            var(--hdx-space-6);
+
+    &__group {
+        display:        flex;
+        flex-direction: column;
+        gap:            var(--hdx-space-2);
+    }
+
+    &__label {
+        .hdx-body-xs();
+        color:  var(--hdx-neutral-95);
+        margin: 0;
+    }
+
+    &__list {
+        list-style: none;
+        margin:     0;
+        padding:    0;
+    }
+}
+
+// ── Header: title + subtitle, action ──────────────────────────
+.hdx-v2-user-dashboard-header {
+    display:        flex;
+    flex-direction: column;
+    align-items:    flex-start;
+    gap:            var(--hdx-space-4);
+    margin-bottom:  var(--hdx-space-6);
+
+    @media (min-width: @hdx-bp-xl) {
+        .hdx-list-header-row();
+        flex-direction: row;
+        gap:            var(--hdx-space-8);
+    }
+
+    &__text {
+        display:        flex;
+        flex-direction: column;
+        gap:            var(--hdx-space-13);
+
+        @media (min-width: @hdx-bp-xl) {
+            flex:      1;
+            min-width: 0;
+        }
+    }
+
+    &__title {
+        .hdx-dashboard-title();
+    }
+
+    &__subtitle {
+        .hdx-dashboard-subtitle();
+    }
+}
+
+// ── Empty state ───────────────────────────────────────────────
+.hdx-v2-user-dashboard-empty {
+    .hdx-list-header-empty();
+    display:        flex;
+    flex-direction: column;
+    gap:            var(--hdx-space-4);
+
+    &__text {
+        margin: 0;
+    }
+}

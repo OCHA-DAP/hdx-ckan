@@ -159,9 +159,11 @@
 .c-page-header__desc.is-clamped .c-text-button {
   display: inline-flex;
 }
-.c-page-header__desc.is-open .c-text-button__icon {
-  transform: rotate(180deg);
+.c-page-header__desc .c-text-button .c-text-button__icon {
   transition: transform 0.15s ease;
+}
+.c-page-header__desc.is-open .c-text-button .c-text-button__icon {
+  transform: rotate(180deg);
 }
 .c-page-header__desc-text {
   font-family: var(--hdx-font-body);

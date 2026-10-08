@@ -1,0 +1,41 @@
+// ============================================================
+// pages/hdx-connect.less
+// HDX Connect Requests dashboard (requestdata/my_requested_data.html,
+// task 074) — v2 page-specific styles
+// Figma: llm_docs/redesign/figma_exports/xl-user-dashboard-hdx-connect-requests.html
+// ============================================================
+
+@import "../mixins.less";
+
+.hdx-v2-hdx-connect {
+    display:        flex;
+    flex-direction: column;
+    gap:            var(--hdx-space-6);
+
+    &__shared-error {
+        margin: var(--hdx-space-3);
+    }
+}
+
+.hdx-v2-hdx-connect-summary {
+    display:        flex;
+    flex-direction: column;
+    gap:            var(--hdx-space-2);
+
+    &__title {
+        .hdx-body-m-semibold();
+        color:  var(--hdx-neutral-95);
+        margin: 0;
+    }
+
+    &__requester {
+        .hdx-body-s();
+        color:  var(--hdx-neutral-8);
+        margin: 0;
+    }
+
+    &__message {
+        .hdx-quote();
+        .hdx-quote-marks();
+    }
+}

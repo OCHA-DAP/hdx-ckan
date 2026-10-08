@@ -24,6 +24,9 @@
                               navigates on (task 070 A5 — org index's backend
                               reads 'limit', not the shared search logic's
                               'ext_page_size'). default: 'ext_page_size'
+  sort_key          {string}  URL query param name the sort dropdown navigates
+                              on (task 074 — the HDX Connect Requests view
+                              reads 'order_by'). default: 'sort'
   ──────────────────────────────────────────────────────────────────
 #}
 {% set sorting_selected = sorting_selected if sorting_selected is defined else h.HDX_CONST('DEFAULT_SORTING') %}
@@ -34,6 +37,7 @@
 {% set show_page_size   = show_page_size   if show_page_size   is defined else True %}
 {% set page_size_options = page_size_options if page_size_options is defined else None %}
 {% set page_size_key    = page_size_key    if page_size_key    is defined else 'ext_page_size' %}
+{% set sort_key         = sort_key         if sort_key         is defined else 'sort' %}
 
 {% set limits = page_size_options if page_size_options else [10, 25, 50, 100] %}
 {% set limit_selected = ext_page_size|int if ext_page_size else 10 %}
@@ -101,7 +105,7 @@
         selected=_ns.sort_label,
         state='enabled',
         panel_id='hdx-nav-panel-sort-' ~ panel_suffix,
-        attrs={'data-nav-key': 'sort'},
+        attrs={'data-nav-key': sort_key},
         navigate=True,
         items=_sort_ns.items %}
   </div>

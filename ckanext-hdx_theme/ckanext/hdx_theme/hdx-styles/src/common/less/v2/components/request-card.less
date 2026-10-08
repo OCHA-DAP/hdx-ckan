@@ -1,0 +1,62 @@
+// ============================================================
+// c-request-card — HDX Connect dataset group card (task 074)
+// Compiled output: fanstatic/v2/components/request-card.css
+// Figma: llm_docs/redesign/figma_exports/xl-user-dashboard-hdx-connect-requests.html,
+//        sm-user-dashboard-hdx-connect.html
+// ============================================================
+@import "../mixins.less";
+
+.c-request-card {
+    display:          flex;
+    flex-direction:   column;
+    background-color: var(--hdx-neutral-0);
+    border:           1px solid var(--hdx-neutral-1);
+    border-radius:    var(--hdx-radius-sm);
+
+    &__header {
+        display:        flex;
+        flex-direction: column;
+        gap:            var(--hdx-space-2);
+        padding:        var(--hdx-space-4);
+    }
+
+    &__title {
+        .hdx-body-m-semibold();
+        color:  var(--hdx-neutral-95);
+        margin: 0;
+
+        @media (min-width: @hdx-bp-md) {
+            font-size: var(--hdx-fs-l);
+        }
+    }
+
+    &__title-link {
+        color:           inherit;
+        text-decoration: none;
+
+        &:hover {
+            text-decoration: underline;
+            color:           var(--hdx-primary-5);
+        }
+
+        &:focus-visible {
+            .hdx-focus-ring();
+        }
+    }
+
+    &__maintainer {
+        .hdx-body-s();
+        color:  var(--hdx-neutral-8);
+        margin: 0;
+    }
+}
+
+// ────────────────────────────────────────────────────────────
+// c-request-card-list — vertical list wrapper for request cards
+// ────────────────────────────────────────────────────────────
+
+.c-request-card-list {
+    display:        flex;
+    flex-direction: column;
+    gap:            var(--hdx-space-6);
+}

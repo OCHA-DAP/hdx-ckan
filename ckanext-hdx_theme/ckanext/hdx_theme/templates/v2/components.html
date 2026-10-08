@@ -33,6 +33,7 @@
   {'label': 'Dataviz Card', 'href': '#dataviz-card'},
   {'label': 'Organisation List Card', 'href': '#org-list-card'},
   {'label': 'Member List Card', 'href': '#member-list-card'},
+  {'label': 'Request Card / Item / Archive', 'href': '#request-card'},
   {'label': 'Notification Item', 'href': '#notification-item'},
   {'label': 'Activity Item', 'href': '#activity-item'},
   {'label': 'Table', 'href': '#table'},
@@ -1428,6 +1429,16 @@
           label='Disabled', href='#', status='disabled' %}
     </div>
 
+    <h2 class="demo-subsection__heading">Nav items — size s (vertical menu)</h2>
+    <div class="demo-max-width-m">
+      {% snippet 'v2/components/nav-item.html',
+          label='Newsfeed', href='#', size='s' %}
+      {% snippet 'v2/components/nav-item.html',
+          label='My Organisations', href='#', size='s', status='active' %}
+      {% snippet 'v2/components/nav-item.html',
+          label='Profile and Password', href='#', size='s' %}
+    </div>
+
     <h2 class="demo-subsection__heading">Anchor links (sidebar)</h2>
     <div class="demo-row demo-row--flex-start">
       <div class="demo-anchor-links-sidebar">
@@ -2005,7 +2016,7 @@
   ══════════════════════════════════════════════════════ #}
   <section class="demo-section" id="dataset-card">
     <h1 class="demo-section__title">Dataset Card</h1>
-    <p class="demo-section__subtitle">responsive · two-column (MD+) · stacked (SM) · description toggle</p>
+    <p class="demo-section__subtitle">responsive · two-column (MD+) · stacked (SM) · description toggle · labels · actions</p>
 
     {# ── Full card — all features enabled ─────────────── #}
     <h2 class="demo-subsection__heading">Full card — location, subnational, description, mixed formats, overflow</h2>
@@ -2055,6 +2066,55 @@
           title_href='#',
           location='Democratic Republic of the Congo',
           date_range='Data from 03 Apr 2024 to 15 Apr 2024' %}
+    </div>
+
+    {# ── Labels + actions — My Datasets dashboard ─────── #}
+    <h2 class="demo-subsection__heading">Labels + actions — status badge, frequency, overdue date, management actions</h2>
+    <div class="demo-row demo-row--flex-start">
+      {% call h.snippet('v2/components/dataset-card.html',
+          org_name='Example Organisation',
+          title='Sudan — Example Monthly Market Monitoring Dataset 2024',
+          title_href='#',
+          description='This example dataset tracks monthly market prices across sample locations.',
+          labels=[
+            {'color': 'dark', 'size': 'xs', 'icon_src': 'v2/icons/lock.svg', 'icon_only': True, 'attrs': {'aria-label': 'Private dataset'}},
+            {'text': 'Expected update frequency: Every month', 'color': 'light', 'size': 'xs'},
+            {'text': 'Update by Jun 1 2026', 'color': 'yellow', 'size': 'xs', 'icon': True, 'icon_src': 'v2/icons/time-clock.svg'},
+          ]) %}
+        <div class="c-dataset-card__actions-group">
+          {% snippet 'v2/components/text-button.html',
+              style='tertiary', size='s', tag='button',
+              label='Delete', icon_src='v2/icons/delete.svg' %}
+          {% snippet 'v2/components/text-button.html',
+              style='tertiary', size='s', tag='button', label='Archive' %}
+        </div>
+        <div class="c-dataset-card__actions-group">
+          {% snippet 'v2/components/button.html',
+              style='tertiary', size='s', tag='a', href='#',
+              icon_src='v2/icons/mail.svg', label='Send a group message' %}
+          {% snippet 'v2/components/button.html',
+              style='primary', size='s', label='Update' %}
+        </div>
+      {% endcall %}
+    </div>
+
+    {# ── Labels + single actions group — member-role maintainer ── #}
+    <h2 class="demo-subsection__heading">Labels + single actions group — up-to-date date, member-role maintainer (group aligns right)</h2>
+    <div class="demo-row demo-row--flex-start">
+      {% call h.snippet('v2/components/dataset-card.html',
+          org_name='Example Organisation',
+          title='Sudan — Example Weekly Displacement Tracking Dataset 2024',
+          title_href='#',
+          labels=[
+            {'text': 'Expected update frequency: Every week', 'color': 'light', 'size': 'xs'},
+            {'text': 'Update by Oct 20 2026', 'color': 'light', 'size': 'xs', 'icon': True, 'icon_src': 'v2/icons/time-clock.svg'},
+          ]) %}
+        <div class="c-dataset-card__actions-group">
+          {% snippet 'v2/components/button.html',
+              style='tertiary', size='s', tag='a', href='#',
+              icon_src='v2/icons/mail.svg', label='Send a group message' %}
+        </div>
+      {% endcall %}
     </div>
 
   </section>
@@ -2211,7 +2271,8 @@
             'package_count': 4800,
             'created': '2023-10-31T00:00:00'
           },
-          member_count=12 %}
+          member_count=12,
+          member_since='2023-10-31T00:00:00' %}
     </div>
 
     {# ── No description ───────────────────────────────────────── #}
@@ -2225,7 +2286,8 @@
             'package_count': 293,
             'created': '2019-03-15T00:00:00'
           },
-          member_count=5 %}
+          member_count=5,
+          member_since='2019-03-15T00:00:00' %}
     </div>
 
     {# ── Minimal — short title, no description, 0 members ──────── #}
@@ -2239,7 +2301,24 @@
             'package_count': 17,
             'created': '2014-06-01T00:00:00'
           },
-          member_count=0 %}
+          member_count=0,
+          member_since='2014-06-01T00:00:00' %}
+    </div>
+
+    {# ── Dashboard variant — role + last updated (My Organisations) ── #}
+    <h2 class="demo-subsection__heading">Dashboard — role + last updated</h2>
+    <div class="demo-row demo-row--flex-start">
+      {% snippet 'v2/components/org-list-card.html',
+          org={
+            'title': 'Example Organisation for Humanitarian Data',
+            'name': 'example-organisation',
+            'description': '',
+            'package_count': 293,
+            'created': '2019-03-15T00:00:00'
+          },
+          member_count=5,
+          role=_('Admin'),
+          last_updated='2023-10-31T00:00:00' %}
     </div>
 
   </section>
@@ -2316,6 +2395,81 @@
         {% snippet 'v2/components/text-button.html',
             style='secondary', size='m', tag='button',
             label='Decline' %}
+      {% endcall %}
+    </div>
+
+  </section>
+
+
+  {# ══════════════════════════════════════════════════════
+     REQUEST CARD / REQUEST ITEM / REQUEST ARCHIVE
+  ══════════════════════════════════════════════════════ #}
+  <section class="demo-section" id="request-card">
+    <h1 class="demo-section__title">Request Card / Item / Archive</h1>
+    <p class="demo-section__subtitle">HDX Connect requests (task 074) · c-request-card groups c-request-item rows per dataset · c-request-archive grid with &lt;details&gt; rows</p>
+
+    {% set demo_message = 'I am working on a regional report on access to basic services and would like to use this dataset to map facilities across the provinces, cross-referenced with other publicly available sources. The data will only be used for this research, will not be redistributed and will be properly cited in the final publication. Please let me know if you need any further details about the project or its timeline.' %}
+
+    <h2 class="demo-subsection__heading">Card with New + Open requests ("Maintained by" line)</h2>
+    <div class="demo-row demo-row--column">
+      <div class="c-request-card-list">
+        {% call h.snippet('v2/components/request-card.html',
+            title='Example Dataset — Health Facilities', title_href='#',
+            maintainer_label='Example Maintainer', maintainer_href='#') %}
+          {% call h.snippet('v2/components/request-item.html',
+              avatar_initials='JD', name='Jane Doe', profile_url='#',
+              org_name='Example Organisation', org_href='#', country='Kenya',
+              org_type='Academic / Research', verified=True, tooltip_id='demo-request-verified-1',
+              requested_date='4 May 2026', message=demo_message, intended_use='Academic') %}
+            {% snippet 'v2/components/button.html',
+                style='primary', size='s', label='Reply', icon_src='v2/icons/reply.svg' %}
+            {% snippet 'v2/components/text-button.html',
+                style='secondary', size='s', tag='button', label='Decline' %}
+          {% endcall %}
+          {% call h.snippet('v2/components/request-item.html',
+              avatar_initials='AE', name='Alex Example', profile_url='#',
+              org_name='Sample Foundation', country='Peru',
+              org_type='National NGO', verified=False, tooltip_id='demo-request-verified-2',
+              requested_date='2 May 2026', message='Short message that fits without a Show more toggle.',
+              intended_use='Programming') %}
+            <div class="c-request-item__actions-group">
+              <span>Did you share the data?</span>
+              {% snippet 'v2/components/button.html', style='tertiary', size='s', label='Yes' %}
+              {% snippet 'v2/components/button.html', style='tertiary', size='s', label='No' %}
+            </div>
+          {% endcall %}
+        {% endcall %}
+      </div>
+    </div>
+
+    <h2 class="demo-subsection__heading">Archive grid (rows collapsed by default; status chips Shared / Not Shared / Denied)</h2>
+    <div class="demo-row demo-row--column">
+      {% call h.snippet('v2/components/request-archive.html') %}
+        {% call h.snippet('v2/components/request-archive-row.html',
+            title='Example Dataset — Health Facilities', requests=10, replied=9, declined=1, shared=3) %}
+          {% snippet 'v2/components/request-item.html',
+              variant='archived',
+              avatar_initials='JD', name='Jane Doe', profile_url='#',
+              org_name='Example Organisation', country='Kenya',
+              org_type='Academic / Research', verified=True, tooltip_id='demo-request-verified-3',
+              requested_date='25 March 2026', message=demo_message, intended_use='Academic',
+              status={'text': 'Data Shared', 'color': 'cyan'}, status_date='28 March 2026' %}
+          {% snippet 'v2/components/request-item.html',
+              variant='archived',
+              avatar_initials='AE', name='Alex Example', profile_url='#',
+              requested_date='20 March 2026', message='Request without the requester extras (older data).',
+              status={'text': 'Data Not Shared', 'color': 'dark'}, status_date='22 March 2026' %}
+          {% snippet 'v2/components/request-item.html',
+              variant='archived',
+              avatar_initials='SS', name='Sam Sample', profile_url='#',
+              org_name='Sample Foundation', country='Peru',
+              org_type='National NGO', verified=False, tooltip_id='demo-request-verified-4',
+              requested_date='18 March 2026', message='Could you share the latest version?', intended_use='Media',
+              status={'text': 'Request Denied', 'color': 'yellow'}, status_date='19 March 2026' %}
+        {% endcall %}
+        {% call h.snippet('v2/components/request-archive-row.html',
+            title='Example Dataset With A Much Longer Title That Truncates With An Ellipsis In The Archive Grid', requests=4, replied=2, declined=2, shared=1) %}
+        {% endcall %}
       {% endcall %}
     </div>
 

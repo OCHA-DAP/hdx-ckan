@@ -215,6 +215,8 @@ Add before any block definitions:
 
 The generic `hdx-v2-content-columns__sidebar*` modifiers (`--xl-only`, `--sticky`) come from a later, shared layout convention (`layout.less`) that postdates this task.
 
+The same filters can also sit in a right-hand column (`tertiary_content` + `tertiary_class`, with `hdx-v2-search-sidebar--right`), as on My Datasets (073).
+
 Add secondary block with sidebar filters:
 
 ```jinja2
@@ -243,7 +245,7 @@ Add secondary block with sidebar filters:
 
 ### 6b. `package_list.html` v2 block changes
 
-**Remove** the `hdx-v2-search-layout` opening div and its sidebar form (current lines 177–190):
+**Remove** the `hdx-v2-search-layout` opening div and its sidebar form:
 
 ```html
 {# REMOVE THIS BLOCK: #}
@@ -255,9 +257,9 @@ Add secondary block with sidebar filters:
   </form>
 ```
 
-**Remove** the matching closing `</div>` at line 274 (which closes `hdx-v2-search-layout`).
+**Remove** the matching closing `</div>` (which closes `hdx-v2-search-layout`).
 
-**Update** the results wrapper (line 215) to remove Bootstrap `col-9`:
+**Update** the results wrapper to remove Bootstrap `col-9`:
 
 ```jinja2
 {# Before: #}
@@ -279,7 +281,7 @@ And the corresponding close tag:
 
 ### 6c. `search.less` CSS changes
 
-**Remove** the `hdx-v2-search-layout` block (lines 137–165). The `.hdx-v2-dataset-list { flex:1 }` rule nested inside it moves to the new `.hdx-v2-search-content` block.
+**Remove** the `hdx-v2-search-layout` block. The `.hdx-v2-dataset-list { flex:1 }` rule nested inside it moves to the new `.hdx-v2-search-content` block.
 
 **Add** after the removed block:
 

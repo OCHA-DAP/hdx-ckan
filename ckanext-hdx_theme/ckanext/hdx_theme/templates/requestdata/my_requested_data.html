@@ -1,41 +1,118 @@
-{% extends "user/dashboard.html" %}
+{% extends "v2/user-dashboard-base.html" %}
 
-{% block subtitle %}{% endblock %}
-{% block dashboard_activity_stream_context %}{% endblock %}
-{% block page_header_inner %}{% endblock %}
+{% set user_nav_active  = 'hdx_connect_requests' %}
+{% set page_label       = _('HDX Connect Requests') %}
+{% set user_dict        = g.userobj %}
+{% set has_archive      = requests_archive | length > 0 %}
+{% set sorting_selected = request.args.get('order_by') or 'most_recent' %}
+{% set sorting_options  = [
+  (_('Most Recent'),        'most_recent', _('Most Recent')),
+  (_('Alphabetical (A-Z)'), 'asc',         _('Alphabetical (A-Z)')),
+  (_('Alphabetical (Z-A)'), 'desc',        _('Alphabetical (Z-A)')),
+  (_('Requests Rate'),      'requests',    _('Requests Rate')),
+  (_('Sharing Rate'),       'shared',      _('Sharing Rate')),
+] %}
 
 {% block styles %}
-    {{ super() }}
-    {% asset 'requestdata/main-styles' %}
-    {% asset 'hdx_theme/requestdata-styles' %}
+  {{ super() }}
+  {% asset 'hdx_theme/v2-hdx-connect-page-styles' %}
 {% endblock %}
 
-{% set total_requests = requests_new | length + requests_open | length + total_archived_requests | length %}
+{% block scripts %}
+  {{ super() }}
+  {% asset 'hdx_theme/v2-hdx-connect-page-scripts' %}
+{% endblock %}
 
-{% block primary_content_inner %}
+{% block primary %}
+  {% snippet 'v2/list-header.html',
+      count=requests_new | length + requests_open | length,
+      list_title=page_label,
+      list_subtitle=_('Respond to or decline restricted dataset access requests from other users'),
+      title_tag='h1',
+      title_size='dashboard',
+      show_controls=False,
+      show_filters=False %}
 
-<div class="request-data-module">
-    <div class="requests-main-container">
-        {% snippet 'requestdata/snippets/requests_header.html', title='My Requests', total_requests=total_requests %}
-
-        {% snippet 'requestdata/snippets/section_base.html', state='new', title='New', requests=requests_new, template_type='user' %}
-        {% snippet 'requestdata/snippets/section_base.html', state='open', title='Open', requests=requests_open, template_type='user' %}
-
-        {% if requests_archive %}
-        {% snippet 'requestdata/snippets/order_requests.html', service_url=my_requests_url, current_order_name=current_order_name %}
+  <div class="hdx-v2-hdx-connect"
+       data-hdx-connect-shared-url="{{ h.url_for('requestdata.handle_open_request_action_shared', username=c.userobj.name) }}">
+    {% for section in [
+      {'state': 'new',  'title': _('New'),  'requests': requests_new},
+      {'state': 'open', 'title': _('Open'), 'requests': requests_open},
+    ] %}
+      <section>
+        {% snippet 'v2/list-header.html',
+            count=section.requests | length,
+            list_title=section.title,
+            title_tag='h2',
+            show_controls=False,
+            show_filters=False %}
+        {% if section.requests %}
+          {% set groups = namespace(cards=[], index={}) %}
+          {% for item in section.requests %}
+            {% if item.package_id in groups.index %}
+              {% do groups.cards[groups.index[item.package_id]].requests.append(item) %}
+            {% else %}
+              {% do groups.index.update({item.package_id: groups.cards | length}) %}
+              {% do groups.cards.append({'package_id': item.package_id, 'title': item.title, 'requests': [item]}) %}
+            {% endif %}
+          {% endfor %}
+          <div class="c-request-card-list">
+            {% for group in groups.cards %}
+              {% call h.snippet('v2/components/request-card.html',
+                  title=group.title,
+                  title_href=h.url_for('dataset.read', id=group.package_id)) %}
+                {% for item in group.requests %}
+                  {% snippet 'v2/hdx-connect-request.html', item=item, state=section.state %}
+                {% endfor %}
+              {% endcall %}
+            {% endfor %}
+          </div>
+        {% else %}
+          <div class="hdx-v2-user-dashboard-empty">
+            <p class="hdx-v2-user-dashboard-empty__text">{{ _('No requests found.') }}</p>
+          </div>
         {% endif %}
+      </section>
+    {% endfor %}
 
-        {% snippet 'requestdata/snippets/section_base.html', state='archive', title='Archived', requests=requests_archive, template_type='user' %}
-
-        <div class="alert alert-dismissible request-message-alert d-none" role="alert">
-            <div class="alert-text"></div>
+    <section>
+      {% snippet 'v2/list-header.html',
+          count=requests_archive | length,
+          list_title=_('Archived'),
+          title_tag='h2',
+          show_controls=has_archive,
+          show_filters=False,
+          show_page_size=False,
+          sort_key='order_by',
+          sorting_options=sorting_options,
+          sorting_selected=sorting_selected %}
+      {% if has_archive %}
+        {% call h.snippet('v2/components/request-archive.html') %}
+          {% for group in requests_archive %}
+            {% call h.snippet('v2/components/request-archive-row.html',
+                title=group.title,
+                requests=group.requests,
+                replied=group.replied,
+                declined=group.declined,
+                shared=group.shared) %}
+              {% for item in group.requests_archived %}
+                {% snippet 'v2/hdx-connect-request.html', item=item, state='archive' %}
+              {% endfor %}
+            {% endcall %}
+          {% endfor %}
+        {% endcall %}
+      {% else %}
+        <div class="hdx-v2-user-dashboard-empty">
+          <p class="hdx-v2-user-dashboard-empty__text">{{ _('No requests found.') }}</p>
         </div>
-    </div>
-{#    {% resource 'requestdata/css/main.css' %}#}
-{#    {% resource 'hdx_theme/requestdata/request-data.css' %}#}
+      {% endif %}
+    </section>
 
-</div>
+    {% snippet 'v2/components/alert.html',
+        hidden=True,
+        extra_classes='hdx-v2-hdx-connect__shared-error',
+        extra_attrs='data-hdx-connect-shared-error' %}
+  </div>
 
+  {% snippet 'v2/hdx-connect-drawers.html' %}
 {% endblock %}
-
-

@@ -20,7 +20,7 @@ limitations).
 ## Context
 
 Task 056 gave the Organization page a v2 hero (`page-header.html`) and `v2/components/tabs.html`,
-but scoped its tab-*content* migration to Datasets only — `v2/org-hero.html:76-84` already lists a
+but scoped its tab-*content* migration to Datasets only — `v2/org-hero.html` already lists a
 `Stats` tab entry (`active_tab == 'stats'`, href `hdx_org.stats`) waiting on this migration, the same
 pattern 057 found for Activity. Unlike 057, this isn't primarily a "reuse an existing v2 component"
 job: there is no v2 chart component yet anywhere in the codebase. The core work here is a **charting
@@ -91,7 +91,7 @@ dogpile-cached wrappers, plus a live Solr query in the stats logic that resolves
 dataset's id to its title/name/url (needed for the bar chart's clickable labels, D2). **None of this
 changes** — the v2 templates/JS consume the exact same `data` dict shape.
 
-The XLSX export (`helpers/organization_helper.py:832-896`, `hdx_generate_organization_stats`) builds
+The XLSX export (`helpers/organization_helper.py`, `hdx_generate_organization_stats`) builds
 an openpyxl workbook from a wider Mixpanel pull (`pageviews_downloads_per_organization_last_4_years`)
 and fires `OrganizationStatsDownloadAnalyticsSender` (GA event `org stats download`) — unrelated to
 the charts, unchanged by this task, but its permission-gated UI must stay on the page (D4).

@@ -73,3 +73,6 @@
 | 069 | [animation-interaction-audit](069-animation-interaction-audit.md)                                              | implemented | |
 | 070 | [v2-full-audit](070-v2-full-audit.md)                                                                          | implemented | |
 | 071 | [crisis-pages-v2](071-crisis-pages-v2.md)                                                                       | implemented | |
+| 072 | [user-dashboard-my-organisations-v2](072-user-dashboard-my-organisations-v2.md)                                 | implemented | |
+| 073 | [user-dashboard-my-datasets-v2](073-user-dashboard-my-datasets-v2.md)                                           | implemented | |
+| 074 | [user-dashboard-hdx-connect-requests-v2](074-user-dashboard-hdx-connect-requests-v2.md)                         | implemented | |

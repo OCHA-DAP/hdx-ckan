@@ -88,6 +88,7 @@
 
         {% block main_content %}
           {% set secondary_block_output = self.secondary_content() %}
+          {% set tertiary_block_output = self.tertiary_content() %}
           <div class="{% if secondary_block_output|trim == '' %}no-nav{% endif %}">
             {#
             The pre_primary block can be used to add content before the
@@ -109,6 +110,11 @@
                   <div class="{{ content_class if content_class else '' }}">
                     {{ self.primary() }}
                   </div>
+                  {% if tertiary_block_output|trim != '' %}
+                    <div class="{{ tertiary_class if tertiary_class else '' }}">
+                      {{ tertiary_block_output }}
+                    </div>
+                  {% endif %}
                 </div>
               </div>
             </div>
@@ -128,6 +134,8 @@
 
 
 {% block secondary_content %}{% endblock %}
+
+{% block tertiary_content %}{% endblock %}
 
 {# TODO: remove when v1 is retired #}
 {% block primary %}

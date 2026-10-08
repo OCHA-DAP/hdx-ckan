@@ -1,0 +1,63 @@
+{% extends "v2/page.html" %}
+
+{#
+  Base for the v2 user dashboard and user settings pages: left menu (XL only),
+  breadcrumb, <title> and page styles.
+
+  Children set:
+    user_nav_active  {string}  Item id from h.hdx_get_user_dashboard_nav_sections()
+                               (e.g. 'my_organisations')
+    page_label       {string}  Page name for the breadcrumb and <title>
+  and fill {% block primary %}. Optionally fill {% block tertiary_content %}
+  for a right-hand column (XL only, sticky), e.g. My Datasets' filters.
+#}
+
+{% set outer_row_class = 'hdx-v2-search-row' %}
+{% set sidebar_class   = 'hdx-v2-content-columns__sidebar hdx-v2-content-columns__sidebar--xl-only hdx-v2-content-columns__sidebar--sticky hdx-v2-search-sidebar' %}
+{% set content_class   = 'hdx-v2-content-columns__content hdx-v2-search-content' %}
+{% set tertiary_class  = 'hdx-v2-content-columns__sidebar hdx-v2-content-columns__sidebar--xl-only hdx-v2-content-columns__sidebar--sticky hdx-v2-search-sidebar hdx-v2-search-sidebar--right' %}
+
+{% set user_nav_sections = h.hdx_get_user_dashboard_nav_sections() %}
+{% set user_nav = namespace(section=none) %}
+{% for section in user_nav_sections %}
+  {% if section['items'] | selectattr('id', 'equalto', user_nav_active) | list %}
+    {% set user_nav.section = section %}
+  {% endif %}
+{% endfor %}
+
+{% block subtitle %}{{ page_label }} {{ g.template_title_delimiter }} {{ user_dict.display_name }} {{ g.template_title_delimiter }} {{ _('Users') }}{% endblock %}
+
+{% block styles %}
+  {{ super() }}
+  {% asset 'hdx_theme/v2-search-page-styles' %}
+  {% asset 'hdx_theme/v2-user-dashboard-page-styles' %}
+{% endblock %}
+
+{% block breadcrumb_items %}
+  {% set crumbs = [{'label': user_nav.section.label, 'href': user_nav.section['items'][0].href}] if user_nav.section else [] %}
+  {% snippet 'v2/components/breadcrumb.html',
+      items=crumbs + [{'label': page_label, 'href': ''}] %}
+{% endblock %}
+
+{% block secondary_content %}
+  {% if user_nav_sections %}
+    <nav class="hdx-v2-user-dashboard-nav" aria-label="{{ _('User dashboard') }}">
+      {% for section in user_nav_sections %}
+        <div class="hdx-v2-user-dashboard-nav__group">
+          <h2 class="hdx-v2-user-dashboard-nav__label" id="hdx-v2-user-dashboard-nav-{{ section.id }}">{{ section.label }}</h2>
+          <ul class="hdx-v2-user-dashboard-nav__list" aria-labelledby="hdx-v2-user-dashboard-nav-{{ section.id }}">
+            {% for item in section['items'] %}
+              <li>
+                {% snippet 'v2/components/nav-item.html',
+                    label=item.label,
+                    href=item.href,
+                    size='s',
+                    status='active' if item.id == user_nav_active else 'default' %}
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% endfor %}
+    </nav>
+  {% endif %}
+{% endblock %}

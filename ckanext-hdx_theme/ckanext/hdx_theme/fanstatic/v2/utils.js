@@ -177,4 +177,28 @@
     return false;
   };
 
+  // Sets an element's disabled state as button.html renders it: is-disabled +
+  // aria-disabled, plus [disabled] on form controls or tabindex="-1" on links.
+  window.hdxV2.setDisabled = function setDisabled(el, disabled) {
+    el.classList.toggle('is-disabled', disabled);
+    if (disabled) {
+      el.setAttribute('aria-disabled', 'true');
+    } else {
+      el.removeAttribute('aria-disabled');
+    }
+    if ('disabled' in el) {
+      el.disabled = disabled;
+    } else if (disabled) {
+      el.setAttribute('tabindex', '-1');
+    } else {
+      el.removeAttribute('tabindex');
+    }
+  };
+
+  // Shows a hidden c-alert (templates/v2/components/alert.html) with `text`.
+  window.hdxV2.showAlert = function showAlert(alertEl, text) {
+    alertEl.querySelector('.c-alert__message').textContent = text;
+    alertEl.hidden = false;
+  };
+
 })();

@@ -1,45 +1,47 @@
-{% extends "user/dashboard.html" %}
+{% extends "v2/user-dashboard-base.html" %}
 
-{% block dashboard_activity_stream_context %}{% endblock %}
-{% block add_action_content %}{% endblock %}
+{% set user_nav_active = 'my_organisations' %}
+{% set page_label      = _('My Organisations') %}
 
-{% block page_header_inner %}
-{% endblock %}
-
-{% block styles %}
-    {{ super() }}
-{% endblock %}
-
-{% block scripts %}
-  {{ super() }}
-  {% asset 'hdx_theme/popup-scripts' %}
-  {% asset 'hdx_theme/onboarding-bulk-user-scripts' %}
-{% endblock %}
-
-{% block primary_content_inner %}
+{% block primary %}
   {% set organizations = h.hdx_organizations_available_with_roles() %}
-    {% if organizations %}
-      <div class="float-end">
-        <a class="btn btn-primary" href="{{ h.url_for('hdx_org_join.org_join') }}" title="Request to join an organisation">{{ _('Request to join an org') }}</a>
-      </div>
-    {% endif %}
-  <div>
-    {% if organizations %}
-      <div class="wide">
-        {% snippet "organization/snippets/organization_list.html", organizations=organizations %}
-      </div>
-    {% else %}
-      <div class="row">
-        <div class="col-12 col-md-6 offset-md-3">
-          <div class="text-center mBottom40">
-            <h3 class="center sspRegular16 mb-3">{{ _('Thank you for becoming a registered user on HDX.') }}</h3>
-            <p class="sspRegular16">{{ _('In order to share data on HDX, you need to associate your account with an existing organisation or request to create a new organisation.') }}</p>
-            <p class="sspRegular16">{{ _('An organisation on HDX can be a legal entity or an informal group.') }}</p>
-            <p class="sspRegular16">{{ _('Requests to associate your account with an existing organisation will be assessed by the administrator of that organisation. You will need to provide a reason for making this request.') }}</p>
-            <a class="btn btn-primary" href="{{ h.url_for('hdx_org_join.org_join') }}" title="Request to join an organisation">{{ _('Request to join an org') }}</a>
-          </div>
-        </div>
-      </div>
-    {% endif %}
+  {% set role_labels = {
+    'sysadmin': _('Sysadmin'),
+    'admin':    _('Admin'),
+    'editor':   _('Editor'),
+    'member':   _('Member'),
+  } %}
+
+  <div class="hdx-v2-user-dashboard-header">
+    <div class="hdx-v2-user-dashboard-header__text">
+      <h1 class="hdx-v2-user-dashboard-header__title">{{ page_label }}</h1>
+      <p class="hdx-v2-user-dashboard-header__subtitle">{{ _('Organisations you belong to and your role in each') }}</p>
+    </div>
+    {% snippet 'v2/components/button.html',
+        style='primary',
+        size='s',
+        tag='a',
+        href=h.url_for('hdx_org_join.org_join'),
+        icon_src='v2/icons/mail.svg',
+        label=_('Request to join an org') %}
   </div>
+
+  {% if organizations %}
+    <div class="c-org-list-card-list">
+      {% for org in organizations %}
+        {% snippet 'v2/components/org-list-card.html',
+            org=org,
+            member_count=h.get_group_members(org.id),
+            role=role_labels.get(org.role, org.role),
+            last_updated=org.dataset_last_updated %}
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="hdx-v2-user-dashboard-empty">
+      <p class="hdx-v2-user-dashboard-empty__text">{{ _('Thank you for becoming a registered user on HDX.') }}</p>
+      <p class="hdx-v2-user-dashboard-empty__text">{{ _('In order to share data on HDX, you need to associate your account with an existing organisation or request to create a new organisation.') }}</p>
+      <p class="hdx-v2-user-dashboard-empty__text">{{ _('An organisation on HDX can be a legal entity or an informal group.') }}</p>
+      <p class="hdx-v2-user-dashboard-empty__text">{{ _('Requests to associate your account with an existing organisation will be assessed by the administrator of that organisation. You will need to provide a reason for making this request.') }}</p>
+    </div>
+  {% endif %}
 {% endblock %}

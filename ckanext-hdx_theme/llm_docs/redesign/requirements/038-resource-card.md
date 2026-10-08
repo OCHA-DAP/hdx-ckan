@@ -58,14 +58,14 @@
 - Description is **always visible** (never hidden entirely).
 - Default: clamped to **7 lines** at SM, **3 lines** at MD+.
 - Expanded: `is-open` class on `[data-clamped-content]` and on the root removes the clamp.
-- The chevron icon in the show-more button rotates 180° on expand via CSS `.c-resource-card.is-open .c-text-button__icon`.
+- The chevron icon in the show-more button rotates 180° on expand via `.hdx-clamp-toggle(~'.c-resource-card__footer .c-text-button')` on the root (scoped to the footer toggle).
 
 ### Show more / less toggle
 - Powered by the shared `clamped-text.js` module.
 - `data-module="clamped-text"` is placed on the **root `.c-resource-card`** element (not on `__desc`) so the module can find both the `[data-clamped-content]` `<p>` and the `.c-text-button` in `__footer` in a single `querySelectorAll` pass.
 - Only added when `description` is truthy.
-- The `.c-text-button` is **hidden by default via CSS** (`.c-resource-card .c-text-button { display: none }`).
-- On DOMContentLoaded, `clamped-text.js` checks `scrollHeight > clientHeight` (or `is-open` already on the container for pre-opened cards). If the text is actually clamped, it adds `is-clamped` to the container, which CSS uses to reveal the button (`.c-resource-card.is-clamped .c-text-button { display: inline-flex }`). Short descriptions are never shown a button.
+- The footer `.c-text-button` is **hidden by default via CSS** (same mixin).
+- On DOMContentLoaded, `clamped-text.js` checks `scrollHeight > clientHeight` (or `is-open` already on the container for pre-opened cards). If the text is actually clamped, it adds `is-clamped` to the container, which CSS uses to reveal the button (`.c-resource-card.is-clamped .c-resource-card__footer .c-text-button { display: inline-flex }`, from the mixin). Short descriptions are never shown a button.
 
 ### Conditional rendering
 | Prop | What it shows |
