@@ -99,7 +99,7 @@ Rendered inside `header.html` after the avatar button. Hidden by default; shown 
 
   {# Logout #}
   {% snippet 'v2/components/button.html',
-      style='tertiary', size='m', label=_('Logout'),
+      style='tertiary', size='m', label=_('Log out'),
       tag='a', href=h.url_for('user.logout') %}
 
 </div>
