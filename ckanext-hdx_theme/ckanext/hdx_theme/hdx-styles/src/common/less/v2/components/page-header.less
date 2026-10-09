@@ -223,17 +223,14 @@
     }
 
     &__logo {
-        max-width:       100%;
-        height:          4rem;              // 64 px — Figma spec
-        object-fit:      contain;
-        object-position: center;
-        display:         block;
+        .hdx-org-logo();
     }
 
     &__logo-link {
-        display: block;
-        width:   fit-content;
-        cursor:  pointer;
+        display:   block;
+        width:     fit-content;
+        max-width: @hdx-org-logo-max-width;
+        cursor:    pointer;
 
         &:focus-visible {
             .hdx-focus-ring();

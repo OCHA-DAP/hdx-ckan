@@ -145,7 +145,7 @@
       <div class="hdx-v2-navbar__search">
         {% snippet 'v2/components/autocomplete.html',
             size='m', name='q',
-            placeholder=_('Search for datasets'),
+            placeholder=_('Search for datasets, locations or organisations'),
             value=c.q if c.q is defined else '',
             form_action=h.url_for('dataset.search'),
             search_source='main-nav' %}
@@ -338,7 +338,7 @@
         <div class="hdx-v2-offcanvas__footer">
           {% if not c.userobj %}
             {% snippet 'v2/components/button.html',
-                style='secondary', size='l', label=_('Login'),
+                style='secondary', size='l', label=_('Log in'),
                 tag='a', href=h.url_for('hdx_signin.login', came_from=request.environ.get('REQUEST_URI', '')),
                 attrs={'data-module': 'hdx_click_stopper', 'data-module-link_type': 'main nav'} %}
           {% endif %}
@@ -384,7 +384,7 @@
 
           <div class="hdx-v2-offcanvas__footer">
             {% snippet 'v2/components/button.html',
-                style='secondary', size='l', label=_('Logout'),
+                style='secondary', size='l', label=_('Log out'),
                 tag='a', href=h.url_for('user.logout'),
                 attrs={'data-module': 'hdx_click_stopper', 'data-module-link_type': 'main nav'} %}
           </div>

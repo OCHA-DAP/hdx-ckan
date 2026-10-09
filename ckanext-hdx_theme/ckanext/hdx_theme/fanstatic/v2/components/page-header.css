@@ -250,15 +250,15 @@
   }
 }
 .c-page-header__logo {
-  max-width: 100%;
-  height: 4rem;
+  max-width: min(100%, 17rem);
+  max-height: 8rem;
   object-fit: contain;
-  object-position: center;
   display: block;
 }
 .c-page-header__logo-link {
   display: block;
   width: fit-content;
+  max-width: 17rem;
   cursor: pointer;
 }
 .c-page-header__logo-link:focus-visible {
