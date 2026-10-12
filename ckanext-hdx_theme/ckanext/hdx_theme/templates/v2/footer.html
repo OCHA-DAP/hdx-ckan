@@ -153,16 +153,22 @@
           <p class="hdx-v2-footer__nav-heading">Resources</p>
           <ul class="hdx-v2-footer__nav-list">
             <li>
-              {% snippet 'v2/components/text-link.html',
-                  label='Documentation', href=docs_links['MAIN'],
-                  style='primary', size='s',
-                  attrs={'data-module': 'hdx_click_stopper', 'data-module-link_type': 'footer'} %}
+              <a href="{{ docs_links['MAIN'] }}"
+                 target="_blank" rel="noopener noreferrer"
+                 class="c-text-link c-text-link--primary c-text-link--size-s hdx-v2-footer__ext-link"
+                 data-module="hdx_click_stopper"
+                 data-module-link_type="footer">
+                <span class="hdx-v2-footer__ext-icon" aria-hidden="true">{{ h.hdx_v2_icon('v2/icons/link-external.svg') }}</span>Documentation
+              </a>
             </li>
             <li>
-              {% snippet 'v2/components/text-link.html',
-                  label='QA Process', href=docs_links['QA_PROCESS'],
-                  style='primary', size='s',
-                  attrs={'data-module': 'hdx_click_stopper', 'data-module-link_type': 'footer'} %}
+              <a href="{{ docs_links['QA_PROCESS'] }}"
+                 target="_blank" rel="noopener noreferrer"
+                 class="c-text-link c-text-link--primary c-text-link--size-s hdx-v2-footer__ext-link"
+                 data-module="hdx_click_stopper"
+                 data-module-link_type="footer">
+                <span class="hdx-v2-footer__ext-icon" aria-hidden="true">{{ h.hdx_v2_icon('v2/icons/link-external.svg') }}</span>QA Process
+              </a>
             </li>
             <li>
               <a href="https://github.com/OCHA-DAP"
@@ -174,18 +180,22 @@
               </a>
             </li>
             <li>
-              {% snippet 'v2/components/text-link.html',
-                  label='Build with HDX',
-                  href=docs_links['RESOURCES_FOR_DEVELOPERS'],
-                  style='primary', size='s',
-                  attrs={'data-module': 'hdx_click_stopper', 'data-module-link_type': 'footer'} %}
+              <a href="{{ docs_links['RESOURCES_FOR_DEVELOPERS'] }}"
+                 target="_blank" rel="noopener noreferrer"
+                 class="c-text-link c-text-link--primary c-text-link--size-s hdx-v2-footer__ext-link"
+                 data-module="hdx_click_stopper"
+                 data-module-link_type="footer">
+                <span class="hdx-v2-footer__ext-icon" aria-hidden="true">{{ h.hdx_v2_icon('v2/icons/link-external.svg') }}</span>Build with HDX
+              </a>
             </li>
             <li>
-              {% snippet 'v2/components/text-link.html',
-                  label='Data Licenses',
-                  href=docs_links['DATA_LICENSES'],
-                  style='primary', size='s',
-                  attrs={'data-module': 'hdx_click_stopper', 'data-module-link_type': 'footer'} %}
+              <a href="{{ docs_links['DATA_LICENSES'] }}"
+                 target="_blank" rel="noopener noreferrer"
+                 class="c-text-link c-text-link--primary c-text-link--size-s hdx-v2-footer__ext-link"
+                 data-module="hdx_click_stopper"
+                 data-module-link_type="footer">
+                <span class="hdx-v2-footer__ext-icon" aria-hidden="true">{{ h.hdx_v2_icon('v2/icons/link-external.svg') }}</span>Data Licenses
+              </a>
             </li>
             <li>
               <a href="https://centre.humdata.org/category/blog/"
@@ -237,16 +247,20 @@
     </div>
 
     <div class="hdx-v2-footer__legal">
-      {% snippet 'v2/components/text-link.html',
-          label='Terms of Service',
-          href=docs_links['TERMS_OF_SERVICE'],
-          style='primary', size='s',
-          attrs={'data-module': 'hdx_click_stopper', 'data-module-link_type': 'footer'} %}
-      {% snippet 'v2/components/text-link.html',
-          label='Privacy Policy',
-          href=docs_links['TERMS_OF_SERVICE'] + '#privacy-notice',
-          style='primary', size='s',
-          attrs={'data-module': 'hdx_click_stopper', 'data-module-link_type': 'footer'} %}
+      <a href="{{ docs_links['TERMS_OF_SERVICE'] }}"
+         target="_blank" rel="noopener noreferrer"
+         class="c-text-link c-text-link--primary c-text-link--size-s hdx-v2-footer__ext-link"
+         data-module="hdx_click_stopper"
+         data-module-link_type="footer">
+        <span class="hdx-v2-footer__ext-icon" aria-hidden="true">{{ h.hdx_v2_icon('v2/icons/link-external.svg') }}</span>Terms of Service
+      </a>
+      <a href="{{ docs_links['TERMS_OF_SERVICE'] }}#privacy-notice"
+         target="_blank" rel="noopener noreferrer"
+         class="c-text-link c-text-link--primary c-text-link--size-s hdx-v2-footer__ext-link"
+         data-module="hdx_click_stopper"
+         data-module-link_type="footer">
+        <span class="hdx-v2-footer__ext-icon" aria-hidden="true">{{ h.hdx_v2_icon('v2/icons/link-external.svg') }}</span>Privacy Policy
+      </a>
     </div>
 
   </div>{# /bottom #}
