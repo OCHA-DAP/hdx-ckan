@@ -1,6 +1,8 @@
 .hdx-v2-request-access-logo__img {
-  max-height: 45px;
-  max-width: 100%;
+  max-width: min(100%, 17rem);
+  max-height: 8rem;
+  object-fit: contain;
+  display: block;
 }
 .hdx-v2-request-access-mandatory {
   font-family: var(--hdx-font-body);
