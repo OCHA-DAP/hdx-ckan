@@ -1,0 +1,46 @@
+{% extends "v2/user-dashboard-base.html" %}
+
+{% set user_nav_active = 'my_activity_stream' %}
+{% set page_label      = _('My Activity Stream') if is_myself else _('Activity Stream') %}
+
+{% block breadcrumb_items %}
+  {% if is_myself %}
+    {{ super() }}
+  {% else %}
+    {% snippet 'v2/components/breadcrumb.html',
+        items=[
+          {'label': user_dict.display_name, 'href': h.url_for('user.read', id=user_dict.name)},
+          {'label': page_label, 'href': ''}
+        ] %}
+  {% endif %}
+{% endblock %}
+
+{% block primary %}
+  <div class="hdx-v2-user-dashboard-header">
+    <div class="hdx-v2-user-dashboard-header__text">
+      <div class="hdx-v2-user-dashboard-header__title-row">
+        <h1 class="hdx-v2-user-dashboard-header__title">{{ page_label }}</h1>
+        {% if user_dict.state == 'deleted' %}
+          {% snippet 'v2/components/label.html', text=_('Deleted'), color='red', size='s' %}
+        {% endif %}
+      </div>
+      <p class="hdx-v2-user-dashboard-header__subtitle">
+        {{ _('A history of your actions') if is_myself else _("A history of {name}'s actions").format(name=user_dict.display_name) }}
+      </p>
+    </div>
+  </div>
+
+  {% if activity_stream %}
+    {% snippet 'v2/activity-stream.html',
+        activity_stream=activity_stream,
+        id=id,
+        object_type='user',
+        show_detail_links=h.check_access('activity_list', {'id': id, 'include_data': True, 'object_type': 'user'}),
+        actor_names={user_dict.id: user_dict.name},
+        load_more_href=older_activities_url %}
+  {% else %}
+    <div class="hdx-v2-user-dashboard-empty">
+      <p class="hdx-v2-user-dashboard-empty__text">{{ _('No recent activity for this user.') }}</p>
+    </div>
+  {% endif %}
+{% endblock %}

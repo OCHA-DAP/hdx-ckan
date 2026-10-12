@@ -1313,6 +1313,7 @@
       {% snippet 'v2/components/label.html', text='Cyan',   color='cyan',   size='m' %}
       {% snippet 'v2/components/label.html', text='Yellow', color='yellow', size='m' %}
       {% snippet 'v2/components/label.html', text='Blue',   color='blue',   size='m' %}
+      {% snippet 'v2/components/label.html', text='Red',    color='red',    size='m' %}
     </div>
 
     <h2 class="demo-subsection__heading">Label — Size S &amp; XS</h2>
@@ -2513,13 +2514,13 @@
   ══════════════════════════════════════════════════════ #}
   <section class="demo-section" id="activity-item">
     <h1 class="demo-section__title">Activity Item</h1>
-    <p class="demo-section__subtitle">activity stream timeline item — actor link, action text, optional subject (linked or plain), relative time</p>
+    <p class="demo-section__subtitle">activity stream timeline item — actor link, action text, optional subject (linked or plain), optional detail links, relative time; stream wrapper with optional Load more</p>
 
     <h2 class="demo-subsection__heading">With linked subject</h2>
     <div class="demo-row demo-row--column">
       {% snippet 'v2/components/activity-item.html',
           actor_href='#',
-          actor_label='Jane Doe',
+          actor_label='jdoe',
           action_text='updated the dataset',
           subject_label='Ukraine — Example Monitoring Dataset',
           subject_href='#',
@@ -2530,11 +2531,37 @@
     <div class="demo-row demo-row--column">
       {% snippet 'v2/components/activity-item.html',
           actor_href='#',
-          actor_label='Jane Doe',
+          actor_label='jdoe',
           action_text='deleted the dataset',
           subject_label='Ukraine — Example Monitoring Dataset',
           timestamp=h.date_str_to_datetime('2026-06-01T12:00:00') %}
     </div>
+
+    <h2 class="demo-subsection__heading">With detail links</h2>
+    <div class="demo-row demo-row--column">
+      {% snippet 'v2/components/activity-item.html',
+          actor_href='#',
+          actor_label='jdoe',
+          action_text='updated the dataset',
+          subject_label='Ukraine — Example Monitoring Dataset',
+          subject_href='#',
+          links=[{'label': 'View this version', 'href': '#'}, {'label': 'Changes', 'href': '#'}],
+          timestamp=h.date_str_to_datetime('2026-06-01T12:00:00') %}
+    </div>
+
+    <h2 class="demo-subsection__heading">Stream with Load more (v2/activity-stream.html)</h2>
+    {% snippet 'v2/activity-stream.html',
+        activity_stream=[
+          {'activity_type': 'changed package', 'id': 'demo-activity-2', 'object_id': 'demo-dataset', 'user_id': '',
+           'timestamp': h.date_str_to_datetime('2026-06-02T09:30:00'),
+           'data': {'actor': 'jdoe', 'package': {'title': 'Ukraine — Example Monitoring Dataset', 'type': 'dataset'}}},
+          {'activity_type': 'new package', 'id': 'demo-activity-1', 'object_id': 'demo-dataset', 'user_id': '',
+           'timestamp': h.date_str_to_datetime('2026-06-01T12:00:00'),
+           'data': {'actor': 'jdoe', 'package': {'title': 'Ukraine — Example Monitoring Dataset', 'type': 'dataset'}}}
+        ],
+        id='demo-dataset',
+        object_type='package',
+        load_more_href='#' %}
   </section>
 
   <hr class="demo-divider">

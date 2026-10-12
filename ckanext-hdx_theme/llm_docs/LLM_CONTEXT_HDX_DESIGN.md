@@ -89,7 +89,7 @@ There are three active layout base templates. The goal is to maintain exactly th
 - `ckanext-hdx_theme/ckanext/hdx_theme/templates/v2/header.html` — top-bar + responsive navbar (fully implemented)
 - `ckanext-hdx_theme/ckanext/hdx_theme/templates/v2/footer.html` — dark-teal footer panel (fully implemented)
 
-Pages in holding state on `page_light.html` (org/join, etc.) manually override `{% block header_core %}` to include the legacy `header-mobile.html`. The following pages have been migrated to `v2/page.html`: homepage, dataset search, dataset page, resource page, all locations, all organisations, organization page (Datasets / Activity / Stats / Members tabs; HDX Connect tab postponed), contact contributor, signup flow (all five pages), HAPI landing page, Signals landing page, and My Organisations, My Datasets and HDX Connect Requests (user dashboard, via `v2/user-dashboard-base.html`). See [**redesign/PROGRESS.md**](redesign/PROGRESS.md) for the full holding-state and migrated-pages lists.
+Pages in holding state on `page_light.html` (org/join, etc.) manually override `{% block header_core %}` to include the legacy `header-mobile.html`. The following pages have been migrated to `v2/page.html`: homepage, dataset search, dataset page, resource page, all locations, all organisations, organization page (Datasets / Activity / Stats / Members tabs; HDX Connect tab postponed), contact contributor, signup flow (all five pages), HAPI landing page, Signals landing page, and My Organisations, My Datasets, HDX Connect Requests and My Activity Stream (user dashboard, via `v2/user-dashboard-base.html`). See [**redesign/PROGRESS.md**](redesign/PROGRESS.md) for the full holding-state and migrated-pages lists.
 
 ## BEM components (HDX custom UI blocks)
 
@@ -239,6 +239,15 @@ Example page-specific template (light search):
   - Extends `v2/user-dashboard-base.html`; sets `user_dict` from `g.userobj`. Title and New / Open / Archived headings via `v2/list-header.html`.
   - Request markup: `v2/hdx-connect-request.html` (request dict → `c-request-item` + actions), cards `c-request-card`, Archived grid `c-request-archive`; Reply / Decline drawers in `v2/hdx-connect-drawers.html`.
 - **Core assets**: as My Organisations, plus `hdx_theme/v2-hdx-connect-page-styles` / `-scripts` (`url-nav.js` + `hdx-connect.js`).
+
+---
+
+### My Activity Stream dashboard (`/user/activity/<id>`)
+
+- **Template**: `ckanext-hdx_theme/ckanext/hdx_theme/templates/user/activity_stream.html` (HDX override of the core activity plugin's template; the `activity.user_activity` view is unchanged)
+  - Extends `v2/user-dashboard-base.html` for every user's stream; other users' streams get "Activity Stream" labels and a Home / {name} / Activity Stream breadcrumb.
+  - Timeline: `v2/activity-stream.html` with `object_type='user'`, `show_detail_links` (core's `activity_list` check) and `actor_names` (the owner's name for actor-less rows); "Load more" (`load_more_href`) links to `older_activities_url`.
+- **Core assets**: as My Organisations.
 
 ---
 

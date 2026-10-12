@@ -117,11 +117,11 @@ There is also a generic v2 numbered pager, `v2/components/pagination.html`, alre
 
 | File | Role |
 |---|---|
-| `ckanext-hdx_theme/ckanext/hdx_theme/templates/v2/components/activity-item.html` | `c-activity-item` — single reusable timeline item (dot+line, actor/action/subject/time) |
-| `.../templates/v2/activity-stream.html` | Orchestrator: loops `activity_stream`, dispatches all **23** CKAN activity types via one `{% if/elif %}` chain, calls `activity-item.html` per item, wraps in `.c-activity-stream` |
+| `ckanext-hdx_theme/ckanext/hdx_theme/templates/v2/components/activity-item.html` | `c-activity-item` — single reusable timeline item (dot+line, actor/action/subject/time; optional `links` row, task 075) |
+| `.../templates/v2/activity-stream.html` | Orchestrator: loops `activity_stream`, dispatches all **23** CKAN activity types via one `{% if/elif %}` chain, calls `activity-item.html` per item, wraps in `.c-activity-stream`. Optional `show_detail_links` / `actor_names` (task 075) are not passed here; `load_more_href` (task 075) is |
 | `.../helpers/actions.py` (`hdx_package_activity_stream`) | AJAX action: `package_activity_list(limit=7)` → renders `v2/activity-stream.html` server-side → returns HTML |
 | `.../fanstatic/v2/pages/dataset.js` (`fetchActivitiesIfNeeded`) | On the dataset page's collapsible Activity accordion first-open, POSTs to `hdx_package_activity_stream`, injects the HTML |
-| `ckanext-hdx_theme/ckanext/hdx_theme/hdx-styles/src/common/less/v2/components/activity-item.less` | `.c-activity-item` (`__timeline/__line/__dot/__content/__actor/__action/__time`) + `.c-activity-stream` (flex column, `__empty` state) |
+| `ckanext-hdx_theme/ckanext/hdx_theme/hdx-styles/src/common/less/v2/components/activity-item.less` | `.c-activity-item` (`__timeline/__line/__dot/__content/__actor/__action/__links/__time`) + `.c-activity-stream` (flex column, `__empty` state, `__load-more`) |
 
 **Crucially, the dispatch chain in `v2/activity-stream.html` is already type-generic, not
 dataset-specific** — it already has branches for `new/changed/deleted organization`,
@@ -248,6 +248,7 @@ Per D1: a plain **server-rendered "Load more" link**, not AJAX-append and not th
 
 - **Next-offset link:** `h.url_for('hdx_org.activity_offset', id=org_dict.name, offset=offset + activity_stream|length)` —
   no backend/action change needed since `activity_offset()` already accepts `offset` (§1.2).
+  Passed to `v2/activity-stream.html` as `load_more_href`, which renders the link (task 075).
 - **Has-more heuristic:** show the link only when `activity_stream|length == <configured limit>`
   (31 by default, §1.3) — i.e., a full page suggests there may be more; a short/empty page means
   we've reached the end. This is a **frontend-only heuristic** (D5) — deliberately chosen to avoid

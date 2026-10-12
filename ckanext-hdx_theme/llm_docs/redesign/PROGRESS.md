@@ -113,6 +113,7 @@ CSS custom property equivalents (`--hdx-*`) are defined in `v2/foundation.css` (
 | My Organisations (user dashboard) | `user/dashboard_organizations.html` | Extends `v2/user-dashboard-base.html` (shared left menu via `c-nav-item` size s, for the dashboard/settings pages); other sibling dashboard/settings pages still v1; see `requirements/072-user-dashboard-my-organisations-v2.md` |
 | My Datasets (user dashboard) | `user/dashboard_datasets.html` | Extends `v2/user-dashboard-base.html`; search-page filters in the new right-hand `tertiary_content` column; list via `search_results_wrapper.html` with `admin_view` (c-dataset-card `labels` + actions, per-card delete `c-drawer`); see `requirements/073-user-dashboard-my-datasets-v2.md` |
 | HDX Connect Requests (user dashboard) | `requestdata/my_requested_data.html` | Extends `v2/user-dashboard-base.html`; HDX core override of the `ckanext-requestdata` view; New / Open cards grouped per dataset (`c-request-card` + `c-request-item`), Archived `c-request-archive` grid, Reply / Decline `c-drawer`s; title and section headings via `v2/list-header.html`, Archived sort (`?order_by=`) in its heading row at every width (no Filter overlay, as on the other sort-only pages); see `requirements/074-user-dashboard-hdx-connect-requests-v2.md` |
+| My Activity Stream (user dashboard) | `user/activity_stream.html` | HDX override of the core activity plugin's template; extends `v2/user-dashboard-base.html` for every user's stream ("Activity Stream" labels on other users'); timeline via `v2/activity-stream.html` (`object_type='user'`, `show_detail_links`, `actor_names`), forward-only "Load more", red `c-label` "Deleted" beside the title; see `requirements/075-user-dashboard-my-activity-stream-v2.md` |
 
 ### Pages in holding state (on `page_light.html`)
 
@@ -173,7 +174,7 @@ Each page below extends `page_light.html`, manually overrides `{% block styles %
 - [x] Data grid status — `data-grid-status.html` / `data-grid-status.less`; presentational availability swatch (not a real checkbox); used by the location page Data Grid Availability feature (task 063)
 - [x] Dataviz card — `dataviz-card.html` / `dataviz-card.less`; thumbnail + title + clamped description + date/DATA-link footer + gated Edit link; own `c-dataviz-card-grid` wrapper; used on the Dataviz Gallery page (task 067)
 - [x] Alert — `alert.html` / `alert.less`; 4 variants (success/warning/info/error), dismissible by default; shared across page-level flash banners and form/drawer messages
-- [x] Activity card — `activity-card.html` / `activity-card.less`; used on the org page Activity tab
+- [x] Activity card — `activity-card.html` / `activity-card.less`; used on the homepage
 - [x] Tabs — `tabs.html` / `tabs.less`; used on the org page header
 - [x] Table — `table.html` / `table.less`
 - [x] Toggle — `toggle.html`; styles in `selection.less` alongside Radio/Graph point
@@ -270,7 +271,7 @@ Bundle configuration:
 - [x] Create `less/v2/components/` directory ✓
 - [x] Create `fanstatic/v2/components/` directory ✓
 - [x] Build Button component (primary, secondary, tertiary) ✓
-- [x] Build Label component (3 sizes × 6 colors) ✓
+- [x] Build Label component (3 sizes × 7 colors) ✓
 - [x] Build Badge component (indicator dot) ✓
 - [x] Build Divider component (horizontal separator) ✓
 - [x] Build Avatar component ✓

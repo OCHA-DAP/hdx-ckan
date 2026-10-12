@@ -50,14 +50,9 @@
     <h2 class="hdx-v2-org-activity__title">{{ _('Activity') }}</h2>
     <div class="hdx-v2-org-activity__body">
       {% snippet 'v2/activity-stream.html',
-          activity_stream=group_activity_stream, id=org_dict.id, object_type='organization' %}
-      {% if group_activity_stream and group_activity_stream|length == activity_list_limit %}
-        <div class="hdx-v2-org-activity__load-more">
-          {% snippet 'v2/components/text-link.html',
-              label=_('Load more'), style='secondary', size='xs',
-              href=h.url_for('hdx_org.activity_offset', id=org_dict.name, offset=offset + group_activity_stream|length) %}
-        </div>
-      {% endif %}
+          activity_stream=group_activity_stream, id=org_dict.id, object_type='organization',
+          load_more_href=h.url_for('hdx_org.activity_offset', id=org_dict.name, offset=offset + group_activity_stream|length)
+            if group_activity_stream and group_activity_stream|length == activity_list_limit else '' %}
     </div>
   </section>
 {% endblock %}

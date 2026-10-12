@@ -86,6 +86,10 @@
   background-color: var(--hdx-primary-1);
   color: var(--hdx-primary-9);
 }
+.c-label--red {
+  background-color: var(--hdx-error-1);
+  color: var(--hdx-error-8);
+}
 .c-file-type {
   display: inline-flex;
   align-items: center;
