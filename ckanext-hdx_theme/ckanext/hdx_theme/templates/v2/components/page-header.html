@@ -13,6 +13,8 @@
   member_since        {string}  Optional pre-rendered "Member since {date}" line
                                 below the title (org pages).  default: ''
   description         {string}  Full description.  default: ''
+  avatar              {dict}    c-avatar kwargs (size, initials, aria_label, ...) —
+                                avatar beside the title block (user profile).  default: {}
   org_name            {string}  Organisation display name.  default: ''
   logo_src            {string}  Logo image URL.  default: ''
   header_actions      {list}    {label, href, icon_src, attrs, show} dicts —
@@ -77,6 +79,7 @@
 {% set subtitle            = subtitle            if subtitle            is defined else '' %}
 {% set member_since        = member_since        if member_since        is defined else '' %}
 {% set description         = description         if description         is defined else '' %}
+{% set avatar              = avatar              if avatar              is defined else {} %}
 {% set org_name            = org_name            if org_name            is defined else '' %}
 {% set logo_src            = logo_src            if logo_src            is defined else '' %}
 {% set header_actions      = header_actions      if header_actions      is defined else [] %}
@@ -136,6 +139,10 @@
   <div class="c-page-header__top{{ '' if has_card else ' c-page-header__top--no-card' }}">
 
     <div class="c-page-header__left">
+      {% if avatar %}
+      <div class="c-page-header__identity">
+        {{ h.snippet('v2/components/avatar.html', **avatar) }}
+      {% endif %}
       <div class="c-page-header__description">
 
         {# File format icon + label — resource #}
@@ -291,6 +298,9 @@
 
       </div>
       {# end __description #}
+      {% if avatar %}
+      </div>
+      {% endif %}
 
       {# CTA block (notifications + download count) — dataset only #}
       {% if supports_notifications or download_count %}

@@ -48,12 +48,6 @@
     min-width: 0;
   }
 }
-.hdx-v2-user-dashboard-header__title-row {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--hdx-space-2);
-}
 .hdx-v2-user-dashboard-header__title {
   font-family: var(--hdx-font-display);
   font-size: var(--hdx-fs-2xl);

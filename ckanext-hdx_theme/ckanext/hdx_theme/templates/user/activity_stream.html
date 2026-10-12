@@ -3,27 +3,14 @@
 {% set user_nav_active = 'my_activity_stream' %}
 {% set page_label      = _('My Activity Stream') if is_myself else _('Activity Stream') %}
 
-{% block breadcrumb_items %}
-  {% if is_myself %}
-    {{ super() }}
-  {% else %}
-    {% snippet 'v2/components/breadcrumb.html',
-        items=[
-          {'label': user_dict.display_name, 'href': h.url_for('user.read', id=user_dict.name)},
-          {'label': page_label, 'href': ''}
-        ] %}
-  {% endif %}
-{% endblock %}
-
 {% block primary %}
+  {% if not is_myself %}
+    {{ self.user_profile_header() }}
+  {% endif %}
+  {% set title_tag = 'h1' if is_myself else 'h2' %}
   <div class="hdx-v2-user-dashboard-header">
     <div class="hdx-v2-user-dashboard-header__text">
-      <div class="hdx-v2-user-dashboard-header__title-row">
-        <h1 class="hdx-v2-user-dashboard-header__title">{{ page_label }}</h1>
-        {% if user_dict.state == 'deleted' %}
-          {% snippet 'v2/components/label.html', text=_('Deleted'), color='red', size='s' %}
-        {% endif %}
-      </div>
+      <{{ title_tag }} class="hdx-v2-user-dashboard-header__title">{{ page_label }}</{{ title_tag }}>
       <p class="hdx-v2-user-dashboard-header__subtitle">
         {{ _('A history of your actions') if is_myself else _("A history of {name}'s actions").format(name=user_dict.display_name) }}
       </p>

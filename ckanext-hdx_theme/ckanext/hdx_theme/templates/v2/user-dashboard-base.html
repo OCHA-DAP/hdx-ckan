@@ -10,6 +10,12 @@
     page_label       {string}  Page name for the breadcrumb and <title>
   and fill {% block primary %}. Optionally fill {% block tertiary_content %}
   for a right-hand column (XL only, sticky), e.g. My Datasets' filters.
+  The left menu is built for user_dict, the user whose page is shown.
+
+  Another user's public pages (Datasets, Activity Stream) output
+  {{ self.user_profile_header() }} at the top of primary; it is never rendered
+  automatically. When is_myself is false, the breadcrumb is
+  Users / {name} (/ page_label, except on Datasets).
 #}
 
 {% set outer_row_class = 'hdx-v2-search-row' %}
@@ -17,7 +23,7 @@
 {% set content_class   = 'hdx-v2-content-columns__content hdx-v2-search-content' %}
 {% set tertiary_class  = 'hdx-v2-content-columns__sidebar hdx-v2-content-columns__sidebar--xl-only hdx-v2-content-columns__sidebar--sticky hdx-v2-search-sidebar hdx-v2-search-sidebar--right' %}
 
-{% set user_nav_sections = h.hdx_get_user_dashboard_nav_sections() %}
+{% set user_nav_sections = h.hdx_get_user_dashboard_nav_sections(user_dict.name) %}
 {% set user_nav = namespace(section=none) %}
 {% for section in user_nav_sections %}
   {% if section['items'] | selectattr('id', 'equalto', user_nav_active) | list %}
@@ -34,9 +40,31 @@
 {% endblock %}
 
 {% block breadcrumb_items %}
-  {% set crumbs = [{'label': user_nav.section.label, 'href': user_nav.section['items'][0].href}] if user_nav.section else [] %}
-  {% snippet 'v2/components/breadcrumb.html',
-      items=crumbs + [{'label': page_label, 'href': ''}] %}
+  {% if is_myself is defined and not is_myself %}
+    {% set crumbs = [{'label': _('Users'), 'href': h.url_for('user.index')}] %}
+    {% if user_nav_active == 'my_datasets' %}
+      {% set crumbs = crumbs + [{'label': user_dict.display_name, 'href': ''}] %}
+    {% else %}
+      {% set crumbs = crumbs + [{'label': user_dict.display_name, 'href': h.url_for('hdx_user.read', id=user_dict.name)},
+                                {'label': page_label, 'href': ''}] %}
+    {% endif %}
+  {% else %}
+    {% set crumbs = [{'label': user_nav.section.label, 'href': user_nav.section['items'][0].href}] if user_nav.section else [] %}
+    {% set crumbs = crumbs + [{'label': page_label, 'href': ''}] %}
+  {% endif %}
+  {% snippet 'v2/components/breadcrumb.html', items=crumbs %}
+{% endblock %}
+
+{% block user_profile_header %}
+  {% snippet 'v2/components/page-header.html',
+      avatar={'size': 'l',
+              'initials': (user_dict.display_name or '').split()[:2] | map('first') | join,
+              'aria_label': user_dict.display_name},
+      title=user_dict.display_name,
+      member_since=_('Member since') ~ ' ' ~ (h.hdx_format_date(user_dict.created) if user_dict.created else _('Unknown')),
+      description=h.render_markdown(user_dict.about) if user_dict.about else '',
+      state_label_text=_('Deleted') if user_dict.state == 'deleted' else '',
+      state_label_color='red' %}
 {% endblock %}
 
 {% block secondary_content %}
