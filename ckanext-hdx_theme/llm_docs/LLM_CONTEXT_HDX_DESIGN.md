@@ -216,19 +216,20 @@ Example page-specific template (light search):
 
 ---
 
-### My Organisations dashboard (`/dashboard/organizations`)
+### My Organisations dashboard (`/user/organizations/<id>`, own page only)
 
-- **Template**: `ckanext-hdx_theme/ckanext/hdx_theme/templates/user/dashboard_organizations.html`
+- **Template**: `ckanext-hdx_theme/ckanext/hdx_theme/templates/user/read_organizations.html`
   - Extends `v2/user-dashboard-base.html` (left menu at XL from `h.hdx_get_user_dashboard_nav_sections()`, breadcrumb, `<title>`), which extends `v2/page.html`. Children set `user_nav_active` and `page_label`.
 - **Core assets**: `hdx_theme/v2-search-page-styles` (sidebar/content layout classes), `hdx_theme/v2-user-dashboard-page-styles`.
 
 ---
 
-### My Datasets dashboard (`/dashboard/datasets`)
+### My Datasets dashboard (`/user/<id>`, any user)
 
-- **Template**: `ckanext-hdx_theme/ckanext/hdx_theme/templates/user/dashboard_datasets.html`
+- **Template**: `ckanext-hdx_theme/ckanext/hdx_theme/templates/user/read.html`
   - Extends `v2/user-dashboard-base.html`; the search-page filters (plus an Update status dropdown) fill `{% block tertiary_content %}`, the right-hand column.
-  - List: `search_results_wrapper.html` with `admin_view=true`, `title_size='dashboard'` and `list_subtitle`; cards via `package_item_v2.html`'s `admin_view` branch.
+  - Another user's page: the base's `user_profile_header` block (`c-page-header` + `avatar`) and the public search cards.
+  - List: `search_results_wrapper.html` with `admin_view=is_myself`, `title_size='dashboard'` and `list_subtitle`; cards via `package_item_v2.html`'s `admin_view` branch.
 - **Core assets**: as My Organisations, plus `hdx_theme/v2-search-page-scripts`.
 
 ---
@@ -245,7 +246,7 @@ Example page-specific template (light search):
 ### My Activity Stream dashboard (`/user/activity/<id>`)
 
 - **Template**: `ckanext-hdx_theme/ckanext/hdx_theme/templates/user/activity_stream.html` (HDX override of the core activity plugin's template; the `activity.user_activity` view is unchanged)
-  - Extends `v2/user-dashboard-base.html` for every user's stream; other users' streams get "Activity Stream" labels and a Home / {name} / Activity Stream breadcrumb.
+  - Extends `v2/user-dashboard-base.html` for every user's stream; other users' streams get the profile header, "Activity Stream" labels and a Home / Users / {name} / Activity Stream breadcrumb.
   - Timeline: `v2/activity-stream.html` with `object_type='user'`, `show_detail_links` (core's `activity_list` check) and `actor_names` (the owner's name for actor-less rows); "Load more" (`load_more_href`) links to `older_activities_url`.
 - **Core assets**: as My Organisations.
 

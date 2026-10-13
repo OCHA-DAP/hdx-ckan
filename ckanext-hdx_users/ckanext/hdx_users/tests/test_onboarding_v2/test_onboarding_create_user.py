@@ -281,7 +281,8 @@ class TestOnboarding(object):
         profile_url = h.url_for(u'hdx_user.read', id=user_dict.get('id'))
 
         profile_result = app.get(profile_url, headers=auth_sysadmin)
-        assert '<span class="label label-important">Deleted</span>' in profile_result.body
+        assert 'c-label--red' in profile_result.body
+        assert '<span class="c-label__text">Deleted</span>' in profile_result.body
 
         auth_testuser = {'Authorization': testuser_token}
         profile_result2 = app.get(profile_url, status=404, headers=auth_testuser)

@@ -54,6 +54,15 @@
   align-items: flex-start;
   gap: var(--hdx-space-3);
 }
+.c-page-header__identity {
+  display: flex;
+  align-items: center;
+  gap: var(--hdx-space-3);
+}
+.c-page-header__identity > .c-page-header__description {
+  flex: 1;
+  min-width: 0;
+}
 .c-page-header__labels {
   display: flex;
   flex-wrap: wrap;

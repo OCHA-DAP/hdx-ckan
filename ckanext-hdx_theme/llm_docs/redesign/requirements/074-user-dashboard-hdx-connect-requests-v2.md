@@ -753,36 +753,3 @@ Raise any of them before implementation if they should change.
 | Counters incremented before the auth check; `organization_member` computed with an always-true generator in EXT `process_extras_fields` | Pre-existing EXT issues, out of scope. "Verified" shows whenever the chosen org resolves (normally one of the requester's own orgs) |
 | Anonymous users | 403 (v1), not a login redirect. Unchanged |
 | Chip semantics | Unverified and Request Denied share `yellow`; the text disambiguates (Q10) |
-
----
-
-## Verification
-
-**Access and rendering:**
-- `/user/my_requested_data/<own name>` renders for a maintainer and for a sysadmin. Another user's id → 403; anonymous →
-  403.
-- Title count = New + Open. Sections show their counts, and "No requests found." when empty.
-- New / Open requests are grouped per dataset, the card with the most recent request first.
-
-**Actions:**
-- Reply and Decline open the drawer with the request summary. Submit is disabled until the fields are valid.
-- The POST fields match v1 exactly (§2.3). On success the page reloads and the request has moved (New → Open / Archive).
-- Validation errors (empty message, invalid email) appear in the drawer `c-alert`.
-- Yes / No archive the request with `data_shared` true / false.
-
-**Archive:**
-- Rows expand and collapse with the keyboard and mouse. Screen readers announce "{title}, N requests, N replied,
-  N denied, N shared".
-- Status chips follow §5.3.
-- At SM the counts sit under the title with visible labels.
-
-**Sort:**
-- At every width the Archived heading's sort sets `?order_by=` and reorders the Archive; on narrow screens it wraps
-  under the title, right-aligned.
-- It doesn't render when Archive is empty.
-
-**Regressions:**
-- The rendered HTML of `/dataset`, the org datasets tab, Location and Crisis is unchanged.
-- The Members tab and My Datasets sort still use `?sort=`.
-- The bell notification link reads "HDX Connect Requests".
-- No v1 requestdata bundle or Bootstrap JS loads on the page. There are no console errors at SM, MD, XL and XXL.

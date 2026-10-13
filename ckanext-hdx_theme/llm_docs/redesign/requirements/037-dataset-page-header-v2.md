@@ -355,6 +355,7 @@ c-page-header
   __top
     --no-card            full-width description column when there's no org card
   __left
+  __identity            avatar + __description row (avatar)
   __description
   __format              file-type icon + label (resource)
   __format-label

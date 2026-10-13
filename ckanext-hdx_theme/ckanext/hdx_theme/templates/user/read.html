@@ -1,25 +1,36 @@
-{% extends "user/read_base.html" %}
+{% extends "v2/user-dashboard-base.html" %}
 
-{% block primary_content_inner %}
-  {% block package_list %}
-  {% if user.datasets %}
-    {% snippet 'snippets/package_list.html', packages=user.datasets %}
-  {% else %}
+{% set user_nav_active = 'my_datasets' %}
+{% set page_label      = _('My Datasets') if is_myself else _('Datasets') %}
+{% set has_filters     = search_data.page.items or search_data.filters_are_selected %}
 
-    {% if is_myself %}
-      <p class="empty">
-        {{ _('You haven\'t created any datasets.') }}
-        {# Users must go to a country before creating a new collection so I commented out the part below.
-        {% if h.check_access('package_create') %}
-          {% link_for _('Create one now?'), controller='package', action='new' %}
-        {% endif %}
-        #}
-      </p>
-    {% else %}
-      <p class="empty">
-        {{ _('User hasn\'t created any datasets.') }}
-      </p>
-    {% endif %}
+{% block scripts %}
+  {{ super() }}
+  {% asset 'hdx_theme/v2-search-page-scripts' %}
+{% endblock %}
+
+{% block tertiary_content %}
+  {% if has_filters %}
+    <form id="search-page-filters-form" autocomplete="off">
+      <aside class="hdx-v2-search-filters">
+        {% snippet 'v2/search-filters.html',
+            facet_list=search_data.full_facet_info.get('facets', {}),
+            archived_url_helper=search_data.full_facet_info.get('archived_url_helper') %}
+      </aside>
+    </form>
   {% endif %}
-  {% endblock %}
+{% endblock %}
+
+{% block primary %}
+  {% if not is_myself %}
+    {{ self.user_profile_header() }}
+  {% endif %}
+  {% snippet 'search/snippets/search_results_wrapper.html',
+      tracking_enabled=g.tracking_enabled, my_c=search_data, v2=true,
+      admin_view=is_myself,
+      list_title=page_label,
+      list_subtitle=_('Datasets you own or manage') if is_myself else _('Datasets {name} owns or manages').format(name=user_dict.display_name),
+      title_tag='h1' if is_myself else 'h2',
+      title_size='dashboard',
+      show_filters=has_filters %}
 {% endblock %}

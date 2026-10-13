@@ -1,11 +1,11 @@
 # 073 — User Dashboard: My Datasets (v2 Migration)
 
-**Scope:** `/dashboard/datasets` (HDX `hdx_user_dashboard.datasets`, which shadows core `dashboard.datasets` on
-the same URL), on the shared v2 dashboard base from 072. Also in scope:
+**Scope:** `/user/<id>` (HDX `hdx_user.read`, any user; D24), on the shared v2 dashboard base from 072. Also in scope:
 - a generic right-hand column block in `v2/page.html`;
 - an Update status filter in the v2 filters;
 - `labels` and actions extensions to `c-dataset-card`;
-- a hash-open for the dataset page's group message drawer.
+- a hash-open for the dataset page's group message drawer;
+- another user's profile header, an `avatar` param on `c-page-header` (D27).
 
 **Excluded:**
 - Figma's Time period and Data type filters, deferred everywhere (031, 056 D12, 065).
@@ -16,8 +16,8 @@ the same URL), on the shared v2 dashboard base from 072. Also in scope:
 - New tests.
 - The remaining dashboard/settings siblings.
 
-**Figma sources:** `xl-user-dashboard-my-datasets.html` (XL only; there are no MD/SM exports) in
-`ckanext-hdx_theme/llm_docs/redesign/figma_exports/`.
+**Figma sources:** `xl-user-dashboard-my-datasets.html` and, for another user's page, `xl-public-user-profile.html`
+(XL only; there are no MD/SM exports) in `ckanext-hdx_theme/llm_docs/redesign/figma_exports/`.
 
 `THEME` = `ckanext-hdx_theme/ckanext/hdx_theme`.
 
@@ -164,8 +164,8 @@ Decisions confirmed with the user are listed in §8.
 
 ## 5. Functional & Preservation Rules
 
-- **No view or backend change.** The following stay as they are:
-  - the URL, login gate and maintainer `fq`;
+- **No view or backend change** beyond D24/D25. The following stay as they are:
+  - the maintainer `fq`;
   - the `due_date asc` default and the archived redirect;
   - every `ext_*` parameter and the 10/25/50/100 page sizes.
 - **Deep link:** `?ext_update_status=needs_update` shows a checked dropdown and a removable chip.
@@ -193,7 +193,7 @@ Decisions confirmed with the user are listed in §8.
   - **Cards:** at every width, the chips wrap under the org name, left-aligned, when the top row doesn't fit (usual
     at XL, rare at MD). At SM the actions row also wraps, with the buttons on a second line, left-aligned (D20).
 - **Accessibility:**
-  - One `<h1>` (the list title). The filters sit in an `<aside>`.
+  - One `<h1>` (the list title; the profile header's name on another user's page). The filters sit in an `<aside>`.
   - Icon-only badges keep their `aria-label`.
   - Actions are native `<button>`/`<a>` elements with the component focus rings.
   - Focus handling and Escape come from `c-drawer`.
@@ -205,6 +205,8 @@ Decisions confirmed with the user are listed in §8.
 | Case | Handling |
 |---|---|
 | Sysadmin maintainer who isn't an org member | "Send a group message" opens the dataset page, where no drawer renders. Accepted with D18 |
+| Hand-typed `?ext_update_status=` or `?sort=due_date asc` on another user's page | Still applied, as on /dataset, with no dropdown, chip or sort label. Accepted |
+| Deleted user (sysadmins only; others get 404) | Red "Deleted" label in the profile header (D26) |
 | Member-role maintainer | Update, Archive and Delete are hidden (D15) |
 | Unknown frequency, ongoing date or no due date | No due chip (v1 parity). The frequency chip shows whenever a frequency is set |
 | Archived view (Show only: Archived) | The Archive action reads "Unarchive" (D17) and there is no due chip (D13) |
@@ -218,12 +220,12 @@ Decisions confirmed with the user are listed in §8.
 
 | # | Decision |
 |---|---|
-| D1 Strategy | **Direct replacement** of `user/dashboard_datasets.html`, extending `v2/user-dashboard-base.html` with `user_nav_active='my_datasets'` and `page_label=_('My Datasets')`. No `?v2` gate. |
+| D1 Strategy | **Direct replacement** of `user/read.html` (D24), extending `v2/user-dashboard-base.html` with `user_nav_active='my_datasets'` and `page_label=_('My Datasets')` ("Datasets" on another user's page). No `?v2` gate. |
 | D2 Right column | New `{% block tertiary_content %}` plus a `tertiary_class` layout var in `v2/page.html`. It is captured like `secondary_content` and rendered as a third div **after** the content column, only when non-empty, so the DOM order is nav → list → filters. The base sets `tertiary_class` to `hdx-v2-content-columns__sidebar --xl-only --sticky hdx-v2-search-sidebar hdx-v2-search-sidebar--right`. |
 | D3 Widths | Both side columns are 25% (`.v2-sidebar-flex()`), not Figma's 14.063rem. |
 | D4 List render | `search_results_wrapper.html` with `my_c=search_data` and `v2=true`, as on the Org/Location/Crisis pages. The wrapper forwards `admin_view`, `list_title`, `list_subtitle`, `title_tag`, `title_size` and `show_filters` to `package_list.html`. |
 | D5 Update status | When the `ext_update_status` facet is present, `search-filters.html` renders it as the **first** dropdown, labelled "Update status" with the placeholder "All statuses". Only this page's search logic returns that facet. `search.js` `FILTER_PARAMS` and package_list's selected-count/chip keys gain `ext_update_status`. |
-| D6 Header | Reuse the v2 list header (`v2/list-header.html`, rendered by `package_list.html`) with new params: `list_title` (default "Datasets"), `list_subtitle` (default none; here Figma's "Datasets you own or manage", verbatim, although the list is maintainer-only), `title_tag` (default `strong`; `h1` here), and `title_size` (`'section'` default, `'page'` on /dataset, `'dashboard'` here; the CSS modifier is the value itself). Controls, Filter button, search bar, chips and overlay are reused unchanged. |
+| D6 Header | Reuse the v2 list header (`v2/list-header.html`, rendered by `package_list.html`) with new params: `list_title` (default "Datasets"), `list_subtitle` (default none; here Figma's "Datasets you own or manage", verbatim, although the list is maintainer-only; "Datasets {display_name} owns or manages" on another user's page), `title_tag` (default `strong`; `h1` here, `h2` below another user's profile header), and `title_size` (`'section'` default, `'page'` on /dataset, `'dashboard'` here; the CSS modifier is the value itself). Controls, Filter button, search bar, chips and overlay are reused unchanged. |
 | D7 Header fonts | Match the My Datasets Figma. Title: `.hdx-display-s()` (24px bold, fixed). Count: `.hdx-body-m()`, neutral-8. Subtitle: `.hdx-body-s()`, neutral-85, `space-13` below the title row, full width. The header row wraps, so in the narrow XL column the controls drop under the title. Implemented as `hdx-v2-list-header__title--dashboard` / `__count--dashboard` plus a `__subtitle` element. Title and subtitle type come from new shared mixins `.hdx-dashboard-title()` / `.hdx-dashboard-subtitle()` in `mixins.less`, which 072's `.hdx-v2-user-dashboard-header__title` / `__subtitle` also switch to. |
 | D8 Sort | Keep "Due for Update" (`due_date asc`) as the default, shown via `admin_view`. Figma's "Last added" is placeholder content. |
 | D9 Card | **Extend `c-dataset-card`** with new optional params. No modifier class. |
@@ -240,7 +242,12 @@ Decisions confirmed with the user are listed in §8.
 | D20 MD/SM | The Search pattern (§6). The card's top row wraps at any width when it doesn't fit, with the chips under the org name (§6). |
 | D21 Empty state | When there are no items and no filters are selected (the `organization/read.html` condition), `tertiary_content` renders nothing and `show_filters=False` hides the Filter button and overlay (the header's sort then shows at every width, 074 Q63). package_list's existing empty-state copy stays. |
 | D22 Right column CSS | In `search.less`, generic: `.hdx-v2-search-sidebar--right` (at XL: `border-left: 1px solid var(--hdx-neutral-1)`, padding `space-5` 0 `space-20` `space-10`), and `.hdx-v2-search-content:not(:last-child)` (at XL: padding-right `space-10`), next to the existing `:only-child` rule. |
-| D23 Tests | No new tests. The `hdx_user_dashboard.datasets` rows in `test_page_load.py` cover the page load. |
+| D23 Tests | No new tests. The `hdx_user.read` rows in `test_page_load.py` cover the page load. |
+| D24 URL | `/user/<id>`: `hdx_user.read` (keeps its `user_show` check and deleted-user 404; logged-in users only, as v1, under `public_user_details = false`) runs `DashboardDatasetLogic` for the viewed user. The v1 `read.html` is gone (`permission.html`, `edit_user_form.html` extend `user/read_base.html`). `/dashboard/datasets` 302s here with the query string (anonymous → `home.index`); the delete redirect and the bell link use `hdx_user.read`. |
+| D25 Own page | `admin_view=is_myself`: another user's page gets the public search card, for every viewer. The view passes `is_myself` to the search logic as `owner_view`, which skips the `ext_update_status` facet and defaults to Last Modified. |
+| D26 Deleted label | A red "Deleted" label in the profile header (D27), via `c-page-header`'s `state_label_text` / `state_label_color`, when `user_dict.state == 'deleted'`. |
+| D27 Profile header | On another user's page (public-profile export), the base's opt-in `user_profile_header` block (also on 075's stream) renders `c-page-header` with a new `avatar` param (`__identity`): size-`l` initials from the first two words of `display_name`, the name, Member since, the rendered `about` (clamped) and the D26 label. The component's type is kept (32px title vs the export's 28px). |
+| D28 Breadcrumb, menu | Another user's page: Home / Users (`user.index`) / {display_name}. Their menu lists Datasets before Activity Stream (the export's and v1's tab order). |
 
 ---
 
@@ -249,8 +256,11 @@ Decisions confirmed with the user are listed in §8.
 | File | Change |
 |---|---|
 | `THEME/templates/v2/page.html` | `tertiary_content` block + `tertiary_class` (D2) |
-| `THEME/templates/v2/user-dashboard-base.html` | Sets `tertiary_class`; header comment documents the block (D2) |
-| `THEME/templates/user/dashboard_datasets.html` | Full replacement: base, filter form in `tertiary_content`, wrapper call, `scripts` block (D1, D4, D21) |
+| `THEME/templates/v2/user-dashboard-base.html` | Sets `tertiary_class`; header comment documents the block (D2); `user_profile_header` block, other-user breadcrumb (D27, D28) |
+| `THEME/templates/user/read.html` | Full replacement: base, filter form in `tertiary_content`, wrapper call, `scripts` block, profile header (D1, D4, D21, D24–D27) |
+| `ckanext-hdx_users/.../views/user.py`, `views/dashboard.py`, `controller_logic/dashboard_*_logic.py` | `/user/<id>` view, `/dashboard/datasets` redirect, logic takes the viewed user (D24) |
+| `THEME/templates/v2/components/page-header.html`, `THEME/hdx-styles/src/common/less/v2/components/page-header.less` | `avatar` param, `__identity` (D27) |
+| `THEME/helpers/helpers.py` | Other-user menu (D28) |
 | `THEME/templates/search/snippets/search_results_wrapper.html` | Forward the new params (D4) |
 | `THEME/templates/search/search.html` | `title_size='page'` (D6) |
 | `THEME/templates/search/snippets/package_list.html` | Header params + subtitle (D6, D7); `ext_update_status` in count/chips (D5); `show_filters` (D21). The v2 `admin_view` loop uses `package_item_v2.html` |
@@ -268,17 +278,3 @@ Decisions confirmed with the user are listed in §8.
 | `ckanext-hdx_theme/llm_docs/redesign/PROGRESS.md`, `ckanext-hdx_theme/llm_docs/LLM_CONTEXT_HDX_DESIGN.md` | Migrated-pages entries |
 | `ckanext-hdx_theme/llm_docs/redesign/requirements/029-implement-dataset-card-component.md`, `036-dataset-results-layout-v2.md`, `066-archived-dataviz-v2.md`, `072-user-dashboard-my-organisations-v2.md` | Card params, right column, `title_size`, Excluded list and header mixins |
 | `ckanext-hdx_theme/llm_docs/redesign/requirements/STATUS.md` | 073 → `implemented` when done |
-
----
-
-## Verification
-
-- `/dashboard/datasets` renders for tester and sysadmin and redirects anonymous users; the `test_page_load.py` rows pass.
-- `?ext_update_status=needs_update` shows the Update status dropdown checked and a removable chip.
-- Sort defaults to "Due for Update". Page size, search, the archived toggle and pagination keep their params.
-- Chips follow D12/D13 for fresh, overdue, unknown, ongoing and archived datasets, and the private/archived/by-request badges appear.
-- Update and Archive open the contribute popup (Archive at `#field_archived`). A member-role maintainer sees neither.
-- The Delete drawer POSTs; the page then shows "Dataset has been deleted." as a `c-alert`.
-- "Send a group message" opens the dataset page with the drawer open (for org members).
-- XL shows three columns. On MD/SM there is no nav, and the Filter button opens the overlay with filters and sort.
-- /dataset and the Org, Location and Crisis pages are visually unchanged.

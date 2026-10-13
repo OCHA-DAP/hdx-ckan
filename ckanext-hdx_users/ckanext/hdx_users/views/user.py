@@ -18,7 +18,9 @@ from ckan.views.user import (
 )
 # from ckan.views.user import generate_apikey as _generate_apikey
 # from ckan.views.user import logged_out as _logged_out
+from ckanext.hdx_users.controller_logic.dashboard_dataset_logic import DashboardDatasetLogic
 from ckanext.hdx_users.general_token_model import ObjectType, get_by_type_and_user_id_and_object, TokenType
+from ckanext.hdx_users.views.dashboard import _redirect_keeping_query
 from ckanext.hdx_users.views.notification_platform import _generate_url_for
 from ckanext.hdx_users.views.user_edit_view import HDXEditView, HDXTwoStep
 from ckanext.hdx_users.views.user_view_helper import *
@@ -162,33 +164,54 @@ class HDXPerformResetView(PerformResetView):
 
 def read(id=None):
     """
-    Identical to user.py:read, but needs to be here to receive requests
-    and direct them to the correct _setup_template_variables method
+    The user's Datasets page: datasets the viewed user maintains
     """
     context = {u'model': model, u'session': model.Session,
                u'user': g.user, u'auth_user_obj': g.userobj,
                u'for_view': True}
     data_dict = {u'id': id,
-                 u'user_obj': g.userobj,
-                 u'include_datasets': True,
-                 u'include_num_followers': True}
+                 u'user_obj': g.userobj}
 
     try:
         check_access(u'user_show', context, data_dict)
     except NotAuthorized:
         abort(403, _(u'Not authorized to see this page'))
 
-    context[u'with_related'] = True
-
     extra_vars = _extra_template_variables(context, data_dict)
 
-    # The legacy templates have the user's activity stream on the user
-    # profile page, new templates do not.
-    # if tk.asbool(config.get(u'ckan.legacy_templates', False)):
-    #     g.user_activity_stream = get_action(u'user_activity_list_html')(
-    #         context, {u'id': g.user_dict[u'id']})
+    dashboard_dataset_logic = DashboardDatasetLogic(extra_vars[u'user_dict'], extra_vars[u'is_myself']).read()
+    if dashboard_dataset_logic.redirect_result:
+        return dashboard_dataset_logic.redirect_result
+    extra_vars[u'search_data'] = dashboard_dataset_logic.search_data
 
     return render(u'user/read.html', extra_vars=extra_vars)
+
+
+def read_organizations(id=None):
+    """
+    "My Organisations" tab: only the user's own organisations
+    """
+    if not g.user:
+        h.flash_error(_(u'Not authorized to see this page'))
+        return h.redirect_to(u'user.login')
+
+    context = {u'model': model, u'session': model.Session,
+               u'user': g.user, u'auth_user_obj': g.userobj,
+               u'for_view': True}
+    data_dict = {u'id': id, u'user_obj': g.userobj}
+
+    extra_vars = _extra_template_variables(context, data_dict)
+    if not extra_vars[u'is_myself']:
+        abort(403, _(u'Not authorized to see this page'))
+
+    return render(u'user/read_organizations.html', extra_vars=extra_vars)
+
+
+def read_organizations_moved(id):
+    """
+    Moved to /user/organizations/<id>
+    """
+    return _redirect_keeping_query(h.url_for(u'hdx_user.read_organizations', id=id), code=301)
 
 
 def _extra_template_variables(context, data_dict):
@@ -209,13 +232,11 @@ def _extra_template_variables(context, data_dict):
     if user_dict[u'state'] == u'deleted' and not is_sysadmin:
         abort(404, _(u'User not found'))
     is_myself = user_dict[u'name'] == g.user
-    about_formatted = h.render_markdown(user_dict[u'about'])
 
     extra = {
         u'is_sysadmin': is_sysadmin,
         u'user_dict': user_dict,
-        u'is_myself': is_myself,
-        u'about_formatted': about_formatted
+        u'is_myself': is_myself
     }
     return extra
 
@@ -316,6 +337,8 @@ user.add_url_rule(u'/followers/<id>', view_func=_followers)
 
 # user.add_url_rule(u'/generate_key', view_func=_generate_apikey, methods=(u'POST',))
 
+user.add_url_rule(u'/organizations/<id>', view_func=read_organizations)
+user.add_url_rule(u'/<id>/organizations', view_func=read_organizations_moved)
 user.add_url_rule(u'/<id>', view_func=read)
 
 user.add_url_rule('/configure_mfa/<id>', view_func=HDXTwoStep.configure_mfa, methods=['POST'])
