@@ -66,6 +66,41 @@
     }
 }
 
+// ── Profile header divider ────────────────────────────────────
+.hdx-v2-user-dashboard-divider {
+    background-color: var(--hdx-neutral-1);
+    margin:           var(--hdx-space-6) 0;
+
+    @media (min-width: @hdx-bp-md) {
+        margin: var(--hdx-space-8) 0;
+    }
+
+    @media (min-width: @hdx-bp-xl) {
+        width:  auto;
+        margin: var(--hdx-space-10) 0 var(--hdx-space-10) calc(-1 * var(--hdx-space-10));
+
+        .hdx-v2-search-content:not(:last-child) & {
+            margin-right: calc(-1 * var(--hdx-space-10));
+        }
+    }
+}
+
+// ── User Permission form ──────────────────────────────────────
+.hdx-v2-user-permission {
+    display:        flex;
+    flex-direction: column;
+    align-items:    flex-start;
+    gap:            var(--hdx-space-6);
+
+    &__fieldset {
+        .v2-checkbox-group();
+    }
+
+    &__item {
+        .v2-checkbox-row();
+    }
+}
+
 // ── Empty state ───────────────────────────────────────────────
 .hdx-v2-user-dashboard-empty {
     .hdx-list-header-empty();

@@ -89,7 +89,7 @@ There are three active layout base templates. The goal is to maintain exactly th
 - `ckanext-hdx_theme/ckanext/hdx_theme/templates/v2/header.html` — top-bar + responsive navbar (fully implemented)
 - `ckanext-hdx_theme/ckanext/hdx_theme/templates/v2/footer.html` — dark-teal footer panel (fully implemented)
 
-Pages in holding state on `page_light.html` (org/join, etc.) manually override `{% block header_core %}` to include the legacy `header-mobile.html`. The following pages have been migrated to `v2/page.html`: homepage, dataset search, dataset page, resource page, all locations, all organisations, organization page (Datasets / Activity / Stats / Members tabs; HDX Connect tab postponed), contact contributor, signup flow (all five pages), HAPI landing page, Signals landing page, and My Organisations, My Datasets, HDX Connect Requests and My Activity Stream (user dashboard, via `v2/user-dashboard-base.html`). See [**redesign/PROGRESS.md**](redesign/PROGRESS.md) for the full holding-state and migrated-pages lists.
+Pages in holding state on `page_light.html` (org/join, etc.) manually override `{% block header_core %}` to include the legacy `header-mobile.html`. The following pages have been migrated to `v2/page.html`: homepage, dataset search, dataset page, resource page, all locations, all organisations, organization page (Datasets / Activity / Stats / Members tabs; HDX Connect tab postponed), contact contributor, signup flow (all five pages), HAPI landing page, Signals landing page, and My Organisations, My Datasets, HDX Connect Requests, My Activity Stream and User Permission (user dashboard and settings, via `v2/user-dashboard-base.html`). See [**redesign/PROGRESS.md**](redesign/PROGRESS.md) for the full holding-state and migrated-pages lists.
 
 ## BEM components (HDX custom UI blocks)
 
@@ -248,6 +248,15 @@ Example page-specific template (light search):
 - **Template**: `ckanext-hdx_theme/ckanext/hdx_theme/templates/user/activity_stream.html` (HDX override of the core activity plugin's template; the `activity.user_activity` view is unchanged)
   - Extends `v2/user-dashboard-base.html` for every user's stream; other users' streams get the profile header, "Activity Stream" labels and a Home / Users / {name} / Activity Stream breadcrumb.
   - Timeline: `v2/activity-stream.html` with `object_type='user'`, `show_detail_links` (core's `activity_list` check) and `actor_names` (the owner's name for actor-less rows); "Load more" (`load_more_href`) links to `older_activities_url`.
+- **Core assets**: as My Organisations.
+
+---
+
+### User Permission settings (`/user/permission/<id>`, sysadmins only)
+
+- **Template**: `ckanext-hdx_theme/ckanext/hdx_theme/templates/user/permission.html`
+  - Extends `v2/user-dashboard-base.html`; another user's page gets the profile header. A fieldset of `c-checkbox` rows (`.v2-checkbox-row()`) and a `c-button` submit.
+  - The `hdx_user_permission.read` view flashes "Permissions updated." and redirects after a save; unknown ids give 404.
 - **Core assets**: as My Organisations.
 
 ---

@@ -220,6 +220,7 @@ Dataset-relevant params (see the docblock in `templates/v2/components/page-heade
 |-------|------|---------|-------------|
 | `title` | string | `''` | Dataset title text. |
 | `compact_title` | bool | `False` | Title fixed at 1.5rem, no XL scale-up (`c-page-header--compact-title`, resource pages). |
+| `flush` | bool | `False` | No vertical padding (`c-page-header--flush`), for a header inside an already-padded content column (user profile header). |
 | `description` | string | `''` | Full description. Empty = section hidden. |
 | `org_name` | string | `''` | Organisation display name (used as img alt). |
 | `logo_src` | string | `''` | Logo image URL. Empty = logo area hidden. |

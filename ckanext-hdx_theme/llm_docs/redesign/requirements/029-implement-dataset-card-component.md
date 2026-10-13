@@ -88,7 +88,7 @@ No component extension required — all variants are already supported.
 | Use | Component | Props |
 |---|---|---|
 | "Show more" / "Show less" | `c-text-button` | `style=tertiary, size=s, icon=true, icon_position=right, icon_src='v2/icons/chevron-down.svg'` |
-| Location label | `c-label` | `size=xs, color=cyan, icon=false` |
+| Location label | `c-label` | `size=xs, color=cyan, icon=false`; ellipsis at the column width |
 | Subnational label | `c-label` | `size=xs, color=grey, icon=false` |
 | Private / archived badge | `c-label` | `size=xs, color=dark, icon_only=true, icon=true, icon_src='v2/icons/lock.svg'` |
 | COD / COD+ badge | `c-label` | `size=xs, color=dark, icon=false` |

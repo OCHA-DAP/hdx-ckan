@@ -12,7 +12,7 @@
   for a right-hand column (XL only, sticky), e.g. My Datasets' filters.
   The left menu is built for user_dict, the user whose page is shown.
 
-  Another user's public pages (Datasets, Activity Stream) output
+  Another user's Datasets, Activity Stream and User Permission pages output
   {{ self.user_profile_header() }} at the top of primary; it is never rendered
   automatically. When is_myself is false, the breadcrumb is
   Users / {name} (/ page_label, except on Datasets).
@@ -64,7 +64,9 @@
       member_since=_('Member since') ~ ' ' ~ (h.hdx_format_date(user_dict.created) if user_dict.created else _('Unknown')),
       description=h.render_markdown(user_dict.about) if user_dict.about else '',
       state_label_text=_('Deleted') if user_dict.state == 'deleted' else '',
-      state_label_color='red' %}
+      state_label_color='red',
+      flush=True %}
+  <hr class="c-divider hdx-v2-user-dashboard-divider">
 {% endblock %}
 
 {% block secondary_content %}

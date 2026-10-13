@@ -409,6 +409,9 @@
 .c-page-header--compact-title .c-page-header__title {
   font-size: var(--hdx-fs-2xl);
 }
+.c-page-header--flush {
+  padding: 0;
+}
 .c-page-header__cta--row {
   flex-direction: row;
   align-items: center;

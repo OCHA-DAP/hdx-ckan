@@ -58,7 +58,7 @@
 
 // ── Form field-row layout ───────────────────────────────────────
 // Checkbox + label + inline error, two-column grid. Used by the
-// auth, signup, and request-access pages.
+// auth, signup, request-access and user-dashboard pages.
 
 .v2-checkbox-row() {
     display:               grid;
@@ -69,6 +69,12 @@
     .c-checkbox__error {
         grid-column: 2;
     }
+}
+
+.v2-checkbox-group() {
+    display:        flex;
+    flex-direction: column;
+    gap:            var(--hdx-space-4);
 }
 
 

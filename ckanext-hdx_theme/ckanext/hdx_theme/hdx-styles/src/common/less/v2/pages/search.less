@@ -116,19 +116,19 @@
 // ────────────────────────────────────────────────────────────
 
 .hdx-v2-search-content {
-    padding: var(--hdx-space-10)  // 40px top
-             0                    // 0 right
-             var(--hdx-space-10)  // 40px bottom
-             var(--hdx-space-10); // 40px left
+    // SM (< 768px): hdx-v2-container provides 1rem sides
+    padding: var(--hdx-space-6) 0;  // 24px top/bottom
 
-    // MD (768–1280px): side padding removed — hdx-v2-container provides 3rem sides
-    @media (max-width: @hdx-bp-xl) {
+    // MD (768–1280px): no side padding — hdx-v2-container provides 3rem sides
+    @media (min-width: @hdx-bp-md) {
         padding: var(--hdx-space-8) 0;  // 32px top/bottom
     }
 
-    // SM (< 768px): hdx-v2-container provides 1rem sides
-    @media (max-width: @hdx-bp-md) {
-        padding: var(--hdx-space-6) 0;  // 24px top/bottom
+    @media (min-width: @hdx-bp-xl) {
+        padding: var(--hdx-space-10)  // 40px top
+                 0                    // 0 right
+                 var(--hdx-space-10)  // 40px bottom
+                 var(--hdx-space-10); // 40px left
     }
 
     &:only-child {

@@ -243,10 +243,10 @@ Decisions confirmed with the user are listed in §8.
 | D21 Empty state | When there are no items and no filters are selected (the `organization/read.html` condition), `tertiary_content` renders nothing and `show_filters=False` hides the Filter button and overlay (the header's sort then shows at every width, 074 Q63). package_list's existing empty-state copy stays. |
 | D22 Right column CSS | In `search.less`, generic: `.hdx-v2-search-sidebar--right` (at XL: `border-left: 1px solid var(--hdx-neutral-1)`, padding `space-5` 0 `space-20` `space-10`), and `.hdx-v2-search-content:not(:last-child)` (at XL: padding-right `space-10`), next to the existing `:only-child` rule. |
 | D23 Tests | No new tests. The `hdx_user.read` rows in `test_page_load.py` cover the page load. |
-| D24 URL | `/user/<id>`: `hdx_user.read` (keeps its `user_show` check and deleted-user 404; logged-in users only, as v1, under `public_user_details = false`) runs `DashboardDatasetLogic` for the viewed user. The v1 `read.html` is gone (`permission.html`, `edit_user_form.html` extend `user/read_base.html`). `/dashboard/datasets` 302s here with the query string (anonymous → `home.index`); the delete redirect and the bell link use `hdx_user.read`. |
+| D24 URL | `/user/<id>`: `hdx_user.read` (keeps its `user_show` check and deleted-user 404; logged-in users only, as v1, under `public_user_details = false`) runs `DashboardDatasetLogic` for the viewed user. The v1 `read.html` is gone (`edit_user_form.html` extends `user/read_base.html`). `/dashboard/datasets` 302s here with the query string (anonymous → `home.index`); the delete redirect and the bell link use `hdx_user.read`. |
 | D25 Own page | `admin_view=is_myself`: another user's page gets the public search card, for every viewer. The view passes `is_myself` to the search logic as `owner_view`, which skips the `ext_update_status` facet and defaults to Last Modified. |
 | D26 Deleted label | A red "Deleted" label in the profile header (D27), via `c-page-header`'s `state_label_text` / `state_label_color`, when `user_dict.state == 'deleted'`. |
-| D27 Profile header | On another user's page (public-profile export), the base's opt-in `user_profile_header` block (also on 075's stream) renders `c-page-header` with a new `avatar` param (`__identity`): size-`l` initials from the first two words of `display_name`, the name, Member since, the rendered `about` (clamped) and the D26 label. The component's type is kept (32px title vs the export's 28px). |
+| D27 Profile header | On another user's page (public-profile export), the base's opt-in `user_profile_header` block (also on 075's stream) renders `c-page-header` with a new `avatar` param (`__identity`): size-`l` initials from the first two words of `display_name`, the name, Member since, the rendered `about` (clamped) and the D26 label. The component's type is kept (32px title vs the export's 28px). It is `flush` (the column's padding applies) and followed by a `c-divider` (`--hdx-neutral-1`) that reaches the column borders at XL. |
 | D28 Breadcrumb, menu | Another user's page: Home / Users (`user.index`) / {display_name}. Their menu lists Datasets before Activity Stream (the export's and v1's tab order). |
 
 ---
@@ -259,7 +259,8 @@ Decisions confirmed with the user are listed in §8.
 | `THEME/templates/v2/user-dashboard-base.html` | Sets `tertiary_class`; header comment documents the block (D2); `user_profile_header` block, other-user breadcrumb (D27, D28) |
 | `THEME/templates/user/read.html` | Full replacement: base, filter form in `tertiary_content`, wrapper call, `scripts` block, profile header (D1, D4, D21, D24–D27) |
 | `ckanext-hdx_users/.../views/user.py`, `views/dashboard.py`, `controller_logic/dashboard_*_logic.py` | `/user/<id>` view, `/dashboard/datasets` redirect, logic takes the viewed user (D24) |
-| `THEME/templates/v2/components/page-header.html`, `THEME/hdx-styles/src/common/less/v2/components/page-header.less` | `avatar` param, `__identity` (D27) |
+| `THEME/templates/v2/components/page-header.html`, `THEME/hdx-styles/src/common/less/v2/components/page-header.less` | `avatar` and `flush` params, `__identity` (D27) |
+| `THEME/hdx-styles/src/common/less/v2/pages/user-dashboard.less` | Profile header divider (D27) |
 | `THEME/helpers/helpers.py` | Other-user menu (D28) |
 | `THEME/templates/search/snippets/search_results_wrapper.html` | Forward the new params (D4) |
 | `THEME/templates/search/search.html` | `title_size='page'` (D6) |

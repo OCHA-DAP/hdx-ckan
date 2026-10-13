@@ -189,6 +189,18 @@
   align-items: flex-start;
   flex-wrap: wrap;
   gap: var(--hdx-space-1);
+  min-width: 0;
+  max-width: 100%;
+}
+.c-dataset-card__locations .c-label {
+  min-width: 0;
+  max-width: 100%;
+}
+.c-dataset-card__locations .c-label__text {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: var(--hdx-lh-normal);
 }
 .c-dataset-card__subnational {
   display: none;

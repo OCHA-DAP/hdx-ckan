@@ -77,3 +77,4 @@
 | 073 | [user-dashboard-my-datasets-v2](073-user-dashboard-my-datasets-v2.md)                                           | implemented | |
 | 074 | [user-dashboard-hdx-connect-requests-v2](074-user-dashboard-hdx-connect-requests-v2.md)                         | implemented | |
 | 075 | [user-dashboard-my-activity-stream-v2](075-user-dashboard-my-activity-stream-v2.md)                             | in_progress | |
+| 076 | [user-settings-user-permission-v2](076-user-settings-user-permission-v2.md)                                     | implemented | |
