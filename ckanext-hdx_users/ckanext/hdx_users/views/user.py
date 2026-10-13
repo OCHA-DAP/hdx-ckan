@@ -20,7 +20,7 @@ from ckan.views.user import (
 # from ckan.views.user import logged_out as _logged_out
 from ckanext.hdx_users.controller_logic.dashboard_dataset_logic import DashboardDatasetLogic
 from ckanext.hdx_users.general_token_model import ObjectType, get_by_type_and_user_id_and_object, TokenType
-from ckanext.hdx_users.views.dashboard import _moved_permanently
+from ckanext.hdx_users.views.dashboard import _redirect_keeping_query
 from ckanext.hdx_users.views.notification_platform import _generate_url_for
 from ckanext.hdx_users.views.user_edit_view import HDXEditView, HDXTwoStep
 from ckanext.hdx_users.views.user_view_helper import *
@@ -211,7 +211,7 @@ def read_organizations_moved(id):
     """
     Moved to /user/organizations/<id>
     """
-    return _moved_permanently(h.url_for(u'hdx_user.read_organizations', id=id))
+    return _redirect_keeping_query(h.url_for(u'hdx_user.read_organizations', id=id), code=301)
 
 
 def _extra_template_variables(context, data_dict):

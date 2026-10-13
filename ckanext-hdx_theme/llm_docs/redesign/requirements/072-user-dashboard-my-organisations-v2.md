@@ -167,7 +167,7 @@ HDX, "Member since" means the **org's** `created` date (`c-org-list-card`, `v2/o
   - `member_count` is still `h.get_group_members(org.id)` per card, as on the All Orgs page.
 - **"Request to join an org":** keep the `hdx_org_join.org_join` link and its label.
 - **URLs:** every existing endpoint and URL still resolves. `url_for('dashboard.organizations')`
-  callers (`first_login.py` `_compute_url`, `contribute_flow.py` `new`, the v1 header menu and tab bar) go through the 301 (D17).
+  callers (`first_login.py` `_compute_url`, `contribute_flow.py` `new`, the v1 header menu and tab bar) go through the redirect (D17).
 - **Analytics:** no new tracking. The generic Mixpanel page view keeps firing; only its `pageTitle`
   value changes (D13).
 - **v1 assets:** the page loads no v1 bundles. It adds only `v2-search-page-styles` and `v2-user-dashboard-page-styles`. The
@@ -220,7 +220,7 @@ HDX, "Member since" means the **org's** `created` date (`c-org-list-card`, `v2/o
 | D1 Shell | **Shared base template** `THEME/templates/v2/user-dashboard-base.html`, extending `v2/page.html`. It owns all four layout vars, the sidebar (`secondary_content`), the breadcrumb, the `subtitle` block and the page styles bundle. Children set `user_nav_active` (an item id) and `page_label` and fill the content. Only My Organisations adopts it now. |
 | D2 Nav items | **`c-nav-item` + new `size` param**: `'m'` (default, 4rem) / `'s'` (3rem), emitted as `c-nav-item--size-*` like `c-button`. The base becomes `display:flex` + `justify-content:flex-start` (no visible change in horizontal rows), so items fill their `<li>` without a modifier. `status='active'` now also outputs `aria-current="page"` (the navbar never passes `active`). Group labels, `<nav>` and `<ul>` live in the base template. |
 | D3 Width | Generic `hdx-v2-content-columns__sidebar` (25% at XL) + `--xl-only` + `--sticky`, not Figma's fixed 14rem. |
-| D4 Items | **Activity and Content:** My Datasets, My Organisations, My Activity Stream, HDX Connect Requests. **Account and Settings:** User Permission (sysadmin only, as today, first), API Tokens, Notifications settings, Profile and Password. Newsfeed (`/dashboard` 301s to My Datasets), My Locations, Datasets (profile) and the sysadmin "More" dropdown are dropped. |
+| D4 Items | **Activity and Content:** My Datasets, My Organisations, My Activity Stream, HDX Connect Requests. **Account and Settings:** User Permission (sysadmin only, as today, first), API Tokens, Notifications settings, Profile and Password. Newsfeed (`/dashboard` redirects to My Datasets), My Locations, Datasets (profile) and the sysadmin "More" dropdown are dropped. |
 | D5 Data | New helper `h.hdx_get_user_dashboard_nav_sections()` returns `[{id, label, items:[{id, label, href}]}]` and is registered in `plugin.py`. Section ids are `dashboard` and `settings`. Item ids: `my_datasets`, `my_organisations`, `my_activity_stream`, `hdx_connect_requests`, `user_permission`, `api_tokens`, `notifications_settings`, `profile_and_password`. It takes an optional `user_name` (the base passes `user_dict.name`): another user gets Datasets and Activity Stream without "My", and only the settings items the viewer can access. It returns `[]` with neither a `user_name` nor a `c.userobj`. |
 | D6 Header menu | `hdx_get_user_menu_sections()` keeps its Sysadmin Dashboard section and builds its dashboard/settings sections from the new helper, so both menus stay identical, labels included ("Activity and Content", "Account and Settings", "Notifications settings"). Section ids are unchanged (DOM ids `desk-*` / `offcanvas-user-*` keep working). |
 | D7 Breadcrumb | Home / Activity and Content (links to My Datasets, the group's first item) / My Organisations. |
@@ -233,7 +233,7 @@ HDX, "Member since" means the **org's** `created` date (`c-org-list-card`, `v2/o
 | D14 Layout | Reuses the Search page's `hdx-v2-search-row` / `hdx-v2-search-sidebar` / `hdx-v2-search-content` (loads `v2-search-page-styles`, as the Org/Country/Crisis pages do). Sidebar at XL: `border-right: 1px solid var(--hdx-neutral-1)`, padding `space-5` / `space-10` / `space-20` / 0, grey canvas (no white panel). Content: `space-10` 0 `space-10` `space-10` at XL, `space-8` 0 at MD, `space-6` 0 at SM. Menu groups are `space-6` apart (there is no 28px token); label to list is `space-2`. Group label: `.hdx-body-xs()`, neutral-95. |
 | D15 MD/SM | No menu. The header stacks at MD and SM: title, subtitle, then the button, `space-4` apart. |
 | D16 Tests | No new tests. The `hdx_user.read_organizations` row in `test_page_load.py` covers the page load. |
-| D17 URL | `/user/organizations/<id>` (`read_organizations` in `ckanext-hdx_users/.../views/user.py`), own page only: anonymous → login, anyone else → 403. `/user/<id>/organizations` (core's public view would render this template with the viewer's orgs) and `/dashboard/organizations` 301 here, keeping the query string. |
+| D17 URL | `/user/organizations/<id>` (`read_organizations` in `ckanext-hdx_users/.../views/user.py`), own page only: anonymous → login, anyone else → 403. `/user/<id>/organizations` (core's public view would render this template with the viewer's orgs) 301s and `/dashboard/organizations` 302s here, keeping the query string. |
 
 ---
 
@@ -243,7 +243,7 @@ HDX, "Member since" means the **org's** `created` date (`c-org-list-card`, `v2/o
 |---|---|
 | `THEME/templates/v2/user-dashboard-base.html` | NEW: shell (D1, D3, D7, D13, D14); layout via the `hdx-v2-search-*` classes |
 | `THEME/templates/user/read_organizations.html` | Full replacement extending the base; header, card list, empty state (D8–D12); v1 assets removed |
-| `ckanext-hdx_users/.../views/user.py`, `views/dashboard.py` | Own-only `read_organizations` route; `/dashboard/organizations` and `/user/<id>/organizations` 301s (D17) |
+| `ckanext-hdx_users/.../views/user.py`, `views/dashboard.py` | Own-only `read_organizations` route; `/dashboard/organizations` and `/user/<id>/organizations` redirects (D17) |
 | `THEME/templates/v2/components/nav-item.html` | `size` param, `aria-current` on active, header comment (D2) |
 | `THEME/hdx-styles/src/common/less/v2/components/nav-item.less` | `&--size-m`/`&--size-s`, base `display:flex` + `flex-start`, `:focus-visible` ring (D2) |
 | `THEME/templates/v2/components/org-list-card.html` | `role`, `member_since`, `last_updated` params, header comment (D10) |

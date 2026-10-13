@@ -161,7 +161,7 @@ class TestPageLoad(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
 
         for url in ['/dashboard', '/dashboard/?type=dataset&name=x']:
             result = test_client.get(url, headers={'Authorization': self.tester_token})
-            assert result.status_code == 301, 'the removed Newsfeed should permanently redirect'
+            assert result.status_code == 302, 'the removed Newsfeed should redirect'
             assert result.headers['Location'].endswith(user_page_url), 'to the user page, without the query string'
 
         result = test_client.get('/dashboard/')

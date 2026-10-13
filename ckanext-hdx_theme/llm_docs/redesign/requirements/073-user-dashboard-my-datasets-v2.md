@@ -243,7 +243,7 @@ Decisions confirmed with the user are listed in §8.
 | D21 Empty state | When there are no items and no filters are selected (the `organization/read.html` condition), `tertiary_content` renders nothing and `show_filters=False` hides the Filter button and overlay (the header's sort then shows at every width, 074 Q63). package_list's existing empty-state copy stays. |
 | D22 Right column CSS | In `search.less`, generic: `.hdx-v2-search-sidebar--right` (at XL: `border-left: 1px solid var(--hdx-neutral-1)`, padding `space-5` 0 `space-20` `space-10`), and `.hdx-v2-search-content:not(:last-child)` (at XL: padding-right `space-10`), next to the existing `:only-child` rule. |
 | D23 Tests | No new tests. The `hdx_user.read` rows in `test_page_load.py` cover the page load. |
-| D24 URL | `/user/<id>`: `hdx_user.read` (keeps its `user_show` check and deleted-user 404; public, like the v1 profile) runs `DashboardDatasetLogic` for the viewed user. The v1 `read.html` is gone (`permission.html`, `edit_user_form.html` extend `user/read_base.html`). `/dashboard/datasets` 301s here with the query string (anonymous → `home.index`); the delete redirect and the bell link use `hdx_user.read`. |
+| D24 URL | `/user/<id>`: `hdx_user.read` (keeps its `user_show` check and deleted-user 404; logged-in users only, as v1, under `public_user_details = false`) runs `DashboardDatasetLogic` for the viewed user. The v1 `read.html` is gone (`permission.html`, `edit_user_form.html` extend `user/read_base.html`). `/dashboard/datasets` 302s here with the query string (anonymous → `home.index`); the delete redirect and the bell link use `hdx_user.read`. |
 | D25 Own page | `admin_view=is_myself`: another user's page gets the public search card, for every viewer. The view passes `is_myself` to the search logic as `owner_view`, which skips the `ext_update_status` facet and defaults to Last Modified. |
 | D26 Deleted label | A red "Deleted" label in the profile header (D27), via `c-page-header`'s `state_label_text` / `state_label_color`, when `user_dict.state == 'deleted'`. |
 | D27 Profile header | On another user's page (public-profile export), the base's opt-in `user_profile_header` block (also on 075's stream) renders `c-page-header` with a new `avatar` param (`__identity`): size-`l` initials from the first two words of `display_name`, the name, Member since, the rendered `about` (clamped) and the D26 label. The component's type is kept (32px title vs the export's 28px). |
@@ -258,7 +258,7 @@ Decisions confirmed with the user are listed in §8.
 | `THEME/templates/v2/page.html` | `tertiary_content` block + `tertiary_class` (D2) |
 | `THEME/templates/v2/user-dashboard-base.html` | Sets `tertiary_class`; header comment documents the block (D2); `user_profile_header` block, other-user breadcrumb (D27, D28) |
 | `THEME/templates/user/read.html` | Full replacement: base, filter form in `tertiary_content`, wrapper call, `scripts` block, profile header (D1, D4, D21, D24–D27) |
-| `ckanext-hdx_users/.../views/user.py`, `views/dashboard.py`, `controller_logic/dashboard_*_logic.py` | `/user/<id>` view, `/dashboard/datasets` 301, logic takes the viewed user (D24) |
+| `ckanext-hdx_users/.../views/user.py`, `views/dashboard.py`, `controller_logic/dashboard_*_logic.py` | `/user/<id>` view, `/dashboard/datasets` redirect, logic takes the viewed user (D24) |
 | `THEME/templates/v2/components/page-header.html`, `THEME/hdx-styles/src/common/less/v2/components/page-header.less` | `avatar` param, `__identity` (D27) |
 | `THEME/helpers/helpers.py` | Other-user menu (D28) |
 | `THEME/templates/search/snippets/search_results_wrapper.html` | Forward the new params (D4) |
@@ -278,17 +278,3 @@ Decisions confirmed with the user are listed in §8.
 | `ckanext-hdx_theme/llm_docs/redesign/PROGRESS.md`, `ckanext-hdx_theme/llm_docs/LLM_CONTEXT_HDX_DESIGN.md` | Migrated-pages entries |
 | `ckanext-hdx_theme/llm_docs/redesign/requirements/029-implement-dataset-card-component.md`, `036-dataset-results-layout-v2.md`, `066-archived-dataviz-v2.md`, `072-user-dashboard-my-organisations-v2.md` | Card params, right column, `title_size`, Excluded list and header mixins |
 | `ckanext-hdx_theme/llm_docs/redesign/requirements/STATUS.md` | 073 → `implemented` when done |
-
----
-
-## Verification
-
-- `/user/<id>` renders for tester, sysadmin and anonymous users; the `test_page_load.py` rows pass.
-- `?ext_update_status=needs_update` shows the Update status dropdown checked and a removable chip.
-- Sort defaults to "Due for Update" (Last Modified on another user's page). Page size, search, the archived toggle and pagination keep their params.
-- Chips follow D12/D13 for fresh, overdue, unknown, ongoing and archived datasets, and the private/archived/by-request badges appear.
-- Update and Archive open the contribute popup (Archive at `#field_archived`). A member-role maintainer sees neither.
-- The Delete drawer POSTs; the page then shows "Dataset has been deleted." as a `c-alert`.
-- "Send a group message" opens the dataset page with the drawer open (for org members).
-- XL shows three columns. On MD/SM there is no nav, and the Filter button opens the overlay with filters and sort.
-- /dataset and the Org, Location and Crisis pages are visually unchanged.

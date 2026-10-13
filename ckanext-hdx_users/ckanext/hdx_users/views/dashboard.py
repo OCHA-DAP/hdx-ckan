@@ -10,10 +10,10 @@ _ = tk._
 hdx_user_dashboard = Blueprint(u'hdx_user_dashboard', __name__, url_prefix=u'/dashboard')
 
 
-def _moved_permanently(url):
+def _redirect_keeping_query(url, code=302):
     if request.query_string:
         url = u'{}?{}'.format(url, request.query_string.decode(u'utf-8'))
-    return redirect(url, code=301)
+    return redirect(url, code=code)
 
 
 def datasets():
@@ -25,7 +25,7 @@ def datasets():
         h.flash_error(_(u'Not authorized to see this page'))
         return h.redirect_to(u'home.index')
 
-    return _moved_permanently(h.url_for(u'hdx_user.read', id=g.user))
+    return _redirect_keeping_query(h.url_for(u'hdx_user.read', id=g.user))
 
 
 def organizations():
@@ -37,7 +37,7 @@ def organizations():
         h.flash_error(_(u'Not authorized to see this page'))
         return h.redirect_to(u'user.login')
 
-    return _moved_permanently(h.url_for(u'hdx_user.read_organizations', id=g.user))
+    return _redirect_keeping_query(h.url_for(u'hdx_user.read_organizations', id=g.user))
 
 
 def newsfeed():
@@ -50,7 +50,7 @@ def newsfeed():
         h.flash_error(_(u'Not authorized to see this page'))
         return h.redirect_to(u'user.login')
 
-    return redirect(h.url_for(u'hdx_user.read', id=g.user), code=301)
+    return h.redirect_to(u'hdx_user.read', id=g.user)
 
 
 hdx_user_dashboard.add_url_rule(u'/', view_func=newsfeed, strict_slashes=False)
