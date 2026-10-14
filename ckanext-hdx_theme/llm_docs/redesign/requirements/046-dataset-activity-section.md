@@ -148,9 +148,9 @@ For **`new_user` / `changed_user`** there is no subject at all.
 **Notes:**
 - `resource.read` URL: `h.url_for('resource.read', id=resource.package_id, resource_id=resource.id)`
 - `pkg.read` type: use `activity.data.package.type or 'dataset'` for the endpoint prefix
-- `activity.data.actor` stores the username at creation time (resilient to user deletion); fall back to the optional `actor_names` dict (task 075), then `activity.user_id`
-- Optional `show_detail_links` (default False; task 075, user stream only) adds "View this version" / "Changes" links on new/changed package and changed organization/group items
-- Optional `load_more_href` (default `''`; task 075, org tab and user stream) renders a "Load more" `c-text-link` (secondary xs) in `.c-activity-stream__load-more` after the stream
+- `activity.data.actor` stores the username at creation time (resilient to user deletion); fall back to the optional `actor_names` dict, then `activity.user_id`
+- Optional `show_detail_links` (default False) adds "View this version" / "Changes" links on new/changed package and changed organization/group items
+- Optional `load_more_href` (default `''`) renders a "Load more" `c-text-link` (secondary xs) in `.c-activity-stream__load-more` after the stream
 
 ---
 
@@ -206,7 +206,7 @@ The second section is the canonical design.
 | `action_text` | string | yes | — | Plain-text action phrase (e.g. "updated the dataset") |
 | `subject_label` | string | no | `''` | Subject text (dataset/resource/etc. title) |
 | `subject_href` | string | no | `''` | Subject URL — if empty and `subject_label` set, rendered as plain text |
-| `links` | list | no | `[]` | `[{label, href}]` detail links, rendered as a `__links` row between the action and the time (task 075) |
+| `links` | list | no | `[]` | `[{label, href}]` detail links, rendered as a `__links` row between the action and the time |
 | `timestamp` | datetime | yes | — | Activity timestamp from `activity.timestamp` |
 | `extra_classes` | string | no | `''` | Additional CSS classes on the root element |
 
@@ -282,7 +282,7 @@ var $activities = $(wrapper).find('.c-activity-stream');
 ### `activity-stream.html` structure
 
 ```jinja2
-{# Accepts same params as v1: activity_stream, id, object_type (+ optional show_detail_links, actor_names, load_more_href, task 075) #}
+{# Accepts same params as v1: activity_stream, id, object_type (+ optional show_detail_links, actor_names, load_more_href) #}
 {% if not activity_stream %}
   <p class="c-activity-stream__empty">
     {{ _('No recent activity for this dataset.') }}
@@ -507,7 +507,7 @@ Fall back: `activity.user_name if (activity.user_name is defined and activity.us
 ### `follow_user` subject
 
 `activity.object_id` is the followed user's CKAN ID, not their display name.
-The subject label uses `actor_names[object_id]` when given (task 075), else `activity.object_id`
+The subject label uses `actor_names[object_id]` when given, else `activity.object_id`
 as text (same behavior as v1 `user()` macro for anonymous viewers). The subject href is
 `h.url_for('user.read', id=activity.object_id)`.
 

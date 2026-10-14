@@ -44,7 +44,7 @@ CSS custom property equivalents (`--hdx-*`) are defined in `v2/foundation.css` (
 - Overrides `{% block page %}` with: header block → main content (toolbar + flash + two-column layout) → footer block
 - `{% block header_core %}` includes `v2/header.html` via `{% snippet %}`, passing `quick_links` (fetched once at the top of `page.html`); `v2/header.html` takes an optional `minimal=True` param (logo-only navbar, no top-bar/search/nav items/actions/hamburger/offcanvas)
 - `{% block toolbar %}` renders `<div class="hdx-v2-breadcrumb-row">` with a `{% block breadcrumb_items %}` sub-block; page templates override only `{% block breadcrumb_items %}`; set `breadcrumb_row_class` variable for modifier classes on the row div (e.g. `'hdx-v2-breadcrumb-row--white'`)
-- `{% block flash %}` renders flash messages using `hdx-v2-flash {{ category }}` class (Bootstrap `.alert` removed)
+- `{% block flash %}` renders each flash as a `c-alert` (`alert.html`, `extra_classes='hdx-v2-flash'`, category→variant map)
 - `secondary_right_side` feature removed; sidebar always renders on the left
 - `{% block footer %}` includes `v2/footer.html` via `{% snippet %}`, passing the same `quick_links`
 - `{% block primary %}` (v1 fallback, never reached by v2 pages) annotated with TODO for removal on v1 retirement

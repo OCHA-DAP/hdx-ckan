@@ -248,10 +248,10 @@ consistent: none of them were ever opened as tasks.
 
 ### D1 — Missing demos
 
-`select.html` (4 real call sites, see B8), `c-form-field`, `c-divider`. `graph-point.html` and
-`table.html` appear *only* in the showcase — `c-table` reaches real pages via the DataTables path
-rather than the snippet, and `c-graph-point` via the charts; worth confirming that is intended
-rather than an orphan.
+`select.html` (real call sites in B8), `c-form-field`, `c-divider`. `graph-point.html`
+appears *only* in the showcase — `c-graph-point` reaches real pages via the charts; worth
+confirming that is intended rather than an orphan. `table.html` renders the API Tokens list;
+`c-table` also reaches real pages via the DataTables path.
 
 ### D2 — Undefined classes
 
@@ -308,7 +308,7 @@ remains `CONVENTIONS.md` plus `.claude/skills/hdx-v2-styles/references/conventio
 | A4 | Apply the proposed fix: ship `nav-controls.css` once via `v2-page-styles`, drop the four page-bundle `@import`s. | Landed |
 | A5 | Route `organization/index.html` through `v2/search-nav-controls.html` instead of hand-rolled markup. | Landed |
 | A6 | Promote `FocusTrap` to `window.hdxV2.FocusTrap` in `utils.js`; replace the "copy the class" instruction in `conventions.md` and the skill. | Landed |
-| B1 | Merge `c-kpi-card` and `c-stats-card` into one component with variants, preserving the exact current visual output on every call site (All Locations, All Organisations, org Stats tab, location page KPI row). | Landed — supersedes 058 D14 / 063 D8. Since then, 3 of those 4 call sites (All Locations, All Organisations, location page KPI/`header_stats` row) have been commented out in a later polish pass — only the org Stats tab still renders the merged component live. |
+| B1 | Merge `c-kpi-card` and `c-stats-card` into one component with variants, preserving the exact current visual output on every call site (All Locations, All Organisations, org Stats tab, location page KPI row). | Landed — supersedes 058 D14 / 063 D8. |
 | B2 | Add `c-signup-tier-row` to `components/signup-tier.less`; use it on both the value-proposition page and the showcase. | Landed |
 | B3 | Relocate `.hdx-v2-signals-*` out of `components/signal-card.less` to the top level of `less/v2/`; remove the hardcoded `19.938rem` width at every breakpoint. | Landed |
 | B4 | Wrap the Mailchimp embed in `landing_pages/signals.html` with v2-equivalent layout classes instead of Bootstrap grid classes. | Deferred to next cycle — nothing is visually broken today (Bootstrap's own CSS still styles the form); this is an architectural cleanup on a live, complex third-party embed with no existing v2 CSS to build on |
@@ -322,6 +322,6 @@ remains `CONVENTIONS.md` plus `.claude/skills/hdx-v2-styles/references/conventio
 | 4.2 | Behavior-drift corrected in 056 (D3, D14, D17, D18), 061 (D5/D6 filename + Component Mapping table), 064 (Decision 6). | Done in this pass |
 | 062 | `planned-maintenance.html` ships from infra outside this repo — not a discrepancy, no doc change needed beyond the note already added to this audit. | Resolved |
 | 068 | STATUS.md updated to `implemented`; a `c-spinner` component was later built and wired into the Data Dictionary AJAX load and the TDE fetch — doc references corrected accordingly. | Done in this pass |
-| D1 | Add showcase demos for `select.html`, `c-form-field`, `c-divider`. `table.html` / `graph-point.html` confirmed intentionally showcase-only — no orphan cleanup needed. | Landed |
+| D1 | Add showcase demos for `select.html`, `c-form-field`, `c-divider`. `graph-point.html` confirmed intentionally showcase-only, and `table.html` has a real caller (API Tokens) — no orphan cleanup needed. | Landed |
 | D2 | Rename the undefined showcase classes (`demo-section__heading` → `demo-subsection__heading`, `dl-h2` → the real class) to match what's actually defined. | Landed |
 | D3 | Add `id`s to every showcase section plus a table of contents. | Landed |

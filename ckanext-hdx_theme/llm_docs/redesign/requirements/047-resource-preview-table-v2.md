@@ -198,7 +198,7 @@ function initDataTable(data, columns) {
 }
 ```
 
-For datastore-backed resources (added later by task 068), `loadFromDatastore(resourceId)` fetches from `/api/3/action/datastore_search` instead and feeds the same `initDataTable()`.
+For datastore-backed resources, `loadFromDatastore(resourceId)` fetches from `/api/3/action/datastore_search` instead and feeds the same `initDataTable()`.
 
 **HXL hashtag row**: For HXL-tagged CSV files, `row[1]` will contain the hashtag row (e.g. `["#date", "#loc+name", ...]`). This row is **not stripped by the API** — it appears in `response.slice(1)` as a regular data row and is displayed as-is (same behaviour as v1).
 

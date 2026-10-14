@@ -115,8 +115,8 @@ doc — see Decisions below.
   are factored into mixins in `mixins.less` (`.hdx-page-section-wrapper()`,
   `.hdx-page-section-header()`, `.hdx-page-section-body()`), called from each page's own BEM block —
   matching the existing "List header pattern" precedent for page-owned, verbatim-duplicated styling
-  (`CONVENTIONS.md`). The section title itself calls the broader-scope `.hdx-section-title()` mixin
-  (also used by org/HAPI/Signals/country/Locations). `pages/dataset.less` keeps its extra `&__title-row`,
+  (`CONVENTIONS.md`). The section title itself calls the broader-scope `.hdx-section-title()` mixin.
+  `pages/dataset.less` keeps its extra `&__title-row`,
   `&__chevron`, and `&--collapsible` variant layered on top of the mixin calls.
 - **D5 — Resource-type detection / conditional logic (confirmed): reuse `res.datastore_active`, no new
   detection.** It is already computed by CKAN core and already gates the existing "API access" section

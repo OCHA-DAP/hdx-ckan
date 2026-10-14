@@ -1,7 +1,7 @@
 @import "../mixins.less";
 
 // ============================================================
-// c-page-header — unified page hero header (dataset + resource)
+// c-page-header — unified page hero header
 // Figma: llm_docs/redesign/figma_exports/dataset-page-header.html
 // ============================================================
 
@@ -38,7 +38,7 @@
             gap:                   var(--hdx-space-6);
         }
 
-        // No org card (e.g. landing pages, Locations) — description
+        // No org card — description
         // column takes the full width instead of leaving a 25% gap.
         &--no-card {
             @media (min-width: @hdx-bp-md) {
@@ -124,8 +124,8 @@
         .hdx-page-title-font-size();
     }
 
-    // ── Title actions — "Interactive map | Alphabetical order" ─
-    // style text-button row under the title. XL only (Locations).
+    // ── Title actions ────────────────────────────────────────
+    // Separator-delimited text-button row under the title. XL only.
     &__title-actions {
         display: none;
 
@@ -146,7 +146,7 @@
         color:  var(--hdx-neutral-85);
         margin: 0;
     }
-    // ── Member since — muted line below title (org pages) ────
+    // ── Member since — muted line below title ────────────────
 
     &__member-since {
         .hdx-body-s();                      // 14 px — Figma .web-design
@@ -248,7 +248,7 @@
             margin: 0;
         }
     }
-    // ── Right-card action links (org pages) ──────────────────
+    // ── Right-card action links ──────────────────────────────
 
     &__card-actions {
         display:        flex;
@@ -256,7 +256,7 @@
         align-items:    flex-start;
         gap:            var(--hdx-space-2);        // 8 px — Figma .text-buttons-parent
     }
-    // ── Right-card count stats (org pages) ───────────────────
+    // ── Right-card count stats ───────────────────────────────
 
     &__card-stats {
         display:    flex;

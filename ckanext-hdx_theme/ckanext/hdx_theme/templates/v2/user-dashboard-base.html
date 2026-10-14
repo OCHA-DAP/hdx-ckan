@@ -9,13 +9,12 @@
                                (e.g. 'my_organisations')
     page_label       {string}  Page name for the breadcrumb and <title>
   and fill {% block primary %}. Optionally fill {% block tertiary_content %}
-  for a right-hand column (XL only, sticky), e.g. My Datasets' filters.
+  for a right-hand column (XL only, sticky).
   The left menu is built for user_dict, the user whose page is shown.
 
-  Another user's Datasets, Activity Stream and User Permission pages output
-  {{ self.user_profile_header() }} at the top of primary; it is never rendered
-  automatically. When is_myself is false, the breadcrumb is
-  Users / {name} (/ page_label, except on Datasets).
+  Pages that can show another user output {{ self.user_profile_header() }}
+  at the top of primary; it is never rendered automatically. When is_myself
+  is false, the breadcrumb is Users / {name} (/ page_label, except on Datasets).
 #}
 
 {% set outer_row_class = 'hdx-v2-search-row' %}

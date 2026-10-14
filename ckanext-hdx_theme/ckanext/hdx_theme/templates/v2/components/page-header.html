@@ -2,28 +2,25 @@
   Snippet: page-header.html
   Path:    templates/v2/components/page-header.html
 
-  Unified page hero header — one generic layout for dataset, resource,
-  org, landing and crisis pages. All differences are param-driven.
+  Unified page hero header — one generic layout; all differences are param-driven.
 
   ── Parameters ───────────────────────────────────────────────
   title               {string}  Title text.  default: ''
-  compact_title       {bool}    Title fixed at 1.5rem, no XL scale-up
-                                (resource pages).  default: False
+  compact_title       {bool}    Title fixed at 1.5rem, no XL scale-up.  default: False
   flush               {bool}    No vertical padding, for a header inside an
-                                already-padded content column (user profile
-                                header).  default: False
+                                already-padded content column.  default: False
   subtitle            {string}  Optional subtitle rendered below title (semibold).  default: ''
   member_since        {string}  Optional pre-rendered "Member since {date}" line
-                                below the title (org pages).  default: ''
+                                below the title.  default: ''
   description         {string}  Full description.  default: ''
   avatar              {dict}    c-avatar kwargs (size, initials, aria_label, ...) —
-                                avatar beside the title block (user profile).  default: {}
+                                avatar beside the title block.  default: {}
   org_name            {string}  Organisation display name.  default: ''
   logo_src            {string}  Logo image URL.  default: ''
   header_actions      {list}    {label, href, icon_src, attrs, show} dicts —
                                 inline action links in the right card.  default: []
   header_stats        {list}    {label, value} dicts — count pairs in the right
-                                card, below a divider (org pages).  default: []
+                                card, below a divider.  default: []
   contact_href        {string}  Link to contact page.  default: '#'
   download_count      {int}     Approx downloads.  default: 0
   archived            {bool}    Show "Archived" label.  default: False
@@ -39,15 +36,13 @@
   state_label_color   {string}  c-label color for state_label_text.  default: 'grey'
   title_actions       {list}    {label, href, icon_src, icon_position, style, size} dicts —
                                 horizontal text-button row under the title, separated by "|",
-                                visible from XL only (Locations page).  default: []
-  title_count         {string}  Count badge shown next to the title (Datasets/Dataviz Gallery/
-                                Archived Dataviz list-page titles).  default: ''
+                                visible from XL only.  default: []
+  title_count         {string}  Count badge shown next to the title.  default: ''
   extra_classes       {string}  Extra classes on the root section.  default: ''
 
   meta_items          {list}    Metadata strip entries (strip + divider render
-                                only when non-empty). 3 items get the resource-
-                                style --cols-3 grid; otherwise the 4-column
-                                dataset grid. Each item:
+                                only when non-empty). 3 items get the --cols-3
+                                grid; otherwise the 4-column grid. Each item:
     label            {string}  required — column heading
     value            {string}  value text.  default: ''
     value_href       {string}  render value as c-text-link (resource URL).  default: ''
@@ -149,7 +144,7 @@
       {% endif %}
       <div class="c-page-header__description">
 
-        {# File format icon + label — resource #}
+        {# File format icon + label #}
         {% if file_format %}
         <div class="c-page-header__format">
           {% snippet 'v2/components/file-type-icon.html', format=file_format, aria_label=file_format_text %}
@@ -159,7 +154,7 @@
         </div>
         {% endif %}
 
-        {# Labels row — dataset #}
+        {# Labels row #}
         {% if archived or request_only or cod_dataset or links_list or page_list or (pkg_state and pkg_state.startswith('deleted')) %}
         <div class="c-page-header__labels">
 
@@ -215,9 +210,8 @@
         </div>
         {% endif %}
 
-        {# Title — omitted when empty (e.g. crisis page show_title=off).
-           title_count wraps it with a count badge (Datasets/Dataviz Gallery/
-           Archived Dataviz list-page titles); otherwise rendered bare. #}
+        {# Title — omitted when empty. title_count wraps it with a count
+           badge; otherwise rendered bare. #}
         {% if title %}
           {% set title_html %}
             <h1 class="c-page-header__title"
@@ -238,7 +232,7 @@
         {% endif %}
 
         {# Title actions — optional horizontal text-button row under the title,
-           visible from XL only (e.g. Locations "Interactive map | Alphabetical order") #}
+           visible from XL only #}
         {% if title_actions %}
         <div class="c-page-header__title-actions">
           {% for action in title_actions %}
@@ -256,7 +250,7 @@
         </div>
         {% endif %}
 
-        {# State chip — optional, independent of the title (e.g. crisis page 'draft') #}
+        {# State chip — optional, independent of the title #}
         {% if state_label_text %}
           {% snippet 'v2/components/label.html',
               text=state_label_text, color=state_label_color, size='s' %}
@@ -267,7 +261,7 @@
           <p class="c-page-header__subtitle">{{ subtitle }}</p>
         {% endif %}
 
-        {# Member since — optional muted line below title (org pages) #}
+        {# Member since — optional muted line below title #}
         {% if member_since %}
           <p class="c-page-header__member-since">{{ member_since }}</p>
         {% endif %}
@@ -290,7 +284,7 @@
         </div>
         {% endif %}
 
-        {# Optional CTA button — landing pages only (cta_href must be provided) #}
+        {# Optional CTA button — only when cta_href is provided #}
         {% if cta_href %}
           {% snippet 'v2/components/button.html',
               tag='a', href=cta_href,
@@ -306,7 +300,7 @@
       </div>
       {% endif %}
 
-      {# CTA block (notifications + download count) — dataset only #}
+      {# CTA block (notifications + download count) #}
       {% if supports_notifications or download_count %}
       <div class="c-page-header__cta">
         {% if supports_notifications %}
@@ -435,7 +429,7 @@
         {% if item.copy_value %}
           {% snippet 'v2/components/copy-button.html',
               value=item.copy_value, style='secondary', size='s',
-              icon_position='left', label=_('Copy') %}
+              icon_position='left' %}
         {% endif %}
         {% if item.link %}
           {% snippet 'v2/components/text-button.html',
@@ -470,9 +464,8 @@
 
 </section>
 
-{# Group message drawer — dataset page (org-card action) + org page header
-   action (org-hero.html header_actions). Posts to the same
-   /membership/contact_members endpoint as the org Members-tab drawer. #}
+{# Group message drawer — opened by the header's group-message actions.
+   Posts to the /membership/contact_members endpoint. #}
 {% if not hide_membership and membership and membership.display_group_message %}
   {% snippet 'v2/group-message-drawer.html',
       drawer_id='gm-header-drawer',

@@ -29,7 +29,7 @@
   };
 
   // Selector for all natively focusable elements.
-  // Used by focus-trap implementations (drawer, overlays, etc.).
+  // For focus-trap implementations.
   var FOCUSABLE = [
     'a[href]',
     'button:not([disabled])',
@@ -107,9 +107,7 @@
   var activeTraps = [];
 
   // Traps Tab/Shift+Tab focus inside `element`, and returns focus to
-  // `triggerElement` on deactivate. Shared by navbar.js (offcanvas) and
-  // components/drawer.js — promoted here once a second consumer needed it
-  // (task 070 A6).
+  // `triggerElement` on deactivate. Promoted here once a second consumer needed it (task 070 A6).
   window.hdxV2.FocusTrap = function FocusTrap(element, triggerElement) {
     this.element        = element;
     this.triggerElement = triggerElement;

@@ -23,7 +23,7 @@
 | `hdx_connect` | bool | `false` | Render the request-data variant of the footer instead of the download button. |
 | `request_href` | string | `'#'` | URL for the "Request data" link when `hdx_connect` is set. |
 | `request_attrs` | dict | `{}` | Extra HTML attributes on the "Request data" link. |
-| `show_more_info` | bool | `true` | Render the "More information" button. Set `false` when no meaningful `title_href` exists (e.g. the zero-resource HDX Connect state). |
+| `show_more_info` | bool | `true` | Render the "More information" button. Set `false` when no meaningful `title_href` exists. |
 | `extra_classes` | string | `''` | Extra CSS classes on the root element. |
 
 ---
@@ -121,7 +121,7 @@ Used to simplify the inline format-mapping logic in `package_item_v2.html`.
 
 | Question | Decision |
 |----------|----------|
-| Should "More information" be conditional? | Yes — new `show_more_info` param (default `true`); the zero-resource HDX Connect card in `resources_list.html` passes `show_more_info=False` to suppress the button when there's no real `title_href` to link to |
+| Should "More information" be conditional? | Yes — new `show_more_info` param (default `true`); set it `False` to suppress the button when there's no real `title_href` to link to |
 | Where does the show-more button live relative to description? | In `__footer`, outside `__desc`; `data-module` placed on root card element to bridge both |
 | Shared JS or separate? | New shared `clamped-text.js` covering dataset-card + dataset-page-header + resource-card |
 | Format mapping? | New `h.hdx_format_to_icon_category()` Python helper; `package_item_v2.html` simplified to use it |

@@ -95,7 +95,7 @@ The existing carousel infrastructure (data backend, JS, analytics) is fully reus
 
 Registered in `fanstatic/webassets.yml` under `v2-page-scripts`. **Do not reuse `homepage-responsive.js`** — that file remains on the page for other legacy purposes but is not used by this section.
 
-Shipped as a ~10-line config call into a shared, generic `window.hdxCarousel.init()` (`fanstatic/v2/carousel.js`), not standalone functions — the same engine also backs the Signals carousel (task 054):
+Shipped as a ~10-line config call into a shared, generic `window.hdxCarousel.init()` (`fanstatic/v2/carousel.js`), not standalone functions:
 
 ```js
 window.hdxCarousel.init({

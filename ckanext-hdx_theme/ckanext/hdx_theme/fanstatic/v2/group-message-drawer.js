@@ -1,13 +1,10 @@
 // ============================================================
 // group-message-drawer.js — shared "Group message" c-drawer form
-// Renders from templates/v2/group-message-drawer.html,
-// used on the dataset/org page header (page-header.html — triggers
-// #contact-members, #group-message-org-action) and the org Members
-// tab (organization/members.html — per-role [data-gm-topic] triggers,
-// drawer id 'group-message-drawer'). The dataset page also opens
-// 'gm-header-drawer' on load for a #group-message link (My Datasets
-// dashboard). Any number of instances can coexist on the same page;
-// each is scoped by its own recaptcha widget id.
+// Renders from templates/v2/group-message-drawer.html. Clicks on
+// #contact-members / #group-message-org-action open 'gm-header-drawer';
+// per-role [data-gm-topic] triggers pre-fill and open the
+// 'group-message-drawer' instance. Any number of instances can coexist
+// on the same page; each is scoped by its own recaptcha widget id.
 // ============================================================
 (function () {
   'use strict';
@@ -115,7 +112,7 @@
     if (window.hdxV2Drawer) window.hdxV2Drawer('gm-header-drawer').open();
   });
 
-  // Per-role preselect trigger (org Members tab) — pre-fills the topic
+  // Per-role preselect trigger — pre-fills the topic
   // select on the page's 'group-message-drawer' instance.
   document.addEventListener('click', function (e) {
     var trigger = e.target.closest && e.target.closest('[data-gm-topic]');

@@ -191,7 +191,7 @@ Note: `package/hdx-read-shape.html` (the pre-v2 template that used to own this m
 
 **resources_list.html** renders `resource-card` items (task 038) — do not change its internals. Its `resource_list_classes` param defaults to `'hdx-bs3 resource-list'`; the v2 dataset page passes `'resource-list c-resource-card-list'` (the `resource-list` class stays for `hdx_resource_grouping.js`; `c-resource-card-list` owns the layout in `components/resource-card.less`).
 
-The title/count split (`__left` wrapping a separate `__count` span, no parentheses) deviates from the Figma export, which shows `"Data and resources (7)"` as one plain text string — done instead to match the count-badge pattern already used by the org Members tab and the search page's list header (`.hdx-list-header-row-left()` + `.hdx-section-title-count()`).
+The title/count split (`__left` wrapping a separate `__count` span, no parentheses) deviates from the Figma export, which shows `"Data and resources (7)"` as one plain text string — done instead to match the shared count-badge pattern (`.hdx-list-header-row-left()` + `.hdx-section-title-count()`).
 
 ---
 

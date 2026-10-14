@@ -63,7 +63,7 @@ Rendered inside `header.html` after the avatar button. Hidden by default; shown 
   {% endif %}
 
   {# Activity and Content / Account and Settings — sections and items come from
-     h.hdx_get_user_dashboard_nav_sections() (task 072), shared with the user dashboard sidebar #}
+     h.hdx_get_user_dashboard_nav_sections() #}
 
   {# Logout #}
   {% snippet 'v2/components/button.html',
@@ -336,7 +336,7 @@ The spec above left Products on Bootstrap (`data-bs-toggle="dropdown"`). The act
 
 The spec called for `navbar-user-menu-body.html` as a shared snippet included by both the desktop panel and the mobile offcanvas second level. This was replaced with:
 
-- **`h.hdx_get_user_menu_sections()`** helper in `ckanext-hdx_theme/helpers/helpers.py` — returns a list of `{id, label, items: [{label, href}]}` dicts (dashboard/settings items also carry an `id`) with all URLs resolved and sysadmin-only entries filtered based on `c.userobj.sysadmin`; the dashboard/settings sections come from `h.hdx_get_user_dashboard_nav_sections()`, which also feeds the user dashboard sidebar (task 072)
+- **`h.hdx_get_user_menu_sections()`** helper in `ckanext-hdx_theme/helpers/helpers.py` — returns a list of `{id, label, items: [{label, href}]}` dicts (dashboard/settings items also carry an `id`) with all URLs resolved and sysadmin-only entries filtered based on `c.userobj.sysadmin`; the dashboard/settings sections come from `h.hdx_get_user_dashboard_nav_sections()`
 - Registered in `plugin.py` under `get_helpers()`
 - `navbar-user-menu.html` loops over the helper with `hdx-v2-user-menu__*` markup (desktop panel)
 - `header.html` (offcanvas) second level loops over the helper with `hdx-v2-offcanvas__nav-item--expandable` + `hdx-v2-offcanvas__subnav` markup (see task 019 notes)

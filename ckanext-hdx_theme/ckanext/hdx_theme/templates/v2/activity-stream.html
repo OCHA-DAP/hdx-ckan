@@ -1,15 +1,13 @@
 {#
   v2/activity-stream.html — type-dispatch orchestrator for the v2 activity
-  timeline (c-activity-item). Shared by the dataset page (task 046), the
-  organisation page's Activity tab (task 057) and the user activity stream
-  (task 075).
+  timeline (c-activity-item).
 
   Accepts the same params as the v1 activity_stream.html:
     activity_stream (list)   — list of activity dicts from package_activity_list,
                                  organization_activity_list or user_activity_list
     id              (string) — dataset/org/user id or name
     object_type     (string) — 'package' | 'organization' | 'user' ('user' has
-                                 no empty-state text: the user page renders
+                                 no empty-state text: the caller renders
                                  its own)
   Optional:
     show_detail_links (bool, default=False) — "View this version" / "Changes"

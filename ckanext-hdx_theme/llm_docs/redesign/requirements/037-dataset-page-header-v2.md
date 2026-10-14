@@ -214,13 +214,13 @@ The caller builds the metadata strip as a `meta_items` list via `{% set %}`, gua
 
 ### 4.2 Parameter reference
 
-Dataset-relevant params (see the docblock in `templates/v2/components/page-header.html` for the full list — org/landing/crisis and download-CTA params included):
+Dataset-relevant params (see the docblock in `templates/v2/components/page-header.html` for the full list):
 
 | Param | Type | Default | Description |
 |-------|------|---------|-------------|
 | `title` | string | `''` | Dataset title text. |
-| `compact_title` | bool | `False` | Title fixed at 1.5rem, no XL scale-up (`c-page-header--compact-title`, resource pages). |
-| `flush` | bool | `False` | No vertical padding (`c-page-header--flush`), for a header inside an already-padded content column (user profile header). |
+| `compact_title` | bool | `False` | Title fixed at 1.5rem, no XL scale-up (`c-page-header--compact-title`). |
+| `flush` | bool | `False` | No vertical padding (`c-page-header--flush`), for a header inside an already-padded content column. |
 | `description` | string | `''` | Full description. Empty = section hidden. |
 | `org_name` | string | `''` | Organisation display name (used as img alt). |
 | `logo_src` | string | `''` | Logo image URL. Empty = logo area hidden. |
@@ -336,7 +336,7 @@ All responsive logic via LESS `@media` queries nested inside element blocks.
 
 | File | Status | Role |
 |------|--------|------|
-| `templates/v2/components/page-header.html` | Created | Component snippet (shared by dataset, resource, org, landing, crisis pages) |
+| `templates/v2/components/page-header.html` | Created | Component snippet |
 | `less/v2/components/page-header.less` | Created | All `.c-page-header` LESS |
 | `fanstatic/v2/components/page-header.js` | Created | Overflow "View more" reveal + tooltip click/keyboard JS |
 | `fanstatic/webassets.yml` | Modified | Adds `page-header.js` to `v2-components-scripts` bundle |
@@ -352,27 +352,27 @@ Block: `c-page-header` (shared component).
 
 ```
 c-page-header
-  --compact-title       title fixed at 1.5rem (resource pages)
+  --compact-title       title fixed at 1.5rem
   __top
     --no-card            full-width description column when there's no org card
   __left
   __identity            avatar + __description row (avatar)
   __description
-  __format              file-type icon + label (resource)
+  __format              file-type icon + label
   __format-label
   __labels
   __link-group          one per links_list item
   __title-row           title + __title-count, when title_count is set
   __title
-  __title-count         count badge (list-page titles: Dataviz Gallery, Archived Dataviz)
-  __title-actions        XL-only text-button row under the title (Locations), separated by __title-action-sep
+  __title-count         count badge
+  __title-actions        XL-only text-button row under the title, separated by __title-action-sep
   __title-action-sep
   __subtitle
   __member-since
   __desc                data-module="clamped-text" (updated task 038)
   __desc-text           line-clamped <p> data-clamped-content; clamp lifted when __desc-text.is-open
   __cta
-    --row               download + export metadata row (resource)
+    --row               download + export metadata row
   __notify-btn
   __downloads
   __right-card
@@ -432,4 +432,4 @@ c-page-header
 | D15 | MD layout: left column uses `flex: 1` (not fixed width) to avoid blank space beside org card on wide viewports. |
 | D16 | Spacing and typography use CSS custom properties (`var(--hdx-space-*)`, `var(--hdx-font-*)`, etc.), not raw rem values. |
 | D17 | edit_mode support: title and description container receive `data-module="hdx-quick-edit"` attrs when `edit_mode=True`, passed alongside `pkg_id`. |
-| D18 | Org logo links to the contributor's org page via an opt-in `logo_href` param on `c-page-header` (wraps `<img>` in `<a class="c-page-header__logo-link mx-ga-dimension-organization">` when passed). `hdx_read.html` passes `logo_href=h.url_for(controller='organization', action='read', id=pkg.owner_org)`, mirroring the existing "Contributor" text-link. Opt-in so the org page's own header (same component, via `org-hero.html`) doesn't get a self-link. |
+| D18 | Org logo links to the contributor's org page via an opt-in `logo_href` param on `c-page-header` (wraps `<img>` in `<a class="c-page-header__logo-link mx-ga-dimension-organization">` when passed). `hdx_read.html` passes `logo_href=h.url_for(controller='organization', action='read', id=pkg.owner_org)`, mirroring the existing "Contributor" text-link. Opt-in so the org page's own header doesn't get a self-link. |

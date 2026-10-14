@@ -6,7 +6,7 @@ The v2 header user menu is aligned to the same menu (D6).
 
 **Excluded:** Migrating the sibling dashboard/settings pages (Newsfeed, My Activity Stream,
 User Permission, API Tokens, Notifications, Profile and Password). They stay v1
-with their tab bars. My Datasets is task 073; HDX Connect Requests is task 074. Also excluded: pagination (D8), follower counts (D11) and
+with their tab bars. Also excluded: pagination (D8), follower counts (D11) and
 pending join requests.
 
 **Figma sources:** `xl-user-dashboard-my-organisation.html` (XL only; there are no MD/SM exports)
@@ -208,7 +208,7 @@ HDX, "Member since" means the **org's** `created` date (`c-org-list-card`, `v2/o
 | No description | No "Show more" (existing card). |
 | All Orgs page regression | Must still render "Member since {org.created}" by passing `member_since=org.created` (D10). |
 | Menu links to v1 pages | Expected until the siblings migrate; each keeps its v1 tab bar. |
-| Another user's page (073, 075) | The menu follows the viewed user (D5). |
+| Another user's page | The menu follows the viewed user (D5). |
 | Header-menu change | Affects every v2 page: My Locations and Datasets (profile) leave the header menu (D4, D6). |
 
 ---

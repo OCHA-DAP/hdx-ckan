@@ -15,7 +15,7 @@
 
 
 // ── Page-layout flex rules ─────────────────────────────────────
-// Used by two-column page sidebars (search, dataset, resource).
+// For two-column page sidebars.
 
 .v2-sidebar-flex() {
     flex:      0 0 25%;
@@ -36,8 +36,8 @@
     }
 }
 
-// ── Partner-logo image — HAPI/Signals landing-page grids ────────
-// Shared visual rule for the per-image sizing; each landing page
+// ── Partner-logo image ──────────────────────────────────────────
+// Shared visual rule for the per-image sizing; each logo grid
 // keeps its own grid-column-count class alongside this.
 
 .hdx-partner-logo() {
@@ -57,8 +57,7 @@
 }
 
 // ── Form field-row layout ───────────────────────────────────────
-// Checkbox + label + inline error, two-column grid. Used by the
-// auth, signup, request-access and user-dashboard pages.
+// Checkbox + label + inline error, two-column grid.
 
 .v2-checkbox-row() {
     display:               grid;
@@ -176,8 +175,7 @@
 .hdx-body-semibold-base()   { .-hdx-body-base(var(--hdx-fw-semibold));   }
 
 // ── Page-title scale ─────────────────────────────────────────────
-// Canonical top-of-page title scale (24 → 28 → 32px Bold) — shared by
-// c-page-header's hero <h1> and homepage major-section headings.
+// Canonical top-of-page title scale (24 → 28 → 32px Bold).
 
 .hdx-page-title-scale() {
     .hdx-display-s();   // 24px bold, base (font-family + weight + base size)
@@ -185,7 +183,6 @@
 }
 
 // Font-size ramp only (no weight/family/color) — for title-adjacent elements
-// (list-header counts, the /dataset search page's "Datasets" sub-heading)
 // that need to track the page-title size without adopting its weight/color.
 .hdx-page-title-font-size() {
     font-size: var(--hdx-fs-2xl);  // 24px base
@@ -209,7 +206,7 @@
 }
 
 // ── Section header pattern ─────────────────────────────────────
-// Shared label + heading structure for homepage sections (intro, highlights, etc.)
+// Shared label + heading structure for homepage sections.
 
 .hdx-section-header() {
     display:        flex;
@@ -240,16 +237,13 @@
 }
 
 // ── List header pattern ────────────────────────────────────────
-// Shared count + empty-state structure for page-owned list headers
-// (search page, Archived Dataviz, Dataviz Gallery, c-page-header's
-// title_count badge, org Members tab). Title itself calls
-// .hdx-section-title() (search, Members tab) or is c-page-header's
-// own __title (Dataviz Gallery/Archived Dataviz).
+// Shared count + empty-state structure for page-owned list headers.
+// The title itself is not styled here — it calls .hdx-section-title()
+// or is c-page-header's own __title.
 
 // Row shape: title+count grouped on the left (`-row-left()`), any
 // controls (sort/filter) as a sibling pushed right by the left
-// group's flex:1 — used by the search-page/country/crisis list
-// header and the org Members tab heading row.
+// group's flex:1.
 .hdx-list-header-row() {
     display:     flex;
     align-items: center;
@@ -269,8 +263,7 @@
 }
 
 // Font-size ramp only — for count badges beside a .hdx-section-title()
-// heading (org Datasets tab, country/crisis pages, Members tab), tracking
-// its 18→20px step without adopting weight/color.
+// heading, tracking its 18→20px step without adopting weight/color.
 .hdx-section-title-font-size() {
     font-size: var(--hdx-fs-l);   // 18px base
     @media (min-width: @hdx-bp-md) { font-size: var(--hdx-fs-xl); }  // 20px
@@ -290,8 +283,8 @@
 
 // ── Page-section pattern ───────────────────────────────────────
 // Shared padding/header/title/body structure for page-owned detail
-// sections (dataset page, resource page). Sections are separated by
-// <hr class="c-divider"> in each page's template.
+// sections. Sections are separated by <hr class="c-divider"> in each
+// page's template.
 
 .hdx-scroll-offset-header() {
     @media (max-width: @hdx-bp-xl) { scroll-margin-top: 8rem; }
@@ -312,8 +305,7 @@
     gap:             var(--hdx-space-3);
 }
 
-// Canonical in-page sub-section heading (20px Semibold) — shared by
-// dataset/resource sections, org tabs, and HAPI/Signals landing sections.
+// Canonical in-page sub-section heading (20px Semibold).
 // Not for page/list-level titles (see .hdx-page-title-scale() above,
 // a different, larger tier).
 .hdx-section-title() {
@@ -330,7 +322,7 @@
 // ── Line clamp ──────────────────────────────────────────────────
 // Multi-line text truncation with a trailing ellipsis. `-off()`
 // reverses it (e.g. an `.is-open` expanded state). `-inline()` is a
-// separate variant for the one site (label.less) that needs
+// separate variant for sites that need
 // -webkit-inline-box + text-overflow instead of the block form.
 
 .hdx-line-clamp(@lines) {
@@ -406,7 +398,7 @@
 
 // ── Focus ring ──────────────────────────────────────────────────
 // Keyboard-focus outline. Inverse variant is for dark surfaces
-// (navbar, top bar) where the primary-5 ring has no contrast.
+// where the primary-5 ring has no contrast.
 
 .hdx-focus-ring() {
     outline:        2px solid var(--hdx-primary-5);

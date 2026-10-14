@@ -226,7 +226,7 @@ At SM: title + date only. No description, no metadata.
 |---|---|---|---|
 | `org` | dict | required | Organisation dict from `page.items` |
 | `member_count` | int | 0 | Pre-fetched member count |
-| `role` / `member_since` / `last_updated` | string | not set | Optional line parts under the title, rendered only when passed (task 072); this page passes `member_since=org.created` |
+| `role` / `member_since` / `last_updated` | string | not set | Optional line parts under the title, rendered only when passed; this page passes `member_since=org.created` |
 
 **No `size` param** — breakpoint handled by CSS.
 **No `state` param** — hover is CSS-only.

@@ -4,8 +4,7 @@
 // - Pending-approval Approve/Decline → AJAX member_request_process
 //   (keeps the v1 analytics contract: sendMemberAddRejectEvent)
 // - Invite tags-autocomplete on /util/user/hdx_autocomplete (Q10)
-// Group-message drawer logic lives in group-message-drawer.js (shared
-// with the dataset/org page header).
+// Group-message drawer logic lives in group-message-drawer.js.
 // ============================================================
 (function () {
   'use strict';
