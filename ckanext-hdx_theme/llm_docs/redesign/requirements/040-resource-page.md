@@ -136,7 +136,7 @@ GA tracking reads `.ga-download` click + `data-resource-name` / `data-resource-i
 
 #### 2d. Export metadata dropdown
 
-Reuses the existing export URL pattern from `resource_item.html:92`. Uses the standard `c-dropdown` snippet with `navigate=True`. Items navigate directly to the export URL; `dropdown.js` handles open/close and navigation.
+Reuses the existing export URL pattern from `resource_item.html`'s Export Metadata menu. Uses the standard `c-dropdown` snippet with `navigate=True`. Items navigate directly to the export URL; `dropdown.js` handles open/close and navigation.
 
 ```jinja
 {% snippet 'v2/components/dropdown.html',

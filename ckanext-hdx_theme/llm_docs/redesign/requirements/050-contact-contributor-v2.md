@@ -41,10 +41,10 @@ v1 renders four BEM form snippets directly inside the template:
 
 | Item | Detail |
 |---|---|
-| **View class** | `DatasetContactContributorView` — `ckanext-hdx_package/ckanext/hdx_package/views/dataset.py` (lines 547–649) |
+| **View class** | `DatasetContactContributorView` — `ckanext-hdx_package/ckanext/hdx_package/views/dataset.py` |
 | **Logic class** | `DatasetContactContributorLogic` — `ckanext-hdx_package/ckanext/hdx_package/controller_logic/dataset_contact_contributor_logic.py` |
-| **Email action** | `hdx_send_mail_contributor` — `ckanext-hdx_package/ckanext/hdx_package/actions/get.py` (lines 888–944) |
-| **Auth** | `hdx_send_mail_contributor` — `ckanext-hdx_package/ckanext/hdx_package/actions/authorize.py` (lines 52–66): user must be authenticated |
+| **Email action** | `hdx_send_mail_contributor` — `ckanext-hdx_package/ckanext/hdx_package/actions/get.py` |
+| **Auth** | `hdx_send_mail_contributor` — `ckanext-hdx_package/ckanext/hdx_package/actions/authorize.py`: user must be authenticated |
 | **Topics** | `ckanext-hdx_package/ckanext/hdx_package/helpers/membership_data.py` |
 | **URL** | `/dataset/<id>/contact/` → named route `hdx_dataset.contact_contributor` |
 

@@ -1,0 +1,82 @@
+{#
+  Snippet: list-header.html
+  Path:    templates/v2/list-header.html
+
+  List header row: title + count, sort / page-size controls, MD/SM
+  Filter button (opens #hdx-filter-overlay, see v2/filter-overlay.html)
+  and an optional full-width subtitle line. Shared by the dataset list
+  (search/snippets/package_list.html) and the HDX Connect Requests
+  dashboard (page title and section headings, task 074).
+  Styles: pages/search.less (.hdx-v2-list-header).
+
+  Parameters
+  ─────────────────────────────────────────────────
+  count             {int}     Number shown beside the title.  Required.
+  list_title        {string}  Heading text.  default: 'Datasets'
+  list_subtitle     {string}  Line below the heading row.  default: ''
+  title_tag         {string}  Heading element, e.g. 'h1'.  default: 'strong'
+  title_size        {string}  Heading and count scale: 'section' | 'page' |
+                              'dashboard'.  default: 'section'
+  show_controls     {bool}    Render the controls (v2/search-nav-controls.html):
+                              XL-only when the Filter button renders (the
+                              overlay holds them below XL), every width
+                              otherwise.  default: True
+  show_filters      {bool}    Render the MD/SM Filter button.  default: True
+  total_selected    {int}     Selected filters, shown as the button count.
+                              default: 0
+  sorting_selected, ext_page_size, admin_view, sorting_options,
+  show_page_size, sort_key
+                              Forwarded to v2/search-nav-controls.html
+                              (see its header for defaults).
+  ─────────────────────────────────────────────────
+  Example
+
+  {% snippet 'v2/list-header.html',
+      count=packages_count, sorting_selected=sorting_selected,
+      ext_page_size=ext_page_size, total_selected=total_selected %}
+#}
+
+{% set list_title     = list_title     if list_title     is defined else _('Datasets') %}
+{% set list_subtitle  = list_subtitle  if list_subtitle  is defined else '' %}
+{% set title_tag      = title_tag      if title_tag      is defined else 'strong' %}
+{% set title_size     = title_size     if title_size     is defined else 'section' %}
+{% set show_controls  = show_controls  if show_controls  is defined else True %}
+{% set show_filters   = show_filters   if show_filters   is defined else True %}
+{% set total_selected = total_selected if total_selected is defined else 0 %}
+
+<div class="hdx-v2-list-header">
+  <div class="hdx-v2-list-header__left">
+    <{{ title_tag }} class="hdx-v2-list-header__title{{ ' hdx-v2-list-header__title--' ~ title_size if title_size != 'section' else '' }}">{{ list_title }}</{{ title_tag }}>
+    <span class="hdx-v2-list-header__count{{ ' hdx-v2-list-header__count--' ~ title_size if title_size != 'section' else '' }}">{{ h.localised_number(count) }}</span>
+  </div>
+  {% if show_controls %}
+  <div class="hdx-v2-list-header__controls{{ ' hdx-v2-list-header__controls--xl-only' if show_filters else '' }}">
+    {% snippet 'v2/search-nav-controls.html',
+        sorting_selected=sorting_selected,
+        ext_page_size=ext_page_size,
+        admin_view=admin_view,
+        sorting_options=sorting_options,
+        show_page_size=show_page_size,
+        sort_key=sort_key,
+        panel_suffix='hdr' %}
+  </div>
+  {% endif %}
+  {% if show_filters %}
+    <div class="hdx-v2-list-header__filter-btn">
+      {% snippet 'v2/components/dropdown.html',
+          size='m',
+          placeholder='Filter',
+          count='(' ~ total_selected ~ ')' if total_selected > 0 else '',
+          state='filter' if total_selected > 0 else 'enabled',
+          icon=True,
+          icon_src='v2/icons/filter.svg',
+          chevron_src='',
+          panel_id='hdx-filter-overlay',
+          extra_classes='c-dropdown--inline',
+          button_attrs={'data-module': 'filter-btn'} %}
+    </div>
+  {% endif %}
+  {% if list_subtitle %}
+    <p class="hdx-v2-list-header__subtitle">{{ list_subtitle }}</p>
+  {% endif %}
+</div>

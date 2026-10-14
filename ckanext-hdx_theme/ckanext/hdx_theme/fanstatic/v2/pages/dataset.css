@@ -142,10 +142,13 @@
 .hdx-v2-dataset-metadata__full.is-clamped .c-text-button {
   display: inline-flex;
 }
-.hdx-v2-dataset-metadata__cell.is-open .c-text-button__icon,
-.hdx-v2-dataset-metadata__full.is-open .c-text-button__icon {
-  transform: rotate(180deg);
+.hdx-v2-dataset-metadata__cell .c-text-button .c-text-button__icon,
+.hdx-v2-dataset-metadata__full .c-text-button .c-text-button__icon {
   transition: transform 0.15s ease;
+}
+.hdx-v2-dataset-metadata__cell.is-open .c-text-button .c-text-button__icon,
+.hdx-v2-dataset-metadata__full.is-open .c-text-button .c-text-button__icon {
+  transform: rotate(180deg);
 }
 .hdx-v2-dataset-metadata__label {
   font-family: var(--hdx-font-body);

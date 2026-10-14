@@ -35,7 +35,7 @@ The task title "CSV / HXL preview" refers to the **DataTables-based tabular prev
 ```
 resource_read.html (v2)
   ↓ {% snippet 'package/snippets/resource_view.html' %}
-  ↓ resource_view.html:50 → <iframe data-module="data-viewer">
+  ↓ resource_view.html → <iframe data-module="data-viewer">
       src = h.url_for('resource_view', view_id=_data_explorer.id, ...)
   ↓ [inside iframe] hdx_csv_preview_view.html
       extends base.html
@@ -71,8 +71,8 @@ resource_read.html (v2)
 
 ### Error visibility mechanism
 
-1. `resource_view.html:19` renders `<div class="data-viewer-error js-hide">` hidden by default
-2. On load/data error, `data-viewer2.js:24–28` subscribes to `data-viewer-error` pubsub event
+1. `resource_view.html` renders `<div class="data-viewer-error js-hide">` hidden by default
+2. On load/data error, `data-viewer2.js` subscribes to `data-viewer-error` pubsub event
 3. Handler removes `js-hide` from the error div and hides the iframe with jQuery `.hide()`
 
 ### Root causes of breakage in v2

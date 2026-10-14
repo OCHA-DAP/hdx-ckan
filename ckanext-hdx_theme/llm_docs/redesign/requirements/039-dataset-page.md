@@ -380,7 +380,7 @@ No "See more in your dashboard" link — dropped. `fanstatic/v2/pages/dataset.js
 
 ### Blocks to KEEP UNCHANGED:
 - `{% block pre_primary %}` — dataset-page-header (task 037)
-- All analytics blocks (lines 43–55): `analytics_org_name`, `analytics_org_id`, `analytics_is_cod`, `analytics_is_indicator`, `analytics_is_archived`, `analytics_group_names`, `analytics_group_ids`, `analytics_dataset_name`, `analytics_dataset_id`, `analytics_dataset_availability`, `analytics_came_from`, `analytics_supports_notifications`, `analytics_supports_tabular_data_endpoints`
+- All analytics blocks: `analytics_org_name`, `analytics_org_id`, `analytics_is_cod`, `analytics_is_indicator`, `analytics_is_archived`, `analytics_group_names`, `analytics_group_ids`, `analytics_dataset_name`, `analytics_dataset_id`, `analytics_dataset_availability`, `analytics_came_from`, `analytics_supports_notifications`, `analytics_supports_tabular_data_endpoints`
 - `{% block head_extras %}` — structured data (schema.org ld+json)
 - `{% block subtitle %}`, `{% block meta %}`, `{% block links %}`
 
@@ -652,7 +652,7 @@ Load in `hdx_read.html`:
 
 ## Analytics Preservation (CRITICAL)
 
-These blocks in `hdx_read.html` (lines 43–55) must NOT be touched:
+These blocks in `hdx_read.html` must NOT be touched:
 
 ```
 {% block analytics_org_name %}

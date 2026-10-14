@@ -3,10 +3,11 @@
   Path:    templates/v2/components/dataset-card.html
 
   Renders a .c-dataset-card component — organisation, title, description
-  toggle, location labels, date range, file format badges, and a footer
-  "view others" link.
+  toggle, location labels, date range, file format badges, optional
+  top-row labels and actions row, and a footer "view others" link.
 
-  Responsive: two-column row at MD+, stacked single-column at SM.
+  Responsive: two-column row at MD+, stacked single-column at SM. The right
+  column renders only when location, date_range or formats is set.
   Hover state handled via CSS :hover — no state class.
 
   Parameters
@@ -67,6 +68,19 @@
                              description. Pass '' or omit to disable highlighting.
                              default: ''
 
+  labels           {list}    c-label param dicts (text, color, size, icon,
+                             icon_src, icon_only, attrs). When non-empty, the
+                             org line becomes a top row: org on the left,
+                             labels on the right, wrapping under the org when
+                             the row doesn't fit.
+                             default: []
+
+  caller()         block     Optional. Renders an actions row below the body.
+                             Wrap related controls in
+                             <div class="c-dataset-card__actions-group">; the
+                             groups sit at opposite ends and wrap, and a
+                             single group aligns right.
+
   ──────────────────────────────────────────────────────
   Examples
 
@@ -93,6 +107,15 @@
       title_href='/dataset/sudan-crisis',
       location='Sudan',
       date_range='Data from Jan 2024 to Dec 2024' %}
+
+  Labels + actions (My Datasets dashboard):
+  {% call h.snippet('v2/components/dataset-card.html',
+      org_name='OCHA', title='Sudan Crisis Data 2024',
+      title_href='/dataset/sudan-crisis',
+      labels=[{'text': 'Expected update frequency: Every day', 'color': 'light', 'size': 'xs'}]) %}
+    <div class="c-dataset-card__actions-group">…text buttons…</div>
+    <div class="c-dataset-card__actions-group">…buttons…</div>
+  {% endcall %}
 #}
 
 {# ── Defaults ────────────────────────────────────────────── #}
@@ -110,6 +133,7 @@
 {% set show_others_href  = show_others_href  if show_others_href  is defined else '#' %}
 {% set extra_classes     = extra_classes     if extra_classes     is defined else '' %}
 {% set query             = query             if query             is defined else '' %}
+{% set labels            = labels            if labels            is defined else [] %}
 
 {# ── BEM class list ──────────────────────────────────────── #}
 {% set classes = ['c-dataset-card'] %}
@@ -125,6 +149,7 @@
     {# ── Left column ───────────────────────────────────────── #}
     <div class="c-dataset-card__left">
 
+      {% if labels %}<div class="c-dataset-card__top">{% endif %}
       {% if org_name %}
         <p class="c-dataset-card__org">
           {% if org_href %}
@@ -133,6 +158,14 @@
             {{ org_name }}
           {% endif %}
         </p>
+      {% endif %}
+      {% if labels %}
+        <div class="c-dataset-card__labels">
+          {% for label in labels %}
+            {{ h.snippet('v2/components/label.html', **label) }}
+          {% endfor %}
+        </div>
+      </div>
       {% endif %}
 
       {% if title %}
@@ -154,6 +187,7 @@
     </div>
 
     {# ── Right column ──────────────────────────────────────── #}
+    {% if location or date_range or formats %}
     <div class="c-dataset-card__right">
 
       {% if location %}
@@ -207,8 +241,15 @@
       {% endif %}
 
     </div>
+    {% endif %}
 
   </div>{# /.c-dataset-card__body #}
+
+  {% if caller is defined %}
+    <div class="c-dataset-card__actions">
+      {{ caller() }}
+    </div>
+  {% endif %}
 
   {% if show_others_label %}
     <div class="c-dataset-card__footer">

@@ -1,0 +1,7 @@
+<span class="hdx-v2-api-token-created">
+  {{ _('API Token created:') }}
+  <span class="hdx-v2-api-token-created__token">{{ token }}</span>
+  {% snippet 'v2/components/copy-button.html',
+      value=token, style='secondary', size='s' %}
+  {{ _("Make sure to copy it now, you won't be able to see it again!") }}
+</span>

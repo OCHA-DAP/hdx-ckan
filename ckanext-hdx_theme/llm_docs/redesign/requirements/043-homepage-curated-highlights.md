@@ -6,7 +6,7 @@
 
 ## Context
 
-The v2 homepage (`templates/home/index.html`) is implemented except for the Curated Highlights section. The old v1 carousel markup is fully commented out (lines 50–95 of `home/index.html`). This task implements the replacement section using the v2 design system.
+The v2 homepage (`templates/home/index.html`) is implemented except for the Curated Highlights section. The old v1 carousel markup is fully commented out (in `home/index.html`). This task implements the replacement section using the v2 design system.
 
 The existing carousel infrastructure (data backend, JS, analytics) is fully reusable — do not reimplement from scratch.
 
@@ -121,8 +121,8 @@ On init, the last real slide is prepended and the first is appended. Track: `[cl
 
 ### Existing data backend
 
-- **Helper**: `h.hdx_get_carousel_list()` in `ckanext-hdx_theme/ckanext/hdx_theme/helpers/helpers.py:895`
-- **Action**: `hdx_carousel_settings_show` in `helpers/actions.py:348` — reads `hdx.carousel.config` from `system_info` table
+- **Helper**: `h.hdx_get_carousel_list()` in `ckanext-hdx_theme/ckanext/hdx_theme/helpers/helpers.py`
+- **Action**: `hdx_carousel_settings_show` in `helpers/actions.py` — reads `hdx.carousel.config` from `system_info` table
 - **Default data**: `helpers/initial_carousel_settings.py` — 8 sample items
 - **Cap**: `max_items=3` — fixed, do not change
 - **Item schema**: `id`, `title`, `description`, `order`, `graphic` (image URL), `url`, `embed`, `buttonText`, `newTab`
@@ -147,7 +147,7 @@ The old `hdx_carousel_item.html` snippet is v1 (Bootstrap grid, `.sub-item` clas
 
 ### Position
 
-Insert the new section **after the alert bar** (`{% if alert_bar ... %}` block, line 47–49) and **before `#homepage-alerts`** (line 98). This replaces the commented-out block (lines 50–95) — delete the commented-out code.
+Insert the new section **after the alert bar** (`{% if alert_bar ... %}` block) and **before `#homepage-alerts`**. This replaces the commented-out block — delete the commented-out code.
 
 ### Section wrapper structure
 
@@ -274,7 +274,7 @@ The Figma shows a subtitle row ("4.8k Datasets • 65 organisations") under the 
 | Zero carousel items configured | Wrap entire section in `{% if carouselItems %}` — section not rendered |
 | 1 or 2 items (fewer than 3) | XL flex row still works. Carousel JS creates dots based on actual item count. Test with 1 and 2 items. |
 | Long titles | Figma mandates `white-space: nowrap; overflow: hidden; text-overflow: ellipsis` — test with 80+ char titles at SM width |
-| Missing image | Use placeholder div with neutral bg (follow `showcase-card.html:30` pattern). Do not break layout with broken `<img>`. |
+| Missing image | Use placeholder div with neutral bg (follow `showcase-card.html`'s `c-showcase-card__image-placeholder` pattern). Do not break layout with broken `<img>`. |
 | JS selector collision | `homepage-responsive.js` binds to `.mobile-carousel` globally. Confirmed no conflict — old Bootstrap carousel markup is fully deleted. Only one `.mobile-carousel` element in the DOM. |
 | Analytics regression | Forgetting `data-module="hdx_click_stopper"` on the card `<a>` breaks analytics silently. Verify in browser console after implementation. |
 | Carousel `left` animation overflow | `.mobile-carousel-inner` must have `position: relative` and `.mobile-carousel` must have `overflow: hidden` for the JS animation to clip correctly |

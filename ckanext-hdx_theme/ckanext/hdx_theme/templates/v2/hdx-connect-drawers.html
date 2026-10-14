@@ -1,0 +1,91 @@
+{#
+  Snippet: hdx-connect-drawers.html
+  Path:    templates/v2/hdx-connect-drawers.html
+
+  The HDX Connect Reply and Decline c-drawers (task 074), rendered once per
+  page. Each form posts to its hdx_requestdata_user endpoint; the hidden
+  request fields and the request summary are filled from the clicked
+  button's data-hdx-connect-request by fanstatic/v2/pages/hdx-connect.js,
+  which also opens the drawer, enables the submit button once the required
+  fields are filled and shows server errors in the drawer's c-alert.
+  Ids: hdx-connect-reply-drawer, hdx-connect-decline-drawer.
+
+  No parameters.
+#}
+
+{% set summary %}
+  <div class="hdx-v2-hdx-connect-summary">
+    <p class="hdx-v2-hdx-connect-summary__title" data-hdx-connect-summary="package_name"></p>
+    <p class="hdx-v2-hdx-connect-summary__requester">{{ _('Requested by:') }} <span data-hdx-connect-summary="requested_by"></span></p>
+    <blockquote class="hdx-v2-hdx-connect-summary__message" data-hdx-connect-summary="message"></blockquote>
+  </div>
+{% endset %}
+
+{% set request_fields %}
+  {% for field in ['id', 'package_id', 'send_to', 'package_name', 'maintainers', 'requested_by', 'sender_id'] %}
+    <input type="hidden" name="{{ field }}" value="">
+  {% endfor %}
+{% endset %}
+
+{% call h.snippet('v2/components/drawer.html',
+    drawer_id='hdx-connect-reply-drawer',
+    title=_('Reply to this request')) %}
+  <form class="c-drawer-form" data-hdx-connect-form
+        action="{{ h.url_for('hdx_requestdata_user.handle_new_request_action_reply', username=c.userobj.name) }}">
+    {% snippet 'v2/components/alert.html', hidden=True, extra_attrs='data-hdx-connect-error' %}
+    {{ summary }}
+    {{ request_fields }}
+    <input type="hidden" name="state" value="open">
+    <p class="c-drawer-form__description">{{ _('Please reply to the request using the form below. HDX tracks whether data requests are accepted or denied but does not track the content of the email message.') }}</p>
+    <p class="c-drawer-form__description">{{ _('Sensitive data should always be shared via a secure channel, such as encrypted email or an encrypted file transfer service. Share the password to decrypt data separately via a different secure channel. You may want to establish a data sharing agreement before sharing sensitive data.') }}</p>
+    <p class="c-drawer-form__description">{{ _('For more on responsible approaches to data sharing read this') }} <a href="https://centre.humdata.org/guidance-note-responsible-approaches-to-data-sharing/">{{ _('guidance note') }}</a>.</p>
+    <div class="c-form-field">
+      {% snippet 'v2/components/text-field.html',
+          size='m', name='message_content', id='hdx-connect-reply-message',
+          label=_('Your response'), required=True,
+          multiline=True, rows=6 %}
+    </div>
+    <p class="c-drawer-form__description">{{ _('Please indicate which email address the requester should use to contact you should they have questions.') }}</p>
+    <div class="c-form-field">
+      {% snippet 'v2/components/text-field.html',
+          size='m', type='email', name='email', id='hdx-connect-reply-email',
+          label=_('Your email'), required=True,
+          value=c.userobj.email %}
+    </div>
+    <div class="c-drawer-form__buttons">
+      {% snippet 'v2/components/button.html',
+          style='tertiary', label=_('Cancel'), attrs={'data-drawer-close': ''} %}
+      {% snippet 'v2/components/button.html',
+          style='primary', label=_('Send reply'), state='disabled',
+          attrs={'data-hdx-connect-submit': ''} %}
+    </div>
+  </form>
+{% endcall %}
+
+{% call h.snippet('v2/components/drawer.html',
+    drawer_id='hdx-connect-decline-drawer',
+    title=_('Decline the request')) %}
+  <form class="c-drawer-form" data-hdx-connect-form
+        action="{{ h.url_for('hdx_requestdata_user.handle_new_request_action_reject', username=c.userobj.name) }}">
+    {% snippet 'v2/components/alert.html', hidden=True, extra_attrs='data-hdx-connect-error' %}
+    {{ summary }}
+    {{ request_fields }}
+    <input type="hidden" name="state" value="archive">
+    <input type="hidden" name="rejected" value="true">
+    <p class="c-drawer-form__description">{{ _("Explain why you can't share the requested data") }}</p>
+    <p class="c-drawer-form__description">{{ _('*Please note that HDX tracks whether data requests are accepted or denied but does not track the content of the message.') }}</p>
+    <div class="c-form-field">
+      {% snippet 'v2/components/text-field.html',
+          size='m', name='message_content', id='hdx-connect-decline-message',
+          label=_('Your message'), required=True,
+          multiline=True, rows=6 %}
+    </div>
+    <div class="c-drawer-form__buttons">
+      {% snippet 'v2/components/button.html',
+          style='tertiary', label=_('Cancel'), attrs={'data-drawer-close': ''} %}
+      {% snippet 'v2/components/button.html',
+          style='primary', label=_('Send'), state='disabled',
+          attrs={'data-hdx-connect-submit': ''} %}
+    </div>
+  </form>
+{% endcall %}

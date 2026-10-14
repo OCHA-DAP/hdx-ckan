@@ -179,6 +179,7 @@ ASK QUESTIONS before making decisions.
 ### What a requirement file must NOT contain
 
 - **No `**Status**` field.** Status is tracked exclusively in `requirements/STATUS.md`. Never add a `**Status**: ...` line to a requirement file.
+- **No line numbers.** Never cite line numbers (`file.py:94`, `:120-140`, "line 45") or file line counts ("216 lines") anywhere in `llm_docs`; they go stale with every edit. Reference the file plus a symbol, block, selector or bundle name instead.
 - **No open questions after implementation.** Every question in section 9 must be resolved into a decision before implementation begins. Once implemented, the open questions section is removed entirely.
 - **No verification section after implementation.** The verification checklist is ephemeral — remove it once the task is verified. Its presence after implementation creates confusion about what still needs checking.
 

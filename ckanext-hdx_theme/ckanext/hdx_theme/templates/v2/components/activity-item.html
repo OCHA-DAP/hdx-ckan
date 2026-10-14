@@ -3,18 +3,21 @@
 
   Required:
     actor_href    (string) — URL of actor's profile page
-    actor_label   (string) — display name of actor
+    actor_label   (string) — username of actor
     action_text   (string) — plain-text action phrase
     timestamp     (datetime) — activity.timestamp
 
   Optional:
     subject_label (string, default='') — dataset/resource/etc. title
     subject_href  (string, default='') — subject URL; if empty, subject renders as plain text
+    links         (list, default=[]) — [{label, href}] detail links (e.g. "View this version",
+                                       "Changes"), rendered as a row between the action and the time
     extra_classes (string, default='') — additional CSS classes on the root element
 #}
 
 {% set subject_label = subject_label if subject_label is defined else '' %}
 {% set subject_href  = subject_href  if subject_href  is defined else '' %}
+{% set links         = links         if links         is defined else [] %}
 {% set extra_classes = extra_classes if extra_classes is defined else '' %}
 
 <div class="c-activity-item{{ ' ' ~ extra_classes if extra_classes else '' }}">
@@ -36,6 +39,15 @@
         <span>{{ subject_label }}</span>
       {% endif %}
     </div>
+    {% if links %}
+      <div class="c-activity-item__links">
+        {% for link in links %}
+          {% if not loop.first %}<span aria-hidden="true">|</span>{% endif %}
+          {% snippet 'v2/components/text-link.html',
+              label=link.label, href=link.href, style='secondary', size='xs' %}
+        {% endfor %}
+      </div>
+    {% endif %}
     <time class="c-activity-item__time"
           datetime="{{ h.render_datetime(timestamp, date_format='%Y-%m-%dT%H:%M:%S') }}"
           title="{{ h.hdx_format_date(timestamp, with_time=True) }}">

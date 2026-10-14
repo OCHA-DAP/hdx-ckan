@@ -68,6 +68,18 @@
         align-items:    flex-start;
         gap:            var(--hdx-space-3);
     }
+    // ── Identity row ─────────────────────────────────────────
+
+    &__identity {
+        display:     flex;
+        align-items: center;
+        gap:         var(--hdx-space-3);
+
+        > .c-page-header__description {
+            flex:      1;
+            min-width: 0;
+        }
+    }
     // ── Labels row ───────────────────────────────────────────
 
     &__labels {
@@ -150,15 +162,7 @@
         gap:            var(--hdx-space-2);
         align-self:     stretch;
 
-        // Show-more button: hidden until JS confirms content is actually clamped
-        .c-text-button { display: none; }
-        &.is-clamped .c-text-button { display: inline-flex; }
-
-        &.is-open .c-text-button__icon {
-            transform:  rotate(180deg);
-            transition: transform 0.15s ease;
-            .hdx-motion();
-        }
+        .hdx-clamp-toggle();
     }
 
     &__desc-text {
@@ -372,6 +376,11 @@
         .c-page-header__title {
             font-size: var(--hdx-fs-2xl); // 1.5rem
         }
+    }
+    // ── Flush — no vertical padding ──────────────────────────
+
+    &--flush {
+        padding: 0;
     }
     // ── CTA row variant (download + export) ──────────────────
 

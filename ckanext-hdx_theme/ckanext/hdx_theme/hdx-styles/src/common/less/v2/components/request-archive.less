@@ -1,0 +1,110 @@
+// ============================================================
+// c-request-archive     — HDX Connect Archive grid (task 074)
+// c-request-archive-row — one dataset row (<details>/<summary>)
+// Compiled output: fanstatic/v2/components/request-archive.css
+// Figma: llm_docs/redesign/figma_exports/xl-user-dashboard-hdx-connect-requests.html
+// ============================================================
+@import "../mixins.less";
+
+@c-request-archive-columns: var(--hdx-space-4) minmax(0, 5fr) repeat(4, minmax(0, 1fr));
+
+.c-request-archive {
+    background-color: var(--hdx-neutral-0);
+    border:           1px solid var(--hdx-neutral-1);
+    border-radius:    var(--hdx-radius-sm);
+
+    &__header {
+        display: none;
+
+        @media (min-width: @hdx-bp-md) {
+            display:               grid;
+            grid-template-columns: @c-request-archive-columns;
+            column-gap:            var(--hdx-space-2);
+            padding:               var(--hdx-space-2) var(--hdx-space-4);
+            .hdx-body-xs();
+            color:                 var(--hdx-neutral-8);
+            text-align:            right;
+        }
+    }
+
+    &__heading:first-child {
+        grid-column: 2;
+        text-align:  left;
+    }
+}
+
+.c-request-archive-row {
+    border-top: 1px solid var(--hdx-neutral-1);
+
+    &__summary {
+        display:               grid;
+        grid-template-columns: var(--hdx-space-4) minmax(0, 1fr);
+        align-items:           center;
+        gap:                   var(--hdx-space-1) var(--hdx-space-2);
+        padding:               var(--hdx-space-2) var(--hdx-space-4);
+        cursor:                pointer;
+        list-style:            none;
+
+        &::-webkit-details-marker { display: none; }
+
+        &:focus-visible { .hdx-focus-ring(); }
+
+        @media (min-width: @hdx-bp-md) {
+            grid-template-columns: @c-request-archive-columns;
+        }
+    }
+
+    &__chevron {
+        display:    flex;
+        color:      var(--hdx-neutral-8);
+        transition: transform 0.15s ease;
+        .hdx-motion();
+
+        svg { .hdx-icon-size(var(--hdx-space-4)); }
+    }
+
+    &[open] &__chevron {
+        transform: rotate(90deg);
+    }
+
+    &__title {
+        .hdx-body-s-medium();
+        color:         var(--hdx-neutral-95);
+        white-space:   nowrap;
+        overflow:      hidden;
+        text-overflow: ellipsis;
+    }
+
+    &__counts {
+        grid-column: 2;
+        display:     flex;
+        flex-wrap:   wrap;
+        gap:         var(--hdx-space-1);
+        .hdx-body-xs();
+        color:       var(--hdx-neutral-8);
+
+        @media (min-width: @hdx-bp-md) {
+            display: contents;
+        }
+    }
+
+    &__count {
+        & + &::before {
+            content:      '\00B7';
+            margin-right: var(--hdx-space-1);
+        }
+
+        @media (min-width: @hdx-bp-md) {
+            .hdx-body-m-medium();
+            text-align: right;
+
+            & + &::before { content: none; }
+        }
+    }
+
+    &__count-label {
+        @media (min-width: @hdx-bp-md) {
+            display: none;
+        }
+    }
+}

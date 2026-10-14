@@ -3,7 +3,7 @@
 
   var BP_XL = '(min-width: 80rem)';
 
-  var FILTER_PARAMS = ['groups', 'organization', 'res_format', 'vocab_Topics'];
+  var FILTER_PARAMS = ['ext_update_status', 'groups', 'organization', 'res_format', 'vocab_Topics'];
 
   // vocab_Topics is included here too (as well as in FILTER_PARAMS) because
   // nested HPC advanced-filter items share the vocab_Topics facet key.

@@ -1,0 +1,160 @@
+{#
+  Snippet: request-item.html
+  Path:    templates/v2/components/request-item.html
+
+  One HDX Connect request (task 074): avatar, "Name · Org · Country",
+  org-type + Verified / Unverified chips (tooltip), requested date, the
+  clamped message quote (Show more via clamped-text.js), then a footer bar
+  with "Intended use" and either the caller() actions (New / Open) or the
+  archived status chip + date. Rendered inside c-request-card or
+  c-request-archive-row.
+
+  Parameters
+  ─────────────────────────────────────────────────
+  avatar_initials {string}  1–2 letters for the c-avatar.  default: ''
+  name            {string}  Requester name.  default: ''
+  profile_url     {string}  Requester profile URL; plain text without it.
+                            default: ''
+  org_name        {string}  Requester organisation.  default: ''
+  org_href        {string}  Organisation URL; plain text without it.
+                            default: ''
+  country         {string}  default: ''
+  org_type        {string}  Organisation type label (grey chip).  default: ''
+  verified        {bool}    True → Verified chip, False → Unverified chip,
+                            None → no chip.  default: None
+  tooltip_id      {string}  Unique id for the Verified / Unverified tooltip.
+                            Required when verified is not None.
+  requested_date  {string}  Pre-formatted request date.  default: ''
+  message         {string}  Requester message (clamped, 3 lines).  default: ''
+  intended_use    {string}  "Intended use: …" in the footer.  default: ''
+  status          {dict}    Archived status chip: {text, color} (c-label
+                            colour).  default: None
+  status_date     {string}  "(date)" after the intended use.  default: ''
+  variant         {string}  'default' | 'archived' (neutral-05 body).
+                            default: 'default'
+  extra_classes   {string}  default: ''
+  caller()        block     Optional footer actions; wrap buttons that sit
+                            closer together in .c-request-item__actions-group.
+  ─────────────────────────────────────────────────
+  Example
+
+  {% call h.snippet('v2/components/request-item.html',
+      avatar_initials='JD', name='Jane Doe', profile_url='/user/jdoe',
+      org_name='Example Org', country='Kenya', org_type='Academic / Research',
+      verified=True, tooltip_id='request-verified-1',
+      requested_date='4 May 2026', message='…', intended_use='Academic') %}
+    {% snippet 'v2/components/button.html', style='primary', size='s', label='Reply' %}
+  {% endcall %}
+#}
+
+{% set avatar_initials = avatar_initials if avatar_initials is defined else '' %}
+{% set name            = name            if name            is defined else '' %}
+{% set profile_url     = profile_url     if profile_url     is defined else '' %}
+{% set org_name        = org_name        if org_name        is defined else '' %}
+{% set org_href        = org_href        if org_href        is defined else '' %}
+{% set country         = country         if country         is defined else '' %}
+{% set org_type        = org_type        if org_type        is defined else '' %}
+{% set verified        = verified        if verified        is defined else none %}
+{% set tooltip_id      = tooltip_id      if tooltip_id      is defined else '' %}
+{% set requested_date  = requested_date  if requested_date  is defined else '' %}
+{% set message         = message         if message         is defined else '' %}
+{% set intended_use    = intended_use    if intended_use    is defined else '' %}
+{% set status          = status          if status          is defined else none %}
+{% set status_date     = status_date     if status_date     is defined else '' %}
+{% set variant         = variant         if variant         is defined else 'default' %}
+{% set extra_classes   = extra_classes   if extra_classes   is defined else '' %}
+
+{% set classes = ['c-request-item'] %}
+{% if variant == 'archived' %}{% set classes = classes + ['c-request-item--archived'] %}{% endif %}
+{% if extra_classes %}{% set classes = classes + [extra_classes] %}{% endif %}
+
+<div class="{{ classes | join(' ') }}">
+  <div class="c-request-item__body">
+    {% snippet 'v2/components/avatar.html',
+        size='md', initials=avatar_initials, aria_label=name %}
+
+    <div class="c-request-item__content">
+      <p class="c-request-item__requester">
+        {%- if profile_url -%}
+          {% snippet 'v2/components/text-link.html',
+              label=name, href=profile_url, style='secondary', size='s' %}
+        {%- else -%}
+          <span class="c-request-item__name">{{ name }}</span>
+        {%- endif -%}
+        {%- if org_name %} &middot;
+          {% if org_href -%}
+            {% snippet 'v2/components/text-link.html',
+                label=org_name, href=org_href, style='secondary', size='s' %}
+          {%- else -%}
+            {{ org_name }}
+          {%- endif -%}
+        {%- endif -%}
+        {%- if country %} &middot; {{ country }}{% endif -%}
+      </p>
+
+      {% if org_type or verified is not none %}
+        <div class="c-request-item__labels">
+          {% if org_type %}
+            {% snippet 'v2/components/label.html',
+                text=org_type, color='grey', size='xs' %}
+          {% endif %}
+          {% if verified is not none %}
+            <span class="c-tooltip-anchor">
+              {% snippet 'v2/components/label.html',
+                  text=_('Verified') if verified else _('Unverified'),
+                  color='cyan' if verified else 'yellow',
+                  size='xs', icon=True, icon_src='v2/icons/info-circle.svg',
+                  extra_classes='c-tooltip-trigger',
+                  attrs={'tabindex': '0', 'aria-describedby': tooltip_id} %}
+              {% snippet 'v2/components/tooltip.html',
+                  variant='dark', tooltip_id=tooltip_id,
+                  text=_('This user is a member of this organization on HDX.') if verified else _('This user is not a member of this organization on HDX.') %}
+            </span>
+          {% endif %}
+        </div>
+      {% endif %}
+
+      {% if requested_date %}
+        <p class="c-request-item__date">{{ _('Requested date:') }} {{ requested_date }}</p>
+      {% endif %}
+
+      {% if message %}
+        <div class="c-request-item__message" data-module="clamped-text">
+          <blockquote class="c-request-item__quote">
+            <p class="c-request-item__message-text" data-clamped-content>{{ message }}</p>
+          </blockquote>
+          {% snippet 'v2/components/text-button.html',
+              style='tertiary', size='s', label='Show more',
+              icon_position='right',
+              icon_src='v2/icons/chevron-down.svg',
+              tag='button', button_type='button',
+              attrs={'data-clamped-toggle': '', 'aria-expanded': 'false'} %}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
+  {% if intended_use or status or status_date or caller is defined %}
+    <div class="c-request-item__footer">
+      {% if intended_use or status or status_date %}
+        <p class="c-request-item__meta">
+          {% if intended_use %}
+            <span class="c-request-item__intended-use">{{ _('Intended use:') }} {{ intended_use }}</span>
+          {% endif %}
+          {% if status_date %}
+            <span>({{ status_date }})</span>
+          {% endif %}
+          {% if status %}
+            {% snippet 'v2/components/label.html',
+                text=status.text, color=status.color, size='xs' %}
+          {% endif %}
+        </p>
+      {% endif %}
+      {% if caller is defined %}
+        <div class="c-request-item__actions">
+          {{ caller() }}
+        </div>
+      {% endif %}
+    </div>
+  {% endif %}
+</div>

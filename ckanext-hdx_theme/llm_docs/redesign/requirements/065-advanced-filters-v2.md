@@ -46,15 +46,15 @@ don't exist in v2 today and stay that way here.
   `render_facet_list`), called from `package_list.html`'s v1 branch and from
   `light/snippets/package_list.html` (the `/m/dataset` mobile route, still fully v1).
 - `ckanext-hdx_search/ckanext/hdx_search/controller_logic/search_logic.py::_prepare_facets_info()`
-  (~line 431) builds `result['facets']['featured']` (the "Advanced filters" group: Sub-national,
+  builds `result['facets']['featured']` (the "Advanced filters" group: Sub-national,
   Geodata, P-Codes, Tabular Data, HDX HAPI, COD levels, HPC topics).
-- `ckanext-hdx_search/ckanext/hdx_search/plugin.py::dataset_facets()` (line 277) registers the raw
+- `ckanext-hdx_search/ckanext/hdx_search/plugin.py::dataset_facets()` registers the raw
   Solr facet fields.
 - JS: `fanstatic/datasets/search-facets.js` (checkbox click → full-page navigation) and
   `datasets/list-header.js` (category collapse/expand + localStorage of open/closed panel state,
   in-category MiniSearch, "Show filter" switch).
-- `package_search_facets.html:25` has a dead `ext_archived` "NEW" badge check — the code path that
-  used to populate that facet item is commented out in `search_logic.py:610-613`, so it never fires.
+- `package_search_facets.html` has a dead `ext_archived` "NEW" badge check — the code path that
+  used to populate that facet item is commented out in `search_logic.py::_prepare_facets_info()`, so it never fires.
 
 ### 1.2 Advanced filters panel (v2 — already implemented, task 031)
 
@@ -82,42 +82,42 @@ arrays' union. `031-basic-filtering.md`'s own Files/Data-Flow tables reference s
 ### 1.3 Archived datasets toggle (v1 — current, live)
 
 Not a checkbox — a pair of tab links, "Datasets [N] | Archived Datasets [N]", rendered by
-`templates/search/snippets/archived_tabs.html`, included from `package_list.html:39` (v1 branch)
-and `light/snippets/package_list.html:30`.
+`templates/search/snippets/archived_tabs.html`, included from `package_list.html` (v1 branch)
+and `light/snippets/package_list.html`.
 
 Backend: `search_logic.py`:
-- `class ArchivedUrlHelper` (lines 877-935) computes `archived_url` (adds `ext_archived=1`) and
+- `class ArchivedUrlHelper` computes `archived_url` (adds `ext_archived=1`) and
   `unarchived_url` (strips it), `show_archived_link`/`show_unarchived_link`,
   `archived_disabled`/`unarchived_disabled` (a tab renders as disabled text instead of a link when
   it would show 0 results), and `redirect_if_needed()` — force-redirects to the archived view if
   the default (unarchived) view has 0 results but archived datasets exist.
-- `_search()` (lines 133-219): `ext_archived=1` → `hide_archived = False`; the actual Solr filter is
-  applied at lines 217-219 via a tagged `fq` on `extras_archived` (`ARCHIVED_DATASETS_FACET_NAME =
-  'archived'`, `helpers/constants.py:37`). Default (`hide_archived=True`) excludes archived
+- `_search()`: `ext_archived=1` → `hide_archived = False`; the actual Solr filter is
+  applied via a tagged `fq` on `extras_archived` (`ARCHIVED_DATASETS_FACET_NAME =
+  'archived'`, `helpers/constants.py`). Default (`hide_archived=True`) excludes archived
   datasets.
-- `helpers.py::facet_url_extra_args()` (line 1265) preserves `ext_archived` when rebuilding other
+- `helpers.py::facet_url_extra_args()` preserves `ext_archived` when rebuilding other
   facet-toggle URLs, so switching a regular filter while on the Archived tab keeps you on that tab.
-- Called from `ckanext-hdx_package/ckanext/hdx_package/views/light_dataset.py:100-103`
+- Called from `ckanext-hdx_package/ckanext/hdx_package/views/light_dataset.py`
   (`generic_search()`, shared by `/dataset` and `/m/dataset`) — the redirect check runs server-side
   on every search request.
 
-**Confirmed by direct read: `package_list.html`'s v2 branch (lines 82-181) does not render
+**Confirmed by direct read: `package_list.html`'s v2 branch does not render
 `archived_tabs.html` or any archived-related markup at all.** This is a pure addition to v2, not a
 replacement of an existing v2 element.
 
 ### 1.4 Applied filters / removable pills (v1 — current, live)
 
 No pill/chip UI exists anywhere live today. What exists instead:
-- A single global "Clear all" text link (`package_list.html:188-189`, identical in
-  `light/snippets/package_list.html:15-17`), whose `href` targets the bare search URL but is
-  intercepted by `datasets/list-header.js:100-107` → `getFilterUrlNew(true)` (lines 138-166), which
+- A single global "Clear all" text link (`package_list.html`, identical in
+  `light/snippets/package_list.html`), whose `href` targets the bare search URL but is
+  intercepted by the `.filter-clear` handler in `datasets/list-header.js` → `getFilterUrlNew(true)`, which
   skips facet params but **still re-adds** `q`, sort, page size, `ext_batch`, and `ext_archived`. In
   practice, "Clear all" today clears facet/advanced-filter selections only — it preserves search
   text, sort, page size, and the archived/unarchived tab.
 - A numeric badge only (not pills) on the mobile filter toggle:
-  `result['num_of_selected_filters']` (`search_logic.py:632-637`).
-- `result['selected_titles']` / `selected_titles_str"` (`search_logic.py:480-481, 553-560,
-  615-620`) exist only for SEO (page `<title>`, meta description, canonical link) — never rendered
+  `result['num_of_selected_filters']` (`search_logic.py::_prepare_facets_info()`).
+- `result['selected_titles']` / `selected_titles_str"` (`search_logic.py::_prepare_facets_info()`)
+  exist only for SEO (page `<title>`, meta description, canonical link) — never rendered
   as UI.
 - Legacy `snippets/facet_list.html` / `search/snippets/search_facets.html` contain an old per-category
   "Clear All" link pattern, but neither is invoked from the live `/dataset` or `/m/dataset` routes —
@@ -131,7 +131,7 @@ No pill/chip UI exists anywhere live today. What exists instead:
 sending mixpanel events. GA deals with search differently / automatically"*):
 1. Serializes `#search-page-filters-form` / `#dataset-filter-form` (both forms exist identically in
    v1 and current v2 markup).
-2. Maps recognized params via `mixpanelMapping` (lines 29-152): `q`, `vocab_Topics`, `res_format`,
+2. Maps recognized params via `mixpanelMapping`: `q`, `vocab_Topics`, `res_format`,
    `organization`, `groups`, `license_id`, `cod_level`, `ext_subnational`, `ext_tabular_data`,
    `ext_geodata`, `ext_requestdata`, `ext_hxl`, `ext_sadd`, `ext_administrative_divisions`,
    `ext_p_coded`, etc.
@@ -233,7 +233,7 @@ Integration:
 - The "archived" option additionally passes `hint=True, hint_text=archived_url_helper.archived_explanation`
   — `radio.html`'s existing info-icon + tooltip params — matching Figma's icon next to "Archived
   datasets" (no icon on "Actively maintained"). Reuses the exact copy already live on the v1 tabs'
-  `[?]` tooltip (`ArchivedUrlHelper.archived_explanation`, `search_logic.py:879`) — no new copy.
+  `[?]` tooltip (`ArchivedUrlHelper.archived_explanation`, `search_logic.py`) — no new copy.
 - Click handler navigates to the option's precomputed URL (same mechanism conceptually as every
   other filter's "click → new URL → full reload", just sourced from `archived_url_helper` instead
   of `updateUrl()`).

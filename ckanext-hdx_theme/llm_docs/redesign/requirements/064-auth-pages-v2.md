@@ -28,9 +28,9 @@ blueprints in `ckanext-hdx_users`:
 
 | Route | View | Live template chain |
 |---|---|---|
-| `/login`, `/sign-in`, `/user/login` | `hdx_signin.login()` — `ckanext-hdx_users/ckanext/hdx_users/views/signin.py:73-150` | `user/signin.html` → `widget/onboarding/login.html` |
-| `/user/reset` | `HDXRequestResetView` — `ckanext-hdx_users/ckanext/hdx_users/views/user.py:50-125` | `user/forgot_password.html` → `widget/onboarding/recover.html` + `recoverSuccess.html` (JS popup-swap on the same route) |
-| `/user/reset/<id>` (emailed link) | `HDXPerformResetView` — `user.py:128-160` | `user/perform_reset.html` → `v2/page.html` (`hdx-v2-auth-card`) |
+| `/login`, `/sign-in`, `/user/login` | `hdx_signin.login()` — `ckanext-hdx_users/ckanext/hdx_users/views/signin.py` | `user/signin.html` → `widget/onboarding/login.html` |
+| `/user/reset` | `HDXRequestResetView` — `ckanext-hdx_users/ckanext/hdx_users/views/user.py` | `user/forgot_password.html` → `widget/onboarding/recover.html` + `recoverSuccess.html` (JS popup-swap on the same route) |
+| `/user/reset/<id>` (emailed link) | `HDXPerformResetView` — `user.py` | `user/perform_reset.html` → `v2/page.html` (`hdx-v2-auth-card`) |
 
 None of these three templates have any `{% if v2 %}` gating today — this is a **net-new v2 build**,
 not a toggle-on of hidden v2 markup. Decisions confirmed with the requester are listed in §12.
@@ -41,96 +41,95 @@ not a toggle-on of hidden v2 markup. Decisions confirmed with the requester are 
 
 ### 1.1 Login
 
-- View: `signin.py`'s `login()` (lines 73-150) is a ground-up reimplementation, not a subclass of
-  core CKAN's `ckan/views/user.py:561-606 login()`. Custom `_authenticate()` (lines 35-48) iterates
+- View: `signin.py`'s `login()` is a ground-up reimplementation, not a subclass of
+  core CKAN's `login()` in `ckan/views/user.py`. Custom `_authenticate()` iterates
   `IAuthenticator` plugins directly and only succeeds via `ckanext-security`'s authenticator — core's
   `ckan_authenticator()` fallback is deliberately skipped.
 - Template: `widget/onboarding/login.html` (extends `widget/popup/popup.html`). Fields: `#field-login`
-  (text, `name="login"`, label "Username or Email", `required`, line 51), `#field-password` (password,
-  `name="password"`, label "Password", `required`, line 56), `#field-mfa` (number, `name="mfa"`, label
+  (text, `name="login"`, label "Username or Email", `required`), `#field-password` (password,
+  `name="password"`, label "Password", `required`), `#field-mfa` (number, `name="mfa"`, label
   "One Time Password", hidden by default, revealed by JS only when the account has TOTP enabled),
-  `#field-remember` (checkbox, `name="remember"`, value `"63072000"`, unchecked by default, line 67).
-  Submit button starts `disabled` (line 68) and is enabled by JS once required fields are filled. Links:
-  "Forgot your password?" → `/user/reset` (line 69), "Not a member? Register" → onboarding value
-  proposition (lines 70-72), a back-arrow to `data.login_came_from` or the splash page (line 22) — this
+  `#field-remember` (checkbox, `name="remember"`, value `"63072000"`, unchecked by default).
+  Submit button starts `disabled` and is enabled by JS once required fields are filled. Links:
+  "Forgot your password?" → `/user/reset`, "Not a member? Register" → onboarding value
+  proposition, a back-arrow to `data.login_came_from` or the splash page — this
   is login's equivalent of the close affordance seen on the other two pages.
 - **CSRF gap:** `widget/onboarding/login.html` has **no `{{ h.csrf_input() }}`** and no hidden
   CSRF field of any kind — confirmed by inspection, zero matches for "hidden"/"token" in the file. Both
-  `widget/onboarding/password-reset.html:27` and `ckan/templates/user/request_reset.html:16` include
+  `widget/onboarding/password-reset.html` and `ckan/templates/user/request_reset.html` include
   one. CKAN's CSRF protection is not globally disabled for plugin blueprints
   (`ckan.csrf_protection.ignore_extensions = false`), so this is a real, pre-existing gap — see §12
   Decision 6 for the scoped fix.
 - Error display: a single inline block, not CKAN's flash-message system —
-  `<div class="error-message" style="{{ '' if error_message else 'display: none;' }}">{{ error_message }}</div>`
-  (lines 64-66). `error_message` is a plain string set server-side: `_("Login failed. Bad username or
-  password.")` (`signin.py:142`). There is no per-field error state and no `error_summary`/`errors`
+  `<div class="error-message" style="{{ '' if error_message else 'display: none;' }}">{{ error_message }}</div>`.
+  `error_message` is a plain string set server-side: `_("Login failed. Bad username or
+  password.")` (`signin.py`). There is no per-field error state and no `error_summary`/`errors`
   dict for login — contrast with the dead-code core snippet, which does support per-field errors.
-  The unvalidated-email case is handled entirely differently: `signin.py:108-113` logs the user out,
+  The unvalidated-email case is handled entirely differently: `signin.py`'s `login()` logs the user out,
   flashes a message, and **redirects to the splash page** — a different error surface than the inline
   login-widget message.
 - Rate limiting / lockout: real enforcement is server-side in `ckanext-security`
   (`src/ckanext-security/ckanext/security/authenticator.py`, `LoginThrottle` at
-  `src/ckanext-security/ckanext/security/cache/login.py:27-67`), keyed by username or IP. A client-side
-  preview endpoint, `GET /util/user/check_lockout` (`ckanext-hdx_users/ckanext/hdx_users/views/user_edit_view.py:74-83`),
-  is called synchronously by `signin.js:13-29` before the real POST. **Pre-existing bug:**
-  `signin.js:24` calls `_showLoginError(...)`, but no such function is defined anywhere in the fanstatic
+  `src/ckanext-security/ckanext/security/cache/login.py`), keyed by username or IP. A client-side
+  preview endpoint, `GET /util/user/check_lockout` (`ckanext-hdx_users/ckanext/hdx_users/views/user_edit_view.py`),
+  is called synchronously by `checkLockout()` in `signin.js` before the real POST. **Pre-existing bug:**
+  `checkLockout()` calls `_showLoginError(...)`, but no such function is defined anywhere in the fanstatic
   tree — if this branch is hit, the reference error aborts the handler before `event.preventDefault()`
   runs, so the intended client-side lockout warning silently fails to render (the server-side throttle
   still rejects the request; only the friendly pre-warning is broken). Flagged in §8, not fixed here
   beyond the natural consequence of §5 replacing this handler wholesale.
-- MFA/TOTP: `GET /util/user/check_mfa` (`user_edit_view.py:87-95`) is used by `signin.js:48-64` to
+- MFA/TOTP: `GET /util/user/check_mfa` (`user_edit_view.py`) is used by `checkMfa()` in `signin.js` to
   reveal `#field-mfa`; actual verification happens inside `ckanext-security`'s authenticator.
-- JS: `fanstatic/widget/signin/signin.js` (bundle `signin-scripts`, `webassets.yml:506-510`). The
+- JS: `fanstatic/widget/signin/signin.js` (bundle `signin-scripts`, `webassets.yml`). The
   login submit itself is a plain full-page POST (no AJAX) — JS only does lockout pre-check, MFA
   toggling, submit-button enable/disable (`requiredFieldsFormValidator`, duplicated verbatim in both
-  `signin.js:66-81` and `onboarding.js:89-104`), and "remember me" cookie read/prefill with Gravatar
-  (lines 91-106).
-- Analytics: `user/signin.html:30-31` blanks `{% block mixpanel_init %}` and
+  `signin.js` and `onboarding.js`), and "remember me" cookie read/prefill with Gravatar.
+- Analytics: `user/signin.html` blanks `{% block mixpanel_init %}` and
   `{% block google_analytics_init %}` — both empty. See §1.5.
 
 ### 1.2 Forgot Password ("request reset")
 
-- View: `HDXRequestResetView` (`user.py:50-125`) is an independent `MethodView`, not a subclass of
+- View: `HDXRequestResetView` (`user.py`) is an independent `MethodView`, not a subclass of
   core's `RequestResetView` for `get`/`post`. `GET /user/reset` renders `user/forgot_password.html`,
   which renders three widgets on one page load: `widget/onboarding/recover.html` (the form),
   `widget/onboarding/recoverSuccess.html` (the confirmation, hidden until swapped in), and
   `widget/loading/loading.html` (a redirect-in-progress screen).
 - Form: `widget/onboarding/recover.html` (extends `widget/onboarding/notification.html` →
   `widget/popup/popup.html`). Body copy: "Enter your username or email below and we will send you an
-  email with a link to enter a new password." (line 21). Single field `#field-recover-id`
-  (`name="user"`, `type="text"`, `required`, line 26) — accepts username or email, no `@`-format
-  validation, matching core CKAN semantics. **Accessibility bug found:** the field's `<label>` (line
-  25) is `for="field-login"` — a copy-paste artifact from `login.html` — while the actual input id is
+  email with a link to enter a new password.". Single field `#field-recover-id`
+  (`name="user"`, `type="text"`, `required`) — accepts username or email, no `@`-format
+  validation, matching core CKAN semantics. **Accessibility bug found:** the field's `<label>`
+  is `for="field-login"` — a copy-paste artifact from `login.html` — while the actual input id is
   `field-recover-id`, breaking the label/input association. Flagged for a fix in §7, independent of any
   copy-wording decision.
-- `<form id="recover-form" onsubmit="return false;">` (line 19) — the native submit is always
+- `<form id="recover-form" onsubmit="return false;">` — the native submit is always
   suppressed; this is a pure AJAX form (see §1.3).
 - reCAPTCHA: invisible v2, bound directly to the submit button —
-  `<input class="... hdx-recaptcha ..." disabled type="submit" value="Reset" data-sitekey="..." data-callback='onSubmit' data-size="invisible" data-badge="inline">`
-  (line 42). No visible challenge unless Google's risk engine triggers one.
+  `<input class="... hdx-recaptcha ..." disabled type="submit" value="Reset" data-sitekey="..." data-callback='onSubmit' data-size="invisible" data-badge="inline">`.
+  No visible challenge unless Google's risk engine triggers one.
 - No CSRF hidden field in the markup — CSRF is added via the AJAX call's headers instead (see §1.3),
   which is a legitimate pattern for that path.
-- Footer: "Not a member? Register" (line 45).
+- Footer: "Not a member? Register".
 
 ### 1.3 Confirmation
 
 There is **no separate route or template** for "confirmation" today — it's a same-page, JS-driven
 popup swap:
 
-1. `widget/onboarding/forgot-password.js:1-7` calls `showOnboardingWidget('#recoverPopup')` on
+1. `widget/onboarding/forgot-password.js` calls `showOnboardingWidget('#recoverPopup')` on
    `$(document).ready`, so the recover form is what opens by default.
-2. On submit, `widget/onboarding/recover.js:4-26` intercepts and does:
+2. On submit, `widget/onboarding/recover.js` intercepts and does:
    `$.ajax({ url: "/user/reset", type: 'POST', data: $this.serialize(), headers: hdxUtil.net.getCsrfTokenAsObject(), success: ... })`.
    On success (`result.success`), it closes the recover widget and calls
    `showOnboardingWidget('#recoverSuccessPopup')`. On failure, it shows `result.error.message` inline in
    `.error-message` and adds an `.error` class to the input — all client-side, no page reload.
 3. The confirmation UI is `widget/onboarding/recoverSuccess.html`: title `"Please check your email"`,
    body `"Email was sent if the username or <br/>email address matched in our system."`, plus an
-   animated mail-envelope gif. Its close button (`forgot-password.js:3-6`) shows a loading screen and
+   animated mail-envelope gif. Its close button (`forgot-password.js`) shows a loading screen and
    redirects to `/`.
-- Backend returns **JSON, not HTML**: `HDXRequestResetView.post()` (`user.py:57-125`) returns raw
-  `json.dumps(...)` strings via constants in `ckanext-hdx_users/ckanext/hdx_users/views/user_view_helper.py:1-24`.
-  Every user-found-or-not path returns the same success shape (lines 92-94, 101, 113-115, 120, 123) —
+- Backend returns **JSON, not HTML**: `HDXRequestResetView.post()` returns raw
+  `json.dumps(...)` strings via constants in `ckanext-hdx_users/ckanext/hdx_users/views/user_view_helper.py`.
+  Every user-found-or-not path returns the same success shape (`OnbSuccess`) —
   this intentionally never discloses whether an account exists, matching core CKAN's own
   `RequestResetView.post()` behavior. This contract must not change.
 
@@ -138,7 +137,7 @@ popup swap:
 
 Reached only via the emailed token link, and structurally its own screen: full-page POST (not AJAX),
 core CKAN flash-message error handling (`post()` is inherited unmodified from
-`ckan/views/user.py:828-877`), and its own copy about password rules. No Figma export exists for it —
+`ckan/views/user.py`), and its own copy about password rules. No Figma export exists for it —
 folded into this task after the initial migration per §12 Decision 5, reusing the login/forgot-password
 `hdx-v2-auth-card` shell verbatim rather than following a design export.
 
@@ -168,8 +167,8 @@ folded into this task after the initial migration per §12 Decision 5, reusing t
 
 All three live pages explicitly blank the base template's tracking blocks:
 
-- `user/signin.html:30-31` → `mixpanel_init`, `google_analytics_init` both empty.
-- `user/forgot_password.html:36-38` → same two, plus `hotjar_init` empty.
+- `user/signin.html` → `mixpanel_init`, `google_analytics_init` both empty.
+- `user/forgot_password.html` → same two, plus `hotjar_init` empty.
 - `user/perform_reset.html` → same three, empty.
 
 GTM (`GTM-MFNPQ7K`) and Mixpanel are otherwise injected globally by `base.html`'s
@@ -260,7 +259,7 @@ onto the existing `notification.html`/`popup.html` `.close` icon and `closeCurre
 ```
 
 No fields, no button, no footer links — purely a confirmation message. `[X]` again maps onto the
-existing close-and-redirect-home behavior (`forgot-password.js:3-6`).
+existing close-and-redirect-home behavior (`forgot-password.js`).
 
 ### `sm-forgot-password.html` / `sm-forgot-password-confirmation.html`
 
@@ -291,7 +290,7 @@ close glyph as the XL `[X]`, per context).
 | Login — password | `#field-password`, plain `<input type="password" required>` | `text-field.html` with `type='password'` — built-in eye/eye-off toggle matches Figma's icon exactly, no bespoke JS needed |
 | Login — MFA/OTP | `#field-mfa`, `<input type="number">`, hidden until JS reveals it | `text-field.html` with `type='number'`, same JS-driven `hidden`/reveal logic (`check_mfa`), no new component. "Forgot your password?" is positioned directly after this field in the DOM (not after the password field) so it renders below the OTP field whenever MFA is revealed, matching Figma's password→link ordering with the OTP field spliced in between |
 | Login — remember me | `#field-remember`, checkbox, value `"63072000"` | `v2/components/checkbox.html`, same `name`/`value` preserved as-is (§8 flags the value's odd semantics, not to be touched) |
-| Login — error | Single `.error-message` div, generic string, shown/hidden via inline `style` | Figma ties the error visually to the password field: render via `text-field.html`'s `errors` prop on the password field (adds `.c-search-input--error` + inline message) — same generic `error_message` string from `signin.py:142`, just re-targeted to the password field's error slot instead of a floating top div. Wording stays as-is (Decision 9) — Figma's "Incorrect email or password" is not adopted |
+| Login — error | Single `.error-message` div, generic string, shown/hidden via inline `style` | Figma ties the error visually to the password field: render via `text-field.html`'s `errors` prop on the password field (adds `.c-search-input--error` + inline message) — same generic `error_message` string from `signin.py`, just re-targeted to the password field's error slot instead of a floating top div. Wording stays as-is (Decision 9) — Figma's "Incorrect email or password" is not adopted |
 | Forgot password — user | `#field-recover-id`, plain `<input required>`, mislabeled `for` attribute (§1.2 bug) | `text-field.html` (`type='text'`), `errors` prop wired to `result.error.message` from the existing AJAX response — same JSON contract, only the rendering target changes. Label/input association bug fixed here |
 | Forgot password — submit/status | JSON success/error handled by hand-rolled JS (`recover.js`) toggling `.error-message`/`.error` classes | Same AJAX call and JSON shape; JS updates `c-search-input--error` state and a `c-alert` (or the field-level error span) instead of legacy classes — no change to the request/response contract |
 | reCAPTCHA | Invisible v2, bound to submit button | Unchanged (§12 Decision 2) — Figma's visible checkbox mock is not implemented |
@@ -314,7 +313,7 @@ error-message sources.
 | Remember me | **Reuse** `v2/components/checkbox.html` | Already supports `label` + `errors`; no new component needed |
 | Submit / secondary buttons | **Reuse** `v2/components/button.html` | `style='primary'` for Log in/Reset, `style='tertiary'`/text-link for Register/Sign up/Cancel-style links |
 | "Forgot password?" / "Sign up" / "Not you?" links | **Reuse** `v2/components/text-link.html` / `text-button.html` | Existing generic link/button components already used elsewhere for this exact pattern. "Forgot password?" uses `style='tertiary'` (Figma's `.text-link` color is a dark neutral, not the royal-blue used for "Sign up"); "Sign up" stays `style='primary'` |
-| Top-level / field-level error and status messages | **Reuse** `v2/components/alert.html` and `text-field.html`'s built-in `errors` slot | `c-alert` is the established v2 pattern for form-level status (per `request_access.html:60-62`); field-level errors use the input's own `errors` prop, matching Figma's per-field error treatment |
+| Top-level / field-level error and status messages | **Reuse** `v2/components/alert.html` and `text-field.html`'s built-in `errors` slot | `c-alert` is the established v2 pattern for form-level status (per `request_access.html`); field-level errors use the input's own `errors` prop, matching Figma's per-field error treatment |
 | Page shell (logo-only navbar, dark background, no site header/footer/breadcrumb) | **Extend** the pattern from `error_document_template.html` | Closer analog than `request_access.html` (which keeps the full v2 site header/footer/breadcrumb chrome) — Figma shows only a logo bar and no footer on all three auth pages, matching how `error_document_template.html` extends `v2/page.html` with `header`/`footer` blocks emptied out and `quick_links = []` |
 | MFA/OTP input | **Extend** `text-field.html` (`type='number'`) | No dedicated MFA component exists or is needed — it's a plain numeric text input |
 | Popup/modal chrome (`widget/popup/popup.html`, `notification.html`) | **Reuse as-is** | No v2 equivalent exists; the close-icon/`closeCurrentWidget()` behavior for forgot-password/confirmation is preserved unchanged (§1.3, §5) |
@@ -330,15 +329,15 @@ error-message sources.
   wiring the lockout message into the redesigned error UI from scratch — not left broken.
 - **MFA reveal** — `GET /util/user/check_mfa` still toggles the (now `text-field.html`-based) MFA
   field's visibility exactly as today.
-- **Remember me** — cookie prefill/Gravatar behavior (`signin.js:91-106`) is preserved; the checkbox
-  component's `name`/`value` stay identical so the server-side handling in `signin.py:124-134` needs no
+- **Remember me** — cookie prefill/Gravatar behavior (`signin.js`) is preserved; the checkbox
+  component's `name`/`value` stay identical so the server-side handling in `signin.py` needs no
   change.
 - **Forgot password submit → confirmation** — unchanged AJAX/JSON contract (§1.3, §3). On success, the
   v2 recover widget is hidden and the v2 confirmation widget is shown in place — same
   `showOnboardingWidget`/`closeCurrentWidget` mechanism, no navigation, no new route (§12 Decision 3).
 - **Close icon (forgot-password, confirmation)** — maps onto the existing `.close`
   icon/`closeCurrentWidget()` pattern already provided by `notification.html`. Confirmation's close
-  additionally triggers the existing loading-screen-then-redirect-to-`/` behavior (`forgot-password.js:3-6`)
+  additionally triggers the existing loading-screen-then-redirect-to-`/` behavior (`forgot-password.js`)
   — reused as-is.
 - **Back arrow (login)** — none. No login Figma export (`xl-login-filled-with-error.html`, `sm-login.html`,
   the MD stub) shows any back/close affordance in the card header — only the "Log in" heading.
@@ -385,10 +384,10 @@ page variants with one breakpoint-driven stylesheet.
 | Risk | Detail | Mitigation |
 |---|---|---|
 | CSRF fix could interact with an untested code path | `signin.py`'s `login()` POST has never had a CSRF token to validate against; adding `h.csrf_input()` changes what the request body contains | Per Decision 6: add the field, then explicitly verify a live login POST still succeeds (token round-trips through CKAN's standard CSRF validation, no bespoke bypass in `signin.py` to account for) before considering this done |
-| Pre-existing broken lockout-warning JS (`_showLoginError` undefined, `signin.js:24`) | Currently fails silently; server-side throttle still protects the account, only the friendly warning is broken | The v2 rewrite of this handler (§5) naturally replaces it with working code targeting the new error UI — not a separate fix, a byproduct of the required JS rewrite |
+| Pre-existing broken lockout-warning JS (`_showLoginError` undefined, `checkLockout()` in `signin.js`) | Currently fails silently; server-side throttle still protects the account, only the friendly warning is broken | The v2 rewrite of this handler (§5) naturally replaces it with working code targeting the new error UI — not a separate fix, a byproduct of the required JS rewrite |
 | No MD Figma spec for any of the three pages | `md-login-filled-with-error.html` is an empty stub; no MD export exists at all for forgot-password/confirmation | Resolved via Decision 4 (derive from SM) — flagged here as "derived, not sourced from an actual design," so it's revisited if a real MD Figma frame appears later |
 | SM card padding inconsistency (`sm-login.html` 3rem vs `sm-forgot-password.html` 2.5rem) | Both cards should plausibly share one padding value; Figma exports disagree | Resolved via Decision 13: standardize on `2.5rem` for all three SM cards (also matches XL's padding across all three page types) |
-| Remember-me duration semantics | `value="63072000"` is consumed as `timedelta(milliseconds=int(_remember))` in `signin.py:124-134` — 63,072,000 ms is ~17.5 hours, not the 730 days the value's name implies | **Flag only, do not fix** — this is authentication-logic behavior, explicitly out of this task's scope |
+| Remember-me duration semantics | `value="63072000"` is consumed as `timedelta(milliseconds=int(_remember))` in `signin.py` — 63,072,000 ms is ~17.5 hours, not the 730 days the value's name implies | **Flag only, do not fix** — this is authentication-logic behavior, explicitly out of this task's scope |
 
 ---
 
@@ -414,10 +413,10 @@ string**, not as a blanket policy. Resolved per-string outcome (full decisions i
 
 | Location | Current copy | Figma copy | Decision |
 |---|---|---|---|
-| Login field label | "Username or Email" (`login.html:50`) | "Email" (`xl-login-filled-with-error.html`) | Keep current — Decision 8 |
-| Login failure message | `_("Login failed. Bad username or password.")` (`signin.py:142`) | "Incorrect email or password" | Keep current — Decision 9 |
-| Footer CTA (login + forgot-password) | "Not a member? Register" (`login.html:70-72`, `recover.html:45`) | "Don't have an account? Sign up" | Adopt Figma copy — Decision 10 |
-| Login "forgot password" link | "Forgot your password?" (`login.html:69`) | "Forgot password?" (note: the forgot-password *page's own heading*, "Forgot your password?", already matches Figma exactly — only this login-page link text conflicts) | Keep current — Decision 11 |
+| Login field label | "Username or Email" (`login.html`) | "Email" (`xl-login-filled-with-error.html`) | Keep current — Decision 8 |
+| Login failure message | `_("Login failed. Bad username or password.")` (`signin.py`) | "Incorrect email or password" | Keep current — Decision 9 |
+| Footer CTA (login + forgot-password) | "Not a member? Register" (`login.html`, `recover.html`) | "Don't have an account? Sign up" | Adopt Figma copy — Decision 10 |
+| Login "forgot password" link | "Forgot your password?" (`login.html`) | "Forgot password?" (note: the forgot-password *page's own heading*, "Forgot your password?", already matches Figma exactly — only this login-page link text conflicts) | Keep current — Decision 11 |
 | Confirmation heading | "Please check your email" (`recoverSuccess.html`) | "Check your email" | Keep current — Decision 12 |
 
 SM card padding (3rem vs 2.5rem, §6/§8) is resolved in Decision 13: standardize on `2.5rem` across all
@@ -431,7 +430,7 @@ Per Decision 7 (§12): keep all three pages **untracked**, matching today exactl
 continue blanking `mixpanel_init`/`google_analytics_init` (and `hotjar_init` on the forgot-password
 page) — no new events are introduced by this migration. If login/reset analytics becomes a product
 requirement later, the signup/onboarding flow's existing pattern
-(`ckanext-hdx_users/ckanext/hdx_users/views/onboarding.py:372-427`, explicit `analytics_account_type`
+(`validate_account()`/`validated_account()` in `ckanext-hdx_users/ckanext/hdx_users/views/onboarding.py`, explicit `analytics_account_type`
 context passed into templates) is the established precedent to follow — not applied here.
 
 ---
@@ -456,20 +455,20 @@ context passed into templates) is the established precedent to follow — not ap
    existing for it — reuses the login/forgot-password `hdx-v2-auth-card` shell verbatim (§1.4). No
    view/backend changes; only the template/CSS/JS shell was replaced.
 6. **CSRF token on the login form.** The live v2 login form, `user/signin.html`, calls
-   `h.csrf_input()` directly inside its own `<form>` (around line 53-56). `widget/onboarding/login.html`
+   `h.csrf_input()` directly inside its own `<form>`. `widget/onboarding/login.html`
    carries no CSRF field, but it isn't rendered anywhere live — it's referenced only in commented-out
    lines in `page.html` and `page_light.html`.
 7. **Analytics.** Keep all three pages untracked, matching today. No new tracking is introduced by this
    migration (§11).
-8. **Login field label.** Keep current "Username or Email" (`login.html:50`). Figma's "Email" is not
+8. **Login field label.** Keep current "Username or Email" (`login.html`). Figma's "Email" is not
    adopted — the field still accepts either, and the current label is more accurate.
 9. **Login failure message.** Keep current `_("Login failed. Bad username or password.")`
-   (`signin.py:142`). Figma's "Incorrect email or password" is not adopted.
+   (`signin.py`). Figma's "Incorrect email or password" is not adopted.
 10. **Footer CTA (login + forgot-password).** Adopt Figma's "Don't have an account? Sign up" on both
-    pages, replacing the current "Not a member? Register" (`login.html:70-72`, `recover.html:45`). The
+    pages, replacing the current "Not a member? Register" (`login.html`, `recover.html`). The
     "Sign up" link is right-aligned (`justify-content: space-between` on the footer row); "Don't have an
     account?" stays at the left edge.
-11. **Login "forgot password" link.** Keep current "Forgot your password?" (`login.html:69`). Figma's
+11. **Login "forgot password" link.** Keep current "Forgot your password?" (`login.html`). Figma's
     shorter "Forgot password?" is not adopted for this link (the forgot-password page's own heading
     already matches Figma and is unaffected).
 12. **Confirmation heading.** Keep current "Please check your email" (`recoverSuccess.html`). Figma's

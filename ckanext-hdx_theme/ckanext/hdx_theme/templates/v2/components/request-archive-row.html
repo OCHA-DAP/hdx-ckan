@@ -1,0 +1,62 @@
+{#
+  Snippet: request-archive-row.html
+  Path:    templates/v2/components/request-archive-row.html
+
+  One dataset row of c-request-archive (task 074): a native
+  <details>/<summary> disclosure (collapsed by default, no JS). The summary
+  holds a leading chevron, the plain-text dataset title and the four
+  lifetime counters; their labels show below MD only (from MD up the
+  container's header row names the columns). The summary's aria-label
+  reads "{title}, N requests, N replied, N denied, N shared". The panel
+  holds the archived c-request-item rows from the caller() body.
+  Styles: request-archive.less.
+
+  Parameters
+  ─────────────────────────────────────────────────
+  title         {string}  Dataset title.  default: ''
+  requests      {int}     Requests counter.  default: 0
+  replied       {int}     Replied counter.  default: 0
+  declined      {int}     Denied counter.  default: 0
+  shared        {int}     Shared counter.  default: 0
+  extra_classes {string}  default: ''
+  caller()      block     The archived c-request-item rows (variant='archived').
+  ─────────────────────────────────────────────────
+  Example
+
+  {% call h.snippet('v2/components/request-archive-row.html',
+      title='Example dataset', requests=10, replied=9, declined=1, shared=3) %}
+    {% snippet 'v2/components/request-item.html', variant='archived', ... %}
+  {% endcall %}
+#}
+
+{% set title         = title         if title         is defined else '' %}
+{% set requests      = requests      if requests      is defined else 0 %}
+{% set replied       = replied       if replied       is defined else 0 %}
+{% set declined      = declined      if declined      is defined else 0 %}
+{% set shared        = shared        if shared        is defined else 0 %}
+{% set extra_classes = extra_classes if extra_classes is defined else '' %}
+
+{% set counts = [
+  (requests, _('Requests')),
+  (replied,  _('Replied')),
+  (declined, _('Denied')),
+  (shared,   _('Shared')),
+] %}
+
+{% set aria_label = _('{title}, {requests} requests, {replied} replied, {declined} denied, {shared} shared').format(
+    title=title, requests=requests, replied=replied, declined=declined, shared=shared) %}
+
+<details class="c-request-archive-row{{ ' ' ~ extra_classes if extra_classes else '' }}">
+  <summary class="c-request-archive-row__summary" aria-label="{{ aria_label }}">
+    <span class="c-request-archive-row__chevron">{{ h.hdx_v2_icon('v2/icons/chevron-right.svg') }}</span>
+    <span class="c-request-archive-row__title">{{ title }}</span>
+    <span class="c-request-archive-row__counts">
+      {% for value, label in counts %}
+        <span class="c-request-archive-row__count">{{ value }} <span class="c-request-archive-row__count-label">{{ label }}</span></span>
+      {% endfor %}
+    </span>
+  </summary>
+  <div class="c-request-archive-row__panel">
+    {% if caller is defined %}{{ caller() }}{% endif %}
+  </div>
+</details>

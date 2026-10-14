@@ -2,12 +2,23 @@
   Snippet: org-list-card.html
   Path:    templates/v2/components/org-list-card.html
 
-  Renders a single organisation card for the All Organisations list.
+  Renders a single organisation card for the All Organisations list and
+  the My Organisations dashboard.
 
   Parameters
   ──────────────────────────────────────────────────────
-  org          {dict}  Organisation dict from page.items.  required
-  member_count {int}   Pre-fetched member count.  default: 0
+  org          {dict}    Organisation dict from page.items.  required
+  member_count {int}     Pre-fetched member count.  default: 0
+  role         {string}  Translated role label, e.g. _('Admin').
+                         default: not set (no role part)
+  member_since {string}  Raw date → "Member since 31 October 2023".
+                         default: not set (no member-since part)
+  last_updated {string}  Raw date → "Last updated on 31 October 2023".
+                         default: not set (no last-updated part)
+
+  The line under the title joins the passed parts with ' - ', e.g.
+  "Admin - Last updated on 31 October 2023". An empty or unparseable
+  date renders "Unknown".
   ──────────────────────────────────────────────────────
   Responsive behaviour (CSS-only, no size param):
     XL (≥ 80rem)  flex row: left ~45rem + right flex:1 right-aligned
@@ -20,15 +31,27 @@
 {% set title       = org.title or org.display_name %}
 {% set href        = h.url_for('hdx_org.read', id=org.name) %}
 {% set description = h.render_markdown(org.description) if org.description else '' %}
-{% set created     = h.hdx_format_date(org.created) if org.created else _('Unknown') %}
 {% set datasets    = org.package_count or 0 %}
+
+{% set meta_parts = [] %}
+{% if role is defined and role %}
+  {% set meta_parts = meta_parts + [role] %}
+{% endif %}
+{% if member_since is defined %}
+  {% set meta_parts = meta_parts + [_('Member since') ~ ' ' ~ (h.hdx_format_date(member_since) or _('Unknown'))] %}
+{% endif %}
+{% if last_updated is defined %}
+  {% set meta_parts = meta_parts + [_('Last updated on') ~ ' ' ~ (h.hdx_format_date(last_updated) or _('Unknown'))] %}
+{% endif %}
 
 <div class="c-org-list-card">
   <div class="c-org-list-card__inner">
 
     <div class="c-org-list-card__left">
       <a class="c-org-list-card__title" href="{{ href }}">{{ title }}</a>
-      <span class="c-org-list-card__date">{{ _('Member since') }} {{ created }}</span>
+      {% if meta_parts %}
+        <span class="c-org-list-card__date">{{ meta_parts | join(' - ') }}</span>
+      {% endif %}
 
       {% if description %}
         <div class="c-org-list-card__description" data-module="clamped-text">

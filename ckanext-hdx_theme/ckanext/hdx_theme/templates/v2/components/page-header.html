@@ -9,10 +9,15 @@
   title               {string}  Title text.  default: ''
   compact_title       {bool}    Title fixed at 1.5rem, no XL scale-up
                                 (resource pages).  default: False
+  flush               {bool}    No vertical padding, for a header inside an
+                                already-padded content column (user profile
+                                header).  default: False
   subtitle            {string}  Optional subtitle rendered below title (semibold).  default: ''
   member_since        {string}  Optional pre-rendered "Member since {date}" line
                                 below the title (org pages).  default: ''
   description         {string}  Full description.  default: ''
+  avatar              {dict}    c-avatar kwargs (size, initials, aria_label, ...) —
+                                avatar beside the title block (user profile).  default: {}
   org_name            {string}  Organisation display name.  default: ''
   logo_src            {string}  Logo image URL.  default: ''
   header_actions      {list}    {label, href, icon_src, attrs, show} dicts —
@@ -77,6 +82,7 @@
 {% set subtitle            = subtitle            if subtitle            is defined else '' %}
 {% set member_since        = member_since        if member_since        is defined else '' %}
 {% set description         = description         if description         is defined else '' %}
+{% set avatar              = avatar              if avatar              is defined else {} %}
 {% set org_name            = org_name            if org_name            is defined else '' %}
 {% set logo_src            = logo_src            if logo_src            is defined else '' %}
 {% set header_actions      = header_actions      if header_actions      is defined else [] %}
@@ -93,6 +99,7 @@
 {% set title_actions       = title_actions       if title_actions       is defined else [] %}
 {% set title_count         = title_count         if title_count         is defined else '' %}
 {% set compact_title       = compact_title       if compact_title       is defined else False %}
+{% set flush               = flush               if flush               is defined else False %}
 {% set extra_classes       = extra_classes       if extra_classes       is defined else '' %}
 {% set state_label_text    = state_label_text    if state_label_text    is defined else '' %}
 {% set state_label_color   = state_label_color   if state_label_color   is defined else 'grey' %}
@@ -130,12 +137,16 @@
   ) %}
 {% set has_card = logo_src or org_name_visible or ns_actions.visible or header_stats %}
 
-<section class="c-page-header{{ ' c-page-header--compact-title' if compact_title else '' }}{{ ' ' ~ extra_classes if extra_classes else '' }}">
+<section class="c-page-header{{ ' c-page-header--compact-title' if compact_title else '' }}{{ ' c-page-header--flush' if flush else '' }}{{ ' ' ~ extra_classes if extra_classes else '' }}">
 
   {# ── TOP ─────────────────────────────────────────────────── #}
   <div class="c-page-header__top{{ '' if has_card else ' c-page-header__top--no-card' }}">
 
     <div class="c-page-header__left">
+      {% if avatar %}
+      <div class="c-page-header__identity">
+        {{ h.snippet('v2/components/avatar.html', **avatar) }}
+      {% endif %}
       <div class="c-page-header__description">
 
         {# File format icon + label — resource #}
@@ -291,6 +302,9 @@
 
       </div>
       {# end __description #}
+      {% if avatar %}
+      </div>
+      {% endif %}
 
       {# CTA block (notifications + download count) — dataset only #}
       {% if supports_notifications or download_count %}

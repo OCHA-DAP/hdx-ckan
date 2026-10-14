@@ -76,7 +76,7 @@ it would mean overriding vendor library defaults rather than touching HDX code.
 
 - **Files**: no HDX-authored zoom logic exists. `fanstatic/browse_/browse.js` constructs the Leaflet map
   with Leaflet's stock default zoom control, unmodified (`zoomAnimation`/`fadeAnimation` never overridden).
-- **Actual animation**: vendor CSS, `fanstatic/vendor/leaflet-1.7.1/leaflet.css:186-193`:
+- **Actual animation**: vendor CSS, `fanstatic/vendor/leaflet-1.7.1/leaflet.css`:
   ```css
   .leaflet-zoom-anim .leaflet-zoom-animated {
       transition: transform 0.25s cubic-bezier(0,0,0.25,1);
@@ -89,38 +89,38 @@ it would mean overriding vendor library defaults rather than touching HDX code.
 
 ### 1.3 Signals carousel
 
-- **Files**: `fanstatic/v2/signals-carousel.js` (thin config, 8 lines) + shared engine
-  `fanstatic/v2/carousel.js` (204 lines, `window.hdxCarousel.init()`) + LESS
+- **Files**: `fanstatic/v2/signals-carousel.js` (thin config) + shared engine
+  `fanstatic/v2/carousel.js` (`window.hdxCarousel.init()`) + LESS
   `hdx-styles/src/common/less/v2/components/signal-card.less`.
-- **Config actually wired** (`signals-carousel.js:2-7`):
+- **Config actually wired** (`signals-carousel.js`):
   ```js
   window.hdxCarousel.init({
       containerSelector: '.hdx-v2-signals-cards',
       slideSelector:     '.hdx-v2-signal-slide',
+      prevBtnSelector:   '.hdx-v2-signals-carousel__arrow--prev',
+      nextBtnSelector:   '.hdx-v2-signals-carousel__arrow--next',
       dotsSelector:      '.hdx-v2-signals-dots',
       mediaQuery:        '(min-width: 80rem)',
   });
   ```
-  No `prevBtnSelector`/`nextBtnSelector` is passed, and no arrow markup exists in `signal-card.less` or
-  either consuming template. Confirmed against `054-signals-landing-page.md` §5, which states this
-  explicitly: *"dots only — no arrows"* — a deliberate decision made when this carousel was built, not an
-  oversight. **The premise that this carousel has arrow navigation does not hold today.**
+  Arrow buttons are wired, mirroring highlights — this reverses `054-signals-landing-page.md` §5's
+  *"dots only — no arrows"* decision (§6).
 - **Shared engine mechanism** (`carousel.js`, applies to both this and 1.4): CSS `transition` on the
   `left` property (a position offset, not `transform`/`opacity`), set via inline style, plus Hammer.js for
   touch swipe. Infinite loop via DOM-cloning + silent position "teleport" on landing on a clone.
   ```js
-  inner.style.transition = 'left 350ms';                 // carousel.js:92, 141, 173
-  window.setTimeout(settle, 400);                         // carousel.js:183 — fallback if transitionend doesn't fire
+  var duration       = window.hdxV2.tokenPx('--hdx-duration-base');
+  var transitionRule = reducedMotion ? 'none' : ('left ' + duration + 'ms ' + window.hdxV2.token('--hdx-ease-out'));
+  window.setTimeout(settle, duration + 50);               // carousel.js goTo() — fallback if transitionend doesn't fire
   ```
-- **Values found**: duration **350ms**, **no easing keyword specified** anywhere (resolves to the CSS
-  default `ease`, not `ease-out`). Arrow-click and swipe would drive the identical `goTo()` path if arrows
-  existed — but they don't for this carousel.
+- **Values found**: duration **300ms** (`--hdx-duration-base`), easing **`ease-out`** (`--hdx-ease-out`).
+  Arrow-click and swipe drive the identical `goTo()` path.
 
 ### 1.4 Mobile nav — "profile" second-level slide-in
 
-- **Files**: `templates/v2/header.html:282-408` (markup), `hdx-styles/src/common/less/v2/navbar.less:481-727`
-  (styles, comment: "Offcanvas panel — task 019"), `fanstatic/v2/navbar.js:173-196` (behavior).
-- **JS handler** (`navbar.js:173-183`) — a pure `hidden`-attribute swap, nothing else:
+- **Files**: `.hdx-v2-offcanvas` in `templates/v2/header.html` (markup), `hdx-styles/src/common/less/v2/navbar.less`
+  (styles, comment: "Offcanvas panel — task 019"), `fanstatic/v2/navbar.js` (behavior).
+- **JS handler** (`navbar.js`) — a pure `hidden`-attribute swap, nothing else:
   ```js
   var levelTrigger = e.target.closest('[data-hdx-v2-offcanvas-level]');
   if (levelTrigger) {
@@ -130,7 +130,7 @@ it would mean overriding vendor library defaults rather than touching HDX code.
       return;
   }
   ```
-- **CSS for the second level** (`navbar.less:676-687`):
+- **CSS for the second level** (`.hdx-v2-offcanvas__level` in `navbar.less`):
   ```less
   &__level {
       position: absolute;
@@ -144,7 +144,7 @@ it would mean overriding vendor library defaults rather than touching HDX code.
   file — there is nothing for CSS to animate even if the `hidden` swap were changed to a class toggle.
 - **The outer offcanvas sheet** (level 1, the whole mobile-nav sheet) does have a transform, but it is
   **not a right-margin slide** — it drops from the top — and its transition is **commented out in the
-  shipped LESS** (`navbar.less:485-497`):
+  shipped LESS** (`navbar.less`):
   ```less
   .hdx-v2-offcanvas {
       transform:  translateY(-110%);
@@ -161,8 +161,8 @@ it would mean overriding vendor library defaults rather than touching HDX code.
 ### 1.5 Highlights carousel
 
 - **Files**: `fanstatic/v2/highlights-carousel.js` (config) + the same shared `carousel.js` engine as 1.3 +
-  `hdx-styles/src/common/less/v2/pages/home.less:157-256`.
-- **Config** (`highlights-carousel.js:2-9`) — this carousel *does* wire arrow buttons:
+  `.hdx-v2-highlights` in `hdx-styles/src/common/less/v2/pages/home.less`.
+- **Config** (`highlights-carousel.js`) — this carousel *does* wire arrow buttons:
   ```js
   window.hdxCarousel.init({
       containerSelector: '.mobile-carousel',
@@ -173,27 +173,27 @@ it would mean overriding vendor library defaults rather than touching HDX code.
       dotsSelector:      '.highlight-dots',
   });
   ```
-- **Values found**: identical engine to 1.3 — **350ms**, no easing keyword (default `ease`). Arrow click
-  and swipe drive the same `goTo()` path.
+- **Values found**: identical engine to 1.3 — **300ms**, **`ease-out`**. Arrow click and swipe drive the
+  same `goTo()` path.
 - **Since 054's refactor, signals and highlights share one carousel engine** — there is no duplicated,
-  divergently-tuned carousel code. The only difference between the two is configuration (arrows wired vs.
-  not), not mechanism. A timing/easing fix to `carousel.js` affects both simultaneously.
+  divergently-tuned carousel code. The only difference between the two is configuration (selectors), not
+  mechanism. A timing/easing fix to `carousel.js` affects both simultaneously.
 
 ### 1.6 Location map — hover tooltip
 
-- **Files**: `fanstatic/browse_/browse.js` (event wiring), `hdx-styles/src/common/less/browse_/browse.less:193-196`
+- **Files**: `fanstatic/browse_/browse.js` (event wiring), `hdx-styles/src/common/less/browse_/browse.less`
   (fill transition), vendor `fanstatic/vendor/leaflet-1.7.1/leaflet.css` (popup fade).
-- **Wiring** (`browse.js:134-140`) — listens on `mousemove` (not `mouseover`), opens a real Leaflet
+- **Wiring** (`prepareMap()` in `browse.js`) — listens on `mousemove` (not `mouseover`), opens a real Leaflet
   `L.Popup`:
   ```js
   layer.on({ mousemove: highlightFeature, mouseout: resetFeature, click: featureClicked });
   ```
 - **Two separate animated effects are present, confirmed directly**:
-  - Country fill-color change (HDX-authored, `browse.less:194-195`):
+  - Country fill-color change (HDX-authored, `browse.less`):
     ```css
     path { transition: fill 200ms; }
     ```
-  - Popup fade-in (vendor Leaflet, `leaflet.css:172-177`):
+  - Popup fade-in (vendor Leaflet, `leaflet.css`):
     ```css
     .leaflet-fade-anim .leaflet-popup { opacity: 0; transition: opacity 0.2s linear; }
     ```
@@ -205,10 +205,10 @@ it would mean overriding vendor library defaults rather than touching HDX code.
 - **Shared component**: `fanstatic/v2/components/anchor-links.js` — header comment states the intended
   behavior directly: *"Smooth scroll on anchor-link click (500ms, cubic-bezier(0.6, 0, 0.3, 1))"*.
   ```js
-  var ease = cubicBezier(0.6, 0, 0.3, 1);                       // anchor-links.js:52
+  var ease = cubicBezier(0.6, 0, 0.3, 1);                       // anchor-links.js
   function smoothScrollTo(target, container, extraOffset) {
       ...
-      var duration = 500;                                       // anchor-links.js:77
+      var duration = 500;                                       // anchor-links.js
       function step(timestamp) {
           var pos = start + distance * ease(progress);
           ...
@@ -222,13 +222,13 @@ it would mean overriding vendor library defaults rather than touching HDX code.
 - **Consumers, all going through the same function**: dataset page (`hdx_read.html`), resource page
   (`resource_read.html`), Signals/HAPI landing pages, and the location data-grid drawer's own mobile
   anchor nav (`location-datagrid-drawer.html`). The locations-list page's own sidebar anchors
-  (`pages/locations-list.js:8-22`) explicitly delegate to `window.hdxSmoothScrollTo` rather than
+  (`pages/locations-list.js`) explicitly delegate to `window.hdxSmoothScrollTo` rather than
   reimplementing anything.
 - **Hash-on-load correction** (site-wide, not Signals-specific): `initHashOnLoadCorrection` re-runs
   `smoothScrollTo` on `window.load` when the page was loaded with a `location.hash` matching an element,
   correcting scroll drift from content (e.g. images) that finishes loading after the browser's native
   fragment-scroll already fired. Exposed as `window.hdxScrollToHashTarget`.
-- **"Access via API" rescroll**: `fanstatic/v2/pages/resource.js:20-23`, fired on the Data Explorer iframe's
+- **"Access via API" rescroll**: `fanstatic/v2/pages/resource.js`, fired on the Data Explorer iframe's
   `load` event and again after the AJAX-built data-dictionary table renders:
   ```js
   function scrollToApiAccessIfActive() {
@@ -244,18 +244,18 @@ it would mean overriding vendor library defaults rather than touching HDX code.
 ### 1.8 Data-grid "legend" drawer
 
 - Note on naming: the button that opens this overlay is labelled **"Definitions"** in the live template
-  (`templates/v2/location-datagrid-drawer.html`, triggered from `templates/country/country.html:280`,
+  (`templates/v2/location-datagrid-drawer.html`, triggered from `templates/country/country.html`,
   `onclick="hdxV2Drawer('location-datagrid-drawer').open()"`), not "Legend." Flagged as a naming
   observation only — it does not affect the animation audit.
 - **Component**: the generic, app-wide `c-drawer` component —
   `templates/v2/components/drawer.html` / `fanstatic/v2/components/drawer.js` /
   `hdx-styles/src/common/less/v2/components/drawer.less`.
-- **Open/close JS** (`drawer.js:15-34`) is a class toggle only, no manual animation code:
+- **Open/close JS** (`drawer.js`) is a class toggle only, no manual animation code:
   ```js
   $drawer.addClass('is-open').attr('aria-hidden', 'false');   // open()
   $drawer.removeClass('is-open').attr('aria-hidden', 'true'); // close()
   ```
-- **CSS** (`drawer.less:26-52`), confirmed directly:
+- **CSS** (`drawer.less`), confirmed directly:
   ```less
   &__overlay { background: var(--hdx-overlay-black-25); }
   &__container {
@@ -264,7 +264,7 @@ it would mean overriding vendor library defaults rather than touching HDX code.
       .c-drawer.is-open & { transform: translateX(0); }
   }
   ```
-  `--hdx-overlay-black-25` resolves (`overlays.less:29`) to `rgba(0, 0, 0, 0.25)`.
+  `--hdx-overlay-black-25` resolves (`overlays.less`) to `rgba(0, 0, 0, 0.25)`.
 - **Values found**: slide **0.3s (300ms), `ease-out`** — exact match to spec. Backdrop **black at 25%
   opacity**, via a design token rather than an inline literal — exact match to spec.
 - **Reuse note**: this exact mechanism (same duration/easing/backdrop) is shared by every other drawer in
@@ -285,9 +285,9 @@ it would mean overriding vendor library defaults rather than touching HDX code.
 |---|---|---|---|
 | Homepage bar chart | Dissolve (fade out, no fade in) · linear · 300ms · 2500ms cycle | Bar: symmetric `background-color` cross-fade · Label: asymmetric `opacity` fade-out/instant-show · **linear** · **300ms** · **2500ms** | Exact match after revision |
 | Map zoom *(out of scope)* | Dissolve · ease-out · 300ms | Vendor Leaflet `transform` · `cubic-bezier(0,0,0.25,1)` · 0.25s | Close, not exact; vendor default |
-| Signals carousel | Smart Animate · ease-out · 300ms, arrow-triggered | Shared engine · default `ease` · 350ms — **no arrow buttons exist** | Mismatch on timing/easing; premise (arrows) doesn't hold |
+| Signals carousel | Smart Animate · ease-out · 300ms, arrow-triggered | Shared engine · **ease-out** · **300ms**; arrows wired | Exact match after revision |
 | Mobile nav "profile" slide-in | Smart Animate · custom spring (4/1/0.01) · from right margin | **Instant `hidden` swap, no transition/transform at either level** | Full gap |
-| Highlights carousel | Smart Animate · ease-out · 300ms, arrow-triggered | Shared engine · default `ease` · 350ms; arrows do exist | Timing/easing mismatch only |
+| Highlights carousel | Smart Animate · ease-out · 300ms, arrow-triggered | Shared engine · **ease-out** · **300ms**; arrows wired | Exact match after revision |
 | Map hover tooltip | Instant | Two ~200ms animations (HDX fill + vendor popup fade) | Not instant |
 | Anchor links (site-wide + drawer) | Smart Animate · custom bezier(0.6,0,0.3,1) · 500ms | Custom rAF loop · **bezier(0.6,0,0.3,1)** · **500ms** | Exact match (one unrelated call site diverges, §1.7) |
 | Data-grid drawer ("Definitions") | Move in · ease-out · 300ms · backdrop #000 @25% | `translateX` · **ease-out** · **0.3s** · **`--hdx-overlay-black-25`** | Exact match |

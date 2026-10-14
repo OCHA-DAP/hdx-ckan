@@ -10,7 +10,7 @@
 This is a **migration, not a redesign** — the bell dropdown must match Figma exactly while preserving every existing notification type and behavior. The v1 legacy dropdown (Bootstrap, `light/notifications/notification_snippet.html`) keeps rendering for non-v2 sessions: the 4 shared snippets still branch on `{% if v2 %}`, rendering the new markup only in the v2 branch, and `header-global.html`/`notification_snippet.html` are left untouched (see §3).
 
 Two important framing corrections vs. the original task brief, confirmed with the user during planning:
-1. **"Notifications" already names a different, unrelated feature.** `hdx_user.notifications` (route `views/user.py:227`, template `user/notifications.html`) is the "Subscribe to Notifications" hub — email opt-in/opt-out for dataset/org/location updates, entirely separate data model, already migrated to v2 drawers in task 051. This doc's subject — the bell-dropdown backlog (membership requests, HDX Connect requests, expired datasets, quarantined datasets) — is **unrelated** to it. The two must not be confused or merged.
+1. **"Notifications" already names a different, unrelated feature.** `hdx_user.notifications` (route `notifications()` in `views/user.py`, template `user/notifications.html`) is the "Subscribe to Notifications" hub — email opt-in/opt-out for dataset/org/location updates, entirely separate data model, already migrated to v2 drawers in task 051. This doc's subject — the bell-dropdown backlog (membership requests, HDX Connect requests, expired datasets, quarantined datasets) — is **unrelated** to it. The two must not be confused or merged.
 2. **No read/unread state exists today**, in backend or Figma. This doc does not invent one.
 
 ---
@@ -20,8 +20,8 @@ Two important framing corrections vs. the original task brief, confirmed with th
 ### 1.1 Data flow (unchanged by this task)
 
 ```
-h.hdx_get_user_notifications()                        [ckanext-hdx_users/helpers/helpers.py:65]
-  → get_notification_service()                        [helpers/notification_service.py:19]
+h.hdx_get_user_notifications()                        [ckanext-hdx_users/helpers/helpers.py]
+  → get_notification_service()                        [helpers/notification_service.py]
     → NotificationService.get_notifications()          combines 4 sub-services, sorts by last_date desc
         MembershipRequestsService     → org_membership_snippet.html
         RequestDataService (+Sysadmin variant)  → requestdata_snippet.html
@@ -59,11 +59,11 @@ The 4 type snippets are `{% include %}`'d by *both* the v1 and v2 shells (same f
 
 ### 1.4 Read/unread state
 
-**None exists.** No DB column, no API action, no localStorage. All 4 types are computed live each page load from current DB/SOLR state (pending membership row, open `requestdata` row, `due_date` passed, quarantine flag true) and disappear once the underlying condition resolves — not once "read." The only related CKAN-core action, `dashboard_mark_activities_old` (`ckanext/activity/logic/action.py:58`), is unused by this system. Figma exports show no unread indicator. **Out of scope — no read/unread concept is invented.**
+**None exists.** No DB column, no API action, no localStorage. All 4 types are computed live each page load from current DB/SOLR state (pending membership row, open `requestdata` row, `due_date` passed, quarantine flag true) and disappear once the underlying condition resolves — not once "read." The only related CKAN-core action, `dashboard_mark_activities_old` (`ckanext/activity/logic/action.py`), is unused by this system. Figma exports show no unread indicator. **Out of scope — no read/unread concept is invented.**
 
 ### 1.5 Analytics (must be preserved exactly)
 
-`hdxUtil.analytics.sendNotificationInteractionEvent(data)` (`fanstatic/google-analytics.js:445`) dispatches to both Mixpanel and GTM (`event: 'notification interaction hdx'`) with `type: 'header icon'|'item'`, `personal: boolean`, `count`, `destinationUrl`. Function signature and call sites are unchanged by this task — only the *wiring* that triggers the header-icon call is added for v2 (§1.3, §5).
+`hdxUtil.analytics.sendNotificationInteractionEvent(data)` (`fanstatic/google-analytics.js`) dispatches to both Mixpanel and GTM (`event: 'notification interaction hdx'`) with `type: 'header icon'|'item'`, `personal: boolean`, `count`, `destinationUrl`. Function signature and call sites are unchanged by this task — only the *wiring* that triggers the header-icon call is added for v2 (§1.3, §5).
 
 ### 1.6 No existing "list page" — and none is being built
 
@@ -206,7 +206,7 @@ If a full-list page is wanted later, this section's original design (standalone 
 
 | v1 | v2 |
 |---|---|
-| `background-color: lightyellow;` (`.for-sysadmin`, `_global-header.less:249`; `.hdx-v2-notifications__item--sysadmin`, `navbar.less:472`, also hardcoded `lightyellow`) | `var(--hdx-warning-1)` (`#f6e9d4`) on the new `.c-notification-item--sysadmin` — closest token to the current pale-yellow look. Moves from the dropdown-specific `.hdx-v2-notifications__item` wrapper to the shared shell. |
+| `background-color: lightyellow;` (`.for-sysadmin`, `_global-header.less`; `.hdx-v2-notifications__item--sysadmin`, `navbar.less`, also hardcoded `lightyellow`) | `var(--hdx-warning-1)` (`#f6e9d4`) on the new `.c-notification-item--sysadmin` — closest token to the current pale-yellow look. Moves from the dropdown-specific `.hdx-v2-notifications__item` wrapper to the shared shell. |
 | Plain inline text, `<br>`, `.date { color: @grayColor }` | `.c-notification-item__title` uses `.hdx-body-s()`; `.c-notification-item__meta`/`__date` uses `.hdx-body-xs()`; flex row layout matching Figma's `.time-parent` |
 | No per-item icon | `.c-notification-item__arrow` — now an `<a>` (§4, second click target), reuses existing `v2/icons/arrow-right.svg`, sized `1rem` per Figma |
 
