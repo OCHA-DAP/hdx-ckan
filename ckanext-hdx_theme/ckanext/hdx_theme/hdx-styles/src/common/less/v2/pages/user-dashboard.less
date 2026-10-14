@@ -101,6 +101,43 @@
     }
 }
 
+// ── API Tokens form + list ────────────────────────────────────
+.hdx-v2-api-tokens {
+    display:        flex;
+    flex-direction: column;
+    gap:            var(--hdx-space-6);
+
+    @media (min-width: @hdx-bp-md) { width: 80%; }
+
+    &__form {
+        display:        flex;
+        flex-direction: column;
+        gap:            var(--hdx-space-5);
+    }
+
+    &__actions {
+        display:         flex;
+        justify-content: flex-end;
+    }
+
+    &__title {
+        .hdx-dashboard-title();
+    }
+}
+
+// ── API token created (flash content) ─────────────────────────
+.hdx-v2-api-token-created {
+    display:        flex;
+    flex-direction: column;
+    align-items:    flex-start;
+    gap:            var(--hdx-space-2);
+
+    &__token {
+        .hdx-body-s-semibold();
+        word-break: break-all;
+    }
+}
+
 // ── Empty state ───────────────────────────────────────────────
 .hdx-v2-user-dashboard-empty {
     .hdx-list-header-empty();

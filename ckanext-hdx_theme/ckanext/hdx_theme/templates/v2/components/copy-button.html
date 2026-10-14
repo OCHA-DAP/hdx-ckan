@@ -11,7 +11,7 @@
   style         {string}  'secondary' | 'tertiary'.  default: 'secondary'
   size          {string}  'm' | 's'.  default: 'm'
   icon_position {string}  'left' | 'right'.  default: 'left'
-  label         {string}  Button label.  default: 'Copy'
+  label         {string}  Button label.  default: _('Copy')
   extra_classes {string}  Extra CSS classes.  default: ''
   ─────────────────────────────
 #}
@@ -19,7 +19,7 @@
 {% set style         = style         if style         is defined else 'secondary' %}
 {% set size          = size          if size          is defined else 'm' %}
 {% set icon_position = icon_position if icon_position is defined else 'left' %}
-{% set label         = label         if label         is defined else 'Copy' %}
+{% set label         = label         if label         is defined else _('Copy') %}
 {% set extra_classes = extra_classes if extra_classes is defined else '' %}
 
 <button type="button"

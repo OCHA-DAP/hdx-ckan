@@ -6,13 +6,15 @@ from ckan.types import Context
 from flask import Blueprint, url_for
 
 import ckan.authz as new_authz
+import ckan.lib.navl.dictization_functions as dictization_functions
+import ckan.logic as logic
 import ckan.model as model
 import ckanext.hdx_package.helpers.analytics as analytics
 import ckanext.hdx_users.helpers.helpers as usr_h
 import ckanext.hdx_users.helpers.mailer as hdx_mailer
 import ckanext.hdx_users.helpers.tokens as tokens
 
-from ckan.views.user import PerformResetView, RequestResetView
+from ckan.views.user import ApiTokenView, PerformResetView, RequestResetView
 from ckan.views.user import (
     follow as _follow, followers as _followers, unfollow as _unfollow, logout as _logout
 )
@@ -241,6 +243,51 @@ def _extra_template_variables(context, data_dict):
     return extra
 
 
+class HDXApiTokenView(ApiTokenView):
+    """
+    "API Tokens" settings page: list and create (the new token is shown once, in a flash)
+    """
+
+    def get(self, id, data=None, errors=None):
+        context = {
+            u'user': current_user.name,
+            u'auth_user_obj': current_user,
+            u'for_view': True,
+            u'include_plugin_extras': True
+        }
+        try:
+            tokens = get_action(u'api_token_list')(context, {u'user': id})
+        except NotAuthorized:
+            abort(403, _(u'Unauthorized to view API tokens.'))
+        except NotFound:
+            abort(404, _(u'User not found'))
+
+        extra_vars = _extra_template_variables(context, {u'id': id})
+        extra_vars.update({
+            u'tokens': tokens,
+            u'data': data,
+            u'errors': errors
+        })
+        return render(u'user/api_tokens.html', extra_vars=extra_vars)
+
+    def post(self, id):
+        data_dict = logic.clean_dict(
+            dictization_functions.unflatten(
+                logic.tuplize_dict(logic.parse_params(request.form))))
+        data_dict[u'user'] = id
+        try:
+            token = get_action(u'api_token_create')({}, data_dict)[u'token']
+        except NotAuthorized:
+            abort(403, _(u'Unauthorized to create API tokens.'))
+        except NotFound:
+            abort(404, _(u'User not found'))
+        except ValidationError as e:
+            return self.get(id, data_dict, e.error_dict)
+
+        h.flash_success(h.snippet(u'user/snippets/api_token_created.html', token=token), allow_html=True)
+        return h.redirect_to(u'user.api_tokens', id=id)
+
+
 def logged_out_page():
     return redirect(url_for('home.index'))
 
@@ -339,6 +386,7 @@ user.add_url_rule(u'/followers/<id>', view_func=_followers)
 
 user.add_url_rule(u'/organizations/<id>', view_func=read_organizations)
 user.add_url_rule(u'/<id>/organizations', view_func=read_organizations_moved)
+user.add_url_rule(u'/<id>/api-tokens', view_func=HDXApiTokenView.as_view(str(u'api_tokens')))
 user.add_url_rule(u'/<id>', view_func=read)
 
 user.add_url_rule('/configure_mfa/<id>', view_func=HDXTwoStep.configure_mfa, methods=['POST'])

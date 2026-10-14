@@ -89,7 +89,7 @@ There are three active layout base templates. The goal is to maintain exactly th
 - `ckanext-hdx_theme/ckanext/hdx_theme/templates/v2/header.html` — top-bar + responsive navbar (fully implemented)
 - `ckanext-hdx_theme/ckanext/hdx_theme/templates/v2/footer.html` — dark-teal footer panel (fully implemented)
 
-Pages in holding state on `page_light.html` (org/join, etc.) manually override `{% block header_core %}` to include the legacy `header-mobile.html`. The following pages have been migrated to `v2/page.html`: homepage, dataset search, dataset page, resource page, all locations, all organisations, organization page (Datasets / Activity / Stats / Members tabs; HDX Connect tab postponed), contact contributor, signup flow (all five pages), HAPI landing page, Signals landing page, and My Organisations, My Datasets, HDX Connect Requests, My Activity Stream and User Permission (user dashboard and settings, via `v2/user-dashboard-base.html`). See [**redesign/PROGRESS.md**](redesign/PROGRESS.md) for the full holding-state and migrated-pages lists.
+Pages in holding state on `page_light.html` (org/join, etc.) manually override `{% block header_core %}` to include the legacy `header-mobile.html`. See [**redesign/PROGRESS.md**](redesign/PROGRESS.md) for the full holding-state and migrated-pages lists.
 
 ## BEM components (HDX custom UI blocks)
 
@@ -261,6 +261,15 @@ Example page-specific template (light search):
 
 ---
 
+### API Tokens settings (`/user/<id>/api-tokens`)
+
+- **Template**: `ckanext-hdx_theme/ckanext/hdx_theme/templates/user/api_tokens.html`
+  - Extends `v2/user-dashboard-base.html`; another user's page gets the profile header. A create form (`text-field.html`, `select.html`, `c-button`) and the token list (`user/snippets/api_token_list.html` → `table.html`, a tertiary `c-button` Revoke form per row).
+  - `HDXApiTokenView` (`hdx_user.api_tokens`, same URL as core's `user.api_tokens`) runs a bare `user_show`, 404s unknown ids and flashes the new token through `user/snippets/api_token_created.html` (`c-copy-button`). Revoking stays core's `user.api_token_revoke`.
+- **Core assets**: as My Organisations.
+
+---
+
 ### Organisation page (`/organization/<name>`)
 
 - **Templates** (one per tab, all extend `v2/page.html` and share the `v2/org-hero.html` hero — `c-page-header` + `c-tabs`):
@@ -398,7 +407,7 @@ Add `data-hdx-v2-form-validator` to a `<form>` element. The validator (`fanstati
 
 **Error display — `c-search-input` fields**: the validator adds `c-search-input--error` to the input wrapper; a sibling `<span class="c-search-input__error">` (always rendered by the snippet, empty by default) is revealed via the CSS sibling rule `&--error ~ &__error { display: block }`. Server-side errors pre-populate the span and pre-add the modifier class from the template. No `style.display` manipulation — CSS drives visibility entirely.
 
-**Error display — `c-checkbox` fields**: same pattern — `c-checkbox--error` on the `.c-checkbox` wrapper drives a sibling `<span class="c-checkbox__error">` via CSS. The snippet renders the empty span after the label, unless `error_slot=false` (list-item checklist rows, never validated).
+**Error display — `c-checkbox` fields**: same pattern — `c-checkbox--error` on the `.c-checkbox` wrapper drives a sibling `<span class="c-checkbox__error">` via CSS. The snippet renders the empty span after the label, unless `error_slot=false` (for fields that are never validated).
 
 Pass `data-validation-error="…"` (via `input_attrs` / `attrs`) for the inline error text. Fields using `data-live-feedback` use the `c-form-validator__live-feedback` panel as the primary error UI and may omit `data-validation-error`.
 

@@ -102,6 +102,46 @@
 .hdx-v2-user-permission__item .c-checkbox__error {
   grid-column: 2;
 }
+.hdx-v2-api-tokens {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hdx-space-6);
+}
+@media (min-width: 48rem) {
+  .hdx-v2-api-tokens {
+    width: 80%;
+  }
+}
+.hdx-v2-api-tokens__form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hdx-space-5);
+}
+.hdx-v2-api-tokens__actions {
+  display: flex;
+  justify-content: flex-end;
+}
+.hdx-v2-api-tokens__title {
+  font-family: var(--hdx-font-display);
+  font-size: var(--hdx-fs-2xl);
+  font-weight: var(--hdx-fw-bold);
+  line-height: var(--hdx-lh-normal);
+  color: var(--hdx-neutral-95);
+  margin: 0;
+}
+.hdx-v2-api-token-created {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--hdx-space-2);
+}
+.hdx-v2-api-token-created__token {
+  font-family: var(--hdx-font-body);
+  font-size: var(--hdx-fs-s);
+  font-weight: var(--hdx-fw-semibold);
+  line-height: var(--hdx-lh-normal);
+  word-break: break-all;
+}
 .hdx-v2-user-dashboard-empty {
   font-family: var(--hdx-font-body);
   font-size: var(--hdx-fs-m);
