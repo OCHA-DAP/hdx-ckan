@@ -122,6 +122,8 @@ Rendered when there are more file formats than the visible set:
 | `query` | string | `''` | Search term to highlight in title/description via the `highlight` JS module |
 | `extra_classes` | string | `''` | Additional CSS classes on root `.c-dataset-card` element |
 | `labels` | list | `[]` | `c-label` param dicts; when non-empty the org line becomes a `__top` row (org left, `__labels` right, wrapping under the org) |
+| `title_action` | dict | `{}` | `button.html` params; when non-empty the title becomes a `__title-row` with the button on the right, wrapping under the title at SM |
+| `meta_items` | list | `[]` | `{label, value, tooltip?, chip?}` dicts (`tooltip` = `{text, id, aria_label}` info-icon, `chip` = `{text, color}` xs `c-label`, cyan by default); a `__meta` `<dl>` in `__left` below the title, 20px from it; equal `__meta-item` columns at MD+, stacked at SM |
 | `caller()` | block | — | Optional `__actions` row below the body; children are `__actions-group` divs at opposite ends; a single group aligns right |
 
 `__right` renders only when `location`, `date_range` or `formats` is set.

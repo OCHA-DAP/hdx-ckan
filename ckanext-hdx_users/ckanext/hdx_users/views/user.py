@@ -294,21 +294,18 @@ def logged_out_page():
 
 def notifications(id=None):
     """
-    "Notifications" tab
+    "Notifications Settings" page: the user's email-notification subscriptions
     """
 
     if not current_user.is_authenticated:
         return h.redirect_to('user.login', came_from=h.url_for('hdx_user.notifications', id=id))
 
-    context: Context = {'model': model, 'session': model.Session, 'user': current_user.name}
+    context: Context = {'model': model, 'session': model.Session, 'user': current_user.name,
+                        'auth_user_obj': current_user, 'for_view': True}
 
-    data_dict = {'id': id, 'include_num_followers': True}
-    try:
-        user_dict = get_action('user_show')(context, data_dict)
-    except NotFound:
-        abort(404, _(u'User not found'))
-    except NotAuthorized:
-        abort(403, _(u'Not authorized to see this page'))
+    extra_vars = _extra_template_variables(context, {'id': id})
+    user_dict = extra_vars['user_dict']
+    is_myself = extra_vars['is_myself']
 
     try:
         subscriptions = tk.get_action('hdx_notifications_subscription_list')(context, {'user_id': id})
@@ -317,15 +314,14 @@ def notifications(id=None):
             object_id = subscription.get('object')
 
             try:
-                object_dict = _get_object_dict(object_type, object_id)
-                unsubscribe_token = get_by_type_and_user_id_and_object(TokenType.UNSUBSCRIBE_FOR_NOTIFICATION, current_user.id, object_type, object_id)
-                subscription['object_dict'] = object_dict
+                subscription['object_dict'] = _get_object_dict(object_type, object_id)
                 subscription['object_link'] = _generate_url_for(object_type, object_id, True)
-                subscription['unsubscribe_token'] = unsubscribe_token
-                subscription['unsubscribe_email'] = user_dict.get('email')
-            except tk.ObjectNotFound:
+                if is_myself:
+                    subscription['unsubscribe_token'] = get_by_type_and_user_id_and_object(TokenType.UNSUBSCRIBE_FOR_NOTIFICATION, current_user.id, object_type, object_id)
+                    subscription['unsubscribe_email'] = user_dict.get('email')
+            except (tk.ObjectNotFound, NotAuthorized):
                 subscription['object_dict'] = None
-                log.warning(f'{object_type.value} {object_id} does not exist for user {id}. Skipping subscription.')
+                log.warning(f'{object_type.value} {object_id} does not exist or is not accessible for user {id}. Skipping subscription.')
                 # raise tk.ValidationError(f'{object_type.value} {object_id} does not exist')
             except Exception as e:
                 log.error(f'Error retrieving target or user: {e}')
@@ -333,16 +329,16 @@ def notifications(id=None):
     except NotAuthorized:
         abort(403, _(u'Not authorized to see this page'))
 
-    # remove any subscriptiohns with problems (like missing object)
+    # remove any subscriptions with problems (like missing object)
     subscriptions = [s for s in subscriptions if s.get('object_dict')]
 
-    return render('user/notifications.html', extra_vars={
+    extra_vars.update({
         'subscriptions': subscriptions,
-        'user_dict':  user_dict,
         'analytics': {
             'analytics_came_from': analytics.came_from(request.args),
         }
     })
+    return render('user/notifications.html', extra_vars=extra_vars)
 
 
 def _get_object_dict(object_type, object_id):

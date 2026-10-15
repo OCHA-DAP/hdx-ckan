@@ -82,18 +82,29 @@
         }
     }
 
-    // ── __top ────────────────────────────────────────────────
-    &__top {
+    // ── __top, __title-row ───────────────────────────────────
+    &__top,
+    &__title-row {
         display:         flex;
         flex-wrap:       wrap;
         align-items:     center;
         justify-content: space-between;
         gap:             var(--hdx-space-13) var(--hdx-space-5);  // 6px row / 20px column
         width:           100%;
+    }
 
-        .c-dataset-card__org {
-            width:     auto;
-            max-width: 100%;
+    &__top .c-dataset-card__org {
+        width:     auto;
+        max-width: 100%;
+    }
+
+    &__title-row .c-dataset-card__title {
+        flex:       1 1 100%;
+        align-self: auto;
+
+        @media (min-width: @hdx-bp-md) {
+            flex:      1;
+            min-width: 0;
         }
     }
 
@@ -156,6 +167,47 @@
         }
 
         &.is-open { display: block; }
+    }
+
+    // ── __meta ───────────────────────────────────────────────
+    &__meta {
+        display:        flex;
+        flex-direction: column;
+        gap:            var(--hdx-space-5);  // 20px
+        width:          100%;
+        margin:         calc(var(--hdx-space-5) - var(--hdx-space-13)) 0 0;  // 20px below the title
+        color:          var(--hdx-neutral-85);
+
+        @media (min-width: @hdx-bp-md) {
+            flex-direction: row;
+        }
+    }
+
+    &__meta-item {
+        display:        flex;
+        flex-direction: column;
+        gap:            var(--hdx-space-2);  // 8px
+        min-width:      0;
+
+        @media (min-width: @hdx-bp-md) {
+            flex: 1;
+        }
+    }
+
+    &__meta-label {
+        display:     flex;
+        align-items: center;
+        gap:         var(--hdx-space-1);  // 4px
+        .hdx-body-s-semibold();
+    }
+
+    &__meta-value {
+        display:     flex;
+        flex-wrap:   wrap;
+        align-items: center;
+        gap:         var(--hdx-space-1) var(--hdx-space-13);  // 4px / 6px
+        margin:      0;
+        .hdx-body-s();
     }
 
     // ── __right ──────────────────────────────────────────────
@@ -283,6 +335,9 @@
     display:        flex;
     flex-direction: column;
     gap:            var(--hdx-space-4);
+    list-style:     none;
+    margin:         0;
+    padding:        0;
 
     // Search highlight — text matched by the highlight.js module.
     // The legacy rule lives in deprecated.css (page-styles bundle),

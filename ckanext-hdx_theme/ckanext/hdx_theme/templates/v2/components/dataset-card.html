@@ -4,7 +4,8 @@
 
   Renders a .c-dataset-card component — organisation, title, description
   toggle, location labels, date range, file format badges, optional
-  top-row labels and actions row, and a footer "view others" link.
+  top-row labels, title action, metadata columns and actions row, and a
+  footer "view others" link.
 
   Responsive: two-column row at MD+, stacked single-column at SM. The right
   column renders only when location, date_range or formats is set.
@@ -75,6 +76,22 @@
                              the row doesn't fit.
                              default: []
 
+  title_action     {dict}    c-button params (button.html), rendered right of
+                             the title; wraps under the title at SM.
+                             default: {}
+
+  meta_items       {list}    Label/value columns below the title, as a <dl>:
+                             equal columns at MD+, stacked at SM. Each item:
+                               label   {string} column heading
+                               value   {string} value text
+                               tooltip {dict}   {text, id, aria_label} —
+                                                info-icon after the label
+                                                (optional)
+                               chip    {dict}   {text, color} — c-label xs
+                                                after the value, color
+                                                default 'cyan' (optional)
+                             default: []
+
   caller()         block     Optional. Renders an actions row below the body.
                              Wrap related controls in
                              <div class="c-dataset-card__actions-group">; the
@@ -116,6 +133,15 @@
     <div class="c-dataset-card__actions-group">…text buttons…</div>
     <div class="c-dataset-card__actions-group">…buttons…</div>
   {% endcall %}
+
+  Title action + metadata columns:
+  {% snippet 'v2/components/dataset-card.html',
+      title='Dataset: Sudan Crisis Data 2024',
+      title_href='/dataset/sudan-crisis',
+      title_action={'style': 'tertiary', 'size': 's', 'label': 'Unsubscribe',
+                    'icon_src': 'v2/icons/delete.svg'},
+      meta_items=[{'label': 'Update type:', 'value': 'Dataset is updated'},
+                  {'label': 'Receive notifications:', 'value': 'By Email'}] %}
 #}
 
 {# ── Defaults ────────────────────────────────────────────── #}
@@ -134,6 +160,8 @@
 {% set extra_classes     = extra_classes     if extra_classes     is defined else '' %}
 {% set query             = query             if query             is defined else '' %}
 {% set labels            = labels            if labels            is defined else [] %}
+{% set title_action      = title_action      if title_action      is defined else {} %}
+{% set meta_items        = meta_items        if meta_items        is defined else [] %}
 
 {# ── BEM class list ──────────────────────────────────────── #}
 {% set classes = ['c-dataset-card'] %}
@@ -169,7 +197,12 @@
       {% endif %}
 
       {% if title %}
+        {% if title_action %}<div class="c-dataset-card__title-row">{% endif %}
         <a class="c-dataset-card__title" href="{{ title_href }}"{% if query %} data-module="highlight" data-module-text="{{ query }}"{% endif %}>{{ title }}</a>
+        {% if title_action %}
+          {{ h.snippet('v2/components/button.html', **title_action) }}
+        </div>
+        {% endif %}
       {% endif %}
 
       {% if description %}
@@ -182,6 +215,31 @@
               tag='button', button_type='button',
               attrs={'data-clamped-toggle': ''} %}
         </div>
+      {% endif %}
+
+      {% if meta_items %}
+        <dl class="c-dataset-card__meta">
+          {% for item in meta_items %}
+            <div class="c-dataset-card__meta-item">
+              <dt class="c-dataset-card__meta-label">
+                {{ item.label }}
+                {% if item.tooltip %}
+                  {% snippet 'v2/components/info-icon.html',
+                      aria_label=item.tooltip.aria_label,
+                      tooltip_text=item.tooltip.text,
+                      tooltip_id=item.tooltip.id %}
+                {% endif %}
+              </dt>
+              <dd class="c-dataset-card__meta-value">
+                <span>{{ item.value }}</span>
+                {% if item.chip %}
+                  {% snippet 'v2/components/label.html',
+                      text=item.chip.text, color=item.chip.color or 'cyan', size='xs' %}
+                {% endif %}
+              </dd>
+            </div>
+          {% endfor %}
+        </dl>
       {% endif %}
 
     </div>

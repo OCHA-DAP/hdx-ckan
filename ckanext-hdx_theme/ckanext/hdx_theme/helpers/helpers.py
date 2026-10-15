@@ -1442,7 +1442,7 @@ def hdx_get_user_dashboard_nav_sections(user_name=None):
                                'href': h.url_for('user.api_tokens', id=user_name)})
     if is_own or h.check_access('user_update', {'id': user_name}):
         settings_items += [
-            {'id': 'notifications_settings', 'label': _('Notifications settings'),
+            {'id': 'notifications_settings', 'label': _('Notifications Settings'),
              'href': h.url_for('hdx_user.notifications', id=user_name)},
             {'id': 'profile_and_password', 'label': _('Profile and Password'),
              'href': h.url_for('hdx_user.edit', id=user_name)},

@@ -270,6 +270,16 @@ Example page-specific template (light search):
 
 ---
 
+### Notifications Settings (`/user/notifications/<id>`)
+
+- **Template**: `ckanext-hdx_theme/ckanext/hdx_theme/templates/user/notifications.html`
+  - Extends `v2/user-dashboard-base.html`; another user's page (sysadmins only) gets the profile header and a read-only list. One `c-dataset-card` per subscription in a `c-dataset-card-list` `<ul>`: "{Type}: {title}", `meta_items` (Update type / Receive notifications / Update frequency), and an Unsubscribe `title_action` on your own page when the subscription has an active token.
+  - Unsubscribe fills and opens the 051 drawers (`notification_platform/unsubscribe_drawers.html`, also included by `modals.html`); `onUnsubscribeSubmit` posts; closing the success drawer reloads the page.
+  - The `hdx_user.notifications` view uses `_extra_template_variables()` and drops subscriptions whose object is gone or unreadable.
+- **Core assets**: as My Organisations, plus `notification-platform-util-scripts` and `v2-notifications-settings-page-scripts` on your own page when it has subscriptions.
+
+---
+
 ### Organisation page (`/organization/<name>`)
 
 - **Templates** (one per tab, all extend `v2/page.html` and share the `v2/org-hero.html` hero — `c-page-header` + `c-tabs`):

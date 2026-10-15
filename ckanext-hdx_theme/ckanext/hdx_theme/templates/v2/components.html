@@ -2017,7 +2017,7 @@
   ══════════════════════════════════════════════════════ #}
   <section class="demo-section" id="dataset-card">
     <h1 class="demo-section__title">Dataset Card</h1>
-    <p class="demo-section__subtitle">responsive · two-column (MD+) · stacked (SM) · description toggle · labels · actions</p>
+    <p class="demo-section__subtitle">responsive · two-column (MD+) · stacked (SM) · description toggle · labels · actions · title action · metadata columns</p>
 
     {# ── Full card — all features enabled ─────────────── #}
     <h2 class="demo-subsection__heading">Full card — location, subnational, description, mixed formats, overflow</h2>
@@ -2116,6 +2116,24 @@
               icon_src='v2/icons/mail.svg', label='Send a group message' %}
         </div>
       {% endcall %}
+    </div>
+
+    {# ── Title action + metadata columns ──────────────── #}
+    <h2 class="demo-subsection__heading">Title action + metadata columns — action wraps under the title (SM), columns stack (SM)</h2>
+    <div class="demo-row demo-row--flex-start">
+      {% snippet 'v2/components/dataset-card.html',
+          title='Dataset: Sudan — Example Weekly Displacement Tracking Dataset 2024',
+          title_href='#',
+          title_action={'style': 'tertiary', 'size': 's', 'label': 'Unsubscribe',
+                        'icon_src': 'v2/icons/delete.svg',
+                        'attrs': {'aria-label': 'Unsubscribe from Dataset: Sudan — Example Weekly Displacement Tracking Dataset 2024'}},
+          meta_items=[
+            {'label': 'Update type:', 'value': 'Dataset is updated',
+             'tooltip': {'text': 'Example tooltip text.', 'id': 'demo-dataset-card-meta-tooltip', 'aria_label': 'More info about update type'}},
+            {'label': 'Receive notifications:', 'value': 'By Email',
+             'chip': {'text': 'Example', 'color': 'cyan'}},
+            {'label': 'Update frequency:', 'value': 'As soon as possible'},
+          ] %}
     </div>
 
   </section>
