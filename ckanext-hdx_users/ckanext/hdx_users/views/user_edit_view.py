@@ -37,37 +37,60 @@ NotAuthorized = tk.NotAuthorized
 NotFound = tk.ObjectNotFound
 ValidationError = tk.ValidationError
 
+
+def _two_step_user_or_abort(id):
+    context = {
+        'model': model,
+        'session': model.Session,
+        'user': g.user,
+        'auth_user_obj': g.userobj
+    }
+    try:
+        check_access('user_update', context, {'id': id})
+        return get_action('user_show')(context, {'id': id})
+    except NotAuthorized:
+        abort(403, _('Unauthorized to edit a user.'))
+    except NotFound:
+        abort(404, _('User not found'))
+
+
 class HDXTwoStep:
     @staticmethod
     def configure_mfa(id=None):
+        user_dict = _two_step_user_or_abort(id)
         tc = utils.configure_mfa(id)
         helpers.get_flashed_messages()
-        helpers.flash_success("Successfully configured and enabled the two-step verification.")
-        session['totp_enabled'] = True
+        if tc.mfa_test_valid:
+            helpers.flash_success("Successfully configured and enabled the two-step verification.")
+            if user_dict['id'] == g.userobj.id:
+                session['totp_enabled'] = True
         return json.dumps({'success': (tc.mfa_test_valid == True)})
 
     @staticmethod
     def new(id=None):
+        user_dict = _two_step_user_or_abort(id)
         utils.new(id)
-        tc = utils.configure_mfa(id)
+        tc = SecurityTOTP.get_for_user(user_dict['name'])
         helpers.get_flashed_messages()
         helpers.flash_error("Two-step verification enabled. "
                             "Please add the new secret to your authenticator app and verify the code to ensure it is working ok.")
         return json.dumps({
             'success': True,
-            'totp_challenger_uri': tc.totp_challenger_uri,
-            'totp_secret': tc.totp_secret
+            'totp_challenger_uri': tc.provisioning_uri,
+            'totp_secret': tc.secret
         })
 
     @staticmethod
     def delete(id=None):
+        user_dict = _two_step_user_or_abort(id)
         totp_challenger = SecurityTOTP.get_for_user(id)
         helpers.get_flashed_messages()
         helpers.flash_success("Successfully disabled the two-step verification.")
         if totp_challenger:
             totp_challenger.delete()
             totp_challenger.commit()
-        session['totp_enabled'] = False
+        if user_dict['id'] == g.userobj.id:
+            session['totp_enabled'] = False
         return json.dumps({'success': True})
 
     @staticmethod
