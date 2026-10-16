@@ -204,8 +204,9 @@ whether server-rendered or JS-toggled.
   status message.
 - Visibility contract: visible by default; JS-managed instances render with
   `hidden=True` and toggle the `hidden` **attribute** (`alert.hidden = false`).
-  No `is-visible`/display classes. `window.hdxV2.showAlert(alertEl, text)`
-  (`utils.js`) sets the message and unhides the alert.
+  No `is-visible`/display classes. `window.hdxV2.showAlert(alertEl, text, variant)`
+  (`utils.js`) sets the message and unhides the alert; the optional `variant`
+  swaps the `c-alert--*` class and the role.
 - Dismissible by default (renders a `.c-alert__close` button); pass
   `dismissible=False` only when there's a specific reason an instance
   shouldn't be dismissed independently of the surrounding form/drawer.
@@ -258,7 +259,9 @@ Pages with their own anchor-linked content sections (`hdx-v2-dataset-section` on
 component — each page has its own extra variants (the dataset page adds `&__title-row`, `&__chevron`,
 and a `&--collapsible` modifier the resource page doesn't need). The padding/scroll-margin/header/
 body styling is factored into `mixins.less` (`.hdx-page-section-wrapper()`, `.hdx-page-section-header()`,
-`.hdx-page-section-body()`) — call these instead of re-declaring the rules.
+`.hdx-page-section-body()`) — call these instead of re-declaring the rules. The header row wraps
+(`flex-wrap: wrap`), so an action drops under the title in a narrow column, and
+`.hdx-page-section-header()` can also be called on its own for a title + action row.
 
 The section title itself calls `.hdx-section-title()` (18px SM / 20px MD+ Semibold).
 

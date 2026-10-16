@@ -16,6 +16,7 @@ import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
 import ckanext.hdx_users.helpers.mailer as hdx_mailer
 import ckanext.hdx_users.helpers.reset_password as reset_password
 from ckan.tests import factories
+from ckanext.hdx_org_group.helpers.static_lists import ORGANIZATION_TYPE_LIST
 
 NotAuthorized = tk.NotAuthorized
 
@@ -160,14 +161,15 @@ class TestEditUserEmail(hdx_test_base.HdxFunctionalBaseTest):
             headers=env,
         )
         # existing values in the form
-        assert '<input id="field-username" type="hidden" name="name" value="sue"' in response.body
-        assert '<input id="field-fullname" type="text" class="form-control" name="fullname"' in response.body
-        assert '<input id="field-email" type="email" class="form-control" name="email" value="sue@example.com"' in response.body
-        assert '<textarea id="field-about" class="form-control" name="about" cols="20" rows="5"' in response.body
-        # assert '<input id="field-activity-streams-email-notifications" type="checkbox" name="activity_streams_email_notifications" value="True"' in response.body
-        assert '<input id="field-password" type="password" class="form-control" name="old_password" value=""' in response.body
-        assert '<input id="field-password" type="password" class="form-control" name="password1" value=""' in response.body
-        assert '<input id="field-password-confirm" type="password" class="form-control" name="password2" value=""' in response.body
+        assert '<input type="hidden" name="name" value="sue">' in response.body
+        assert 'id="field-fullname"' in response.body
+        assert 'id="field-email"' in response.body
+        assert 'value="sue@example.com"' in response.body
+        assert 'id="field-about"' in response.body
+        assert 'id="field-activity-streams-email-notifications"' in response.body
+        assert 'id="field-old-password"' in response.body
+        assert 'id="field-password"' in response.body
+        assert 'id="field-password-confirm"' in response.body
 
         user_dict = tk.get_action('user_show')({
             'model': model, 'session': model.Session, 'user': 'testsysadmin'},
@@ -194,7 +196,8 @@ class TestEditUserEmail(hdx_test_base.HdxFunctionalBaseTest):
             headers=auth,
         )
         # existing email in the form
-        assert '<input id="field-email" type="email" class="form-control" name="email" value="sue@example.com"' in response.body
+        assert 'id="field-email"' in response.body
+        assert 'value="sue@example.com"' in response.body
 
         user_dict = tk.get_action('user_show')({
             'model': model, 'session': model.Session, 'user': 'testsysadmin'},
@@ -206,7 +209,7 @@ class TestEditUserEmail(hdx_test_base.HdxFunctionalBaseTest):
         user_updated = test_client.post(url_for, data=params, headers=auth)
 
         # error message in response
-        assert '<li data-field-label="Email">Email: The email address is already registered on HDX.</li>' in user_updated.body
+        assert '<span class="c-search-input__error">The email address is already registered on HDX.</span>' in user_updated.body
 
         # sue user email hasn't changed.
         user = model.Session.query(model.User).get(sue_user['id'])
@@ -224,7 +227,8 @@ class TestEditUserEmail(hdx_test_base.HdxFunctionalBaseTest):
             headers=auth,
         )
         # existing email in the form
-        assert '<input id="field-email" type="email" class="form-control" name="email" value="sue@example.com"' in response.body
+        assert 'id="field-email"' in response.body
+        assert 'value="sue@example.com"' in response.body
 
         user_dict = tk.get_action('user_show')({
             'model': model, 'session': model.Session, 'user': 'testsysadmin'},
@@ -236,7 +240,7 @@ class TestEditUserEmail(hdx_test_base.HdxFunctionalBaseTest):
         user_updated = test_client.post(url_for, data=params, headers=auth)
 
         # error message in response
-        assert '<li data-field-label="Email">Email: Email {} is not a valid format</li>'.format(
+        assert '<span class="c-search-input__error">Email {} is not a valid format</span>'.format(
             params['email']) in user_updated.body
 
         # sue user email hasn't changed.
@@ -256,7 +260,8 @@ class TestEditUserEmail(hdx_test_base.HdxFunctionalBaseTest):
             headers=auth,
         )
         # existing values in the form
-        assert '<input id="field-email" type="email" class="form-control" name="email" value="sue@example.com"' in response.body
+        assert 'id="field-email"' in response.body
+        assert 'value="sue@example.com"' in response.body
 
         user_dict = tk.get_action('user_show')({
             'model': model, 'session': model.Session, 'user': 'testsysadmin'},
@@ -266,7 +271,7 @@ class TestEditUserEmail(hdx_test_base.HdxFunctionalBaseTest):
         params['email'] = 'existing@example.com'
         auth = {'Authorization': sue_token}
         user_updated = test_client.post(url_for, data=params, headers=auth)
-        assert '<li data-field-label="Email">Email: The email address is already registered on HDX.</li>' in user_updated.body
+        assert '<span class="c-search-input__error">The email address is already registered on HDX.</span>' in user_updated.body
 
         user = model.Session.query(model.User).get(sue_user['id'])
         assert user.email == sue_user.get('email')
@@ -286,7 +291,8 @@ class TestEditUserEmail(hdx_test_base.HdxFunctionalBaseTest):
             headers=auth,
         )
         # existing values in the form
-        assert '<input id="field-email" type="email" class="form-control" name="email" value="sue@example.com"' in response.body
+        assert 'id="field-email"' in response.body
+        assert 'value="sue@example.com"' in response.body
 
         user_dict = tk.get_action('user_show')({
             'model': model, 'session': model.Session, 'user': 'testsysadmin'},
@@ -296,10 +302,98 @@ class TestEditUserEmail(hdx_test_base.HdxFunctionalBaseTest):
         params['email'] = 'EXISTING@example.com'
         auth = {'Authorization': sue_token}
         user_updated = test_client.post(url_for, data=params, headers=auth)
-        assert '<li data-field-label="Email">Email: The email address is already registered on HDX.</li>' in user_updated.body
+        assert '<span class="c-search-input__error">The email address is already registered on HDX.</span>' in user_updated.body
 
         user = model.Session.query(model.User).get(sue_user['id'])
         assert user.email == sue_user.get('email')
+
+    def test_edit_own_page(self):
+        '''A user's own page has the public profile link and no sysadmin sections.'''
+        factories.User(name='sue', email='sue@example.com', password='Abcdefgh12')
+        sue_token = factories.APIToken(user='sue', expires_in=2, unit=60 * 60)['token']
+
+        response = self.app.get(url=h.url_for('user.edit'), headers={'Authorization': sue_token})
+        assert '<h2 class="hdx-v2-user-dashboard-header__title">Profile and Password</h2>' in response.body
+        assert 'View public profile' in response.body
+        assert 'href="/user/sue"' in response.body
+        assert 'target="_blank" rel="noopener noreferrer"' in response.body
+        assert 'Old password' in response.body
+        assert 'id="two-step-drawer"' not in response.body
+        assert 'id="delete-user-drawer"' not in response.body
+
+    def test_edit_other_user_as_sysadmin(self):
+        '''A sysadmin on another user's page gets the 2FA and delete drawers.'''
+        sue_user = factories.User(name='sue', email='sue@example.com', fullname='Sue Tester')
+        factories.Sysadmin(name='sysadmin079')
+        token = factories.APIToken(user='sysadmin079', expires_in=2, unit=60 * 60)['token']
+
+        response = self.app.get(url=h.url_for('user.edit', id='sue'), headers={'Authorization': token})
+        assert "Update Sue Tester's account details, password, and login preferences" in response.body
+        assert 'Sysadmin password' in response.body
+        assert 'id="two-step-drawer"' in response.body
+        assert 'Turn on two-step verification' in response.body
+        assert 'id="delete-user-drawer"' in response.body
+        assert 'action="/user/delete/{}"'.format(sue_user['id']) in response.body
+        assert 'Are you sure you want to delete this user?' in response.body
+        assert response.body.count('c-button--size-m is-disabled"') == 1
+
+    def test_delete_drawer_for_maintainer(self):
+        '''A dataset maintainer's delete drawer lists the datasets and disables Confirm.'''
+        factories.User(name='sue', email='sue@example.com')
+        factories.Sysadmin(name='sysadmin079')
+        token = factories.APIToken(user='sysadmin079', expires_in=2, unit=60 * 60)['token']
+        factories.Group(name='location079')
+        factories.Organization(
+            name='org079',
+            title='Org 079',
+            users=[{'name': 'sue', 'capacity': 'admin'}],
+            hdx_org_type=ORGANIZATION_TYPE_LIST[0][1],
+            org_url='https://hdx.hdxtest.org/'
+        )
+        context = {'model': model, 'session': model.Session, 'user': 'sysadmin079'}
+        tk.get_action('package_create')(context, {
+            'package_creator': 'test function',
+            'private': False,
+            'dataset_date': '[1960-01-01 TO 2012-12-31]',
+            'caveats': 'These are the caveats',
+            'license_other': 'TEST OTHER LICENSE',
+            'methodology': 'This is a test methodology',
+            'dataset_source': 'Test data',
+            'license_id': 'hdx-other',
+            'name': 'dataset079',
+            'notes': 'This is a test dataset',
+            'title': 'Dataset 079',
+            'owner_org': 'org079',
+            'groups': [{'name': 'location079'}],
+            'data_update_frequency': '30',
+            'maintainer': 'sue'
+        })
+
+        response = self.app.get(url=h.url_for('user.edit', id='sue'), headers={'Authorization': token})
+        assert 'User cannot be removed. Please change maintainer for the following datasets:' in response.body
+        assert '<li><a href="/dataset/dataset079" target="_blank">Dataset 079</a></li>' in response.body
+        assert response.body.count('c-button--size-m is-disabled"') == 2
+
+    def test_edit_wrong_old_password(self):
+        '''A wrong old password shows its error under the field and keeps the new passwords.'''
+        sue_user = factories.User(name='sue', email='sue@example.com', password='Abcdefgh12')
+        sue_token = factories.APIToken(user='sue', expires_in=2, unit=60 * 60)['token']
+        url_for = h.url_for('user.edit', id=sue_user['name'])
+
+        user_dict = tk.get_action('user_show')({
+            'model': model, 'session': model.Session, 'user': 'testsysadmin'},
+            {'id': 'sue@example.com'})
+        test_client = self.get_backwards_compatible_test_client()
+        params = _get_user_params(user_dict)
+        params['email'] = 'sue@example.com'
+        params['old_password'] = 'Wrongpassword12'
+        params['password1'] = 'Newpassword12'
+        params['password2'] = 'Newpassword12'
+        response = test_client.post(url_for, data=params, headers={'Authorization': sue_token})
+
+        assert '<span class="c-search-input__error">Password entered was incorrect</span>' in response.body
+        assert 'value="Newpassword12"' in response.body
+        assert model.User.by_name('sue').validate_password('Abcdefgh12')
 
 
 class TestResetPasswordSendingEmail(hdx_test_base.HdxFunctionalBaseTest):

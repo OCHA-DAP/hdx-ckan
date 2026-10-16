@@ -85,6 +85,18 @@
     }
 }
 
+// ── Form actions row ──────────────────────────────────────────
+.hdx-v2-user-dashboard-actions {
+    display:         flex;
+    justify-content: flex-end;
+}
+
+// ── Secret / token text ───────────────────────────────────────
+.hdx-v2-user-dashboard-secret {
+    .hdx-body-s-semibold();
+    word-break: break-all;
+}
+
 // ── User Permission form ──────────────────────────────────────
 .hdx-v2-user-permission {
     display:        flex;
@@ -115,13 +127,90 @@
         gap:            var(--hdx-space-5);
     }
 
-    &__actions {
-        display:         flex;
-        justify-content: flex-end;
-    }
-
     &__title {
         .hdx-dashboard-title();
+    }
+}
+
+// ── Profile and Password stack ────────────────────────────────
+.hdx-v2-user-profile {
+    &,
+    &__form {
+        display:        flex;
+        flex-direction: column;
+        gap:            var(--hdx-space-12);
+    }
+
+    @media (min-width: @hdx-bp-md) { width: 80%; }
+
+    &__group {
+        display:        flex;
+        flex-direction: column;
+        gap:            var(--hdx-space-5);
+    }
+
+    &__checkbox {
+        .v2-checkbox-row();
+    }
+
+    &__hint {
+        .hdx-body-s();
+        grid-column: 2;
+        color:       var(--hdx-neutral-8);
+        margin:      0;
+    }
+
+    &__section {
+        display:        flex;
+        flex-direction: column;
+        gap:            var(--hdx-space-6);
+    }
+
+    &__section-header {
+        .hdx-page-section-header();
+    }
+
+    &__section-title {
+        .hdx-dashboard-title();
+    }
+}
+
+// ── Two-step verification drawer ──────────────────────────────
+.hdx-v2-two-step {
+    &__steps {
+        padding-left: var(--hdx-space-5);
+
+        li + li { margin-top: var(--hdx-space-2); }
+    }
+
+    &__state,
+    &__setup,
+    &__test,
+    &__actions {
+        display:        flex;
+        flex-direction: column;
+        gap:            var(--hdx-space-4);
+    }
+
+    &__buttons {
+        display:     flex;
+        flex-wrap:   wrap;
+        align-items: center;
+        gap:         var(--hdx-space-4);
+    }
+
+    &__qr {
+        align-self:    flex-start;
+        border:        1px solid var(--hdx-neutral-3);
+        border-radius: var(--hdx-radius-md);
+        padding:       var(--hdx-space-2);
+    }
+
+    &__secret-row {
+        display:     flex;
+        flex-wrap:   wrap;
+        align-items: center;
+        gap:         var(--hdx-space-2);
     }
 }
 
@@ -131,11 +220,6 @@
     flex-direction: column;
     align-items:    flex-start;
     gap:            var(--hdx-space-2);
-
-    &__token {
-        .hdx-body-s-semibold();
-        word-break: break-all;
-    }
 }
 
 // ── Empty state ───────────────────────────────────────────────

@@ -203,7 +203,7 @@ dashboard shell, and Unsubscribe opens the 051 unsubscribe drawer on the same pa
 - **Assets:** the base's `v2-search-page-styles` + `v2-user-dashboard-page-styles`. The template loads
   `notification-platform-util-scripts`, then a new page bundle with `notifications-settings.js` (D24).
   The drawers need `v2-components-scripts`, which every v2 page loads.
-- `user/read_base.html` stays for Profile and Password; its "Notifications" tab now lands on the v2 page.
+- The "Notifications" tab of `user/read_base.html` now lands on the v2 page.
 
 ---
 

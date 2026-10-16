@@ -234,6 +234,8 @@ Dataset-relevant params (see the docblock in `templates/v2/components/page-heade
 | `supports_notifications` | bool | `False` | Show "Get notified" button (JS modal). |
 | `meta_items` | list | `[]` | Metadata strip entries (strip + divider render only when non-empty). 3 items get the resource-style `--cols-3` grid; otherwise the 4-column dataset grid. |
 | `extra_classes` | string | `''` | Extra classes on the root section. |
+| `cta_style` | string | `'button'` | CTA after the description (renders when `cta_href` is set): `'button'` = primary `c-button` m, `'text'` = primary `c-text-button` m. |
+| `cta_attrs` | dict | `{}` | Extra attrs on the CTA link. |
 | `edit_mode` | bool | `False` | Adds `data-module="hdx-quick-edit"` attrs to title and description container. |
 | `pkg_id` | string | `''` | Package ID — required when `edit_mode=True`. |
 

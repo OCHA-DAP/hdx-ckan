@@ -219,7 +219,7 @@ Example page-specific template (light search):
 ### My Organisations dashboard (`/user/organizations/<id>`, own page only)
 
 - **Template**: `ckanext-hdx_theme/ckanext/hdx_theme/templates/user/read_organizations.html`
-  - Extends `v2/user-dashboard-base.html` (left menu at XL from `h.hdx_get_user_dashboard_nav_sections()`, breadcrumb, `<title>`), which extends `v2/page.html`. Children set `user_nav_active` and `page_label`.
+  - Extends `v2/user-dashboard-base.html` (left menu at XL from `h.hdx_get_user_dashboard_nav_sections()`, breadcrumb, `<title>`), which extends `v2/page.html`. Children set `user_nav_active` and `page_label` (optionally `public_profile_link`).
 - **Core assets**: `hdx_theme/v2-search-page-styles` (sidebar/content layout classes), `hdx_theme/v2-user-dashboard-page-styles`.
 
 ---
@@ -277,6 +277,16 @@ Example page-specific template (light search):
   - Unsubscribe fills and opens the 051 drawers (`notification_platform/unsubscribe_drawers.html`, also included by `modals.html`); `onUnsubscribeSubmit` posts; closing the success drawer reloads the page.
   - The `hdx_user.notifications` view uses `_extra_template_variables()` and drops subscriptions whose object is gone or unreadable.
 - **Core assets**: as My Organisations, plus `notification-platform-util-scripts` and `v2-notifications-settings-page-scripts` on your own page when it has subscriptions.
+
+---
+
+### Profile and Password settings (`/user/edit/<id>`)
+
+- **Template**: `ckanext-hdx_theme/ckanext/hdx_theme/templates/user/edit_user_form.html`
+  - Extends `v2/user-dashboard-base.html`; the profile header shows for every viewer (own page included), with a "View public profile" link (`public_profile_link` → `c-page-header` `cta_style='text'`). A profile + password form of `c-form-field`s with errors under each field.
+  - Sysadmin viewers also get two-step verification (a `c-drawer` driven by `v2/pages/user-profile.js`, calling the `hdx_user` `configure_mfa` endpoints) and Delete account (a `c-drawer` posting to core `user.delete`; maintainers get `v2/maintainer-datasets-list.html` and a disabled Confirm).
+  - The `HDXEditView` view is unchanged.
+- **Core assets**: as My Organisations, plus `v2-user-profile-page-scripts` for sysadmin viewers.
 
 ---
 

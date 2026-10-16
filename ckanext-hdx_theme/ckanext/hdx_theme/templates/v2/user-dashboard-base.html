@@ -15,6 +15,8 @@
   Pages that can show another user output {{ self.user_profile_header() }}
   at the top of primary; it is never rendered automatically. When is_myself
   is false, the breadcrumb is Users / {name} (/ page_label, except on Datasets).
+  A child that sets public_profile_link = true (top level) gets a
+  "View public profile" link in that header.
 #}
 
 {% set outer_row_class = 'hdx-v2-search-row' %}
@@ -64,6 +66,11 @@
       description=h.render_markdown(user_dict.about) if user_dict.about else '',
       state_label_text=_('Deleted') if user_dict.state == 'deleted' else '',
       state_label_color='red',
+      cta_style='text',
+      cta_label=_('View public profile'),
+      cta_href=h.url_for('hdx_user.read', id=user_dict.name) if public_profile_link is defined and public_profile_link else '',
+      cta_icon_src='v2/icons/link-external.svg',
+      cta_attrs={'target': '_blank', 'rel': 'noopener noreferrer'},
       flush=True %}
   <hr class="c-divider hdx-v2-user-dashboard-divider">
 {% endblock %}

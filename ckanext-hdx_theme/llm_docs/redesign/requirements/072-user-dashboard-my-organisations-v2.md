@@ -5,8 +5,8 @@ and left menu for the user dashboard and user settings pages, built now and adop
 The v2 header user menu is aligned to the same menu (D6).
 
 **Excluded:** Migrating the sibling dashboard/settings pages (Newsfeed, My Activity Stream,
-User Permission, API Tokens, Notifications, Profile and Password). They stay v1
-with their tab bars. Also excluded: pagination (D8), follower counts (D11) and
+User Permission, API Tokens, Notifications, Profile and Password); later tasks
+(073–079) handle them. Also excluded: pagination (D8), follower counts (D11) and
 pending join requests.
 
 **Figma sources:** `xl-user-dashboard-my-organisation.html` (XL only; there are no MD/SM exports)
@@ -172,7 +172,6 @@ HDX, "Member since" means the **org's** `created` date (`c-org-list-card`, `v2/o
   value changes (D13).
 - **v1 assets:** the page loads no v1 bundles. It adds only `v2-search-page-styles` and `v2-user-dashboard-page-styles`. The
   card's `clamped-text.js` comes from `v2-components-scripts`.
-- **v1 siblings:** all v1 sibling pages keep `user/dashboard.html` / `user/read_base.html`; only the Newsfeed and My Locations links leave their v1 tab bar and header menu (D4).
 
 ---
 
@@ -207,7 +206,6 @@ HDX, "Member since" means the **org's** `created` date (`c-org-list-card`, `v2/o
 | Long org name | 2-line clamp (existing card). |
 | No description | No "Show more" (existing card). |
 | All Orgs page regression | Must still render "Member since {org.created}" by passing `member_since=org.created` (D10). |
-| Menu links to v1 pages | Expected until the siblings migrate; each keeps its v1 tab bar. |
 | Another user's page | The menu follows the viewed user (D5). |
 | Header-menu change | Affects every v2 page: My Locations and Datasets (profile) leave the header menu (D4, D6). |
 

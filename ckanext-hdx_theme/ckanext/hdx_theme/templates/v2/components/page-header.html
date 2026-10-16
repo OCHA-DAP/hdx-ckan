@@ -38,6 +38,12 @@
                                 horizontal text-button row under the title, separated by "|",
                                 visible from XL only.  default: []
   title_count         {string}  Count badge shown next to the title.  default: ''
+  cta_label           {string}  CTA label, at the end of the description block.  default: ''
+  cta_href            {string}  CTA URL; the CTA renders only when set.  default: ''
+  cta_icon_src        {string}  CTA icon path (left).  default: ''
+  cta_style           {string}  'button' (primary c-button m) | 'text'
+                                (primary c-text-button m).  default: 'button'
+  cta_attrs           {dict}    Extra attrs on the CTA link.  default: {}
   extra_classes       {string}  Extra classes on the root section.  default: ''
 
   meta_items          {list}    Metadata strip entries (strip + divider render
@@ -101,6 +107,8 @@
 {% set cta_label           = cta_label           if cta_label           is defined else '' %}
 {% set cta_href            = cta_href            if cta_href            is defined else '' %}
 {% set cta_icon_src        = cta_icon_src        if cta_icon_src        is defined else '' %}
+{% set cta_style           = cta_style           if cta_style           is defined else 'button' %}
+{% set cta_attrs           = cta_attrs           if cta_attrs           is defined else {} %}
 {% set edit_mode           = edit_mode           if edit_mode           is defined else False %}
 {% set pkg_id              = pkg_id              if pkg_id              is defined else '' %}
 {% set pkg_state           = pkg_state           if pkg_state           is defined else '' %}
@@ -284,14 +292,13 @@
         </div>
         {% endif %}
 
-        {# Optional CTA button — only when cta_href is provided #}
+        {# Optional CTA — only when cta_href is provided #}
         {% if cta_href %}
-          {% snippet 'v2/components/button.html',
+          {% snippet 'v2/components/text-button.html' if cta_style == 'text' else 'v2/components/button.html',
               tag='a', href=cta_href,
-              style='primary', type='text', size='m',
-              state='enabled',
               icon_src=cta_icon_src,
-              label=cta_label %}
+              label=cta_label,
+              attrs=cta_attrs %}
         {% endif %}
 
       </div>

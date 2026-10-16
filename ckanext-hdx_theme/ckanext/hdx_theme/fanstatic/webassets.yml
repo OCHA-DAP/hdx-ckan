@@ -1872,3 +1872,10 @@ v2-notifications-settings-page-scripts:
   output: ckanext-hdx_theme/%(version)s_v2-notifications-settings-page-scripts.js
   contents:
     - v2/pages/notifications-settings.js
+
+v2-user-profile-page-scripts:
+  <<: *common-js
+  output: ckanext-hdx_theme/%(version)s_v2-user-profile-page-scripts.js
+  contents:
+    - v2/qrious/qrious.min.js
+    - v2/pages/user-profile.js

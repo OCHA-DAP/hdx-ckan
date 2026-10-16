@@ -11,7 +11,8 @@ Every finding carries a proposed fix. §7 records the decision on each. The code
 templates, `webassets.yml`'s v2 section, and `requirements/001–069`.
 
 **Excluded** (next cycle, per the task owner): sysadmin dashboard, user settings, user dashboard,
-requested data (org page), contribute flow, find/request org.
+requested data (org page), contribute flow, find/request org. User dashboard and user settings were
+migrated later (072–079).
 
 **Method.** Every count below is reproducible by the grep quoted next to it. Every file path was
 resolved against the filesystem. No claim here rests on a requirement doc alone — where a doc and

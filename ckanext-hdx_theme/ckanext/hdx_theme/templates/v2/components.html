@@ -2629,6 +2629,14 @@
           label='Open confirm drawer',
           attrs={'onclick': "window.hdxV2Drawer('demo-drawer-confirm').open()"}) }}
     </div>
+
+    <h2 class="demo-subsection__heading">Confirm — with list</h2>
+    <div class="demo-row">
+      {{ h.snippet('v2/components/button.html',
+          style='secondary',
+          label='Open confirm drawer with list',
+          attrs={'onclick': "window.hdxV2Drawer('demo-drawer-list').open()"}) }}
+    </div>
   </section>
 
   {# ── Demo drawers ─────────────────────────────────────────────── #}
@@ -2701,6 +2709,36 @@
         {{ h.snippet('v2/components/button.html',
             style='primary',
             label='Confirm') }}
+      </div>
+    </div>
+  {% endcall %}
+
+  {% call h.snippet('v2/components/drawer.html',
+      drawer_id='demo-drawer-list',
+      title='Delete account') %}
+    <div class="c-drawer-form">
+      <p class="c-drawer-form__text">
+        User cannot be removed. Please change maintainer for the following datasets:
+      </p>
+      {% snippet 'v2/maintainer-datasets-list.html',
+          maint_orgs_pkgs=[
+            {'name': 'demo-org-one', 'title': 'Example Organisation One',
+             'pkgs': [{'name': 'demo-dataset-1', 'title': 'Example Weekly Displacement Tracking 2024'},
+                      {'name': 'demo-dataset-2', 'title': 'Example Food Security Indicators'},
+                      {'name': 'demo-dataset-3', 'title': 'Example Health Facilities'}]},
+            {'name': 'demo-org-two', 'title': 'Example Organisation Two',
+             'pkgs': [{'name': 'demo-dataset-4', 'title': 'Example Population Estimates'},
+                      {'name': 'demo-dataset-5', 'title': 'Example Administrative Boundaries'}]},
+          ] %}
+      <div class="c-drawer-form__buttons">
+        {{ h.snippet('v2/components/button.html',
+            style='tertiary',
+            label='Cancel',
+            attrs={'data-drawer-close': ''}) }}
+        {{ h.snippet('v2/components/button.html',
+            style='primary',
+            label='Confirm',
+            state='disabled') }}
       </div>
     </div>
   {% endcall %}

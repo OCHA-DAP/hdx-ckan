@@ -194,7 +194,15 @@
   };
 
   // Shows a hidden c-alert (templates/v2/components/alert.html) with `text`.
-  window.hdxV2.showAlert = function showAlert(alertEl, text) {
+  // The optional `variant` (success | warning | info | error) swaps the
+  // c-alert--* class and the role as alert.html sets them.
+  window.hdxV2.showAlert = function showAlert(alertEl, text, variant) {
+    if (variant) {
+      ['success', 'warning', 'info', 'error'].forEach(function (v) {
+        alertEl.classList.toggle('c-alert--' + v, v === variant);
+      });
+      alertEl.setAttribute('role', variant === 'success' || variant === 'info' ? 'status' : 'alert');
+    }
     alertEl.querySelector('.c-alert__message').textContent = text;
     alertEl.hidden = false;
   };

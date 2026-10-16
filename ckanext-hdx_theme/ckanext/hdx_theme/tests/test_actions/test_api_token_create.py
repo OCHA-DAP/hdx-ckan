@@ -107,7 +107,7 @@ class TestApiToken(object):
 
         res = client.get(url, headers=auth)
         assert res.status_code == 200
-        token = re.search(r'class="hdx-v2-api-token-created__token">([^<]+)</span>', res.body).group(1)
+        token = re.search(r'class="hdx-v2-user-dashboard-secret">([^<]+)</span>', res.body).group(1)
         assert 'data-copy-value="{}"'.format(token) in res.body
         assert 'copy-into-buffer' not in res.body
         assert 'created-in-ui' in res.body

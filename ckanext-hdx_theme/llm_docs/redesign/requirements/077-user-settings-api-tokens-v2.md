@@ -163,7 +163,7 @@ revoke view, the actions and auth rules, the `expire_api_token` plugin and HDX's
 | Empty state | **Reuse** `.hdx-v2-user-dashboard-empty` |
 | List/create view | **Override** `HDXApiTokenView` in `USERS/views/user.py` (D11, D16) |
 | Token flash | **New** `user/snippets/api_token_created.html`, reusing `copy-button.html`, shown through the `v2/page.html` flash → `c-alert` |
-| Layout | **New** page blocks `.hdx-v2-api-tokens` and `.hdx-v2-api-token-created` in `pages/user-dashboard.less` |
+| Layout | **New** page blocks `.hdx-v2-api-tokens` and `.hdx-v2-api-token-created` in `pages/user-dashboard.less`; **reuse** the shared `.hdx-v2-user-dashboard-actions` and `.hdx-v2-user-dashboard-secret` |
 
 ---
 
@@ -210,7 +210,7 @@ revoke view, the actions and auth rules, the `expire_api_token` plugin and HDX's
       `options={'86400': _('Day'), '3600': _('Hour'), '60': _('Minute')}`,
       `selected=data.unit|string if data.unit else '86400'`, `errors=errors.unit`. No
       `required`, no placeholder (D5, D13).
-  - `<div class="hdx-v2-api-tokens__actions">` with `button.html` `style='primary'`, `size='m'`,
+  - `<div class="hdx-v2-user-dashboard-actions">` with `button.html` `style='primary'`, `size='m'`,
     `button_type='submit'`, label "Create API Token".
 - **List:**
   - Title "All API Tokens", `<h2>` on your own page and `<h3>` on another user's, class
@@ -228,16 +228,15 @@ revoke view, the actions and auth rules, the `expire_api_token` plugin and HDX's
 - **Token flash** (`api_token_created.html`, param `token`), rendered by the view into the success
   flash (D11):
   - `<span class="hdx-v2-api-token-created">` holding "API Token created:", the token in
-    `__token`, `copy-button.html` `style='secondary'`, `size='s'`, `value=token`, and "Make sure to copy it now, you won't be able to see it again!" as plain text.
+    `.hdx-v2-user-dashboard-secret`, `copy-button.html` `style='secondary'`, `size='s'`, `value=token`, and "Make sure to copy it now, you won't be able to see it again!" as plain text.
 - **Spacing (tokens):**
   - `.hdx-v2-api-tokens`: flex column, `gap: var(--hdx-space-6)`. Width 100% at SM, 80% from MD
     (D12).
   - `__form`: flex column, `gap: var(--hdx-space-5)`.
-  - `__actions`: flex, `justify-content: flex-end`.
   - `__title`: `.hdx-dashboard-title()`.
   - The header's existing `margin-bottom: var(--hdx-space-6)` separates header and form.
   - `.hdx-v2-api-token-created`: flex column, `align-items: flex-start`,
-    `gap: var(--hdx-space-2)`; `__token`: `.hdx-body-s-semibold()`, `word-break: break-all`.
+    `gap: var(--hdx-space-2)`.
 
 ---
 
