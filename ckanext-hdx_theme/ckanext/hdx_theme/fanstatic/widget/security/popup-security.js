@@ -53,7 +53,11 @@ $(document).ready(function() {
       }
 
       let userName = $("#hidden-user-name").val();
-      $.get(`/user/configure_mfa/${userName}/new`)
+      $.ajax({
+        url: `/user/configure_mfa/${userName}/new`,
+        type: 'POST',
+        headers: hdxUtil.net.getCsrfTokenAsObject()
+      })
         .done((response) => {
           const result = JSON.parse(response);
           if (result.success == true){
@@ -76,7 +80,11 @@ $(document).ready(function() {
       window.onbeforeunload = null;
       $tsvPopup.find('i.close').show();
       let userName = $("#hidden-user-name").val();
-      $.get(`/user/configure_mfa/${userName}/delete`)
+      $.ajax({
+        url: `/user/configure_mfa/${userName}/delete`,
+        type: 'POST',
+        headers: hdxUtil.net.getCsrfTokenAsObject()
+      })
         .done((response) => {
           const result = JSON.parse(response);
           if (result.success == true){

@@ -319,7 +319,7 @@ user.add_url_rule(u'/followers/<id>', view_func=_followers)
 user.add_url_rule(u'/<id>', view_func=read)
 
 user.add_url_rule('/configure_mfa/<id>', view_func=HDXTwoStep.configure_mfa, methods=['POST'])
-user.add_url_rule('/configure_mfa/<id>/new', view_func=HDXTwoStep.new, methods=['GET', 'POST'])
-user.add_url_rule('/configure_mfa/<id>/delete', view_func=HDXTwoStep.delete, methods=['GET'])
+user.add_url_rule('/configure_mfa/<id>/new', view_func=HDXTwoStep.new, methods=['POST'])
+user.add_url_rule('/configure_mfa/<id>/delete', view_func=HDXTwoStep.delete, methods=['POST'])
 
 user.add_url_rule(u'/notifications/<id>', view_func=notifications)
