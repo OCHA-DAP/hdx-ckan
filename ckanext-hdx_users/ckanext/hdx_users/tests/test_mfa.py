@@ -33,7 +33,10 @@ def test_mfa(MockLoginThrottle: MagicMock, app: CKANTestApp):
 
     _logout(app)
 
+    assert not _mfa_enabled(username, app)
     totp = _enable_totp(username)
+    assert _mfa_enabled(username, app)
+    assert _mfa_enabled(email, app)
 
     logged_in = _attempt_login(email, password, '', fullname, app)
     assert not logged_in, 'Log in should not work because mfa is enabled'
@@ -141,6 +144,11 @@ def _locked_out(username: str, app: CKANTestApp) -> bool:
         raise Exception('Bad HTTP response' + response.status_code)
     reponse_dict = json.loads(response.body)
     return reponse_dict.get('result')
+
+
+def _mfa_enabled(username: str, app: CKANTestApp) -> bool:
+    response = app.get(tk.h.url_for('hdx_user_autocomplete.check_mfa', user=username))
+    return json.loads(response.body)['result']
 
 
 def _auth(user_name: str) -> dict:

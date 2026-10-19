@@ -71,15 +71,15 @@ not a toggle-on of hidden v2 markup. Decisions confirmed with the requester are 
 - Rate limiting / lockout: real enforcement is server-side in `ckanext-security`
   (`src/ckanext-security/ckanext/security/authenticator.py`, `LoginThrottle` at
   `src/ckanext-security/ckanext/security/cache/login.py`), keyed by username or IP. A client-side
-  preview endpoint, `GET /util/user/check_lockout` (`ckanext-hdx_users/ckanext/hdx_users/views/user_edit_view.py`),
-  is called synchronously by `checkLockout()` in `signin.js` before the real POST. **Pre-existing bug:**
+  preview endpoint, `GET /util/user/check_lockout` (`ckanext-hdx_users/ckanext/hdx_users/views/user_edit_view.py`
+  `HDXTwoStep.check_lockout`), is called synchronously by `checkLockout()` in `signin.js` before the real POST. **Pre-existing bug:**
   `checkLockout()` calls `_showLoginError(...)`, but no such function is defined anywhere in the fanstatic
   tree — if this branch is hit, the reference error aborts the handler before `event.preventDefault()`
   runs, so the intended client-side lockout warning silently fails to render (the server-side throttle
   still rejects the request; only the friendly pre-warning is broken). Flagged in §8, not fixed here
   beyond the natural consequence of §5 replacing this handler wholesale.
-- MFA/TOTP: `GET /util/user/check_mfa` (`user_edit_view.py`) is used by `checkMfa()` in `signin.js` to
-  reveal `#field-mfa`; actual verification happens inside `ckanext-security`'s authenticator.
+- MFA/TOTP: `GET /util/user/check_mfa` (`user_edit_view.py` `HDXTwoStep.check_mfa`) is used by `checkMfa()` in
+  `signin.js` to reveal `#field-mfa`; actual verification happens inside `ckanext-security`'s authenticator.
 - JS: `fanstatic/widget/signin/signin.js` (bundle `signin-scripts`, `webassets.yml`). The
   login submit itself is a plain full-page POST (no AJAX) — JS only does lockout pre-check, MFA
   toggling, submit-button enable/disable (`requiredFieldsFormValidator`, duplicated verbatim in both
