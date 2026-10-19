@@ -1,125 +1,233 @@
-{% extends "user/read.html" %}
-{% import 'macros/form.html' as form %}
+{% extends "v2/user-dashboard-base.html" %}
 
-{% block subtitle %}{{ _('Profile and Password') }}{% endblock %}
-
-{% block primary_content_inner %}
-<div class="paddingLeftHack">
-  <div class="row mTop35 mBottom35">
-<form class="col-8" method="post" action="{{ action }}" id="user-edit-form">
-  {{ h.csrf_input() }}
-  {{ form.errors(error_summary) }}
-
-  <fieldset>
-    <legend>{{ _('Profile') }}</legend>
-
-    <input id="field-username" type="hidden" name="name" value="{{ data.name }}"/>
-
-    {{ form.input('fullname', label=_('Full name'), id='field-fullname', value=data.fullname, is_required=true,
-          error=errors.fullname, classes=['row', 'align-items-center', 'mb-3'], control_classes=['col-8'],
-          label_wrapper_classes=['col-4'], attrs={'autocomplete':'off'}) }}
-
-
-    {{ form.input('email', label=_('Email'), id='field-email', type='email', value=data.email,
-          error=errors.email, classes=['row', 'align-items-center', 'mb-3'], control_classes=['col-8'],
-          is_required=true,
-          label_wrapper_classes=['col-4'], attrs={'autocomplete':'off'}) }}
-
-    {{ form.textarea('about', label=_('About'), id='field-about', value=data.about, error=errors.about, classes=['row', 'align-items-center', 'mb-3'], control_classes=['col-8'], label_wrapper_classes=['col-4']) }}
-
-    {% if show_email_notifications %}
-      {% call form.checkbox('activity_streams_email_notifications', label=_('Subscribe to notification emails'), id='field-activity-streams-email-notifications', value=True, checked=g.userobj.activity_streams_email_notifications) %}
-      {{ form.info(_("You will receive notification emails from {site_title}, e.g. when you have new activities on your dashboard.".format(site_title=g.site_title)), classes=['info-help-tight']) }}
-      {% endcall %}
-    {% endif %}
-
-  </fieldset>
-
-  <fieldset class="mTop35">
-    <legend>{{ _('Password') }}</legend>
-    {{ form.input('old_password',
-                  type='password',
-                  label=_('Sysadmin Password') if is_sysadmin else _('Old Password'),
-                  id='field-password',
-                  value=data.oldpassword,
-                  error=errors.oldpassword,
-                  classes=['row', 'align-items-center', 'mb-3'], control_classes=['col-8'], label_wrapper_classes=['col-4'],
-                  attrs={'autocomplete': 'off'}
-                  ) }}
-
-    {{ form.input('password1', type='password', label=_('New Password'), id='field-password', value=data.password1, error=errors.password1, classes=['row', 'align-items-center', 'mb-3'], control_classes=['col-8'], label_wrapper_classes=['col-4'], attrs={'autocomplete': 'off'} ) }}
-
-    {{ form.input('password2', type='password', label=_('Confirm New Password'), id='field-password-confirm', value=data.password2, error=errors.password2, classes=['row', 'align-items-center', 'mb-3'], control_classes=['col-8'], label_wrapper_classes=['col-4'], attrs={'autocomplete': 'off'}) }}
-
-    <div class="row">
-      <div class="col-4">
-        {{ form.required_message() }}
-      </div>
-      <div class="col-8">
-        {% block generate_button %}{% endblock %}
-        <button class="btn btn-primary" type="submit" name="save">{{ _('Update Profile') }}</button>
-      </div>
-    </div>
-  </fieldset>
-{% if is_sysadmin %}
-  <fieldset class="mTop35">
-    <legend>{{_('Two-step verification')}}</legend>
-    {#
-    {% if h.check_ckan_version('2.9') %}
-      {% link_for _('Manage two-step verification'), controller='mfa_user', action='configure_mfa', id=data.id, class_='btn btn-default pull-left', icon='cog' %}
-    {% else %}
-      {% link_for _('Manage two-step verification'), controller='ckanext.security.controllers:MFAUserController', action='configure_mfa', id=data.id, class_='btn btn-default pull-left', icon='cog' %}
-    {% endif %}
-    #}
-    <a href="#" class="btn btn-sm mt-2" onclick="showOnboardingWidget('#tsvPopup')"> {{ _('Manage two-step verification') }}</a>
-  </fieldset>
-{% endif %}
-{% if h.check_access('user_delete', {'id': data.id})  %}
-  <fieldset class="mTop35">
-    <legend>{{_('Delete account')}}</legend>
-    {% block delete_button %}
-      {% if h.check_access('user_delete', {'id': data.id})  %}
-        {% set member = h.hdx_get_org_member_info(data.id) %}
-        {% if member.maint_orgs_pkgs | length > 0 %}
-          {% set confirm_delete_message = 'User cannot be removed. Please change maintainer for the following datasets: ' %}
-          {% set disabled = True %}
-          {% snippet 'snippets/confirmation_member_delete.html', form_url=h.url_for('hdx_members.member_delete',
-            id=group_id),
-            user=id,
-            header='',
-            confirm_btn_label='Confirm',
-            body=confirm_delete_message, modal_div_id='confirm-del-member-div-'+member.id,
-            packages=member.maint_orgs_pkgs, disabled=disabled %}
-          <a class="btn btn-sm btn-danger mt-2" href="#confirm-del-member-div-{{ member.id }}" data-bs-toggle="modal" title="{{ _('Delete') }}">
-            {{ _('Delete') }}
-          </a>
-        {% else %}
-          {% set locale = h.dump_json({'content': _('Are you sure you want to delete this user?'), 'heading': _('You are deleting user'), 'delete': _('Delete')}) %}
-          <a class="btn btn-sm btn-danger mt-2" href="{% url_for 'user.delete', id=data.id %}" data-module="hdx_confirm-action" data-module-i18n="{{ locale }}">{% block delete_button_text %}{{ _('Delete') }}{% endblock %}</a>
-        {% endif %}
-      {% endif %}
-    {% endblock %}
-  </fieldset>
-{% endif %}
-
-</form>
-</div>
-</div>
-
-{% if is_sysadmin %}
-  <div>
-    {{ h.snippet('widget/security/two-step-verification.html', id="tsvPopup", title="How to turn on two-step verification", userId=data.id, userName=data.name) }}
-  </div>
-{% endif %}
-{% endblock %}
-
-{% block styles %}
-  {{ super() }}
-  {% asset 'hdx_theme/two-step-styles' %}
-  {% asset 'security/mfa_configure' %}
-{% endblock %}
+{% set user_nav_active     = 'profile_and_password' %}
+{% set page_label          = _('Profile and Password') %}
+{% set public_profile_link = true %}
 
 {% block scripts %}
   {{ super() }}
-  {% asset 'hdx_theme/two-step-scripts' %}
+  {% if is_sysadmin %}
+    {% asset 'hdx_theme/v2-user-profile-page-scripts' %}
+  {% endif %}
+{% endblock %}
+
+{% block primary %}
+  {% set can_delete = h.check_access('user_delete', {'id': user_dict.id}) %}
+  {% set generate_label = _('Generate new two-step verification code') %}
+
+  {{ self.user_profile_header() }}
+  <div class="hdx-v2-user-dashboard-header">
+    <div class="hdx-v2-user-dashboard-header__text">
+      <h2 class="hdx-v2-user-dashboard-header__title">{{ page_label }}</h2>
+      <p class="hdx-v2-user-dashboard-header__subtitle">
+        {{ _('Update your account details, password, and login preferences') if is_myself else _("Update {name}'s account details, password, and login preferences").format(name=user_dict.display_name) }}
+      </p>
+    </div>
+  </div>
+
+  <div class="hdx-v2-user-profile">
+    <form method="POST" class="hdx-v2-user-profile__form">
+      {{ h.csrf_input() }}
+      {% if error_summary and not errors %}
+        {% snippet 'v2/components/alert.html', message=error_summary.values() | join(' ') %}
+      {% endif %}
+
+      <div class="hdx-v2-user-profile__group">
+        <input type="hidden" name="name" value="{{ data.name }}">
+        <div class="c-form-field">
+          {% snippet 'v2/components/text-field.html',
+              size='m', name='fullname', id='field-fullname',
+              label=_('Full name'), required=True, autocomplete='name',
+              value=data.fullname, errors=errors.fullname %}
+        </div>
+        <div class="c-form-field">
+          {% snippet 'v2/components/text-field.html',
+              size='m', type='email', name='email', id='field-email',
+              label=_('Email'), required=True, autocomplete='email',
+              value=data.email, errors=errors.email %}
+        </div>
+        <div class="c-form-field">
+          {% snippet 'v2/components/text-field.html',
+              size='m', multiline=True, name='about', id='field-about',
+              label=_('About'), value=data.about, errors=errors.about %}
+        </div>
+        {% if show_email_notifications %}
+          <div class="hdx-v2-user-profile__checkbox">
+            {% snippet 'v2/components/checkbox.html',
+                id='field-activity-streams-email-notifications',
+                name='activity_streams_email_notifications', value='True',
+                checked=data.activity_streams_email_notifications,
+                label=_('Subscribe to notification emails'),
+                attrs={'aria-describedby': 'field-activity-streams-email-notifications-hint'},
+                error_slot=false %}
+            <p class="hdx-v2-user-profile__hint" id="field-activity-streams-email-notifications-hint">
+              {{ _('You will receive notification emails from {site_title}, e.g. when you have new activities on your dashboard.').format(site_title=g.site_title) }}
+            </p>
+          </div>
+        {% endif %}
+      </div>
+
+      <div class="hdx-v2-user-profile__section">
+        <div class="hdx-v2-user-profile__section-header">
+          <h3 class="hdx-v2-user-profile__section-title">{{ _('Password') }}</h3>
+        </div>
+        <div class="hdx-v2-user-profile__group">
+          <div class="c-form-field">
+            {% snippet 'v2/components/text-field.html',
+                size='m', type='password', name='old_password', id='field-old-password',
+                label=_('Sysadmin password') if is_sysadmin else _('Old password'),
+                autocomplete='current-password', errors=errors.oldpassword %}
+          </div>
+          <div class="c-form-field">
+            {% snippet 'v2/components/text-field.html',
+                size='m', type='password', name='password1', id='field-password',
+                label=_('New password'), autocomplete='new-password',
+                value=data.password1, errors=errors.password1 %}
+          </div>
+          <div class="c-form-field">
+            {% snippet 'v2/components/text-field.html',
+                size='m', type='password', name='password2', id='field-password-confirm',
+                label=_('Confirm new password'), autocomplete='new-password',
+                value=data.password2, errors=errors.password2 %}
+          </div>
+        </div>
+        <div class="hdx-v2-user-dashboard-actions">
+          {% snippet 'v2/components/button.html',
+              style='primary', size='m', button_type='submit',
+              label=_('Update profile'), attrs={'name': 'save'} %}
+        </div>
+      </div>
+    </form>
+
+    {% if is_sysadmin %}
+      <hr class="c-divider">
+      <div class="hdx-v2-user-profile__section-header">
+        <h3 class="hdx-v2-user-profile__section-title">{{ _('Two-step verification') }}</h3>
+        {% snippet 'v2/components/button.html',
+            style='tertiary', size='m', label=_('Manage two-step verification'),
+            attrs={'onclick': "window.hdxV2Drawer('two-step-drawer').open()"} %}
+      </div>
+    {% endif %}
+
+    {% if can_delete %}
+      <hr class="c-divider">
+      <div class="hdx-v2-user-profile__section-header">
+        <h3 class="hdx-v2-user-profile__section-title">{{ _('Delete account') }}</h3>
+        {% snippet 'v2/components/button.html',
+            style='tertiary', size='m', label=_('Delete account'),
+            attrs={'onclick': "window.hdxV2Drawer('delete-user-drawer').open()"} %}
+      </div>
+    {% endif %}
+  </div>
+
+  {% if is_sysadmin %}
+    {% call h.snippet('v2/components/drawer.html',
+        drawer_id='two-step-drawer',
+        title=_('Two-step verification')) %}
+      <div class="c-drawer-form hdx-v2-two-step"
+           data-two-step
+           data-two-step-new-url="{{ h.url_for('hdx_user.new', id=user_dict.name) }}"
+           data-two-step-delete-url="{{ h.url_for('hdx_user.delete', id=user_dict.name) }}"
+           data-two-step-test-url="{{ h.url_for('hdx_user.configure_mfa', id=user_dict.name) }}">
+        <p class="c-drawer-form__description">{{ _('Two-step verification (also known as two factor authentication or 2FA) is required for an extra layer of protection to your HDX account.') }}</p>
+        <p class="c-drawer-form__description">{{ _('Enabling two-step verification means that HDX will require a six-digit one time password (in addition to your existing password) every time you sign in to your account.') }}</p>
+        <p class="c-drawer-form__description">{{ _("In order for two-step verification to work correctly, you'll need a mobile device running a compatible mobile app such as Google Authenticator (Android/iPhone) or other apps that support time-based One Time Password (TOTP) protocol.") }}</p>
+        <ol class="c-drawer-form__description hdx-v2-two-step__steps">
+          <li>{{ _('Download app that supports time-based One Time Password(TOTP) protocol such as') }} <a href="https://support.google.com/accounts/answer/1066447?hl=en&ref_topic=2954345" target="_blank" rel="noopener noreferrer">{{ _('Google Authenticator (Android/iPhone)') }}</a></li>
+          <li>{{ _('Click on "Turn on two-step verification" below which will generate a QR code.') }} <strong>{{ _('Once the code is generated, you will be required to enter One Time Password every time you login to HDX.') }}</strong></li>
+          <li>{{ _('Scan a QR code displayed on the screen below with your mobile app or manually enter a secret key.') }}</li>
+          <li>{{ _('Using the One Time Password test, enter six-digit one time pass displayed on your app to make sure your two-step verification is working.') }}</li>
+        </ol>
+
+        <div class="hdx-v2-two-step__state" data-two-step-state>
+          {% if g.totp_challenger_uri %}
+            <p class="c-drawer-form__text">{{ _('Two-step verification is on.') }}</p>
+            <div class="hdx-v2-two-step__buttons">
+              {% snippet 'v2/components/button.html',
+                  style='tertiary', size='m', label=_('Turn off two-step verification'),
+                  attrs={'data-two-step-off': ''} %}
+              {% snippet 'v2/components/text-button.html',
+                  style='primary', size='m', tag='button', label=generate_label,
+                  attrs={'data-two-step-new': ''} %}
+            </div>
+          {% else %}
+            <div class="hdx-v2-two-step__buttons">
+              {% snippet 'v2/components/button.html',
+                  style='primary', size='m', label=_('Turn on two-step verification'),
+                  attrs={'data-two-step-new': ''} %}
+            </div>
+          {% endif %}
+        </div>
+
+        {% snippet 'v2/components/alert.html', hidden=True, extra_attrs='data-two-step-error' %}
+
+        <div class="hdx-v2-two-step__setup" data-two-step-setup hidden>
+          <canvas class="hdx-v2-two-step__qr" role="img"
+                  aria-label="{{ _('QR code to scan with your authenticator app') }}"
+                  data-two-step-qr></canvas>
+          <p class="c-drawer-form__text">{{ _('If you are not able to scan the QR code, you can manually enter this secret into your authenticator app:') }}</p>
+          <div class="hdx-v2-two-step__secret-row">
+            <span class="hdx-v2-user-dashboard-secret" data-two-step-secret></span>
+            {% snippet 'v2/components/copy-button.html', size='s' %}
+          </div>
+        </div>
+
+        <form class="hdx-v2-two-step__test" data-two-step-test{% if not g.totp_challenger_uri %} hidden{% endif %}>
+          <div class="c-form-field">
+            {% snippet 'v2/components/text-field.html',
+                size='m', name='mfa', id='field-mfa',
+                label=_('Enter the code from your app to test'),
+                autocomplete='one-time-code' %}
+          </div>
+          <div class="hdx-v2-two-step__buttons">
+            {% snippet 'v2/components/button.html',
+                style='secondary', size='m', button_type='submit', label=_('Test') %}
+          </div>
+          {% snippet 'v2/components/alert.html', variant='success', hidden=True, extra_attrs='data-two-step-result' %}
+          <p class="c-drawer-form__text">
+            <strong>{{ _('If your one-time password does not work:') }}</strong><br>
+            {{ _('Click on the "{label}" and repeat from step 3 above.').format(label=generate_label) }}
+          </p>
+        </form>
+
+        <div class="hdx-v2-two-step__actions" data-two-step-actions hidden>
+          <p class="c-drawer-form__text">{{ _('Please test the two step code before saving.') }}</p>
+          <p class="c-drawer-form__text">{{ _('Turn off the two-step verification.') }}</p>
+          <div class="c-drawer-form__buttons">
+            {% snippet 'v2/components/button.html',
+                style='tertiary', size='m', label=_('Cancel'),
+                attrs={'data-two-step-cancel': ''} %}
+            {% snippet 'v2/components/button.html',
+                style='primary', size='m', label=_('Save'), state='disabled',
+                attrs={'data-two-step-save': ''} %}
+          </div>
+        </div>
+      </div>
+    {% endcall %}
+  {% endif %}
+
+  {% if can_delete %}
+    {% set maint_orgs_pkgs = h.hdx_get_org_member_info(user_dict.id).maint_orgs_pkgs %}
+    {% call h.snippet('v2/components/drawer.html',
+        drawer_id='delete-user-drawer',
+        title=_('Delete account')) %}
+      <form class="c-drawer-form" method="post"
+            action="{{ h.url_for('user.delete', id=user_dict.id) }}">
+        {{ h.csrf_input() }}
+        {% if maint_orgs_pkgs %}
+          <p class="c-drawer-form__text">{{ _('User cannot be removed. Please change maintainer for the following datasets: ') }}</p>
+          {% snippet 'v2/maintainer-datasets-list.html', maint_orgs_pkgs=maint_orgs_pkgs %}
+        {% else %}
+          <p class="c-drawer-form__text">{{ _('Are you sure you want to delete this user?') }}</p>
+        {% endif %}
+        <div class="c-drawer-form__buttons">
+          {% snippet 'v2/components/button.html',
+              style='tertiary', label=_('Cancel'), attrs={'data-drawer-close': ''} %}
+          {% snippet 'v2/components/button.html',
+              style='primary', button_type='submit', label=_('Confirm'),
+              state='disabled' if maint_orgs_pkgs else 'enabled' %}
+        </div>
+      </form>
+    {% endcall %}
+  {% endif %}
 {% endblock %}

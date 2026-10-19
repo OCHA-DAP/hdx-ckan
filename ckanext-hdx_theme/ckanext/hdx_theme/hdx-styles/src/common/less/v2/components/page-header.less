@@ -1,7 +1,7 @@
 @import "../mixins.less";
 
 // ============================================================
-// c-page-header — unified page hero header (dataset + resource)
+// c-page-header — unified page hero header
 // Figma: llm_docs/redesign/figma_exports/dataset-page-header.html
 // ============================================================
 
@@ -38,7 +38,7 @@
             gap:                   var(--hdx-space-6);
         }
 
-        // No org card (e.g. landing pages, Locations) — description
+        // No org card — description
         // column takes the full width instead of leaving a 25% gap.
         &--no-card {
             @media (min-width: @hdx-bp-md) {
@@ -67,6 +67,18 @@
         flex-direction: column;
         align-items:    flex-start;
         gap:            var(--hdx-space-3);
+    }
+    // ── Identity row ─────────────────────────────────────────
+
+    &__identity {
+        display:     flex;
+        align-items: center;
+        gap:         var(--hdx-space-3);
+
+        > .c-page-header__description {
+            flex:      1;
+            min-width: 0;
+        }
     }
     // ── Labels row ───────────────────────────────────────────
 
@@ -112,8 +124,8 @@
         .hdx-page-title-font-size();
     }
 
-    // ── Title actions — "Interactive map | Alphabetical order" ─
-    // style text-button row under the title. XL only (Locations).
+    // ── Title actions ────────────────────────────────────────
+    // Separator-delimited text-button row under the title. XL only.
     &__title-actions {
         display: none;
 
@@ -134,7 +146,7 @@
         color:  var(--hdx-neutral-85);
         margin: 0;
     }
-    // ── Member since — muted line below title (org pages) ────
+    // ── Member since — muted line below title ────────────────
 
     &__member-since {
         .hdx-body-s();                      // 14 px — Figma .web-design
@@ -150,15 +162,7 @@
         gap:            var(--hdx-space-2);
         align-self:     stretch;
 
-        // Show-more button: hidden until JS confirms content is actually clamped
-        .c-text-button { display: none; }
-        &.is-clamped .c-text-button { display: inline-flex; }
-
-        &.is-open .c-text-button__icon {
-            transform:  rotate(180deg);
-            transition: transform 0.15s ease;
-            .hdx-motion();
-        }
+        .hdx-clamp-toggle();
     }
 
     &__desc-text {
@@ -241,7 +245,7 @@
             margin: 0;
         }
     }
-    // ── Right-card action links (org pages) ──────────────────
+    // ── Right-card action links ──────────────────────────────
 
     &__card-actions {
         display:        flex;
@@ -249,7 +253,7 @@
         align-items:    flex-start;
         gap:            var(--hdx-space-2);        // 8 px — Figma .text-buttons-parent
     }
-    // ── Right-card count stats (org pages) ───────────────────
+    // ── Right-card count stats ───────────────────────────────
 
     &__card-stats {
         display:    flex;
@@ -372,6 +376,11 @@
         .c-page-header__title {
             font-size: var(--hdx-fs-2xl); // 1.5rem
         }
+    }
+    // ── Flush — no vertical padding ──────────────────────────
+
+    &--flush {
+        padding: 0;
     }
     // ── CTA row variant (download + export) ──────────────────
 

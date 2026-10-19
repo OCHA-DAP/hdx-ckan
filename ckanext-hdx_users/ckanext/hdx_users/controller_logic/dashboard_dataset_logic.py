@@ -1,45 +1,29 @@
 from collections import OrderedDict
 
-import ckan.model as model
-import ckan.plugins.toolkit as tk
-
 from ckanext.hdx_users.controller_logic.dashboard_search_logic import DashboardSearchLogic
 from ckanext.hdx_package.helpers.freshness_calculator import UPDATE_STATUS_URL_FILTER
-
-get_action = tk.get_action
+from ckanext.hdx_search.helpers.constants import DEFAULT_SORTING
 
 
 class DashboardDatasetLogic(object):
 
-    def __init__(self, userobj):
+    def __init__(self, user_dict, owner_view):
         super(DashboardDatasetLogic, self).__init__()
-        self.userobj = userobj
+        self.user_dict = user_dict
+        self.owner_view = owner_view
 
         self.redirect_result = None
-        self.user_dict = None
         self.search_data = None
 
     def read(self):
-        self.user_dict = self._fetch_user_data()
         self.search_data = self._fetch_dataset_search_results()
         return self
 
-    def _fetch_user_data(self):
-        context = {'model': model, 'session': model.Session, 'for_view': True,
-                   'user': self.userobj.name, 'auth_user_obj': self.userobj,
-                   # Do NOT fetch the datasets we will fetch via package_search
-                   'return_minimal': True,  # This is being deprecated
-                   'include_num_followers': False,
-                   'include_datasets': False
-                   }
-        data_dict = {'user_obj': self.userobj}
-
-        return get_action('user_show')(context, data_dict)
-
     def _fetch_dataset_search_results(self):
-        fq = 'maintainer:"{}"'.format(self.userobj.id)
-        search_logic = DashboardSearchLogic()
-        search_logic._search(additional_fq=fq, default_sort_by='due_date asc', ignore_capacity_check=True)
+        fq = 'maintainer:"{}"'.format(self.user_dict['id'])
+        search_logic = DashboardSearchLogic(self.user_dict['name'], self.owner_view)
+        default_sort_by = 'due_date asc' if self.owner_view else DEFAULT_SORTING
+        search_logic._search(additional_fq=fq, default_sort_by=default_sort_by, ignore_capacity_check=True)
         archived_url_helper = search_logic.add_archived_url_helper()
         redirect_result = archived_url_helper.redirect_if_needed()
         if redirect_result:

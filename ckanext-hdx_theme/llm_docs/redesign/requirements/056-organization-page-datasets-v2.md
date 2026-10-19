@@ -62,8 +62,8 @@ if read_logic.org_meta.is_custom:
 else:
     # ... render('organization/read.html', ...)
 ```
-(`views/organization.py:67-90`). `is_custom` comes from the org extras flag `custom_org`
-(`org_meta_dao.py::OrgMetaDao.__process_custom()`, lines 164-177) — a manually-toggled admin
+(`read()` in `views/organization.py`). `is_custom` comes from the org extras flag `custom_org`
+(`org_meta_dao.py::OrgMetaDao.__process_custom()`) — a manually-toggled admin
 checkbox ("Use custom organisation page"), not a hardcoded org list. It also unlocks two JSON
 extras blobs: `customization` (image_sq, image_rect, highlight_color, logo_bg_color,
 topline_resource) and `visualization_config` (embedded/embedded-preview iframe settings).
@@ -106,13 +106,13 @@ triggers an existing JS-driven flow. v2 must call the exact same handler, unchan
 
 | Boolean | Check | Computed in |
 |---|---|---|
-| `can_edit` | `check_access('organization_update', {'id': org_id})` | `organization_read_logic.py:104`, `org_meta_dao.py:125` |
-| `can_create_dataset` | `check_access('package_create', {'organization_id': org_id, 'owner_org': org_id})` | `organization_read_logic.py:105-108`, `org_meta_dao.py:126-128` |
-| `allow_basic_user_info` | `check_access('hdx_basic_user_info')` (= just logged in) | `organization_read_logic.py:101`; auth fn in `hdx_theme/helpers/auth.py:39-41` |
-| `allow_req_membership` | `not user_in_org_or_group(org_id) and allow_basic_user_info` | `organization_read_logic.py:102` |
-| `display_group_message` | current user is themselves a member (`hdx_member_list`) | `org_meta_dao.py::fetch_group_message_topics()` → `hdx_package/helpers/membership_data.py:50` |
-| "Get notified" visible | `hdx_supports_notifications('organization', org_id, org_dict)` — a **business rule**, not an ACL | `hdx_theme/helpers/helpers.py:1167` |
-| Requested Data tab visible | `check_access('organization_update', {'id': org_dict.id})` (same as `can_edit`) | `custom_org.html:53` / `read_base.html` equivalent |
+| `can_edit` | `check_access('organization_update', {'id': org_id})` | `organization_read_logic.py::OrgReadLogic.read()`, `org_meta_dao.py::OrgMetaDao.fetch_permissions()` |
+| `can_create_dataset` | `check_access('package_create', {'organization_id': org_id, 'owner_org': org_id})` | `organization_read_logic.py::OrgReadLogic.read()`, `org_meta_dao.py::OrgMetaDao.fetch_permissions()` |
+| `allow_basic_user_info` | `check_access('hdx_basic_user_info')` (= just logged in) | `organization_read_logic.py::OrgReadLogic.read()`; auth fn in `hdx_theme/helpers/auth.py` |
+| `allow_req_membership` | `not user_in_org_or_group(org_id) and allow_basic_user_info` | `organization_read_logic.py::OrgReadLogic.read()` |
+| `display_group_message` | current user is themselves a member (`hdx_member_list`) | `org_meta_dao.py::fetch_group_message_topics()` → `hdx_package/helpers/membership_data.py::get_message_groups()` |
+| "Get notified" visible | `hdx_supports_notifications('organization', org_id, org_dict)` — a **business rule**, not an ACL | `hdx_theme/helpers/helpers.py` |
+| Requested Data tab visible | `check_access('organization_update', {'id': org_dict.id})` (same as `can_edit`) | `content_primary_nav` in `custom_org.html` / `read_base.html` equivalent |
 
 The pattern is belt-and-braces: computed once in `OrgReadLogic`/`OrgMetaDao`, passed as plain
 booleans into templates, and in a few spots re-checked with `h.check_access(...)` directly. v2
@@ -416,7 +416,7 @@ This is the same sidebar/overlay breakpoint contract already established for the
 | D14 | Only `requestdata/organization_requested_data.html` extends `organization/read_v1_base.html`, a verbatim copy of the old `read.html`, to keep its v1 header intact; `members.html`, `stats.html`, and `activity_stream.html` extend `v2/page.html` directly | Requested Data keeps its v1 rendering exactly via the base-template copy; the other three tabs render through the standard v2 shell |
 | D15 | The mobile "light" theme (`/m/organization/*`) is NOT retired in this task — `light_organization.py` and `light/organization/*` are untouched; retirement is a separate follow-up | Requester decision; keeps this change focused on the org page itself |
 | D16 | Tab label is "Activity" (Figma) rather than v1's "Activity Stream"; the "Member since" date keeps the `h.render_datetime()` default format ("May 25, 2017") used by the v2 org-list card rather than Figma's "25 May 2017" | Requester decisions, one per Figma-vs-convention conflict |
-| D17 | The hero is rendered via `v2/org-hero.html`, a shared wrapper (used by all four org tabs) that calls `v2/components/page-header.html` with generic self-gating params (`member_since`, `header_actions`, `header_stats`) — no mode flag, landing-page integration style; hero metrics inherit the dataset header defaults with no org-specific style overrides; the hero band border is a single `--hdx-neutral-1` at all breakpoints; the logo uses the component's `.hdx-org-logo()` sizing | Requester decisions during implementation review |
+| D17 | The hero is rendered via `v2/org-hero.html`, a shared wrapper that calls `v2/components/page-header.html` with generic self-gating params (`member_since`, `header_actions`, `header_stats`) — no mode flag, landing-page integration style; hero metrics inherit the dataset header defaults with no org-specific style overrides; the hero band border is a single `--hdx-neutral-1` at all breakpoints; the logo uses the component's `.hdx-org-logo()` sizing | Requester decisions during implementation review |
 | D18 | "Group message" is not part of this task (no action link, no popups) — a separate implementation covers it. The "Add dataset" / empty-state "Add Data" links keep their v1 `contributeAddDetails()` onclick; `contribute.js` is bundled on v2 pages in the `v2-page-scripts` bundle | Requester decision |
 
 ---
@@ -430,7 +430,7 @@ This is the same sidebar/overlay breakpoint contract already established for the
 | `ckanext-hdx_theme/ckanext/hdx_theme/templates/organization/members.html`, `stats.html`, `activity_stream.html`, `requestdata/organization_requested_data.html` | `{% extends %}` repointed to `organization/read_v1_base.html` — no other change |
 | `ckanext-hdx_theme/ckanext/hdx_theme/templates/organization/custom/custom_org.html` | No longer rendered — the read route renders the unified template for custom orgs too; `custom_org_header.html`/`custom_style.html` and the `custom_members.html`/`custom_stats.html`/`custom_activity_stream.html` wrappers untouched (still used by out-of-scope tabs) |
 | `ckanext-hdx_theme/ckanext/hdx_theme/templates/v2/components/page-header.html` | Extended with generic `member_since` / `header_actions` / `header_stats` params (D17) |
-| `ckanext-hdx_theme/ckanext/hdx_theme/templates/v2/org-hero.html` | New — shared wrapper that assembles `member_since`/`header_actions`/`header_stats` and calls `page-header.html`, used by all four org tabs (D17) |
+| `ckanext-hdx_theme/ckanext/hdx_theme/templates/v2/org-hero.html` | New — shared wrapper that assembles `member_since`/`header_actions`/`header_stats` and calls `page-header.html` (D17) |
 | `ckanext-hdx_theme/ckanext/hdx_theme/templates/v2/components/tabs.html` | New minimal tabs snippet |
 | `ckanext-hdx_theme/ckanext/hdx_theme/hdx-styles/src/common/less/v2/components/page-header.less` | `__member-since`, `__card-actions`, `__card-stats` element styles added |
 | `ckanext-hdx_theme/ckanext/hdx_theme/hdx-styles/src/common/less/v2/components/tabs.less` | New |

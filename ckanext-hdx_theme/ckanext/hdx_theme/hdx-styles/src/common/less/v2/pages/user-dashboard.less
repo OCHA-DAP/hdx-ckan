@@ -1,0 +1,235 @@
+// ============================================================
+// pages/user-dashboard.less
+// User dashboard and settings pages (v2/user-dashboard-base.html)
+// — v2 page-specific styles
+// Figma: llm_docs/redesign/figma_exports/xl-user-dashboard-my-organisation.html
+// ============================================================
+
+@import "../mixins.less";
+
+// ── Left menu ─────────────────────────────────────────────────
+.hdx-v2-user-dashboard-nav {
+    display:        flex;
+    flex-direction: column;
+    gap:            var(--hdx-space-6);
+
+    &__group {
+        display:        flex;
+        flex-direction: column;
+        gap:            var(--hdx-space-2);
+    }
+
+    &__label {
+        .hdx-body-xs();
+        color:  var(--hdx-neutral-95);
+        margin: 0;
+    }
+
+    &__list {
+        list-style: none;
+        margin:     0;
+        padding:    0;
+    }
+}
+
+// ── Header: title + subtitle, action ──────────────────────────
+.hdx-v2-user-dashboard-header {
+    display:        flex;
+    flex-direction: column;
+    align-items:    flex-start;
+    gap:            var(--hdx-space-4);
+    margin-bottom:  var(--hdx-space-6);
+
+    @media (min-width: @hdx-bp-xl) {
+        .hdx-list-header-row();
+        flex-direction: row;
+        gap:            var(--hdx-space-8);
+    }
+
+    &__text {
+        display:        flex;
+        flex-direction: column;
+        gap:            var(--hdx-space-13);
+
+        @media (min-width: @hdx-bp-xl) {
+            flex:      1;
+            min-width: 0;
+        }
+    }
+
+    &__title {
+        .hdx-dashboard-title();
+    }
+
+    &__subtitle {
+        .hdx-dashboard-subtitle();
+    }
+}
+
+// ── Profile header divider ────────────────────────────────────
+.hdx-v2-user-dashboard-divider {
+    background-color: var(--hdx-neutral-1);
+    margin:           var(--hdx-space-6) 0;
+
+    @media (min-width: @hdx-bp-md) {
+        margin: var(--hdx-space-8) 0;
+    }
+
+    @media (min-width: @hdx-bp-xl) {
+        width:  auto;
+        margin: var(--hdx-space-10) 0 var(--hdx-space-10) calc(-1 * var(--hdx-space-10));
+
+        .hdx-v2-search-content:not(:last-child) & {
+            margin-right: calc(-1 * var(--hdx-space-10));
+        }
+    }
+}
+
+// ── Form actions row ──────────────────────────────────────────
+.hdx-v2-user-dashboard-actions {
+    display:         flex;
+    justify-content: flex-end;
+}
+
+// ── Secret / token text ───────────────────────────────────────
+.hdx-v2-user-dashboard-secret {
+    .hdx-body-s-semibold();
+    word-break: break-all;
+}
+
+// ── User Permission form ──────────────────────────────────────
+.hdx-v2-user-permission {
+    display:        flex;
+    flex-direction: column;
+    align-items:    flex-start;
+    gap:            var(--hdx-space-6);
+
+    &__fieldset {
+        .v2-checkbox-group();
+    }
+
+    &__item {
+        .v2-checkbox-row();
+    }
+}
+
+// ── API Tokens form + list ────────────────────────────────────
+.hdx-v2-api-tokens {
+    display:        flex;
+    flex-direction: column;
+    gap:            var(--hdx-space-6);
+
+    @media (min-width: @hdx-bp-md) { width: 80%; }
+
+    &__form {
+        display:        flex;
+        flex-direction: column;
+        gap:            var(--hdx-space-5);
+    }
+
+    &__title {
+        .hdx-dashboard-title();
+    }
+}
+
+// ── Profile and Password stack ────────────────────────────────
+.hdx-v2-user-profile {
+    &,
+    &__form {
+        display:        flex;
+        flex-direction: column;
+        gap:            var(--hdx-space-12);
+    }
+
+    @media (min-width: @hdx-bp-md) { width: 80%; }
+
+    &__group {
+        display:        flex;
+        flex-direction: column;
+        gap:            var(--hdx-space-5);
+    }
+
+    &__checkbox {
+        .v2-checkbox-row();
+    }
+
+    &__hint {
+        .hdx-body-s();
+        grid-column: 2;
+        color:       var(--hdx-neutral-8);
+        margin:      0;
+    }
+
+    &__section {
+        display:        flex;
+        flex-direction: column;
+        gap:            var(--hdx-space-6);
+    }
+
+    &__section-header {
+        .hdx-page-section-header();
+    }
+
+    &__section-title {
+        .hdx-dashboard-title();
+    }
+}
+
+// ── Two-step verification drawer ──────────────────────────────
+.hdx-v2-two-step {
+    &__steps {
+        padding-left: var(--hdx-space-5);
+
+        li + li { margin-top: var(--hdx-space-2); }
+    }
+
+    &__state,
+    &__setup,
+    &__test,
+    &__actions {
+        display:        flex;
+        flex-direction: column;
+        gap:            var(--hdx-space-4);
+    }
+
+    &__buttons {
+        display:     flex;
+        flex-wrap:   wrap;
+        align-items: center;
+        gap:         var(--hdx-space-4);
+    }
+
+    &__qr {
+        align-self:    flex-start;
+        border:        1px solid var(--hdx-neutral-3);
+        border-radius: var(--hdx-radius-md);
+        padding:       var(--hdx-space-2);
+    }
+
+    &__secret-row {
+        display:     flex;
+        flex-wrap:   wrap;
+        align-items: center;
+        gap:         var(--hdx-space-2);
+    }
+}
+
+// ── API token created (flash content) ─────────────────────────
+.hdx-v2-api-token-created {
+    display:        flex;
+    flex-direction: column;
+    align-items:    flex-start;
+    gap:            var(--hdx-space-2);
+}
+
+// ── Empty state ───────────────────────────────────────────────
+.hdx-v2-user-dashboard-empty {
+    .hdx-list-header-empty();
+    display:        flex;
+    flex-direction: column;
+    gap:            var(--hdx-space-4);
+
+    &__text {
+        margin: 0;
+    }
+}

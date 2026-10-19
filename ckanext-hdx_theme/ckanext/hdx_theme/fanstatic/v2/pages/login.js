@@ -26,12 +26,6 @@
       return match ? decodeURIComponent(match[1]) : null;
     }
 
-    function setButtonDisabled(btn, disabled) {
-      btn.disabled = disabled;
-      btn.classList.toggle('is-disabled', disabled);
-      btn.setAttribute('aria-disabled', disabled ? 'true' : 'false');
-    }
-
     function setFieldError(input, message) {
       var wrapper = input.closest('.c-search-input');
       if (!wrapper) return;
@@ -48,7 +42,7 @@
         if (el.type === 'checkbox') { if (!el.checked) valid = false; }
         else if (!el.value) { valid = false; }
       });
-      setButtonDisabled(submitButton, !valid);
+      window.hdxV2.setDisabled(submitButton, !valid);
     }
 
     [loginField, passwordField, mfaField].forEach(function (el) {
@@ -80,7 +74,7 @@
     form.addEventListener('submit', function (e) {
       if (lockoutCleared) return;
       e.preventDefault();
-      setButtonDisabled(submitButton, true);
+      window.hdxV2.setDisabled(submitButton, true);
       var username = loginField.value;
       fetch('/util/user/check_lockout?user=' + encodeURIComponent(username), {credentials: 'same-origin'})
         .then(function (r) { return r.json(); })
@@ -91,13 +85,13 @@
             updateSubmitState();
           } else {
             lockoutCleared = true;
-            setButtonDisabled(submitButton, false);
+            window.hdxV2.setDisabled(submitButton, false);
             if (form.requestSubmit) { form.requestSubmit(); } else { form.submit(); }
           }
         })
         .catch(function () {
           lockoutCleared = true;
-          setButtonDisabled(submitButton, false);
+          window.hdxV2.setDisabled(submitButton, false);
           if (form.requestSubmit) { form.requestSubmit(); } else { form.submit(); }
         });
     });

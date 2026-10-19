@@ -73,3 +73,11 @@
 | 069 | [animation-interaction-audit](069-animation-interaction-audit.md)                                              | implemented | |
 | 070 | [v2-full-audit](070-v2-full-audit.md)                                                                          | implemented | |
 | 071 | [crisis-pages-v2](071-crisis-pages-v2.md)                                                                       | implemented | |
+| 072 | [user-dashboard-my-organisations-v2](072-user-dashboard-my-organisations-v2.md)                                 | implemented | |
+| 073 | [user-dashboard-my-datasets-v2](073-user-dashboard-my-datasets-v2.md)                                           | implemented | |
+| 074 | [user-dashboard-hdx-connect-requests-v2](074-user-dashboard-hdx-connect-requests-v2.md)                         | implemented | |
+| 075 | [user-dashboard-my-activity-stream-v2](075-user-dashboard-my-activity-stream-v2.md)                             | in_progress | |
+| 076 | [user-settings-user-permission-v2](076-user-settings-user-permission-v2.md)                                     | implemented | |
+| 077 | [user-settings-api-tokens-v2](077-user-settings-api-tokens-v2.md)                                               | implemented | |
+| 078 | [user-settings-notifications-v2](078-user-settings-notifications-v2.md)                                         | implemented | |
+| 079 | [user-settings-profile-password-v2](079-user-settings-profile-password-v2.md)                                   | implemented | |

@@ -191,7 +191,7 @@ Note: `package/hdx-read-shape.html` (the pre-v2 template that used to own this m
 
 **resources_list.html** renders `resource-card` items (task 038) — do not change its internals. Its `resource_list_classes` param defaults to `'hdx-bs3 resource-list'`; the v2 dataset page passes `'resource-list c-resource-card-list'` (the `resource-list` class stays for `hdx_resource_grouping.js`; `c-resource-card-list` owns the layout in `components/resource-card.less`).
 
-The title/count split (`__left` wrapping a separate `__count` span, no parentheses) deviates from the Figma export, which shows `"Data and resources (7)"` as one plain text string — done instead to match the count-badge pattern already used by the org Members tab and the search page's list header (`.hdx-list-header-row-left()` + `.hdx-section-title-count()`).
+The title/count split (`__left` wrapping a separate `__count` span, no parentheses) deviates from the Figma export, which shows `"Data and resources (7)"` as one plain text string — done instead to match the shared count-badge pattern (`.hdx-list-header-row-left()` + `.hdx-section-title-count()`).
 
 ---
 
@@ -380,7 +380,7 @@ No "See more in your dashboard" link — dropped. `fanstatic/v2/pages/dataset.js
 
 ### Blocks to KEEP UNCHANGED:
 - `{% block pre_primary %}` — dataset-page-header (task 037)
-- All analytics blocks (lines 43–55): `analytics_org_name`, `analytics_org_id`, `analytics_is_cod`, `analytics_is_indicator`, `analytics_is_archived`, `analytics_group_names`, `analytics_group_ids`, `analytics_dataset_name`, `analytics_dataset_id`, `analytics_dataset_availability`, `analytics_came_from`, `analytics_supports_notifications`, `analytics_supports_tabular_data_endpoints`
+- All analytics blocks: `analytics_org_name`, `analytics_org_id`, `analytics_is_cod`, `analytics_is_indicator`, `analytics_is_archived`, `analytics_group_names`, `analytics_group_ids`, `analytics_dataset_name`, `analytics_dataset_id`, `analytics_dataset_availability`, `analytics_came_from`, `analytics_supports_notifications`, `analytics_supports_tabular_data_endpoints`
 - `{% block head_extras %}` — structured data (schema.org ld+json)
 - `{% block subtitle %}`, `{% block meta %}`, `{% block links %}`
 
@@ -652,7 +652,7 @@ Load in `hdx_read.html`:
 
 ## Analytics Preservation (CRITICAL)
 
-These blocks in `hdx_read.html` (lines 43–55) must NOT be touched:
+These blocks in `hdx_read.html` must NOT be touched:
 
 ```
 {% block analytics_org_name %}

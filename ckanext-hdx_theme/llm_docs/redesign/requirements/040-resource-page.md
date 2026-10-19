@@ -136,7 +136,7 @@ GA tracking reads `.ga-download` click + `data-resource-name` / `data-resource-i
 
 #### 2d. Export metadata dropdown
 
-Reuses the existing export URL pattern from `resource_item.html:92`. Uses the standard `c-dropdown` snippet with `navigate=True`. Items navigate directly to the export URL; `dropdown.js` handles open/close and navigation.
+Reuses the existing export URL pattern from `resource_item.html`'s Export Metadata menu. Uses the standard `c-dropdown` snippet with `navigate=True`. Items navigate directly to the export URL; `dropdown.js` handles open/close and navigation.
 
 ```jinja
 {% snippet 'v2/components/dropdown.html',
@@ -259,7 +259,7 @@ The section body uses `.hdx-v2-resource-api` — column layout on SM/MD, row lay
 
 **Block 2 — Resource ID**:
 - Label + value
-- `copy-button.html`, same component used by the page-header's Resource ID/URL and Dataset ID copy buttons:
+- `copy-button.html`:
 
 ```jinja
 {% snippet 'v2/components/copy-button.html',
@@ -310,7 +310,7 @@ Renders a `<button>` with `data-copy-value="{{ value }}"`. No `__feedback` span 
 
 ### JS: `fanstatic/v2/components/copy-button.js`
 
-Added to `v2-components-scripts` bundle. Listens for `click` on any element with `[data-copy-value]`; `copy-button.html` is currently the only template that renders that attribute.
+Added to `v2-components-scripts` bundle. Listens for `click` on any element with `[data-copy-value]`.
 
 - On success: `navigator.clipboard.writeText(el.dataset.copyValue)` → adds `is-copied` class to the element
 - After 2 seconds: removes `is-copied` class
@@ -507,7 +507,7 @@ No page-specific scripts block needed — all JS is in `v2-components-scripts`, 
 
 | File | Type | Notes |
 |---|---|---|
-| `templates/v2/components/page-header.html` | Jinja template | Unified `c-page-header` (dataset + resource + org/landing/crisis) |
+| `templates/v2/components/page-header.html` | Jinja template | Unified `c-page-header` (dataset + resource) |
 | `templates/v2/components/copy-button.html` | Jinja template | `c-copy-button` — green icon on copy success |
 | `fanstatic/v2/components/page-header.js` | JavaScript | Overflow "View more" reveal + tooltip handling; export dropdown logic in `dropdown.js` |
 | `fanstatic/v2/components/copy-button.js` | JavaScript | Clipboard copy; `is-copied` CSS class approach (in `v2-components-scripts`) |

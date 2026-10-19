@@ -1402,14 +1402,64 @@ def hdx_dataset_has_datastore_resources(resource_list: list[Any]) -> bool:
     return False
 
 
+def hdx_get_user_dashboard_nav_sections(user_name=None):
+    """
+    :param user_name: the user whose pages are being viewed (default: the current user)
+    """
+    is_own = bool(c.userobj) and user_name in (None, c.user)
+    if is_own:
+        user_name = c.user
+    if not user_name:
+        return []
+
+    if is_own:
+        dashboard_items = [
+            {'id': 'my_datasets', 'label': _('My Datasets'), 'href': h.url_for('hdx_user.read', id=user_name)},
+            {'id': 'my_organisations', 'label': _('My Organisations'),
+             'href': h.url_for('hdx_user.read_organizations', id=user_name)},
+            {'id': 'my_activity_stream', 'label': _('My Activity Stream'),
+             'href': h.url_for('activity.user_activity', id=user_name)},
+            {'id': 'hdx_connect_requests', 'label': _('HDX Connect Requests'),
+             'href': h.url_for('requestdata.my_requested_data', id=user_name)},
+        ]
+    else:
+        dashboard_items = [
+            {'id': 'my_datasets', 'label': _('Datasets'), 'href': h.url_for('hdx_user.read', id=user_name)},
+            {'id': 'my_activity_stream', 'label': _('Activity Stream'),
+             'href': h.url_for('activity.user_activity', id=user_name)},
+        ]
+
+    sections = [{'id': 'dashboard', 'label': _('Activity and Content'), 'items': dashboard_items}]
+    if not c.userobj:
+        return sections
+
+    settings_items = []
+    if c.userobj.sysadmin:
+        settings_items.append({'id': 'user_permission', 'label': _('User Permission'),
+                               'href': h.url_for('hdx_user_permission.read', id=user_name)})
+    if is_own or h.check_access('api_token_list', {'user': user_name}):
+        settings_items.append({'id': 'api_tokens', 'label': _('API Tokens'),
+                               'href': h.url_for('user.api_tokens', id=user_name)})
+    if is_own or h.check_access('user_update', {'id': user_name}):
+        settings_items += [
+            {'id': 'notifications_settings', 'label': _('Notifications Settings'),
+             'href': h.url_for('hdx_user.notifications', id=user_name)},
+            {'id': 'profile_and_password', 'label': _('Profile and Password'),
+             'href': h.url_for('hdx_user.edit', id=user_name)},
+        ]
+
+    if settings_items:
+        sections.append({'id': 'settings', 'label': _('Account and Settings'), 'items': settings_items})
+    return sections
+
+
 def hdx_get_user_menu_sections():
     if not c.userobj:
         return []
 
-    is_sysadmin = c.userobj.sysadmin
     sections = []
 
-    if is_sysadmin:
+    if c.userobj.sysadmin:
         sections.append({
             'id': 'sysadmin',
             'label': _('Sysadmin Dashboard'),
@@ -1426,39 +1476,7 @@ def hdx_get_user_menu_sections():
             ],
         })
 
-    sections.append({
-        'id': 'dashboard',
-        'label': _('User Dashboard'),
-        'items': [
-            {'label': _('Newsfeed'), 'href': h.url_for('activity.dashboard')},
-            {'label': _('My Datasets'), 'href': h.url_for('hdx_user_dashboard.datasets')},
-            {'label': _('My Organisations'), 'href': h.url_for('dashboard.organizations')},
-            {'label': _('My Locations'), 'href': h.url_for('dashboard.groups')},
-            {'label': _('HDX Connect Requests'), 'href': h.url_for('requestdata.my_requested_data', id=c.user)},
-        ],
-    })
-
-    settings_items = [
-        {'label': _('Datasets'), 'href': h.url_for('user.read', id=c.user)},
-        {'label': _('Activity Stream'), 'href': h.url_for('activity.user_activity', id=c.user)},
-    ]
-    if is_sysadmin:
-        settings_items.append({
-            'label': _('User Permission'),
-            'href': h.url_for('hdx_user_permission.read', id=c.user),
-        })
-    settings_items += [
-        {'label': _('API Tokens'), 'href': h.url_for('user.api_tokens', id=c.user)},
-        {'label': _('Notifications'), 'href': h.url_for('hdx_user.notifications', id=c.user)},
-        {'label': _('Profile and Password'), 'href': h.url_for('user.edit', id=c.user)},
-    ]
-    sections.append({
-        'id': 'settings',
-        'label': _('User Settings'),
-        'items': settings_items,
-    })
-
-    return sections
+    return sections + hdx_get_user_dashboard_nav_sections()
 
 
 def hdx_format_to_icon_category(format_str):
