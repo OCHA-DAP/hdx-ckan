@@ -285,7 +285,7 @@ Example page-specific template (light search):
 - **Template**: `ckanext-hdx_theme/ckanext/hdx_theme/templates/user/edit_user_form.html`
   - Extends `v2/user-dashboard-base.html`; the profile header shows for every viewer (own page included), with a "View public profile" link (`public_profile_link` → `c-page-header` `cta_style='text'`). A profile + password form of `c-form-field`s with errors under each field.
   - Sysadmin viewers also get two-step verification (a `c-drawer` driven by `v2/pages/user-profile.js`, calling the `hdx_user` `configure_mfa` endpoints) and Delete account (a `c-drawer` posting to core `user.delete`; maintainers get `v2/maintainer-datasets-list.html` and a disabled Confirm).
-  - The `HDXEditView` view is unchanged.
+  - `HDXEditView` is unchanged, except that `get` no longer sets `g.totp_secret`.
 - **Core assets**: as My Organisations, plus `v2-user-profile-page-scripts` for sysadmin viewers.
 
 ---

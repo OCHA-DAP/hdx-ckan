@@ -2,6 +2,7 @@ import pytest
 import pyotp
 import mock
 import json
+import time
 
 import ckan.plugins.toolkit as tk
 import ckan.tests.factories as factories
@@ -140,3 +141,116 @@ def _locked_out(username: str, app: CKANTestApp) -> bool:
         raise Exception('Bad HTTP response' + response.status_code)
     reponse_dict = json.loads(response.body)
     return reponse_dict.get('result')
+
+
+def _auth(user_name: str) -> dict:
+    return {'Authorization': factories.APIToken(user=user_name, expires_in=2, unit=60 * 60)['token']}
+
+
+def _wrong_code(totp: pyotp.TOTP) -> str:
+    now = time.time()
+    valid_codes = {totp.at(now, offset) for offset in range(-2, 3)}
+    return next(code for code in ('111222', '333444', '555666') if code not in valid_codes)
+
+
+@pytest.mark.usefixtures('keep_db_tables_on_clean', 'hdx_clean_db')
+@pytest.mark.ckan_config('hdx.security.site_name', 'HDX')
+class TestTwoStepEndpoints(object):
+
+    def test_delete(self, app: CKANTestApp):
+        factories.User(name='mfa_owner_1')
+        factories.User(name='mfa_other_1')
+        factories.User(name='mfa_sysadmin_1', sysadmin=True)
+        owner, other, sysadmin = _auth('mfa_owner_1'), _auth('mfa_other_1'), _auth('mfa_sysadmin_1')
+        url = tk.h.url_for('hdx_user.delete', id='mfa_owner_1')
+        SecurityTOTP.create_for_user('mfa_owner_1')
+
+        assert app.post(url).status_code == 403
+        assert app.get(url, headers=owner).status_code == 404
+        assert app.post(url, headers=other).status_code == 403
+        assert SecurityTOTP.get_for_user('mfa_owner_1') is not None
+
+        assert app.post(url, headers=owner).status_code == 200
+        assert SecurityTOTP.get_for_user('mfa_owner_1') is None
+
+        SecurityTOTP.create_for_user('mfa_owner_1')
+        assert app.post(url, headers=sysadmin).status_code == 200
+        assert SecurityTOTP.get_for_user('mfa_owner_1') is None
+
+        unknown_url = tk.h.url_for('hdx_user.delete', id='mfa_unknown_user')
+        assert app.post(unknown_url, headers=sysadmin).status_code == 404
+
+    def test_new(self, app: CKANTestApp):
+        factories.User(name='mfa_owner_2')
+        factories.User(name='mfa_other_2')
+        factories.User(name='mfa_sysadmin_2', sysadmin=True)
+        owner, other, sysadmin = _auth('mfa_owner_2'), _auth('mfa_other_2'), _auth('mfa_sysadmin_2')
+        url = tk.h.url_for('hdx_user.new', id='mfa_owner_2')
+        secret = SecurityTOTP.create_for_user('mfa_owner_2').secret
+
+        assert app.get(url, headers=owner).status_code == 404
+        assert app.post(url, headers=other).status_code == 403
+        assert SecurityTOTP.get_for_user('mfa_owner_2').secret == secret
+
+        res = app.post(url, headers=owner)
+        assert res.status_code == 200
+        new_secret = SecurityTOTP.get_for_user('mfa_owner_2').secret
+        assert new_secret != secret
+        assert new_secret in res.body
+
+        assert app.post(url, headers=sysadmin).status_code == 200
+
+    @pytest.mark.ckan_config('hdx.security.2fa.redirect', 'true')
+    def test_configure_mfa(self, app: CKANTestApp):
+        factories.User(name='mfa_owner_3')
+        factories.User(name='mfa_other_3')
+        factories.User(name='mfa_sysadmin_3', sysadmin=True)
+        owner, other, sysadmin = _auth('mfa_owner_3'), _auth('mfa_other_3'), _auth('mfa_sysadmin_3')
+        totp = pyotp.TOTP(SecurityTOTP.create_for_user('mfa_owner_3').secret)
+        url = tk.h.url_for('hdx_user.configure_mfa', id='mfa_owner_3')
+
+        assert app.post(url, data={'mfa': totp.now()}, headers=other).status_code == 403
+
+        client = app.test_client()
+        res = client.post(url, data={'mfa': _wrong_code(totp)}, headers=owner)
+        assert '"success": false' in res.body
+        res = client.get(tk.h.url_for('hdx_user.edit', id='mfa_owner_3'), headers=owner)
+        assert 'Successfully configured and enabled the two-step verification.' not in res.body
+
+        res = client.post(url, data={'mfa': totp.now()}, headers=owner)
+        assert '"success": true' in res.body
+
+        client = app.test_client()
+        res = client.post(url, data={'mfa': totp.now()}, headers=sysadmin)
+        assert '"success": true' in res.body
+        res = client.get('/', headers=sysadmin, follow_redirects=False)
+        assert res.status_code == 302
+        assert 'show_totp' in res.headers['Location']
+
+    def test_security_extension_routes(self, app: CKANTestApp):
+        factories.User(name='mfa_owner_4')
+        owner = _auth('mfa_owner_4')
+        secret = SecurityTOTP.create_for_user('mfa_owner_4').secret
+
+        assert app.get(tk.h.url_for('mfa_user.configure_mfa', id='mfa_owner_4'), headers=owner).status_code == 404
+        assert app.get(tk.h.url_for('mfa_user.new', id='mfa_owner_4'), headers=owner).status_code == 404
+        assert app.post(tk.h.url_for('mfa_user.new', id='mfa_owner_4'), headers=owner).status_code == 404
+        login_data = {'login': 'mfa_owner_4', 'password': 'Abcdefgh1-', 'mfa': ''}
+        assert app.post(tk.h.url_for('mfa_user.login'), data=login_data, headers=owner).status_code == 404
+        assert SecurityTOTP.get_for_user('mfa_owner_4').secret == secret
+
+    def test_edit_page(self, app: CKANTestApp):
+        factories.User(name='mfa_owner_5')
+        factories.User(name='mfa_sysadmin_5', sysadmin=True)
+        secret = SecurityTOTP.create_for_user('mfa_owner_5').secret
+
+        res = app.get(tk.h.url_for('hdx_user.edit', id='mfa_owner_5'), headers=_auth('mfa_sysadmin_5'))
+        assert 'Two-step verification is on.' in res.body
+        assert secret not in res.body
+
+    @pytest.mark.ckan_config('hdx.security.2fa.redirect', 'true')
+    def test_redirect_on_unmatched_routes(self, app: CKANTestApp):
+        factories.User(name='mfa_sysadmin_6', sysadmin=True)
+        sysadmin = _auth('mfa_sysadmin_6')
+
+        assert app.post('/no-such-page/for-two-step-test', headers=sysadmin).status_code == 405

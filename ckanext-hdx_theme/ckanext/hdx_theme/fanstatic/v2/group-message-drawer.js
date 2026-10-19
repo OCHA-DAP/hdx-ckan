@@ -63,12 +63,7 @@
     }
     var data = new URLSearchParams(new FormData(form));
     if (token) data.set('g-recaptcha-response', token);
-    fetch('/membership/contact_members', {
-      method: 'POST',
-      headers: window.hdxUtil.net.getCsrfTokenAsObject(),
-      body: data
-    })
-      .then(function (r) { return r.json(); })
+    window.hdxV2.post('/membership/contact_members', data)
       .then(function (resp) {
         var widgetId = recaptchaWidgets[drawer.id];
         if (resp && resp.success) {

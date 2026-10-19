@@ -144,16 +144,16 @@
             <p class="c-drawer-form__text">{{ _('Two-step verification is on.') }}</p>
             <div class="hdx-v2-two-step__buttons">
               {% snippet 'v2/components/button.html',
-                  style='tertiary', size='m', label=_('Turn off two-step verification'),
+                  style='tertiary', label=_('Turn off two-step verification'),
                   attrs={'data-two-step-off': ''} %}
               {% snippet 'v2/components/text-button.html',
-                  style='primary', size='m', tag='button', label=generate_label,
+                  style='primary', tag='button', label=generate_label,
                   attrs={'data-two-step-new': ''} %}
             </div>
           {% else %}
             <div class="hdx-v2-two-step__buttons">
               {% snippet 'v2/components/button.html',
-                  style='primary', size='m', label=_('Turn on two-step verification'),
+                  style='primary', label=_('Turn on two-step verification'),
                   attrs={'data-two-step-new': ''} %}
             </div>
           {% endif %}
@@ -181,7 +181,7 @@
           </div>
           <div class="hdx-v2-two-step__buttons">
             {% snippet 'v2/components/button.html',
-                style='secondary', size='m', button_type='submit', label=_('Test') %}
+                style='secondary', button_type='submit', label=_('Test') %}
           </div>
           {% snippet 'v2/components/alert.html', variant='success', hidden=True, extra_attrs='data-two-step-result' %}
           <p class="c-drawer-form__text">
@@ -195,10 +195,10 @@
           <p class="c-drawer-form__text">{{ _('Turn off the two-step verification.') }}</p>
           <div class="c-drawer-form__buttons">
             {% snippet 'v2/components/button.html',
-                style='tertiary', size='m', label=_('Cancel'),
+                style='tertiary', label=_('Cancel'),
                 attrs={'data-two-step-cancel': ''} %}
             {% snippet 'v2/components/button.html',
-                style='primary', size='m', label=_('Save'), state='disabled',
+                style='primary', label=_('Save'), state='disabled',
                 attrs={'data-two-step-save': ''} %}
           </div>
         </div>

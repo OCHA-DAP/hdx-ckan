@@ -546,7 +546,7 @@ Page LESS keeps only page-rhythm concerns around the wrapper (e.g.
 
 If a utility class or function has exactly one consumer and no realistic reuse case, inline it into the consumer rather than maintaining a separate component file. Promote it to a shared module (`utils.js`) the moment a second consumer needs the same logic — never copy it. (`FocusTrap` started inlined into `navbar.js` from `focus-trap.js`; once `components/drawer.js` needed the same Tab-trap logic, it moved to `window.hdxV2.FocusTrap` in `utils.js`.)
 
-CSRF headers for `fetch` POSTs: call `window.hdxUtil.net.getCsrfTokenAsObject()` directly (`base/hdx-util-lib.js`, in the `hdx_theme/ckan` bundle that `base.html` loads on every page) — no local wrapper functions.
+CSRF headers for `fetch` POSTs: `window.hdxV2.post(url, body)` (`utils.js`) for a POST that returns JSON; otherwise call `window.hdxUtil.net.getCsrfTokenAsObject()` directly (`base/hdx-util-lib.js`, in the `hdx_theme/ckan` bundle that `base.html` loads on every page) — no local wrapper functions.
 
 ---
 

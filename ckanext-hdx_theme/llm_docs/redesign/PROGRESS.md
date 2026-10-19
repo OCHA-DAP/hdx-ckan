@@ -208,7 +208,7 @@ Bundle configuration:
   - `v2/nav-controls.css` — shared sort + results-per-page dropdown pair
   - `v2/navbar.css` — main navbar styles (logo, search, nav items, actions, offcanvas)
   - `v2/top-bar.css` — top-bar styles (OCHA services dropdown, documentation link)
-- `hdx_theme/v2-components-scripts` ✅ Contains: `v2/utils.js` (shared `window.hdxV2.*` helpers incl. `FocusTrap`, `setDisabled`, `showAlert`, loaded first), then `alert.js`, `anchor-links.js` (smooth scroll + mobile dropdown + active tracking), `clamped-text.js` (show-more/less), `copy-button.js`, `drawer.js`, `dropdown.js`, `input-field.js` (password toggle), `page-header.js`, `tooltip.js`, `toggle.js`
+- `hdx_theme/v2-components-scripts` ✅ Contains: `v2/utils.js` (shared `window.hdxV2.*` helpers incl. `FocusTrap`, `setDisabled`, `showAlert`, `post`, loaded first), then `alert.js`, `anchor-links.js` (smooth scroll + mobile dropdown + active tracking), `clamped-text.js` (show-more/less), `copy-button.js`, `drawer.js`, `dropdown.js`, `input-field.js` (password toggle), `page-header.js`, `tooltip.js`, `toggle.js`
 - `hdx_theme/v2-page-scripts` ✅ Contains `v2/contribute.js` + `v2/group-message-drawer.js` + `v2/navbar.js` (navbar + offcanvas, uses `window.hdxV2.FocusTrap`) + `v2/search-autocomplete.js`; preloads `v2-components-scripts` and `v2-search-scripts` (MiniSearch/feature-index)
 - `hdx_theme/v2-search-scripts` — global lib bundle: MiniSearch, normalize.js, feature-index; auto-loaded via `v2-page-scripts` preload
 - `hdx_theme/v2-search-page-styles` — search page: adds `v2/pages/search.css`

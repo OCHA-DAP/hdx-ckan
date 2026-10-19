@@ -1,10 +1,10 @@
 // ============================================================
 // user-profile.js — v2 Profile and Password (task 079)
 // Two-step verification drawer of templates/user/edit_user_form.html:
-// - Turn on / Generate → GET …/new, draw the QR (QRious), start the setup
+// - Turn on / Generate → POST …/new, draw the QR (QRious), start the setup
 // - Test → POST the code; a pass enables Save
-// - Save → reload without the query string
-// - Cancel / Turn off → GET …/delete, reload
+// - Save → reload without the query string or fragment
+// - Cancel / Turn off → POST …/delete, reload
 // - Closing the drawer mid-setup: Cancel before a passed test, Save after
 // - ?show_totp opens the drawer on load
 // ============================================================
@@ -17,11 +17,6 @@
   var INVALID = 'Code is invalid, please check code and try again!';
   var TEST_ERROR = 'Error while attempting test!';
   var ERROR = 'Error!';
-
-  function json(response) {
-    if (!response.ok) throw new Error(response.status);
-    return response.json();
-  }
 
   function succeeded(resp) {
     if (!resp || resp.success !== true) throw new Error('failed');
@@ -51,13 +46,12 @@
     }
 
     function save() {
-      leave(function () { window.location.assign(window.location.href.split('?')[0]); });
+      leave(function () { window.location.assign(window.location.href.split(/[?#]/)[0]); });
     }
 
     function turnOff(reloadOnError) {
       errorAlert.hidden = true;
-      fetch(root.getAttribute('data-two-step-delete-url'))
-        .then(json)
+      window.hdxV2.post(root.getAttribute('data-two-step-delete-url'))
         .then(succeeded)
         .then(reload)
         .catch(function () {
@@ -71,8 +65,7 @@
 
     function startSetup() {
       errorAlert.hidden = true;
-      fetch(root.getAttribute('data-two-step-new-url'))
-        .then(json)
+      window.hdxV2.post(root.getAttribute('data-two-step-new-url'))
         .then(succeeded)
         .then(function (resp) {
           part('secret').textContent = resp.totp_secret;
@@ -93,12 +86,7 @@
     testForm.addEventListener('submit', function (e) {
       e.preventDefault();
       resultAlert.hidden = true;
-      fetch(root.getAttribute('data-two-step-test-url'), {
-        method: 'POST',
-        headers: window.hdxUtil.net.getCsrfTokenAsObject(),
-        body: new URLSearchParams(new FormData(testForm))
-      })
-        .then(json)
+      window.hdxV2.post(root.getAttribute('data-two-step-test-url'), new URLSearchParams(new FormData(testForm)))
         .then(function (resp) {
           if (!resp || resp.success !== true) {
             window.hdxV2.showAlert(resultAlert, INVALID, 'error');

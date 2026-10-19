@@ -5,7 +5,7 @@ where a sysadmin manages two-step verification and deletes accounts. It moves in
 shell. The 2FA popup becomes a `c-drawer`, and so does the delete confirmation.
 
 **Excluded:**
-- The view, actions, schemas, validators and auth rules.
+- The view (except D1), actions, schemas, validators and auth rules.
 - The 2FA endpoints and the `ckanext-security` extension.
 - Core's delete view.
 - The `_before_request` 2FA redirect.
@@ -111,8 +111,8 @@ shell. The 2FA popup becomes a `c-drawer`, and so does the delete confirmation.
 
   | Endpoint | Method | Purpose |
   |---|---|---|
-  | `/user/configure_mfa/<name>/new` | GET | Returns `totp_challenger_uri` + `totp_secret` (JSON) |
-  | `/user/configure_mfa/<name>/delete` | GET | Turns 2FA off |
+  | `/user/configure_mfa/<name>/new` | POST | CSRF header; returns `totp_challenger_uri` + `totp_secret` (JSON) |
+  | `/user/configure_mfa/<name>/delete` | POST | CSRF header; turns 2FA off |
   | `/user/configure_mfa/<name>` | POST | `mfa` + CSRF header (`hdxUtil.net.getCsrfTokenAsObject()`); returns `{success}` |
 
   - Messages:
@@ -120,8 +120,8 @@ shell. The 2FA popup becomes a `c-drawer`, and so does the delete confirmation.
       please check code and try again!" / "Error while attempting test!".
     - `/new` and `/delete` failures: `alert('Error!')`.
   - The endpoints also set flashes, which show on the next page load.
-- **Flow:** Save reloads the page without the query string; Cancel turns 2FA off, then reloads; Turn off
-  swaps the popup to the off state in place.
+- **Flow:** Save reloads the page without the query string or fragment; Cancel turns 2FA off, then
+  reloads; Turn off swaps the popup to the off state in place.
 - **Forced setup:** `THEME/plugin.py` `_before_request` sends sysadmins without 2FA to
   `user.edit?show_totp=True`. The popup auto-opens on `show_totp`.
 - **Login** (`user/signin.html` + `v2/pages/login.js`) asks for the code when the account has 2FA.
@@ -220,6 +220,7 @@ shell. The 2FA popup becomes a `c-drawer`, and so does the delete confirmation.
 | Maintainer list | **Extend** `.c-drawer-form` with `__list`, moved from the org page; **new** shared `v2/maintainer-datasets-list.html` (D17) |
 | Secret copy, result messages | **Reuse** `copy-button.html`, `alert.html`, `hdxV2.setDisabled`; **extend** `hdxV2.showAlert` with a variant (D24) |
 | 2FA JS | **New** `fanstatic/v2/pages/user-profile.js` + vendored QRious, bundle `v2-user-profile-page-scripts` (D15) |
+| 2FA requests | **New** shared `hdxV2.post` in `utils.js` (D26) |
 | Layout | **New** page blocks `.hdx-v2-user-profile` and `.hdx-v2-two-step` (2FA drawer content) in `pages/user-dashboard.less`; **new** shared `.hdx-v2-user-dashboard-actions` and `.hdx-v2-user-dashboard-secret` (D25) |
 
 ---
@@ -228,7 +229,7 @@ shell. The 2FA popup becomes a `c-drawer`, and so does the delete confirmation.
 
 - `THEME/templates/user/edit_user_form.html` is replaced wholesale and extends
   `v2/user-dashboard-base.html` (D1). No shared v1 snippet changes, so there is no `{% if v2 %}` and no `v2=true`.
-- The view is untouched. Every caller of `hdx_user.edit` / `user.edit` (nav helper, v1 tabs, header,
+- The view changes only as D1 says. Every caller of `hdx_user.edit` / `user.edit` (nav helper, v1 tabs, header,
   splash flash, 2FA redirect) reaches the v2 page unchanged.
 - `user/read_base.html` stays; the v1 settings tabs still link here.
 - **Assets:**
@@ -338,7 +339,7 @@ shell. The 2FA popup becomes a `c-drawer`, and so does the delete confirmation.
   - **Trigger:** "Manage two-step verification" opens `two-step-drawer`. `?show_totp` in the URL opens it
     on load.
   - **Turn on / Generate:**
-    - GET `/user/configure_mfa/<name>/new`;
+    - POST `/user/configure_mfa/<name>/new` with `hdxUtil.net.getCsrfTokenAsObject()`;
     - on success: fill the secret and the copy button's `data-copy-value`, draw the QR with QRious
       (size 250), show the setup block, test block and setup actions, and hide the state block;
     - set `onbeforeunload` (v1 message).
@@ -346,9 +347,9 @@ shell. The 2FA popup becomes a `c-drawer`, and so does the delete confirmation.
     - POST `/user/configure_mfa/<name>` with `mfa` and `hdxUtil.net.getCsrfTokenAsObject()`;
     - show the v1 result message in the `c-alert` (`hdxV2.showAlert`, success or error variant);
     - on success, enable Save (`hdxV2.setDisabled`) and clear `onbeforeunload`.
-  - **Save:** `location.assign` to the URL without the query string.
-  - **Cancel:** GET `/user/configure_mfa/<name>/delete`, then reload.
-  - **Turn off:** GET `…/delete`, then reload.
+  - **Save:** `location.assign` to the URL without the query string or fragment.
+  - **Cancel:** POST `/user/configure_mfa/<name>/delete` with the same header, then reload.
+  - **Turn off:** POST `…/delete`, then reload.
   - **Closing mid-setup:** `drawer:close` counts as Cancel while the setup is untested, and as Save after a
     test passed.
   - **Failures:** a `/new` or `/delete` failure shows "Error!" in the drawer's error `c-alert`; closing
@@ -403,7 +404,7 @@ shell. The 2FA popup becomes a `c-drawer`, and so does the delete confirmation.
 
 | # | Decision |
 |---|---|
-| D1 Template | Replace `user/edit_user_form.html` wholesale; it extends `v2/user-dashboard-base.html`. The view is untouched. |
+| D1 Template | Replace `user/edit_user_form.html` wholesale; it extends `v2/user-dashboard-base.html`. The view only stops setting `g.totp_secret`. |
 | D2 Profile header | Shown on your own page and on another user's. Profile header `<h1>`, page title `<h2>`, section titles `<h3>`. Figma subtitle on your own page; "Update {name}'s account details, password, and login preferences" on another user's. |
 | D3 Public link | "View public profile" → `hdx_user.read` for the viewed user (own page: My Datasets). New tab, `link-external.svg` on the left. |
 | D4 page-header CTA | New `cta_style` (`'button'` default, `'text'` → `text-button.html` primary m) and `cta_attrs` (dict, like `header_actions[].attrs`). The header comment documents `cta_label`, `cta_href`, `cta_icon_src`, `cta_style`, `cta_attrs`. Signals is unchanged. |
@@ -422,12 +423,13 @@ shell. The 2FA popup becomes a `c-drawer`, and so does the delete confirmation.
 | D17 Drawer list | `.hdx-v2-org-members__pkg-list` moves to `drawer.less` as `c-drawer-form__list`; its markup moves to `v2/maintainer-datasets-list.html`, which the org members drawer uses too. |
 | D18 Width | `.hdx-v2-user-profile` 100% at SM, 80% from MD (own rule). |
 | D19 Analytics | No new events. The Mixpanel page title follows the base subtitle, "Profile and Password \| {name} \| Users", as on 072–078. |
-| D20 Tests | Update the five `TestEditUserEmail` tests for the v2 markup (email errors under the Email field). Add to `TestEditUserEmail`: own GET (title, link with `target="_blank"`); 2FA section/drawer only for sysadmin viewers; delete drawer only for sysadmins, with Confirm disabled for maintainers; wrong old password → error under its field. |
-| D21 Unchanged | View, actions, schema, validators, auth, 2FA endpoints and flashes, core delete view, `_before_request` redirect, field names, CSRF. |
+| D20 Tests | Update the five `TestEditUserEmail` tests for the v2 markup (email errors under the Email field). Add to `TestEditUserEmail`: own GET (title, link with `target="_blank"`); 2FA section/drawer only for sysadmin viewers; delete drawer only for sysadmins, with Confirm disabled for maintainers; wrong old password → error under its field. Add to `test_mfa.py`: 2FA on → the on state without the stored secret. |
+| D21 Unchanged | View (except D1), actions, schema, validators, auth, 2FA endpoints and flashes, core delete view, `_before_request` redirect, field names, CSRF. |
 | D22 New copy | The other-user subtitle; "Two-step verification is on."; the 2FA drawer title "Two-step verification" (v1: "How to turn on two-step verification"); the delete drawer title "Delete account" with the org drawer's "Confirm". |
 | D23 Hidden layers | Figma's Comments textarea, count, sort/page-size and secondary buttons are not built. |
 | D24 showAlert variant | `hdxV2.showAlert(alertEl, text, variant)`: the optional `variant` swaps the `c-alert--*` class and the role as `alert.html` sets them. Existing callers are unchanged. |
 | D25 Shared dashboard classes | `.hdx-v2-user-dashboard-actions` (right-aligned submit row) and `.hdx-v2-user-dashboard-secret` (semibold secret text that breaks anywhere) in `pages/user-dashboard.less`. They replace this page's copies and 077's `__actions` / `__token`, so `api_tokens.html`, `api_token_created.html` and its test switch to them. |
+| D26 Shared POST | `window.hdxV2.post(url, body)` in `utils.js`: CSRF header, resolves with the parsed JSON. It replaces the local `post()` in `hdx-connect.js` and the identical POST in `group-message-drawer.js`. |
 
 ---
 
@@ -450,9 +452,12 @@ shell. The 2FA popup becomes a `c-drawer`, and so does the delete confirmation.
 | `THEME/hdx-styles/src/common/less/v2/pages/user-dashboard.less` | `.hdx-v2-user-profile` and `.hdx-v2-two-step` blocks (§5); shared `-actions` / `-secret`, 077's `__actions` / `__token` removed (D25) |
 | `THEME/fanstatic/v2/pages/user-profile.js` | New: 2FA drawer logic (D13, D14) |
 | `THEME/fanstatic/v2/qrious/qrious.min.js` | New: vendored QRious 4.0.2 (D15) |
-| `THEME/fanstatic/v2/utils.js` | `hdxV2.showAlert` optional `variant` (D24) |
+| `THEME/fanstatic/v2/utils.js` | `hdxV2.showAlert` optional `variant` (D24); `hdxV2.post` (D26) |
+| `THEME/fanstatic/v2/pages/hdx-connect.js`, `THEME/fanstatic/v2/group-message-drawer.js` | Use `hdxV2.post` (D26) |
 | `THEME/fanstatic/webassets.yml` | `v2-user-profile-page-scripts` (D15) |
+| `USERS/views/user_edit_view.py` | `HDXEditView.get` no longer sets `g.totp_secret` (D1) |
 | `USERS/tests/test_emails/test_email_access.py` | Updated + new render tests (D20) |
+| `USERS/tests/test_mfa.py` | 2FA on-state render test (D20) |
 | `ckanext-hdx_theme/llm_docs/redesign/PROGRESS.md` | Migrated-pages row; Page header bullet (D4) |
 | `ckanext-hdx_theme/llm_docs/LLM_CONTEXT_HDX_DESIGN.md` | Key-pages entry; base contract `public_profile_link` (D5) |
 | `ckanext-hdx_theme/llm_docs/redesign/CONVENTIONS.md` | `showAlert` signature (D24); page-section header wraps (D11) |

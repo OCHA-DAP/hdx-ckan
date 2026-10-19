@@ -207,4 +207,13 @@
     alertEl.hidden = false;
   };
 
+  // POSTs `body` to `url` with the CSRF header and resolves with the parsed JSON response.
+  window.hdxV2.post = function post(url, body) {
+    return fetch(url, {
+      method: 'POST',
+      headers: window.hdxUtil.net.getCsrfTokenAsObject(),
+      body: body
+    }).then(function (r) { return r.json(); });
+  };
+
 })();

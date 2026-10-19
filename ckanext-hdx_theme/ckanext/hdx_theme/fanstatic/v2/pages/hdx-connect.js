@@ -14,14 +14,6 @@
   var SEND_ERROR = 'There was an error sending your message. Please try again.';
   var SHARED_ERROR = 'There was an error updating the request. Please try again.';
 
-  function post(url, body) {
-    return fetch(url, {
-      method: 'POST',
-      headers: window.hdxUtil.net.getCsrfTokenAsObject(),
-      body: body
-    }).then(function (r) { return r.json(); });
-  }
-
   function errorText(resp, fallback) {
     var error = resp && resp.error;
     var messages = [];
@@ -64,7 +56,7 @@
     var alertEl = form.querySelector('[data-hdx-connect-error]');
     alertEl.hidden = true;
     window.hdxV2.setDisabled(form.querySelector('[data-hdx-connect-submit]'), true);
-    post(form.getAttribute('action'), new FormData(form))
+    window.hdxV2.post(form.getAttribute('action'), new FormData(form))
       .then(function (resp) {
         if (resp && resp.success) {
           window.location.reload();
@@ -100,7 +92,7 @@
 
     alertEl.hidden = true;
     buttons.forEach(function (b) { window.hdxV2.setDisabled(b, true); });
-    post(url, body)
+    window.hdxV2.post(url, body)
       .then(function (resp) {
         if (resp && resp.success) {
           window.location.reload();
