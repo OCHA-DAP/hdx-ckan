@@ -108,7 +108,7 @@ $(document).ready(function() {
   }
 
   $('#submit-two-step-btn').on('click', () => {
-    let url = window.location.href.split('?')[0]
+    let url = window.location.href.split(/[?#]/)[0]
     location.assign(url);
   })
   $('#cancel-two-step-btn').on('click', () => { toggleTwoStep(false); location.reload(); })
