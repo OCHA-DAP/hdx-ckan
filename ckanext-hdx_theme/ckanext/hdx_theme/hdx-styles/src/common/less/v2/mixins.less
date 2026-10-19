@@ -50,6 +50,17 @@
     margin:     0 auto;
 }
 
+// ── Org logo image ──────────────────────────────────────────────
+
+@hdx-org-logo-max-width: 17rem;
+
+.hdx-org-logo() {
+    max-width:  ~"min(100%, @{hdx-org-logo-max-width})";
+    max-height: 8rem;
+    object-fit: contain;
+    display:    block;
+}
+
 .v2-sidebar-sticky() {
     position:   sticky;
     top:        var(--hdx-space-12);   // 48px — matches .c-anchor-links-wrapper top

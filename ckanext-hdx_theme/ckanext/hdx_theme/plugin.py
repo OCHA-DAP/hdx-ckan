@@ -345,6 +345,8 @@ class HDXThemePlugin(plugins.SingletonPlugin):
         }
 
     def _before_request(self):
+        if request.blueprint == 'mfa_user':
+            tk.abort(404)
         protected_urls = [
             '/',
             '/dashboard/',
@@ -357,7 +359,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
         ]
         redirect_enabled = config.get('hdx.security.2fa.redirect', 'false') == 'true'
         if redirect_enabled and g.userobj and g.userobj.sysadmin and \
-            request.url_rule.rule in protected_urls:
+            request.url_rule and request.url_rule.rule in protected_urls:
             log.info('Sysadmin, checking for 2FA...')
             if session.get('totp_enabled', None) is None:
                 totp_challenger = SecurityTOTP.get_for_user(g.userobj.name)

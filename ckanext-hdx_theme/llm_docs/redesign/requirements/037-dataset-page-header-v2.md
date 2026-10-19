@@ -68,7 +68,7 @@ Top is still two columns (left + right card). Key differences:
 | Title font-size | 1.75rem | 1.5rem |
 | Right card width | 17.375rem | 11.25rem |
 | Right card padding | 1.5rem | 1rem |
-| Org logo area | max-width 9.375rem | max-width 7.05rem, h 4rem |
+| Org logo area | max-height 8rem, max-width min(100%, 17rem) | max-height 8rem, max-width min(100%, 17rem) |
 | Metadata font | 12px | 14px |
 | **Metadata layout** | **4 items in a row** | **2×2 grid (Location+Freq / Period+Source)** |
 
@@ -159,7 +159,7 @@ Uses the shared `c-info-icon` / `c-tooltip-anchor` pattern. Hover/focus visibili
 | Element | Markup |
 |---------|--------|
 | Divider | `<hr class="c-divider">` |
-| Org logo | `<img>` with `max-width` + `object-fit: contain`; wrapped in `<a class="c-page-header__logo-link">` when `logo_href` is passed (dataset page only — see Decisions) |
+| Org logo | `<img>` sized by `.hdx-org-logo()` (max 8rem × min(100%, 17rem), natural ratio, no upscaling); wrapped in `<a class="c-page-header__logo-link">` when `logo_href` is passed (dataset page only — see Decisions) |
 | Dataset title | `<h1>` — Merriweather bold, responsive font-size, `word-break: break-word; overflow-wrap: anywhere;` (so an unbreakable long title wraps instead of overflowing behind the org logo); gets `data-module="hdx-quick-edit"` attrs when `edit_mode=True` |
 | Description container | `<div data-module="clamped-text">` + `<p class="...__desc-text" data-clamped-content>` + show-more button (updated task 038) |
 | Download count | `<div>` with an SVG icon + `<span>` |
