@@ -1867,6 +1867,12 @@ v2-hdx-connect-page-scripts:
     - v2/url-nav.js
     - v2/pages/hdx-connect.js
 
+v2-hdx-connect-scripts:
+  <<: *common-js
+  output: ckanext-hdx_theme/%(version)s_v2-hdx-connect-scripts.js
+  contents:
+    - v2/pages/hdx-connect.js
+
 v2-notifications-settings-page-scripts:
   <<: *common-js
   output: ckanext-hdx_theme/%(version)s_v2-notifications-settings-page-scripts.js

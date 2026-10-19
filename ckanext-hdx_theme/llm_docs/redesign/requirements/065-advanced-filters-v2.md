@@ -206,7 +206,7 @@ maintained" is the default, no-op state and produces no pill, matching v1; an ar
 scope, e.g. a CMS `data_list` section pinned to `ext_archived=1`, also produces no pill)
      ↓
 Pill click / Archived radio click / Clear all click → all still just navigate to a URL built
-from existing helpers (updateUrl()/clearFacet() for regular filters, archived_url_helper.*_url
+from existing helpers (updateUrl() for regular filters, archived_url_helper.*_url
 for archived) → full page reload → same generic Mixpanel page-load event fires as today
 ```
 
@@ -336,7 +336,7 @@ possible future reuse.
 ## 8. Risks
 
 - **Breaking filter logic** — mitigated: Archived toggle and pill removal both navigate through
-  existing, unmodified functions/helpers (`updateUrl()`, `clearFacet()`, `archived_url_helper.*_url`);
+  existing, unmodified functions/helpers (`updateUrl()`, `archived_url_helper.*_url`);
   no new URL-building or Solr-query code is introduced.
 - **State desynchronization** — the Archived radio's `checked` state must reflect the *server's*
   view of `ext_archived` on every page load, including after `redirect_if_needed()` force-redirects

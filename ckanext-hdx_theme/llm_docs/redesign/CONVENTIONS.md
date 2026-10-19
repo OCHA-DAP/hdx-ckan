@@ -239,7 +239,7 @@ Canonical top-of-page title scale (24 → 28 → 32px Bold) in `mixins.less`.
 The list header block (`hdx-v2-list-header`, shared snippet `v2/list-header.html`) takes its row shape from `.hdx-list-header-row()` /
 `.hdx-list-header-row-left()` in `mixins.less` — title+count grouped left, sort/filter controls
 pushed right by the left group's `flex:1`. Its controls and the MD/SM overlay (`v2/filter-overlay.html`,
-`#hdx-filter-overlay`) render `v2/search-nav-controls.html`, whose `sort_key` / `page_size_key` set the URL
+`#hdx-filter-overlay`; `show_controls=False` drops the overlay's) render `v2/search-nav-controls.html`, whose `sort_key` / `page_size_key` set the URL
 params the dropdowns navigate on (default `sort` / `ext_page_size`). The controls are XL-only
 (`__controls--xl-only`) when the list header renders the Filter button, and visible at every width otherwise
 (sort-only lists keep the sort beside the list). Their titles call `.hdx-section-title()` like every

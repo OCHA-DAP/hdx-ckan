@@ -25,7 +25,7 @@
   {% snippet 'v2/components/breadcrumb.html',
       items=[
         {'label': _('Organisations'), 'href': h.url_for('organizations_index')},
-        {'label': group_dict.display_name | truncate(35), 'href': h.url_for('hdx_org.read', id=group_dict.name)},
+        {'label': group_dict.display_name, 'href': h.url_for('hdx_org.read', id=group_dict.name)},
         {'label': _('Members'), 'href': ''}
       ] %}
 {% endblock %}

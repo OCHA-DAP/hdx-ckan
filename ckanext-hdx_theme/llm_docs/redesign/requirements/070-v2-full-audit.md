@@ -11,8 +11,8 @@ Every finding carries a proposed fix. §7 records the decision on each. The code
 templates, `webassets.yml`'s v2 section, and `requirements/001–069`.
 
 **Excluded** (next cycle, per the task owner): sysadmin dashboard, user settings, user dashboard,
-requested data (org page), contribute flow, find/request org. User dashboard and user settings were
-migrated later (072–079).
+requested data (org page), contribute flow, find/request org. User dashboard, user settings and the org
+Requested Data tab were migrated later (072–080).
 
 **Method.** Every count below is reproducible by the grep quoted next to it. Every file path was
 resolved against the filesystem. No claim here rests on a requirement doc alone — where a doc and
@@ -221,9 +221,9 @@ grep -ohE '(ckanext-hdx_theme/)?(ckanext/hdx_theme/)?(templates|fanstatic|hdx-st
 
 | Doc | Finding |
 |---|---|
-| **056** D3 | Activity, Members, Stats and Datasets tabs are full v2 (057/058/059); Requested Data is the only tab still on v1, matching the excluded-scope list. Doc corrected |
-| **056** D14 | Only `requestdata/organization_requested_data.html` extends `organization/read_v1_base.html`; `members.html`, `stats.html` and `activity_stream.html` extend `v2/page.html`. Doc corrected |
-| **056** D17 / Files Affected | The hero renders via `templates/v2/org-hero.html`, a shared wrapper used by all four org tabs that calls `page-header.html`. Doc corrected |
+| **056** D3 | Activity, Members, Stats, Datasets and Requested Data tabs are full v2 (057/058/059, 080). Doc corrected |
+| **056** D14 | No template extends `organization/read_v1_base.html`; `members.html`, `stats.html`, `activity_stream.html` and `requestdata/organization_requested_data.html` extend `v2/page.html`. Doc corrected |
+| **056** D17 / Files Affected | The hero renders via `templates/v2/org-hero.html`, a shared wrapper that calls `page-header.html`. Doc corrected |
 | **056** D18 | `contribute.js` is bundled on v2 pages: `v2/contribute.js` is in `v2-page-scripts`. Doc corrected |
 | **061** D5 / D6 | The `errors` param, the `c-dropdown--error` / `c-dropdown__error` pair and `option_attrs` live in `v2/components/select.html` (`dropdown.less` carries the error styles, which `select.html` reuses). Doc corrected to name `select.html` throughout, including its Component Mapping table |
 | **061** D7 | No `novalidate` remains on either form |

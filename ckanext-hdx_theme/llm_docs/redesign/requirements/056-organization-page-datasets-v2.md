@@ -252,7 +252,7 @@ No — `Datasets {N}` / `Members {N}` in the hero are a plain inline label/value
 card, not individual bordered KPI tiles (contrast with the All-Organisations list page's
 `kpi-locations-card`, which is a different, unrelated pattern).
 
-**Current status:** this `header_stats` stat pair is commented out on all 4 org tabs (`read.html`, `members.html`, `activity_stream.html`, `stats.html`) — the org hero no longer shows a Datasets/Members count.
+**Current status:** no org tab passes this `header_stats` stat pair — the org hero no longer shows a Datasets/Members count.
 
 ---
 
@@ -261,7 +261,7 @@ card, not individual bordered KPI tiles (contrast with the All-Organisations lis
 | UI Element | Approach | Justification |
 |---|---|---|
 | Breadcrumb | **Reuse as-is** — `v2/components/breadcrumb.html` | `Home → Organisations → {org.title}`, standard 3-item usage identical to existing dataset-page pattern |
-| Org hero | **Extend** `v2/components/page-header.html` with generic optional params (`member_since`, `header_actions`, `header_stats`) | Same integration technique as the HAPI/Signals landing pages: pass only the params the page needs, each self-gating — no mode flag. Hero metrics (title sizes, gaps, card width) inherit the dataset header defaults, no org-specific style overrides. (`header_stats` itself is no longer passed by any of the 4 org tabs — see "KPI-style cards?" above — but the param remains supported by `page-header.html`.) |
+| Org hero | **Extend** `v2/components/page-header.html` with generic optional params (`member_since`, `header_actions`, `header_stats`) | Same integration technique as the HAPI/Signals landing pages: pass only the params the page needs, each self-gating — no mode flag. Hero metrics (title sizes, gaps, card width) inherit the dataset header defaults, no org-specific style overrides. (`header_stats` itself is no longer passed by any org tab — see "KPI-style cards?" above — but the param remains supported by `page-header.html`.) |
 | Header action row | **New generic param** `header_actions` on `page-header.html`, rendered inside the existing right card | Data-driven list of `{label, href, icon_src, attrs, show}` items (Visit website / Edit org page / Add dataset / Request membership), each gated by the existing booleans from §1.3 — mirrors `org_actions_menu.html`'s conditions, rendered inline per Figma instead of in a v1 dropdown |
 | Tabs bar | **New minimal component**, `v2/components/tabs.html` | No reusable tabs component exists anywhere in the v2 system today (confirmed — searched all `ckanext-hdx_theme` templates/LESS/JS and the v2 component demo page). Closest relatives (`c-anchor-links` scroll-spy, `c-button state=active` toggle) solve different problems. See §4. |
 | Filters sidebar + MD/SM overlay | **Reuse as-is** — `v2/search-filters.html` | Facet-driven, already produces the exact facet dict for org-scoped search; Figma even shows the "Organisation" facet present with the current org pinned as a chip, confirming no special-casing is wanted |
@@ -376,9 +376,8 @@ This is the same sidebar/overlay breakpoint contract already established for the
 | **Duplicating the dataset list** | Explicitly reuse `search_results_wrapper.html` unchanged, just with `v2=True` always on (§5) |
 | **Inconsistent tabs implementation** | One shared `v2/components/tabs.html`, one permission-gated item list, used identically regardless of org type — fixes the existing 2-tab-vs-5-tab v1 drift (§1.4) |
 | **Regression in filters** | Zero changes to `v2/search-filters.html`; org-scoping stays a backend `additional_fq` concern |
-| **Breaking out-of-scope tabs (Members/Stats/Activity/Requested Data)** — *found during audit, not in original brief* | Four templates extend the old `organization/read.html` (`members.html`, `stats.html`, `activity_stream.html`, `requestdata/organization_requested_data.html`) and inherit their entire v1 header from it. Fix: the old `read.html` is kept verbatim as `organization/read_v1_base.html` and only the four `{% extends %}` lines are repointed to it — zero visual/behavioral change to those tabs; each copy gets deleted as its tab is migrated in future tasks (D14). |
+| **Breaking out-of-scope tabs (Members/Stats/Activity/Requested Data)** — *found during audit, not in original brief* | Four templates extend the old `organization/read.html` (`members.html`, `stats.html`, `activity_stream.html`, `requestdata/organization_requested_data.html`) and inherit their entire v1 header from it. Fix: the old `read.html` is kept verbatim as `organization/read_v1_base.html` and only the four `{% extends %}` lines are repointed to it — zero visual/behavioral change to those tabs (D14). |
 | **Custom-org feature regression** (visualization embed, follow button, brand theming) | Explicitly accepted and scoped out per the Decisions Taken below — not a silent regression, a deliberate, Figma-matching simplification |
-| **Temporary visual inconsistency navigating Datasets → Activity/Members/Stats** | Unavoidable with incremental tab-by-tab migration (same pattern used elsewhere in this v2 project); those tabs keep the v1-styled header (via `custom_org_header.html`/standard header, whichever the org needs) until each gets its own future migration |
 
 ---
 
@@ -402,7 +401,7 @@ This is the same sidebar/overlay breakpoint contract already established for the
 |---|---|---|
 | D1 | Figma gap (task-named files `xl-org-page.html`/`md-org-page.html`/`sm-org-page.html` did not exist at task start) resolved by the requester adding the real exports mid-planning; doc drafted against the final, corrected set of 4 files | — |
 | D2 | Both standard AND custom/branded orgs unify into ONE v2 template; the separate mobile "light" theme is retired outright | Explicit requester instruction; v2 is responsive so the light theme is redundant |
-| D3 | Activity, Members, Stats, and Datasets tabs are full v2; Requested Data is the only tab still on its v1 route | Preserves working navigation; avoids dead links |
+| D3 | Activity, Members, Stats, Datasets and Requested Data tabs are full v2 | Preserves working navigation; avoids dead links |
 | D4 | Direct template replacement, no `?v2=true` gate | Matches the 048/049 list-page precedent; chosen over the dataset-search-style gradual gate |
 | D5 | Custom-org visualization/embed block dropped | Not shown in any Figma export; its "Embed data" popup is already broken in v1 today |
 | D6 | Custom-org Follow button dropped everywhere | Not shown in any Figma export/card variant; matches how standard orgs already behave |
@@ -413,7 +412,7 @@ This is the same sidebar/overlay breakpoint contract already established for the
 | D11 | No pre-implementation `organization_list` query for live `custom_org=True` count | Requester chose to skip it — D5-D7 already accept the custom-org feature regression regardless of how many orgs are affected, so the count doesn't change the plan |
 | D12 | Figma's "Time period" / "Data type" / "Show only" filter sections are out of scope for this task; the existing `v2/search-filters.html` facet set is reused unchanged, with no new top-level dropdowns or regrouping | Requester decision; avoids scope creep into a filter-layout redesign not required by this task |
 | D13 | "Request Membership" is included in the header action row (gated on the existing `allow_req_membership`), rendered as "Request membership" | Its absence from Figma is a permission-state artifact — the populated export was captured as an org admin, who can never see it; dropping it would remove the page's only membership-request entry point |
-| D14 | Only `requestdata/organization_requested_data.html` extends `organization/read_v1_base.html`, a verbatim copy of the old `read.html`, to keep its v1 header intact; `members.html`, `stats.html`, and `activity_stream.html` extend `v2/page.html` directly | Requested Data keeps its v1 rendering exactly via the base-template copy; the other three tabs render through the standard v2 shell |
+| D14 | No template extends `organization/read_v1_base.html`, a verbatim copy of the old `read.html` kept on disk; `members.html`, `stats.html`, `activity_stream.html` and `requestdata/organization_requested_data.html` extend `v2/page.html` directly | Every tab renders through the standard v2 shell |
 | D15 | The mobile "light" theme (`/m/organization/*`) is NOT retired in this task — `light_organization.py` and `light/organization/*` are untouched; retirement is a separate follow-up | Requester decision; keeps this change focused on the org page itself |
 | D16 | Tab label is "Activity" (Figma) rather than v1's "Activity Stream"; the "Member since" date keeps the `h.render_datetime()` default format ("May 25, 2017") used by the v2 org-list card rather than Figma's "25 May 2017" | Requester decisions, one per Figma-vs-convention conflict |
 | D17 | The hero is rendered via `v2/org-hero.html`, a shared wrapper that calls `v2/components/page-header.html` with generic self-gating params (`member_since`, `header_actions`, `header_stats`) — no mode flag, landing-page integration style; hero metrics inherit the dataset header defaults with no org-specific style overrides; the hero band border is a single `--hdx-neutral-1` at all breakpoints; the logo uses the component's `.hdx-org-logo()` sizing | Requester decisions during implementation review |
@@ -426,9 +425,8 @@ This is the same sidebar/overlay breakpoint contract already established for the
 | File | Change |
 |---|---|
 | `ckanext-hdx_theme/ckanext/hdx_theme/templates/organization/read.html` | Replaced with v2 template; extends `v2/page.html` |
-| `ckanext-hdx_theme/ckanext/hdx_theme/templates/organization/read_v1_base.html` | New — verbatim copy of the old `read.html`, extension target for the four out-of-scope tab templates (D14) |
-| `ckanext-hdx_theme/ckanext/hdx_theme/templates/organization/members.html`, `stats.html`, `activity_stream.html`, `requestdata/organization_requested_data.html` | `{% extends %}` repointed to `organization/read_v1_base.html` — no other change |
-| `ckanext-hdx_theme/ckanext/hdx_theme/templates/organization/custom/custom_org.html` | No longer rendered — the read route renders the unified template for custom orgs too; `custom_org_header.html`/`custom_style.html` and the `custom_members.html`/`custom_stats.html`/`custom_activity_stream.html` wrappers untouched (still used by out-of-scope tabs) |
+| `ckanext-hdx_theme/ckanext/hdx_theme/templates/organization/read_v1_base.html` | New — verbatim copy of the old `read.html`, kept on disk (D14) |
+| `ckanext-hdx_theme/ckanext/hdx_theme/templates/organization/custom/custom_org.html` | No longer rendered — the read route renders the unified template for custom orgs too; `custom_org_header.html`/`custom_style.html` and the `custom_members.html`/`custom_stats.html`/`custom_activity_stream.html` wrappers untouched |
 | `ckanext-hdx_theme/ckanext/hdx_theme/templates/v2/components/page-header.html` | Extended with generic `member_since` / `header_actions` / `header_stats` params (D17) |
 | `ckanext-hdx_theme/ckanext/hdx_theme/templates/v2/org-hero.html` | New — shared wrapper that assembles `member_since`/`header_actions`/`header_stats` and calls `page-header.html` (D17) |
 | `ckanext-hdx_theme/ckanext/hdx_theme/templates/v2/components/tabs.html` | New minimal tabs snippet |

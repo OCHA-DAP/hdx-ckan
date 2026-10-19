@@ -1,7 +1,7 @@
 // ============================================================
 // pages/hdx-connect.less
-// HDX Connect Requests dashboard (requestdata/my_requested_data.html,
-// task 074) — v2 page-specific styles
+// HDX Connect requests (v2/hdx-connect-sections.html,
+// v2/hdx-connect-drawers.html) — v2 page-specific styles
 // Figma: llm_docs/redesign/figma_exports/xl-user-dashboard-hdx-connect-requests.html
 // ============================================================
 
@@ -11,6 +11,11 @@
     display:        flex;
     flex-direction: column;
     gap:            var(--hdx-space-6);
+
+    &__empty {
+        .hdx-list-header-empty();
+        margin: 0;
+    }
 
     &__shared-error {
         margin: var(--hdx-space-3);

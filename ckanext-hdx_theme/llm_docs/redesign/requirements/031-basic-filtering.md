@@ -58,7 +58,7 @@ using the existing `c-dropdown`, `c-checkbox`, and `c-button` component system.
 ### Preserve backend logic strictly
 
 - Do NOT modify query params, URL structure, or facet selection logic
-- All filter changes go through `updateUrl()` / `clearFacet()` / `clearAdvancedFilters()` / `clearAllFilters()`
+- All filter changes go through `updateUrl()` / `setNavParam(facet, null)` / `clearAdvancedFilters()` / `clearAllFilters()`
 - `clearAllFilters()` removes both `FILTER_PARAMS` and `ADVANCED_FILTER_PARAMS`
 
 ### Decision-first workflow
@@ -323,7 +323,7 @@ Facet → URL param mapping:
 ## JavaScript Constants
 
 ```javascript
-var FILTER_PARAMS = ['ext_update_status', 'groups', 'organization', 'res_format', 'vocab_Topics'];
+var FILTER_PARAMS = ['ext_update_status', 'groups', 'organization', 'res_format', 'vocab_Topics', 'filter_by_maintainers'];
 
 var ADVANCED_FILTER_PARAMS = [
   'ext_subnational', 'ext_geodata', 'ext_p_coded',

@@ -378,7 +378,7 @@ Also preserve: `{% block head_extras %}`, `{% block subtitle %}`, `{% block meta
 
 Handles ALL `c-dropdown` open/close toggle and outside-click-close. Also handles `[data-nav-value]` clicks that are **not** inside `[data-nav-key]` (export metadata items) by navigating to the URL directly.
 
-Does not interfere with `search.js` which handles `[data-nav-key]` items via `setNavParam`.
+Does not interfere with `url-nav.js`, which handles `[data-nav-key]` items via `setNavParam`.
 
 ### `fanstatic/v2/components/page-header.js`
 
@@ -386,7 +386,7 @@ Targets all `.c-page-header` instances (`querySelectorAll`). Overflow "View more
 
 ### `fanstatic/v2/pages/search.js` — modified
 
-Dropdown toggle/close code **removed** (moved to `dropdown.js`). Retains: URL helpers (`setNavParam`, `updateUrl`), checkbox change handler, nav item → setNavParam, clear facet, MiniSearch, FilterOverlay.
+Dropdown toggle/close code **removed** (moved to `dropdown.js`). Retains: URL helper `updateUrl`, checkbox change handler, clear facet, MiniSearch, FilterOverlay.
 
 ### `fanstatic/v2/components/copy-button.js` — new, in `v2-components-scripts`
 

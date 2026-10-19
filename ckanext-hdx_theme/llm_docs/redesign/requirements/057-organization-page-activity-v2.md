@@ -267,7 +267,7 @@ Per D1: a plain **server-rendered "Load more" link**, not AJAX-append and not th
 
 | UI Element | Approach | Justification |
 |---|---|---|
-| Breadcrumb | **Reuse as-is** — `v2/components/breadcrumb.html` | Same 3-item usage as the Datasets tab (056 §Component Strategy) |
+| Breadcrumb | **Reuse as-is** — `v2/components/breadcrumb.html` | Organisations / {org} linked to the Datasets tab / Activity, as Members (080 D12) |
 | Org hero | **Reuse as-is** — `v2/components/page-header.html` | Already extended by 056 with everything the org page needs (`member_since`, `header_actions`, `header_stats`); no new params required for Activity. (`header_stats` is no longer passed here — see 056's "KPI-style cards?" — the hero no longer shows a Datasets/Members count.) |
 | Tabs bar | **Reuse as-is** — `v2/components/tabs.html`, mark `Activity` item `active: true` | Same `items` list already defined in the `pre_primary` block of `organization/read.html` (or its Activity-tab equivalent) — no component change, just which item gets `active` |
 | Activity item | **Reuse as-is** — `v2/components/activity-item.html` (`c-activity-item`) | §3 — visually matches Figma exactly, zero extension needed |

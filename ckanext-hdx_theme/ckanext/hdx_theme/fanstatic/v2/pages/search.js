@@ -3,7 +3,7 @@
 
   var BP_XL = '(min-width: 80rem)';
 
-  var FILTER_PARAMS = ['ext_update_status', 'groups', 'organization', 'res_format', 'vocab_Topics'];
+  var FILTER_PARAMS = ['ext_update_status', 'groups', 'organization', 'res_format', 'vocab_Topics', 'filter_by_maintainers'];
 
   // vocab_Topics is included here too (as well as in FILTER_PARAMS) because
   // nested HPC advanced-filter items share the vocab_Topics facet key.
@@ -32,13 +32,6 @@
         url.searchParams.append(facet, v);
       });
     }
-    url.searchParams.delete('page');
-    window.location.href = url.toString();
-  }
-
-  function clearFacet(facet) {
-    var url = new URL(window.location.href);
-    url.searchParams.delete(facet);
     url.searchParams.delete('page');
     window.location.href = url.toString();
   }
@@ -152,7 +145,7 @@
         if (facet === 'advanced') {
           clearAdvancedFilters();
         } else {
-          clearFacet(facet);
+          setNavParam(facet, null);
         }
         return;
       }

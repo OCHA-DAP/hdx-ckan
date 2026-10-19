@@ -1,0 +1,142 @@
+{#
+  Snippet: hdx-connect-sections.html
+  Path:    templates/v2/hdx-connect-sections.html
+
+  HDX Connect requests body: the title header
+  (v2/list-header.html, count = new + open + archived requests), the New and
+  Open sections (one c-request-card per dataset), the Archived section
+  (c-request-archive + its sort on `order_by`), the shared-error c-alert and
+  v2/hdx-connect-drawers.html. JS: fanstatic/v2/pages/hdx-connect.js
+
+  Parameters
+  ─────────────────────────────────────────────────
+  requests_new      {list}    New requests.  Required.
+  requests_open     {list}    Open requests.  Required.
+  requests_archive  {list}    Archived requests grouped per dataset.  Required.
+  list_title        {string}  Heading text.  Required.
+  list_subtitle     {string}  Line below the heading row.  default: ''
+  title_tag         {string}  Heading element, e.g. 'h1'.  default: 'strong'
+  show_filters      {bool}    Render the MD/SM Filter button
+                              (v2/list-header.html).  default: False
+  total_selected    {int}     Selected filters, shown as the button count.
+                              default: 0
+  show_maintainer   {bool}    Fill c-request-card's maintainer_label /
+                              maintainer_href from each dataset's maintainer
+                              on the New and Open cards.  default: False
+  ─────────────────────────────────────────────────
+  Example
+
+  {% snippet 'v2/hdx-connect-sections.html',
+      requests_new=requests_new, requests_open=requests_open,
+      requests_archive=requests_archive, list_title=_('Requested Data'),
+      show_maintainer=True %}
+#}
+
+{% set list_subtitle    = list_subtitle    if list_subtitle    is defined else '' %}
+{% set title_tag        = title_tag        if title_tag        is defined else 'strong' %}
+{% set show_filters     = show_filters     if show_filters     is defined else False %}
+{% set total_selected   = total_selected   if total_selected   is defined else 0 %}
+{% set show_maintainer  = show_maintainer  if show_maintainer  is defined else False %}
+
+{% set has_archive      = requests_archive | length > 0 %}
+{% set archived_count   = requests_archive | map(attribute='requests_archived') | map('length') | sum %}
+{% set sorting_selected = (request.args.get('order_by') or 'most_recent').split('|')[0] %}
+{% set sorting_options  = [
+  (_('Most Recent'),        'most_recent', _('Most Recent')),
+  (_('Alphabetical (A-Z)'), 'asc',         _('Alphabetical (A-Z)')),
+  (_('Alphabetical (Z-A)'), 'desc',        _('Alphabetical (Z-A)')),
+  (_('Requests Rate'),      'requests',    _('Requests Rate')),
+  (_('Sharing Rate'),       'shared',      _('Sharing Rate')),
+] %}
+
+{% snippet 'v2/list-header.html',
+    count=requests_new | length + requests_open | length + archived_count,
+    list_title=list_title,
+    list_subtitle=list_subtitle,
+    title_tag=title_tag,
+    title_size='dashboard',
+    show_controls=False,
+    show_filters=show_filters,
+    total_selected=total_selected %}
+
+<div class="hdx-v2-hdx-connect"
+     data-hdx-connect-shared-url="{{ h.url_for('requestdata.handle_open_request_action_shared', username=c.userobj.name) }}">
+  {% for section in [
+    {'state': 'new',  'title': _('New'),  'requests': requests_new},
+    {'state': 'open', 'title': _('Open'), 'requests': requests_open},
+  ] %}
+    <section>
+      {% snippet 'v2/list-header.html',
+          count=section.requests | length,
+          list_title=section.title,
+          title_tag='h2',
+          show_controls=False,
+          show_filters=False %}
+      {% if section.requests %}
+        {% set groups = namespace(cards=[], index={}) %}
+        {% for item in section.requests %}
+          {% if item.package_id in groups.index %}
+            {% do groups.cards[groups.index[item.package_id]].requests.append(item) %}
+          {% else %}
+            {% do groups.index.update({item.package_id: groups.cards | length}) %}
+            {% do groups.cards.append({'package_id': item.package_id, 'title': item.title, 'requests': [item],
+                                       'maintainer': item.maintainers[0] if show_maintainer and item.maintainers else none}) %}
+          {% endif %}
+        {% endfor %}
+        <div class="c-request-card-list">
+          {% for group in groups.cards %}
+            {% call h.snippet('v2/components/request-card.html',
+                title=group.title,
+                title_href=h.url_for('dataset.read', id=group.package_id),
+                maintainer_label=group.maintainer.fullname if group.maintainer else '',
+                maintainer_href=h.url_for('user.read', id=group.maintainer.username) if group.maintainer else '') %}
+              {% for item in group.requests %}
+                {% snippet 'v2/hdx-connect-request.html', item=item, state=section.state %}
+              {% endfor %}
+            {% endcall %}
+          {% endfor %}
+        </div>
+      {% else %}
+        <p class="hdx-v2-hdx-connect__empty">{{ _('No requests found.') }}</p>
+      {% endif %}
+    </section>
+  {% endfor %}
+
+  <section>
+    {% snippet 'v2/list-header.html',
+        count=requests_archive | length,
+        list_title=_('Archived'),
+        title_tag='h2',
+        show_controls=has_archive,
+        show_filters=False,
+        show_page_size=False,
+        sort_key='order_by',
+        sorting_options=sorting_options,
+        sorting_selected=sorting_selected %}
+    {% if has_archive %}
+      {% call h.snippet('v2/components/request-archive.html') %}
+        {% for group in requests_archive %}
+          {% call h.snippet('v2/components/request-archive-row.html',
+              title=group.title,
+              requests=group.requests,
+              replied=group.replied,
+              declined=group.declined,
+              shared=group.shared) %}
+            {% for item in group.requests_archived %}
+              {% snippet 'v2/hdx-connect-request.html', item=item, state='archive' %}
+            {% endfor %}
+          {% endcall %}
+        {% endfor %}
+      {% endcall %}
+    {% else %}
+      <p class="hdx-v2-hdx-connect__empty">{{ _('No requests found.') }}</p>
+    {% endif %}
+  </section>
+
+  {% snippet 'v2/components/alert.html',
+      hidden=True,
+      extra_classes='hdx-v2-hdx-connect__shared-error',
+      extra_attrs='data-hdx-connect-shared-error' %}
+</div>
+
+{% snippet 'v2/hdx-connect-drawers.html' %}

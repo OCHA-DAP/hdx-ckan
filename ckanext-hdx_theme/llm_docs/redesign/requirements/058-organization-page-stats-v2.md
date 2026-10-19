@@ -348,7 +348,7 @@ not re-decided here.
 | `ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/v2/pages/dataset.js` | Chart-init code removed (now in `charts.js`, self-initializing); keeps only the section-accordion logic |
 | `ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/webassets.yml` | `v2-chart-scripts` carries the vendor libs + `v2/charts.js`; `v2-dataset-page-scripts` is `v2/pages/dataset.js` + `v2/data-use-survey-drawer.js`; `v2-components-styles` gains `stats-card.css`; all v1 bundles untouched (D13) |
 | `ckanext-hdx_theme/ckanext/hdx_theme/templates/organization/stats.html` | Replaced with the v2 template: `v2/page.html` shell + `org-hero.html` (Stats tab active), `c-stats-card` KPIs, chart cards, "See documentation" link (D1), re-placed XLSX prompt (D4) |
-| `ckanext-hdx_org_group/ckanext/hdx_org_group/views/organization.py` | `stats()` unified for standard + custom orgs (D11); fetches `datasets_num` for the hero stats |
+| `ckanext-hdx_org_group/ckanext/hdx_org_group/views/organization.py` | `stats()` unified for standard + custom orgs (D11); its `datasets_num` fetch for the hero stats is commented out |
 | `ckanext-hdx_theme/ckanext/hdx_theme/templates/v2/components/stats-card.html` | **New** — `c-stats-card` component (D14) |
 | `ckanext-hdx_theme/.../hdx-styles/src/common/less/v2/components/stats-card.less` | **New** — `c-stats-card` styles (D14) |
 | `ckanext-hdx_theme/.../hdx-styles/src/common/less/v2/pages/org.less` | Stats-tab section added (`hdx-v2-org-stats*`): header/export row, KPI column/row per breakpoint, chart cards, legend |

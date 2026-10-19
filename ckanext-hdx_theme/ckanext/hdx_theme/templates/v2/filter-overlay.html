@@ -15,6 +15,8 @@
   ─────────────────────────────────────────────────
   total_selected    {int}     Selected filters; 0 disables "Clear filters".
                               default: 0
+  show_controls     {bool}    Render the sort / page-size controls.
+                              default: True
   sorting_selected, ext_page_size, admin_view, sorting_options,
   show_page_size, sort_key
                               Forwarded to v2/search-nav-controls.html
@@ -28,6 +30,7 @@
 #}
 
 {% set total_selected = total_selected if total_selected is defined else 0 %}
+{% set show_controls  = show_controls  if show_controls  is defined else True %}
 
 <div class="hdx-v2-search-filter-overlay" id="hdx-filter-overlay" role="dialog" aria-modal="true" aria-label="{{ _('Filters') }}">
   <div class="hdx-v2-search-filter-overlay__header">
@@ -40,6 +43,7 @@
     </button>
   </div>
   <div class="hdx-v2-search-filter-overlay__body">
+    {% if show_controls %}
     <div class="hdx-v2-overlay-nav-controls">
       {% snippet 'v2/search-nav-controls.html',
           sorting_selected=sorting_selected,
@@ -50,6 +54,7 @@
           sort_key=sort_key,
           panel_suffix='ovl' %}
     </div>
+    {% endif %}
     <div data-filter-panel-slot></div>
   </div>
   <div class="hdx-v2-search-filter-overlay__footer">

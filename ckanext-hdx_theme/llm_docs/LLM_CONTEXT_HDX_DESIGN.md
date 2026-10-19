@@ -237,7 +237,7 @@ Example page-specific template (light search):
 ### HDX Connect Requests dashboard (`/user/my_requested_data/<username>`)
 
 - **Template**: `ckanext-hdx_theme/ckanext/hdx_theme/templates/requestdata/my_requested_data.html` (HDX core override; the `ckanext-requestdata` view is unchanged)
-  - Extends `v2/user-dashboard-base.html`; sets `user_dict` from `g.userobj`. Title and New / Open / Archived headings via `v2/list-header.html`.
+  - Extends `v2/user-dashboard-base.html`; sets `user_dict` from `g.userobj`. Body: `v2/hdx-connect-sections.html` (title and New / Open / Archived headings via `v2/list-header.html`).
   - Request markup: `v2/hdx-connect-request.html` (request dict → `c-request-item` + actions), cards `c-request-card`, Archived grid `c-request-archive`; Reply / Decline drawers in `v2/hdx-connect-drawers.html`.
 - **Core assets**: as My Organisations, plus `hdx_theme/v2-hdx-connect-page-styles` / `-scripts` (`url-nav.js` + `hdx-connect.js`).
 
@@ -297,8 +297,8 @@ Example page-specific template (light search):
   - Activity: `organization/activity_stream.html`
   - Stats: `organization/stats.html` (Chart.js via `hdx_theme/v2-chart-scripts`)
   - Members: `organization/members.html` (role-grouped `c-member-list-card` list, right-side sidebar, one-click `c-dropdown--link` change-role/approve dropdowns, remove/leave + group-message drawers)
-- **Core assets**: `hdx_theme/v2-org-page-styles` on every tab; plus per tab: `v2-search-page-styles`/`-scripts` (Datasets), `v2-chart-scripts` (Stats), `hdx_theme/v2-org-members-page-scripts` (Members: `url-nav.js` + `org-members-page.js`).
-- The HDX Connect tab is postponed; the Requested Data tab remains v1.
+  - Requested Data: `requestdata/organization_requested_data.html` (HDX core override of the `ckanext-requestdata` view; `v2/hdx-connect-sections.html` body, Maintainer filter in the search-page filter column / overlay)
+- **Core assets**: `hdx_theme/v2-org-page-styles` on every tab; plus per tab: `v2-search-page-styles`/`-scripts` (Datasets), `v2-chart-scripts` (Stats), `hdx_theme/v2-org-members-page-scripts` (Members: `url-nav.js` + `org-members-page.js`), `v2-search-page-styles`/`-scripts` + `v2-hdx-connect-page-styles` + `v2-hdx-connect-scripts` (Requested Data).
 
 ---
 

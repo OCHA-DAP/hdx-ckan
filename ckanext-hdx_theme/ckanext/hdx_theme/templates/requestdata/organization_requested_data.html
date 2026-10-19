@@ -1,54 +1,101 @@
-{% extends "organization/read_v1_base.html" %}
+{% extends "v2/page.html" %}
 
-{% block subtitle_suffix %}{{ _('Dataset Requests') }}{% endblock %}
-{% block meta_description %}
-{% endblock %}
+{% set org_meta = org_meta or c.org_meta %}
+{% set org_dict = org_dict or org_meta.org_dict or c.group_dict %}
 
-{% block breadcrumb_content %}
-  {% snippet "snippets/other_breadcrumb_item.html", title=_('Organizations'), named_route='organization.index', position=2 %}
-  {% block breadcrumb_content_inner %}
-    {% snippet "snippets/other_breadcrumb_item.html", title=org_meta.org_dict.display_name|truncate(35), controller='organization', action='read', id=org_name, position=3 %}
-    {% snippet "snippets/active_breadcrumb_item.html", title=_('Dataset Requests'), position=4 %}
-  {% endblock %}
-{% endblock %}
+{# The lines below are for analytics #}
+{% block analytics_org_name %}{{ org_dict.name }}{% endblock %}
+{% block analytics_org_id %}{{ org_dict.id }}{% endblock %}
 
-{% set total_archived_requests = [] %}
+{% set outer_row_class = 'hdx-v2-search-row' %}
+{% set sidebar_class   = 'hdx-v2-content-columns__sidebar hdx-v2-content-columns__sidebar--xl-only hdx-v2-content-columns__sidebar--sticky hdx-v2-search-sidebar' %}
+{% set content_class   = 'hdx-v2-content-columns__content hdx-v2-search-content' %}
 
-{% for item in requests_archive %}
-  {% for request in item.requests_archived %}
-    {% if total_archived_requests.append(1) %}{% endif %}
-  {% endfor %}
-{% endfor %}
+{% set filter_segments      = (request.args.get('filter_by_maintainers') or '').split('|') %}
+{% set filter_pair          = filter_segments[1].split(':') if filter_segments | length > 1 else [] %}
+{% set selected_maintainers = (filter_pair[1].split(',') if filter_pair | length > 1 else []) | reject('in', ['*all*', '']) | list %}
+{% set total_selected       = selected_maintainers | length %}
 
-{% set total_requests = requests_new | length + requests_open | length + total_archived_requests | length %}
-
-{% block primary_content_inner %}
-  <div class="request-data-module mTop30">
-    {% snippet 'requestdata/snippets/requests_header.html', title='Dataset Requests', total_requests=total_requests, type='organization', maintainers=maintainers, org_name=org_name, counters=counters %}
-    <br>
-    {% snippet 'requestdata/snippets/section_base.html', state='new', title='New', requests=requests_new %}
-    {% snippet 'requestdata/snippets/section_base.html', state='open', title='Open', requests=requests_open %}
-
-    {% if requests_archive %}
-      {% set service_url = h.url_for('requestdata_organization_requests.requested_data', id=org_meta.org_dict.name) %}
-      {% snippet 'requestdata/snippets/order_requests.html', service_url=service_url, org_name=org_name, current_order_name=current_order_name %}
-    {% endif %}
-
-    {% snippet 'requestdata/snippets/section_base.html', state='archive', title='Archive', requests=requests_archive %}
-
-    <div class="alert alert-dismissible request-message-alert d-none" role="alert">
-      <div class="alert-text"></div>
-    </div>
-  </div>
-{% endblock %}
-
-{% block primary_content_module_margin %}{% endblock %}
+{% block subtitle %}{{ org_dict.display_name }} Humanitarian Data | {% block subtitle_suffix %}{{ _('Requested Data') }}{% endblock %}{% endblock %}
 
 {% block styles %}
-	{{ super() }}
-{#  {% resource 'requestdata/css/main.css' %}#}
-{#  {% resource 'hdx_theme/requestdata/request-data.css' %}#}
+  {{ super() }}
+  {% asset 'hdx_theme/v2-search-page-styles' %}
+  {% asset 'hdx_theme/v2-org-page-styles' %}
+  {% asset 'hdx_theme/v2-hdx-connect-page-styles' %}
+{% endblock %}
 
-  {% asset 'requestdata/main-styles' %}
-  {% asset 'hdx_theme/requestdata-styles' %}
+{% block scripts %}
+  {{ super() }}
+  {% asset 'hdx_theme/v2-search-page-scripts' %}
+  {% asset 'hdx_theme/v2-hdx-connect-scripts' %}
+{% endblock %}
+
+{% block breadcrumb_items %}
+  {% snippet 'v2/components/breadcrumb.html',
+      items=[
+        {'label': _('Organisations'), 'href': h.url_for('organizations_index')},
+        {'label': org_dict.display_name, 'href': h.url_for('hdx_org.read', id=org_dict.name)},
+        {'label': _('Requested Data'), 'href': ''}
+      ] %}
+{% endblock %}
+
+{# ── Hero: org header + tabs ───────────────────────────────── #}
+{% block pre_primary %}
+  {% snippet 'v2/org-hero.html',
+      org_dict=org_dict, org_meta=org_meta, active_tab='requested_data' %}
+{% endblock %}
+
+{# ── Maintainer filter (XL column, MD/SM overlay) ──────────── #}
+{% block secondary_content %}
+  {% if maintainers %}
+    {% set maintainer_items = namespace(list=[]) %}
+    {% for maintainer in maintainers %}
+      {% set is_selected = maintainer.username in selected_maintainers %}
+      {% set maintainer_items.list = maintainer_items.list + [{
+          'value': maintainer.username,
+          'label': maintainer.name,
+          'count': '(' ~ maintainer.count ~ ')',
+          'checked': is_selected,
+          'active': is_selected,
+          'attrs': {'data-hdx-connect-maintainer': ''}
+      }] %}
+    {% endfor %}
+    <form id="search-page-filters-form" autocomplete="off">
+      <aside class="hdx-v2-search-filters">
+        <span class="hdx-v2-search-filters__heading">{{ _('Filter by') }}</span>
+        <div class="hdx-v2-search-filters__item">
+          {% snippet 'v2/components/dropdown.html',
+              size='m',
+              label=_('Maintainer'),
+              placeholder=_('All maintainers'),
+              selected=maintainers | selectattr('username', 'in', selected_maintainers) | map(attribute='name') | join(', '),
+              state='filter' if total_selected > 0 else 'enabled',
+              panel_id='hdx-filter-panel-maintainers',
+              attrs={'data-hdx-connect-maintainer-filter': org_name},
+              items=maintainer_items.list,
+              has_clear=total_selected > 0,
+              clear_facet='filter_by_maintainers' %}
+        </div>
+      </aside>
+    </form>
+  {% endif %}
+{% endblock %}
+
+{# ── New / Open / Archived requests ──────────────────────────── #}
+{% block primary_content %}
+  {% snippet 'v2/hdx-connect-sections.html',
+      requests_new=requests_new,
+      requests_open=requests_open,
+      requests_archive=requests_archive,
+      list_title=_('Requested Data'),
+      show_filters=maintainers | length > 0,
+      total_selected=total_selected,
+      show_maintainer=True %}
+
+  {% if maintainers %}
+    {% snippet 'v2/filter-overlay.html',
+        total_selected=total_selected,
+        show_controls=False %}
+  {% endif %}
 {% endblock %}

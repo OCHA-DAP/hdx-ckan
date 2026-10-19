@@ -100,7 +100,7 @@ CSS custom property equivalents (`--hdx-*`) are defined in `v2/foundation.css` (
 | Signup — account-validated | `onboarding/signup/account-validated.html` | Step 3; `c-step-pager`; `analytics_account_type` block preserved |
 | HAPI landing page | `landing_pages/hapi.html` | Extends `v2/page.html`; `c-anchor-links` sticky sidebar; `c-accordion` FAQ; `c-content-card` Be Inspired; CSS Grid partner logos; `c-page-header` with subtitle; see `requirements/053-hdx-hapi-landing-page.md` |
 | Signals landing page | `landing_pages/signals.html` | Extends `v2/page.html`; `c-page-header` with bell-icon CTA; featured signals carousel (Hammer.js + `carousel.js`, dots-only, SM/MD); Mailchimp signup form with v2 buttons; signals map iframe; `c-accordion` FAQ; partner logos; see `requirements/054-signals-landing-page.md` |
-| Organization page | `organization/read.html`, `organization/activity_stream.html`, `organization/stats.html`, `organization/members.html` | Extend `v2/page.html`; shared `v2/org-hero.html` (page-header + `c-tabs`); tasks 056–059 (Datasets / Activity / Stats / Members); HDX Connect tab postponed |
+| Organization page | `organization/read.html`, `organization/activity_stream.html`, `organization/stats.html`, `organization/members.html`, `requestdata/organization_requested_data.html` | Extend `v2/page.html`; shared `v2/org-hero.html` (page-header + `c-tabs`); tasks 056–059, 080 (Datasets / Activity / Stats / Members / Requested Data) |
 | Crisis / Event pages | `pages/read_page.html` (serves `/event/<name>` + `/dashboards/<name>`) | Extends `v2/page.html`; `page-header.html` (description sourced from the first `description`-type CMS section, not the page's own keywords field); new `v2/crisis-section.html` dispatcher + `crisis-page.less`/`crisis-page.js`; dataset list reuses `search_results_wrapper.html`; `/m/` light routes untouched; see `requirements/060-crisis-event-pages-v2.md` |
 | Error page (404/403/Server Error) | `error_document_template.html` | Extends `v2/page.html` with `{% block header %}`/`{% block footer %}`/`{% block scripts %}` emptied out (no nav chrome, no JS) and `quick_links = []` and `{% block main_content %}` replaced with the centered logo/heading/body/CTA layout; 500/503/anything-else collapses into one "Server Error" copy, 403 keeps its own copy; see `requirements/062-error-pages-v2.md` |
 | Login | `user/signin.html` | Extends `v2/page.html`; sets `quick_links = []`; `{% block header %}` uses `v2/header.html` with new `minimal=True` param (logo-only navbar, no top-bar/search/nav/actions/offcanvas); real page content, no popup/widget indirection (no longer renders `widget/onboarding/login.html`); "remember me" cookie prefill/gravatar-style swap now shows initials only via `c-avatar`; see `requirements/064-auth-pages-v2.md` |
@@ -110,7 +110,7 @@ CSS custom property equivalents (`--hdx-*`) are defined in `v2/foundation.css` (
 | Request access | `package/request_access.html` | Extends `v2/page.html`; see `requirements/061-hdx-connect-flow-v2.md` |
 | My Organisations (user dashboard) | `user/read_organizations.html` | Extends `v2/user-dashboard-base.html` (shared left menu via `c-nav-item` size s, for the dashboard/settings pages); see `requirements/072-user-dashboard-my-organisations-v2.md` |
 | My Datasets (user dashboard) | `user/read.html` | Extends `v2/user-dashboard-base.html`; search-page filters in the new right-hand `tertiary_content` column; list via `search_results_wrapper.html` with `admin_view` (c-dataset-card `labels` + actions, per-card delete `c-drawer`); another user's page: profile header + public cards; see `requirements/073-user-dashboard-my-datasets-v2.md` |
-| HDX Connect Requests (user dashboard) | `requestdata/my_requested_data.html` | Extends `v2/user-dashboard-base.html`; HDX core override of the `ckanext-requestdata` view; New / Open cards grouped per dataset (`c-request-card` + `c-request-item`), Archived `c-request-archive` grid, Reply / Decline `c-drawer`s; title and section headings via `v2/list-header.html`, Archived sort (`?order_by=`) in its heading row at every width (no Filter overlay, as on the other sort-only pages); see `requirements/074-user-dashboard-hdx-connect-requests-v2.md` |
+| HDX Connect Requests (user dashboard) | `requestdata/my_requested_data.html` | Extends `v2/user-dashboard-base.html`; HDX core override of the `ckanext-requestdata` view; body in `v2/hdx-connect-sections.html`; New / Open cards grouped per dataset (`c-request-card` + `c-request-item`), Archived `c-request-archive` grid, Reply / Decline `c-drawer`s; title and section headings via `v2/list-header.html`, Archived sort (`?order_by=`) in its heading row at every width (no Filter overlay, as on the other sort-only pages); see `requirements/074-user-dashboard-hdx-connect-requests-v2.md` |
 | My Activity Stream (user dashboard) | `user/activity_stream.html` | HDX override of the core activity plugin's template; extends `v2/user-dashboard-base.html` for every user's stream ("Activity Stream" labels and the profile header on other users'); timeline via `v2/activity-stream.html` (`object_type='user'`, `show_detail_links`, `actor_names`), forward-only "Load more", red `c-label` "Deleted" in the profile header; see `requirements/075-user-dashboard-my-activity-stream-v2.md` |
 | User Permission (user settings) | `user/permission.html` | Extends `v2/user-dashboard-base.html`; sysadmin-only form of `c-checkbox` rows in a fieldset (`sr-only` legend) + `c-button` submit; profile header on another user's page; the view flashes and redirects after a save and 404s unknown ids; see `requirements/076-user-settings-user-permission-v2.md` |
 | API Tokens (user settings) | `user/api_tokens.html` | Extends `v2/user-dashboard-base.html`; HDX `HDXApiTokenView` override of core's list/create view (bare `user_show`, 404 for unknown ids); create form of `c-form-field`s + `c-button`, token list via `table.html` with a tertiary `c-button` Revoke form per row (core's revoke view); the new token shows once in the success `c-alert` flash (`user/snippets/api_token_created.html`, `c-copy-button`); profile header on another user's page; see `requirements/077-user-settings-api-tokens-v2.md` |
@@ -229,7 +229,8 @@ Bundle configuration:
 - `hdx_theme/v2-crisis-page-styles` / `-scripts` — Crisis/event pages: adds `v2/pages/crisis.css` / `v2/pages/crisis.js`
 - `hdx_theme/v2-crisis-pages-page-styles` — Crisis Pages page: adds `v2/pages/crisis-pages.css`
 - `hdx_theme/v2-user-dashboard-page-styles` — User dashboard/settings pages (via `v2/user-dashboard-base.html`): adds `v2/pages/user-dashboard.css`; loaded after `v2-search-page-styles`, whose sidebar/content classes the base reuses
-- `hdx_theme/v2-hdx-connect-page-styles` / `-scripts` — HDX Connect Requests dashboard: adds `v2/pages/hdx-connect.css` / `v2/url-nav.js` + `v2/pages/hdx-connect.js` (sort, drawers, Reply / Decline / Yes / No)
+- `hdx_theme/v2-hdx-connect-page-styles` / `-scripts` — HDX Connect requests: adds `v2/pages/hdx-connect.css` / `v2/url-nav.js` + `v2/pages/hdx-connect.js` (sort, drawers, Reply / Decline / Yes / No, Maintainer filter)
+- `hdx_theme/v2-hdx-connect-scripts` — `v2/pages/hdx-connect.js` only (no `url-nav.js`)
 - `hdx_theme/v2-notifications-settings-page-scripts` — Notifications Settings page: adds `v2/pages/notifications-settings.js` (fills and opens the unsubscribe drawers, reloads after success); requires `notification-platform-util-scripts` loaded first in the template
 - `hdx_theme/v2-user-profile-page-scripts` — Profile and Password page (sysadmin viewers): adds `v2/qrious/qrious.min.js` (QRious 4.0.2) + `v2/pages/user-profile.js` (two-step verification drawer)
 - `hdx_theme/v2-org-list-page-styles` — All Organisations page: adds `v2/pages/org-list.css` (org-list-card styles come from the preloaded `v2-components-styles` bundle)
@@ -301,11 +302,11 @@ Bundle configuration:
 - [x] Resource page
 - [x] All Locations page
 - [x] All Organisations page
-- [x] Organization page (Datasets / Activity / Stats / Members tabs — 056–059; HDX Connect tab postponed)
+- [x] Organization page (Datasets / Activity / Stats / Members / Requested Data tabs — 056–059, 080)
 - [x] Archived Dataviz page
 - [x] Dataviz Gallery page
 
-Deferred to next cycle: Find/join org page, org request pages, create/edit dataset page, org page HDX Connect tab, Signals Mailchimp form's Bootstrap-to-v2 CSS cleanup (task 070 B4), `resource_view.html` error-div class cleanup (task 047 Decision 10).
+Deferred to next cycle: Find/join org page, org request pages, create/edit dataset page, an HDX-side guard against the `ckanext-requestdata` org view's 500s (task 080 D19), Signals Mailchimp form's Bootstrap-to-v2 CSS cleanup (task 070 B4), `resource_view.html` error-div class cleanup (task 047 Decision 10).
 
 ### Phase 4: Cleanup — Next cycle
 - [ ] Delete old layout templates (`page.html`, `page_light.html`)
@@ -320,7 +321,6 @@ Deferred to next cycle: Find/join org page, org request pages, create/edit datas
 
 1. **Migrate remaining holding-state pages** from `page_light.html` — org/join pages.
 2. **Build page-specific components** as needed during individual page migrations.
-3. **Organization page HDX Connect tab** — postponed.
 
 ---
 

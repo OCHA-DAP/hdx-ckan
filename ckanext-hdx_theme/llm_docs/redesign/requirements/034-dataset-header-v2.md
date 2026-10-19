@@ -283,7 +283,7 @@ These MUST be preserved:
 | D6 | Admin sort option | Admin "Due for Update" preserved — `admin_view` param passed to `search-nav-controls.html` |
 | D7 | Tooltips | "Trending" and "Due for Update" tooltips preserved via `tooltip` key in `nav_items` list |
 | D8 | Analytics | No Mixpanel events — analytics remain commented-out as in v1 |
-| D9 | Dropdown navigation mode | `[data-nav-key]` / `[data-nav-value]` data attributes; `setNavParam()` in `search.js` navigates immediately on click |
+| D9 | Dropdown navigation mode | `[data-nav-key]` / `[data-nav-value]` data attributes; `setNavParam()` in `url-nav.js` navigates immediately on click |
 | D10 | Results per page options | Options remain `[10, 25, 50, 100]` |
 | — | Overlay sort/limit behavior | Immediate navigation on selection — no "Show results" button involvement |
 | — | Page heading | Always static **"Datasets"** — no dynamic filter context in the heading |

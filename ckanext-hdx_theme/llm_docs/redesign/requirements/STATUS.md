@@ -81,3 +81,4 @@
 | 077 | [user-settings-api-tokens-v2](077-user-settings-api-tokens-v2.md)                                               | implemented | |
 | 078 | [user-settings-notifications-v2](078-user-settings-notifications-v2.md)                                         | implemented | |
 | 079 | [user-settings-profile-password-v2](079-user-settings-profile-password-v2.md)                                   | implemented | |
+| 080 | [organization-page-hdx-connect-requests-v2](080-organization-page-hdx-connect-requests-v2.md)                   | implemented | |

@@ -26,7 +26,8 @@
   {% snippet 'v2/components/breadcrumb.html',
       items=[
         {'label': _('Organisations'), 'href': h.url_for('organizations_index')},
-        {'label': org_dict.display_name, 'href': ''}
+        {'label': org_dict.display_name, 'href': h.url_for('hdx_org.read', id=org_dict.name)},
+        {'label': _('Activity'), 'href': ''}
       ] %}
 {% endblock %}
 

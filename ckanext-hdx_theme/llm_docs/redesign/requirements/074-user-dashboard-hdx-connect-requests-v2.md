@@ -10,8 +10,8 @@ from 072. Also in scope:
   local copy (Q66, Q67).
 
 **Excluded:**
-- The org "Requested Data" tab and the sysadmin HDX Connect Dashboard. Their Figma exports are reference only, and both
-  pages stay v1 (§3.4 records how they will reuse this work).
+- The org "Requested Data" tab (task 080) and the sysadmin HDX Connect Dashboard (v1). Their Figma exports are
+  reference only (§3.4 records how they reuse this work).
 - Any change to the `ckanext-requestdata` repo (view, actions, auth, model), and any other backend change.
 - Pagination, filters on this page, new analytics events and new tests.
 - The requester-side "Request data access" flow (task 061).
@@ -323,7 +323,7 @@ Open are always `modified_at desc`.
 | Shell | v1 `page.html`, BS5 tab bar, "User Dashboard" heading | 072 base + left nav (XL) | Q1 |
 | Breadcrumb | Home > Dashboard | Home / Activity and Content / HDX Connect Requests (from the base) | derived |
 | `<title>` | "HDX" (empty subtitle) | "HDX Connect Requests \| {name} \| Users" | derived |
-| Title | "My Requests [N]" | H1 "HDX Connect Requests" + count (New + Open) + Figma subtitle | Q24, Q40 |
+| Title | "My Requests [N]" | H1 "HDX Connect Requests" + count (New + Open + Archived requests) + Figma subtitle | Q24, Q40 |
 | Section names | New / Open / Archived | New / Open / Archived, each with a count | Q38 |
 | Empty section | "No requests found." | Same copy, v2 styling | Q23 |
 | Dataset group | `h4` link + inline-styled BS rows | `c-request-card` per dataset (New / Open grouped in the template); title link kept; "Maintained by" hidden here | Q2, Q20, Q35, Q45 |
@@ -446,7 +446,7 @@ The list wrapper is `c-request-card-list` (24px gap), in the component's own LES
 | Change | Detail |
 |---|---|
 | `v2/search-nav-controls.html` | New optional `sort_key` (default `'sort'`, mirroring `page_size_key`) used for the sort dropdown's `data-nav-key`. Existing callers are unchanged |
-| `v2/filter-overlay.html` (new) | `#hdx-filter-overlay` markup moved verbatim out of `package_list.html`: header "Filters" + close, body with `search-nav-controls` (`panel_suffix='ovl'`) + `[data-filter-panel-slot]`, footer "Clear filters" / "Show results". Params forward the nav-controls arguments (`sorting_selected`, `sorting_options`, `ext_page_size`, `admin_view`, `show_page_size`, `sort_key`) and `total_selected` (Clear button state). The id stays `hdx-filter-overlay` (`search.js` looks it up). `package_list.html` calls the snippet, and Search's HTML must stay byte-identical. Not used on this page (Q62); kept for the future org / sysadmin requests pages (§3.4) |
+| `v2/filter-overlay.html` (new) | `#hdx-filter-overlay` markup moved verbatim out of `package_list.html`: header "Filters" + close, body with `search-nav-controls` (`panel_suffix='ovl'`) + `[data-filter-panel-slot]`, footer "Clear filters" / "Show results". Params forward the nav-controls arguments (`sorting_selected`, `sorting_options`, `ext_page_size`, `admin_view`, `show_page_size`, `sort_key`) and `total_selected` (Clear button state). The id stays `hdx-filter-overlay` (`search.js` looks it up). `package_list.html` calls the snippet, and Search's HTML must stay byte-identical. Not used on this page (Q62) |
 | `v2/list-header.html` (new) | `package_list.html`'s v2 header moved out: title + count, controls (`search-nav-controls`; `__controls--xl-only` when the Filter button renders, every width otherwise, Q63), MD/SM Filter button, subtitle. Params forward package_list's (`list_title`, `list_subtitle`, `title_tag`, `title_size`, `count`, the nav-controls arguments, `show_filters`, `total_selected`), plus `show_controls` to omit the controls. `package_list.html` calls the snippet; Search's HTML stays identical apart from the `--xl-only` class (Q40) |
 | `fanstatic/v2/utils.js` | `window.hdxV2.setDisabled(el, disabled)` (button.html's disabled contract: `is-disabled`, `aria-disabled`, plus `[disabled]` on form controls or `tabindex="-1"` on links) and `window.hdxV2.showAlert(alertEl, text, variant)` (`variant` optional). They replace the local copies in `hdx-connect.js`, `group-message-drawer.js` (whose enabled Submit kept a stale `aria-disabled="true"`), `login.js`, `forgot-password.js`, `perform-reset.js`, `form-validator.js` and `locations-list.js` (Q66) |
 | `LESS/mixins.less` | `.hdx-clamp-toggle(@toggle: ~'.c-text-button')`: hides the clamp toggle until `.is-clamped`, rotates its chevron on `.is-open`. Replaces the copies in `dataset-card`, `page-header`, `dataviz-card`, `org-list-card`, `resource-card` (scoped to its footer toggle, so the "Access via API" icon no longer rotates), `pages/dataset.less` and `request-item` (Q67) |
@@ -465,11 +465,11 @@ The list wrapper is `c-request-card-list` (24px gap), in the component's own LES
 - Full replacement of `THEME/templates/requestdata/my_requested_data.html`, extending `v2/user-dashboard-base.html`.
 - It sets `user_dict` from `g.userobj` (the base's `subtitle` needs `display_name`) along with `user_nav_active` and
   `page_label`.
-- The shared v1 snippets (`requestdata/snippets/*`) and `ajax_snippets/*` are **not modified**: the org and sysadmin v1
-  pages still use them.
+- The shared v1 snippets (`requestdata/snippets/*`) and `ajax_snippets/*` are **not modified**: the sysadmin v1 page
+  still uses them.
 
-**Layout, top to bottom:**
-1. Header (`v2/list-header.html`): H1 + count (`requests_new|length + requests_open|length`) + subtitle "Respond to
+**Layout, top to bottom** (in `v2/hdx-connect-sections.html`):
+1. Header (`v2/list-header.html`): H1 + count (new + open + archived requests) + subtitle "Respond to
    or decline restricted dataset access requests from other users".
 2. New: heading "New" + request count; one `c-request-card` per dataset, holding one `c-request-item` per request with
    its Reply and Decline (Q45).
@@ -480,8 +480,8 @@ The list wrapper is `c-request-card-list` (24px gap), in the component's own LES
 - New / Open grouping is done in the template by `package_id`, in first-appearance order: the card with the most recent
   request comes first, and requests keep the view's `modified_at desc` order. Jinja's `groupby` is not used (it sorts
   by key).
-- An empty section keeps its heading (count 0) and shows "No requests found." in 072's `hdx-v2-user-dashboard-empty`
-  (Q54).
+- An empty section keeps its heading (count 0) and shows "No requests found." in a `hdx-v2-hdx-connect__empty`
+  paragraph (Q54).
 - The two action drawers render once per page (from `templates/v2/`, Q44).
 
 ### 6.3 Copy
@@ -640,7 +640,7 @@ All questions were resolved with the user. The **User choice** column records ea
 | Q21 | Verification rendering | Both chips + tooltip / both chips + hidden explanation / Unverified only | Both + tooltip | **Both chips + tooltip**; copy mirrors v1's sentence for each state |
 | Q22 | Requester line and date wording | "Name · Org · Country" / "Name · Country, from Org" / v1 wording | "Name · Org · Country" | **"Name · Org · Country" + "Requested date: …"** |
 | Q23 | Empty states | Sections + v1 copy / hide empty sections / headings only | Sections + v1 copy | **Sections + "No requests found."** |
-| Q24 | Title count | None (Figma) / New + Open (v1) / total | None | **New + Open** |
+| Q24 | Title count | None (Figma) / New + Open (v1) / total | None | **Total: new + open + archived requests** (080 D10) |
 | Q25 | Message length | Clamp + Show more / full text | Clamp | **Clamp + Show more** |
 | Q26 | Drawer content | Summary + v1 copy + fields / v1 copy + fields | Summary + v1 copy + fields | **Summary + v1 copy + fields** |
 | Q27 | Reply icon | `reply.svg` / `mail.svg` / none | `reply.svg` | **`reply.svg`** |
@@ -670,7 +670,7 @@ All questions were resolved with the user. The **User choice** column records ea
 | Q51 | Sort label (Figma / v2 "Sort by" vs v1 "Order by:") | "Sort by" / "Order by" | "Sort by" | **"Sort by"** |
 | Q52 | `maintainers` POST value (v1 sends "[object Object]", unused) | JSON string / omit / literal v1 value | JSON | **JSON string** |
 | Q53 | Yes / No failure alert position | One alert moved by JS / fixed under the Open heading / one per request | Moved by JS | **One alert, moved under the failed request** |
-| Q54 | Empty section styling | 072's `hdx-v2-user-dashboard-empty` / compact page-LESS line | Reuse | **Reuse `hdx-v2-user-dashboard-empty`** |
+| Q54 | Empty section styling | 072's `hdx-v2-user-dashboard-empty` / compact page-LESS line | Reuse | **`<p class="hdx-v2-hdx-connect__empty">`** in `hdx-connect.less` (080 D15) |
 | Q55 | Archive title underline (Figma underlines; Q9 made it plain text) | No underline / underlined | No underline | **No underline** |
 | Q56 | Quote styling shared by the request item and the drawer summary | `.hdx-quote()` mixin / duplicate / plain text in the drawer | Mixin | **`.hdx-quote()`** (+ `.hdx-quote-marks()`) in `mixins.less` |
 | Q57 | Open footer (Figma omits "Intended use") | Show intended use (v1) / omit (Figma) | Show | **Show "Intended use"** |
@@ -706,7 +706,7 @@ Raise any of them before implementation if they should change.
 | File | Change |
 |---|---|
 | `THEME/templates/requestdata/my_requested_data.html` | Full replacement: base, header, sections, archive, drawers, assets (Q1) |
-| `THEME/templates/v2/hdx-connect-request.html`, `hdx-connect-drawers.html` (new) | Request-item mapping from the raw request dict (`h.load_json(item.extras)`) with the action buttons; the two drawers. The per-dataset grouping is in the page template (Q44, Q45) |
+| `THEME/templates/v2/hdx-connect-request.html`, `hdx-connect-drawers.html` (new) | Request-item mapping from the raw request dict (`h.load_json(item.extras)`) with the action buttons; the two drawers. The per-dataset grouping is in `v2/hdx-connect-sections.html` (Q44, Q45) |
 | `THEME/templates/v2/components/request-card.html` (new) | `c-request-card` (§5.2) |
 | `THEME/templates/v2/components/request-item.html` (new) | `c-request-item` (§5.2) |
 | `THEME/templates/v2/components/request-archive.html`, `request-archive-row.html` (new) | `c-request-archive` (§5.2) |
