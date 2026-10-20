@@ -1,80 +1,106 @@
-{% extends "page_light.html" %}
+{% extends "v2/page.html" %}
 
 {% set CONST = h.HDX_CONST('UI_CONSTANTS')['ONBOARDING']['CONFIRM_ORGANISATION_CHOICE'] %}
+{% set org_dict = data.org_dict %}
+{% set outer_row_class      = 'hdx-v2-signup-outer-row' %}
+{% set breadcrumb_row_class = 'hdx-v2-breadcrumb-row--white' %}
+{% set content_class        = 'hdx-v2-content-columns__content' %}
 
 {% block subtitle %}{{ _('Confirm your choice of organisation') }}{% endblock %}
 
 {% block styles %}
-  {% asset 'hdx_theme/page-extra-light-styles' %}
-  {% asset 'hdx_theme/bem-blocks-styles' %}
-{% endblock %}
-
-{% block scripts %}
   {{ super() }}
-  {% asset 'hdx_theme/bem-blocks-scripts' %}
+  {% asset 'hdx_theme/v2-signup-page-styles' %}
+  {% asset 'hdx_theme/v2-org-request-page-styles' %}
 {% endblock %}
 
-{% block header_core %}
-  {% snippet 'header-mobile.html', page_has_desktop_version=False, page_has_mobile_version=False %}
+{% block secondary %}{% endblock %}
+
+{% block breadcrumb_items %}
+  {% snippet 'v2/components/breadcrumb.html',
+      items=[
+        {'label': _('Organisations'), 'href': h.url_for('organization.index')},
+        {'label': CONST.PAGE_TITLE, 'href': ''}
+      ] %}
 {% endblock %}
 
-{% block breadcrumb_content %}
-  {% snippet "snippets/active_breadcrumb_item.html", title=_('Organisations'), position=2 %}
-{% endblock %}
+{% block primary %}
+<div class="hdx-v2-signup-form-page">
 
-{% block content %}
+  {% snippet 'v2/components/step-pager.html',
+      steps=[CONST.STEPS_1, CONST.STEPS_2, CONST.STEPS_3],
+      current_step=1 %}
 
-  <div class="container">
+  {% if org_dict %}
+    {% set logo_src = org_dict.custom_rect_logo_url or org_dict.image_display_url %}
+    {% set description = h.render_markdown(org_dict.description) if org_dict.description else '' %}
 
-    <div class="row">
-      <div class="col-12 col-sm-10 col-md-8 col-lg-6 mx-auto">
-        {{ h.snippet('bem.blocks/stepper.html', steps=[CONST.STEPS_1, CONST.STEPS_2, CONST.STEPS_3], spacing_class="my-5", current_step=1) }}
-        <div class="text-center">
-          {{ h.snippet('bem.blocks/heading.html', title=CONST.PAGE_TITLE, spacing_class="mb-4") }}
+    <form id="confirm-organisation-form"
+          class="hdx-v2-signup-form-page__card"
+          method="post"
+          action="{{ h.url_for('hdx_org_join.reason_request') }}">
+      {{ h.csrf_input() }}
+      <input type="hidden" name="org_id" value="{{ org_dict.id }}">
+
+      <h1 class="hdx-v2-signup-form-page__heading">{{ CONST.PAGE_TITLE }}</h1>
+
+      <div class="hdx-v2-org-request-confirm">
+        <div>
+          <p class="hdx-v2-org-request-confirm__label">{{ CONST.BODY_CHOICE_TEXT }}</p>
+          <p class="hdx-v2-org-request-confirm__org-name">{{ org_dict.display_name }}</p>
+        </div>
+
+        {% if logo_src %}
+          <img class="hdx-v2-org-request-confirm__logo" src="{{ logo_src }}" alt="{{ org_dict.display_name }}">
+        {% endif %}
+
+        <p class="hdx-v2-org-request-confirm__label">{{ CONST.BODY_ABOUT_TEXT }}</p>
+        <p class="hdx-v2-org-request-confirm__member-since">{{ CONST.BODY_MEMBER_SINCE_TEXT.format(h.hdx_format_date(org_dict.created) or _('Unknown')) }}</p>
+
+        {% if description %}
+          <div class="hdx-v2-org-request-confirm__desc" data-module="clamped-text">
+            <div class="hdx-v2-org-request-confirm__desc-text" data-clamped-content>{{ description }}</div>
+            {% snippet 'v2/components/text-button.html',
+                style='tertiary',
+                size='s',
+                label=_('Show more'),
+                icon_position='right',
+                icon_src='v2/icons/chevron-down.svg',
+                tag='button',
+                button_type='button',
+                attrs={'aria-expanded': 'false', 'data-clamped-toggle': ''} %}
+          </div>
+        {% endif %}
+
+        <div class="hdx-v2-org-request-confirm__actions">
+          {% snippet 'v2/components/button.html',
+              label=CONST.BUTTON_SUBMIT,
+              style='primary',
+              size='l',
+              button_type='submit' %}
+          <p class="hdx-v2-org-request-confirm__links">
+            {% snippet 'v2/components/text-link.html',
+                label=CONST.BUTTON_CHOOSE_DIFFERENT_ORG,
+                href=h.url_for('hdx_org_join.find_organisation'),
+                style='tertiary' %}
+            {{ _('or') }}
+            {% snippet 'v2/components/text-link.html',
+                label=CONST.BUTTON_CREATE_NEW_ORG,
+                href=h.url_for('hdx_org_request.new'),
+                style='tertiary' %}
+          </p>
         </div>
       </div>
+
+    </form>
+  {% else %}
+    <div class="hdx-v2-signup-form-page__card">
+      <h1 class="hdx-v2-signup-form-page__heading">{{ CONST.PAGE_TITLE }}</h1>
+      {% snippet 'v2/components/alert.html',
+          message=h.literal(CONST.BODY_ORG_NOT_FOUND.format(h.url_for('hdx_org_join.find_organisation'))),
+          dismissible=False %}
     </div>
+  {% endif %}
 
-    <div class="row">
-      <div class="col-12 col-sm-10 col-md-8 col-lg-6 mx-auto">
-        {{ h.snippet('bem.blocks/paragraph.html', text=CONST.BODY_CHOICE_TEXT, paragraph_classes=["paragraph__text_font-size-big", "paragraph__text_font-weight-bold"]) }}
-        {{ h.snippet('bem.blocks/paragraph.html', text=data.org_dict.display_name, paragraph_classes=["paragraph__text_font-size-big"]) }}
-        {% if data.org_dict.custom_rect_logo_url %}
-          <img src="{{ data.org_dict.custom_rect_logo_url }}" alt="{{ data.org_dict.display_name }}" class="img-responsive" style="max-height: 45px;">
-        {% endif %}
-        {{ h.snippet('bem.blocks/paragraph.html', text=CONST.BODY_ABOUT_TEXT, paragraph_classes=["paragraph__text_font-size-big", "paragraph__text_font-weight-bold"], spacing_class="mt-3") }}
-        {{ h.snippet('bem.blocks/paragraph.html', text=CONST.BODY_MEMBER_SINCE_TEXT.format(h.render_datetime(data.org_dict.created)), paragraph_classes=["text-muted fw-bold"]) }}
-        {{ h.snippet('bem.blocks/paragraph.html', show_more=True, text=data.org_dict.description, spacing_class="mb-5") }}
-
-        <form method="post" action="{{ h.url_for('hdx_org_join.reason_request') }}" id="confirm-organisation-form">
-          {{ h.csrf_input() }}
-          <input type="hidden" name="org_id" value="{{ data.org_dict.id }}">
-          {{ h.snippet('bem.blocks/form_button.html',
-              type="submit",
-              title=CONST.BUTTON_SUBMIT,
-              button_classes=["form-button__btn_font-size_big", "btn-primary", "btn-lg", "d-block", "w-100"]) }}
-          <div class="text-center mb-5">
-            {{ h.snippet('bem.blocks/form_button.html',
-              type="href",
-              url=h.url_for('hdx_org_join.find_organisation'),
-              title=CONST.BUTTON_CHOOSE_DIFFERENT_ORG,
-              button_classes=["form-button__btn_font-size_medium", "btn-link", "pe-0"],
-              container_classes=["mt-1 d-inline-block"]) }}
-            {{ h.snippet('bem.blocks/form_button.html',
-              type="separator",
-              title="or",
-              button_classes=["form-button__btn_font-size_medium", "btn-link", "px-0"],
-              container_classes=["mt-1 d-inline-block"]) }}
-            {{ h.snippet('bem.blocks/form_button.html',
-              type="href",
-              url=h.url_for('hdx_org_request.new'),
-              title=CONST.BUTTON_CREATE_NEW_ORG,
-              button_classes=["form-button__btn_font-size_medium", "btn-link", "ps-0"],
-              container_classes=["mt-1 d-inline-block"]) }}
-          </div>
-        </form>
-      </div>
-    </div>
-
-  </div>
+</div>
 {% endblock %}

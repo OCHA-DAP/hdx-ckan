@@ -1496,6 +1496,7 @@ v2-components-styles:
     - v2/components/dropdown.css
     - v2/components/form-field.css
     - v2/components/highlight-card.css
+    - v2/components/info-box.css
     - v2/components/input-field.css
     - v2/components/label.css
     - v2/components/letter-anchor.css
@@ -1642,6 +1643,20 @@ v2-datatable-scripts:
   output: ckanext-hdx_theme/%(version)s_v2-datatable-scripts.js
   contents:
     - vendor/datatables-2.3.8/dataTables.min.js
+
+v2-select2-styles:
+  output: ckanext-hdx_theme/%(version)s_v2-select2-styles.css
+  <<: *common-css
+  filters: cssrewrite
+  contents:
+    - vendor/select2-4/select2.min.css
+
+v2-select2-scripts:
+  <<: *common-js
+  output: ckanext-hdx_theme/%(version)s_v2-select2-scripts.js
+  contents:
+    - vendor/select2-4/select2.min.js
+    - v2/components/select.js
 
 v2-resource-page-scripts:
   <<: *common-js
@@ -1809,6 +1824,12 @@ v2-signup-page-styles:
   <<: *common-css
   contents:
     - v2/pages/signup.css
+
+v2-org-request-page-styles:
+  output: ckanext-hdx_theme/%(version)s_v2-org-request-page-styles.css
+  <<: *common-css
+  contents:
+    - v2/pages/org-request.css
 
 v2-hapi-landing-page-styles:
   output: ckanext-hdx_theme/%(version)s_v2-hapi-landing-page-styles.css

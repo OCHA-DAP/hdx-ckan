@@ -393,6 +393,38 @@
     p:last-child, ul:last-child, ol:last-child { margin-bottom: 0; }
 }
 
+// ── Org description ─────────────────────────────────────────────
+// "Member since" line and the 3-line clamped markdown description
+// with its show-more toggle (`clamped-text.js`).
+
+.hdx-member-since() {
+    .hdx-body-s();
+    color:  var(--hdx-neutral-8);
+    margin: 0;
+}
+
+.hdx-clamped-desc() {
+    display:        flex;
+    flex-direction: column;
+    align-items:    flex-start;
+    gap:            var(--hdx-space-2);
+    align-self:     stretch;
+
+    .hdx-clamp-toggle();
+}
+
+.hdx-clamped-desc-text() {
+    .hdx-body-m();
+    color:  var(--hdx-neutral-85);
+    margin: 0;
+    .hdx-line-clamp(3);
+    .hdx-markdown-content(var(--hdx-space-4));
+
+    &.is-open {
+        .hdx-line-clamp-off();
+    }
+}
+
 // ── Quote ───────────────────────────────────────────────────────
 
 .hdx-quote() {

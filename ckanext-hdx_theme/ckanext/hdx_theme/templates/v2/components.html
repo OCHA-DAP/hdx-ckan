@@ -39,6 +39,7 @@
   {'label': 'Table', 'href': '#table'},
   {'label': 'Drawer', 'href': '#drawer'},
   {'label': 'Alert', 'href': '#alert'},
+  {'label': 'Info Box', 'href': '#info-box'},
   {'label': 'Spinner', 'href': '#spinner'},
   {'label': 'Accordion', 'href': '#accordion'},
   {'label': 'Content Card', 'href': '#content-card'},
@@ -301,6 +302,12 @@
   }
 
   </style>
+  {% asset 'hdx_theme/v2-select2-styles' %}
+{% endblock %}
+
+{% block scripts %}
+  {{ super() }}
+  {% asset 'hdx_theme/v2-select2-scripts' %}
 {% endblock %}
 
 {% block breadcrumb_items %}
@@ -1171,6 +1178,16 @@
           errors='Please select a country',
           name='demo-select-error', options={'sd': 'Sudan', 'td': 'Chad', 'ml': 'Mali'} %}
     </div>
+
+    <h2 class="demo-subsection__heading">Select — searchable (Select2; select.js)</h2>
+    <div class="demo-row--column demo-max-width-l">
+      <div class="c-form-field">
+        {% snippet 'v2/components/select.html',
+            label='Country', placeholder='Select a country', id='demo-select-searchable',
+            name='demo-select-searchable', options={'sd': 'Sudan', 'td': 'Chad', 'ml': 'Mali', 'ne': 'Niger', 'ci': 'Côte d’Ivoire'},
+            searchable=True %}
+      </div>
+    </div>
   </section>
 
   <br><br><br><br><br>
@@ -1263,6 +1280,15 @@
       {% snippet 'v2/components/text-field.html',
           size='l', id='demo-label-required-input', label='Email address', required=True, placeholder='Value' %}
       <br>
+    </div>
+
+    <h2 class="demo-subsection__heading">Text field — textarea with character counter (character_count=True)</h2>
+    <div class="demo-row--column demo-max-width-l">
+      <div class="c-form-field">
+        {% snippet 'v2/components/text-field.html',
+            size='m', multiline=True, id='demo-counter-textarea', name='demo-counter-textarea',
+            label='Message', required=True, character_count=True %}
+      </div>
     </div>
 
     <h2 class="demo-subsection__heading">Autocomplete — with chips (panel open, static preview)</h2>
@@ -2757,6 +2783,23 @@
       {% snippet 'v2/components/alert.html', message='Your changes have been saved.', variant='success' %}
       {% snippet 'v2/components/alert.html', message='This action cannot be undone.', variant='warning' %}
       {% snippet 'v2/components/alert.html', message='You need to log in to continue.', variant='info' %}
+    </div>
+  </section>
+
+  {# ══════════════════════════════════════════════════════════════
+     Info Box
+  ══════════════════════════════════════════════════════════════ #}
+  <section class="demo-section" id="info-box">
+    <h1 class="demo-section__title">Info Box</h1>
+    <p class="demo-section__subtitle">
+      Static information panel: info icon + one or more paragraphs (no live-region role).
+    </p>
+    <div class="demo-row demo-row--column demo-max-width-l">
+      {% snippet 'v2/components/info-box.html',
+          paragraphs=['First paragraph of placeholder information text that wraps onto a second line.',
+                      'Second paragraph of placeholder information text.'] %}
+      {% snippet 'v2/components/info-box.html',
+          paragraphs=['Single paragraph of placeholder information text.'] %}
     </div>
   </section>
 

@@ -82,3 +82,4 @@
 | 078 | [user-settings-notifications-v2](078-user-settings-notifications-v2.md)                                         | implemented | |
 | 079 | [user-settings-profile-password-v2](079-user-settings-profile-password-v2.md)                                   | implemented | |
 | 080 | [organization-page-hdx-connect-requests-v2](080-organization-page-hdx-connect-requests-v2.md)                   | implemented | |
+| 081 | [org-join-request-flow-v2](081-org-join-request-flow-v2.md)                                                     | implemented | |

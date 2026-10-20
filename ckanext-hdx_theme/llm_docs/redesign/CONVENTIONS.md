@@ -511,7 +511,7 @@ Three distinct components cover form fields; pick by field type, don't extend th
 
 - `search-input.html` — search boxes only (`type='search'`).
 - `text-field.html` — generic text/email/password/textarea fields (password-toggle, multiline).
-- `select.html` — native `<select>`-backed fields.
+- `select.html` — native `<select>`-backed fields; `searchable=True` for long option lists (Select2).
 
 `search-input.html` used to cover the generic-field role too; it split into `text-field.html` once form pages (contact contributor, request access, auth) needed password toggles and textareas.
 

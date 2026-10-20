@@ -89,7 +89,7 @@ There are three active layout base templates. The goal is to maintain exactly th
 - `ckanext-hdx_theme/ckanext/hdx_theme/templates/v2/header.html` — top-bar + responsive navbar (fully implemented)
 - `ckanext-hdx_theme/ckanext/hdx_theme/templates/v2/footer.html` — dark-teal footer panel (fully implemented)
 
-Pages in holding state on `page_light.html` (org/join, etc.) manually override `{% block header_core %}` to include the legacy `header-mobile.html`. See [**redesign/PROGRESS.md**](redesign/PROGRESS.md) for the full holding-state and migrated-pages lists.
+Pages in holding state on `page_light.html` (create/edit dataset) manually override `{% block header_core %}` to include the legacy `header-mobile.html`. See [**redesign/PROGRESS.md**](redesign/PROGRESS.md) for the full holding-state and migrated-pages lists.
 
 ## BEM components (HDX custom UI blocks)
 
@@ -330,6 +330,16 @@ Example page-specific template (light search):
 
 ---
 
+### Org join / create flow (`/org/join/*`, `/org/request/*`)
+
+- **Templates**: `org/join/find_organisation.html`, `confirm_organisation.html`, `reason_request.html`, `completed.html` and `org/request/org_new_request.html`, `completed_request.html`. All extend `v2/page.html` with the signup layout variables and shell (`hdx-v2-signup-form-page`, 3-step `c-step-pager`); views and schema are unchanged.
+  - Find: `c-info-box` + `select.html` `searchable=True` (Select2, `hdx-v2` theme, `select.js`); `?selected=` preselects.
+  - Confirm / Reason: an error `c-alert` instead of the form when `organization_show` finds no org.
+- **Core assets**: `hdx_theme/v2-signup-page-styles`; plus `hdx_theme/v2-select2-styles` / `v2-select2-scripts` on Find and `hdx_theme/v2-org-request-page-styles` on Confirm and Reason.
+- **Constants**: `helpers/ui_constants/onboarding/` (one file per page).
+
+---
+
 ### Signals page (`/signals`)
 
 - **Template**: `ckanext-hdx_theme/ckanext/hdx_theme/templates/landing_pages/signals.html`
@@ -384,12 +394,13 @@ Example page-specific template (light search):
 - **Core assets**:
   - `hdx_theme/v2-components-styles` — all v2 component styles (loaded by `v2/page.html`).
   - `hdx_theme/v2-components-scripts` — all v2 component JS (loaded by `v2/page.html`).
+  - `hdx_theme/v2-select2-styles` / `v2-select2-scripts` — Select2 for the searchable-select demo (loaded by the template).
 
 ---
 
 ## V2 JavaScript Patterns
 
-All v2 JavaScript is vanilla — no jQuery. Follow these patterns consistently.
+New v2 JavaScript is vanilla — no jQuery; the one exception is the Select2 API calls in `fanstatic/v2/components/select.js` (jQuery is already loaded by `hdx_theme/ckan`). Follow these patterns consistently.
 
 ### No jQuery
 

@@ -26,6 +26,14 @@
                           and renders .c-dropdown__error below the wrapper.
                           default: None
   required      {bool}    Appends a red asterisk inside the label.  default: False
+  select_attrs  {dict}    Extra HTML attrs on the <select> itself
+                          (e.g. aria-labelledby).  default: {}
+  searchable    {bool}    Turns the select into a Select2 field with a search box in
+                          its panel (components/select.js, `hdx-v2` theme in
+                          dropdown.less); with a placeholder it also gets a clear (×)
+                          button. Select2 fires `change` through jQuery only. The
+                          caller loads the `v2-select2-styles` and
+                          `v2-select2-scripts` bundles.  default: False
   ─────────────────────────────────────────────────
 
   Example
@@ -33,6 +41,10 @@
   {% snippet 'v2/components/select.html',
       label='Country', placeholder='Select a country',
       name='country', options={'sd': 'Sudan', 'td': 'Chad'} %}
+
+  {% snippet 'v2/components/select.html',
+      label='Country', placeholder='Select a country',
+      name='country', options=countries, searchable=True %}
 #}
 
 {% set size             = size             if size             is defined else 'm' %}
@@ -49,6 +61,8 @@
 {% set option_attrs     = option_attrs     if option_attrs     is defined else {} %}
 {% set errors           = errors           if errors           is defined else None %}
 {% set required         = required         if required         is defined else false %}
+{% set select_attrs     = select_attrs     if select_attrs     is defined else {} %}
+{% set searchable       = searchable       if searchable       is defined else false %}
 
 {% set is_disabled = (state == 'disabled') %}
 
@@ -69,7 +83,9 @@
           name="{{ name }}"
           {% if id %}id="{{ id }}"{% endif %}
           {% if required %}required{% endif %}
-          {% if is_disabled %}disabled aria-disabled="true"{% endif %}>
+          {% if is_disabled %}disabled aria-disabled="true"{% endif %}
+          {% if searchable %}data-searchable{% endif %}
+          {% for key, val in select_attrs.items() %} {{ key }}="{{ val }}"{% endfor %}>
     {% if placeholder %}
       <option value="" disabled {% if not selected %}selected{% endif %}>{{ placeholder }}</option>
     {% endif %}
