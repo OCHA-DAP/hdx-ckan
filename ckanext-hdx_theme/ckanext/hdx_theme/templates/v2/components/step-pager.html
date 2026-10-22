@@ -11,15 +11,18 @@
 {% set steps        = steps        if steps        is defined else [] %}
 {% set current_step = current_step if current_step is defined else 1 %}
 
-<div class="c-step-pager">
+<ol class="c-step-pager">
   {% for step in steps %}
-    {% if not loop.first %}
-      <div class="c-step-pager__connector{% if loop.index <= current_step %} c-step-pager__connector--filled{% endif %}"></div>
-    {% endif %}
     {% set state = 'completed' if loop.index < current_step else 'active' if loop.index == current_step else '' %}
-    <div class="c-step-pager__step{% if state %} c-step-pager__step--{{ state }}{% endif %}">
-      <div class="c-step-pager__badge">{{ loop.index }}</div>
-      <div class="c-step-pager__label">{{ step }}</div>
-    </div>
+    <li class="c-step-pager__item"{% if state == 'active' %} aria-current="step"{% endif %}>
+      {% if not loop.first %}
+        <div class="c-step-pager__connector{% if loop.index <= current_step %} c-step-pager__connector--filled{% endif %}" aria-hidden="true"></div>
+      {% endif %}
+      <div class="c-step-pager__step{% if state %} c-step-pager__step--{{ state }}{% endif %}">
+        <div class="c-step-pager__badge">{{ loop.index }}</div>
+        <div class="c-step-pager__label" aria-hidden="true">{{ step }}</div>
+        <span class="sr-only">{{ step }}{% if state == 'completed' %}, {{ _('completed') }}{% endif %}</span>
+      </div>
+    </li>
   {% endfor %}
-</div>
+</ol>

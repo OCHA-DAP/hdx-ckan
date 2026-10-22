@@ -50,3 +50,16 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   });
 });
+
+document.addEventListener('DOMContentLoaded', function () {
+  document.querySelectorAll('.c-search-input[data-character-count]').forEach(function (wrapper) {
+    var field   = wrapper.querySelector('textarea, input');
+    var counter = wrapper.nextElementSibling;
+    if (!field || !counter) return;
+
+    field.addEventListener('input', function () {
+      var total = field.value.length;
+      counter.textContent = total + (total === 1 ? ' character' : ' characters');
+    });
+  });
+});

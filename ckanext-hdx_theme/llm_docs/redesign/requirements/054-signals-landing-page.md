@@ -634,27 +634,23 @@ inside the left column of the page header. Extend `c-page-header` with optional 
 | `cta_label` | string | `""` | CTA button text |
 | `cta_href` | string | `""` | CTA button href (anchor) |
 | `cta_icon_src` | string | `""` | Optional icon SVG path (e.g. `'v2/icons/bell.svg'`) |
+| `cta_style` | string | `"button"` | `'button'` (primary `c-button` m) or `'text'` (primary `c-text-button` m) |
+| `cta_attrs` | dict | `{}` | Extra attrs on the CTA link |
 
 In `page-header.html`, inside the left column, after `description`:
 ```jinja2
 {% if cta_href %}
-  {% set cta_has_icon = cta_icon_src != '' %}
-  {% snippet 'v2/components/button.html',
+  {% snippet 'v2/components/text-button.html' if cta_style == 'text' else 'v2/components/button.html',
       tag='a', href=cta_href,
-      style='primary', type='text', size='m',
-      state='enabled',
-      icon=cta_has_icon,
-      icon_src=cta_icon_src if cta_icon_src else 'v2/icons/placeholder.svg',
+      icon_src=cta_icon_src,
       label=cta_label,
-      extra_classes='c-page-header__cta-link' %}
+      attrs=cta_attrs %}
 {% endif %}
 ```
 
-LESS: `.c-page-header__cta-link { display: inline-flex; margin-top: var(--hdx-space-1); }`
-
 Signals call:
 ```jinja2
-cta_label=_('Subscribe to notifications'),
+cta_label=_('Sign up'),
 cta_icon_src='v2/icons/bell.svg',
 cta_href='#signup'
 ```

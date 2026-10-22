@@ -23,7 +23,7 @@
 | `hdx_connect` | bool | `false` | Render the request-data variant of the footer instead of the download button. |
 | `request_href` | string | `'#'` | URL for the "Request data" link when `hdx_connect` is set. |
 | `request_attrs` | dict | `{}` | Extra HTML attributes on the "Request data" link. |
-| `show_more_info` | bool | `true` | Render the "More information" button. Set `false` when no meaningful `title_href` exists (e.g. the zero-resource HDX Connect state). |
+| `show_more_info` | bool | `true` | Render the "More information" button. Set `false` when no meaningful `title_href` exists. |
 | `extra_classes` | string | `''` | Extra CSS classes on the root element. |
 
 ---
@@ -58,14 +58,14 @@
 - Description is **always visible** (never hidden entirely).
 - Default: clamped to **7 lines** at SM, **3 lines** at MD+.
 - Expanded: `is-open` class on `[data-clamped-content]` and on the root removes the clamp.
-- The chevron icon in the show-more button rotates 180° on expand via CSS `.c-resource-card.is-open .c-text-button__icon`.
+- The chevron icon in the show-more button rotates 180° on expand via `.hdx-clamp-toggle(~'.c-resource-card__footer .c-text-button')` on the root (scoped to the footer toggle).
 
 ### Show more / less toggle
 - Powered by the shared `clamped-text.js` module.
 - `data-module="clamped-text"` is placed on the **root `.c-resource-card`** element (not on `__desc`) so the module can find both the `[data-clamped-content]` `<p>` and the `.c-text-button` in `__footer` in a single `querySelectorAll` pass.
 - Only added when `description` is truthy.
-- The `.c-text-button` is **hidden by default via CSS** (`.c-resource-card .c-text-button { display: none }`).
-- On DOMContentLoaded, `clamped-text.js` checks `scrollHeight > clientHeight` (or `is-open` already on the container for pre-opened cards). If the text is actually clamped, it adds `is-clamped` to the container, which CSS uses to reveal the button (`.c-resource-card.is-clamped .c-text-button { display: inline-flex }`). Short descriptions are never shown a button.
+- The footer `.c-text-button` is **hidden by default via CSS** (same mixin).
+- On DOMContentLoaded, `clamped-text.js` checks `scrollHeight > clientHeight` (or `is-open` already on the container for pre-opened cards). If the text is actually clamped, it adds `is-clamped` to the container, which CSS uses to reveal the button (`.c-resource-card.is-clamped .c-resource-card__footer .c-text-button { display: inline-flex }`, from the mixin). Short descriptions are never shown a button.
 
 ### Conditional rendering
 | Prop | What it shows |
@@ -121,7 +121,7 @@ Used to simplify the inline format-mapping logic in `package_item_v2.html`.
 
 | Question | Decision |
 |----------|----------|
-| Should "More information" be conditional? | Yes — new `show_more_info` param (default `true`); the zero-resource HDX Connect card in `resources_list.html` passes `show_more_info=False` to suppress the button when there's no real `title_href` to link to |
+| Should "More information" be conditional? | Yes — new `show_more_info` param (default `true`); set it `False` to suppress the button when there's no real `title_href` to link to |
 | Where does the show-more button live relative to description? | In `__footer`, outside `__desc`; `data-module` placed on root card element to bridge both |
 | Shared JS or separate? | New shared `clamped-text.js` covering dataset-card + dataset-page-header + resource-card |
 | Format mapping? | New `h.hdx_format_to_icon_category()` Python helper; `package_item_v2.html` simplified to use it |

@@ -1,0 +1,30 @@
+// ============================================================
+// c-slug-preview — URL slug field + "URL: <prefix><slug> [Edit]" preview
+// ============================================================
+@import "../mixins.less";
+
+.c-slug-preview {
+    &__field[hidden] { display: none; }
+
+    &__preview {
+        .hdx-body-m();
+        display:     flex;
+        flex-wrap:   wrap;
+        align-items: baseline;
+        column-gap:  var(--hdx-space-2);
+        margin:      0;
+        color:       var(--hdx-neutral-85);
+
+        &[hidden] { display: none; }
+    }
+
+    &__label {
+        .hdx-body-m-medium();
+        color: var(--hdx-neutral-9);
+    }
+
+    &__url {
+        min-width:     0;
+        overflow-wrap: anywhere;
+    }
+}

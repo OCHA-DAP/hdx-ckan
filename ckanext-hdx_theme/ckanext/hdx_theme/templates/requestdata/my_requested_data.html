@@ -1,41 +1,25 @@
-{% extends "user/dashboard.html" %}
+{% extends "v2/user-dashboard-base.html" %}
 
-{% block subtitle %}{% endblock %}
-{% block dashboard_activity_stream_context %}{% endblock %}
-{% block page_header_inner %}{% endblock %}
+{% set user_nav_active  = 'hdx_connect_requests' %}
+{% set page_label       = _('HDX Connect Requests') %}
+{% set user_dict        = g.userobj %}
 
 {% block styles %}
-    {{ super() }}
-    {% asset 'requestdata/main-styles' %}
-    {% asset 'hdx_theme/requestdata-styles' %}
+  {{ super() }}
+  {% asset 'hdx_theme/v2-hdx-connect-page-styles' %}
 {% endblock %}
 
-{% set total_requests = requests_new | length + requests_open | length + total_archived_requests | length %}
-
-{% block primary_content_inner %}
-
-<div class="request-data-module">
-    <div class="requests-main-container">
-        {% snippet 'requestdata/snippets/requests_header.html', title='My Requests', total_requests=total_requests %}
-
-        {% snippet 'requestdata/snippets/section_base.html', state='new', title='New', requests=requests_new, template_type='user' %}
-        {% snippet 'requestdata/snippets/section_base.html', state='open', title='Open', requests=requests_open, template_type='user' %}
-
-        {% if requests_archive %}
-        {% snippet 'requestdata/snippets/order_requests.html', service_url=my_requests_url, current_order_name=current_order_name %}
-        {% endif %}
-
-        {% snippet 'requestdata/snippets/section_base.html', state='archive', title='Archived', requests=requests_archive, template_type='user' %}
-
-        <div class="alert alert-dismissible request-message-alert d-none" role="alert">
-            <div class="alert-text"></div>
-        </div>
-    </div>
-{#    {% resource 'requestdata/css/main.css' %}#}
-{#    {% resource 'hdx_theme/requestdata/request-data.css' %}#}
-
-</div>
-
+{% block scripts %}
+  {{ super() }}
+  {% asset 'hdx_theme/v2-hdx-connect-page-scripts' %}
 {% endblock %}
 
-
+{% block primary %}
+  {% snippet 'v2/hdx-connect-sections.html',
+      requests_new=requests_new,
+      requests_open=requests_open,
+      requests_archive=requests_archive,
+      list_title=page_label,
+      list_subtitle=_('Respond to or decline restricted dataset access requests from other users'),
+      title_tag='h1' %}
+{% endblock %}

@@ -84,6 +84,9 @@ class TestRequestOrg(object):
         assert result.status_code == 200
         assert CONST_REQUEST_CREATE_ORG['PAGE_TITLE'] in result.body
         assert CONST_REQUEST_CREATE_ORG['BODY_INFO_1ST_PARAGRAPH'] in result.body
+        assert CONST_REQUEST_CREATE_ORG['TEXTAREA_DATA_TYPE_LABEL'] in result.body
+        assert '<textarea name="role"' in result.body
+        assert result.body.count('c-step-pager__step--completed') == 1
 
         # no user
         result = app.post(url, data=NEW_ORGANIZATION_DATA, headers={})
@@ -95,6 +98,7 @@ class TestRequestOrg(object):
         assert result.status_code == 200
         assert CONST_COMPLETED_CREATE_ORG['PAGE_TITLE'] in result.body
         assert CONST_COMPLETED_CREATE_ORG['BODY_MAIN_TEXT'] in result.body
+        assert result.body.count('c-step-pager__step--completed') == 2
 
         # registered user, wrong organization data
         new_wrong_org_dict = {}

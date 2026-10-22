@@ -91,11 +91,10 @@ pages = [
     {'url_name': 'hdx_crisis_pages.show', 'usertype': 'all'},
     {'url_name': 'hdx_crisis_pages.show', 'usertype': None},
 
-    {'url_name': 'dashboard.organizations', 'usertype': 'all'},
-    {'url_name': 'activity.dashboard', 'usertype': 'all'},
-    {'url_name': 'hdx_user_dashboard.datasets', 'usertype': 'all'},
+    {'url_name': 'hdx_user.read_organizations', 'usertype': 'user', 'url_params': {'id': 'tester'}},
+    {'url_name': 'hdx_user.read', 'usertype': 'all', 'url_params': {'id': 'tester'}},
     {'url_name': 'dashboard.groups', 'usertype': 'all'},
-    {'url_name': 'hdx_user_dashboard.datasets', 'usertype': 'all', 'url_params': {'id': 'tester'}},
+    {'url_name': 'hdx_user.read', 'usertype': None, 'url_params': {'id': 'tester'}},
     {'url_name': 'hdx_splash.about_hrinfo', 'usertype': 'all'},
 ]
 
@@ -155,6 +154,19 @@ class TestPageLoad(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
                 self._try_page_load(test_client, url_name, 'tester', self.tester_token, url_params)
             if page['usertype'] == 'sysadmin' or page['usertype'] == 'all':
                 self._try_page_load(test_client, url_name, 'testsysadmin', self.testsysadmin_token, url_params)
+
+    def test_dashboard_redirects(self):
+        test_client = self.get_backwards_compatible_test_client()
+        user_page_url = h.url_for('hdx_user.read', id='tester')
+
+        for url in ['/dashboard', '/dashboard/?type=dataset&name=x']:
+            result = test_client.get(url, headers={'Authorization': self.tester_token})
+            assert result.status_code == 302, 'the removed Newsfeed should redirect'
+            assert result.headers['Location'].endswith(user_page_url), 'to the user page, without the query string'
+
+        result = test_client.get('/dashboard/')
+        assert result.status_code == 302
+        assert h.url_for('user.login') in result.headers['Location']
 
     def _try_page_load(self, test_client, url_name, username, token, url_params=None):
         result = None

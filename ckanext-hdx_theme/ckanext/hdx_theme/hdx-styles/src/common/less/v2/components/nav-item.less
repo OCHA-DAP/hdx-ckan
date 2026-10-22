@@ -1,7 +1,8 @@
 @import "../mixins.less";
 
 // ============================================================
-// c-nav-item — top-bar navigation item with active underline
+// c-nav-item — navigation item with active underline
+// (navbar at size m, vertical menus at size s)
 // ============================================================
 // Figma source: "Navigation and Pagination"
 // ============================================================
@@ -12,10 +13,9 @@
 // ────────────────────────────────────────────────────────────
 
 .c-nav-item {
-    display:         inline-flex;
+    display:         flex;
     align-items:     center;
-    justify-content: center;
-    height:          4rem;  // 64 px — fixed nav item height
+    justify-content: flex-start;
     padding:         0 var(--hdx-space-2);   // 0 8
     box-sizing:      border-box;
     border-bottom:   4px solid transparent;   // always take up space
@@ -29,6 +29,11 @@
 
     &__label { position: relative; line-height: var(--hdx-lh-normal); }
     &__chevron { width: var(--hdx-space-6); flex-shrink: 0; }  // 24 px
+
+    // ── Sizes ───────────────────────────────────────────────
+
+    &--size-m { height: 4rem; }  // 64 px — navbar
+    &--size-s { height: 3rem; }  // 48 px — vertical menu
 
     // ── States ──────────────────────────────────────────────
 
@@ -45,6 +50,8 @@
     &:hover:not(&--disabled) {
         color: @c-nav-color-active;
     }
+
+    &:focus-visible { .hdx-focus-ring(); }
 
     &--disabled {
         border-bottom: 4px solid var(--hdx-neutral-3);  // #c4d0d1 lightgray

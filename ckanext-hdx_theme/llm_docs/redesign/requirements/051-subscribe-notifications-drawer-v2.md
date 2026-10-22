@@ -374,7 +374,7 @@ All four notification modals are replaced by drawer panels **on the dataset page
 
 `page-header.html` now loads `notification_platform/buttons.html` to render the opt-in / opt-out CTAs in the dataset header. Parameters `notification_object_type`, `notification_object_id`, and `notification_object_dict` are threaded from `hdx_read.html` → `page-header.html` → `buttons.html`.
 
-`templates/user/notifications.html` (hub page) no longer includes `modals.html` or notification scripts — unsubscribe happens on the object page via navigation link (see Decision 7).
+`templates/user/notifications.html` (hub page) never includes `modals.html`; it renders only the two unsubscribe drawers from `notification_platform/unsubscribe_drawers.html`, which `modals.html` also includes (see Decision 7).
 
 ### 4.4 JS Migration Strategy
 
@@ -474,7 +474,7 @@ Form elements inside the drawer body stretch to fill the available width (`align
 | `fanstatic/notification_platform/util.js` | jQuery → vanilla JS; `$.ajax` → `fetch`; Bootstrap Modal → `window.hdxV2Drawer()` |
 | `fanstatic/notification_platform/subscribe.js` | jQuery → vanilla JS; `hide.bs.modal` → `addEventListener('drawer:close', ...)` |
 | `fanstatic/notification_platform/unsubscribe.js` | jQuery → vanilla JS; hub click handler removed |
-| `templates/user/notifications.html` | Unsubscribe link is real navigation (`?_unsubscribe_token=...`); `modals.html` snippet and notification scripts removed |
+| `templates/user/notifications.html` | Unsubscribe opens the unsubscribe drawers on the same page (Decision 7); no `modals.html` |
 | `hdx-styles/src/common/less/v2/components/input-field.less` | `.c-form-validator__live-feedback` BEM styles appended (live feedback list with `::before` icons) |
 | `fanstatic/webassets.yml` | Added `v2-form-validator-scripts` bundle; added `jquery.js` to `v2-page-scripts`; added `drawer.js` to `v2-components-scripts` |
 | `templates/v2/components.html` | Drawer demo section (3 generic lorem ipsum drawers); "Search input — with label" demo subsection |
@@ -492,4 +492,4 @@ Form elements inside the drawer body stretch to fill the available width (`align
 | 4 | **New `v2/form-validator.js` created (vanilla JS, not CKAN module).** The existing `hdx-form-validator` module remains for v1 pages. v2 pages use `data-hdx-v2-form-validator` on `<form>` and load `v2-form-validator-scripts`. All v1 validation types preserved; live feedback uses `c-form-validator__live-feedback*` BEM classes with CSS `::before` icons instead of FontAwesome. |
 | 5 | **`drawer.js` is part of a `v2-components-scripts` bundle** (or equivalent shared v2 component bundle), keeping it consistent with the existing v2 loading pattern. |
 | 6 | **The subscribe form title (Merriweather, 2rem, bold) is rendered in the drawer header** via the `title` param of the drawer snippet. The notification content template does not render its own heading. `.c-drawer__title` is styled with Merriweather bold. |
-| 7 | **Hub unsubscribe uses navigation link, not AJAX.** The `notifications.html` hub page renders `<a href="{{ subscription.object_link }}?_unsubscribe_token=...">` — a real navigation link. On arrival at the object page, the existing Python token validation + `unsubscribe.js` auto-opens the unsubscribe drawer. No drawers or JS needed on the hub page itself. |
+| 7 | **Hub unsubscribe opens the drawer on the same page** (task 078). Each Unsubscribe button carries its subscription's data; `fanstatic/v2/pages/notifications-settings.js` fills the drawers of `notification_platform/unsubscribe_drawers.html` and opens them, and `onUnsubscribeSubmit` posts. Object pages and email links keep the `?_unsubscribe_token` flow. |

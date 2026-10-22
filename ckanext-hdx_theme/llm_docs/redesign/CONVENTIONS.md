@@ -68,13 +68,13 @@ template variables instead of re-declaring flex rules in page LESS:
 
 | Class | Role |
 |---|---|
-| `hdx-v2-content-columns--gap` | column gap `space-3`, `space-6` at XL (Locations) |
-| `hdx-v2-content-columns--gap-xl` | column gap `space-6` at XL only (Dataset, Resource) |
-| `hdx-v2-content-columns--stack` | column below XL, row at XL (Org Members/Stats) |
+| `hdx-v2-content-columns--gap` | column gap `space-3`, `space-6` at XL |
+| `hdx-v2-content-columns--gap-xl` | column gap `space-6` at XL only |
+| `hdx-v2-content-columns--stack` | column below XL, row at XL |
 | `hdx-v2-content-columns__sidebar` | sidebar column — `flex: 0 0 25%` at XL |
-| `hdx-v2-content-columns__sidebar--xl-only` | hidden below XL (Search, Dataset, Resource, landing pages) |
-| `hdx-v2-content-columns__sidebar--sticky` | sticky sidebar (Search, Locations) |
-| `hdx-v2-content-columns__sidebar--right` | rendered after the content column (Org Members) |
+| `hdx-v2-content-columns__sidebar--xl-only` | hidden below XL |
+| `hdx-v2-content-columns__sidebar--sticky` | sticky sidebar |
+| `hdx-v2-content-columns__sidebar--right` | rendered after the content column |
 | `hdx-v2-content-columns__content` | content column — `flex: 1; min-width: 0` |
 
 Page-specific classes remain **only** for genuinely page-specific extras
@@ -87,7 +87,7 @@ The underlying mixins in `mixins.less` (`.v2-sidebar-flex()`,
 are built from — reach for them only in layouts the generic classes cannot
 express.
 
-`.c-anchor-links-wrapper` has `position: sticky; top: var(--hdx-space-12)` built in — pages that use `c-anchor-links` for sidebar navigation (Dataset, HAPI) get stickiness through the component and do **not** need the `--sticky` modifier on the sidebar container.
+`.c-anchor-links-wrapper` has `position: sticky; top: var(--hdx-space-12)` built in — pages that use `c-anchor-links` for sidebar navigation get stickiness through the component and do **not** need the `--sticky` modifier on the sidebar container.
 
 ---
 
@@ -157,7 +157,7 @@ Use `is-*` classes only for persistent states set by the server or JavaScript.
 | Focus | `:focus-visible` in LESS |
 | Pressed | `:active` in LESS |
 | Selected / current | `is-active` class (server or JS) |
-| Unavailable | `is-disabled` class (server or JS) |
+| Unavailable | `is-disabled` class (server or JS); JS: `window.hdxV2.setDisabled(el, disabled)` |
 | Expanded | `is-open` class (JS only) |
 | Scroll lock (body) while an overlay is open | `is-<component>-open` class on `<body>` (JS only), e.g. `is-drawer-open` |
 
@@ -197,16 +197,16 @@ See [007-stable-border-width-across-states.md](requirements/007-stable-border-wi
 All alert-shaped feedback — page-level flash banners (`v2/page.html`) and
 form/drawer error & status messages — uses the shared `c-alert` component
 (`templates/v2/components/alert.html` + `less/v2/components/alert.less`),
-whether server-rendered (Contact Contributor error summary, login page,
-flash messages) or JS-toggled (notification drawers, org-members group
-message and request approve/decline, org member add/remove/invite flash).
+whether server-rendered or JS-toggled.
 
 - Variants: `success` | `warning` | `info` | `error` (default). Pass
   `variant='...'` to the snippet; never hand-roll a colored `<p>` for a
   status message.
 - Visibility contract: visible by default; JS-managed instances render with
   `hidden=True` and toggle the `hidden` **attribute** (`alert.hidden = false`).
-  No `is-visible`/display classes.
+  No `is-visible`/display classes. `window.hdxV2.showAlert(alertEl, text, variant)`
+  (`utils.js`) sets the message and unhides the alert; the optional `variant`
+  swaps the `c-alert--*` class and the role.
 - Dismissible by default (renders a `.c-alert__close` button); pass
   `dismissible=False` only when there's a specific reason an instance
   shouldn't be dismissed independently of the surrounding form/drawer.
@@ -214,9 +214,8 @@ message and request approve/decline, org member add/remove/invite flash).
   itself — that wipes the close button. Target the nested `.c-alert__message`
   span instead.
 - Do not create page- or drawer-specific alert classes.
-- Full-screen "success state" swaps (Contact Contributor, Request Access,
-  Forgot Password) that re-title an entire page/card header are a distinct,
-  intentional pattern — not alert messages — and are out of scope for this
+- Full-screen "success state" swaps that re-title an entire page/card header
+  are a distinct, intentional pattern — not alert messages — and are out of scope for this
   component.
 
 ---
@@ -231,24 +230,25 @@ Exceptions: global container cap (1320px), fixed-height elements (buttons, input
 
 ## Page-title scale — `.hdx-page-title-scale()`
 
-Canonical top-of-page title scale (24 → 28 → 32px Bold) in `mixins.less`, shared by `c-page-header`'s
-hero `<h1>` and the homepage's section headings (`.hdx-section-heading()`).
+Canonical top-of-page title scale (24 → 28 → 32px Bold) in `mixins.less`.
 
 ---
 
 ## List header pattern — `.hdx-list-header-count()` / `-empty()`
 
-The search page's header block (`hdx-v2-list-header`) and the org Members tab's heading row
-(`hdx-v2-org-members__header`) share the same row shape via `.hdx-list-header-row()` /
+The list header block (`hdx-v2-list-header`, shared snippet `v2/list-header.html`) takes its row shape from `.hdx-list-header-row()` /
 `.hdx-list-header-row-left()` in `mixins.less` — title+count grouped left, sort/filter controls
-pushed right by the left group's `flex:1`. Their titles call `.hdx-section-title()` like every
-other in-page heading, *except* on the main `/dataset` search page, where an `emphasize_title`
-param bumps the title (and its count) to the page-title font-size scale instead. Dataviz Gallery
-and Archived Dataviz reuse `c-page-header` directly (`title` + `title_count` params) instead. The
+pushed right by the left group's `flex:1`. Its controls and the MD/SM overlay (`v2/filter-overlay.html`,
+`#hdx-filter-overlay`; `show_controls=False` drops the overlay's) render `v2/search-nav-controls.html`, whose `sort_key` / `page_size_key` set the URL
+params the dropdowns navigate on (default `sort` / `ext_page_size`). The controls are XL-only
+(`__controls--xl-only`) when the list header renders the Filter button, and visible at every width otherwise
+(sort-only lists keep the sort beside the list). Their titles call `.hdx-section-title()` like every
+other in-page heading. The list header's `title_size` param changes that: `'page'` bumps the title and count to the page-title font-size scale, and
+`'dashboard'` uses `.hdx-dashboard-title()` with a `.hdx-body-m()` count. `list_subtitle` adds a full-width `__subtitle` line; the header row wraps, so
+the controls drop under the title in a narrow column. Hero-scale list
+titles use `c-page-header` directly (`title` + `title_count` params) instead. The
 count styling is factored into `.hdx-list-header-count()` (base: family/weight/color, no size) plus
-`.hdx-section-title-count()` (adds the 18→20px ramp, used by the default list-header and Members
-tab) or `.hdx-page-title-font-size()` directly (24/28/32px, used by the `emphasize_title` variant
-and `c-page-header`'s own `title_count` badge).
+`.hdx-section-title-count()` (adds the 18→20px ramp, used by the default list-header) or `.hdx-page-title-font-size()` directly (24/28/32px, used by `title_size='page'`).
 
 ---
 
@@ -259,11 +259,11 @@ Pages with their own anchor-linked content sections (`hdx-v2-dataset-section` on
 component — each page has its own extra variants (the dataset page adds `&__title-row`, `&__chevron`,
 and a `&--collapsible` modifier the resource page doesn't need). The padding/scroll-margin/header/
 body styling is factored into `mixins.less` (`.hdx-page-section-wrapper()`, `.hdx-page-section-header()`,
-`.hdx-page-section-body()`) — call these instead of re-declaring the rules.
+`.hdx-page-section-body()`) — call these instead of re-declaring the rules. The header row wraps
+(`flex-wrap: wrap`), so an action drops under the title in a narrow column, and
+`.hdx-page-section-header()` can also be called on its own for a title + action row.
 
-The section title itself calls `.hdx-section-title()` (18px SM / 20px MD+ Semibold) — also used by
-org's tab titles, HAPI's/Signals' landing sections, the country page's "Data Grid Availability"
-heading, and the Locations page's controls heading and per-letter dividers.
+The section title itself calls `.hdx-section-title()` (18px SM / 20px MD+ Semibold).
 
 ---
 
@@ -297,7 +297,8 @@ Update ARIA attributes whenever state changes:
 |-------|-----------|
 | Panel open/closed | `aria-expanded="true/false"` on the trigger |
 | Widget hidden/visible | `aria-hidden="true/false"` |
-| Current nav item | `aria-current="true"` |
+| Link to the current page (nav-item, tabs, pagination) | `aria-current="page"` |
+| Current in-page anchor (anchor-links) | `aria-current="true"` |
 | Tooltip association | `aria-describedby` on trigger, `id` + `role="tooltip"` on tooltip element |
 
 ### Focus management
@@ -381,6 +382,8 @@ Components render an `attrs` dict with a separating space before each attribute:
 
 Leaving any of these unset produces an unclassed wrapper div and makes CSS targeting impossible.
 
+**Right-hand column:** fill `{% block tertiary_content %}` and set `tertiary_class`. `page.html` renders it as a third div after the content column, only when the block is non-empty (like `secondary_content`). `user-dashboard-base.html` sets `tertiary_class`.
+
 **Single-column pages** (no sidebar): set `content_class` only. `page.html` applies `content_class` whenever it is defined (the former guard `and secondary_block_output != ''` was removed). Use the generic content class — it provides `flex: 1; min-width: 0`:
 
 ```jinja2
@@ -405,7 +408,7 @@ The `--white` modifier is defined in `layout.less`. Do **not** override `{% bloc
 
 ## `quick_links` — header/footer Products menus
 
-`page.html` fetches the quick links once (`quick_links`) and passes them to `v2/header.html` and `v2/footer.html`. A page that doesn't render those menus (error page, auth pages) sets this at the top, so it runs no quick-links query and the error page renders even after a failed DB transaction:
+`page.html` fetches the quick links once (`quick_links`) and passes them to `v2/header.html` and `v2/footer.html`. A page that doesn't render those menus sets this at the top, so it runs no quick-links query and the error page renders even after a failed DB transaction:
 
 ```jinja2
 {% set quick_links = [] %}
@@ -472,11 +475,11 @@ v2-{lib-name}-scripts                          # shared utility lib — loaded e
 
 ## Web assets — preload chain
 
-Only the two foundational bundles may declare `extra: preload:` in `webassets.yml`:
+The two foundational bundles declare `extra: preload:` in `webassets.yml`:
 - `v2-page-styles` preloads `v2-components-styles`
 - `v2-page-scripts` preloads `v2-components-scripts` + `v2-search-scripts`
 
-All other page-specific bundles have **no preload**. Their dependencies are already loaded by the time they run because `v2/page.html` always loads the base bundles first.
+All other page-specific bundles have **no preload**, except `v2-resource-page-scripts` (preloads `v2-datatable-scripts`) and `v2-shape-view-scripts` (preloads `charting-scripts`). Their dependencies are already loaded by the time they run because `v2/page.html` always loads the base bundles first.
 
 Shared utility lib bundles (`v2-{lib-name}-scripts`, e.g. `v2-carousel-scripts`) are **not** declared as preloads. Load them explicitly with `{% asset %}` in the consuming template, before the page-specific bundle:
 
@@ -504,11 +507,13 @@ Each component gets its own file in `components/`. Do not group unrelated compon
 
 ## Form-field components — which one to use
 
-Three distinct components cover form fields; pick by field type, don't extend the wrong one:
+Five distinct components cover form fields; pick by field type, don't extend the wrong one:
 
 - `search-input.html` — search boxes only (`type='search'`).
 - `text-field.html` — generic text/email/password/textarea fields (password-toggle, multiline).
-- `select.html` — native `<select>`-backed fields.
+- `select.html` — native `<select>`-backed fields; `searchable=True` for long option lists (Select2).
+- `slug-preview.html` — URL slug fields with a "URL: prefix/slug [Edit]" preview (wraps `text-field.html`).
+- `image-upload.html` — image fields that take an upload or a linked URL (CKAN url/upload/clear fields).
 
 `search-input.html` used to cover the generic-field role too; it split into `text-field.html` once form pages (contact contributor, request access, auth) needed password toggles and textareas.
 
@@ -522,7 +527,7 @@ files:
 
 - `c-<name>-list` — vertical flex list (`c-dataset-card-list`,
   `c-resource-card-list`, `c-org-list-card-list`, `c-member-list-card-list`,
-  `c-activity-card-list`, `c-stats-card-list`)
+  `c-request-card-list`, `c-activity-card-list`, `c-stats-card-list`)
 - `c-<name>-grid` — grid (`c-content-card-grid`, `c-selection-item-grid`,
   `c-showcase-card-grid`, `c-dataviz-card-grid`)
 - `c-<name>-row` — inline flex-wrap row (`c-kpi-card-row`, `c-selection-item-row`)
@@ -542,6 +547,8 @@ Page LESS keeps only page-rhythm concerns around the wrapper (e.g.
 ## Inline single-consumer utilities
 
 If a utility class or function has exactly one consumer and no realistic reuse case, inline it into the consumer rather than maintaining a separate component file. Promote it to a shared module (`utils.js`) the moment a second consumer needs the same logic — never copy it. (`FocusTrap` started inlined into `navbar.js` from `focus-trap.js`; once `components/drawer.js` needed the same Tab-trap logic, it moved to `window.hdxV2.FocusTrap` in `utils.js`.)
+
+CSRF headers for `fetch` POSTs: `window.hdxV2.post(url, body)` (`utils.js`) for a POST that returns JSON; otherwise call `window.hdxUtil.net.getCsrfTokenAsObject()` directly (`base/hdx-util-lib.js`, in the `hdx_theme/ckan` bundle that `base.html` loads on every page) — no local wrapper functions.
 
 ---
 

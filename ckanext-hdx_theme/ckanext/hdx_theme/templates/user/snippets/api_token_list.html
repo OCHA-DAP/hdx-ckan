@@ -1,53 +1,24 @@
-<table class="table table-stripped table-condensed table-header table-hover table-bordered">
-  <thead>
-    <tr>
-      {% block hdx_head_cells %}
-        {% block head_cell_token %}<th scope="col">{{ _('App/Token name') }}</th>{% endblock %}
-        {% block head_cell_last_access %}<th scope="col">{{ _('Last access') }}</th>{% endblock %}
-        {% block head_cell_expires_at %}<th scope="col">{{ _('Expires at') }}</th>{% endblock %}
-        {% block head_cell_actions %}<th scope="col">{{ _('Actions') }}</th>{% endblock %}
-      {% endblock hdx_head_cells %}
-    </tr>
-  </thead>
-  <tbody>
-    {% for token in tokens %}
-      <tr>
-        {% block hdx_token_cells scoped %}
-          {% block token_cell_token %}
-            <td colspan="1">
-              <code>
-                {{ token.name }}
-              </code>
-            </td>
-          {% endblock token_cell_token %}
-          {% block token_cell_last_access %}
-            <td>
-              {{ h.render_datetime(token.last_access, date_format='%-d %B %Y, %H:%M:%S UTC') or _('Never') }}
-            </td>
-          {% endblock token_cell_last_access %}
-          {% block token_cell_expires_at %}
-            <td>
-              {% with extras = token.plugin_extras.expire_api_token|default(None) %}
-                {{ h.render_datetime(extras.exp, date_format='%-d %B %Y, %H:%M:%S UTC') }}
-              {% endwith  %}
-            </td>
-          {% endblock token_cell_expires_at %}
-          {% block token_cell_actions %}
-            <td>
-              {% set action = h.url_for("user.api_token_revoke", id=user['name'], jti=token['id']) %}
-              <form action="{{ action }}" method="POST">
-                {{ h.csrf_input() }}
-                <div class="btn-group">
-                  <button type="submit" href="{{ action }}" class="btn btn-danger btn-sm" title="{{ _('Revoke') }}"
-                          data-module="confirm-action">
-                      {{_('Revoke')}}
-                  </button>
-                </div>
-              </form>
-            </td>
-          {% endblock token_cell_actions %}
-        {% endblock hdx_token_cells %}
-      </tr>
-    {% endfor %}
-  </tbody>
-</table>
+{% set date_format = '%-d %B %Y, %H:%M:%S UTC' %}
+{% set table = namespace(rows=[]) %}
+{% for token in tokens %}
+  {% set revoke_form %}
+    <form method="POST" action="{{ h.url_for('user.api_token_revoke', id=user_dict.name, jti=token.id) }}">
+      {{ h.csrf_input() }}
+      {% snippet 'v2/components/button.html',
+          style='tertiary', size='s', button_type='submit',
+          label=_('Revoke'),
+          attrs={'aria-label': _('Revoke {name}').format(name=token.name)} %}
+    </form>
+  {% endset %}
+  {% set extras = token.plugin_extras.expire_api_token|default(None) %}
+  {% set table.rows = table.rows + [[
+      token.name,
+      h.render_datetime(token.last_access, date_format=date_format) or _('Never'),
+      h.render_datetime(extras.exp, date_format=date_format),
+      revoke_form
+  ]] %}
+{% endfor %}
+
+{% snippet 'v2/components/table.html',
+    headers=[_('App/Token name'), _('Last access'), _('Expires at'), _('Actions')],
+    rows=table.rows %}

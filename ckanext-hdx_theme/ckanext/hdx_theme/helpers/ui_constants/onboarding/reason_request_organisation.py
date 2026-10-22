@@ -13,6 +13,7 @@ CONSTANTS = {
     'BODY_INFO_TEXT': '''Please indicate:''',
     'BODY_INFO_1ST_ENTRY_TEXT': '''Your relationship to the organisation you want to join''',
     'BODY_INFO_2ND_ENTRY_TEXT': '''If you're joining the organisation to share data, the type of data you want to share''',
+    'BODY_ORG_NOT_FOUND': REQUEST_JOIN_ORGANISATION_CONSTANTS['BODY_ORG_NOT_FOUND'],
 
     'BUTTON_SUBMIT': '''Submit''',
     'BUTTON_CANCEL': '''Cancel''',

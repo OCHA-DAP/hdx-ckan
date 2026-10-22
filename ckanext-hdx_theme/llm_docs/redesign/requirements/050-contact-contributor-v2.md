@@ -41,10 +41,10 @@ v1 renders four BEM form snippets directly inside the template:
 
 | Item | Detail |
 |---|---|
-| **View class** | `DatasetContactContributorView` — `ckanext-hdx_package/ckanext/hdx_package/views/dataset.py` (lines 547–649) |
+| **View class** | `DatasetContactContributorView` — `ckanext-hdx_package/ckanext/hdx_package/views/dataset.py` |
 | **Logic class** | `DatasetContactContributorLogic` — `ckanext-hdx_package/ckanext/hdx_package/controller_logic/dataset_contact_contributor_logic.py` |
-| **Email action** | `hdx_send_mail_contributor` — `ckanext-hdx_package/ckanext/hdx_package/actions/get.py` (lines 888–944) |
-| **Auth** | `hdx_send_mail_contributor` — `ckanext-hdx_package/ckanext/hdx_package/actions/authorize.py` (lines 52–66): user must be authenticated |
+| **Email action** | `hdx_send_mail_contributor` — `ckanext-hdx_package/ckanext/hdx_package/actions/get.py` |
+| **Auth** | `hdx_send_mail_contributor` — `ckanext-hdx_package/ckanext/hdx_package/actions/authorize.py`: user must be authenticated |
 | **Topics** | `ckanext-hdx_package/ckanext/hdx_package/helpers/membership_data.py` |
 | **URL** | `/dataset/<id>/contact/` → named route `hdx_dataset.contact_contributor` |
 
@@ -219,7 +219,7 @@ base component). This modifier overrides the base styles for the textarea case:
 Rewrite `contact_contributor.html` in-place to extend `v2/page.html` directly. No `{% if v2 %}` gate — this page had no v1 re-use requirement. All v1 content removed; analytics blocks preserved.
 
 This page's layout CSS (row/content/column/header/form/dataset-name/buttons) lives in the shared
-`pages/message-form.less` (`v2-message-form-page-styles` bundle), also used by Request Access —
+`pages/message-form.less` (`v2-message-form-page-styles` bundle) —
 this page has no page-specific LESS file of its own.
 
 ### Data flow (unchanged from v1)
@@ -277,7 +277,7 @@ The analytics JS asset is loaded unchanged — only inside the `{% if message_se
 v1 uses a Bootstrap `.alert.alert-danger`. v2 renders:
 - **Top-level summary** above the form: the shared `c-alert` snippet
   (`{% snippet 'v2/components/alert.html', message=error_summary %}`) styled with
-  `--hdx-error-6` tint and red border. Reused unchanged by drawer forms.
+  `--hdx-error-6` tint and red border.
 - **Per-field errors** inside each component: `text-field.html` takes an `errors` parameter — when
   set, a `<span class="c-search-input__error">` is appended inside the wrapper (BEM class carried
   over from `search-input.html`), styled in `--hdx-error-6`, CSS in `input-field.css`. `select.html`
@@ -350,7 +350,7 @@ At SM, buttons remain right-aligned side-by-side — matching Figma.
 
 4. **Error display:** Both per-field and top-level summary, matching v1 behavior.
    - Top-level: the shared `c-alert` snippet above the form, styled with
-     `--hdx-error-6` tint and red border — reused unchanged by drawer forms.
+     `--hdx-error-6` tint and red border.
    - Per-field: `text-field.html` and `select.html` both take an `errors` param; when set, a
      `<span class="c-search-input__error">` is rendered inside the wrapper (BEM class carried
      over from `search-input.html`). CSS in `input-field.css`.

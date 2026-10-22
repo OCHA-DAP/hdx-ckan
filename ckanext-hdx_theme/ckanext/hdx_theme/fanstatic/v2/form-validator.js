@@ -261,28 +261,8 @@
           removeErrorMessages(input);
         }
       });
-      if (isFormValid) {
-        enableSubmitButton();
-      } else {
-        disableSubmitButton();
-      }
+      if (submitButton) window.hdxV2.setDisabled(submitButton, !isFormValid);
       return isFormValid;
-    }
-
-    // === Submit button ===
-
-    function disableSubmitButton() {
-      if (!submitButton) return;
-      submitButton.classList.add('is-disabled');
-      submitButton.setAttribute('disabled', '');
-      submitButton.setAttribute('aria-disabled', 'true');
-    }
-
-    function enableSubmitButton() {
-      if (!submitButton) return;
-      submitButton.classList.remove('is-disabled');
-      submitButton.removeAttribute('disabled');
-      submitButton.removeAttribute('aria-disabled');
     }
 
     // === Scroll to error ===

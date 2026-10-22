@@ -58,7 +58,7 @@ Parameters:
 | `separator` | string | `'/'` | Separator between crumbs. |
 | `extra_classes` | string | `''` | Additional CSS classes on the root `<nav>`. |
 
-LESS: `breadcrumb.less` lines 225–260 — flex row, 8px gap, 12px font, CSS custom properties.
+LESS: `breadcrumb.less` — flex row, 8px gap, 12px font, CSS custom properties.
 No Bootstrap dependency. Classes: `.c-breadcrumb`, `.c-breadcrumb__item`,
 `.c-breadcrumb__separator`, `.c-breadcrumb__current`.
 
@@ -69,7 +69,7 @@ current page and breaks accessibility expectations.
 
 ### Legacy breadcrumb (currently active on search page)
 
-`v2/page.html` (lines 58–75) defines the `toolbar` block:
+`v2/page.html` defines the `toolbar` block:
 
 ```
 .toolbarRow > .hdx-v2-container > .toolbar
@@ -84,7 +84,7 @@ current page and breaks accessibility expectations.
   {% endblock %}
 ```
 
-`search/search.html` (lines 50–52) provides:
+`search/search.html` provides:
 
 ```jinja2
 {% block breadcrumb_content %}

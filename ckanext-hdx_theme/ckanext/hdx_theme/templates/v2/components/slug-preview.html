@@ -1,0 +1,75 @@
+{#
+  Snippet: slug-preview.html
+  Path:    templates/v2/components/slug-preview.html
+
+  Renders a c-slug-preview — a URL slug field (text-field.html) and a
+  "URL: <prefix><slug> [Edit]" preview row. With JS (slug-preview.js, page-loaded
+  `v2-slug-preview-scripts`) the preview replaces the field unless the field has
+  errors, the slug follows the `target_id` field while that field was empty at
+  load and the slug hasn't been typed into, and Edit (or a failed native
+  `required` check) reveals the field.
+  Without JS only the field renders.
+
+  Parameters
+  ─────────────────────────────────────────────────
+  name                {string}  input name attr.  default: 'name'
+  id                  {string}  input id attr (also prefixes the field wrapper id).
+                                default: 'field-slug'
+  value               {string}  Current slug.  default: ''
+  label               {string}  Field and preview label.  default: 'URL'
+  required            {bool}    Required field (asterisk + native required).  default: False
+  errors              {list|string}  Field error(s); the field stays visible.  default: None
+  placeholder         {string}  Input placeholder.  default: ''
+  prefix              {string}  Text before the slug in the preview (domain + path).
+                                default: ''
+  preview_placeholder {string}  Preview text while the slug is empty.  default: '<slug>'
+  target_id           {string}  id of the field the slug follows.  default: ''
+  extra_classes       {string}  default: ''
+  ─────────────────────────────────────────────────
+  Example
+
+  {% snippet 'v2/components/slug-preview.html',
+      name='name', id='field-url', value=data.name, required=True,
+      prefix='data.humdata.org/organization/', preview_placeholder='<organization>',
+      target_id='field-title' %}
+#}
+
+{% set name                = name                if name                is defined else 'name' %}
+{% set id                  = id                  if id                  is defined else 'field-slug' %}
+{% set value               = value               if value               is defined else '' %}
+{% set label               = label               if label               is defined else _('URL') %}
+{% set required            = required            if required            is defined else false %}
+{% set errors              = errors              if errors              is defined else None %}
+{% set placeholder         = placeholder         if placeholder         is defined else '' %}
+{% set prefix              = prefix              if prefix              is defined else '' %}
+{% set preview_placeholder = preview_placeholder if preview_placeholder is defined else '<slug>' %}
+{% set target_id           = target_id           if target_id           is defined else '' %}
+{% set extra_classes       = extra_classes       if extra_classes       is defined else '' %}
+{% set field_id = id ~ '-field' %}
+
+<div class="c-slug-preview{{ ' ' ~ extra_classes if extra_classes else '' }}"
+     data-slug-preview
+     {% if target_id %}data-slug-preview-target="{{ target_id }}"{% endif %}
+     {% if errors %}data-slug-preview-error{% endif %}>
+  <div class="c-form-field c-slug-preview__field" id="{{ field_id }}" data-slug-preview-field>
+    {% snippet 'v2/components/text-field.html',
+        size='m',
+        name=name,
+        id=id,
+        label=label,
+        required=required,
+        value=value,
+        placeholder=placeholder,
+        errors=errors %}
+  </div>
+  <p class="c-slug-preview__preview" data-slug-preview-preview hidden>
+    <span class="c-slug-preview__label">{{ label }}:</span>
+    <span class="c-slug-preview__url">{{ prefix }}<span data-slug-preview-value data-slug-preview-placeholder="{{ preview_placeholder }}">{{ value or preview_placeholder }}</span></span>
+    {% snippet 'v2/components/text-button.html',
+        style='primary',
+        size='m',
+        tag='button',
+        label=_('Edit'),
+        attrs={'aria-controls': field_id, 'aria-expanded': 'false', 'data-slug-preview-edit': ''} %}
+  </p>
+</div>

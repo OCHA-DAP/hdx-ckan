@@ -1,0 +1,48 @@
+// ============================================================
+// c-image-upload — image field: upload / link / remove
+// Figma: llm_docs/redesign/figma_exports/xl-edit-org-page.html
+// ============================================================
+@import "../mixins.less";
+
+.c-image-upload {
+    &__attached,
+    &__web,
+    &__blank {
+        display:     flex;
+        flex-wrap:   wrap;
+        align-items: center;
+        gap:         var(--hdx-space-3);
+
+        &[hidden] { display: none; }
+    }
+
+    &__thumb {
+        display:    block;
+        max-width:  100%;
+        max-height: var(--hdx-space-16);
+        object-fit: contain;
+
+        &[hidden] { display: none; }
+    }
+
+    &__name {
+        .hdx-body-m();
+        min-width:     0;
+        overflow-wrap: anywhere;
+        color:         var(--hdx-neutral-85);
+
+        &:empty { display: none; }
+    }
+
+    &__url {
+        display:        flex;
+        flex-direction: column;
+        flex:           1;
+        min-width:      0;
+    }
+
+    &__error {
+        .hdx-body-s();
+        color: var(--hdx-error-6);
+    }
+}
