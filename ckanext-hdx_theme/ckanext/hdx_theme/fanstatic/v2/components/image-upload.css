@@ -1,0 +1,47 @@
+.c-image-upload__attached,
+.c-image-upload__web,
+.c-image-upload__blank {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--hdx-space-3);
+}
+.c-image-upload__attached[hidden],
+.c-image-upload__web[hidden],
+.c-image-upload__blank[hidden] {
+  display: none;
+}
+.c-image-upload__thumb {
+  display: block;
+  max-width: 100%;
+  max-height: var(--hdx-space-16);
+  object-fit: contain;
+}
+.c-image-upload__thumb[hidden] {
+  display: none;
+}
+.c-image-upload__name {
+  font-family: var(--hdx-font-body);
+  font-size: var(--hdx-fs-m);
+  font-weight: var(--hdx-fw-regular);
+  line-height: var(--hdx-lh-normal);
+  min-width: 0;
+  overflow-wrap: anywhere;
+  color: var(--hdx-neutral-85);
+}
+.c-image-upload__name:empty {
+  display: none;
+}
+.c-image-upload__url {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+.c-image-upload__error {
+  font-family: var(--hdx-font-body);
+  font-size: var(--hdx-fs-s);
+  font-weight: var(--hdx-fw-regular);
+  line-height: var(--hdx-lh-normal);
+  color: var(--hdx-error-6);
+}

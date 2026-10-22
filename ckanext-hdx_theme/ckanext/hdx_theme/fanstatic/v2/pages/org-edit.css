@@ -1,0 +1,20 @@
+.hdx-v2-org-edit__section-title {
+  font-family: var(--hdx-font-display);
+  font-weight: var(--hdx-fw-semibold);
+  line-height: var(--hdx-lh-normal);
+  color: var(--hdx-neutral-95);
+  margin: 0;
+  font-size: var(--hdx-fs-l);
+}
+@media (min-width: 48rem) {
+  .hdx-v2-org-edit__section-title {
+    font-size: var(--hdx-fs-xl);
+  }
+}
+.hdx-v2-org-edit__danger {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--hdx-space-3);
+}

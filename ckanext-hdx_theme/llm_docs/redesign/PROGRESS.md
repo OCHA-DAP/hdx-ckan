@@ -116,6 +116,7 @@ CSS custom property equivalents (`--hdx-*`) are defined in `v2/foundation.css` (
 | API Tokens (user settings) | `user/api_tokens.html` | Extends `v2/user-dashboard-base.html`; HDX `HDXApiTokenView` override of core's list/create view (bare `user_show`, 404 for unknown ids); create form of `c-form-field`s + `c-button`, token list via `table.html` with a tertiary `c-button` Revoke form per row (core's revoke view); the new token shows once in the success `c-alert` flash (`user/snippets/api_token_created.html`, `c-copy-button`); profile header on another user's page; see `requirements/077-user-settings-api-tokens-v2.md` |
 | Notifications Settings (user settings) | `user/notifications.html` | Extends `v2/user-dashboard-base.html`; one `c-dataset-card` per email-notification subscription (`meta_items` + an Unsubscribe `title_action`) in a `c-dataset-card-list` `<ul>`; Unsubscribe opens the 051 drawers (`notification_platform/unsubscribe_drawers.html`) on the same page; read-only with the profile header on another user's page; see `requirements/078-user-settings-notifications-v2.md` |
 | Org join / create flow | `org/join/find_organisation.html`, `org/join/confirm_organisation.html`, `org/join/reason_request.html`, `org/join/completed.html`, `org/request/org_new_request.html`, `org/request/completed_request.html` | Extend `v2/page.html` with the signup shell (`hdx-v2-signup-form-page`, 3-step `c-step-pager` on both flows); `c-info-box`; Find's org picker is `select.html` `searchable` (Select2, `select.js`); unknown `org_id` on Confirm / Reason shows an error `c-alert`; see `requirements/081-org-join-request-flow-v2.md` |
+| Edit / create organisation | `organization/edit.html`, `organization/new.html`, `organization/new_organization_form.html` | Extend `v2/page.html` with the signup shell; one standalone form for both (core views unchanged): numbered sections, `c-slug-preview` URL, `c-image-upload` logo (`customization.image_rect`), hidden carry of the extras the form doesn't edit; Delete `c-drawer` (disabled while the org has datasets) / Restore form on edit; see `requirements/082-edit-org-page-v2.md` |
 | Profile and Password (user settings) | `user/edit_user_form.html` | Extends `v2/user-dashboard-base.html`; profile header for every viewer (own page included) with a "View public profile" text-button CTA (`public_profile_link`); profile + password form of `c-form-field`s; sysadmin viewers get the two-step verification `c-drawer` (`v2/pages/user-profile.js`, vendored QRious) and the delete-account `c-drawer` (core `user.delete`, maintainers listed via `v2/maintainer-datasets-list.html`); see `requirements/079-user-settings-profile-password-v2.md` |
 
 ### Pages in holding state (on `page_light.html`)
@@ -179,6 +180,8 @@ Each page below extends `page_light.html`, manually overrides `{% block styles %
 - [x] Copy button — `copy-button.html` / `copy-button.less`
 - [x] Graph point — `graph-point.html`; styles in `selection.less`; chart data-point dot with focus ring
 - [x] Radio — `radio.html`; styles in `selection.less`
+- [x] Slug preview — `slug-preview.html` / `slug-preview.less` / `slug-preview.js` (page-loaded `v2-slug-preview-scripts`); slug field + "URL: prefix/slug [Edit]" preview, follows a target field (core `$.url.slugify`)
+- [x] Image upload — `image-upload.html` / `image-upload.less` / `image-upload.js`; uploaded file or linked URL (blank / attached / web states, CKAN url/upload/clear fields), `image-upload:change` event
 
 Each component file should have:
 1. **HTML template** (`templates/v2/components/component-name.html`) — reusable snippet with BEM markup
@@ -195,7 +198,7 @@ Exception: `info-icon.html` has no dedicated LESS/CSS — it composes existing `
 
 Bundle configuration:
 - `hdx_theme/v2-components-styles` — standalone design system bundle (tokens + components), no Bootstrap
-  - Contents: `v2/foundation.css`, `v2/overlay.css`, then component CSS files: `accordion`, `activity-card`, `activity-item`, `alert`, `anchor-links`, `avatar-badge`, `breadcrumb`, `buttons`, `checkbox`, `content-card`, `copy-button`, `data-grid-status`, `dataset-card`, `dataviz-card`, `divider`, `drawer`, `dropdown`, `form-field`, `highlight-card`, `info-box`, `input-field`, `label`, `letter-anchor`, `list-item`, `member-list-card`, `nav-item`, `notification-item`, `org-list-card`, `page-header`, `pagination`, `request-archive`, `request-card`, `request-item`, `resource-card`, `selection`, `showcase-card`, `signup-tier`, `spinner`, `stats-card`, `step-pager`, `table`, `tabs`, `signal-card`, `text-link`
+  - Contents: `v2/foundation.css`, `v2/overlay.css`, then component CSS files: `accordion`, `activity-card`, `activity-item`, `alert`, `anchor-links`, `avatar-badge`, `breadcrumb`, `buttons`, `checkbox`, `content-card`, `copy-button`, `data-grid-status`, `dataset-card`, `dataviz-card`, `divider`, `drawer`, `dropdown`, `form-field`, `highlight-card`, `image-upload`, `info-box`, `input-field`, `label`, `letter-anchor`, `list-item`, `member-list-card`, `nav-item`, `notification-item`, `org-list-card`, `page-header`, `pagination`, `request-archive`, `request-card`, `request-item`, `resource-card`, `selection`, `showcase-card`, `signup-tier`, `slug-preview`, `spinner`, `stats-card`, `step-pager`, `table`, `tabs`, `signal-card`, `text-link`
   - Kept separate for non-page contexts (component previews, embedded widgets)
 - `hdx_theme/v2-page-styles` ✅ Full page bundle: preloads `v2-components-styles`, then adds:
   - `vendor/bootstrap5/css/bootstrap.css`
@@ -204,7 +207,7 @@ Bundle configuration:
   - `v2/nav-controls.css` — shared sort + results-per-page dropdown pair
   - `v2/navbar.css` — main navbar styles (logo, search, nav items, actions, offcanvas)
   - `v2/top-bar.css` — top-bar styles (OCHA services dropdown, documentation link)
-- `hdx_theme/v2-components-scripts` ✅ Contains: `v2/utils.js` (shared `window.hdxV2.*` helpers incl. `FocusTrap`, `setDisabled`, `showAlert`, `post`, loaded first), then `alert.js`, `anchor-links.js` (smooth scroll + mobile dropdown + active tracking), `clamped-text.js` (show-more/less), `copy-button.js`, `drawer.js`, `dropdown.js`, `input-field.js` (password toggle, character counter), `page-header.js`, `tooltip.js`, `toggle.js`
+- `hdx_theme/v2-components-scripts` ✅ Contains: `v2/utils.js` (shared `window.hdxV2.*` helpers incl. `FocusTrap`, `setDisabled`, `showAlert`, `post`, loaded first), then `alert.js`, `anchor-links.js` (smooth scroll + mobile dropdown + active tracking), `clamped-text.js` (show-more/less), `copy-button.js`, `drawer.js`, `dropdown.js`, `image-upload.js`, `input-field.js` (password toggle, character counter), `page-header.js`, `tooltip.js`, `toggle.js`
 - `hdx_theme/v2-page-scripts` ✅ Contains `v2/contribute.js` + `v2/group-message-drawer.js` + `v2/navbar.js` (navbar + offcanvas, uses `window.hdxV2.FocusTrap`) + `v2/search-autocomplete.js`; preloads `v2-components-scripts` and `v2-search-scripts` (MiniSearch/feature-index)
 - `hdx_theme/v2-search-scripts` — global lib bundle: MiniSearch, normalize.js, feature-index; auto-loaded via `v2-page-scripts` preload
 - `hdx_theme/v2-search-page-styles` — search page: adds `v2/pages/search.css`
@@ -218,6 +221,7 @@ Bundle configuration:
   load via `datastore_info`; loaded only when `res.datastore_active`)
 - `hdx_theme/v2-datatable-scripts` — DataTables lib (`vendor/datatables-2.3.8/dataTables.min.js`); preloaded by `v2-resource-page-scripts`
 - `hdx_theme/v2-select2-styles` / `v2-select2-scripts` — Select2 4.1.0-rc.0 lib (`vendor/select2-4/select2.min.css` / `select2.min.js`) + `v2/components/select.js` (`select.html` `searchable`); loaded by the consuming template
+- `hdx_theme/v2-slug-preview-scripts` — `v2/components/slug-preview.js` (`slug-preview.html`); uses the core slug plugins already in `base-main`; loaded by the consuming template
 - `hdx_theme/v2-home-page-styles` — homepage: adds `v2/bar-chart.css` + `v2/pages/home.css`
 - `hdx_theme/v2-home-page-scripts` — homepage: adds `v2/highlights-carousel.js`, `v2/bar-chart.js`; requires `v2-carousel-scripts` loaded first in the template
 - `hdx_theme/v2-locations-list-page-styles` — All Locations page: adds Leaflet CSS, `browse_/browse.css` + `v2/pages/locations-list.css`
@@ -240,6 +244,7 @@ Bundle configuration:
 - `hdx_theme/v2-request-access-page-styles` / `-scripts` — Request Data Access page: adds `v2/pages/request-access.css` / `v2/pages/request-access.js`
 - `hdx_theme/v2-signup-page-styles` — Signup flow pages: adds `v2/pages/signup.css`
 - `hdx_theme/v2-org-request-page-styles` — Org join / create flow: adds `v2/pages/org-request.css` (confirm block, reason list), loaded after `v2-signup-page-styles`
+- `hdx_theme/v2-org-edit-page-styles` / `-scripts` — Edit / create organisation: adds `v2/pages/org-edit.css` (section titles, delete/restore row; loaded after `v2-signup-page-styles`) / `v2/pages/org-edit.js` (submit prep, hidden booleans, logo ticks the custom page); `v2-slug-preview-scripts` loads first
 - `hdx_theme/v2-verify-email-page-scripts` — Signup verify-email page: adds `v2/pages/verify-email.js`
 - `hdx_theme/v2-hapi-landing-page-styles` — HAPI landing page: adds `v2/pages/hapi-landing.css`
 - `hdx_theme/v2-carousel-scripts` — shared carousel lib: `vendor/hammer/hammer.js` + `v2/carousel.js`; loaded explicitly by each page template that uses the carousel (no preload)
@@ -304,6 +309,7 @@ Bundle configuration:
 - [x] Archived Dataviz page
 - [x] Dataviz Gallery page
 - [x] Org join / create flow pages
+- [x] Edit / create organisation page
 
 Deferred to next cycle: create/edit dataset page, an HDX-side guard against the `ckanext-requestdata` org view's 500s (task 080 D19), Signals Mailchimp form's Bootstrap-to-v2 CSS cleanup (task 070 B4), `resource_view.html` error-div class cleanup (task 047 Decision 10).
 

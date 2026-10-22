@@ -340,6 +340,16 @@ Example page-specific template (light search):
 
 ---
 
+### Edit / create organisation (`/organization/edit/<name>`, `/organization/new`)
+
+- **Templates**: `organization/edit.html` and `organization/new.html` extend `v2/page.html` with the signup layout variables and shell; both render the standalone form `organization/new_organization_form.html`, which branches on `action`. Core `EditGroupView` / `CreateGroupView` are unchanged.
+  - The form: numbered sections, `c-slug-preview` for the URL, `c-image-upload` for the logo (`customization.image_rect`, resolved by the `hdx_organization_logo_url` helper), hidden `customization` / `visualization_config` carrying what the form doesn't edit.
+  - After a failed save `data` is the posted form; the Delete / Restore gate, breadcrumb and Cancel read `group_dict`.
+  - Edit: Delete `c-drawer` (core `organization.delete`, disabled while the org has datasets) or a Restore form (`hdx_org.restore`).
+- **Core assets**: `hdx_theme/v2-signup-page-styles`, `v2-org-edit-page-styles`, `v2-slug-preview-scripts`, `v2-org-edit-page-scripts`.
+
+---
+
 ### Signals page (`/signals`)
 
 - **Template**: `ckanext-hdx_theme/ckanext/hdx_theme/templates/landing_pages/signals.html`
@@ -400,7 +410,7 @@ Example page-specific template (light search):
 
 ## V2 JavaScript Patterns
 
-New v2 JavaScript is vanilla — no jQuery; the one exception is the Select2 API calls in `fanstatic/v2/components/select.js` (jQuery is already loaded by `hdx_theme/ckan`). Follow these patterns consistently.
+New v2 JavaScript is vanilla — no jQuery; the exceptions are the Select2 API calls in `fanstatic/v2/components/select.js` and core's slug plugins (`$.url.slugify`, `$.fn.slug`) in `fanstatic/v2/components/slug-preview.js` (jQuery is already loaded by `hdx_theme/ckan`). Follow these patterns consistently.
 
 ### No jQuery
 

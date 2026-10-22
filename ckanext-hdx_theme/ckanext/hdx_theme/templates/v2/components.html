@@ -13,6 +13,8 @@
   {'label': 'Avatars & Badge', 'href': '#avatars-badge'},
   {'label': 'Dropdown', 'href': '#dropdown'},
   {'label': 'Input Field / Search / Autocomplete', 'href': '#input-field'},
+  {'label': 'Slug Preview', 'href': '#slug-preview'},
+  {'label': 'Image Upload', 'href': '#image-upload'},
   {'label': 'Label / File-type / Tooltip', 'href': '#label'},
   {'label': 'Navigation & Pagination', 'href': '#navigation-pagination'},
   {'label': 'Tabs', 'href': '#tabs'},
@@ -308,6 +310,7 @@
 {% block scripts %}
   {{ super() }}
   {% asset 'hdx_theme/v2-select2-scripts' %}
+  {% asset 'hdx_theme/v2-slug-preview-scripts' %}
 {% endblock %}
 
 {% block breadcrumb_items %}
@@ -1319,6 +1322,93 @@
             {'label': 'Ukraine — Example Monitoring Dataset', 'url': '#', 'count': 'Dataset', 'type': 'dataset'},
           ],
           confirm_label='View all results' %}
+    </div>
+  </section>
+
+  <hr class="demo-divider">
+
+  {# ══════════════════════════════════════════════════════
+     SLUG PREVIEW
+  ══════════════════════════════════════════════════════ #}
+  <section class="demo-section" id="slug-preview">
+    <h1 class="demo-section__title">Slug Preview</h1>
+    <p class="demo-section__subtitle">
+      URL slug field + "URL: prefix/slug [Edit]" preview (page-loaded <code>v2-slug-preview-scripts</code>).
+      The slug follows its target field while that field was empty at load; a field with errors stays visible.
+    </p>
+
+    <h2 class="demo-subsection__heading">Empty — follows the Name field</h2>
+    <div class="demo-row--column demo-max-width-l">
+      <div class="c-form-field">
+        {% snippet 'v2/components/text-field.html',
+            size='m', id='demo-slug-title', name='demo-slug-title', label='Name', required=True %}
+      </div>
+      {% snippet 'v2/components/slug-preview.html',
+          name='demo-slug', id='demo-slug', required=True, placeholder='my-organisation',
+          prefix='example.org/organization/', preview_placeholder='<organization>',
+          target_id='demo-slug-title' %}
+    </div>
+
+    <h2 class="demo-subsection__heading">With a value</h2>
+    <div class="demo-row--column demo-max-width-l">
+      {% snippet 'v2/components/slug-preview.html',
+          name='demo-slug-value', id='demo-slug-value', required=True, value='example-organisation',
+          prefix='example.org/organization/' %}
+    </div>
+
+    <h2 class="demo-subsection__heading">With an error</h2>
+    <div class="demo-row--column demo-max-width-l">
+      {% snippet 'v2/components/slug-preview.html',
+          name='demo-slug-error', id='demo-slug-error', required=True, value='example-organisation',
+          prefix='example.org/organization/', errors=['Group name already exists in database'] %}
+    </div>
+  </section>
+
+  <hr class="demo-divider">
+
+  {# ══════════════════════════════════════════════════════
+     IMAGE UPLOAD
+  ══════════════════════════════════════════════════════ #}
+  <section class="demo-section" id="image-upload">
+    <h1 class="demo-section__title">Image Upload</h1>
+    <p class="demo-section__subtitle">
+      Uploaded file or linked URL: blank (Upload + Link), attached (thumbnail + Remove), web (URL + ×).
+      Choosing a file or entering a URL dispatches <code>image-upload:change</code>.
+    </p>
+
+    <h2 class="demo-subsection__heading">Blank</h2>
+    <div class="demo-row--column demo-max-width-l">
+      {% snippet 'v2/components/image-upload.html',
+          field_url='demo_image_blank', field_upload='demo_image_blank_upload', field_clear='clear_demo_image_blank',
+          id='demo-image-blank', label='Logo', accept='image/png,image/gif,image/jpeg' %}
+    </div>
+
+    <h2 class="demo-subsection__heading">Attached (stored upload)</h2>
+    <div class="demo-row--column demo-max-width-l">
+      {% snippet 'v2/components/image-upload.html',
+          field_url='demo_image_attached', field_upload='demo_image_attached_upload', field_clear='clear_demo_image_attached',
+          id='demo-image-attached', label='Logo', value='placeholder.svg',
+          preview_url=h.url_for_static('/v2/icons/placeholder.svg') %}
+    </div>
+
+    <h2 class="demo-subsection__heading">Web (linked URL)</h2>
+    <div class="demo-row--column demo-max-width-l">
+      {% snippet 'v2/components/image-upload.html',
+          field_url='demo_image_web', field_upload='demo_image_web_upload', field_clear='clear_demo_image_web',
+          id='demo-image-web', label='Logo', value='https://example.com/logo.png' %}
+    </div>
+
+    <h2 class="demo-subsection__heading">Uploads disabled</h2>
+    <div class="demo-row--column demo-max-width-l">
+      {% snippet 'v2/components/image-upload.html',
+          field_url='demo_image_url_only', id='demo-image-url-only', label='Logo', upload_enabled=false %}
+    </div>
+
+    <h2 class="demo-subsection__heading">With an error</h2>
+    <div class="demo-row--column demo-max-width-l">
+      {% snippet 'v2/components/image-upload.html',
+          field_url='demo_image_error', field_upload='demo_image_error_upload', field_clear='clear_demo_image_error',
+          id='demo-image-error', label='Logo', errors=['Unsupported upload type: image/svg+xml'] %}
     </div>
   </section>
 

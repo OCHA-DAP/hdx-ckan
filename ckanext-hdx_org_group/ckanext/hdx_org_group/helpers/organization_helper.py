@@ -291,6 +291,24 @@ def remove_image(filename):
     return True
 
 
+def hdx_organization_logo_url(value, qualified=False):
+    '''
+    Returns the URL of an organization logo stored in the customization extra:
+    a linked logo (http/https) as it is, an uploaded file through the local image server.
+    :param value: the image_sq / image_rect value (a URL or an uploaded filename)
+    :type value: str
+    :param qualified: return an absolute URL for uploaded files (optional)
+    :type qualified: bool
+    :return: the logo URL or None when there is no logo
+    :rtype: str
+    '''
+    if not value:
+        return None
+    if value.startswith('http'):
+        return value
+    return helpers.url_for('hdx_local_image_server.org_file', filename=value, qualified=qualified)
+
+
 def hdx_group_create(context, data_dict):
     return _run_core_group_org_action(context, data_dict, core.create.group_create)
 
@@ -422,26 +440,24 @@ def hdx_group_or_org_update(context, data_dict, is_org=False):
         data_dict['customization'] = {}
 
     # If we're removing the image
-    upload_sq = _manage_image_upload_for_org('image_sq', customization, data_dict)
-    upload_rect = _manage_image_upload_for_org('image_rect', customization, data_dict)
+    removed_images = []
+    upload_sq = _manage_image_upload_for_org('image_sq', customization, data_dict, removed_images)
+    upload_rect = _manage_image_upload_for_org('image_rect', customization, data_dict, removed_images)
 
-    storage_path = uploader.get_storage_path()
     ##Rearrange things the way we need them
-    try:
-        if data_dict['image_sq'] != '' and data_dict['image_sq'] != None:
-            data_dict['customization']['image_sq'] = data_dict['image_sq']
-        else:
-            data_dict['customization']['image_sq'] = customization['image_sq']
-    except KeyError:
+    if data_dict.get('image_sq'):
+        data_dict['customization']['image_sq'] = data_dict['image_sq']
+    elif data_dict.get('clear_image_sq'):
         data_dict['customization']['image_sq'] = ''
+    else:
+        data_dict['customization']['image_sq'] = customization.get('image_sq', '')
 
-    try:
-        if data_dict['image_rect'] != '' and data_dict['image_rect'] != None:
-            data_dict['customization']['image_rect'] = data_dict['image_rect']
-        else:
-            data_dict['customization']['image_rect'] = customization['image_rect']
-    except KeyError:
+    if data_dict.get('image_rect'):
+        data_dict['customization']['image_rect'] = data_dict['image_rect']
+    elif data_dict.get('clear_image_rect'):
         data_dict['customization']['image_rect'] = ''
+    else:
+        data_dict['customization']['image_rect'] = customization.get('image_rect', '')
 
     data_dict['customization'] = json.dumps(data_dict['customization'])
 
@@ -519,26 +535,24 @@ def hdx_group_or_org_update(context, data_dict, is_org=False):
     if upload_rect:
         upload_rect.upload(uploader.get_max_image_size())
 
+    for filename in removed_images:
+        remove_image(filename)
+
     if not context.get('defer_commit'):
         model.repo.commit()
 
     return model_dictize.group_dictize(group, context)
 
 
-def _manage_image_upload_for_org(image_field, customization, data_dict):
+def _manage_image_upload_for_org(image_field, customization, data_dict, removed_images):
     clear_field = 'clear_{}'.format(image_field)
     if clear_field in data_dict and data_dict[clear_field]:
-        remove_image(customization[image_field])
-        data_dict['customization'][image_field] = ''
-        # customization[image_field] = ''
+        if customization.get(image_field):
+            removed_images.append(customization[image_field])
 
     upload_field = '{}_upload'.format(image_field)
     if data_dict.get(upload_field):
-        # If old image exists remove it
-        if customization[image_field]:
-            remove_image(customization[image_field])
-
-        upload_obj = uploader.Upload('group', customization[image_field])
+        upload_obj = uploader.Upload('group', customization.get(image_field, ''))
         upload_obj.update_data_dict(data_dict, image_field,
                                  upload_field, 'clear_upload')
 
