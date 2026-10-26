@@ -42,7 +42,7 @@ CSS custom property equivalents (`--hdx-*`) are defined in `v2/foundation.css` (
 - Loads `hdx_theme/v2-page-styles`; legacy onboarding and `page-scripts` bundles are commented out pending v1 retirement
 - Sets `{% block bodytag %}hdx-v2{% endblock %}` for scoping v2 styles to the body class
 - Overrides `{% block page %}` with: header block → main content (toolbar + flash + two-column layout) → footer block
-- `{% block header_core %}` includes `v2/header.html` via `{% snippet %}`, passing `quick_links` (fetched once at the top of `page.html`); `v2/header.html` takes an optional `minimal=True` param (logo-only navbar, no top-bar/search/nav items/actions/hamburger/offcanvas)
+- `{% block header_core %}` includes `v2/header.html` via `{% snippet %}`, passing `quick_links` (fetched once at the top of `page.html`); `v2/header.html` takes an optional `minimal=True` param (logo-only navbar, no top-bar/search/nav items/actions/hamburger/offcanvas) and marks the current section's nav item On via `h.hdx_v2_main_nav_state(quick_links)` (see `requirements/083-global-nav-on-state.md`)
 - `{% block toolbar %}` renders `<div class="hdx-v2-breadcrumb-row">` with a `{% block breadcrumb_items %}` sub-block; page templates override only `{% block breadcrumb_items %}`; set `breadcrumb_row_class` variable for modifier classes on the row div (e.g. `'hdx-v2-breadcrumb-row--white'`)
 - `{% block flash %}` renders each flash as a `c-alert` (`alert.html`, `extra_classes='hdx-v2-flash'`, category→variant map)
 - `secondary_right_side` feature removed; sidebar always renders on the left
@@ -141,7 +141,7 @@ Each page below extends `page_light.html`, manually overrides `{% block styles %
 - [x] Avatar + badge
 - [x] Dropdown
 - [x] Input field
-- [x] Navigation — nav item `size` m (navbar) / s (vertical menu)
+- [x] Navigation — nav item `size` m (navbar) / s (vertical menu), `aria_current` page / true
 - [x] Selection
 - [x] Text link
 - [x] Breadcrumb

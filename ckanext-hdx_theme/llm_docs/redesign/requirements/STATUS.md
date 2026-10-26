@@ -84,3 +84,4 @@
 | 080 | [organization-page-hdx-connect-requests-v2](080-organization-page-hdx-connect-requests-v2.md)                   | implemented | |
 | 081 | [org-join-request-flow-v2](081-org-join-request-flow-v2.md)                                                     | implemented | |
 | 082 | [edit-org-page-v2](082-edit-org-page-v2.md)                                                                     | implemented | |
+| 083 | [global-nav-on-state](083-global-nav-on-state.md)                                                               | implemented | |

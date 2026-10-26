@@ -283,6 +283,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'hdx_format_to_icon_category': hdx_helpers.hdx_format_to_icon_category,
             'hdx_format_number_si': hdx_helpers.hdx_format_number_si,
             'hdx_v2_icon': hdx_helpers.hdx_v2_icon,
+            'hdx_v2_main_nav_state': hdx_helpers.hdx_v2_main_nav_state,
         }
 
     def get_actions(self):

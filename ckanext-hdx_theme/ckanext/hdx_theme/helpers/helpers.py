@@ -28,6 +28,7 @@ from ckan.types import Context
 from ckanext.hdx_package.helpers.caching import cached_objects_with_notifications, cached_objects_without_notifications
 from ckanext.hdx_package.helpers.freshness_calculator import UPDATE_FREQ_INFO, UPDATE_FREQ_NEVER
 from ckanext.hdx_package.helpers.p_code_filters_helper import are_new_p_code_filters_enabled
+from ckanext.hdx_theme.helpers.constants import const
 from ckanext.hdx_theme.helpers.v2_icon_view_boxes import V2_ICON_VIEW_BOXES
 from ckanext.hdx_theme.util.light_redirect import switch_url_path
 from ckanext.hdx_users.notifications_subscription_model import ObjectType
@@ -1535,3 +1536,27 @@ def hdx_v2_icon(path):
             '<svg aria-hidden="true" focusable="false" viewBox="{}" fill="none"><use href="{}#i"/></svg>'
             .format(view_box, h.url_for_static(path)))
     return icon
+
+
+def hdx_v2_main_nav_state(quick_links):
+    """The v2 header's current main nav section, e.g. {'section': 'data', 'aria_current': 'page', 'product_url': None}
+    (aria_current is 'page' on the section's own URL, else 'true'; product_url is the quick link to this page)."""
+    try:
+        path = request.path.rstrip('/') or '/'
+        section = aria_current = product_url = None
+        for name, own_url, prefixes in const('V2_MAIN_NAV_SECTIONS'):
+            if any(path == prefix or path.startswith(prefix + '/') for prefix in prefixes):
+                section = name
+                aria_current = 'page' if path == own_url else 'true'
+                break
+        for link in quick_links:
+            parts = urlparse.urlsplit(link.get('url') or '')
+            if parts.netloc and parts.netloc != request.host:
+                continue
+            if parts.path and (parts.path.rstrip('/') or '/') == path:
+                product_url = link.get('url')
+                break
+        return {'section': section, 'aria_current': aria_current, 'product_url': product_url}
+    except Exception as e:
+        log.warning('v2 main nav state failed, no nav item is On: %s', e)
+        return {'section': None, 'aria_current': None, 'product_url': None}
