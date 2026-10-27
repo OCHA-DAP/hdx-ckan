@@ -153,7 +153,7 @@ revoke view, the actions and auth rules, the `expire_api_token` plugin and HDX's
 
 | Need | Mapping |
 |---|---|
-| Shell, menu, breadcrumb, `subtitle` | **Reuse** the base with `user_nav_active='api_tokens'`, `page_label=_('API Tokens')` |
+| Shell, menu, breadcrumb, `subtitle` | **Reuse** the base with `nav_active='api_tokens'`, `page_label=_('API Tokens')` |
 | Profile header | **Reuse** the base's `user_profile_header` block |
 | Header | **Reuse** the `.hdx-v2-user-dashboard-header` markup |
 | Fields | **Reuse** `c-form-field`, `text-field.html`, `select.html` |

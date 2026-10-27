@@ -1523,6 +1523,7 @@ v2-components-styles:
     - v2/components/tabs.css
     - v2/components/signal-card.css
     - v2/components/text-link.css
+    - v2/components/user-item.css
 
 v2-components-scripts:
   <<: *common-js
@@ -1890,11 +1891,23 @@ v2-crisis-pages-page-styles:
   contents:
     - v2/pages/crisis-pages.css
 
+v2-dashboard-page-styles:
+  output: ckanext-hdx_theme/%(version)s_v2-dashboard-page-styles.css
+  <<: *common-css
+  contents:
+    - v2/pages/dashboard.css
+
 v2-user-dashboard-page-styles:
   output: ckanext-hdx_theme/%(version)s_v2-user-dashboard-page-styles.css
   <<: *common-css
   contents:
     - v2/pages/user-dashboard.css
+
+v2-sysadmin-page-styles:
+  output: ckanext-hdx_theme/%(version)s_v2-sysadmin-page-styles.css
+  <<: *common-css
+  contents:
+    - v2/pages/sysadmin.css
 
 v2-hdx-connect-page-styles:
   output: ckanext-hdx_theme/%(version)s_v2-hdx-connect-page-styles.css

@@ -22,10 +22,9 @@
 {% set org_id     = extras.get('organization_id') %}
 {% set org_name   = extras.get('organization_name') %}
 {% set org_type   = extras.get('organization_type') %}
-{% set name_parts = (item.sender_name or '').split() %}
 
 {% set params = {
-  'avatar_initials': name_parts[:2] | map('first') | join,
+  'avatar_initials': h.hdx_initials(item.sender_name),
   'name': item.sender_name,
   'profile_url': h.url_for('user.read', id=item.sender_user_id),
   'org_name': org_name or '',

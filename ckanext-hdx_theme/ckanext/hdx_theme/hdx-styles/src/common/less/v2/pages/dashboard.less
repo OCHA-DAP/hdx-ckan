@@ -1,0 +1,33 @@
+// ============================================================
+// pages/dashboard.less
+// Dashboard shell (v2/dashboard-base.html) — left menu
+// Figma: llm_docs/redesign/figma_exports/xl-user-dashboard-my-organisation.html,
+//        xl-sysadmin-all-sysadmins.html
+// ============================================================
+
+@import "../mixins.less";
+
+// ── Left menu ─────────────────────────────────────────────────
+.hdx-v2-dashboard-nav {
+    display:        flex;
+    flex-direction: column;
+    gap:            var(--hdx-space-6);
+
+    &__group {
+        display:        flex;
+        flex-direction: column;
+        gap:            var(--hdx-space-2);
+    }
+
+    &__label {
+        .hdx-body-xs();
+        color:  var(--hdx-neutral-95);
+        margin: 0;
+    }
+
+    &__list {
+        list-style: none;
+        margin:     0;
+        padding:    0;
+    }
+}

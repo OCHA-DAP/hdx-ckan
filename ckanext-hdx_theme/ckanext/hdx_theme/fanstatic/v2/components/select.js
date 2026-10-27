@@ -13,16 +13,35 @@
   function init(select) {
     var wrapper     = select.closest('.c-dropdown');
     var placeholder = select.querySelector('option[value=""]');
+    var source      = select.getAttribute('data-source');
     var $select     = jQuery(select);
-
-    $select.select2({
+    var options     = {
       theme:             'hdx-v2',
       width:             '100%',
       dropdownParent:    jQuery(wrapper),
       selectionCssClass: 'c-dropdown__select',
       placeholder:       placeholder ? { id: '', text: placeholder.textContent } : null,
       allowClear:        !!placeholder
-    });
+    };
+
+    if (source) {
+      options.minimumInputLength = 1;
+      options.ajax = {
+        url:      source,
+        dataType: 'json',
+        delay:    300,
+        data:     function (params) { return { q: params.term }; },
+        processResults: function (users) {
+          return {
+            results: users.map(function (user) {
+              return { id: user.name, text: user.fullname ? user.fullname + ' (' + user.name + ')' : user.name };
+            })
+          };
+        }
+      };
+    }
+
+    $select.select2(options);
 
     var selection   = wrapper.querySelector('.select2-selection');
     var ids         = labelIds(select);

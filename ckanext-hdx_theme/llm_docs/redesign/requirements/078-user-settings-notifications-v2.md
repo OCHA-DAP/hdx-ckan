@@ -176,7 +176,7 @@ dashboard shell, and Unsubscribe opens the 051 unsubscribe drawer on the same pa
 
 | Need | Mapping |
 |---|---|
-| Shell, menu, breadcrumb, `<title>` | **Reuse** the base, `user_nav_active='notifications_settings'`, `page_label=_('Notifications Settings')` |
+| Shell, menu, breadcrumb, `<title>` | **Reuse** the base, `nav_active='notifications_settings'`, `page_label=_('Notifications Settings')` |
 | Profile header | **Reuse** the base's `user_profile_header` block |
 | Header | **Reuse** `.hdx-v2-user-dashboard-header` markup |
 | Card | **Extend** `c-dataset-card`: `meta_items` + a title-row action (D4) |

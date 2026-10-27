@@ -132,7 +132,7 @@ the user approved it.
 
 | Need | Mapping |
 |---|---|
-| Shell, menu, breadcrumb, `subtitle` | **Reuse** the base with `user_nav_active='user_permission'`, `page_label=_('User Permission')` |
+| Shell, menu, breadcrumb, `subtitle` | **Reuse** the base with `nav_active='user_permission'`, `page_label=_('User Permission')` |
 | Profile header | **Reuse** the base's `user_profile_header` block |
 | Header | **Reuse** the `.hdx-v2-user-dashboard-header` markup |
 | Checkbox rows | **Reuse** `c-checkbox` + `.v2-checkbox-row()` |

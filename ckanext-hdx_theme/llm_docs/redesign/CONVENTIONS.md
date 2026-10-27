@@ -382,7 +382,7 @@ Components render an `attrs` dict with a separating space before each attribute:
 
 Leaving any of these unset produces an unclassed wrapper div and makes CSS targeting impossible.
 
-**Right-hand column:** fill `{% block tertiary_content %}` and set `tertiary_class`. `page.html` renders it as a third div after the content column, only when the block is non-empty (like `secondary_content`). `user-dashboard-base.html` sets `tertiary_class`.
+**Right-hand column:** fill `{% block tertiary_content %}` and set `tertiary_class`. `page.html` renders it as a third div after the content column, only when the block is non-empty (like `secondary_content`). `dashboard-base.html` sets `tertiary_class`.
 
 **Single-column pages** (no sidebar): set `content_class` only. `page.html` applies `content_class` whenever it is defined (the former guard `and secondary_block_output != ''` was removed). Use the generic content class — it provides `flex: 1; min-width: 0`:
 
@@ -529,7 +529,7 @@ files:
   `c-resource-card-list`, `c-org-list-card-list`, `c-member-list-card-list`,
   `c-request-card-list`, `c-activity-card-list`, `c-stats-card-list`)
 - `c-<name>-grid` — grid (`c-content-card-grid`, `c-selection-item-grid`,
-  `c-showcase-card-grid`, `c-dataviz-card-grid`)
+  `c-showcase-card-grid`, `c-dataviz-card-grid`, `c-user-item-grid`)
 - `c-<name>-row` — inline flex-wrap row (`c-kpi-card-row`, `c-selection-item-row`)
 
 Child sizing lives inside the wrapper, scoped with a direct-child selector

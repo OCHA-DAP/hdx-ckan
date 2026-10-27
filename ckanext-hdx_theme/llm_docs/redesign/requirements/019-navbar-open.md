@@ -45,7 +45,7 @@ Markup lives inline at the end of `header.html`, outside `<nav class="hdx-v2-nav
                 data-hdx-v2-offcanvas-level="user-detail">
           {% snippet 'v2/components/avatar.html',
               size='sm',
-              initials=c.userobj.display_name[0] | upper,
+              initials=h.hdx_initials(c.userobj.display_name),
               badge=notif.count > 0 %}
           <span class="hdx-v2-offcanvas__user-name">{{ c.userobj.display_name }}</span>
           <span class="hdx-v2-offcanvas__user-chevron">{{ h.hdx_v2_icon('v2/icons/chevron-right.svg') }}</span>

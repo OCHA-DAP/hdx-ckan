@@ -1,0 +1,68 @@
+{% extends "v2/sysadmin-base.html" %}
+
+{% set nav_active = 'all_sysadmins' %}
+{% set page_label = _('All Sysadmins') %}
+
+{% block styles %}
+  {{ super() }}
+  {% asset 'hdx_theme/v2-select2-styles' %}
+{% endblock %}
+
+{% block scripts %}
+  {{ super() }}
+  {% asset 'hdx_theme/v2-select2-scripts' %}
+{% endblock %}
+
+{% block primary %}
+  {% snippet 'v2/list-header.html',
+      list_title=page_label,
+      count=sysadmins | length,
+      list_subtitle=_('View and manage who has sysadmin-level access'),
+      title_tag='h1',
+      title_size='dashboard',
+      show_controls=False,
+      show_filters=False %}
+
+  <ul class="c-user-item-grid">
+    {% for name in sysadmins %}
+      {% set user = h.hdx_get_user_info(name) %}
+      {% set profile_url = h.url_for('user.read', id=user.name) %}
+      <li>
+        {% if name == g.site_id or name == c.user %}
+          {% snippet 'v2/components/user-item.html', name=user.display_name, href=profile_url %}
+        {% else %}
+          {% call h.snippet('v2/components/user-item.html', name=user.display_name, href=profile_url) %}
+            <form method="POST" action="{{ h.url_for('user.sysadmin') }}">
+              {{ h.csrf_input() }}
+              <input type="hidden" name="username" value="{{ user.name }}">
+              <input type="hidden" name="status" value="0">
+              {% snippet 'v2/components/text-button.html',
+                  style='primary', size='s', label=_('Remove'),
+                  icon_src='v2/icons/user-close.svg',
+                  tag='button', button_type='submit',
+                  attrs={'aria-label': _('Remove {name}').format(name=user.display_name)} %}
+            </form>
+          {% endcall %}
+        {% endif %}
+      </li>
+    {% endfor %}
+  </ul>
+
+  <form class="hdx-v2-sysadmin-promote" method="POST" action="{{ h.url_for('user.sysadmin') }}">
+    {{ h.csrf_input() }}
+    <input type="hidden" name="status" value="1">
+    <div class="c-form-field">
+      {% snippet 'v2/components/select.html',
+          label=_('Promote user to sysadmin'),
+          id='promote-username',
+          name='username',
+          placeholder=_('Username'),
+          select_attrs={'data-source': '/api/2/util/user/autocomplete?ignore_self=true'},
+          searchable=True %}
+    </div>
+    <div class="hdx-v2-sysadmin-promote__actions">
+      {% snippet 'v2/components/button.html',
+          style='primary', label=_('Promote'), button_type='submit' %}
+    </div>
+  </form>
+{% endblock %}

@@ -190,7 +190,7 @@ Open are always `modified_at desc`.
 
 | Piece | Fit |
 |---|---|
-| `v2/user-dashboard-base.html` (072) | Shell, nav (`user_nav_active`), breadcrumb, `subtitle` from `page_label`. Its `subtitle` block reads `user_dict.display_name`, which this view doesn't pass |
+| `v2/user-dashboard-base.html` (072) | Shell, nav (`nav_active`), breadcrumb, `subtitle` from `page_label`. Its `subtitle` block reads `user_dict.display_name`, which this view doesn't pass |
 | `c-avatar` size `md` | 40px, brand-15 background / brand-7 initials: an exact Figma match |
 | `c-label` size `xs` | `grey` / `cyan` / `yellow` / `dark` match Figma's chips. `attrs` / `extra_classes` let a chip act as a tooltip trigger |
 | `c-button` primary size `s` | 4/8px padding, 12px text, 14px icon: an exact match for Reply |
@@ -351,7 +351,7 @@ Open are always `modified_at desc`.
 
 | Need | Mapping | Type | Decision |
 |---|---|---|---|
-| Shell, nav, breadcrumb, `<title>` | `v2/user-dashboard-base.html`, `user_nav_active='hdx_connect_requests'`, `page_label=_('HDX Connect Requests')` | Reuse | Q1 |
+| Shell, nav, breadcrumb, `<title>` | `v2/user-dashboard-base.html`, `nav_active='hdx_connect_requests'`, `page_label=_('HDX Connect Requests')` | Reuse | Q1 |
 | Header | **New shared snippet** `v2/list-header.html`, extracted from `package_list.html`'s v2 header; here `title_tag='h1'`, `title_size='dashboard'`, no controls | Share (extraction) | Q24, Q40 |
 | Dataset group | `v2/components/request-card.html` → `c-request-card` | **Share (new)** | Q2 |
 | Requester row | `v2/components/request-item.html` → `c-request-item` | **Share (new)** | Q2 |
@@ -395,7 +395,7 @@ The list wrapper is `c-request-card-list` (24px gap), in the component's own LES
 
 | Param | Type | Notes |
 |---|---|---|
-| `avatar_initials` | string | From `sender_name` (the first letters of its first two words) |
+| `avatar_initials` | string | `h.hdx_initials(sender_name)` (084) |
 | `name`, `profile_url` | string | The name links to `user.read` (`sender_user_id`); `c-text-link` secondary `s` |
 | `org_name`, `org_href` | string | `org_href` only when `organization_id != organization_name` (v1 rule). The link is styled like the name (underlined), Q46 |
 | `country` | string | |
@@ -463,7 +463,7 @@ The list wrapper is `c-request-card-list` (24px gap), in the component's own LES
 ### 6.2 Template
 
 - Full replacement of `THEME/templates/requestdata/my_requested_data.html`, extending `v2/user-dashboard-base.html`.
-- It sets `user_dict` from `g.userobj` (the base's `subtitle` needs `display_name`) along with `user_nav_active` and
+- It sets `user_dict` from `g.userobj` (the base's `subtitle` needs `display_name`) along with `nav_active` and
   `page_label`.
 - The shared v1 snippets (`requestdata/snippets/*`) and `ajax_snippets/*` are **not modified**: the sysadmin v1 page
   still uses them.

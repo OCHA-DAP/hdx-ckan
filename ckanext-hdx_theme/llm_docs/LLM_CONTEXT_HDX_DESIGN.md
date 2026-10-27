@@ -219,8 +219,8 @@ Example page-specific template (light search):
 ### My Organisations dashboard (`/user/organizations/<id>`, own page only)
 
 - **Template**: `ckanext-hdx_theme/ckanext/hdx_theme/templates/user/read_organizations.html`
-  - Extends `v2/user-dashboard-base.html` (left menu at XL from `h.hdx_get_user_dashboard_nav_sections()`, breadcrumb, `<title>`), which extends `v2/page.html`. Children set `user_nav_active` and `page_label` (optionally `public_profile_link`).
-- **Core assets**: `hdx_theme/v2-search-page-styles` (sidebar/content layout classes), `hdx_theme/v2-user-dashboard-page-styles`.
+  - Extends `v2/user-dashboard-base.html` (menu from `h.hdx_get_user_dashboard_nav_sections()`, `<title>`, profile header), which extends the shared shell `v2/dashboard-base.html` (layout, left menu at XL, breadcrumb), which extends `v2/page.html`. Children set `nav_active` and `page_label` (optionally `public_profile_link`).
+- **Core assets**: `hdx_theme/v2-search-page-styles` (sidebar/content layout classes), `hdx_theme/v2-dashboard-page-styles` (left menu), `hdx_theme/v2-user-dashboard-page-styles`.
 
 ---
 
@@ -287,6 +287,16 @@ Example page-specific template (light search):
   - Sysadmin viewers also get two-step verification (a `c-drawer` driven by `v2/pages/user-profile.js`, calling the `hdx_user` `configure_mfa` endpoints) and Delete account (a `c-drawer` posting to core `user.delete`; maintainers get `v2/maintainer-datasets-list.html` and a disabled Confirm).
   - `HDXEditView` is unchanged, except that `get` no longer sets `g.totp_secret`.
 - **Core assets**: as My Organisations, plus `v2-user-profile-page-scripts` for sysadmin viewers.
+
+---
+
+### All Sysadmins (`/ckan-admin`, sysadmins only)
+
+- **Template**: `ckanext-hdx_theme/ckanext/hdx_theme/templates/admin/index.html` (HDX override of core's; core `admin.index` view unchanged)
+  - Extends `v2/sysadmin-base.html` (menu from `h.hdx_get_sysadmin_nav_sections()`, `<title>` "{page} | Sysadmin"), which extends `v2/dashboard-base.html`. Children set `nav_active` and `page_label`. The other sysadmin pages stay on v1 `admin/base.html`.
+  - `v2/list-header.html` (h1 + count + subtitle); `c-user-item` rows (`h.hdx_get_user_info` per row) in a `c-user-item-grid`, each with a one-click Remove form to core `user.sysadmin`, except the site user's and your own; a Promote form with `select.html` `searchable` loading users from core `/api/2/util/user/autocomplete` (`data-source`).
+- **New components**: `v2/components/user-item.html` (`c-user-item`, `c-user-item-grid`).
+- **Core assets**: `hdx_theme/v2-search-page-styles`, `hdx_theme/v2-dashboard-page-styles`, `hdx_theme/v2-sysadmin-page-styles`, `hdx_theme/v2-select2-styles` / `v2-select2-scripts`.
 
 ---
 

@@ -329,8 +329,8 @@ error-message sources.
   wiring the lockout message into the redesigned error UI from scratch — not left broken.
 - **MFA reveal** — `GET /util/user/check_mfa` still toggles the (now `text-field.html`-based) MFA
   field's visibility exactly as today.
-- **Remember me** — cookie prefill/Gravatar behavior (`signin.js`) is preserved; the checkbox
-  component's `name`/`value` stay identical so the server-side handling in `signin.py` needs no
+- **Remember me** — the cookie prefill (`signin.js`) is preserved, with a `c-avatar` of initials
+  instead of the Gravatar; the checkbox component's `name`/`value` stay identical so the server-side handling in `signin.py` needs no
   change.
 - **Forgot password submit → confirmation** — unchanged AJAX/JSON contract (§1.3, §3). On success, the
   v2 recover widget is hidden and the v2 confirmation widget is shown in place — same

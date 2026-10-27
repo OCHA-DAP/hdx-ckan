@@ -33,7 +33,11 @@
                           dropdown.less); with a placeholder it also gets a clear (×)
                           button. Select2 fires `change` through jQuery only. The
                           caller loads the `v2-select2-styles` and
-                          `v2-select2-scripts` bundles.  default: False
+                          `v2-select2-scripts` bundles. A `data-source` URL in
+                          select_attrs loads the options from a user autocomplete
+                          endpoint as the user types (at least one character):
+                          value = name, text = "fullname (name)" or the name.
+                          default: False
   ─────────────────────────────────────────────────
 
   Example
@@ -45,6 +49,11 @@
   {% snippet 'v2/components/select.html',
       label='Country', placeholder='Select a country',
       name='country', options=countries, searchable=True %}
+
+  {% snippet 'v2/components/select.html',
+      label='User', placeholder='Username', name='username', id='username',
+      select_attrs={'data-source': '/api/2/util/user/autocomplete'},
+      searchable=True %}
 #}
 
 {% set size             = size             if size             is defined else 'm' %}

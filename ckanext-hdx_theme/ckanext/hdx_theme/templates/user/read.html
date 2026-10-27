@@ -1,6 +1,6 @@
 {% extends "v2/user-dashboard-base.html" %}
 
-{% set user_nav_active = 'my_datasets' %}
+{% set nav_active      = 'my_datasets' %}
 {% set page_label      = _('My Datasets') if is_myself else _('Datasets') %}
 {% set has_filters     = search_data.page.items or search_data.filters_are_selected %}
 

@@ -150,7 +150,7 @@ Decisions confirmed with the user are listed in §8.
 
 | Need | Mapping |
 |---|---|
-| Shell, nav, breadcrumb, `<title>` | Reuse `v2/user-dashboard-base.html` (`user_nav_active='my_datasets'`, `page_label=_('My Datasets')`) |
+| Shell, nav, breadcrumb, `<title>` | Reuse `v2/user-dashboard-base.html` (`nav_active='my_datasets'`, `page_label=_('My Datasets')`) |
 | Right column | **Extend** `v2/page.html` with `tertiary_content` + `tertiary_class`. The base sets `tertiary_class` (D2) |
 | List, header, chips, overlay, pagination | Reuse `search_results_wrapper.html` → `package_list.html` v2 with new params (D4, D6) |
 | Filters | Reuse `v2/search-filters.html` (+ Update status, D5) in `#search-page-filters-form` |
@@ -220,7 +220,7 @@ Decisions confirmed with the user are listed in §8.
 
 | # | Decision |
 |---|---|
-| D1 Strategy | **Direct replacement** of `user/read.html` (D24), extending `v2/user-dashboard-base.html` with `user_nav_active='my_datasets'` and `page_label=_('My Datasets')` ("Datasets" on another user's page). No `?v2` gate. |
+| D1 Strategy | **Direct replacement** of `user/read.html` (D24), extending `v2/user-dashboard-base.html` with `nav_active='my_datasets'` and `page_label=_('My Datasets')` ("Datasets" on another user's page). No `?v2` gate. |
 | D2 Right column | New `{% block tertiary_content %}` plus a `tertiary_class` layout var in `v2/page.html`. It is captured like `secondary_content` and rendered as a third div **after** the content column, only when non-empty, so the DOM order is nav → list → filters. The base sets `tertiary_class` to `hdx-v2-content-columns__sidebar --xl-only --sticky hdx-v2-search-sidebar hdx-v2-search-sidebar--right`. |
 | D3 Widths | Both side columns are 25% (`.v2-sidebar-flex()`), not Figma's 14.063rem. |
 | D4 List render | `search_results_wrapper.html` with `my_c=search_data` and `v2=true`, as on the Org/Location/Crisis pages. The wrapper forwards `admin_view`, `list_title`, `list_subtitle`, `title_tag`, `title_size` and `show_filters` to `package_list.html`. |
@@ -246,7 +246,7 @@ Decisions confirmed with the user are listed in §8.
 | D24 URL | `/user/<id>`: `hdx_user.read` (keeps its `user_show` check and deleted-user 404; logged-in users only, as v1, under `public_user_details = false`) runs `DashboardDatasetLogic` for the viewed user. The v1 `read.html` is gone. `/dashboard/datasets` 302s here with the query string (anonymous → `home.index`); the delete redirect and the bell link use `hdx_user.read`. |
 | D25 Own page | `admin_view=is_myself`: another user's page gets the public search card, for every viewer. The view passes `is_myself` to the search logic as `owner_view`, which skips the `ext_update_status` facet and defaults to Last Modified. |
 | D26 Deleted label | A red "Deleted" label in the profile header (D27), via `c-page-header`'s `state_label_text` / `state_label_color`, when `user_dict.state == 'deleted'`. |
-| D27 Profile header | On another user's page (public-profile export), the base's opt-in `user_profile_header` block renders `c-page-header` with a new `avatar` param (`__identity`): size-`l` initials from the first two words of `display_name`, the name, Member since, the rendered `about` (clamped) and the D26 label. The component's type is kept (32px title vs the export's 28px). It is `flush` (the column's padding applies) and followed by a `c-divider` (`--hdx-neutral-1`) that reaches the column borders at XL. A child that sets `public_profile_link` also gets a "View public profile" text-button CTA (`cta_style='text'`, new tab). |
+| D27 Profile header | On another user's page (public-profile export), the base's opt-in `user_profile_header` block renders `c-page-header` with a new `avatar` param (`__identity`): size-`l` initials from `h.hdx_initials(display_name)` (084), the name, Member since, the rendered `about` (clamped) and the D26 label. The component's type is kept (32px title vs the export's 28px). It is `flush` (the column's padding applies) and followed by a `c-divider` (`--hdx-neutral-1`) that reaches the column borders at XL. A child that sets `public_profile_link` also gets a "View public profile" text-button CTA (`cta_style='text'`, new tab). |
 | D28 Breadcrumb, menu | Another user's page: Home / Users (`user.index`) / {display_name}. Their menu lists Datasets before Activity Stream (the export's and v1's tab order). |
 
 ---

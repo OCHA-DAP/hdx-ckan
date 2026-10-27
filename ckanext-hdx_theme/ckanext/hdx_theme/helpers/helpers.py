@@ -1454,30 +1454,38 @@ def hdx_get_user_dashboard_nav_sections(user_name=None):
     return sections
 
 
-def hdx_get_user_menu_sections():
-    if not c.userobj:
+def hdx_get_sysadmin_nav_sections():
+    if not c.userobj or not c.userobj.sysadmin:
         return []
 
-    sections = []
+    return [{
+        'id': 'sysadmin',
+        'label': _('Sysadmin'),
+        'items': [
+            {'id': 'all_sysadmins', 'label': _('All Sysadmins'), 'href': h.url_for('admin.index')},
+            {'id': 'all_users', 'label': _('All Users'), 'href': h.url_for('user.index')},
+            {'id': 'homepage_highlights', 'label': _('Homepage Highlights'), 'href': h.url_for('hdx_carousel.show')},
+            {'id': 'hdx_connect_dashboard', 'label': _('HDX Connect Dashboard'),
+             'href': h.url_for('requestdata_ckanadmin.requests_data')},
+            {'id': 'custom_pages', 'label': _('Custom Pages'), 'href': h.url_for('hdx_custom_pages.index')},
+            {'id': 'products_menu', 'label': _('Products Menu'), 'href': h.url_for('hdx_quick_links.show')},
+            {'id': 'package_links', 'label': _('Package Links'), 'href': h.url_for('hdx_package_links.show')},
+        ],
+    }]
 
-    if c.userobj.sysadmin:
-        sections.append({
-            'id': 'sysadmin',
-            'label': _('Sysadmin Dashboard'),
-            'items': [
-                {'label': _('All Sysadmins'), 'href': h.url_for('admin.index')},
-                {'label': _('All Users'), 'href': h.url_for('user.index')},
-                {'label': _('Carousel'), 'href': h.url_for('hdx_carousel.show')},
-                {'label': _('HDX Connect Dashboard'), 'href': h.url_for('requestdata_ckanadmin.requests_data')},
-                {'label': _('Custom/Event Pages'), 'href': h.url_for('hdx_custom_pages.index')},
-                {'label': _('Quick Links'), 'href': h.url_for('hdx_quick_links.show')},
-                {'label': _('Package Links'), 'href': h.url_for('hdx_package_links.show')},
-                {'label': _('Email'), 'href': h.url_for('requestdata_ckanadmin.email')},
-                {'label': _('Config'), 'href': h.url_for('admin.config')},
-            ],
-        })
 
-    return sections + hdx_get_user_dashboard_nav_sections()
+def hdx_get_user_menu_sections():
+    return hdx_get_sysadmin_nav_sections() + hdx_get_user_dashboard_nav_sections()
+
+
+def hdx_initials(name):
+    """Avatar initials: the first letters of the first two words that start with a letter or digit
+    ('HDX - Tag Bot' → 'HT'), else the first non-space character, '' for an empty name."""
+    name = str(name or '')
+    words = [word for word in name.split() if word[0].isalnum()]
+    if words:
+        return ''.join(word[0] for word in words[:2]).upper()
+    return name.strip()[:1].upper()
 
 
 def hdx_format_to_icon_category(format_str):

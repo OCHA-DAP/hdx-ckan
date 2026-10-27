@@ -98,7 +98,16 @@
 
     // ── "Remember me" cookie prefill / returning-user swap ──
     // Initials-only avatar — reuses the server-rendered c-avatar markup,
-    // just fills in the initial once the cookie is read client-side.
+    // just fills in the initials once the cookie is read client-side.
+
+    function initials(name) {
+      var text = (name || '').trim();
+      var words = text.split(/\s+/).filter(function (word) { return /^[\p{L}\p{N}]/u.test(word); });
+      if (words.length) {
+        return words.slice(0, 2).map(function (word) { return word.charAt(0); }).join('').toUpperCase();
+      }
+      return text.charAt(0).toUpperCase();
+    }
 
     function showReturningUser(data) {
       loginField.value = data.login || '';
@@ -107,11 +116,8 @@
       returningName.textContent = data.display_name || '';
       returningEmail.textContent = data.email || '';
 
-      var avatarEl = returningAvatar.querySelector('.c-avatar');
       var initialsEl = returningAvatar.querySelector('.c-avatar__initials');
-      var initial = (data.display_name || '').trim().charAt(0).toUpperCase() || '?';
-      if (initialsEl) initialsEl.textContent = initial;
-      if (avatarEl) avatarEl.setAttribute('aria-label', data.display_name || '');
+      if (initialsEl) initialsEl.textContent = initials(data.display_name);
 
       checkMfa();
       updateSubmitState();

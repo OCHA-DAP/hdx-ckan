@@ -210,7 +210,7 @@ shell. The 2FA popup becomes a `c-drawer`, and so does the delete confirmation.
 
 | Need | Mapping |
 |---|---|
-| Shell, menu, breadcrumb, `subtitle` | **Reuse** the base with `user_nav_active='profile_and_password'`, `page_label=_('Profile and Password')` |
+| Shell, menu, breadcrumb, `subtitle` | **Reuse** the base with `nav_active='profile_and_password'`, `page_label=_('Profile and Password')` |
 | Profile header | **Reuse** the base's `user_profile_header` block, with a child flag for the link (D5) |
 | Public profile link | **Extend** `page-header.html`: `cta_style`, `cta_attrs` (D4) |
 | Header | **Reuse** the `.hdx-v2-user-dashboard-header` markup |

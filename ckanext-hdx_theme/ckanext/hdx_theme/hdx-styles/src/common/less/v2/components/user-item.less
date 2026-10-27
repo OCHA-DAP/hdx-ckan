@@ -1,0 +1,47 @@
+// ============================================================
+// c-user-item      — compact user row (avatar, name, meta, actions)
+// c-user-item-grid — its grid wrapper: one column, two from MD
+// Compiled output: fanstatic/v2/components/user-item.css
+// Figma: llm_docs/redesign/figma_exports/xl-sysadmin-all-sysadmins.html
+// ============================================================
+@import "../mixins.less";
+
+.c-user-item {
+    display:     flex;
+    align-items: center;
+    gap:         var(--hdx-space-13);
+
+    &__name,
+    &__meta {
+        min-width:     0;
+        white-space:   nowrap;
+        overflow:      hidden;
+        text-overflow: ellipsis;
+    }
+
+    &__meta {
+        .hdx-body-s();
+        color: var(--hdx-neutral-85);
+    }
+
+    &__actions {
+        display:     flex;
+        align-items: center;
+        flex-shrink: 0;
+        margin-left: auto;
+    }
+}
+
+.c-user-item-grid {
+    display:               grid;
+    grid-template-columns: minmax(0, 1fr);
+    column-gap:            var(--hdx-space-6);
+    row-gap:               var(--hdx-space-2);
+    list-style:            none;
+    margin:                0;
+    padding:               0;
+
+    @media (min-width: @hdx-bp-md) {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}

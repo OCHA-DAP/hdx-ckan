@@ -39,7 +39,7 @@ On look is the existing hover.
   `highlight_controllers` list. They output `<li class="active"><a>` markup, so they can't drive
   `c-nav-item`. There is no public `h.get_endpoint` or `h.is_url_for`. No v2 template uses the core nav
   helpers.
-- **v2 precedents:** both are template-declared: `user_nav_active` in `v2/user-dashboard-base.html` and
+- **v2 precedents:** both are template-declared: `nav_active` in `v2/dashboard-base.html` and
   `active_tab` in `v2/org-hero.html`. `c-anchor-links` already uses `aria-current="true"`.
 - **Jinja context:** Flask's Jinja globals expose `request` inside `{% snippet %}`; the header already
   branches on `request.path`. CKAN strips the locale prefix from `PATH_INFO` before routing, so
@@ -77,7 +77,7 @@ Measured against the live URL map; "v2" means the template extends a v2 base.
 | New sub-page in a section | automatic | automatic if same blueprint | must set the variable |
 | Fails silently on | a public top-level URL change | an internal blueprint rename/split | a forgotten variable |
 | Own page vs sub-page | same comparison | needs list endpoints | still needs a path comparison |
-| Precedent | the header's `request.path` check | core `build_nav_main` | Jinja docs recipe; `user_nav_active`, `active_tab` |
+| Precedent | the header's `request.path` check | core `build_nav_main` | Jinja docs recipe; `nav_active`, `active_tab` |
 
 - In B, `activity` serves three sections, so it needs full endpoint names, and Organisations spans
   six blueprints.

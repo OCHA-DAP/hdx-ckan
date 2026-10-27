@@ -35,6 +35,7 @@
   {'label': 'Dataviz Card', 'href': '#dataviz-card'},
   {'label': 'Organisation List Card', 'href': '#org-list-card'},
   {'label': 'Member List Card', 'href': '#member-list-card'},
+  {'label': 'User Item', 'href': '#user-item'},
   {'label': 'Request Card / Item / Archive', 'href': '#request-card'},
   {'label': 'Notification Item', 'href': '#notification-item'},
   {'label': 'Activity Item', 'href': '#activity-item'},
@@ -2531,6 +2532,42 @@
             style='secondary', size='m', tag='button',
             label='Decline' %}
       {% endcall %}
+    </div>
+
+  </section>
+
+  <section class="demo-section" id="user-item">
+    <h1 class="demo-section__title">User Item</h1>
+    <p class="demo-section__subtitle">compact user row · caller() actions · c-user-item-grid: one column, two from MD · single-line ellipsis</p>
+
+    <h2 class="demo-subsection__heading">With and without an action, meta, long name</h2>
+    <div class="demo-max-width-xl">
+      <ul class="c-user-item-grid">
+        <li>
+          {% call h.snippet('v2/components/user-item.html', name='Jane Doe', href='#') %}
+            {% snippet 'v2/components/text-button.html',
+                style='primary', size='s', label='Remove',
+                icon_src='v2/icons/user-close.svg',
+                tag='button', attrs={'aria-label': 'Remove Jane Doe'} %}
+          {% endcall %}
+        </li>
+        <li>
+          {% snippet 'v2/components/user-item.html', name='John Smith', href='#' %}
+        </li>
+        <li>
+          {% call h.snippet('v2/components/user-item.html',
+              name='Alexandra Example-Placeholder Longname Sample', href='#') %}
+            {% snippet 'v2/components/text-button.html',
+                style='primary', size='s', label='Remove',
+                icon_src='v2/icons/user-close.svg',
+                tag='button', attrs={'aria-label': 'Remove Alexandra Example-Placeholder Longname Sample'} %}
+          {% endcall %}
+        </li>
+        <li>
+          {% snippet 'v2/components/user-item.html',
+              name='Sam Sample', href='#', meta='- sam@example.org' %}
+        </li>
+      </ul>
     </div>
 
   </section>

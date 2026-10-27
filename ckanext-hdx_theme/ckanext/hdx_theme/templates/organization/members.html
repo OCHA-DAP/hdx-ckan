@@ -140,7 +140,7 @@
             {% set stats_text = h.hdx_show_singular_plural(member.ds_num, _('Dataset'), _('Datasets')) ~ ' - '
                 ~ h.hdx_show_singular_plural(member.org_num, _('Organisation'), _('Organisations')) ~ ' - '
                 ~ h.hdx_show_singular_plural(member.grp_num, _('Countries'), _('Countries')) %}
-            {% set avatar_initials = (member.display_name or member.name or 'A')[0] %}
+            {% set avatar_initials = h.hdx_initials(member.display_name or member.name) %}
 
             {% if authorized and not disable_change %}
               {% call h.snippet('v2/components/member-list-card.html',
@@ -258,7 +258,7 @@
         <div class="hdx-v2-org-members-side__bio-name">
           {% snippet 'v2/components/avatar.html',
               size='sm',
-              initials=(current_member.display_name or current_member.name or 'A')[0],
+              initials=h.hdx_initials(current_member.display_name or current_member.name),
               aria_label=current_member.display_name %}
           <a class="hdx-v2-org-members-side__bio-link" href="{{ h.url_for('user.read', id=current_member.name) }}">{{ current_member.display_name }}</a>
           <span class="hdx-v2-org-members-side__bio-sep" aria-hidden="true">|</span>
@@ -341,7 +341,7 @@
           {% for request in request_list %}
             {% set req_meta = (_('Requested') ~ ' ' ~ h.hdx_format_date(request.revision_last_updated)) if request.revision_last_updated else '' %}
             {% call h.snippet('v2/components/member-list-card.html',
-                avatar_initials=(request.user_display_name or request.user_name or 'A')[0],
+                avatar_initials=h.hdx_initials(request.user_display_name or request.user_name),
                 name=request.user_display_name, username=request.user_name,
                 profile_url=h.url_for('user.read', id=request.user_name),
                 meta_text=req_meta,

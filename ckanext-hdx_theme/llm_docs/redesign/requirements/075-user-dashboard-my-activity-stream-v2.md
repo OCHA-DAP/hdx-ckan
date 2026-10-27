@@ -170,7 +170,7 @@ activity plugin, enabled in every ini).
 
 | Need | Mapping |
 |---|---|
-| Shell, menu, breadcrumb, `subtitle` | **Reuse** `v2/user-dashboard-base.html` with `user_nav_active='my_activity_stream'` and `page_label` = "My Activity Stream" or "Activity Stream" (D14, D15) |
+| Shell, menu, breadcrumb, `subtitle` | **Reuse** `v2/user-dashboard-base.html` with `nav_active='my_activity_stream'` and `page_label` = "My Activity Stream" or "Activity Stream" (D14, D15) |
 | Header | **Reuse** the `.hdx-v2-user-dashboard-header` markup (072), with no action (D6) |
 | Timeline + type dispatch | **Reuse** `v2/activity-stream.html` with `object_type='user'`; **extend** it with opt-in `show_detail_links`, `actor_names` and `load_more_href` params (D2, D8, D16) |
 | Empty | **Reuse** `.hdx-v2-user-dashboard-empty` (072), rendered by the page (D9) |
@@ -187,7 +187,7 @@ activity plugin, enabled in every ini).
 - **Template:** a new HDX override at `THEME/templates/user/activity_stream.html`. HDX templates
   already take priority over the activity plugin's.
 - **Base:** it extends `v2/user-dashboard-base.html` for every user's stream (D1). It sets
-  `user_nav_active='my_activity_stream'` and a `page_label` that depends on `is_myself`.
+  `nav_active='my_activity_stream'` and a `page_label` that depends on `is_myself`.
   - The menu follows the viewed user and marks its Activity Stream item active, with
     `aria-current="page"` (D15).
   - The `subtitle` and the breadcrumb come from the base (D14).
@@ -286,7 +286,7 @@ activity plugin, enabled in every ini).
 | D12 Tests | None. |
 | D13 Markup | The timeline stays `div`s. |
 | D14 Other users | `page_label` = "Activity Stream" when not `is_myself`. Subtitle: "A history of {display_name}'s actions". Below the profile header (073 D27), so the title is an `<h2>`. Breadcrumb: Home / Users / {name} (→ their Datasets page) / Activity Stream. |
-| D15 Menu | `user_nav_active='my_activity_stream'` on every stream, including other users', whose menu is theirs (072 D5). The item keeps `aria-current="page"` there. |
+| D15 Menu | `nav_active='my_activity_stream'` on every stream, including other users', whose menu is theirs (072 D5). The item keeps `aria-current="page"` there. |
 | D16 Load more | `v2/activity-stream.html` gets an optional `load_more_href` (default `''`) and renders the "Load more" link after the stream in `.c-activity-stream__load-more` (`margin-top: var(--hdx-space-6)`, `components/activity-item.less`). This page passes `older_activities_url`. The org Activity tab passes its offset URL, and its `.hdx-v2-org-activity__body` rule is dropped so the gap stays 24px. |
 | D17 Deleted user | When `user_dict.state == 'deleted'` (v1's condition), a `c-label` (`_('Deleted')`, `color='red'`, `size='s'`, as on the dataset page-header) sits in the profile header (073 D26). `label.less` gets a `--red` modifier (`--hdx-error-1` background, `--hdx-error-8` text, the file-type `--web` pair) and `label.html`'s docblock lists 'red'. This also fixes the dataset page-header's "Deleted" label, which passes `red` but had no rule. |
 

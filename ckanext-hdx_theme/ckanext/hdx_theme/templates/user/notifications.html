@@ -1,6 +1,6 @@
 {% extends "v2/user-dashboard-base.html" %}
 
-{% set user_nav_active = 'notifications_settings' %}
+{% set nav_active      = 'notifications_settings' %}
 {% set page_label      = _('Notifications Settings') %}
 {% set can_unsubscribe = is_myself and subscriptions | length > 0 %}
 

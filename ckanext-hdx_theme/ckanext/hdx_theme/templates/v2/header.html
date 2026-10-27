@@ -237,7 +237,7 @@
                     data-hdx-v2-panel="user-menu">
               {% snippet 'v2/components/avatar.html',
                   size='sm',
-                  initials=c.userobj.display_name[0] | upper,
+                  initials=h.hdx_initials(c.userobj.display_name),
                   badge=notif.count > 0 %}
             </button>
             {% snippet 'v2/navbar-user-menu.html' %}
@@ -293,7 +293,7 @@
             <span class="hdx-v2-offcanvas__user-left">
               {% snippet 'v2/components/avatar.html',
                   size='sm',
-                  initials=c.userobj.display_name[0] | upper,
+                  initials=h.hdx_initials(c.userobj.display_name),
                   badge=notif.count > 0 %}
               <span class="hdx-v2-offcanvas__user-name">{{ c.userobj.display_name }}</span>
             </span>
@@ -372,7 +372,7 @@
           <div class="hdx-v2-offcanvas__user-display">
             {% snippet 'v2/components/avatar.html',
                 size='sm',
-                initials=c.userobj.display_name[0] | upper %}
+                initials=h.hdx_initials(c.userobj.display_name) %}
             <span class="hdx-v2-offcanvas__user-name">{{ c.userobj.display_name }}</span>
           </div>
 

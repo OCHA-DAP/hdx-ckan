@@ -1,0 +1,23 @@
+// ============================================================
+// pages/sysadmin.less
+// Sysadmin pages (v2/sysadmin-base.html) — v2 page-specific styles
+// Figma: llm_docs/redesign/figma_exports/xl-sysadmin-all-sysadmins.html
+// ============================================================
+
+@import "../mixins.less";
+
+// ── All Sysadmins: promote form ───────────────────────────────
+.hdx-v2-sysadmin-promote {
+    display:        flex;
+    flex-direction: column;
+    gap:            var(--hdx-space-3);
+    margin:         var(--hdx-space-12) 0 0 auto;
+
+    @media (min-width: @hdx-bp-md) { width: 80%; }
+    @media (min-width: @hdx-bp-xl) { width: 50%; }
+
+    &__actions {
+        display:         flex;
+        justify-content: flex-end;
+    }
+}
