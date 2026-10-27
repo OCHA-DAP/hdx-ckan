@@ -263,7 +263,7 @@ typing-extensions==4.12.2
     #   sqlalchemy2-stubs
 tzdata==2026.3
     # via arrow
-tzlocal==5.2
+tzlocal==5.4.5
     # via -r requirements.in
 ua-parser==0.18.0
     # via
