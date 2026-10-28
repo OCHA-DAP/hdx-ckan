@@ -1,6 +1,6 @@
 // ============================================================
 // pages/dashboard.less
-// Dashboard shell (v2/dashboard-base.html) — left menu
+// Dashboard shell (v2/dashboard-base.html) — left menu, empty state
 // Figma: llm_docs/redesign/figma_exports/xl-user-dashboard-my-organisation.html,
 //        xl-sysadmin-all-sysadmins.html
 // ============================================================
@@ -29,5 +29,17 @@
         list-style: none;
         margin:     0;
         padding:    0;
+    }
+}
+
+// ── Empty state ───────────────────────────────────────────────
+.hdx-v2-dashboard-empty {
+    .hdx-list-header-empty();
+    display:        flex;
+    flex-direction: column;
+    gap:            var(--hdx-space-4);
+
+    &__text {
+        margin: 0;
     }
 }

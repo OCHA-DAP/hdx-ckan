@@ -26,8 +26,8 @@
         actor_names={user_dict.id: user_dict.name},
         load_more_href=older_activities_url %}
   {% else %}
-    <div class="hdx-v2-user-dashboard-empty">
-      <p class="hdx-v2-user-dashboard-empty__text">{{ _('No recent activity for this user.') }}</p>
+    <div class="hdx-v2-dashboard-empty">
+      <p class="hdx-v2-dashboard-empty__text">{{ _('No recent activity for this user.') }}</p>
     </div>
   {% endif %}
 {% endblock %}

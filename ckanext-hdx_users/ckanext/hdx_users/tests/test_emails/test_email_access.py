@@ -47,7 +47,7 @@ class TestEmailAccess(object):
         profile_result = app.get(profile_url, headers={'Authorization': admin_token})
 
         assert 'janedoe3@hdx.hdxtest.org' in str(result.body)
-        assert 'All Sysadmins [' in str(result.body)
+        assert 'aria-label="Sysadmin dashboard"' in str(result.body)
         assert 'janedoe3@hdx.hdxtest.org' not in str(profile_result.body)
         assert 'janedoe3' in str(profile_result.body)
 
@@ -67,6 +67,62 @@ class TestEmailAccess(object):
             result.body), 'emails should not be visible for guests'
         assert 'example@example.com' not in str(
             profile_result.body), 'emails should not be visible for guests'
+
+    def test_user_list_as_sysadmin(self, app):
+        '''A sysadmin gets the All Users header, subtitle and email meta.'''
+        admin_token = factories.APIToken(user='testsysadmin', expires_in=2, unit=60 * 60)['token']
+
+        result = app.get(h.url_for('user.index'), headers={'Authorization': admin_token})
+        body = str(result.body)
+
+        assert '<h1 class="hdx-v2-list-header__title hdx-v2-list-header__title--dashboard">All Users</h1>' in body
+        assert 'Search and manage all registered user accounts' in body
+        assert '<span class="c-user-item__meta">- janedoe3@hdx.hdxtest.org</span>' in body
+
+    def test_user_list_as_normal_user(self, app):
+        '''A normal user gets no menu, subtitle or email meta.'''
+        user_token = factories.APIToken(user='some_user', expires_in=2, unit=60 * 60)['token']
+
+        result = app.get(h.url_for('user.index'), headers={'Authorization': user_token})
+        body = str(result.body)
+
+        assert '<h1 class="hdx-v2-list-header__title hdx-v2-list-header__title--dashboard">All Users</h1>' in body
+        assert 'aria-label="Sysadmin dashboard"' not in body
+        assert 'Search and manage all registered user accounts' not in body
+        assert 'c-user-item__meta' not in body
+
+    def test_user_list_search_and_pagination(self, app):
+        '''A search lists only matches, counts them and keeps q in the pagination links.'''
+        admin_token = factories.APIToken(user='testsysadmin', expires_in=2, unit=60 * 60)['token']
+
+        result = app.get(h.url_for('user.index', q='doe', limit=1), headers={'Authorization': admin_token})
+        body = str(result.body)
+
+        assert '<span class="hdx-v2-list-header__count hdx-v2-list-header__count--dashboard">2</span>' in body
+        assert 'Jane Doe3' in body
+        assert 'John Doe1' not in body
+        assert 'Some User' not in body
+        assert 'href="/user/?q=doe&amp;order_by=name&amp;page=2"' in body
+
+    def test_user_list_no_match(self, app):
+        '''A search with no match shows the empty state.'''
+        admin_token = factories.APIToken(user='testsysadmin', expires_in=2, unit=60 * 60)['token']
+
+        result = app.get(h.url_for('user.index', q='zzz-no-match'), headers={'Authorization': admin_token})
+        body = str(result.body)
+
+        assert 'No users found.' in body
+        assert 'c-user-item-grid' not in body
+
+    def test_user_list_page_past_last(self, app):
+        '''A page past the last one shows the empty state and the pagination.'''
+        admin_token = factories.APIToken(user='testsysadmin', expires_in=2, unit=60 * 60)['token']
+
+        result = app.get(h.url_for('user.index', limit=1, page=99), headers={'Authorization': admin_token})
+        body = str(result.body)
+
+        assert 'No users found.' in body
+        assert 'aria-label="Pagination"' in body
 
     def test_email_access_by_api(self):
 

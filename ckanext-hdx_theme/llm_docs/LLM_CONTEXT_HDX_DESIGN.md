@@ -220,7 +220,7 @@ Example page-specific template (light search):
 
 - **Template**: `ckanext-hdx_theme/ckanext/hdx_theme/templates/user/read_organizations.html`
   - Extends `v2/user-dashboard-base.html` (menu from `h.hdx_get_user_dashboard_nav_sections()`, `<title>`, profile header), which extends the shared shell `v2/dashboard-base.html` (layout, left menu at XL, breadcrumb), which extends `v2/page.html`. Children set `nav_active` and `page_label` (optionally `public_profile_link`).
-- **Core assets**: `hdx_theme/v2-search-page-styles` (sidebar/content layout classes), `hdx_theme/v2-dashboard-page-styles` (left menu), `hdx_theme/v2-user-dashboard-page-styles`.
+- **Core assets**: `hdx_theme/v2-search-page-styles` (sidebar/content layout classes), `hdx_theme/v2-dashboard-page-styles` (left menu, empty state), `hdx_theme/v2-user-dashboard-page-styles`.
 
 ---
 
@@ -246,7 +246,7 @@ Example page-specific template (light search):
 ### My Activity Stream dashboard (`/user/activity/<id>`)
 
 - **Template**: `ckanext-hdx_theme/ckanext/hdx_theme/templates/user/activity_stream.html` (HDX override of the core activity plugin's template; the `activity.user_activity` view is unchanged)
-  - Extends `v2/user-dashboard-base.html` for every user's stream; other users' streams get the profile header, "Activity Stream" labels and a Home / Users / {name} / Activity Stream breadcrumb.
+  - Extends `v2/user-dashboard-base.html` for every user's stream; other users' streams get the profile header, "Activity Stream" labels and a Home / All Users / {name} / Activity Stream breadcrumb.
   - Timeline: `v2/activity-stream.html` with `object_type='user'`, `show_detail_links` (core's `activity_list` check) and `actor_names` (the owner's name for actor-less rows); "Load more" (`load_more_href`) links to `older_activities_url`.
 - **Core assets**: as My Organisations.
 
@@ -293,10 +293,19 @@ Example page-specific template (light search):
 ### All Sysadmins (`/ckan-admin`, sysadmins only)
 
 - **Template**: `ckanext-hdx_theme/ckanext/hdx_theme/templates/admin/index.html` (HDX override of core's; core `admin.index` view unchanged)
-  - Extends `v2/sysadmin-base.html` (menu from `h.hdx_get_sysadmin_nav_sections()`, `<title>` "{page} | Sysadmin"), which extends `v2/dashboard-base.html`. Children set `nav_active` and `page_label`. The other sysadmin pages stay on v1 `admin/base.html`.
+  - Extends `v2/sysadmin-base.html` (menu from `h.hdx_get_sysadmin_nav_sections()`, `<title>` "{page} | Sysadmin"), which extends `v2/dashboard-base.html`. Children set `nav_active` and `page_label`. The other sysadmin pages, except All Users, stay on v1 `admin/base.html`.
   - `v2/list-header.html` (h1 + count + subtitle); `c-user-item` rows (`h.hdx_get_user_info` per row) in a `c-user-item-grid`, each with a one-click Remove form to core `user.sysadmin`, except the site user's and your own; a Promote form with `select.html` `searchable` loading users from core `/api/2/util/user/autocomplete` (`data-source`).
 - **New components**: `v2/components/user-item.html` (`c-user-item`, `c-user-item-grid`).
 - **Core assets**: `hdx_theme/v2-search-page-styles`, `hdx_theme/v2-dashboard-page-styles`, `hdx_theme/v2-sysadmin-page-styles`, `hdx_theme/v2-select2-styles` / `v2-select2-scripts`.
+
+---
+
+### All Users (`/user/`, any logged-in user)
+
+- **Template**: `ckanext-hdx_theme/ckanext/hdx_theme/templates/user/list.html` (HDX override of core's; core `user.index` view, parameters and auth unchanged)
+  - Extends `v2/sysadmin-base.html`; non-sysadmins get no menu, no subtitle and no emails (breadcrumb Home / All Users).
+  - `v2/list-header.html` (h1 + `page.item_count`); a GET search form submitting only `q`; `c-user-item` rows in a `c-user-item-grid`, with "- {email}" `meta` for sysadmin viewers; "No users found." (`.hdx-v2-dashboard-empty`) when empty; `c-pagination` carrying `q` and `order_by`. No sort or page-size controls.
+- **Core assets**: as All Sysadmins, without the select2 bundles.
 
 ---
 

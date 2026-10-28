@@ -117,8 +117,8 @@ dashboard shell, and Unsubscribe opens the 051 unsubscribe drawer on the same pa
 ### 1.5 Reusable v2 pieces
 - **Shell:** `THEME/templates/v2/user-dashboard-base.html` (072): menu, breadcrumb, `<title>`, page
   styles, opt-in `user_profile_header` block. Needs `user_dict` and `is_myself`.
-- **Header / empty:** `.hdx-v2-user-dashboard-header`, `.hdx-v2-user-dashboard-empty`
-  (`pages/user-dashboard.less`).
+- **Header / empty:** `.hdx-v2-user-dashboard-header` (`pages/user-dashboard.less`),
+  `.hdx-v2-dashboard-empty` (`pages/dashboard.less`).
 - **Card:** `c-dataset-card`. Its frame equals Figma's card (neutral-0, neutral-1 border, `radius-sm`,
   `shadow-sm`, 16px padding). Its `labels` top row (org left, labels right) is Figma's hidden top row.
   `caller()` gives an actions row below the body.
@@ -164,7 +164,7 @@ dashboard shell, and Unsubscribe opens the 051 unsubscribe drawer on the same pa
 |---|---|---|
 | Shell | v1 `page.html`, BS5 tab bar, col-3 profile card | `v2/user-dashboard-base.html` |
 | Identity | Profile card for every user | Profile header on another user's page only |
-| Breadcrumb | Users / {name} | Own: Home / Account and Settings / Notifications Settings. Others: Home / Users / {name} / Notifications Settings |
+| Breadcrumb | Users / {name} | Own: Home / Account and Settings / Notifications Settings. Others: Home / All Users / {name} / Notifications Settings |
 | Label | Tab "Notifications"; v2 menu "Notifications settings" | "Notifications Settings" (D6) |
 | Header | "User Settings" + "Subscriptions" | Title + subtitle (D7, D9) |
 | Item | Bootstrap row, red text link | `c-dataset-card` with `meta_items` and a title action (D4) |
@@ -184,7 +184,7 @@ dashboard shell, and Unsubscribe opens the 051 unsubscribe drawer on the same pa
 | Drawers | **Extract** 051's two unsubscribe drawers from `modals.html` into a shared snippet (D1) |
 | Submit + analytics | **Reuse** `util.js` `onUnsubscribeSubmit` unchanged (D1, D13) |
 | Hub behaviour | **New** `fanstatic/v2/pages/notifications-settings.js` (D1, D2) |
-| Empty state | **Reuse** `.hdx-v2-user-dashboard-empty` (D10) |
+| Empty state | **Reuse** `.hdx-v2-dashboard-empty` (D10) |
 | List | **Reuse** `c-dataset-card-list` (D23) |
 
 ---
@@ -220,7 +220,7 @@ dashboard shell, and Unsubscribe opens the 051 unsubscribe drawer on the same pa
      - own page with an active token only (D20), the title action: Unsubscribe (tertiary s, `delete.svg` left) with a JSON
        data attribute holding the token, object id, name, type, email and the two type-specific texts
        (D3).
-  4. Without subscriptions: `.hdx-v2-user-dashboard-empty` (D10).
+  4. Without subscriptions: `.hdx-v2-dashboard-empty` (D10).
   5. Own page with subscriptions: the drawers snippet.
 - **New `c-dataset-card` params** (D4):
   - `meta_items` {list}: `label`, `value`, optional `tooltip` {text, id, aria_label} and `chip`
@@ -305,7 +305,7 @@ dashboard shell, and Unsubscribe opens the 051 unsubscribe drawer on the same pa
 | D7 Subtitle | Figma's: "Set how often you receive email notifications, or unsubscribe entirely". |
 | D8 Other user | Read-only for a sysadmin on another user's page: no Unsubscribe, no drawers, no hub JS. |
 | D9 Other-user subtitle | "Email notifications {name} receives" (display name); the title is an `<h2>` under the profile header. |
-| D10 Empty | `.hdx-v2-user-dashboard-empty`. Own: "To set up notifications use the “Get Notified” button on dataset, crisis, organisation or location pages." Others: "{name} hasn't set up any email notifications." |
+| D10 Empty | `.hdx-v2-dashboard-empty`. Own: "To set up notifications use the “Get Notified” button on dataset, crisis, organisation or location pages." Others: "{name} hasn't set up any email notifications." |
 | D11 Inaccessible object | `NotAuthorized` is treated like `ObjectNotFound`: warning, subscription dropped; no page 403. |
 | D12 Meta text | 14px: `.hdx-body-s-semibold()` label, `.hdx-body-s()` value, neutral-85. |
 | D13 Analytics | Both events identical to the object pages': object id and `name`, popupSource `null`, hashed email on confirm. `analytics_came_from` kept. |

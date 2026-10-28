@@ -100,7 +100,7 @@ revoke view, the actions and auth rules, the `expire_api_token` plugin and HDX's
 - **Table:** `table.html` (`c-table`): neutral-1 border, neutral-01 header, zebra rows, 12px
   neutral-85 cells with ellipsis (200px cap), and `__scroll` with `overflow-x: auto`. Cells are
   printed as `{{ cell }}`, so Markup passes through unescaped. This is its first real call site.
-- **Empty state:** `.hdx-v2-user-dashboard-empty`.
+- **Empty state:** `.hdx-v2-dashboard-empty`.
 - **Flash:** `v2/page.html` renders flashes as `c-alert` (`alert-success` → `success`) above the
   columns, with `h.literal`.
 - **Copy:** `copy-button.html` (`c-copy-button`; its JS is in `v2-components-scripts`).
@@ -138,7 +138,7 @@ revoke view, the actions and auth rules, the `expire_api_token` plugin and HDX's
 |---|---|---|
 | Shell | v1 `page.html`, BS5 tab bar, col-3 profile card | `v2/user-dashboard-base.html`, left menu at XL (D1) |
 | Identity | Profile card for every user | Profile header on another user's page only (D3) |
-| Breadcrumb | Users / {name} | Own: Home / Account and Settings / API Tokens. Others: Home / Users / {name} / API Tokens |
+| Breadcrumb | Users / {name} | Own: Home / Account and Settings / API Tokens. Others: Home / All Users / {name} / API Tokens |
 | Header | "User Settings" + `<legend>` "Manage API Tokens" | Title "API Tokens" + own/other subtitle (D2) |
 | Fields | `form.input` / `form.select` | `text-field.html` `m` / `select.html`, v1 labels (D4–D6) |
 | Errors | Summary box + field messages | Field messages only (D7) |
@@ -149,7 +149,7 @@ revoke view, the actions and auth rules, the `expire_api_token` plugin and HDX's
 | Empty | "You haven't created any API Tokens." | Dashboard empty state, own/other copy (D10) |
 | Token created | Core flash: `<code>` + icon-only `copy-into-buffer` button | v2 flash: success `c-alert` with the token + `c-copy-button` (D11) |
 | Data | `user_show` with datasets + follower count | Bare `user_show` (D16) |
-| `<title>` | API Tokens | Base: API Tokens \| {name} \| Users |
+| `<title>` | API Tokens | Base: API Tokens \| {name} \| All Users |
 
 | Need | Mapping |
 |---|---|
@@ -160,7 +160,7 @@ revoke view, the actions and auth rules, the `expire_api_token` plugin and HDX's
 | Units without a placeholder entry | **Extend** `select.html`: no placeholder by default (D5) |
 | Buttons | **Reuse** `button.html` |
 | Table | **Reuse** `table.html` as-is |
-| Empty state | **Reuse** `.hdx-v2-user-dashboard-empty` |
+| Empty state | **Reuse** `.hdx-v2-dashboard-empty` |
 | List/create view | **Override** `HDXApiTokenView` in `USERS/views/user.py` (D11, D16) |
 | Token flash | **New** `user/snippets/api_token_created.html`, reusing `copy-button.html`, shown through the `v2/page.html` flash → `c-alert` |
 | Layout | **New** page blocks `.hdx-v2-api-tokens` and `.hdx-v2-api-token-created` in `pages/user-dashboard.less`; **reuse** the shared `.hdx-v2-user-dashboard-actions` and `.hdx-v2-user-dashboard-secret` |
@@ -215,7 +215,7 @@ revoke view, the actions and auth rules, the `expire_api_token` plugin and HDX's
 - **List:**
   - Title "All API Tokens", `<h2>` on your own page and `<h3>` on another user's, class
     `hdx-v2-api-tokens__title`.
-  - With tokens, the list snippet; without, `.hdx-v2-user-dashboard-empty` (D10).
+  - With tokens, the list snippet; without, `.hdx-v2-dashboard-empty` (D10).
 - **List snippet:**
   - `headers=[_('App/Token name'), _('Last access'), _('Expires at'), _('Actions')]`.
   - Rows are collected in a `namespace`: `token.name` as plain text, the two date cells with the
@@ -308,7 +308,7 @@ revoke view, the actions and auth rules, the `expire_api_token` plugin and HDX's
 | D7 Errors | Per field only, through the components' `errors`; no summary alert. |
 | D8 Table | `table.html` as-is; the Revoke cell is Markup from a `{% set %}` block; the rows are built in the rewritten `api_token_list.html`. |
 | D9 Revoke | `c-button` tertiary s in a POST form; core's view; no confirm and no flash, as today. |
-| D10 Empty | "All API Tokens" stays; `.hdx-v2-user-dashboard-empty` with "You haven't created any API Tokens." or "{name} hasn't created any API Tokens." (display name). |
+| D10 Empty | "All API Tokens" stays; `.hdx-v2-dashboard-empty` with "You haven't created any API Tokens." or "{name} hasn't created any API Tokens." (display name). |
 | D11 Token flash | HDX POST override flashes `api_token_created.html`: v1 text, the token as plain wrapping text, `c-copy-button` with its default label `_('Copy')`. No Bootstrap classes, no `<code>`, no `copy-into-buffer`. |
 | D12 Widths | `.hdx-v2-api-tokens` (form and list) 100% SM, 80% MD and XL. |
 | D13 Unit kept | String option values; `selected` is the posted unit or `'86400'`. |

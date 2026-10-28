@@ -142,7 +142,7 @@ Decisions confirmed with the user are listed in §8.
 | Archive | — | Edit popup at `#field_archived` (D17) |
 | Group message | — | Link to the dataset page's drawer (D18, D19) |
 | Pager | `page.pager()` | `c-pagination` via the wrapper (D4) |
-| `<title>` | Manage \| {name} \| Users | My Datasets \| {name} \| Users (inherited from the base) |
+| `<title>` | Manage \| {name} \| Users | My Datasets \| {name} \| All Users (inherited from the base) |
 
 ---
 
@@ -247,7 +247,7 @@ Decisions confirmed with the user are listed in §8.
 | D25 Own page | `admin_view=is_myself`: another user's page gets the public search card, for every viewer. The view passes `is_myself` to the search logic as `owner_view`, which skips the `ext_update_status` facet and defaults to Last Modified. |
 | D26 Deleted label | A red "Deleted" label in the profile header (D27), via `c-page-header`'s `state_label_text` / `state_label_color`, when `user_dict.state == 'deleted'`. |
 | D27 Profile header | On another user's page (public-profile export), the base's opt-in `user_profile_header` block renders `c-page-header` with a new `avatar` param (`__identity`): size-`l` initials from `h.hdx_initials(display_name)` (084), the name, Member since, the rendered `about` (clamped) and the D26 label. The component's type is kept (32px title vs the export's 28px). It is `flush` (the column's padding applies) and followed by a `c-divider` (`--hdx-neutral-1`) that reaches the column borders at XL. A child that sets `public_profile_link` also gets a "View public profile" text-button CTA (`cta_style='text'`, new tab). |
-| D28 Breadcrumb, menu | Another user's page: Home / Users (`user.index`) / {display_name}. Their menu lists Datasets before Activity Stream (the export's and v1's tab order). |
+| D28 Breadcrumb, menu | Another user's page: Home / All Users (`user.index`) / {display_name}. Their menu lists Datasets before Activity Stream (the export's and v1's tab order). |
 
 ---
 

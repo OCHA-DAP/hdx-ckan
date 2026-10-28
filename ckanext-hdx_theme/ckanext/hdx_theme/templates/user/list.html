@@ -1,33 +1,55 @@
-{% extends "admin/base.html" %}
+{% extends "v2/sysadmin-base.html" %}
 
-{% block subtitle %}{{ _('All Users') }}{% endblock %}
+{% set nav_active  = 'all_users' %}
+{% set page_label  = _('All Users') %}
+{% set is_sysadmin = g.userobj and g.userobj.sysadmin %}
 
-{% block breadcrumb_content %}
-  {% snippet "snippets/active_breadcrumb_item.html", title=_('Users'), position=2 %}
-{% endblock %}
-{% block primary_content_module_margin %}{% endblock %}
-{% block primary_content_inner %}
-  <article class="module">
-    <div class="module-content">
-      <h1 class="page-heading">
-        {% block page_heading %}{{ _('Users') }}{% endblock %}
-      </h1>
-      {% block users_list %}
-        <ul class="user-list">
-          {% block users_list_inner %}
-            {% for user in page.items %}
-              <li>{{ h.linked_user(user.name, maxlength=20) }}{% if g.userobj.sysadmin %}- {{user.email}} {% endif %}</li>
-            {% endfor %}
-          {% endblock %}
-        </ul>
-      {% endblock %}
+{% block primary %}
+  {% snippet 'v2/list-header.html',
+      list_title=page_label,
+      count=page.item_count,
+      list_subtitle=_('Search and manage all registered user accounts') if is_sysadmin else '',
+      title_tag='h1',
+      title_size='dashboard',
+      show_controls=False,
+      show_filters=False %}
+
+  <form class="hdx-v2-search-bar-row" method="get" action="{{ h.url_for('user.index') }}">
+    {% snippet 'v2/components/search-input.html',
+        size='m',
+        name='q',
+        value=q,
+        icon_submit=True,
+        state='filled' if q else 'enabled',
+        placeholder=_('Search for users'),
+        input_attrs={'aria-label': _('Search for users')},
+        extra_classes='c-search-input--block' %}
+  </form>
+
+  {% if page.items %}
+    <ul class="c-user-item-grid">
+      {% for user in page.items %}
+        <li>
+          {% snippet 'v2/components/user-item.html',
+              name=user.display_name,
+              href=h.url_for('user.read', id=user.name),
+              meta='- ' ~ user.email if is_sysadmin and user.email else '' %}
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <div class="hdx-v2-dashboard-empty">
+      <p class="hdx-v2-dashboard-empty__text">{{ _('No users found.') }}</p>
     </div>
-    {% block page_pagination %}
-      {{ page.pager(q=q, order_by=order_by) }}
-    {% endblock %}
-  </article>
-{% endblock %}
+  {% endif %}
 
-{% block secondary_content %}
-  {% snippet 'user/snippets/user_search.html', q=q %}
+  {% if page.page_count > 1 %}
+    <div class="hdx-v2-pagination-row">
+      {% snippet 'v2/components/pagination.html',
+          size='md',
+          current_page=page.page,
+          total_pages=page.page_count,
+          base_url=h.url_for('user.index', q=q, order_by=order_by) ~ '&page=' %}
+    </div>
+  {% endif %}
 {% endblock %}

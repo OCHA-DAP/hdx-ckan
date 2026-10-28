@@ -157,7 +157,7 @@ activity plugin, enabled in every ini).
 | Element | Current (v1) | Target (v2) |
 |---|---|---|
 | Shell | v1 `page.html`, BS5 tab bar, col-3 profile card | `v2/user-dashboard-base.html`, left menu at XL, for every user's stream (D1, D10, D15) |
-| Breadcrumb | Users / {name} | Own: Home / Activity and Content / My Activity Stream (D7). Others: Home / Users / {name} / Activity Stream (D14) |
+| Breadcrumb | Users / {name} | Own: Home / Activity and Content / My Activity Stream (D7). Others: Home / All Users / {name} / Activity Stream (D14) |
 | Header | Hidden `<h1>` | Visible `<h1>` + subtitle: "My Activity Stream" / "A history of your actions"; others: profile header, then an `<h2>` "Activity Stream" / "A history of {name}'s actions" (D6, D14) |
 | Sort | None | None (D5) |
 | Item | FA icon + sentence + date | `c-activity-item` timeline |
@@ -166,14 +166,14 @@ activity plugin, enabled in every ini).
 | Pagination | Newer / Older buttons | Forward-only "Load more" (D4) |
 | Empty | "No activity found for this type" | "No recent activity for this user." in the dashboard empty state (D9) |
 | Deleted user | "Deleted" label on the profile card | Red `c-label` in the profile header (D17) |
-| `<title>` | Activity Stream \| {name} | Base: {page_label} \| {name} \| Users (D11) |
+| `<title>` | Activity Stream \| {name} | Base: {page_label} \| {name} \| All Users (D11) |
 
 | Need | Mapping |
 |---|---|
 | Shell, menu, breadcrumb, `subtitle` | **Reuse** `v2/user-dashboard-base.html` with `nav_active='my_activity_stream'` and `page_label` = "My Activity Stream" or "Activity Stream" (D14, D15) |
 | Header | **Reuse** the `.hdx-v2-user-dashboard-header` markup (072), with no action (D6) |
 | Timeline + type dispatch | **Reuse** `v2/activity-stream.html` with `object_type='user'`; **extend** it with opt-in `show_detail_links`, `actor_names` and `load_more_href` params (D2, D8, D16) |
-| Empty | **Reuse** `.hdx-v2-user-dashboard-empty` (072), rendered by the page (D9) |
+| Empty | **Reuse** `.hdx-v2-dashboard-empty`, rendered by the page (D9) |
 | Deleted label | **Reuse** `c-label` size s; **extend** `label.less` with a `--red` modifier (D17) |
 | Item | **Extend** `c-activity-item` with an optional `links` param (`[{label, href}]`) rendering `__links` (D2, D3) |
 | Load more | **Reuse** `c-text-link` secondary xs, rendered by the dispatcher (D4, D16) |
@@ -225,7 +225,7 @@ activity plugin, enabled in every ini).
   - No query: the owner's name covers every CKAN 2.11 row (§1.4).
   - The `follow user` subject uses the same dict, falling back to `object_id`.
 - **Empty (D9):** the header always renders. With no activity, the page renders
-  `.hdx-v2-user-dashboard-empty` below it and does not call the dispatcher.
+  `.hdx-v2-dashboard-empty` below it and does not call the dispatcher.
 - **Analytics:** no new tracking. Only `pageTitle` changes (D11).
 
 ### Risks & Edge Cases
@@ -280,12 +280,12 @@ activity plugin, enabled in every ini).
 | D6 Header | The 072 `.hdx-v2-user-dashboard-header` markup (`<h1>`, or `<h2>` below another user's profile header, + subtitle), with no action. |
 | D7 Breadcrumb (own) | The base's Home / Activity and Content / My Activity Stream, not Figma's "Account and Settings". |
 | D8 Actor | No helper, no query. `v2/activity-stream.html` gets an optional `actor_names` dict (`{user_id: username}`, default `{}`); this page passes `{user_dict.id: user_dict.name}`. Label order: `data.actor`, `actor_names`, `user_id`, `_('unknown user')`. The `follow user` subject uses the same dict, else `object_id`. The dataset page and the org Activity tab pass nothing, so their UUID actors (resource-view and org-change rows) are unchanged and left for a follow-up. |
-| D9 Empty | **Dashboard empty state.** The page renders `.hdx-v2-user-dashboard-empty` (072) with "No recent activity for this user." and calls the dispatcher only when there is activity. No `user` branch in the dispatcher. |
+| D9 Empty | **Dashboard empty state.** The page renders `.hdx-v2-dashboard-empty` with "No recent activity for this user." and calls the dispatcher only when there is activity. No `user` branch in the dispatcher. |
 | D10 Profile card | On another user's stream, 073's profile header (D27) replaces it. |
-| D11 Title | The base's "{page_label} \| {display_name} \| Users". The Mixpanel `pageTitle` change is accepted. |
+| D11 Title | The base's "{page_label} \| {display_name} \| All Users". The Mixpanel `pageTitle` change is accepted. |
 | D12 Tests | None. |
 | D13 Markup | The timeline stays `div`s. |
-| D14 Other users | `page_label` = "Activity Stream" when not `is_myself`. Subtitle: "A history of {display_name}'s actions". Below the profile header (073 D27), so the title is an `<h2>`. Breadcrumb: Home / Users / {name} (→ their Datasets page) / Activity Stream. |
+| D14 Other users | `page_label` = "Activity Stream" when not `is_myself`. Subtitle: "A history of {display_name}'s actions". Below the profile header (073 D27), so the title is an `<h2>`. Breadcrumb: Home / All Users / {name} (→ their Datasets page) / Activity Stream. |
 | D15 Menu | `nav_active='my_activity_stream'` on every stream, including other users', whose menu is theirs (072 D5). The item keeps `aria-current="page"` there. |
 | D16 Load more | `v2/activity-stream.html` gets an optional `load_more_href` (default `''`) and renders the "Load more" link after the stream in `.c-activity-stream__load-more` (`margin-top: var(--hdx-space-6)`, `components/activity-item.less`). This page passes `older_activities_url`. The org Activity tab passes its offset URL, and its `.hdx-v2-org-activity__body` rule is dropped so the gap stays 24px. |
 | D17 Deleted user | When `user_dict.state == 'deleted'` (v1's condition), a `c-label` (`_('Deleted')`, `color='red'`, `size='s'`, as on the dataset page-header) sits in the profile header (073 D26). `label.less` gets a `--red` modifier (`--hdx-error-1` background, `--hdx-error-8` text, the file-type `--web` pair) and `label.html`'s docblock lists 'red'. This also fixes the dataset page-header's "Deleted" label, which passes `red` but had no rule. |
@@ -321,7 +321,7 @@ activity plugin, enabled in every ini).
   - "Load more" only when older activity exists
   - the dashboard empty state when there is none
 - Another user's stream: "Activity Stream" + "A history of {name}'s actions", breadcrumb
-  Home / Users / {name} / Activity Stream, that user's menu with the item active. Detail links only for a sysadmin.
+  Home / All Users / {name} / Activity Stream, that user's menu with the item active. Detail links only for a sysadmin.
 - A deleted user's stream shows a red "Deleted" label in the profile header. The dataset page's "Deleted"
   label is now red too.
 - Anonymous: 403, as before.

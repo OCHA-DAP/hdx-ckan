@@ -275,7 +275,7 @@ Nothing else changes.
 | `fanstatic/v2/pages/search.js` | `FILTER_PARAMS` gains `'filter_by_maintainers'`, so the overlay "Clear filters" removes it. "Clear selection" calls `setNavParam(facet, null)`. No Search behaviour changes |
 | `fanstatic/v2/pages/hdx-connect.js` | Maintainer filter handler (§6.4) |
 | `fanstatic/webassets.yml` | New `v2-hdx-connect-scripts` (`<<: *common-js`, `v2/pages/hdx-connect.js` only). `v2-hdx-connect-page-scripts` (`url-nav.js` + `hdx-connect.js`) stays for the user page; each page loads exactly one of the two |
-| `LESS/pages/hdx-connect.less` | `&__empty { .hdx-list-header-empty(); margin: 0; }` inside `.hdx-v2-hdx-connect`. `hdx-v2-user-dashboard-empty` stays: other user pages use it |
+| `LESS/pages/hdx-connect.less` | `&__empty { .hdx-list-header-empty(); margin: 0; }` inside `.hdx-v2-hdx-connect`. `hdx-v2-dashboard-empty` stays: other dashboard pages use it |
 
 ---
 

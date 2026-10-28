@@ -121,14 +121,14 @@ the user approved it.
 |---|---|---|
 | Shell | v1 `page.html`, BS5 tab bar, col-3 profile card | `v2/user-dashboard-base.html`, left menu at XL (D1) |
 | Identity | Profile card for every user | Profile header on another user's page only (D5) |
-| Breadcrumb | Users / {name} | Own: Home / Account and Settings / User Permission. Others: Home / Users / {name} / User Permission |
+| Breadcrumb | Users / {name} | Own: Home / Account and Settings / User Permission. Others: Home / All Users / {name} / User Permission |
 | Header | "User Settings" + hidden `<h2>` | Visible title + subtitle (D2) |
 | Checkboxes | `form.checkbox` macro | `c-checkbox` rows in a fieldset (D13) |
 | Submit | `btn btn-primary` | `c-button` primary M (D4) |
 | JS | `basic-form` (leave warning only) | None (D8) |
 | After save | 200 render, no message | 302 to the same page + success flash (D6, D7) |
 | Unknown id | 500 | 404 (D9) |
-| `<title>` | User Permission | Base: User Permission \| {name} \| Users |
+| `<title>` | User Permission | Base: User Permission \| {name} \| All Users |
 
 | Need | Mapping |
 |---|---|

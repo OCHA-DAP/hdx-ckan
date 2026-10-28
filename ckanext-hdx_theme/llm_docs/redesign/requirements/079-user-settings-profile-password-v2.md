@@ -199,14 +199,14 @@ shell. The 2FA popup becomes a `c-drawer`, and so does the delete confirmation.
 |---|---|---|
 | Shell | v1 `page.html`, BS5 tab bar, col-3 card | `v2/user-dashboard-base.html`, left menu at XL (D1) |
 | Identity | Profile card | Profile header on own and other pages, with "View public profile" (D2, D3) |
-| Breadcrumb | Users / {name} | Own: Home / Account and Settings / Profile and Password. Others: Home / Users / {name} / Profile and Password |
+| Breadcrumb | Users / {name} | Own: Home / Account and Settings / Profile and Password. Others: Home / All Users / {name} / Profile and Password |
 | Header | "User Settings" + "Profile" legend | "Profile and Password" + own/other subtitle (D2) |
 | Fields | `form.input` / `form.textarea` in a Bootstrap grid | `text-field.html` `m`, sentence-case labels (D6, D7) |
 | Errors | Summary box + field messages | Field messages; `c-alert` only for a non-field error (D8) |
 | Submit | `btn btn-primary` "Update Profile" | `c-button` primary m "Update profile", right-aligned (D6, D7) |
 | 2FA | v1 popup, jQuery, stored secret shown | `c-drawer`, v2 page script, QR/secret only during setup (D12–D15) |
 | Delete | `hdx_confirm-action` / Bootstrap modal | `c-drawer` with a POST form (D16) |
-| `<title>` | Profile and Password | Base: Profile and Password \| {name} \| Users (D19) |
+| `<title>` | Profile and Password | Base: Profile and Password \| {name} \| All Users (D19) |
 
 | Need | Mapping |
 |---|---|
@@ -422,7 +422,7 @@ shell. The 2FA popup becomes a `c-drawer`, and so does the delete confirmation.
 | D16 Delete | `delete-user-drawer` with a POST form to core `user.delete`; v1 texts; maintainers get the list and a disabled Confirm; Cancel + Confirm. The action, access check and maintainer lookup use `user_dict.id` (`data.id` is the URL id after a failed save). |
 | D17 Drawer list | `.hdx-v2-org-members__pkg-list` moves to `drawer.less` as `c-drawer-form__list`; its markup moves to `v2/maintainer-datasets-list.html`, which the org members drawer uses too. |
 | D18 Width | `.hdx-v2-user-profile` 100% at SM, 80% from MD (own rule). |
-| D19 Analytics | No new events. The Mixpanel page title follows the base subtitle, "Profile and Password \| {name} \| Users", as on 072–078. |
+| D19 Analytics | No new events. The Mixpanel page title follows the base subtitle, "Profile and Password \| {name} \| All Users", as on 072–078. |
 | D20 Tests | Update the five `TestEditUserEmail` tests for the v2 markup (email errors under the Email field). Add to `TestEditUserEmail`: own GET (title, link with `target="_blank"`); 2FA section/drawer only for sysadmin viewers; delete drawer only for sysadmins, with Confirm disabled for maintainers; wrong old password → error under its field. Add to `test_mfa.py`: 2FA on → the on state without the stored secret. |
 | D21 Unchanged | View (except D1), actions, schema, validators, auth, 2FA endpoints and flashes, core delete view, `_before_request` redirect, field names, CSRF. |
 | D22 New copy | The other-user subtitle; "Two-step verification is on."; the 2FA drawer title "Two-step verification" (v1: "How to turn on two-step verification"); the delete drawer title "Delete account" with the org drawer's "Confirm". |

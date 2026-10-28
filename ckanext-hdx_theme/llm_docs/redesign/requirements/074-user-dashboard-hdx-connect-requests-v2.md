@@ -322,7 +322,7 @@ Open are always `modified_at desc`.
 |---|---|---|---|
 | Shell | v1 `page.html`, BS5 tab bar, "User Dashboard" heading | 072 base + left nav (XL) | Q1 |
 | Breadcrumb | Home > Dashboard | Home / Activity and Content / HDX Connect Requests (from the base) | derived |
-| `<title>` | "HDX" (empty subtitle) | "HDX Connect Requests \| {name} \| Users" | derived |
+| `<title>` | "HDX" (empty subtitle) | "HDX Connect Requests \| {name} \| All Users" | derived |
 | Title | "My Requests [N]" | H1 "HDX Connect Requests" + count (New + Open + Archived requests) + Figma subtitle | Q24, Q40 |
 | Section names | New / Open / Archived | New / Open / Archived, each with a count | Q38 |
 | Empty section | "No requests found." | Same copy, v2 styling | Q23 |
@@ -555,7 +555,7 @@ All strings go through `_()`.
 
 - **Analytics:**
   - No new events.
-  - The generic Mixpanel page view's `pageTitle` changes from `' None '` to "HDX Connect Requests | {name} | Users"
+  - The generic Mixpanel page view's `pageTitle` changes from `' None '` to "HDX Connect Requests | {name} | All Users"
     (accepted, as in 072 D13).
 - **Notification:** in `light/notifications/requestdata_snippet.html`, the link text "My Requests" becomes "HDX Connect
   Requests" in **both** branches (the translated v2 branch and the untranslated legacy branch). The URL is unchanged.
@@ -670,7 +670,7 @@ All questions were resolved with the user. The **User choice** column records ea
 | Q51 | Sort label (Figma / v2 "Sort by" vs v1 "Order by:") | "Sort by" / "Order by" | "Sort by" | **"Sort by"** |
 | Q52 | `maintainers` POST value (v1 sends "[object Object]", unused) | JSON string / omit / literal v1 value | JSON | **JSON string** |
 | Q53 | Yes / No failure alert position | One alert moved by JS / fixed under the Open heading / one per request | Moved by JS | **One alert, moved under the failed request** |
-| Q54 | Empty section styling | 072's `hdx-v2-user-dashboard-empty` / compact page-LESS line | Reuse | **`<p class="hdx-v2-hdx-connect__empty">`** in `hdx-connect.less` (080 D15) |
+| Q54 | Empty section styling | the dashboard `hdx-v2-dashboard-empty` / compact page-LESS line | Reuse | **`<p class="hdx-v2-hdx-connect__empty">`** in `hdx-connect.less` (080 D15) |
 | Q55 | Archive title underline (Figma underlines; Q9 made it plain text) | No underline / underlined | No underline | **No underline** |
 | Q56 | Quote styling shared by the request item and the drawer summary | `.hdx-quote()` mixin / duplicate / plain text in the drawer | Mixin | **`.hdx-quote()`** (+ `.hdx-quote-marks()`) in `mixins.less` |
 | Q57 | Open footer (Figma omits "Intended use") | Show intended use (v1) / omit (Figma) | Show | **Show "Intended use"** |

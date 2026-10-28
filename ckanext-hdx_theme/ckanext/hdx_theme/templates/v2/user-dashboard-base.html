@@ -14,7 +14,7 @@
 
   Pages that can show another user output {{ self.user_profile_header() }}
   at the top of primary; it is never rendered automatically. When is_myself
-  is false, the breadcrumb is Users / {name} (/ page_label, except on Datasets).
+  is false, the breadcrumb is All Users / {name} (/ page_label, except on Datasets).
   A child that sets public_profile_link = true (top level) gets a
   "View public profile" link in that header.
 #}
@@ -22,7 +22,7 @@
 {% set nav_sections   = h.hdx_get_user_dashboard_nav_sections(user_dict.name) %}
 {% set nav_aria_label = _('User dashboard') %}
 
-{% block subtitle %}{{ page_label }} {{ g.template_title_delimiter }} {{ user_dict.display_name }} {{ g.template_title_delimiter }} {{ _('Users') }}{% endblock %}
+{% block subtitle %}{{ page_label }} {{ g.template_title_delimiter }} {{ user_dict.display_name }} {{ g.template_title_delimiter }} {{ _('All Users') }}{% endblock %}
 
 {% block styles %}
   {{ super() }}
@@ -31,7 +31,7 @@
 
 {% block breadcrumb_items %}
   {% if is_myself is defined and not is_myself %}
-    {% set crumbs = [{'label': _('Users'), 'href': h.url_for('user.index')}] %}
+    {% set crumbs = [{'label': _('All Users'), 'href': h.url_for('user.index')}] %}
     {% if nav_active == 'my_datasets' %}
       {% set crumbs = crumbs + [{'label': user_dict.display_name, 'href': ''}] %}
     {% else %}

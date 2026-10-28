@@ -96,8 +96,8 @@
       {% endfor %}
     </ul>
   {% else %}
-    <div class="hdx-v2-user-dashboard-empty">
-      <p class="hdx-v2-user-dashboard-empty__text">
+    <div class="hdx-v2-dashboard-empty">
+      <p class="hdx-v2-dashboard-empty__text">
         {{ _('To set up notifications use the “Get Notified” button on dataset, crisis, organisation or location pages.') if is_myself else _("{name} hasn't set up any email notifications.").format(name=user_dict.display_name) }}
       </p>
     </div>

@@ -52,8 +52,8 @@
     {% if tokens %}
       {% snippet 'user/snippets/api_token_list.html', tokens=tokens, user_dict=user_dict %}
     {% else %}
-      <div class="hdx-v2-user-dashboard-empty">
-        <p class="hdx-v2-user-dashboard-empty__text">
+      <div class="hdx-v2-dashboard-empty">
+        <p class="hdx-v2-dashboard-empty__text">
           {{ _("You haven't created any API Tokens.") if is_myself else _("{name} hasn't created any API Tokens.").format(name=user_dict.display_name) }}
         </p>
       </div>

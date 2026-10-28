@@ -137,7 +137,7 @@ HDX, "Member since" means the **org's** `created` date (`c-org-list-card`, `v2/o
 | Counts | Datasets (link) – Members (link) – Followers | Datasets • Members, plain text (D11) |
 | Pagination | None | None (D8) |
 | Empty state | Copy + button, top button hidden | Header + button always; copy below, no second button (D12) |
-| `<title>` | Manage \| {name} \| Users | My Organisations \| {name} \| Users (D13) |
+| `<title>` | Manage \| {name} \| Users | My Organisations \| {name} \| All Users (D13) |
 | Sysadmin "More" | In tab bar | Dropped (D4) |
 
 ---
@@ -227,7 +227,7 @@ HDX, "Member since" means the **org's** `created` date (`c-org-list-card`, `v2/o
 | D10 Card API | `c-org-list-card` gets optional `role` (a translated label), `member_since` and `last_updated` (raw dates). **Each part renders only when passed**, joined with `' - '`: "Admin - Last updated on 31 October 2023". Dates use `h.hdx_format_date`, with `_('Unknown')` for an empty or unparseable value. My Organisations passes `role` (mapping `sysadmin`/`admin`/`editor`/`member` → `_('Sysadmin')`/`_('Admin')`/`_('Editor')`/`_('Member')`) and `last_updated=org.dataset_last_updated`. All Orgs and the components demo pass `member_since=org.created`, so their output is unchanged. |
 | D11 Card content | Subscribers/followers are omitted. The rest of the card's behaviour is accepted as-is: plain-text counts, title link without a sort param, description behind "Show more" and nothing when empty. Card visuals stay as 049 shipped them (no Figma width/ellipsis/alignment deltas). |
 | D12 Empty state | The header and button always render. Below them, v1's four lines of copy appear verbatim as four `<p>` (no heading) with no second button, styled with `.hdx-list-header-empty()`. |
-| D13 Title | `subtitle` = "My Organisations \| {display_name} \| Users", using `g.template_title_delimiter` and built by the base from `page_label`. The Mixpanel `pageTitle` change is accepted. |
+| D13 Title | `subtitle` = "My Organisations \| {display_name} \| All Users", using `g.template_title_delimiter` and built by the base from `page_label`. The Mixpanel `pageTitle` change is accepted. |
 | D14 Layout | Reuses the Search page's `hdx-v2-search-row` / `hdx-v2-search-sidebar` / `hdx-v2-search-content` (loads `v2-search-page-styles`, as the Org/Country/Crisis pages do). Sidebar at XL: `border-right: 1px solid var(--hdx-neutral-1)`, padding `space-5` / `space-10` / `space-20` / 0, grey canvas (no white panel). Content: `space-10` 0 `space-10` `space-10` at XL, `space-8` 0 at MD, `space-6` 0 at SM. Menu groups are `space-6` apart (there is no 28px token); label to list is `space-2`. Group label: `.hdx-body-xs()`, neutral-95. |
 | D15 MD/SM | No menu. The header stacks at MD and SM: title, subtitle, then the button, `space-4` apart. |
 | D16 Tests | No new tests. The `hdx_user.read_organizations` row in `test_page_load.py` covers the page load. |
