@@ -30,8 +30,10 @@
                           Renders a .c-search-input__error span.  default: None
   label         {string}  Label text rendered above the input as .c-search-input__label.
                           default: None
-  required      {bool}    Appends a red asterisk inside the label (only when label is set).
-                          default: False
+  required      {bool}    Adds `required` to the <input>/<textarea> and a red asterisk
+                          inside the label (when label is set).  default: False
+  character_count {bool}  Renders an "N characters" .c-form-field__hint counter below
+                          the field, kept in sync by input-field.js.  default: False
   ─────────────────────────────────────────────────
   Examples
 
@@ -59,6 +61,7 @@
 {% set errors        = errors        if errors        is defined else None %}
 {% set label         = label         if label         is defined else none %}
 {% set required      = required      if required      is defined else false %}
+{% set character_count = character_count if character_count is defined else False %}
 
 {% set classes = ['c-search-input', 'c-search-input--size-' ~ size] %}
 {% if state == 'active' %}{% set classes = classes + ['c-search-input--active']    %}{% endif %}
@@ -73,13 +76,16 @@
 </label>
 {% endif %}
 <div class="{{ classes | join(' ') }}"
+     {% if character_count %}data-character-count{% endif %}
      {% for key, val in attrs.items() %} {{ key }}="{{ val }}"{% endfor %}>
 
   {% if multiline %}
     <textarea name="{{ name }}"
               {% if id %}id="{{ id }}"{% endif %}
               placeholder="{{ placeholder }}"
-              rows="{{ rows }}">{{ value }}</textarea>
+              rows="{{ rows }}"
+              {% if required %}required="required"{% endif %}
+              {% for key, val in input_attrs.items() %}{{ key }}="{{ val }}" {% endfor %}>{{ value }}</textarea>
   {% else %}
     <input type="{{ type }}"
            name="{{ name }}"
@@ -105,5 +111,9 @@
   {% endif %}
 
 </div>
+{% if character_count %}
+  {% set char_total = (value or '') | length %}
+  <span class="c-form-field__hint">{{ ungettext('{num} character', '{num} characters', char_total).format(num=char_total) }}</span>
+{% endif %}
 <span class="c-search-input__error">{% if errors %}{{ errors | join(', ') if errors is iterable and errors is not string else errors }}{% endif %}</span>
 <ul class="c-form-validator__live-feedback" hidden></ul>

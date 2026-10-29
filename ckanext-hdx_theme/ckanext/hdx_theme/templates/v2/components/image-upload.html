@@ -1,0 +1,129 @@
+{#
+  Snippet: image-upload.html
+  Path:    templates/v2/components/image-upload.html
+
+  Renders a c-image-upload — an image field that is either an uploaded file or a
+  linked URL (CKAN uploader contract: url / upload / clear fields). With JS
+  (image-upload.js) it shows one state at a time:
+    blank    — Upload + Link buttons
+    attached — thumbnail (+ the chosen file's name) + Remove
+    web      — URL input + × reset
+  Remove and × empty the URL and set the clear field to 'true'; choosing a file
+  resets it. Choosing a file or entering a URL dispatches a bubbling
+  `image-upload:change` event.
+  Without JS the URL input and the native file input render. With uploads
+  disabled only the URL input renders.
+
+  Parameters
+  ─────────────────────────────────────────────────
+  field_url      {string}  URL / stored filename field name.  default: 'image_url'
+  field_upload   {string}  File field name.  default: 'image_upload'
+  field_clear    {string}  Clear field name.  default: 'clear_upload'
+  value          {string}  Stored value: a URL or an uploaded filename.  default: ''
+  preview_url    {string}  Resolved URL of an uploaded value (thumbnail).  default: ''
+  clear_value    {string}  Clear field value (re-rendered form).  default: ''
+  label          {string}  Field label.  default: 'Image'
+  url_label      {string}  Visually hidden label of the URL input.  default: 'Image URL'
+  remove_label   {string}  aria-label of Remove and ×.  default: 'Remove image'
+  placeholder    {string}  URL input placeholder.
+                           default: 'https://example.com/my-image.jpg'
+  id             {string}  URL input id (also prefixes the file input and label ids).
+                           default: 'field-image'
+  upload_enabled {bool}    h.uploads_enabled().  default: true
+  accept         {string}  File input accept attr.  default: 'image/*'
+  errors         {list|string}  Error message(s) below the field.  default: None
+  extra_classes  {string}  default: ''
+  ─────────────────────────────────────────────────
+  Example
+
+  {% snippet 'v2/components/image-upload.html',
+      field_url='image_rect', field_upload='image_rect_upload', field_clear='clear_image_rect',
+      value=logo, preview_url=h.hdx_organization_logo_url(logo), label='Organisation logo',
+      id='field-image-rect', upload_enabled=h.uploads_enabled() %}
+#}
+
+{% set field_url      = field_url      if field_url      is defined else 'image_url' %}
+{% set field_upload   = field_upload   if field_upload   is defined else 'image_upload' %}
+{% set field_clear    = field_clear    if field_clear    is defined else 'clear_upload' %}
+{% set value          = value          if value          is defined else '' %}
+{% set preview_url    = preview_url    if preview_url    is defined else '' %}
+{% set clear_value    = clear_value    if clear_value    is defined else '' %}
+{% set label          = label          if label          is defined else _('Image') %}
+{% set url_label      = url_label      if url_label      is defined else _('Image URL') %}
+{% set remove_label   = remove_label   if remove_label   is defined else _('Remove image') %}
+{% set placeholder    = placeholder    if placeholder    is defined else _('https://example.com/my-image.jpg') %}
+{% set id             = id             if id             is defined else 'field-image' %}
+{% set upload_enabled = upload_enabled if upload_enabled is defined else true %}
+{% set accept         = accept         if accept         is defined else 'image/*' %}
+{% set errors         = errors         if errors         is defined else None %}
+{% set extra_classes  = extra_classes  if extra_classes  is defined else '' %}
+
+{% set value    = value or '' %}
+{% set is_url   = value.startswith('http') %}
+{% set state    = 'web' if is_url or not upload_enabled else ('attached' if value else 'blank') %}
+{% set label_id = id ~ '-label' %}
+{% set file_id  = id ~ '-file' %}
+
+<div class="c-form-field c-image-upload{{ ' ' ~ extra_classes if extra_classes else '' }}"
+     {% if upload_enabled %}role="group" aria-labelledby="{{ label_id }}" data-image-upload data-image-upload-state="{{ state }}"{% endif %}>
+  <label class="c-form-field__label" id="{{ label_id }}" for="{{ file_id if upload_enabled else id }}">{{ label }}</label>
+
+  {% if upload_enabled %}
+    <div class="c-image-upload__attached" data-image-upload-attached{% if state != 'attached' %} hidden{% endif %}>
+      <img class="c-image-upload__thumb" alt="" data-image-upload-thumb{% if state == 'attached' and preview_url %} src="{{ preview_url }}"{% else %} hidden{% endif %}>
+      <span class="c-image-upload__name" data-image-upload-name></span>
+      {% snippet 'v2/components/button.html',
+          style='tertiary',
+          size='m',
+          label=_('Remove'),
+          attrs={'aria-label': remove_label, 'data-image-upload-remove': '', 'hidden': ''} %}
+    </div>
+  {% endif %}
+
+  <div class="c-image-upload__web" data-image-upload-web>
+    {% if upload_enabled %}
+      <label class="sr-only" for="{{ id }}">{{ url_label }}</label>
+    {% endif %}
+    <div class="c-image-upload__url">
+      {% snippet 'v2/components/text-field.html',
+          size='m',
+          name=field_url,
+          id=id,
+          value=value,
+          placeholder=placeholder %}
+    </div>
+    {% if upload_enabled %}
+      {% snippet 'v2/components/button.html',
+          style='tertiary',
+          size='m',
+          type='icon-only',
+          label=remove_label,
+          icon_src='v2/icons/close.svg',
+          attrs={'data-image-upload-reset': '', 'hidden': ''} %}
+    {% endif %}
+  </div>
+
+  {% if upload_enabled %}
+    <div class="c-image-upload__blank" data-image-upload-blank hidden>
+      {% snippet 'v2/components/button.html',
+          style='tertiary',
+          size='m',
+          label=_('Upload'),
+          icon_src='v2/icons/upload.svg',
+          attrs={'data-image-upload-choose': ''} %}
+      {% snippet 'v2/components/button.html',
+          style='tertiary',
+          size='m',
+          label=_('Link'),
+          icon_src='v2/icons/link.svg',
+          attrs={'data-image-upload-link': ''} %}
+    </div>
+    <input class="c-image-upload__file" type="file" name="{{ field_upload }}" id="{{ file_id }}" accept="{{ accept }}" data-image-upload-file>
+    <input type="hidden" name="{{ field_clear }}" value="{{ clear_value }}" data-image-upload-clear>
+    <span class="sr-only" aria-live="polite" data-image-upload-status></span>
+  {% endif %}
+
+  {% if errors %}
+    <span class="c-image-upload__error">{{ errors | join(', ') if errors is iterable and errors is not string else errors }}</span>
+  {% endif %}
+</div>

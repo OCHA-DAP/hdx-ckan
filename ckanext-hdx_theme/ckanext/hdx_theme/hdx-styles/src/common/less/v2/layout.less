@@ -32,7 +32,6 @@ body.hdx-v2 {
 }
 
 // ── Breadcrumb row ────────────────────────────────────────────
-// Shared across search and dataset pages.
 // A bottom border acts as the visual separator above the page header.
 .hdx-v2-breadcrumb-row {
     border-bottom: 1px solid var(--hdx-neutral-1);
@@ -50,24 +49,24 @@ body.hdx-v2 {
     margin: var(--hdx-space-4) 0;
 }
 
-// Base flex layout used on any v2 two-column page (search, dataset page, etc.)
+// Base flex layout for any v2 two-column page.
 // Horizontal gap between columns is set per-page via gap or column padding.
 .hdx-v2-content-columns {
     display:     flex;
     align-items: stretch;
 
     // ── Gap presets ──────────────────────────────────────────
-    &--gap {                    // small gap, larger at XL (locations)
+    &--gap {                    // small gap, larger at XL
         gap: var(--hdx-space-3);
 
         @media (min-width: @hdx-bp-xl) { gap: var(--hdx-space-6); }
     }
 
-    &--gap-xl {                 // gap only at XL (dataset, resource)
+    &--gap-xl {                 // gap only at XL
         @media (min-width: @hdx-bp-xl) { gap: var(--hdx-space-6); }
     }
 
-    &--stack {                  // column below XL, row at XL (org members/stats)
+    &--stack {                  // column below XL, row at XL
         flex-direction: column;
         gap:            var(--hdx-space-6);
 
@@ -80,7 +79,7 @@ body.hdx-v2 {
 
         @media (min-width: @hdx-bp-xl) { .v2-sidebar-flex(); }
 
-        &--xl-only {            // hidden below XL (search, dataset, resource, landing)
+        &--xl-only {            // hidden below XL
             display: none;
 
             @media (min-width: @hdx-bp-xl) { display: block; }
@@ -88,7 +87,7 @@ body.hdx-v2 {
 
         &--sticky { .v2-sidebar-sticky(); }
 
-        &--right  { order: 2; } // after the content column (org members)
+        &--right  { order: 2; } // after the content column
     }
 
     // ── Content column ────────────────────────────────────────
@@ -114,7 +113,7 @@ body.hdx-v2 {
     }
 }
 
-// ── Chart.js canvas wrapper (org stats + dataset page, task 058) ──
+// ── Chart.js canvas wrapper ───────────────────────────────────
 // The canvas sits in an absolutely-positioned holder so Chart.js can
 // shrink as well as grow with the container; the template-rendered
 // c-tooltip--graph floats above the canvas, positioned by JS.

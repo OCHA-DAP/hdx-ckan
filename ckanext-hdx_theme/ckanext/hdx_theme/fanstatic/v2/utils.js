@@ -29,7 +29,7 @@
   };
 
   // Selector for all natively focusable elements.
-  // Used by focus-trap implementations (drawer, overlays, etc.).
+  // For focus-trap implementations.
   var FOCUSABLE = [
     'a[href]',
     'button:not([disabled])',
@@ -107,9 +107,7 @@
   var activeTraps = [];
 
   // Traps Tab/Shift+Tab focus inside `element`, and returns focus to
-  // `triggerElement` on deactivate. Shared by navbar.js (offcanvas) and
-  // components/drawer.js — promoted here once a second consumer needed it
-  // (task 070 A6).
+  // `triggerElement` on deactivate. Promoted here once a second consumer needed it (task 070 A6).
   window.hdxV2.FocusTrap = function FocusTrap(element, triggerElement) {
     this.element        = element;
     this.triggerElement = triggerElement;
@@ -175,6 +173,47 @@
   window.hdxV2.prefersReducedMotion = function prefersReducedMotion() {
     // return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     return false;
+  };
+
+  // Sets an element's disabled state as button.html renders it: is-disabled +
+  // aria-disabled, plus [disabled] on form controls or tabindex="-1" on links.
+  window.hdxV2.setDisabled = function setDisabled(el, disabled) {
+    el.classList.toggle('is-disabled', disabled);
+    if (disabled) {
+      el.setAttribute('aria-disabled', 'true');
+    } else {
+      el.removeAttribute('aria-disabled');
+    }
+    if ('disabled' in el) {
+      el.disabled = disabled;
+    } else if (disabled) {
+      el.setAttribute('tabindex', '-1');
+    } else {
+      el.removeAttribute('tabindex');
+    }
+  };
+
+  // Shows a hidden c-alert (templates/v2/components/alert.html) with `text`.
+  // The optional `variant` (success | warning | info | error) swaps the
+  // c-alert--* class and the role as alert.html sets them.
+  window.hdxV2.showAlert = function showAlert(alertEl, text, variant) {
+    if (variant) {
+      ['success', 'warning', 'info', 'error'].forEach(function (v) {
+        alertEl.classList.toggle('c-alert--' + v, v === variant);
+      });
+      alertEl.setAttribute('role', variant === 'success' || variant === 'info' ? 'status' : 'alert');
+    }
+    alertEl.querySelector('.c-alert__message').textContent = text;
+    alertEl.hidden = false;
+  };
+
+  // POSTs `body` to `url` with the CSRF header and resolves with the parsed JSON response.
+  window.hdxV2.post = function post(url, body) {
+    return fetch(url, {
+      method: 'POST',
+      headers: window.hdxUtil.net.getCsrfTokenAsObject(),
+      body: body
+    }).then(function (r) { return r.json(); });
   };
 
 })();

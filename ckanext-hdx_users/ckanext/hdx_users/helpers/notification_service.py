@@ -30,7 +30,7 @@ def get_notification_service():
     membership_request_service = MembershipRequestsService(membership_request_dao, is_sysadmin)
     request_data_service = SysadminRequestDataService(request_data_dao, g.user) \
         if is_sysadmin else RequestDataService(request_data_dao, g.user)
-    expired_datasets_service = ExpiredDatasetsService(expired_datasets_dao, userobj, is_sysadmin)
+    expired_datasets_service = ExpiredDatasetsService(expired_datasets_dao, g.user, is_sysadmin)
 
     quarantine_service = SysadminQuarantinedDatasetsService(quarantined_datasets_dao, g.user) \
         if is_sysadmin else QuarantinedDatasetsService(quarantined_datasets_dao, g.user)
@@ -214,7 +214,7 @@ class ExpiredDatasetsService(object):
                     'last_date': last_date,
                     'count': count,
                     'html_template': 'light/notifications/expired_datasets_snippet.html',
-                    'my_dashboard_url': h.url_for('hdx_user_dashboard.datasets', **param_dict),
+                    'my_dashboard_url': h.url_for('hdx_user.read', id=self.username, **param_dict),
                     'for_sysadmin': False,
                     'is_sysadmin': self.is_sysadmin
                 }

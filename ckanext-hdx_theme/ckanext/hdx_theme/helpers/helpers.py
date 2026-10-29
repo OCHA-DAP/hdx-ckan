@@ -28,6 +28,7 @@ from ckan.types import Context
 from ckanext.hdx_package.helpers.caching import cached_objects_with_notifications, cached_objects_without_notifications
 from ckanext.hdx_package.helpers.freshness_calculator import UPDATE_FREQ_INFO, UPDATE_FREQ_NEVER
 from ckanext.hdx_package.helpers.p_code_filters_helper import are_new_p_code_filters_enabled
+from ckanext.hdx_theme.helpers.constants import const
 from ckanext.hdx_theme.helpers.v2_icon_view_boxes import V2_ICON_VIEW_BOXES
 from ckanext.hdx_theme.util.light_redirect import switch_url_path
 from ckanext.hdx_users.notifications_subscription_model import ObjectType
@@ -1402,63 +1403,99 @@ def hdx_dataset_has_datastore_resources(resource_list: list[Any]) -> bool:
     return False
 
 
-def hdx_get_user_menu_sections():
+def hdx_get_user_dashboard_nav_sections(user_name=None):
+    """
+    :param user_name: the user whose pages are being viewed (default: the current user)
+    """
+    is_own = bool(c.userobj) and user_name in (None, c.user)
+    if is_own:
+        user_name = c.user
+    if not user_name:
+        return []
+
+    if is_own:
+        dashboard_items = [
+            {'id': 'my_datasets', 'label': _('My Datasets'), 'href': h.url_for('hdx_user.read', id=user_name)},
+            {'id': 'my_organisations', 'label': _('My Organisations'),
+             'href': h.url_for('hdx_user.read_organizations', id=user_name)},
+            {'id': 'my_activity_stream', 'label': _('My Activity Stream'),
+             'href': h.url_for('activity.user_activity', id=user_name)},
+            {'id': 'hdx_connect_requests', 'label': _('HDX Connect Requests'),
+             'href': h.url_for('requestdata.my_requested_data', id=user_name)},
+        ]
+    else:
+        dashboard_items = [
+            {'id': 'my_datasets', 'label': _('Datasets'), 'href': h.url_for('hdx_user.read', id=user_name)},
+            {'id': 'my_activity_stream', 'label': _('Activity Stream'),
+             'href': h.url_for('activity.user_activity', id=user_name)},
+        ]
+
+    sections = [{'id': 'dashboard', 'label': _('Activity and Content'), 'items': dashboard_items}]
+    if not c.userobj:
+        return sections
+
+    settings_items = []
+    if c.userobj.sysadmin:
+        settings_items.append({'id': 'user_permission', 'label': _('User Permission'),
+                               'href': h.url_for('hdx_user_permission.read', id=user_name)})
+    if is_own or h.check_access('api_token_list', {'user': user_name}):
+        settings_items.append({'id': 'api_tokens', 'label': _('API Tokens'),
+                               'href': h.url_for('user.api_tokens', id=user_name)})
+    if is_own or h.check_access('user_update', {'id': user_name}):
+        settings_items += [
+            {'id': 'notifications_settings', 'label': _('Notifications Settings'),
+             'href': h.url_for('hdx_user.notifications', id=user_name)},
+            {'id': 'profile_and_password', 'label': _('Profile and Password'),
+             'href': h.url_for('hdx_user.edit', id=user_name)},
+        ]
+
+    if settings_items:
+        sections.append({'id': 'settings', 'label': _('Account and Settings'), 'items': settings_items})
+    return sections
+
+
+def hdx_get_sysadmin_nav_sections():
     if not c.userobj:
         return []
 
     is_sysadmin = c.userobj.sysadmin
-    sections = []
-
+    items = []
     if is_sysadmin:
-        sections.append({
-            'id': 'sysadmin',
-            'label': _('Sysadmin Dashboard'),
-            'items': [
-                {'label': _('All Sysadmins'), 'href': h.url_for('admin.index')},
-                {'label': _('All Users'), 'href': h.url_for('user.index')},
-                {'label': _('Carousel'), 'href': h.url_for('hdx_carousel.show')},
-                {'label': _('HDX Connect Dashboard'), 'href': h.url_for('requestdata_ckanadmin.requests_data')},
-                {'label': _('Custom/Event Pages'), 'href': h.url_for('hdx_custom_pages.index')},
-                {'label': _('Quick Links'), 'href': h.url_for('hdx_quick_links.show')},
-                {'label': _('Package Links'), 'href': h.url_for('hdx_package_links.show')},
-                {'label': _('Email'), 'href': h.url_for('requestdata_ckanadmin.email')},
-                {'label': _('Config'), 'href': h.url_for('admin.config')},
-            ],
-        })
+        items += [
+            {'id': 'all_sysadmins', 'label': _('All Sysadmins'), 'href': h.url_for('admin.index')},
+            {'id': 'all_users', 'label': _('All Users'), 'href': h.url_for('user.index')},
+        ]
+    if is_sysadmin or h.check_access('hdx_carousel_update'):
+        items.append({'id': 'homepage_highlights', 'label': _('Homepage Highlights'),
+                      'href': h.url_for('hdx_carousel.show')})
+    if is_sysadmin or h.check_access('hdx_request_data_admin_list'):
+        items.append({'id': 'hdx_connect_dashboard', 'label': _('HDX Connect Dashboard'),
+                      'href': h.url_for('requestdata_ckanadmin.requests_data')})
+    if is_sysadmin or h.check_access('admin_page_list'):
+        items.append({'id': 'custom_pages', 'label': _('Custom Pages'), 'href': h.url_for('hdx_custom_pages.index')})
+    if is_sysadmin or h.check_access('hdx_quick_links_update'):
+        items += [
+            {'id': 'products_menu', 'label': _('Products Menu'), 'href': h.url_for('hdx_quick_links.show')},
+            {'id': 'package_links', 'label': _('Package Links'), 'href': h.url_for('hdx_package_links.show')},
+        ]
 
-    sections.append({
-        'id': 'dashboard',
-        'label': _('User Dashboard'),
-        'items': [
-            {'label': _('Newsfeed'), 'href': h.url_for('activity.dashboard')},
-            {'label': _('My Datasets'), 'href': h.url_for('hdx_user_dashboard.datasets')},
-            {'label': _('My Organisations'), 'href': h.url_for('dashboard.organizations')},
-            {'label': _('My Locations'), 'href': h.url_for('dashboard.groups')},
-            {'label': _('HDX Connect Requests'), 'href': h.url_for('requestdata.my_requested_data', id=c.user)},
-        ],
-    })
+    if not items:
+        return []
+    return [{'id': 'sysadmin', 'label': _('Sysadmin'), 'items': items}]
 
-    settings_items = [
-        {'label': _('Datasets'), 'href': h.url_for('user.read', id=c.user)},
-        {'label': _('Activity Stream'), 'href': h.url_for('activity.user_activity', id=c.user)},
-    ]
-    if is_sysadmin:
-        settings_items.append({
-            'label': _('User Permission'),
-            'href': h.url_for('hdx_user_permission.read', id=c.user),
-        })
-    settings_items += [
-        {'label': _('API Tokens'), 'href': h.url_for('user.api_tokens', id=c.user)},
-        {'label': _('Notifications'), 'href': h.url_for('hdx_user.notifications', id=c.user)},
-        {'label': _('Profile and Password'), 'href': h.url_for('user.edit', id=c.user)},
-    ]
-    sections.append({
-        'id': 'settings',
-        'label': _('User Settings'),
-        'items': settings_items,
-    })
 
-    return sections
+def hdx_get_user_menu_sections():
+    return hdx_get_sysadmin_nav_sections() + hdx_get_user_dashboard_nav_sections()
+
+
+def hdx_initials(name):
+    """Avatar initials: the first letters of the first two words that start with a letter or digit
+    ('HDX - Tag Bot' → 'HT'), else the first non-space character, '' for an empty name."""
+    name = str(name or '')
+    words = [word for word in name.split() if word[0].isalnum()]
+    if words:
+        return ''.join(word[0] for word in words[:2]).upper()
+    return name.strip()[:1].upper()
 
 
 def hdx_format_to_icon_category(format_str):
@@ -1517,3 +1554,27 @@ def hdx_v2_icon(path):
             '<svg aria-hidden="true" focusable="false" viewBox="{}" fill="none"><use href="{}#i"/></svg>'
             .format(view_box, h.url_for_static(path)))
     return icon
+
+
+def hdx_v2_main_nav_state(quick_links):
+    """The v2 header's current main nav section, e.g. {'section': 'data', 'aria_current': 'page', 'product_url': None}
+    (aria_current is 'page' on the section's own URL, else 'true'; product_url is the quick link to this page)."""
+    try:
+        path = request.path.rstrip('/') or '/'
+        section = aria_current = product_url = None
+        for name, own_url, prefixes in const('V2_MAIN_NAV_SECTIONS'):
+            if any(path == prefix or path.startswith(prefix + '/') for prefix in prefixes):
+                section = name
+                aria_current = 'page' if path == own_url else 'true'
+                break
+        for link in quick_links:
+            parts = urlparse.urlsplit(link.get('url') or '')
+            if parts.netloc and parts.netloc != request.host:
+                continue
+            if parts.path and (parts.path.rstrip('/') or '/') == path:
+                product_url = link.get('url')
+                break
+        return {'section': section, 'aria_current': aria_current, 'product_url': product_url}
+    except Exception as e:
+        log.warning('v2 main nav state failed, no nav item is On: %s', e)
+        return {'section': None, 'aria_current': None, 'product_url': None}

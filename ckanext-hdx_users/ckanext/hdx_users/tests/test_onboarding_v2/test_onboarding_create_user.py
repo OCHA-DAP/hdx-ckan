@@ -113,9 +113,9 @@ class TestOnboarding(object):
         result = app.post(url, data=data_dict)
         assert result.status_code == 200
         assert NEW_USER_EMAIL in result.body
-        assert '<div class="c-step-pager__label">Personal details</div>' in result.body
-        assert '<div class="c-step-pager__label">Verify email</div>' in result.body
-        assert '<div class="c-step-pager__label">Account created</div>' in result.body
+        assert '<div class="c-step-pager__label" aria-hidden="true">Personal details</div>' in result.body
+        assert '<div class="c-step-pager__label" aria-hidden="true">Verify email</div>' in result.body
+        assert '<div class="c-step-pager__label" aria-hidden="true">Account created</div>' in result.body
 
         assert len(_mail_recipient_html.call_args_list) == 1
         assert _mail_recipient_html.call_args_list[0][0][2][0].get('email') == NEW_USER_EMAIL
@@ -281,7 +281,8 @@ class TestOnboarding(object):
         profile_url = h.url_for(u'hdx_user.read', id=user_dict.get('id'))
 
         profile_result = app.get(profile_url, headers=auth_sysadmin)
-        assert '<span class="label label-important">Deleted</span>' in profile_result.body
+        assert 'c-label--red' in profile_result.body
+        assert '<span class="c-label__text">Deleted</span>' in profile_result.body
 
         auth_testuser = {'Authorization': testuser_token}
         profile_result2 = app.get(profile_url, status=404, headers=auth_testuser)

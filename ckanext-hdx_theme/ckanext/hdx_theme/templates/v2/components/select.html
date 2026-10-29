@@ -9,7 +9,8 @@
   ─────────────────────────────────────────────────
   size          {string}  'm' | 's'  default: 'm'
   label         {string}  Label text above the select.  default: '' (hidden)
-  placeholder   {string}  Text shown for the disabled empty option.  default: 'Dropdown'
+  placeholder   {string}  Text of a disabled empty first option, selected while
+                          `selected` is empty. Omit for no such option.  default: ''
   selected      {string}  Current selected value (if any).  default: ''
   state         {string}  'enabled' | 'disabled'  default: 'enabled'
   chevron_src   {string}  Chevron icon path.  default: 'v2/icons/chevron-down.svg'
@@ -25,6 +26,18 @@
                           and renders .c-dropdown__error below the wrapper.
                           default: None
   required      {bool}    Appends a red asterisk inside the label.  default: False
+  select_attrs  {dict}    Extra HTML attrs on the <select> itself
+                          (e.g. aria-labelledby).  default: {}
+  searchable    {bool}    Turns the select into a Select2 field with a search box in
+                          its panel (components/select.js, `hdx-v2` theme in
+                          dropdown.less); with a placeholder it also gets a clear (×)
+                          button. Select2 fires `change` through jQuery only. The
+                          caller loads the `v2-select2-styles` and
+                          `v2-select2-scripts` bundles. A `data-source` URL in
+                          select_attrs loads the options from a user autocomplete
+                          endpoint as the user types (at least one character):
+                          value = name, text = "fullname (name)" or the name.
+                          default: False
   ─────────────────────────────────────────────────
 
   Example
@@ -32,11 +45,20 @@
   {% snippet 'v2/components/select.html',
       label='Country', placeholder='Select a country',
       name='country', options={'sd': 'Sudan', 'td': 'Chad'} %}
+
+  {% snippet 'v2/components/select.html',
+      label='Country', placeholder='Select a country',
+      name='country', options=countries, searchable=True %}
+
+  {% snippet 'v2/components/select.html',
+      label='User', placeholder='Username', name='username', id='username',
+      select_attrs={'data-source': '/api/2/util/user/autocomplete'},
+      searchable=True %}
 #}
 
 {% set size             = size             if size             is defined else 'm' %}
 {% set label            = label            if label            is defined else '' %}
-{% set placeholder      = placeholder      if placeholder      is defined else 'Dropdown' %}
+{% set placeholder      = placeholder      if placeholder      is defined else '' %}
 {% set selected         = selected         if selected         is defined else '' %}
 {% set state            = state            if state            is defined else 'enabled' %}
 {% set chevron_src      = chevron_src      if chevron_src      is defined else 'v2/icons/chevron-down.svg' %}
@@ -48,6 +70,8 @@
 {% set option_attrs     = option_attrs     if option_attrs     is defined else {} %}
 {% set errors           = errors           if errors           is defined else None %}
 {% set required         = required         if required         is defined else false %}
+{% set select_attrs     = select_attrs     if select_attrs     is defined else {} %}
+{% set searchable       = searchable       if searchable       is defined else false %}
 
 {% set is_disabled = (state == 'disabled') %}
 
@@ -68,8 +92,12 @@
           name="{{ name }}"
           {% if id %}id="{{ id }}"{% endif %}
           {% if required %}required{% endif %}
-          {% if is_disabled %}disabled aria-disabled="true"{% endif %}>
-    <option value="" disabled {% if not selected %}selected{% endif %}>{{ placeholder }}</option>
+          {% if is_disabled %}disabled aria-disabled="true"{% endif %}
+          {% if searchable %}data-searchable{% endif %}
+          {% for key, val in select_attrs.items() %} {{ key }}="{{ val }}"{% endfor %}>
+    {% if placeholder %}
+      <option value="" disabled {% if not selected %}selected{% endif %}>{{ placeholder }}</option>
+    {% endif %}
     {% for value, opt_label in options.items() %}
       <option value="{{ value }}" {% if selected == value %}selected{% endif %}
         {% if option_attrs.get(value) %}{% for attr_key, attr_val in option_attrs[value].items() %}{{ attr_key }}="{{ attr_val }}" {% endfor %}{% endif %}>{{ opt_label }}</option>

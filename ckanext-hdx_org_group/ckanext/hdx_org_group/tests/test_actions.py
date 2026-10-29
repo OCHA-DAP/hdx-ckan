@@ -4,6 +4,8 @@ reCreated on 19 Sep, 2023
 @author: dan
 """
 
+import os
+import json
 import pytest
 import logging as logging
 
@@ -13,8 +15,9 @@ import ckan.model as model
 import ckan.plugins.toolkit as tk
 from ckan.types import Context
 import ckan.lib.helpers as h
+import ckan.lib.uploader as uploader
 import ckan.tests.factories as factories
-from ckanext.hdx_org_group.tests.conftest import LOCATION
+from ckanext.hdx_org_group.tests.conftest import LOCATION, ORG2
 
 _get_action = tk.get_action
 NotAuthorized = tk.NotAuthorized
@@ -79,6 +82,55 @@ class TestActions(object):
         org_dict = _get_action('organization_show')(sysadmin_context, {'id': 'hdx-test-org2'})
         assert org_dict.get('name') == 'hdx-test-org2'
         assert org_dict.get('state') == 'active'
+
+    def test_org_logo_remove_and_restore(self, app):
+        def sysadmin_context():
+            return {'model': model, 'session': model.Session, 'user': 'testsysadmin'}
+
+        def stored_customization():
+            org_dict = _get_action('organization_show')(sysadmin_context(), {'id': ORG2})
+            return json.loads(org_dict.get('customization'))
+
+        storage_path = os.path.join(uploader.get_storage_path(), 'storage', 'uploads', 'group')
+        os.makedirs(storage_path, exist_ok=True)
+        sq_path = os.path.join(storage_path, 'test-logo-sq.png')
+        rect_path = os.path.join(storage_path, 'test-logo-rect.png')
+        for path in (sq_path, rect_path):
+            open(path, 'w').close()
+
+        _get_action('organization_patch')(sysadmin_context(), {
+            'id': ORG2,
+            'customization': json.dumps({'highlight_color': '#ff0000'}),
+            'image_sq': 'test-logo-sq.png',
+            'image_rect': 'test-logo-rect.png',
+        })
+
+        with pytest.raises(tk.ValidationError):
+            _get_action('organization_patch')(sysadmin_context(), {
+                'id': ORG2, 'description': '', 'image_rect': '', 'clear_image_rect': 'true'})
+        assert stored_customization().get('image_rect') == 'test-logo-rect.png'
+        assert os.path.exists(rect_path)
+
+        _get_action('organization_patch')(sysadmin_context(), {
+            'id': ORG2, 'image_rect': '', 'clear_image_rect': 'true'})
+        customization = stored_customization()
+        assert customization.get('image_rect') == ''
+        assert customization.get('image_sq') == 'test-logo-sq.png'
+        assert customization.get('highlight_color') == '#ff0000'
+        assert not os.path.exists(rect_path)
+        assert os.path.exists(sq_path)
+
+        test_sysadmin_token = factories.APIToken(user='testsysadmin', expires_in=2, unit=60 * 60)['token']
+        app.post(h.url_for('organization.delete', id=ORG2), headers={'Authorization': test_sysadmin_token})
+        org_dict = _get_action('organization_show')(sysadmin_context(), {'id': ORG2})
+        assert org_dict.get('state') == 'deleted'
+
+        app.post(h.url_for('hdx_org.restore', id=org_dict.get('id')), headers={'Authorization': test_sysadmin_token})
+        org_dict = _get_action('organization_show')(sysadmin_context(), {'id': ORG2})
+        assert org_dict.get('state') == 'active'
+        assert json.loads(org_dict.get('customization')).get('image_sq') == 'test-logo-sq.png'
+
+        os.remove(sq_path)
 
     def test_org_activity_offset(self, app):
 

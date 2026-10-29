@@ -1,67 +1,103 @@
-{% extends "admin/base.html" %}
-{% import 'macros/form.html' as form %}
+{% extends "v2/sysadmin-base.html" %}
+
+{% set nav_active             = 'hdx_connect_dashboard' %}
+{% set page_label             = _('HDX Connect Dashboard') %}
+{% set selected_organizations = (request.args.get('filter_by_organizations') or '').split(',') | reject('equalto', '') | list %}
+{% set total_selected         = selected_organizations | length %}
+
+{% set request_groups = namespace(list=[]) %}
+{% for org in organizations %}
+  {% set request_groups.list = request_groups.list + [{
+      'title': org.title,
+      'requests_new': org.requests_new,
+      'requests_open': org.requests_open,
+      'requests_archive': org.requests_archive | selectattr('requests_archived') | list
+  }] %}
+{% endfor %}
 
 {% block styles %}
   {{ super() }}
-  {% asset 'requestdata/main-styles' %}
-  {% asset 'hdx_theme/requestdata-styles' %}
-  {% asset 'hdx_theme/dataset-search-styles' %}
+  {% asset 'hdx_theme/v2-hdx-connect-page-styles' %}
 {% endblock %}
 
-{% block primary_content_module_margin %}{% endblock %}
+{% block scripts %}
+  {{ super() }}
+  {% asset 'hdx_theme/v2-search-page-scripts' %}
+  {% asset 'hdx_theme/v2-hdx-connect-scripts' %}
+{% endblock %}
 
-{% block primary_content_inner_wrapper %}
-  <div class="row">
-    <div class="col-12">
-      {% block primary_content_inner %}
-        <div class="request-data-module">
-          {% set service_url = h.url_for('requestdata_ckanadmin.download_requests_data') %}
-          {% set csv = '?format=csv'%}
-          {% set json = '?format=json'%}
-          {% if organizations %}
-            <div class="dropdown requested-data-download-btn">
-              <button class="btn dropdown-toggle " type="button" data-bs-toggle="dropdown">Download</button>
-              <ul class="dropdown-menu dropdown-menu-left">
-                <li><a class="dropdown-item" href="{{ service_url }}{{ csv }}">CSV</a></li>
-                <li><a class="dropdown-item" href="{{ service_url }}{{ json }}">JSON</a></li>
-              </ul>
-            </div>
-          {% endif %}
-          <div class="requested-data-total-content">
-            <div class="requested-data-total requested-data-container-item">
-              <h3>Data Requests [{{ total_requests }}]</h3>
-            </div>
-              {% if organizations %}
-                <div class="total-requests-filter">
-                  {% snippet 'requestdata/snippets/filter_requests.html', title='Organization', filter_options=organizations_for_filters, type='organization' %}
-                </div>
-              {% endif %}
-          </div>
-          <div class="sysadmin-requests-container">
-            {% for org in organizations %}
-              {% snippet 'requestdata/snippets/requests_header.html', title=org.title, total_requests=org.requests, type='admin', maintainers=org.maintainers, org_name=org.name, counters=org.counters %}
-
-              {% snippet 'requestdata/snippets/section_base.html', state='new', title='New', requests=org['requests_new'], template_type='admin'  %}
-              {% snippet 'requestdata/snippets/section_base.html', state='open', title='Open', requests=org['requests_open'], template_type='admin' %}
-
-        {#      {% if org['requests_archive'] %}#}
-        {#        {% set service_url = h.url_for('ckanadmin_requests_data') %}#}
-        {#        {% snippet 'requestdata/snippets/order_requests.html', service_url=service_url, org_name=org.name, current_order_name=org.current_order_name %}#}
-        {#      {% endif %}#}
-
-              {% snippet 'requestdata/snippets/section_base.html', state='archive', title='Archive', requests=org['requests_archive'], template_type='admin'  %}
-            {% endfor %}
-          </div>
-          <div class="alert alert-dismissible request-message-alert d-none" role="alert">
-            <div class="alert-text"></div>
-          </div>
+{# ── Organisation filter (XL column, MD/SM overlay) ───────── #}
+{% block tertiary_content %}
+  {% if organizations_for_filters %}
+    {% set org_counts = namespace(list=[]) %}
+    {% for entry in organizations_for_filters %}
+      {% set org_counts.list = org_counts.list + [{
+          'org': entry.org,
+          'count': entry.org.requests_new | length + entry.org.requests_open | length
+                   + entry.org.requests_archive | map(attribute='requests_archived') | map('length') | sum
+      }] %}
+    {% endfor %}
+    {% set filter_orgs = org_counts.list | sort(attribute='org.title') | sort(attribute='count', reverse=True) %}
+    {% set organization_items = namespace(list=[]) %}
+    {% for option in filter_orgs %}
+      {% set is_selected = option.org.name in selected_organizations %}
+      {% set organization_items.list = organization_items.list + [{
+          'value': option.org.name,
+          'label': option.org.title,
+          'count': '(' ~ option.count ~ ')',
+          'checked': is_selected,
+          'active': is_selected,
+          'attrs': {'data-hdx-connect-organization': ''}
+      }] %}
+    {% endfor %}
+    <form id="search-page-filters-form" autocomplete="off">
+      <aside class="hdx-v2-search-filters">
+        <span class="hdx-v2-search-filters__heading">{{ _('Filter by') }}</span>
+        <div class="hdx-v2-search-filters__item">
+          {% snippet 'v2/components/dropdown.html',
+              size='m',
+              label=_('Organisation'),
+              placeholder=_('All organisations'),
+              selected=filter_orgs | map(attribute='org') | selectattr('name', 'in', selected_organizations) | map(attribute='title') | join(', '),
+              state='filter' if total_selected > 0 else 'enabled',
+              panel_id='hdx-filter-panel-organizations',
+              attrs={'data-hdx-connect-organization-filter': ''},
+              items=organization_items.list,
+              has_clear=total_selected > 0,
+              clear_facet='filter_by_organizations' %}
         </div>
-        {% asset 'hdx_theme/requestdata-remove-class-scripts' %}
-      {% endblock %}
-
-    </div>
-  </div>
+      </aside>
+    </form>
+  {% endif %}
 {% endblock %}
 
+{# ── One New / Open / Archived set per organisation ──────── #}
+{% block primary %}
+  {% call h.snippet('v2/hdx-connect-sections.html',
+      groups=request_groups.list,
+      list_title=page_label,
+      list_subtitle=_('Review and manage HDX Connect requests across all organisations'),
+      title_tag='h1',
+      show_filters=organizations_for_filters | length > 0,
+      total_selected=total_selected,
+      show_maintainer=True) %}
+    {% if organizations_for_filters %}
+      {% set download_url = h.url_for('requestdata_ckanadmin.download_requests_data') %}
+      {% snippet 'v2/components/dropdown.html',
+          size='m',
+          placeholder=_('Download'),
+          navigate=True,
+          panel_id='hdx-connect-download-panel',
+          items=[
+            {'value': download_url ~ '?format=csv',  'label': _('CSV'),  'active': False},
+            {'value': download_url ~ '?format=json', 'label': _('JSON'), 'active': False}
+          ] %}
+    {% endif %}
+  {% endcall %}
 
-
+  {% if organizations_for_filters %}
+    {% snippet 'v2/filter-overlay.html',
+        total_selected=total_selected,
+        show_controls=False %}
+  {% endif %}
+{% endblock %}

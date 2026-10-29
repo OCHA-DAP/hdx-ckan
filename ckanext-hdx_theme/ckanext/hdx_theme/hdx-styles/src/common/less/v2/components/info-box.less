@@ -1,0 +1,38 @@
+// ============================================================
+// c-info-box — information panel (icon + paragraphs)
+// Figma: llm_docs/redesign/figma_exports/xl-request-join.html
+// ============================================================
+@import "../mixins.less";
+
+.c-info-box {
+    display:          flex;
+    align-items:      flex-start;
+    gap:              var(--hdx-space-3);
+    padding:          var(--hdx-space-6);
+    border-radius:    var(--hdx-radius-md);
+    background-color: var(--hdx-primary-05);
+
+    &__icon {
+        flex-shrink: 0;
+        line-height: 0;
+        color:       var(--hdx-primary-5);
+
+        svg {
+            .hdx-icon-size(var(--hdx-space-6));
+        }
+    }
+
+    &__body {
+        display:        flex;
+        flex-direction: column;
+        gap:            var(--hdx-space-5);
+        flex:           1;
+        min-width:      0;
+    }
+
+    &__text {
+        .hdx-body-m();
+        color:  var(--hdx-neutral-95);
+        margin: 0;
+    }
+}

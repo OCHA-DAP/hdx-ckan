@@ -7,6 +7,7 @@ import pytest
 import logging
 import json
 import mock
+from bs4 import BeautifulSoup
 import ckan.lib.helpers as h
 import ckan.model as model
 import ckan.plugins.toolkit as tk
@@ -175,6 +176,93 @@ class TestCustomOrgController(org_group_base.OrgGroupBaseWithIndsAndOrgsTest):
         assert result.status_code == 403
 
         # assert 'id="customization-trigger"' not in str(result.response)
+
+    def test_edit_org_page_v2(self):
+        context = {'model': model, 'session': model.Session, 'user': 'testsysadmin'}
+        url = h.url_for('organization.edit', id='hdx-test-org')
+        testsysadmin_token = factories.APIToken(user='testsysadmin', expires_in=2, unit=60 * 60)['token']
+
+        result = self.app.get(url, headers={'Authorization': testsysadmin_token})
+        assert result.status_code == 200
+        assert 'Edit org page' in result.body
+        assert 'id="field-fts-id"' in result.body
+        assert 'id="field-user-survey-url"' in result.body
+        assert 'id="delete-org-drawer"' in result.body
+        assert 'This organisation cannot be deleted while it still has datasets.' in result.body
+        assert 'custom-org-creation' not in result.body
+        assert 'colorpicker' not in result.body
+
+        orgadmin = factories.User()
+        _get_action('organization_member_create')(context, {'id': 'hdx-test-org', 'username': orgadmin['name'],
+                                                            'role': 'admin'})
+        orgadmin_token = factories.APIToken(user=orgadmin['name'], expires_in=2, unit=60 * 60)['token']
+        result = self.app.get(url, headers={'Authorization': orgadmin_token})
+        assert result.status_code == 200
+        assert 'Edit org page' in result.body
+        assert 'id="field-fts-id"' not in result.body
+        assert 'id="field-user-survey-url"' not in result.body
+        assert 'id="delete-org-drawer"' not in result.body
+
+        result = self.app.get(h.url_for('hdx_org.new'), headers={'Authorization': testsysadmin_token})
+        assert result.status_code == 200
+        assert 'Create an organisation' in result.body
+        assert 'id="delete-org-drawer"' not in result.body
+
+    def test_edit_org_page_unchanged_save(self):
+        context = {'model': model, 'session': model.Session, 'user': 'testsysadmin'}
+        orgadmin = factories.User()
+        customization = {'highlight_color': '#ff0000', 'logo_bg_color': '#00ff00', 'topline_resource': 'test-resource'}
+        factories.Organization(
+            name='hdx-test-org-edit',
+            title='HDX TEST ORG EDIT',
+            users=[{'name': orgadmin['name'], 'capacity': 'admin'}],
+            hdx_org_type='donor',
+            org_url='https://hdx.hdxtest.org/',
+            org_acronym='HTOE',
+            fts_id='123456',
+            user_survey_url='https://survey.hdxtest.org/',
+            custom_org='1',
+            request_membership='false',
+            visualization_config=json_config_wfp,
+            customization=json.dumps(customization),
+            image_sq='test-logo-sq.png',
+            image_rect='test-logo-rect.png',
+        )
+        fields = ['title', 'name', 'description', 'org_url', 'org_acronym', 'hdx_org_type', 'fts_id', 'user_survey_url',
+                  'custom_org', 'closed_organization', 'request_membership', 'visualization_config']
+        org_before = _get_action('organization_show')(context, {'id': 'hdx-test-org-edit'})
+
+        url = h.url_for('organization.edit', id='hdx-test-org-edit')
+        orgadmin_token = factories.APIToken(user=orgadmin['name'], expires_in=2, unit=60 * 60)['token']
+        result = self.app.get(url, headers={'Authorization': orgadmin_token})
+        form = BeautifulSoup(result.body, 'html.parser').find('form', id='req-create-org-form')
+        form_data = {}
+        for field in form.find_all(['input', 'textarea', 'select']):
+            if not field.get('name') or field.get('type') == 'file':
+                continue
+            if field.get('type') == 'checkbox' and not field.has_attr('checked'):
+                continue
+            if field.name == 'textarea':
+                form_data[field['name']] = field.text
+            elif field.name == 'select':
+                option = field.find('option', selected=True)
+                form_data[field['name']] = option['value'] if option else ''
+            else:
+                form_data[field['name']] = field.get('value', '')
+
+        self.app.post(url, data=form_data, headers={'Authorization': orgadmin_token})
+        org_after = _get_action('organization_show')(context, {'id': 'hdx-test-org-edit'})
+        for field in fields:
+            assert org_before.get(field) == org_after.get(field)
+        assert json.loads(org_before['customization']) == json.loads(org_after['customization'])
+        assert json.loads(org_after['customization'])['image_sq'] == 'test-logo-sq.png'
+        assert json.loads(org_after['customization'])['image_rect'] == 'test-logo-rect.png'
+
+        form_data.pop('custom_org')
+        self.app.post(url, data=form_data, headers={'Authorization': orgadmin_token})
+        org_after = _get_action('organization_show')(context, {'id': 'hdx-test-org-edit'})
+        assert not org_after.get('custom_org')
+        assert json.loads(org_before['customization']) == json.loads(org_after['customization'])
 
     # COMMENTED OUT FOR 2.6 UPGRADE - TO BE REVIEWED
     #

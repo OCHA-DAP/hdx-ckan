@@ -14,9 +14,7 @@
   Params
   ─────────────────────────────────────────────────
   minimal {bool}  Logo-only navbar, no top-bar/search/nav items/actions/
-                  hamburger/offcanvas. Used by the auth pages (login,
-                  forgot-password), which show only a teal logo bar per
-                  Figma. default: False
+                  hamburger/offcanvas. default: False
   quick_links {list}  Products menu items. default: [] when minimal,
                       else h.hdx_get_quick_links_list(archived=False,
                       exclude_crisis=True)
@@ -24,6 +22,8 @@
 
 {% set minimal = minimal if minimal is defined else False %}
 {% set quick_links = quick_links if quick_links is defined else ([] if minimal else h.hdx_get_quick_links_list(archived=False, exclude_crisis=True)) %}
+{% set nav_state = {} if minimal else h.hdx_v2_main_nav_state(quick_links) %}
+{% set user_menu_sections = [] if minimal else h.hdx_get_user_menu_sections() %}
 
 <header class="hdx-v2-header">
 
@@ -157,14 +157,20 @@
         {% snippet 'v2/components/nav-item.html',
             label=_('Data'),
             href=h.url_for('dataset.search'),
+            status='active' if nav_state.section == 'data' else 'default',
+            aria_current=nav_state.aria_current,
             attrs={'data-module': 'hdx_click_stopper', 'data-module-link_type': 'main nav'} %}
         {% snippet 'v2/components/nav-item.html',
             label=_('Locations'),
             href=h.url_for('group.index'),
+            status='active' if nav_state.section == 'locations' else 'default',
+            aria_current=nav_state.aria_current,
             attrs={'data-module': 'hdx_click_stopper', 'data-module-link_type': 'main nav'} %}
         {% snippet 'v2/components/nav-item.html',
             label=_('Organisations'),
             href=h.url_for('organization.index'),
+            status='active' if nav_state.section == 'organisations' else 'default',
+            aria_current=nav_state.aria_current,
             attrs={'data-module': 'hdx_click_stopper', 'data-module-link_type': 'main nav'} %}
 
         {# Products — custom panel, items from quick-links registry #}
@@ -173,6 +179,8 @@
               label=_('Products'),
               href='#',
               chevron=True,
+              status='active' if nav_state.section == 'products' else 'default',
+              aria_current=nav_state.aria_current,
               attrs={'data-hdx-v2-panel': 'products', 'aria-expanded': 'false',
                      'aria-controls': 'hdx-v2-panel-products'} %}
           <ul class="hdx-v2-navbar__products-panel" id="hdx-v2-panel-products" hidden>
@@ -180,6 +188,7 @@
               <li>
                 <a href="{{ product.url }}"
                    {% if product.newTab %}target="_blank" rel="noopener noreferrer"{% endif %}
+                   {% if product.url == nav_state.product_url %}aria-current="page"{% endif %}
                    data-module="hdx_click_stopper" data-module-link_type="main nav">
                   {{ product.title }}
                 </a>
@@ -229,10 +238,10 @@
                     data-hdx-v2-panel="user-menu">
               {% snippet 'v2/components/avatar.html',
                   size='sm',
-                  initials=c.userobj.display_name[0] | upper,
+                  initials=h.hdx_initials(c.userobj.display_name),
                   badge=notif.count > 0 %}
             </button>
-            {% snippet 'v2/navbar-user-menu.html' %}
+            {% snippet 'v2/navbar-user-menu.html', sections=user_menu_sections %}
           </div>
 
           {% set add_data_obj = h.hdx_check_add_data() %}
@@ -285,7 +294,7 @@
             <span class="hdx-v2-offcanvas__user-left">
               {% snippet 'v2/components/avatar.html',
                   size='sm',
-                  initials=c.userobj.display_name[0] | upper,
+                  initials=h.hdx_initials(c.userobj.display_name),
                   badge=notif.count > 0 %}
               <span class="hdx-v2-offcanvas__user-name">{{ c.userobj.display_name }}</span>
             </span>
@@ -296,18 +305,22 @@
         {# Primary nav links #}
         <nav class="hdx-v2-offcanvas__nav" aria-label="{{ _('Mobile navigation') }}">
           <a class="hdx-v2-offcanvas__nav-item" href="{{ h.url_for('home.index') }}"
+             {% if nav_state.section == 'home' %}aria-current="{{ nav_state.aria_current }}"{% endif %}
              data-module="hdx_click_stopper" data-module-link_type="main nav">
             {{ _('Home') }}
           </a>
           <a class="hdx-v2-offcanvas__nav-item" href="{{ h.url_for('dataset.search') }}"
+             {% if nav_state.section == 'data' %}aria-current="{{ nav_state.aria_current }}"{% endif %}
              data-module="hdx_click_stopper" data-module-link_type="main nav">
             {{ _('Data') }}
           </a>
           <a class="hdx-v2-offcanvas__nav-item" href="{{ h.url_for('group.index') }}"
+             {% if nav_state.section == 'locations' %}aria-current="{{ nav_state.aria_current }}"{% endif %}
              data-module="hdx_click_stopper" data-module-link_type="main nav">
             {{ _('Locations') }}
           </a>
           <a class="hdx-v2-offcanvas__nav-item" href="{{ h.url_for('organization.index') }}"
+             {% if nav_state.section == 'organisations' %}aria-current="{{ nav_state.aria_current }}"{% endif %}
              data-module="hdx_click_stopper" data-module-link_type="main nav">
             {{ _('Organisations') }}
           </a>
@@ -317,6 +330,7 @@
                   type="button"
                   aria-expanded="true"
                   aria-controls="offcanvas-products"
+                  {% if nav_state.section == 'products' %}aria-current="{{ nav_state.aria_current }}"{% endif %}
                   data-module="hdx_click_stopper" data-module-link_type="main nav">
             {{ _('Products') }}
             <span class="hdx-v2-offcanvas__expand-icon">{{ h.hdx_v2_icon('v2/icons/chevron-down.svg') }}</span>
@@ -326,6 +340,7 @@
               <li>
                 <a href="{{ product.url }}"
                    {% if product.newTab %}target="_blank" rel="noopener noreferrer"{% endif %}
+                   {% if product.url == nav_state.product_url %}aria-current="page"{% endif %}
                    data-module="hdx_click_stopper" data-module-link_type="main nav">
                   {{ product.title }}
                 </a>
@@ -358,11 +373,11 @@
           <div class="hdx-v2-offcanvas__user-display">
             {% snippet 'v2/components/avatar.html',
                 size='sm',
-                initials=c.userobj.display_name[0] | upper %}
+                initials=h.hdx_initials(c.userobj.display_name) %}
             <span class="hdx-v2-offcanvas__user-name">{{ c.userobj.display_name }}</span>
           </div>
 
-          {% for section in h.hdx_get_user_menu_sections() %}
+          {% for section in user_menu_sections %}
             <button class="hdx-v2-offcanvas__nav-item hdx-v2-offcanvas__nav-item--expandable"
                     type="button"
                     aria-expanded="true"

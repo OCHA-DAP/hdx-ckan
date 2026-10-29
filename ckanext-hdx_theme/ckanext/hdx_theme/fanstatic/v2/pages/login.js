@@ -26,12 +26,6 @@
       return match ? decodeURIComponent(match[1]) : null;
     }
 
-    function setButtonDisabled(btn, disabled) {
-      btn.disabled = disabled;
-      btn.classList.toggle('is-disabled', disabled);
-      btn.setAttribute('aria-disabled', disabled ? 'true' : 'false');
-    }
-
     function setFieldError(input, message) {
       var wrapper = input.closest('.c-search-input');
       if (!wrapper) return;
@@ -48,7 +42,7 @@
         if (el.type === 'checkbox') { if (!el.checked) valid = false; }
         else if (!el.value) { valid = false; }
       });
-      setButtonDisabled(submitButton, !valid);
+      window.hdxV2.setDisabled(submitButton, !valid);
     }
 
     [loginField, passwordField, mfaField].forEach(function (el) {
@@ -80,7 +74,7 @@
     form.addEventListener('submit', function (e) {
       if (lockoutCleared) return;
       e.preventDefault();
-      setButtonDisabled(submitButton, true);
+      window.hdxV2.setDisabled(submitButton, true);
       var username = loginField.value;
       fetch('/util/user/check_lockout?user=' + encodeURIComponent(username), {credentials: 'same-origin'})
         .then(function (r) { return r.json(); })
@@ -91,20 +85,29 @@
             updateSubmitState();
           } else {
             lockoutCleared = true;
-            setButtonDisabled(submitButton, false);
+            window.hdxV2.setDisabled(submitButton, false);
             if (form.requestSubmit) { form.requestSubmit(); } else { form.submit(); }
           }
         })
         .catch(function () {
           lockoutCleared = true;
-          setButtonDisabled(submitButton, false);
+          window.hdxV2.setDisabled(submitButton, false);
           if (form.requestSubmit) { form.requestSubmit(); } else { form.submit(); }
         });
     });
 
     // ── "Remember me" cookie prefill / returning-user swap ──
     // Initials-only avatar — reuses the server-rendered c-avatar markup,
-    // just fills in the initial once the cookie is read client-side.
+    // just fills in the initials once the cookie is read client-side.
+
+    function initials(name) {
+      var text = (name || '').trim();
+      var words = text.split(/\s+/).filter(function (word) { return /^[\p{L}\p{N}]/u.test(word); });
+      if (words.length) {
+        return words.slice(0, 2).map(function (word) { return word.charAt(0); }).join('').toUpperCase();
+      }
+      return text.charAt(0).toUpperCase();
+    }
 
     function showReturningUser(data) {
       loginField.value = data.login || '';
@@ -113,11 +116,8 @@
       returningName.textContent = data.display_name || '';
       returningEmail.textContent = data.email || '';
 
-      var avatarEl = returningAvatar.querySelector('.c-avatar');
       var initialsEl = returningAvatar.querySelector('.c-avatar__initials');
-      var initial = (data.display_name || '').trim().charAt(0).toUpperCase() || '?';
-      if (initialsEl) initialsEl.textContent = initial;
-      if (avatarEl) avatarEl.setAttribute('aria-label', data.display_name || '');
+      if (initialsEl) initialsEl.textContent = initials(data.display_name);
 
       checkMfa();
       updateSubmitState();

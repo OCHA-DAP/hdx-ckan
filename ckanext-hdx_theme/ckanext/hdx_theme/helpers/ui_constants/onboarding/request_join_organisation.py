@@ -12,6 +12,8 @@ CONSTANTS = {
     'SELECT_ORGANISATION_LABEL': '''If you can not find your organisation in the list, you can request to <a href="{0}" title="Create new organisation">create a new one</a>''',
     'SELECT_ORGANISATION_PLACEHOLDER': '''Select an organisation...''',
 
+    'BODY_ORG_NOT_FOUND': '''This organisation could not be found. <a href="{0}">Choose another organisation</a>.''',
+
     'BUTTON_SUBMIT': '''Continue''',
     'BUTTON_CANCEL': '''Cancel''',
 }

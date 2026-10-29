@@ -164,6 +164,30 @@ body.is-drawer-open {
   color: var(--hdx-neutral-8);
   margin: 0;
 }
+.c-drawer-form__list {
+  font-family: var(--hdx-font-body);
+  font-size: var(--hdx-fs-s);
+  font-weight: var(--hdx-fw-regular);
+  line-height: var(--hdx-lh-normal);
+  max-height: 12rem;
+  overflow-y: auto;
+  color: var(--hdx-neutral-85);
+}
+.c-drawer-form__list p {
+  margin: 0 0 var(--hdx-space-1);
+}
+.c-drawer-form__list ul {
+  margin: 0 0 var(--hdx-space-3);
+  padding-left: var(--hdx-space-5);
+}
+.c-drawer-form__list a {
+  font-family: var(--hdx-font-body);
+  font-size: var(--hdx-fs-s);
+  font-weight: var(--hdx-fw-medium);
+  line-height: var(--hdx-lh-normal);
+  text-decoration: underline;
+  color: inherit;
+}
 .c-drawer-form__checkbox-row {
   display: flex;
   align-items: flex-start;

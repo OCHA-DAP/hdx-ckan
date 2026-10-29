@@ -11,6 +11,7 @@ CONSTANTS = {
     'BODY_CHOICE_TEXT': '''You have chosen to request to join:''',
     'BODY_ABOUT_TEXT': '''About this organisation:''',
     'BODY_MEMBER_SINCE_TEXT': '''Member since {0}''',
+    'BODY_ORG_NOT_FOUND': REQUEST_JOIN_ORGANISATION_CONSTANTS['BODY_ORG_NOT_FOUND'],
 
     'BUTTON_SUBMIT': '''Yes - Choose this organisation''',
     'BUTTON_CHOOSE_DIFFERENT_ORG': '''No - Choose a different organisation''',

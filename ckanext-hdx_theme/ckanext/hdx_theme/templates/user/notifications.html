@@ -1,101 +1,111 @@
-{% extends "user/read_base.html" %}
+{% extends "v2/user-dashboard-base.html" %}
 
-{% block styles %}
-  {{ super() }}
-  {% asset 'hdx_theme/bem-blocks-styles' %}
-  {% asset 'hdx_theme/ckan' %}
-{% endblock %}
+{% set nav_active      = 'notifications_settings' %}
+{% set page_label      = _('Notifications Settings') %}
+{% set can_unsubscribe = is_myself and subscriptions | length > 0 %}
 
 {% block analytics_came_from %}{{ analytics.analytics_came_from }}{% endblock %}
 
-{% block dashboard_activity_stream_context %}{% endblock %}
-{% block page_header_inner %}{% endblock %}
-{% block add_action_content %}{% endblock %}
+{% block scripts %}
+  {{ super() }}
+  {% if can_unsubscribe %}
+    {% asset 'hdx_theme/notification-platform-util-scripts' %}
+    {% asset 'hdx_theme/v2-notifications-settings-page-scripts' %}
+  {% endif %}
+{% endblock %}
 
-{% block primary_content_inner %}
-
-  <div class="pt-4 ps-4">
-    <div class="row align-items-center">
-      <div class="col-6">
-        {{ h.snippet('bem.blocks/heading.html', title='Subscriptions', heading_type=6, spacing_class="mb-1") }}
-      </div>
-      <div class="col-6">
-        <div class="float-end">
-{#          {{ h.snippet('bem.blocks/checkbox_field.html',#}
-{#            label="Enable Notifications",#}
-{#            name="enable_notifications",#}
-{#            checked=True) }}#}
-        </div>
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col-12">
-        {{ h.snippet('bem.blocks/hr.html', color='grey', spacing_class="my-4") }}
-      </div>
-
-      <div class="col-12">
-        <div class="text-center">
-          <p class="empty hub-no-subscriptions{% if subscriptions|length > 0 %} d-none{% endif %}" style="min-height: 200px;">
-            {{ _("To set up notifications use the “Subscribe” button on dataset, crisis, organisation or location pages.") }}
-          </p>
-        </div>
-        {% if subscriptions|length > 0 %}
-          {% for subscription in subscriptions %}
-            {% set ui_object_type = 'location' if subscription.object_type == 'group' else subscription.object_type %}
-            <div class="row">
-              <div class="col-8">
-                <a href="{{ subscription.object_link }}" class="fw-bold"
-                   title="{{ subscription.object_dict.title }}">{{ ui_object_type|capitalize }}: {{ subscription.object_dict.title }}</a>
-              </div>
-              <div class="col-4 text-end">
-{#                {% if subscription.object_type != 'dataset' %}#}
-{#                  <a href="#" class="fw-bold" title="Manage">Manage</a>#}
-{#                  <span class="separator mx-2">|</span>#}
-{#                {% endif %}#}
-                <a
-                  href="{{ subscription.object_link }}?_unsubscribe_token={{ subscription.unsubscribe_token.token }}"
-                  class="fw-bold text-danger"
-                  title="Unsubscribe"
-                >
-                  Unsubscribe <i class="fa-solid fa-trash ms-2"></i>
-                </a>
-              </div>
-              <div class="col-8">
-                <div class="row">
-                  <div class="col-4">
-                    <p class="mb-0 mt-2"><strong>Update type:</strong></p>
-                    {% if subscription.object_type == 'dataset' %}
-                        <p class="mb-0">Dataset is updated</p>
-                    {% else %}
-                      {% if subscription.event_type == 'new-dataset-added' %}
-                        <p class="mb-0">New dataset is added</p>
-                      {% elif subscription.event_type == 'dataset-updated' %}
-                        <p class="mb-0">New dataset is added</p>
-                        <p class="mb-0">Any dataset is updated</p>
-                      {% else %}
-                        <p class="mb-0">{{ subscription.event_type }}</p>
-                      {% endif %}
-                    {% endif %}
-                  </div>
-                  <div class="col-4">
-                    <p class="mb-0 mt-2"><strong>Receive notifications:</strong></p>
-                    <p class="mb-0">By Email</p>
-                  </div>
-                  <div class="col-4">
-                    <p class="mb-0 mt-2"><strong>Update frequency:</strong></p>
-                    <p class="mb-0">As soon as possible</p>
-                  </div>
-                </div>
-              </div>
-              <div class="col-12">
-                {{ h.snippet('bem.blocks/hr.html', color='grey', spacing_class="my-4") }}
-              </div>
-            </div>
-          {% endfor %}
-        {% endif %}
-      </div>
+{% block primary %}
+  {% if not is_myself %}
+    {{ self.user_profile_header() }}
+  {% endif %}
+  {% set title_tag = 'h1' if is_myself else 'h2' %}
+  <div class="hdx-v2-user-dashboard-header">
+    <div class="hdx-v2-user-dashboard-header__text">
+      <{{ title_tag }} class="hdx-v2-user-dashboard-header__title">{{ page_label }}</{{ title_tag }}>
+      <p class="hdx-v2-user-dashboard-header__subtitle">
+        {{ _('Set how often you receive email notifications, or unsubscribe entirely') if is_myself else _('Email notifications {name} receives').format(name=user_dict.display_name) }}
+      </p>
     </div>
   </div>
 
+  {% if subscriptions %}
+    {% set CONST_NOTIFICATION_PLATFORM = h.HDX_CONST('UI_CONSTANTS')['NOTIFICATION_PLATFORM'] %}
+    {% set type_labels = {
+      'dataset': _('Dataset'),
+      'organization': _('Organisation'),
+      'group': _('Location'),
+      'crisis': _('Crisis'),
+    } %}
+    <ul class="c-dataset-card-list">
+      {% for subscription in subscriptions %}
+        {% set object_type = subscription.object_type %}
+        {% set title = type_labels[object_type] ~ ': ' ~ subscription.object_dict.title %}
+
+        {% if object_type == 'dataset' %}
+          {% set update_type = _('Dataset is updated') %}
+        {% elif subscription.event_type == 'new-dataset-added' %}
+          {% set update_type = _('New dataset is added') %}
+        {% elif subscription.event_type == 'dataset-updated' %}
+          {% set update_type = _('New dataset is added') ~ ('<br>' | safe) ~ _('Any dataset is updated') %}
+        {% else %}
+          {% set update_type = subscription.event_type %}
+        {% endif %}
+
+        {% set title_action = {} %}
+        {% if is_myself and subscription.unsubscribe_token %}
+          {% if object_type == 'dataset' %}
+            {% set confirmation_text = CONST_NOTIFICATION_PLATFORM.UNSUBSCRIBE_CONFIRMATION_MODAL_TEXT_DATASET %}
+            {% set unsubscribed_text = CONST_NOTIFICATION_PLATFORM.UNSUBSCRIBED_MODAL_TEXT_DATASET %}
+          {% else %}
+            {% set ui_object_type = 'location' if object_type == 'group' else object_type %}
+            {% set confirmation_text = CONST_NOTIFICATION_PLATFORM.UNSUBSCRIBE_CONFIRMATION_MODAL_TEXT_SEARCH_RESULTS.format(ui_object_type) %}
+            {% set unsubscribed_text = CONST_NOTIFICATION_PLATFORM.UNSUBSCRIBED_MODAL_TEXT_SEARCH_RESULTS.format(ui_object_type) %}
+          {% endif %}
+          {% set unsubscribe_data = h.dump_json({
+            'token': subscription.unsubscribe_token.token,
+            'email': subscription.unsubscribe_email,
+            'object_id': subscription.object,
+            'object_name': subscription.object_dict.name,
+            'object_type': object_type,
+            'confirmation_text': confirmation_text,
+            'unsubscribed_text': unsubscribed_text,
+          }) %}
+          {% set title_action = {
+            'style': 'tertiary',
+            'size': 's',
+            'label': _('Unsubscribe'),
+            'icon_src': 'v2/icons/delete.svg',
+            'attrs': {
+              'aria-label': _('Unsubscribe from {title}').format(title=title),
+              'data-notifications-unsubscribe': unsubscribe_data,
+            },
+          } %}
+        {% endif %}
+
+        <li>
+          {% snippet 'v2/components/dataset-card.html',
+              title=title,
+              title_href=subscription.object_link,
+              title_action=title_action,
+              meta_items=[
+                {'label': _('Update type:'), 'value': update_type},
+                {'label': _('Receive notifications:'), 'value': _('By Email')},
+                {'label': _('Update frequency:'), 'value': _('As soon as possible')},
+              ] %}
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <div class="hdx-v2-dashboard-empty">
+      <p class="hdx-v2-dashboard-empty__text">
+        {{ _('To set up notifications use the “Get Notified” button on dataset, crisis, organisation or location pages.') if is_myself else _("{name} hasn't set up any email notifications.").format(name=user_dict.display_name) }}
+      </p>
+    </div>
+  {% endif %}
+
+  {% if can_unsubscribe %}
+    {% snippet 'notification_platform/unsubscribe_drawers.html',
+        submit_attrs={'id': 'notificationsUnsubscribeButton',
+                      'data-is-authenticated': current_user.is_authenticated} %}
+  {% endif %}
 {% endblock %}

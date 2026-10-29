@@ -1496,6 +1496,8 @@ v2-components-styles:
     - v2/components/dropdown.css
     - v2/components/form-field.css
     - v2/components/highlight-card.css
+    - v2/components/image-upload.css
+    - v2/components/info-box.css
     - v2/components/input-field.css
     - v2/components/label.css
     - v2/components/letter-anchor.css
@@ -1506,10 +1508,14 @@ v2-components-styles:
     - v2/components/org-list-card.css
     - v2/components/page-header.css
     - v2/components/pagination.css
+    - v2/components/request-archive.css
+    - v2/components/request-card.css
+    - v2/components/request-item.css
     - v2/components/resource-card.css
     - v2/components/selection.css
     - v2/components/showcase-card.css
     - v2/components/signup-tier.css
+    - v2/components/slug-preview.css
     - v2/components/spinner.css
     - v2/components/stats-card.css
     - v2/components/step-pager.css
@@ -1517,6 +1523,7 @@ v2-components-styles:
     - v2/components/tabs.css
     - v2/components/signal-card.css
     - v2/components/text-link.css
+    - v2/components/user-item.css
 
 v2-components-scripts:
   <<: *common-js
@@ -1529,6 +1536,7 @@ v2-components-scripts:
     - v2/components/copy-button.js
     - v2/components/drawer.js
     - v2/components/dropdown.js
+    - v2/components/image-upload.js
     - v2/components/input-field.js
     - v2/components/page-header.js
     - v2/components/tooltip.js
@@ -1639,6 +1647,26 @@ v2-datatable-scripts:
   output: ckanext-hdx_theme/%(version)s_v2-datatable-scripts.js
   contents:
     - vendor/datatables-2.3.8/dataTables.min.js
+
+v2-select2-styles:
+  output: ckanext-hdx_theme/%(version)s_v2-select2-styles.css
+  <<: *common-css
+  filters: cssrewrite
+  contents:
+    - vendor/select2-4/select2.min.css
+
+v2-select2-scripts:
+  <<: *common-js
+  output: ckanext-hdx_theme/%(version)s_v2-select2-scripts.js
+  contents:
+    - vendor/select2-4/select2.min.js
+    - v2/components/select.js
+
+v2-slug-preview-scripts:
+  <<: *common-js
+  output: ckanext-hdx_theme/%(version)s_v2-slug-preview-scripts.js
+  contents:
+    - v2/components/slug-preview.js
 
 v2-resource-page-scripts:
   <<: *common-js
@@ -1807,6 +1835,24 @@ v2-signup-page-styles:
   contents:
     - v2/pages/signup.css
 
+v2-org-request-page-styles:
+  output: ckanext-hdx_theme/%(version)s_v2-org-request-page-styles.css
+  <<: *common-css
+  contents:
+    - v2/pages/org-request.css
+
+v2-org-edit-page-styles:
+  output: ckanext-hdx_theme/%(version)s_v2-org-edit-page-styles.css
+  <<: *common-css
+  contents:
+    - v2/pages/org-edit.css
+
+v2-org-edit-page-scripts:
+  <<: *common-js
+  output: ckanext-hdx_theme/%(version)s_v2-org-edit-page-scripts.js
+  contents:
+    - v2/pages/org-edit.js
+
 v2-hapi-landing-page-styles:
   output: ckanext-hdx_theme/%(version)s_v2-hapi-landing-page-styles.css
   <<: *common-css
@@ -1844,3 +1890,53 @@ v2-crisis-pages-page-styles:
   <<: *common-css
   contents:
     - v2/pages/crisis-pages.css
+
+v2-dashboard-page-styles:
+  output: ckanext-hdx_theme/%(version)s_v2-dashboard-page-styles.css
+  <<: *common-css
+  contents:
+    - v2/pages/dashboard.css
+
+v2-user-dashboard-page-styles:
+  output: ckanext-hdx_theme/%(version)s_v2-user-dashboard-page-styles.css
+  <<: *common-css
+  contents:
+    - v2/pages/user-dashboard.css
+
+v2-sysadmin-page-styles:
+  output: ckanext-hdx_theme/%(version)s_v2-sysadmin-page-styles.css
+  <<: *common-css
+  contents:
+    - v2/pages/sysadmin.css
+
+v2-hdx-connect-page-styles:
+  output: ckanext-hdx_theme/%(version)s_v2-hdx-connect-page-styles.css
+  <<: *common-css
+  contents:
+    - v2/pages/hdx-connect.css
+
+v2-hdx-connect-page-scripts:
+  <<: *common-js
+  output: ckanext-hdx_theme/%(version)s_v2-hdx-connect-page-scripts.js
+  contents:
+    - v2/url-nav.js
+    - v2/pages/hdx-connect.js
+
+v2-hdx-connect-scripts:
+  <<: *common-js
+  output: ckanext-hdx_theme/%(version)s_v2-hdx-connect-scripts.js
+  contents:
+    - v2/pages/hdx-connect.js
+
+v2-notifications-settings-page-scripts:
+  <<: *common-js
+  output: ckanext-hdx_theme/%(version)s_v2-notifications-settings-page-scripts.js
+  contents:
+    - v2/pages/notifications-settings.js
+
+v2-user-profile-page-scripts:
+  <<: *common-js
+  output: ckanext-hdx_theme/%(version)s_v2-user-profile-page-scripts.js
+  contents:
+    - v2/qrious/qrious.min.js
+    - v2/pages/user-profile.js

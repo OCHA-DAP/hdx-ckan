@@ -187,7 +187,7 @@ def new_org_template_variables(data_dict):
 
 def stats(id):
     stats_logic = OrganizationStatsLogic(id, g.user, g.userobj)
-    stats_logic.org_meta_dao.fetch_dataset_info()  # datasets_num for the v2 hero stats
+    # stats_logic.org_meta_dao.fetch_dataset_info()  # datasets_num for the v2 hero stats
     org_dict = stats_logic.org_meta_dao.org_dict
     org_dict.update({
         'allow_req_membership': stats_logic.org_meta_dao.allow_req_membership,

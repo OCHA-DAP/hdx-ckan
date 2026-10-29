@@ -2,17 +2,21 @@
   'use strict';
 
   // ── setNavParam ────────────────────────────────────────────────────────────
-  // Sets a single URL param and reloads, resetting ?page to 1.
+  // Sets a single URL param (a null value deletes it) and reloads, resetting ?page to 1.
   // Used by any navigate-on-select dropdown (sort, page-size) and search inputs.
 
   function setNavParam(key, value) {
     var url = new URL(window.location.href);
-    url.searchParams.set(key, value);
+    if (value === null) {
+      url.searchParams.delete(key);
+    } else {
+      url.searchParams.set(key, value);
+    }
     url.searchParams.delete('page');
     window.location.href = url.toString();
   }
 
-  // Expose for pages that wire their own search Enter handler.
+  // Expose for page scripts.
   window.hdxSetNavParam = setNavParam;
 
   // ── Navigate-on-select dropdown handler ───────────────────────────────────

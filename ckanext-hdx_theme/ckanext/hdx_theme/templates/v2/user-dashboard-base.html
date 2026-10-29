@@ -1,0 +1,64 @@
+{% extends "v2/dashboard-base.html" %}
+
+{#
+  Base for the v2 user dashboard and user settings pages, on the shared
+  v2/dashboard-base.html shell (left menu, breadcrumb, layout), plus
+  <title> and page styles.
+
+  Children set:
+    nav_active  {string}  Item id from h.hdx_get_user_dashboard_nav_sections()
+                          (e.g. 'my_organisations')
+    page_label  {string}  Page name for the breadcrumb and <title>
+  and fill {% block primary %}.
+  The left menu is built for user_dict, the user whose page is shown.
+
+  Pages that can show another user output {{ self.user_profile_header() }}
+  at the top of primary; it is never rendered automatically. When is_myself
+  is false, the breadcrumb is All Users / {name} (/ page_label, except on Datasets).
+  A child that sets public_profile_link = true (top level) gets a
+  "View public profile" link in that header.
+#}
+
+{% set nav_sections   = h.hdx_get_user_dashboard_nav_sections(user_dict.name) %}
+{% set nav_aria_label = _('User dashboard') %}
+
+{% block subtitle %}{{ page_label }} {{ g.template_title_delimiter }} {{ user_dict.display_name }} {{ g.template_title_delimiter }} {{ _('All Users') }}{% endblock %}
+
+{% block styles %}
+  {{ super() }}
+  {% asset 'hdx_theme/v2-user-dashboard-page-styles' %}
+{% endblock %}
+
+{% block breadcrumb_items %}
+  {% if is_myself is defined and not is_myself %}
+    {% set crumbs = [{'label': _('All Users'), 'href': h.url_for('user.index')}] %}
+    {% if nav_active == 'my_datasets' %}
+      {% set crumbs = crumbs + [{'label': user_dict.display_name, 'href': ''}] %}
+    {% else %}
+      {% set crumbs = crumbs + [{'label': user_dict.display_name, 'href': h.url_for('hdx_user.read', id=user_dict.name)},
+                                {'label': page_label, 'href': ''}] %}
+    {% endif %}
+    {% snippet 'v2/components/breadcrumb.html', items=crumbs %}
+  {% else %}
+    {{ super() }}
+  {% endif %}
+{% endblock %}
+
+{% block user_profile_header %}
+  {% snippet 'v2/components/page-header.html',
+      avatar={'size': 'l',
+              'initials': h.hdx_initials(user_dict.display_name),
+              'aria_label': user_dict.display_name},
+      title=user_dict.display_name,
+      member_since=_('Member since') ~ ' ' ~ (h.hdx_format_date(user_dict.created) if user_dict.created else _('Unknown')),
+      description=h.render_markdown(user_dict.about) if user_dict.about else '',
+      state_label_text=_('Deleted') if user_dict.state == 'deleted' else '',
+      state_label_color='red',
+      cta_style='text',
+      cta_label=_('View public profile'),
+      cta_href=h.url_for('hdx_user.read', id=user_dict.name) if public_profile_link is defined and public_profile_link else '',
+      cta_icon_src='v2/icons/link-external.svg',
+      cta_attrs={'target': '_blank', 'rel': 'noopener noreferrer'},
+      flush=True %}
+  <hr class="c-divider hdx-v2-user-dashboard-divider">
+{% endblock %}

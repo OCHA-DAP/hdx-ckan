@@ -13,12 +13,6 @@
     var submitButton  = document.getElementById('recover-submit');
     var recaptchaContainer = document.getElementById('recover-recaptcha');
 
-    function setButtonDisabled(btn, disabled) {
-      btn.disabled = disabled;
-      btn.classList.toggle('is-disabled', disabled);
-      btn.setAttribute('aria-disabled', disabled ? 'true' : 'false');
-    }
-
     function setFieldError(input, message) {
       var wrapper = input.closest('.c-search-input');
       if (!wrapper) return;
@@ -28,7 +22,7 @@
     }
 
     function updateSubmitState() {
-      setButtonDisabled(submitButton, idField.value.trim() === '');
+      window.hdxV2.setDisabled(submitButton, idField.value.trim() === '');
     }
 
     idField.addEventListener('input', updateSubmitState);

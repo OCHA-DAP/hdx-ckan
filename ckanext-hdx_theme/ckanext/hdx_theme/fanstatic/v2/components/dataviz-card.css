@@ -57,7 +57,10 @@
 .c-dataviz-card__desc.is-clamped .c-text-button {
   display: inline-flex;
 }
-.c-dataviz-card__desc.is-open .c-text-button__icon {
+.c-dataviz-card__desc .c-text-button .c-text-button__icon {
+  transition: transform 0.15s ease;
+}
+.c-dataviz-card__desc.is-open .c-text-button .c-text-button__icon {
   transform: rotate(180deg);
 }
 .c-dataviz-card__desc-text {

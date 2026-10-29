@@ -1,0 +1,29 @@
+.c-slug-preview__field[hidden] {
+  display: none;
+}
+.c-slug-preview__preview {
+  font-family: var(--hdx-font-body);
+  font-size: var(--hdx-fs-m);
+  font-weight: var(--hdx-fw-regular);
+  line-height: var(--hdx-lh-normal);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: var(--hdx-space-2);
+  margin: 0;
+  color: var(--hdx-neutral-85);
+}
+.c-slug-preview__preview[hidden] {
+  display: none;
+}
+.c-slug-preview__label {
+  font-family: var(--hdx-font-body);
+  font-size: var(--hdx-fs-m);
+  font-weight: var(--hdx-fw-medium);
+  line-height: var(--hdx-lh-normal);
+  color: var(--hdx-neutral-9);
+}
+.c-slug-preview__url {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}

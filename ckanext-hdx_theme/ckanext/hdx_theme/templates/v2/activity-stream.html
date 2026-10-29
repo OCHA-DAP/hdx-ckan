@@ -1,14 +1,28 @@
 {#
   v2/activity-stream.html — type-dispatch orchestrator for the v2 activity
-  timeline (c-activity-item). Shared by the dataset page (task 046) and the
-  organisation page's Activity tab (task 057).
+  timeline (c-activity-item).
 
   Accepts the same params as the v1 activity_stream.html:
-    activity_stream (list)   — list of activity dicts from package_activity_list
-                                 or organization_activity_list
-    id              (string) — dataset/org id or name
-    object_type     (string) — 'package' | 'organization'
+    activity_stream (list)   — list of activity dicts from package_activity_list,
+                                 organization_activity_list or user_activity_list
+    id              (string) — dataset/org/user id or name
+    object_type     (string) — 'package' | 'organization' | 'user' ('user' has
+                                 no empty-state text: the caller renders
+                                 its own)
+  Optional:
+    show_detail_links (bool, default=False) — "View this version" / "Changes"
+                                 links on new/changed package and changed
+                                 organization/group items
+    actor_names       (dict, default={}) — {user_id: username} for actors
+                                 without data.actor, also used for the
+                                 'follow user' subject
+    load_more_href    (string, default='') — next-page URL; renders a
+                                 "Load more" link below the stream
 #}
+
+{% set show_detail_links = show_detail_links if show_detail_links is defined else False %}
+{% set actor_names       = actor_names       if actor_names       is defined else {} %}
+{% set load_more_href    = load_more_href    if load_more_href    is defined else '' %}
 
 {% if not activity_stream %}
   {% if object_type == 'organization' %}
@@ -22,22 +36,33 @@
 
       {# ── Actor ── #}
       {% set _actor_href  = h.url_for('user.read', id=activity.user_id) if activity.user_id else '#' %}
-      {% set _actor_label = activity.data.actor if (activity.data.actor is defined and activity.data.actor) else (activity.user_id if activity.user_id else _('unknown user')) %}
+      {% set _actor_label = activity.data.actor if (activity.data.actor is defined and activity.data.actor) else (actor_names.get(activity.user_id) or activity.user_id or _('unknown user')) %}
 
       {# ── Type dispatch ── #}
-      {% set _ns = namespace(action_text='', subject_label='', subject_href='') %}
+      {% set _ns = namespace(action_text='', subject_label='', subject_href='', links=[]) %}
 
       {% if activity.activity_type == 'new package' %}
         {% set _ns.action_text   = _('created the dataset') %}
         {% set _ns.subject_label = activity.data.package.title if activity.data.package else _('unknown') %}
         {% set _pkg_type         = (activity.data.package.type if activity.data.package else 'dataset') or 'dataset' %}
         {% set _ns.subject_href  = h.url_for(_pkg_type ~ '.read', id=activity.object_id) %}
+        {% if show_detail_links %}
+          {% set _ns.links = [
+            {'label': _('View this version'), 'href': h.url_for('activity.package_history', id=activity.object_id, activity_id=activity.id)},
+          ] %}
+        {% endif %}
 
       {% elif activity.activity_type == 'changed package' %}
         {% set _ns.action_text   = _('updated the dataset') %}
         {% set _ns.subject_label = activity.data.package.title if activity.data.package else _('unknown') %}
         {% set _pkg_type         = (activity.data.package.type if activity.data.package else 'dataset') or 'dataset' %}
         {% set _ns.subject_href  = h.url_for(_pkg_type ~ '.read', id=activity.object_id) %}
+        {% if show_detail_links %}
+          {% set _ns.links = [
+            {'label': _('View this version'), 'href': h.url_for('activity.package_history', id=activity.object_id, activity_id=activity.id)},
+            {'label': _('Changes'), 'href': h.url_for('activity.package_changes', id=activity.id)},
+          ] %}
+        {% endif %}
 
       {% elif activity.activity_type == 'deleted package' %}
         {% set _ns.action_text   = _('deleted the dataset') %}
@@ -99,6 +124,9 @@
         {% set _ns.action_text   = _('updated the organization') %}
         {% set _ns.subject_label = activity.data.group.title if activity.data.group else _('unknown') %}
         {% set _ns.subject_href  = h.url_for('organization.read', id=activity.object_id) %}
+        {% if show_detail_links %}
+          {% set _ns.links = [{'label': _('Changes'), 'href': h.url_for('activity.organization_changes', id=activity.id)}] %}
+        {% endif %}
 
       {% elif activity.activity_type == 'deleted organization' %}
         {% set _ns.action_text   = _('deleted the organization') %}
@@ -114,6 +142,9 @@
         {% set _ns.action_text   = _('updated the group') %}
         {% set _ns.subject_label = activity.data.group.title if activity.data.group else _('unknown') %}
         {% set _ns.subject_href  = h.url_for('group.read', id=activity.object_id) %}
+        {% if show_detail_links %}
+          {% set _ns.links = [{'label': _('Changes'), 'href': h.url_for('activity.group_changes', id=activity.id)}] %}
+        {% endif %}
 
       {% elif activity.activity_type == 'deleted group' %}
         {% set _ns.action_text   = _('deleted the group') %}
@@ -142,7 +173,7 @@
 
       {% elif activity.activity_type == 'follow user' %}
         {% set _ns.action_text   = _('started following') %}
-        {% set _ns.subject_label = activity.object_id %}
+        {% set _ns.subject_label = actor_names.get(activity.object_id) or activity.object_id %}
         {% set _ns.subject_href  = h.url_for('user.read', id=activity.object_id) %}
 
       {% elif activity.activity_type == 'follow group' %}
@@ -162,8 +193,15 @@
           action_text   = _ns.action_text,
           subject_label = _ns.subject_label,
           subject_href  = _ns.subject_href,
+          links         = _ns.links,
           timestamp     = activity.timestamp
       %}
     {% endfor %}
   </div>
+  {% if load_more_href %}
+    <div class="c-activity-stream__load-more">
+      {% snippet 'v2/components/text-link.html',
+          label=_('Load more'), style='secondary', size='xs', href=load_more_href %}
+    </div>
+  {% endif %}
 {% endif %}
