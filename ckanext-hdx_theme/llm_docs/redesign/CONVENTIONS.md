@@ -244,7 +244,7 @@ params the dropdowns navigate on (default `sort` / `ext_page_size`). The control
 (`__controls--xl-only`) when the list header renders the Filter button, and visible at every width otherwise
 (sort-only lists keep the sort beside the list). Their titles call `.hdx-section-title()` like every
 other in-page heading. The list header's `title_size` param changes that: `'page'` bumps the title and count to the page-title font-size scale, and
-`'dashboard'` uses `.hdx-dashboard-title()` with a `.hdx-body-m()` count. `list_subtitle` adds a full-width `__subtitle` line; the header row wraps, so
+`'dashboard'` uses `.hdx-dashboard-title()` with a `.hdx-body-m()` count. A `caller()` body renders in `__actions` on the title row, at every width. `list_subtitle` adds a full-width `__subtitle` line; the header row wraps, so
 the controls drop under the title in a narrow column. Hero-scale list
 titles use `c-page-header` directly (`title` + `title_count` params) instead. The
 count styling is factored into `.hdx-list-header-count()` (base: family/weight/color, no size) plus

@@ -23,6 +23,7 @@
 {% set minimal = minimal if minimal is defined else False %}
 {% set quick_links = quick_links if quick_links is defined else ([] if minimal else h.hdx_get_quick_links_list(archived=False, exclude_crisis=True)) %}
 {% set nav_state = {} if minimal else h.hdx_v2_main_nav_state(quick_links) %}
+{% set user_menu_sections = [] if minimal else h.hdx_get_user_menu_sections() %}
 
 <header class="hdx-v2-header">
 
@@ -240,7 +241,7 @@
                   initials=h.hdx_initials(c.userobj.display_name),
                   badge=notif.count > 0 %}
             </button>
-            {% snippet 'v2/navbar-user-menu.html' %}
+            {% snippet 'v2/navbar-user-menu.html', sections=user_menu_sections %}
           </div>
 
           {% set add_data_obj = h.hdx_check_add_data() %}
@@ -376,7 +377,7 @@
             <span class="hdx-v2-offcanvas__user-name">{{ c.userobj.display_name }}</span>
           </div>
 
-          {% for section in h.hdx_get_user_menu_sections() %}
+          {% for section in user_menu_sections %}
             <button class="hdx-v2-offcanvas__nav-item hdx-v2-offcanvas__nav-item--expandable"
                     type="button"
                     aria-expanded="true"

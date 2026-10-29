@@ -4,6 +4,7 @@
   width: 100%;
   flex-wrap: wrap;
   row-gap: var(--hdx-space-13);
+  column-gap: var(--hdx-space-3);
   margin-bottom: var(--hdx-space-4);
 }
 .hdx-v2-list-header__left {

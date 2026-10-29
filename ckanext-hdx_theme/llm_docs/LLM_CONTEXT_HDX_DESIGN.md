@@ -293,7 +293,7 @@ Example page-specific template (light search):
 ### All Sysadmins (`/ckan-admin`, sysadmins only)
 
 - **Template**: `ckanext-hdx_theme/ckanext/hdx_theme/templates/admin/index.html` (HDX override of core's; core `admin.index` view unchanged)
-  - Extends `v2/sysadmin-base.html` (menu from `h.hdx_get_sysadmin_nav_sections()`, `<title>` "{page} | Sysadmin"), which extends `v2/dashboard-base.html`. Children set `nav_active` and `page_label`. The other sysadmin pages, except All Users, stay on v1 `admin/base.html`.
+  - Extends `v2/sysadmin-base.html` (menu from `h.hdx_get_sysadmin_nav_sections()`, `<title>` "{page} | Sysadmin"), which extends `v2/dashboard-base.html`. Children set `nav_active` and `page_label`. The menu has every item for sysadmins and only the items they may open for other users.
   - `v2/list-header.html` (h1 + count + subtitle); `c-user-item` rows (`h.hdx_get_user_info` per row) in a `c-user-item-grid`, each with a one-click Remove form to core `user.sysadmin`, except the site user's and your own; a Promote form with `select.html` `searchable` loading users from core `/api/2/util/user/autocomplete` (`data-source`).
 - **New components**: `v2/components/user-item.html` (`c-user-item`, `c-user-item-grid`).
 - **Core assets**: `hdx_theme/v2-search-page-styles`, `hdx_theme/v2-dashboard-page-styles`, `hdx_theme/v2-sysadmin-page-styles`, `hdx_theme/v2-select2-styles` / `v2-select2-scripts`.
@@ -303,9 +303,18 @@ Example page-specific template (light search):
 ### All Users (`/user/`, any logged-in user)
 
 - **Template**: `ckanext-hdx_theme/ckanext/hdx_theme/templates/user/list.html` (HDX override of core's; core `user.index` view, parameters and auth unchanged)
-  - Extends `v2/sysadmin-base.html`; non-sysadmins get no menu, no subtitle and no emails (breadcrumb Home / All Users).
+  - Extends `v2/sysadmin-base.html`; non-sysadmins get no subtitle and no emails (breadcrumb Home / All Users).
   - `v2/list-header.html` (h1 + `page.item_count`); a GET search form submitting only `q`; `c-user-item` rows in a `c-user-item-grid`, with "- {email}" `meta` for sysadmin viewers; "No users found." (`.hdx-v2-dashboard-empty`) when empty; `c-pagination` carrying `q` and `order_by`. No sort or page-size controls.
 - **Core assets**: as All Sysadmins, without the select2 bundles.
+
+---
+
+### HDX Connect Dashboard (`/ckan-admin/requests_data`, sysadmins and request-data permission holders)
+
+- **Template**: `ckanext-hdx_theme/ckanext/hdx_theme/templates/admin/all_requests_data.html` (HDX override; the `ckanext-requestdata` view is unchanged)
+  - Extends `v2/sysadmin-base.html`. Body: `v2/hdx-connect-sections.html` with `groups` (one New / Open / Archived set per organisation, no Archived sort); a CSV / JSON Download navigate `c-dropdown` in the header's `caller()` slot.
+  - Organisation filter (checklist `c-dropdown`) in the right column / MD/SM overlay; `hdx-connect.js` writes `filter_by_organizations=a,b`.
+- **Core assets**: as All Users, plus `hdx_theme/v2-hdx-connect-page-styles`, `v2-search-page-scripts` and `v2-hdx-connect-scripts`.
 
 ---
 

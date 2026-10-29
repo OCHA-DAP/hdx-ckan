@@ -10,7 +10,7 @@
   counts on the Stats tab.
 
 **Excluded:**
-- The sysadmin HDX Connect Dashboard (`requestdata_ckanadmin.requests_data`), which stays v1.
+- The sysadmin HDX Connect Dashboard (`requestdata_ckanadmin.requests_data`, task 086).
 - Any change to the `ckanext-requestdata` repo (view, actions, auth, model).
 - Pagination, new analytics events and new tests.
 - An HDX-side guard against the EXT view's 500s (D19, deferred).
@@ -244,12 +244,14 @@ Nothing else changes.
 
 | Param | Type | Notes |
 |---|---|---|
-| `requests_new`, `requests_open`, `requests_archive` | list | Required. The view's lists |
+| `requests_new`, `requests_open`, `requests_archive` | list | Required without `groups`. The view's lists |
+| `groups` | list | One New / Open / Archived set per organisation (086 §5.2). default none |
 | `list_title` | string | Heading text |
 | `list_subtitle` | string | default `''` |
 | `title_tag` | string | default `'strong'` (the user page passes `'h1'`) |
 | `show_filters`, `total_selected` | bool / int | Forwarded to `v2/list-header.html`. default `False` / `0` |
-| `show_maintainer` | bool | Fills `c-request-card`'s `maintainer_label` / `maintainer_href` from each group's maintainer. default `False`. The header says it maps to those card params (074 Q48 keeps the component without a `show_maintainer`) |
+| `show_maintainer` | bool | Fills `c-request-card`'s `maintainer_label` (`fullname`, else `username`) / `maintainer_href` from each group's maintainer. default `False`. The header says it maps to those card params (074 Q48 keeps the component without a `show_maintainer`) |
+| `caller()` | block | Actions on the title header's row (086 D4) |
 
 **Contents:**
 1. Header: `v2/list-header.html`, `title_size='dashboard'`, `show_controls=False`, count = new + open +

@@ -8,9 +8,10 @@
 
   Parameters
   ─────────────────────────────────────────────────
-  title            {string}  Dataset title (<h3>).  default: ''
+  title            {string}  Dataset title.  default: ''
   title_href       {string}  Dataset URL; the title is plain text without it.
                              default: ''
+  title_tag        {string}  Title element, e.g. 'h4'.  default: 'h3'
   maintainer_label {string}  Maintainer name; the "Maintained by" line renders
                              only when set.  default: ''
   maintainer_href  {string}  Maintainer profile URL.  default: '#'
@@ -27,19 +28,20 @@
 
 {% set title            = title            if title            is defined else '' %}
 {% set title_href       = title_href       if title_href       is defined else '' %}
+{% set title_tag        = title_tag        if title_tag        is defined else 'h3' %}
 {% set maintainer_label = maintainer_label if maintainer_label is defined else '' %}
 {% set maintainer_href  = maintainer_href  if maintainer_href  is defined else '#' %}
 {% set extra_classes    = extra_classes    if extra_classes    is defined else '' %}
 
 <div class="c-request-card{{ ' ' ~ extra_classes if extra_classes else '' }}">
   <div class="c-request-card__header">
-    <h3 class="c-request-card__title">
+    <{{ title_tag }} class="c-request-card__title">
       {%- if title_href -%}
         <a class="c-request-card__title-link" href="{{ title_href }}">{{ title }}</a>
       {%- else -%}
         {{ title }}
       {%- endif -%}
-    </h3>
+    </{{ title_tag }}>
     {% if maintainer_label %}
       <p class="c-request-card__maintainer">
         {{ _('Maintained by') }}

@@ -1455,23 +1455,33 @@ def hdx_get_user_dashboard_nav_sections(user_name=None):
 
 
 def hdx_get_sysadmin_nav_sections():
-    if not c.userobj or not c.userobj.sysadmin:
+    if not c.userobj:
         return []
 
-    return [{
-        'id': 'sysadmin',
-        'label': _('Sysadmin'),
-        'items': [
+    is_sysadmin = c.userobj.sysadmin
+    items = []
+    if is_sysadmin:
+        items += [
             {'id': 'all_sysadmins', 'label': _('All Sysadmins'), 'href': h.url_for('admin.index')},
             {'id': 'all_users', 'label': _('All Users'), 'href': h.url_for('user.index')},
-            {'id': 'homepage_highlights', 'label': _('Homepage Highlights'), 'href': h.url_for('hdx_carousel.show')},
-            {'id': 'hdx_connect_dashboard', 'label': _('HDX Connect Dashboard'),
-             'href': h.url_for('requestdata_ckanadmin.requests_data')},
-            {'id': 'custom_pages', 'label': _('Custom Pages'), 'href': h.url_for('hdx_custom_pages.index')},
+        ]
+    if is_sysadmin or h.check_access('hdx_carousel_update'):
+        items.append({'id': 'homepage_highlights', 'label': _('Homepage Highlights'),
+                      'href': h.url_for('hdx_carousel.show')})
+    if is_sysadmin or h.check_access('hdx_request_data_admin_list'):
+        items.append({'id': 'hdx_connect_dashboard', 'label': _('HDX Connect Dashboard'),
+                      'href': h.url_for('requestdata_ckanadmin.requests_data')})
+    if is_sysadmin or h.check_access('admin_page_list'):
+        items.append({'id': 'custom_pages', 'label': _('Custom Pages'), 'href': h.url_for('hdx_custom_pages.index')})
+    if is_sysadmin or h.check_access('hdx_quick_links_update'):
+        items += [
             {'id': 'products_menu', 'label': _('Products Menu'), 'href': h.url_for('hdx_quick_links.show')},
             {'id': 'package_links', 'label': _('Package Links'), 'href': h.url_for('hdx_package_links.show')},
-        ],
-    }]
+        ]
+
+    if not items:
+        return []
+    return [{'id': 'sysadmin', 'label': _('Sysadmin'), 'items': items}]
 
 
 def hdx_get_user_menu_sections():

@@ -10,7 +10,7 @@ from 072. Also in scope:
   local copy (Q66, Q67).
 
 **Excluded:**
-- The org "Requested Data" tab (task 080) and the sysadmin HDX Connect Dashboard (v1). Their Figma exports are
+- The org "Requested Data" tab (task 080) and the sysadmin HDX Connect Dashboard (task 086). Their Figma exports are
   reference only (§3.4 records how they reuse this work).
 - Any change to the `ckanext-requestdata` repo (view, actions, auth, model), and any other backend change.
 - Pagination, filters on this page, new analytics events and new tests.
@@ -384,7 +384,8 @@ Each snippet gets the standard header comment, takes
 
 | Param | Type | Notes |
 |---|---|---|
-| `title` | string | Dataset title (`<h3>`) |
+| `title` | string | Dataset title |
+| `title_tag` | string | Title element. default `'h3'` (086 D3) |
 | `title_href` | string | Dataset URL. The title is a link styled like the `c-dataset-card` title link: no underline at rest, underline on `:hover`, focus ring (Q35) |
 | `maintainer_label`, `maintainer_href` | string | "Maintained by {label}" line (`c-text-link` secondary `s`), rendered only when `maintainer_label` is set. This page doesn't pass it (Q20, Q48) |
 | `caller()` | block | One or more `c-request-item`s |

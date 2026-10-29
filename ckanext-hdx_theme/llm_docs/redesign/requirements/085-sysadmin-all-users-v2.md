@@ -101,7 +101,7 @@ Decisions confirmed with the user are listed in §10.
 
 | Element | Current (v1) | Target (v2) |
 |---|---|---|
-| Shell | v1 `page.html`, BS tab bar, `col-3`/`col-9` | `v2/sysadmin-base.html`, menu at XL for sysadmins (D1, D2) |
+| Shell | v1 `page.html`, BS tab bar, `col-3`/`col-9` | `v2/sysadmin-base.html`, menu at XL (D1, D2) |
 | Breadcrumb | "Users" | Home / Sysadmin / All Users; non-sysadmins Home / All Users (D2) |
 | Header | "Sysadmin Dashboard" `<h2>` + "Users" `<h1>` | `<h1>` "All Users" + count + subtitle (D4) |
 | Sort / page size | None | None (D3) |
@@ -214,7 +214,7 @@ newest-first needs backend code.
 | # | Decision |
 |---|---|
 | D1 Template | HDX `THEME/templates/user/list.html` is rewritten: it extends `v2/sysadmin-base.html`, sets `nav_active = 'all_users'` and `page_label = _('All Users')`, and fills `primary`. The core view is used as it is; there is no HDX view override. |
-| D2 Access | Unchanged: every viewer core admits gets the page. For non-sysadmins `h.hdx_get_sysadmin_nav_sections()` returns `[]`, so there is no menu, the breadcrumb is Home / All Users and the `<title>` is "All Users". The template's sysadmin check (`g.userobj and g.userobj.sysadmin`) treats an anonymous viewer as a non-sysadmin. |
+| D2 Access | Unchanged: every viewer core admits gets the page. For non-sysadmins `h.hdx_get_sysadmin_nav_sections()` holds only the items they may open (086 D1), never All Users, so no item is active, the breadcrumb is Home / All Users and the `<title>` is "All Users". The template's sysadmin check (`g.userobj and g.userobj.sysadmin`) treats an anonymous viewer as a non-sysadmin. |
 | D3 Controls | No "Sort by" and no "Results per page" (`show_controls=False`); the page keeps v1's search and pagination. Core defaults stay (`name` order, 20 per page). A hand-typed `order_by` or `limit` is still honoured by core, and its 500 cases are accepted. |
 | D4 Header | `v2/list-header.html` with `list_title=page_label`, `count=page.item_count` (the matches when `q` is set), `title_tag='h1'`, `title_size='dashboard'`, `show_controls=False`, `show_filters=False`. The count keeps list-header's `h.localised_number` format ("10,008"). `list_subtitle=_('Search and manage all registered user accounts')` for sysadmins only. |
 | D5 Search | A GET form to `user.index` with `class="hdx-v2-search-bar-row"`, submitting only `q` (as v1). `search-input.html` with `size='m'`, `name='q'`, `value=q`, `icon_submit=True`, `state='filled' if q else 'enabled'`, `placeholder=_('Search for users')`, `input_attrs={'aria-label': _('Search for users')}`, `extra_classes='c-search-input--block'`. The shared spacing (list-header's 16px above, the row's 16px below) replaces Figma's 12px / 24px. The × clear (`input-field.js`) resubmits an active search. |

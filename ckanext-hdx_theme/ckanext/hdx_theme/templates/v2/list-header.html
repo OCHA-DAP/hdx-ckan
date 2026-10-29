@@ -3,8 +3,8 @@
   Path:    templates/v2/list-header.html
 
   List header row: title + count, sort / page-size controls, MD/SM
-  Filter button (opens #hdx-filter-overlay, see v2/filter-overlay.html)
-  and an optional full-width subtitle line.
+  Filter button (opens #hdx-filter-overlay, see v2/filter-overlay.html),
+  optional actions from caller() and an optional full-width subtitle line.
   Styles: pages/search.less (.hdx-v2-list-header).
 
   Parameters
@@ -26,6 +26,9 @@
   show_page_size, sort_key
                               Forwarded to v2/search-nav-controls.html
                               (see its header for defaults).
+  caller()          block     Actions on the title row, at every width,
+                              after the controls and the Filter button;
+                              omitted when blank.
   ─────────────────────────────────────────────────
   Example
 
@@ -73,6 +76,12 @@
           extra_classes='c-dropdown--inline',
           button_attrs={'data-module': 'filter-btn'} %}
     </div>
+  {% endif %}
+  {% if caller is defined %}
+    {% set actions = caller() %}
+    {% if actions | trim %}
+      <div class="hdx-v2-list-header__actions">{{ actions }}</div>
+    {% endif %}
   {% endif %}
   {% if list_subtitle %}
     <p class="hdx-v2-list-header__subtitle">{{ list_subtitle }}</p>

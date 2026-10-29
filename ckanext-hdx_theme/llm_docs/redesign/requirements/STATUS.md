@@ -87,3 +87,4 @@
 | 083 | [global-nav-on-state](083-global-nav-on-state.md)                                                               | implemented | |
 | 084 | [sysadmin-all-sysadmins-v2](084-sysadmin-all-sysadmins-v2.md)                                                   | implemented | |
 | 085 | [sysadmin-all-users-v2](085-sysadmin-all-users-v2.md)                                                           | implemented | |
+| 086 | [sysadmin-hdx-connect-dashboard-v2](086-sysadmin-hdx-connect-dashboard-v2.md)                                   | implemented | |

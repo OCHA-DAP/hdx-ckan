@@ -2,7 +2,8 @@
 // pages/hdx-connect.less
 // HDX Connect requests (v2/hdx-connect-sections.html,
 // v2/hdx-connect-drawers.html) — v2 page-specific styles
-// Figma: llm_docs/redesign/figma_exports/xl-user-dashboard-hdx-connect-requests.html
+// Figma: llm_docs/redesign/figma_exports/xl-user-dashboard-hdx-connect-requests.html,
+//        xl-sysadmin-hdx-connect-dashboard.html
 // ============================================================
 
 @import "../mixins.less";
@@ -11,6 +12,18 @@
     display:        flex;
     flex-direction: column;
     gap:            var(--hdx-space-6);
+
+    &__group {
+        display:        flex;
+        flex-direction: column;
+        gap:            var(--hdx-space-6);
+        padding-top:    var(--hdx-space-8);
+        border-top:     1px solid var(--hdx-neutral-1);
+
+        & + & {
+            margin-top: var(--hdx-space-6);
+        }
+    }
 
     &__empty {
         .hdx-list-header-empty();

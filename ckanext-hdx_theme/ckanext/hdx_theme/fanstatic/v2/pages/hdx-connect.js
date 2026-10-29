@@ -5,6 +5,8 @@
 // - Yes / No ("Did you share the data?") → POST, reload
 // - Maintainer filter → set or delete filter_by_maintainers
 //   with window.hdxSetNavParam (url-nav.js)
+// - Organisation filter → set or delete filter_by_organizations
+//   (comma-joined names), same way
 // ============================================================
 (function () {
   'use strict';
@@ -105,19 +107,30 @@
       .catch(function () { fail(SHARED_ERROR); });
   }
 
-  function filterByMaintainers(input) {
-    var filter = input.closest('[data-hdx-connect-maintainer-filter]');
-    var values = Array.prototype.map.call(
-      filter.querySelectorAll('[data-hdx-connect-maintainer]:checked'),
+  function checkedValues(filter, selector) {
+    return Array.prototype.map.call(
+      filter.querySelectorAll(selector + ':checked'),
       function (checkbox) { return checkbox.value; }
     );
+  }
+
+  function filterByMaintainers(input) {
+    var filter = input.closest('[data-hdx-connect-maintainer-filter]');
+    var values = checkedValues(filter, '[data-hdx-connect-maintainer]');
     window.hdxSetNavParam('filter_by_maintainers', values.length
       ? 'org:' + filter.getAttribute('data-hdx-connect-maintainer-filter') + '|maintainers:' + values.join(',')
       : null);
   }
 
+  function filterByOrganizations(input) {
+    var filter = input.closest('[data-hdx-connect-organization-filter]');
+    var values = checkedValues(filter, '[data-hdx-connect-organization]');
+    window.hdxSetNavParam('filter_by_organizations', values.length ? values.join(',') : null);
+  }
+
   document.addEventListener('change', function (e) {
     if (e.target.matches && e.target.matches('[data-hdx-connect-maintainer]')) filterByMaintainers(e.target);
+    if (e.target.matches && e.target.matches('[data-hdx-connect-organization]')) filterByOrganizations(e.target);
   });
 
   document.addEventListener('click', function (e) {

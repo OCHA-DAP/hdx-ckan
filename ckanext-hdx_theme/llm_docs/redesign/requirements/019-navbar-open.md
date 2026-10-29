@@ -320,7 +320,7 @@ The spec suggested reusing `navbar-user-menu.html` (the desktop panel snippet) i
 Instead, the second level renders the user menu sections using the same expandable pattern as Products in the primary level:
 
 ```jinja2
-{% for section in h.hdx_get_user_menu_sections() %}
+{% for section in user_menu_sections %}
   <button class="hdx-v2-offcanvas__nav-item hdx-v2-offcanvas__nav-item--expandable"
           type="button" aria-expanded="true"
           aria-controls="offcanvas-user-{{ section.id }}">
@@ -338,7 +338,7 @@ Instead, the second level renders the user menu sections using the same expandab
 </div>
 ```
 
-The data comes from `h.hdx_get_user_menu_sections()` — see task 018 implementation notes for the helper details. The existing `hdx-v2-offcanvas__nav-item--expandable` JS handler in `navbar.js` covers these buttons automatically (no new JS needed).
+The data comes from `h.hdx_get_user_menu_sections()`, called once at the top of `header.html` as `user_menu_sections` — see task 018 implementation notes for the helper details. The existing `hdx-v2-offcanvas__nav-item--expandable` JS handler in `navbar.js` covers these buttons automatically (no new JS needed).
 
 ### LESS cleanup
 
