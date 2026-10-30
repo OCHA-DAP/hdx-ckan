@@ -318,6 +318,16 @@ Example page-specific template (light search):
 
 ---
 
+### Package Links (`/ckan-admin/package-links/show`, sysadmins and quick-links permission holders)
+
+- **Template**: `ckanext-hdx_theme/ckanext/hdx_theme/templates/admin/package_links.html`; view `views/package_links_custom_settings.py` (`show` passes the stored list as `items`; `update` / `delete` unchanged apart from 400 on a missing title, `''` for an absent `package_list`, and appending an unknown id).
+  - Extends `v2/sysadmin-base.html`. `v2/list-header.html` (h1 + subtitle, no count); one `c-config-item` per stored item in a `c-config-item-list`, fields from `admin/snippets/package_link_fields.html`, plus a `<template>` copy for New Item.
+  - `components/config-item.js`: Sortable drag on the card header, collapse, Delete (queued until Save), New Item, required Title / URL (`hdxV2.setFieldError`), and Save: sequential POSTs (deletes, then one update per card with `order` = position), reload on success, error `c-alert` otherwise; a retry neither recreates new items nor resends finished deletes.
+- **New components**: `v2/components/config-item.html` (`c-config-item`, `c-config-item-list`).
+- **Core assets**: as All Users, plus `hdx_theme/v2-config-item-scripts`.
+
+---
+
 ### Organisation page (`/organization/<name>`)
 
 - **Templates** (one per tab, all extend `v2/page.html` and share the `v2/org-hero.html` hero — `c-page-header` + `c-tabs`):

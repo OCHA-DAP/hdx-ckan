@@ -162,3 +162,99 @@ def test_package_links_update_and_delete_via_http_with_token(app):
 
     shown_after_delete = get_action('hdx_package_links_settings_show')(context, {})
     assert shown_after_delete == []
+
+
+@pytest.mark.usefixtures('hdx_clean_db')
+def test_package_links_update_without_package_list(app):
+    sysadmin = factories.Sysadmin()
+    api_token = factories.APIToken(user=sysadmin['id'], expires_in=2, unit=60 * 60)
+    admin_headers = {'Authorization': api_token['token']}
+
+    get_action = tk.get_action
+    context: Context = {'model': model, 'session': model.Session, 'user': sysadmin['name']}
+
+    create_resp = app.post('/ckan-admin/package-links/update', params={
+        'title': 'No Datasets',
+        'url': '/dataset/no-datasets',
+        'order': '1',
+        'newTab': 'false',
+        'label': 'Datasets',
+    }, headers=admin_headers)
+    assert create_resp.status_code == 200
+
+    shown = get_action('hdx_package_links_settings_show')(context, {})
+    assert len(shown) == 1
+    assert shown[0]['title'] == 'No Datasets'
+    assert shown[0]['package_list'] == ''
+
+
+@pytest.mark.usefixtures('hdx_clean_db')
+def test_package_links_update_with_unknown_id_appends(app):
+    sysadmin = factories.Sysadmin()
+    api_token = factories.APIToken(user=sysadmin['id'], expires_in=2, unit=60 * 60)
+    admin_headers = {'Authorization': api_token['token']}
+
+    get_action = tk.get_action
+    context: Context = {'model': model, 'session': model.Session, 'user': sysadmin['name']}
+
+    existing_item = {
+        'id': 'existing-id',
+        'title': 'Existing',
+        'url': '/dataset/existing',
+        'label': 'Datasets',
+        'order': 1,
+        'newTab': False,
+        'package_list': 'pkg-1',
+    }
+    get_action('hdx_package_links_settings_update')(context, {'hdx.package_links.config': [existing_item]})
+
+    update_resp = app.post('/ckan-admin/package-links/update', params={
+        'id': 'unknown-id',
+        'title': 'Unknown',
+        'url': '/dataset/unknown',
+        'order': '2',
+        'newTab': 'true',
+        'label': 'Datasets',
+        'package_list': 'pkg-2',
+    }, headers=admin_headers)
+    assert update_resp.status_code == 200
+
+    shown = get_action('hdx_package_links_settings_show')(context, {})
+    assert len(shown) == 2
+    assert shown[0] == existing_item
+    assert shown[1]['id'] == 'unknown-id'
+    assert shown[1]['title'] == 'Unknown'
+    assert shown[1]['newTab'] is True
+
+
+@pytest.mark.usefixtures('hdx_clean_db')
+def test_package_links_update_without_title_is_rejected(app):
+    sysadmin = factories.Sysadmin()
+    api_token = factories.APIToken(user=sysadmin['id'], expires_in=2, unit=60 * 60)
+    admin_headers = {'Authorization': api_token['token']}
+
+    get_action = tk.get_action
+    context: Context = {'model': model, 'session': model.Session, 'user': sysadmin['name']}
+
+    existing_item = {
+        'id': 'existing-id',
+        'title': 'Existing',
+        'url': '/dataset/existing',
+        'label': 'Datasets',
+        'order': 1,
+        'newTab': False,
+        'package_list': 'pkg-1',
+    }
+    get_action('hdx_package_links_settings_update')(context, {'hdx.package_links.config': [existing_item]})
+
+    update_resp = app.post('/ckan-admin/package-links/update', params={
+        'id': 'existing-id',
+        'url': '/dataset/untitled',
+        'order': '1',
+        'newTab': 'false',
+    }, headers=admin_headers, expect_errors=True)
+    assert update_resp.status_code == 400
+    assert 'Badly formatted data' in update_resp.text
+
+    shown = get_action('hdx_package_links_settings_show')(context, {})
+    assert shown == [existing_item]

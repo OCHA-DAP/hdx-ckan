@@ -36,6 +36,7 @@
   {'label': 'Organisation List Card', 'href': '#org-list-card'},
   {'label': 'Member List Card', 'href': '#member-list-card'},
   {'label': 'User Item', 'href': '#user-item'},
+  {'label': 'Config Item', 'href': '#config-item'},
   {'label': 'Request Card / Item / Archive', 'href': '#request-card'},
   {'label': 'Notification Item', 'href': '#notification-item'},
   {'label': 'Activity Item', 'href': '#activity-item'},
@@ -2568,6 +2569,46 @@
               name='Sam Sample', href='#', meta='- sam@example.org' %}
         </li>
       </ul>
+    </div>
+
+  </section>
+
+  <section class="demo-section" id="config-item">
+    <h1 class="demo-section__title">Config Item</h1>
+    <p class="demo-section__subtitle">sysadmin editor item · drag handle, collapse toggle, Delete · caller() fields · c-config-item-list</p>
+
+    <h2 class="demo-subsection__heading">Expanded and collapsed</h2>
+    <div class="demo-max-width-xl">
+      <div class="c-config-item-list">
+        <ol class="c-config-item-list__items">
+          <li>
+            {% call h.snippet('v2/components/config-item.html',
+                title='Example Item 1', id='demo-config-item-1') %}
+              <div class="c-form-field">
+                {% snippet 'v2/components/text-field.html',
+                    size='l', label='Title', required=True,
+                    name='title', id='demo-config-item-1-title', value='Example title' %}
+              </div>
+              <div class="c-form-field">
+                {% snippet 'v2/components/select.html',
+                    size='m', label='Open in a new tab', required=True,
+                    name='newTab', id='demo-config-item-1-newTab',
+                    options={'true': 'Yes', 'false': 'No'}, selected='false' %}
+              </div>
+            {% endcall %}
+          </li>
+          <li>
+            {% call h.snippet('v2/components/config-item.html',
+                title='Example Item 2', id='demo-config-item-2', expanded=False) %}
+              <div class="c-form-field">
+                {% snippet 'v2/components/text-field.html',
+                    size='l', label='Title', required=True,
+                    name='title', id='demo-config-item-2-title', value='Another title' %}
+              </div>
+            {% endcall %}
+          </li>
+        </ol>
+      </div>
     </div>
 
   </section>

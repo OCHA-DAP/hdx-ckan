@@ -207,6 +207,17 @@
     alertEl.hidden = false;
   };
 
+  // Sets the error text of a text-field.html or checkbox.html control and
+  // toggles its --error modifier, on when there is a message or `invalid` is true.
+  window.hdxV2.setFieldError = function setFieldError(input, message, invalid) {
+    var wrapper = input.closest('.c-search-input, .c-checkbox');
+    if (!wrapper) return;
+    var block = wrapper.classList.contains('c-checkbox') ? 'c-checkbox' : 'c-search-input';
+    var errorEl = wrapper.parentElement && wrapper.parentElement.querySelector('.' + block + '__error');
+    wrapper.classList.toggle(block + '--error', !!(message || invalid));
+    if (errorEl) errorEl.textContent = message || '';
+  };
+
   // POSTs `body` to `url` with the CSRF header and resolves with the parsed JSON response.
   window.hdxV2.post = function post(url, body) {
     return fetch(url, {

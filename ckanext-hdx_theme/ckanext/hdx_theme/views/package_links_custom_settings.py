@@ -35,9 +35,7 @@ def show():
     action_context: Context = {'model': model, 'session': model.Session, 'user': g.user}
     setting_value = get_action('hdx_package_links_settings_show')(action_context, {})
     template_data = {
-        'data': {
-            'hdx.package_links.config': json.dumps(setting_value)
-        }
+        'items': setting_value
     }
 
     return render('admin/package_links.html', extra_vars=template_data)
@@ -83,7 +81,10 @@ def update():
             existing_setting_list.append(item)
         else:
             existing_index, existing_element = _find_package_links_item_by_id(existing_setting_list, item.get('id'))
-            existing_setting_list[existing_index] = item
+            if existing_index >= 0:
+                existing_setting_list[existing_index] = item
+            else:
+                existing_setting_list.append(item)
 
         data_dict = {
             'hdx.package_links.config': _sort_package_links_items(existing_setting_list)
@@ -93,7 +94,7 @@ def update():
     else:
         ret = json.dumps({
             'message': _('Badly formatted data')
-        })
+        }), 400
 
     return ret
 
@@ -141,7 +142,7 @@ def _process_request():
             'label': request.form.get('label'),
             'order': int(request.form.get('order', -1)),
             'newTab': True if request.form.get('newTab') == 'true' else False,
-            'package_list': request.form.get('package_list').replace(' ', ''),
+            'package_list': (request.form.get('package_list') or '').replace(' ', ''),
             'new': False if request.form.get('id') else True,
             'id': request.form.get('id') if request.form.get('id') else text_type(uuid.uuid4())
         }

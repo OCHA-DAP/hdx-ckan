@@ -9,7 +9,7 @@
 
   Parameters
   ─────────────────────────────────────────────────
-  count             {int}     Number shown beside the title.  Required.
+  count             {int}     Number shown beside the title; omit for none.
   list_title        {string}  Heading text.  default: 'Datasets'
   list_subtitle     {string}  Line below the heading row.  default: ''
   title_tag         {string}  Heading element, e.g. 'h1'.  default: 'strong'
@@ -37,6 +37,7 @@
       ext_page_size=ext_page_size, total_selected=total_selected %}
 #}
 
+{% set count          = count          if count          is defined else none %}
 {% set list_title     = list_title     if list_title     is defined else _('Datasets') %}
 {% set list_subtitle  = list_subtitle  if list_subtitle  is defined else '' %}
 {% set title_tag      = title_tag      if title_tag      is defined else 'strong' %}
@@ -48,7 +49,9 @@
 <div class="hdx-v2-list-header">
   <div class="hdx-v2-list-header__left">
     <{{ title_tag }} class="hdx-v2-list-header__title{{ ' hdx-v2-list-header__title--' ~ title_size if title_size != 'section' else '' }}">{{ list_title }}</{{ title_tag }}>
+    {% if count is not none %}
     <span class="hdx-v2-list-header__count{{ ' hdx-v2-list-header__count--' ~ title_size if title_size != 'section' else '' }}">{{ h.localised_number(count) }}</span>
+    {% endif %}
   </div>
   {% if show_controls %}
   <div class="hdx-v2-list-header__controls{{ ' hdx-v2-list-header__controls--xl-only' if show_filters else '' }}">

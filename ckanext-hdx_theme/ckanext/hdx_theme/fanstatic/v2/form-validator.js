@@ -107,44 +107,6 @@
       return [validationErrors.length === 0, validationErrors];
     }
 
-    // === Error display ===
-
-    function displayError(input) {
-      var wrapper = input.closest('.c-search-input');
-      if (wrapper) {
-        wrapper.classList.add('c-search-input--error');
-        var errorEl = wrapper.parentElement ? wrapper.parentElement.querySelector('.c-search-input__error') : null;
-        if (errorEl) {
-          errorEl.textContent = input.getAttribute('data-validation-error') || '';
-        }
-      } else {
-        var checkboxWrapper = input.closest('.c-checkbox');
-        if (checkboxWrapper) {
-          checkboxWrapper.classList.add('c-checkbox--error');
-          var errorEl = checkboxWrapper.parentElement ? checkboxWrapper.parentElement.querySelector('.c-checkbox__error') : null;
-          if (errorEl) errorEl.textContent = input.getAttribute('data-validation-error') || '';
-        }
-      }
-    }
-
-    function removeErrorMessages(input) {
-      var wrapper = input.closest('.c-search-input');
-      if (wrapper) {
-        wrapper.classList.remove('c-search-input--error');
-        var errorEl = wrapper.parentElement ? wrapper.parentElement.querySelector('.c-search-input__error') : null;
-        if (errorEl) {
-          errorEl.textContent = '';
-        }
-      } else {
-        var checkboxWrapper = input.closest('.c-checkbox');
-        if (checkboxWrapper) {
-          checkboxWrapper.classList.remove('c-checkbox--error');
-          var errorEl = checkboxWrapper.parentElement ? checkboxWrapper.parentElement.querySelector('.c-checkbox__error') : null;
-          if (errorEl) errorEl.textContent = '';
-        }
-      }
-    }
-
     // === Live feedback ===
 
     var liveFeedbackMessages = {
@@ -238,7 +200,7 @@
         if (!result[0]) {
           if (doDisplayError) {
             if (hasLiveFeedback) showLiveFeedback(input);
-            displayError(input);
+            window.hdxV2.setFieldError(input, input.getAttribute('data-validation-error'), true);
           }
           return false;
         } else {
@@ -258,7 +220,7 @@
         if (!validateField(input, shouldDisplay)) {
           isFormValid = false;
         } else {
-          removeErrorMessages(input);
+          window.hdxV2.setFieldError(input, '');
         }
       });
       if (submitButton) window.hdxV2.setDisabled(submitButton, !isFormValid);
@@ -286,7 +248,7 @@
     form.querySelectorAll('[data-validation]').forEach(function (input) {
       var hasLiveFeedback = input.getAttribute('data-live-feedback');
       input.addEventListener('focus', function () {
-        removeErrorMessages(input);
+        window.hdxV2.setFieldError(input, '');
         if (hasLiveFeedback) showLiveFeedback(input);
       });
       input.addEventListener('blur', function () {

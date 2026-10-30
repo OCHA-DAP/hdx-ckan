@@ -26,14 +26,6 @@
       return match ? decodeURIComponent(match[1]) : null;
     }
 
-    function setFieldError(input, message) {
-      var wrapper = input.closest('.c-search-input');
-      if (!wrapper) return;
-      var errorEl = wrapper.parentElement && wrapper.parentElement.querySelector('.c-search-input__error');
-      wrapper.classList.toggle('c-search-input--error', !!message);
-      if (errorEl) errorEl.textContent = message || '';
-    }
-
     // ── Required-field gating (mirrors button.html's disabled contract) ──
 
     function updateSubmitState() {
@@ -80,7 +72,7 @@
         .then(function (r) { return r.json(); })
         .then(function (json) {
           if (json.result === true) {
-            setFieldError(passwordField,
+            window.hdxV2.setFieldError(passwordField,
               'Too many wrong attempts. Login locked for ' + json.timeout + ' seconds. Please try again later!');
             updateSubmitState();
           } else {

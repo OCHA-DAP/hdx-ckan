@@ -1486,6 +1486,7 @@ v2-components-styles:
     - v2/components/breadcrumb.css
     - v2/components/buttons.css
     - v2/components/checkbox.css
+    - v2/components/config-item.css
     - v2/components/content-card.css
     - v2/components/copy-button.css
     - v2/components/data-grid-status.css
@@ -1667,6 +1668,13 @@ v2-slug-preview-scripts:
   output: ckanext-hdx_theme/%(version)s_v2-slug-preview-scripts.js
   contents:
     - v2/components/slug-preview.js
+
+v2-config-item-scripts:
+  <<: *common-js
+  output: ckanext-hdx_theme/%(version)s_v2-config-item-scripts.js
+  contents:
+    - vendor/sortable/Sortable.js
+    - v2/components/config-item.js
 
 v2-resource-page-scripts:
   <<: *common-js

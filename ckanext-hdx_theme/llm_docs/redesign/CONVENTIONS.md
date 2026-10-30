@@ -159,6 +159,7 @@ Use `is-*` classes only for persistent states set by the server or JavaScript.
 | Selected / current | `is-active` class (server or JS) |
 | Unavailable | `is-disabled` class (server or JS); JS: `window.hdxV2.setDisabled(el, disabled)` |
 | Expanded | `is-open` class (JS only) |
+| Being dragged (sortable list) | `is-dragging` class (Sortable's `ghostClass`, JS only) |
 | Scroll lock (body) while an overlay is open | `is-<component>-open` class on `<body>` (JS only), e.g. `is-drawer-open` |
 
 Do **not** add `is-hovered`, `--hovered`, `is-focus`, or similar classes to templates or JavaScript. If a JS controller must replicate hover visuals (e.g. keyboard navigation), use a clearly named parent-class such as `c-component--keyboard-active` and add a comment in the LESS file explaining why the class exists.
@@ -244,7 +245,7 @@ params the dropdowns navigate on (default `sort` / `ext_page_size`). The control
 (`__controls--xl-only`) when the list header renders the Filter button, and visible at every width otherwise
 (sort-only lists keep the sort beside the list). Their titles call `.hdx-section-title()` like every
 other in-page heading. The list header's `title_size` param changes that: `'page'` bumps the title and count to the page-title font-size scale, and
-`'dashboard'` uses `.hdx-dashboard-title()` with a `.hdx-body-m()` count. A `caller()` body renders in `__actions` on the title row, at every width. `list_subtitle` adds a full-width `__subtitle` line; the header row wraps, so
+`'dashboard'` uses `.hdx-dashboard-title()` with a `.hdx-body-m()` count; without `count` no count renders. A `caller()` body renders in `__actions` on the title row, at every width. `list_subtitle` adds a full-width `__subtitle` line; the header row wraps, so
 the controls drop under the title in a narrow column. Hero-scale list
 titles use `c-page-header` directly (`title` + `title_count` params) instead. The
 count styling is factored into `.hdx-list-header-count()` (base: family/weight/color, no size) plus
@@ -517,6 +518,8 @@ Five distinct components cover form fields; pick by field type, don't extend the
 
 `search-input.html` used to cover the generic-field role too; it split into `text-field.html` once form pages (contact contributor, request access, auth) needed password toggles and textareas.
 
+JS field errors: `window.hdxV2.setFieldError(input, message, invalid)` (`utils.js`) sets a `text-field.html` or `checkbox.html` control's error text and toggles its `--error` modifier (on with a message, or with `invalid` true for a border without text) — no local copies.
+
 ---
 
 ## Component wrapper ownership
@@ -527,7 +530,7 @@ files:
 
 - `c-<name>-list` — vertical flex list (`c-dataset-card-list`,
   `c-resource-card-list`, `c-org-list-card-list`, `c-member-list-card-list`,
-  `c-request-card-list`, `c-activity-card-list`, `c-stats-card-list`)
+  `c-request-card-list`, `c-activity-card-list`, `c-stats-card-list`, `c-config-item-list`)
 - `c-<name>-grid` — grid (`c-content-card-grid`, `c-selection-item-grid`,
   `c-showcase-card-grid`, `c-dataviz-card-grid`, `c-user-item-grid`)
 - `c-<name>-row` — inline flex-wrap row (`c-kpi-card-row`, `c-selection-item-row`)

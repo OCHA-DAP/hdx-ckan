@@ -88,3 +88,4 @@
 | 084 | [sysadmin-all-sysadmins-v2](084-sysadmin-all-sysadmins-v2.md)                                                   | implemented | |
 | 085 | [sysadmin-all-users-v2](085-sysadmin-all-users-v2.md)                                                           | implemented | |
 | 086 | [sysadmin-hdx-connect-dashboard-v2](086-sysadmin-hdx-connect-dashboard-v2.md)                                   | implemented | |
+| 087 | [sysadmin-package-links-v2](087-sysadmin-package-links-v2.md)                                                   | implemented | |

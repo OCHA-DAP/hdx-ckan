@@ -1,0 +1,83 @@
+// ============================================================
+// c-config-item      — editable, reorderable item of a sysadmin
+//                      settings editor (handle, title, toggle, Delete, fields)
+// c-config-item-list — its list: items, error alert, actions row
+// Compiled output: fanstatic/v2/components/config-item.css
+// Figma: llm_docs/redesign/figma_exports/xl-sysadmin-package-links.html
+// ============================================================
+@import "../mixins.less";
+
+.c-config-item {
+    display:          flex;
+    flex-direction:   column;
+    gap:              var(--hdx-space-14);
+    padding:          var(--hdx-space-4) var(--hdx-space-5);
+    background-color: var(--hdx-neutral-0);
+    border:           1px solid var(--hdx-neutral-3);
+    border-radius:    var(--hdx-radius-sm);
+
+    &__header {
+        display:     flex;
+        align-items: center;
+        gap:         var(--hdx-space-2);
+        color:       var(--hdx-neutral-10);
+        cursor:      grab;
+    }
+
+    &__handle {
+        flex-shrink: 0;
+
+        svg {
+            .hdx-icon-size(var(--hdx-space-4));
+            display: block;
+        }
+    }
+
+    &__title {
+        .hdx-body-m-medium();
+        flex:   1;
+        margin: 0;
+    }
+
+    &__actions {
+        display:     flex;
+        align-items: center;
+        gap:         var(--hdx-space-3);
+        cursor:      auto;
+    }
+
+    &__toggle[aria-expanded="false"] svg {
+        transform: rotate(180deg);
+    }
+
+    &__body {
+        display:        flex;
+        flex-direction: column;
+        gap:            var(--hdx-space-2);
+
+        &[hidden] { display: none; }
+    }
+}
+
+.c-config-item-list {
+    &,
+    &__items {
+        display:        flex;
+        flex-direction: column;
+        gap:            var(--hdx-space-6);
+    }
+
+    &__items {
+        list-style: none;
+        margin:     0;
+        padding:    0;
+
+        > .is-dragging { opacity: 0.3; }
+    }
+
+    &__actions {
+        display:         flex;
+        justify-content: space-between;
+        align-items:     center;
+    }
+}

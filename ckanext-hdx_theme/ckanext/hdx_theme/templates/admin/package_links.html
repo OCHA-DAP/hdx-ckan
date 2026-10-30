@@ -1,153 +1,58 @@
-{% import 'macros/autoform.html' as autoform %}
-{% import 'macros/form.html' as form %}
+{% extends "v2/sysadmin-base.html" %}
 
+{% set nav_active = 'package_links' %}
+{% set page_label = _('Package Links') %}
 
-{% extends "admin/base.html" %}
-
-{% block primary_content_module_margin %}{% endblock %}
-{% block primary_content_inner %}
-  <div id="package_links-config-main" data-module="hdx_custom_pages" class="paddingLeftHack">
-    <div id="package_links-config-form" class="cp-form hdx-form">
-      <div class="paddingRowHack">
-        <div class="paddingLeftHack paddingRightHack">
-          <div class="form-section">
-            <div class="row">
-              <div class="col-12">
-              </div>
-            </div>
-          </div>
-          <div class="form-section">
-            <div class="row">
-              <div class="col-12">
-                <div id="package_links-config-saved-data" style="display: none;">
-                  {{ data['hdx.package_links.config'] }}
-                </div>
-                <script type="text/template" id="package_links-item-tpl">
-                  <div class="<%= (tab_open?'col-12':'col-12') %>">
-                    <div class="row package_links-item">
-                      <div class="col-12">
-                        <div class="package_links-item-header">
-                          <div class="row">
-                            <div class="col-9">
-                              <div class="drag-handle">
-                                <i class="fa fa-arrows-v grey"></i>
-                                <i class="fa fa fa-align-justify grey mx-2"></i>
-                                Package Links Item <%= order %>
-                                <input type="hidden" name="id" value="<%= id %>">
-                              </div>
-                            </div>
-                            <div class="col-3 text-end">
-                              <a href="#" class="mx-2 delete-item"><i class="fa fa-trash"></i></a>
-                              <a href="#" class="toggle-tab-state"><i
-                                      class="fa <%= (tab_open?'fa-chevron-down':'fa-chevron-up') %> "></i></a>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="col-12 <%= (tab_open?'':'mini-package_links-item') %>">
-                        <div class="package_links-item-content">
-                          <div class="row">
-                            <div class="col-8 <%= (tab_open?'':'d-none') %>">
-                              <div class="mb-3 control-large hdx-section-field">
-                                <label class="control-label" for="title">Title</label>
-                                <div class="controls ">
-                                  <input id="title" type="text" name="title" value="<%= title %>" placeholder="Title"
-                                         class="form-control">
-                                  <span class="error-block"></span>
-                                </div>
-                              </div>
-                              <div class="mb-3 control-large hdx-section-field">
-                                <label class="control-label" for="url_field">URL</label>
-                                <div class="controls ">
-                                  <input id="url_field" type="text" name="url" value="<%= url %>"
-                                         placeholder="eg. https://... " class="form-control">
-                                  <span class="error-block"></span>
-                                </div>
-                              </div>
-                              <div class="mb-3 control-large hdx-section-field">
-                                <label class="control-label" for="new_window">OPEN IN A NEW TAB</label>
-                                <div class="controls ">
-                                  <select name="newTab" id="new_window" class="form-control">
-                                    <option value="true"
-                                    <%= (newTab.toString()==="true"?'selected="selected"':'') %> >Yes</option>
-                                    <option value="false"
-                                    <%= (newTab.toString()==="true"?'':'selected="selected"') %>>No</option>
-                                  </select>
-                                  <span class="error-block"></span>
-                                </div>
-                              </div>
-                              <div class="mb-3 control-large hdx-section-field">
-                                <label class="control-label" for="label_field">Text to be displayed</label>
-                                <div class="controls ">
-                                  <input id="label_field" type="text" name="label" value="<%= label %>"
-                                         placeholder="eg. This dataset can be viewed in the " class="form-control">
-                                  <span class="error-block"></span>
-                                </div>
-                              </div>
-                              <div class="mb-3 control-large hdx-section-field">
-                                <label class="control-label" for="package_list">Datasets to highlight</label>
-                                <div class="controls ">
-                                  <textarea id="package_list" rows="10" name="package_list" placeholder="dataset1,dataset2,..." class="form-control"><%= package_list %></textarea>
-                                  <span class="error-block"></span>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-
-                    </div>
-                  </div>
-
-                </script>
-
-                <div id="package_links-item-collection" class="row">
-
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="row" style="margin-bottom: 30px;">
-            <div class="col-12">
-              <button id="add-package_links-item" class="btn float-start"> + New Item</button>
-              <a href="#" class="btn btn-primary float-end" id="save-package_links">Save</a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-  </div>
-
-{% endblock %}
-
-{% block secondary_content %}
-  <div class="module module-narrow module-shallow">
-    <h2 class="module-heading">
-      <i class="icon-info-sign"></i>
-      {{ _('Package Links Menu Setting') }}
-    </h2>
-    <div class="module-content">
-      {% block admin_form_help %}
-        {% set about_url = h.url_for(controller='home', action='about') %}
-        {% set home_url = h.url_for(controller='home', action='index') %}
-        {% set docs_url = "https://docs.ckan.org/en/{0}/theming".format(g.ckan_doc_version) %}
-        {% trans %}
-          <p>This setting is to configure the package links shown under the main navigation on HDX.</p>
-          <p>A package link menu item has the following configuration fields:</p>
-          <p><strong>Title:</strong> This is the title of menu item that will be visible (ie. Common Operational Datasets)</p>
-          <p><strong>URL:</strong> Vizualization url (ie. https://data.humdata.org/visualization/covid19-humanitarian-operations/)</p>
-          <p><strong>Open in a new tab:</strong> If the package link URL is an internal page on HDX, set this value to No. </p>
-          <p><strong>Datasets to highlight:</strong> Add a comma-separated list of dataset names (last part of the dataset url) for any hdx dataset that is included in the visual. When the dataset page for one of those datasets is displayed, a link will be added to this visual.</p>
-          <p>*Items can be dragged to swap its order of display in the navigation dropdown</p>
-        {% endtrans %}
-      {% endblock %}
-    </div>
-  </div>
-{% endblock %}
-
-{% block scripts2 %}
+{% block scripts %}
   {{ super() }}
-  {% asset 'hdx_theme/admin-package-links-scripts' %}
-{#  {% resource 'hdx_theme/package-links-admin' %}#}
+  {% asset 'hdx_theme/v2-config-item-scripts' %}
+{% endblock %}
+
+{% block primary %}
+  {% snippet 'v2/list-header.html',
+      list_title=page_label,
+      list_subtitle=_('Manage datasets associated with location Data Grid'),
+      title_tag='h1',
+      title_size='dashboard',
+      show_controls=False,
+      show_filters=False %}
+
+  <div class="c-config-item-list" data-config-item-list
+       data-update-url="{{ h.url_for('hdx_package_links.update') }}"
+       data-delete-url="{{ h.url_for('hdx_package_links.delete', id='__id__') }}"
+       data-title-format="{{ _('Package Links Item {n}') }}"
+       data-error-message="{{ _('There was an error saving the package links. Please try again.') }}">
+    <ol class="c-config-item-list__items">
+      {% for item in items %}
+        {% set prefix = 'package-link-' ~ loop.index %}
+        <li>
+          {% call h.snippet('v2/components/config-item.html',
+              title=_('Package Links Item {n}').format(n=loop.index),
+              id=prefix,
+              item_id=item.id) %}
+            {% snippet 'admin/snippets/package_link_fields.html', item=item, prefix=prefix %}
+          {% endcall %}
+        </li>
+      {% endfor %}
+    </ol>
+    <template data-config-item-template>
+      <li>
+        {% call h.snippet('v2/components/config-item.html',
+            title=_('Package Links Item {n}').format(n='__index__'),
+            id='package-link-__index__') %}
+          {% snippet 'admin/snippets/package_link_fields.html', prefix='package-link-__index__' %}
+        {% endcall %}
+      </li>
+    </template>
+    {% snippet 'v2/components/alert.html', hidden=True, extra_attrs='data-config-item-error' %}
+    <div class="c-config-item-list__actions">
+      {% snippet 'v2/components/button.html',
+          style='tertiary', label=_('New Item'),
+          icon_src='v2/icons/plus.svg',
+          attrs={'data-config-item-add': ''} %}
+      {% snippet 'v2/components/button.html',
+          style='primary', label=_('Save'),
+          attrs={'data-config-item-save': ''} %}
+    </div>
+  </div>
 {% endblock %}

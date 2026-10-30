@@ -1,0 +1,81 @@
+{#
+  Snippet: config-item.html
+  Path:    templates/v2/components/config-item.html
+
+  Renders a c-config-item — one editable, reorderable item of a sysadmin
+  settings editor: a header with a drag handle, the title (<h2>), a collapse
+  toggle and Delete, above the caller's fields. Items go in a
+  c-config-item-list (page markup, see the example), whose data attributes
+  drive components/config-item.js (v2-config-item-scripts bundle): drag
+  reordering, collapse, New Item, Delete and Save.
+
+  Parameters
+  ─────────────────────────────────────────────────
+  title         {string}  Header text, e.g. 'Package Links Item 1'.  Required.
+  id            {string}  Unique id prefix: <id>-heading (title), <id>-body,
+                          <id>-delete.  Required.
+  item_id       {string}  Stored item id (data-config-item-id); empty for an
+                          unsaved item.  default: ''
+  expanded      {bool}    Render the body open.  default: True
+  caller()      block     The item's fields.
+  ─────────────────────────────────────────────────
+  Example
+
+  <div class="c-config-item-list" data-config-item-list
+       data-update-url="…/update" data-delete-url="…/delete/__id__"
+       data-title-format="{{ _('Package Links Item {n}') }}"
+       data-error-message="{{ _('There was an error saving the package links. Please try again.') }}">
+    <ol class="c-config-item-list__items">
+      <li>
+        {% call h.snippet('v2/components/config-item.html',
+            title=_('Package Links Item {n}').format(n=1),
+            id='package-link-1', item_id=item.id) %}
+          ...fields, ids starting with 'package-link-1-'...
+        {% endcall %}
+      </li>
+    </ol>
+    <template data-config-item-template>
+      <li>...one c-config-item, ids containing __index__...</li>
+    </template>
+    {% snippet 'v2/components/alert.html', hidden=True, extra_attrs='data-config-item-error' %}
+    <div class="c-config-item-list__actions">
+      ...New Item button with data-config-item-add, Save button with data-config-item-save...
+    </div>
+  </div>
+#}
+
+{% set title    = title    if title    is defined else '' %}
+{% set id       = id       if id       is defined else '' %}
+{% set item_id  = item_id  if item_id  is defined else '' %}
+{% set expanded = expanded if expanded is defined else True %}
+
+<div class="c-config-item" data-config-item{% if item_id %} data-config-item-id="{{ item_id }}"{% endif %}>
+  <div class="c-config-item__header">
+    <span class="c-config-item__handle" aria-hidden="true">{{ h.hdx_v2_icon('v2/icons/format-paragraph-spacing.svg') }}</span>
+    <h2 class="c-config-item__title" id="{{ id }}-heading" data-config-item-title>{{ title }}</h2>
+    <div class="c-config-item__actions">
+      {% snippet 'v2/components/button.html',
+          type='icon-only', style='tertiary', size='s',
+          icon_src='v2/icons/chevron-up.svg',
+          extra_classes='c-config-item__toggle',
+          attrs={
+            'aria-expanded': 'true' if expanded else 'false',
+            'aria-controls': id ~ '-body',
+            'aria-labelledby': id ~ '-heading',
+            'data-config-item-toggle': ''
+          } %}
+      {% snippet 'v2/components/text-button.html',
+          style='tertiary', size='s', label=_('Delete'),
+          icon_src='v2/icons/delete.svg',
+          tag='button',
+          attrs={
+            'id': id ~ '-delete',
+            'aria-labelledby': id ~ '-delete ' ~ id ~ '-heading',
+            'data-config-item-delete': ''
+          } %}
+    </div>
+  </div>
+  <div class="c-config-item__body" id="{{ id }}-body"{% if not expanded %} hidden{% endif %}>
+    {{ caller() }}
+  </div>
+</div>
