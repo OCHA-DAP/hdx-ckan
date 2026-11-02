@@ -123,13 +123,17 @@ def _process_request():
     if not title or not request.form.get('url'):
         return None
     else:
+        try:
+            order = int(request.form.get('order', -1))
+        except ValueError:
+            return None
         item = {
             'title': title,
             # 'description': request.form.get('description'),
             # 'graphic': request.form.get('graphic'),
             # 'graphic_upload': request.form.get('graphic_upload'),
             'url': request.form.get('url'),
-            'order': int(request.form.get('order', -1)),
+            'order': order,
             'newTab': True if request.form.get('newTab') == 'true' else False,
             'archived': True if request.form.get('archived') == 'true' else False,
             # 'embed': True if request.form.get('embed') == 'true' else False,

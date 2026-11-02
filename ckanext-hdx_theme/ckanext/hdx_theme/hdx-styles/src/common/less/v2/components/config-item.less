@@ -1,7 +1,8 @@
 // ============================================================
 // c-config-item      — editable, reorderable item of a sysadmin
 //                      settings editor (handle, title, toggle, Delete, fields)
-// c-config-item-list — its list: items, error alert, actions row
+// c-config-item-list — its list: items, error alert, actions row;
+//                      --grid: two columns from MD up
 // Compiled output: fanstatic/v2/components/config-item.css
 // Figma: llm_docs/redesign/figma_exports/xl-sysadmin-package-links.html
 // ============================================================
@@ -73,6 +74,20 @@
         padding:    0;
 
         > .is-dragging { opacity: 0.3; }
+    }
+
+    &--grid &__items {
+        flex-direction: row;
+        flex-wrap:      wrap;
+        align-items:    flex-start;
+
+        > li {
+            width: 100%;
+
+            @media (min-width: @hdx-bp-md) {
+                width: calc((100% - var(--hdx-space-6)) / 2);
+            }
+        }
     }
 
     &__actions {

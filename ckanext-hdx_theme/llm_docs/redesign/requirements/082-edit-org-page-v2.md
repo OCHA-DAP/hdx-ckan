@@ -385,7 +385,9 @@ Removed from these pages:
 - **Params:** `field_url`, `field_upload`, `field_clear`, `value` (stored value), `preview_url` (resolved, D7),
   `clear_value` (re-rendered clear flag), `label`, `url_label`, `remove_label`, `placeholder`, `id`,
   `upload_enabled` (`h.uploads_enabled()`), `errors`, `accept` (default `image/*`; the form passes
-  `image/png,image/gif,image/jpeg`, the `ckan.upload.group.mimetypes` default).
+  `image/png,image/gif,image/jpeg`, the `ckan.upload.group.mimetypes` default), and the optional `link_enabled`,
+  `remove_enabled`, `upload_label`, `preview`, `max_bytes`, `image_width`, `check_message` (089 §6.4; their
+  defaults keep this form unchanged).
 - **States (parity with `hdx-image-upload`):**
   - **Blank:** Upload (Figma) + Link buttons.
   - **Attached:** thumbnail + Remove. A stored upload shows no file name (stored names carry a timestamp
@@ -398,7 +400,7 @@ Removed from these pages:
   - Initial state: web if the value is http(s), attached if there is a stored filename, blank otherwise.
 - **Uploads disabled:** URL input only (v1 `is_upload_enabled` false).
 - **Events:** emits `image-upload:change` when a file is chosen or a URL is entered, so the page can auto-tick
-  (D12).
+  (D12); fields inserted later initialise on `config-item:add` (089 §6.5).
 - **Bundle:** CSS/JS into `v2-components-styles` / `v2-components-scripts`.
 
 ---

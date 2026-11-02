@@ -45,7 +45,11 @@
     function updateItem(card, order) {
       var body = new FormData();
       card.querySelector('.c-config-item__body').querySelectorAll('[name]').forEach(function (control) {
-        body.append(control.name, control.value);
+        if (control.type !== 'file') {
+          body.append(control.name, control.value);
+        } else if (control.files[0]) {
+          body.append(control.name, control.files[0]);
+        }
       });
       body.append('order', order);
       if (card.dataset.configItemId) body.append('id', card.dataset.configItemId);
@@ -123,6 +127,8 @@
       counter += 1;
       items.insertAdjacentHTML('beforeend', template.innerHTML.replace(/__index__/g, counter));
       renumber();
+      items.lastElementChild.querySelector('[data-config-item]')
+        .dispatchEvent(new CustomEvent('config-item:add', { bubbles: true }));
       items.lastElementChild.querySelector('.c-search-input input, .c-search-input textarea').focus();
     });
 

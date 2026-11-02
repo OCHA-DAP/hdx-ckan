@@ -530,7 +530,8 @@ files:
 
 - `c-<name>-list` — vertical flex list (`c-dataset-card-list`,
   `c-resource-card-list`, `c-org-list-card-list`, `c-member-list-card-list`,
-  `c-request-card-list`, `c-activity-card-list`, `c-stats-card-list`, `c-config-item-list`)
+  `c-request-card-list`, `c-activity-card-list`, `c-stats-card-list`, `c-config-item-list`;
+  `c-config-item-list--grid` wraps into two columns)
 - `c-<name>-grid` — grid (`c-content-card-grid`, `c-selection-item-grid`,
   `c-showcase-card-grid`, `c-dataviz-card-grid`, `c-user-item-grid`)
 - `c-<name>-row` — inline flex-wrap row (`c-kpi-card-row`, `c-selection-item-row`)
@@ -552,6 +553,12 @@ Page LESS keeps only page-rhythm concerns around the wrapper (e.g.
 If a utility class or function has exactly one consumer and no realistic reuse case, inline it into the consumer rather than maintaining a separate component file. Promote it to a shared module (`utils.js`) the moment a second consumer needs the same logic — never copy it. (`FocusTrap` started inlined into `navbar.js` from `focus-trap.js`; once `components/drawer.js` needed the same Tab-trap logic, it moved to `window.hdxV2.FocusTrap` in `utils.js`.)
 
 CSRF headers for `fetch` POSTs: `window.hdxV2.post(url, body)` (`utils.js`) for a POST that returns JSON; otherwise call `window.hdxUtil.net.getCsrfTokenAsObject()` directly (`base/hdx-util-lib.js`, in the `hdx_theme/ckan` bundle that `base.html` loads on every page) — no local wrapper functions.
+
+---
+
+## Components inserted after page load
+
+Component scripts initialise on `DOMContentLoaded`. Markup inserted later announces itself with a bubbling `<component>:add` event on the new element (`config-item:add` from `components/config-item.js` after New Item); a component that can sit inside it listens on `document` and initialises the matches inside `event.target` (`image-upload.js` does this for `[data-image-upload]`).
 
 ---
 

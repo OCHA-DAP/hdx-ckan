@@ -17,6 +17,8 @@
     id_prefix       {string}  Card id prefix (e.g. 'package-link')
     fields_snippet  {string}  Snippet rendering one item's fields; gets item
                               (absent for a new one) and prefix
+    list_layout     {string}  Optional: 'grid' for two columns from MD up
+                              (c-config-item-list--grid); unset: one column
   The view passes items (the stored list).
 #}
 
@@ -34,7 +36,7 @@
       show_controls=False,
       show_filters=False %}
 
-  <div class="c-config-item-list" data-config-item-list
+  <div class="c-config-item-list{% if list_layout == 'grid' %} c-config-item-list--grid{% endif %}" data-config-item-list
        data-update-url="{{ update_url }}"
        data-delete-url="{{ delete_url }}"
        data-title-format="{{ title_format }}"

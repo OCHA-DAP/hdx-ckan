@@ -258,3 +258,37 @@ def test_package_links_update_without_title_is_rejected(app):
 
     shown = get_action('hdx_package_links_settings_show')(context, {})
     assert shown == [existing_item]
+
+
+@pytest.mark.usefixtures('hdx_clean_db')
+def test_package_links_update_with_non_integer_order_is_rejected(app):
+    sysadmin = factories.Sysadmin()
+    api_token = factories.APIToken(user=sysadmin['id'], expires_in=2, unit=60 * 60)
+    admin_headers = {'Authorization': api_token['token']}
+
+    get_action = tk.get_action
+    context: Context = {'model': model, 'session': model.Session, 'user': sysadmin['name']}
+
+    existing_item = {
+        'id': 'existing-id',
+        'title': 'Existing',
+        'url': '/dataset/existing',
+        'label': 'Datasets',
+        'order': 1,
+        'newTab': False,
+        'package_list': 'pkg-1',
+    }
+    get_action('hdx_package_links_settings_update')(context, {'hdx.package_links.config': [existing_item]})
+
+    update_resp = app.post('/ckan-admin/package-links/update', params={
+        'id': 'existing-id',
+        'title': 'Existing',
+        'url': '/dataset/existing',
+        'order': 'first',
+        'newTab': 'false',
+    }, headers=admin_headers, expect_errors=True)
+    assert update_resp.status_code == 400
+    assert 'Badly formatted data' in update_resp.text
+
+    shown = get_action('hdx_package_links_settings_show')(context, {})
+    assert shown == [existing_item]

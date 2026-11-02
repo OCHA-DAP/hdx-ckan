@@ -323,7 +323,7 @@ On `DOMContentLoaded`, for each `[data-config-item-list]`:
 - **Collapse:** the toggle flips `aria-expanded` and the body's `hidden`. Cards start as `expanded` sets them (the
   page keeps the default, so all open); the state is not stored.
 - **New Item:** the template's HTML with `__index__` replaced by a counter that starts above the rendered count is
-  appended, renumbered, and its first text field focused.
+  appended, renumbered, announced with a bubbling `config-item:add` (089 §6.5), and its first text field focused.
 - **Delete:** a card with `data-config-item-id` queues that id; the `<li>` is removed and the list renumbered;
   focus moves to the next card's toggle, or to New Item when no card follows. No confirmation; nothing is sent
   until Save.
@@ -333,10 +333,11 @@ On `DOMContentLoaded`, for each `[data-config-item-list]`:
      first and stop.
   2. `hdxV2.setDisabled(save, true)`.
   3. In sequence: `hdxV2.post(deleteUrl with __id__ → encoded id)` for each queued id; then, for each card in DOM
-     order, `hdxV2.post(updateUrl, formData)` where `formData` holds every named control in the card body,
-     `order` = position and `id` when the card has one. A finished delete leaves the queue. A card without
-     `data-config-item-id` gets the one id its reply has that the previous reply (for the first call: the ids
-     rendered on the page) lacked; a reply without exactly one new id counts as a failure (D17).
+     order, `hdxV2.post(updateUrl, formData)` where `formData` holds every named control in the card body (a file
+     input: its chosen file, if any; 089 §6.5), `order` = position and `id` when the card has one. A finished
+     delete leaves the queue. A card without `data-config-item-id` gets the one id its reply has that the previous
+     reply (for the first call: the ids rendered on the page) lacked; a reply without exactly one new id counts as a
+     failure (D17).
   4. Every reply an array → `window.location.reload()`. A non-array reply, a non-JSON reply (403 / 500 HTML) or a
      network error stops the chain → `hdxV2.showAlert(alert, data-error-message)`, Save re-enabled. Calls already
      made stay applied (v1); a retry neither recreates an item nor resends a finished delete (D17).
@@ -355,6 +356,7 @@ On `DOMContentLoaded`, for each `[data-config-item-list]`:
 | `&__body` | Column flex, gap `--hdx-space-2`; `&[hidden]` `display: none` (the flex would override `hidden`) |
 | `.c-config-item-list`, `&__items` | Column flex, gap `--hdx-space-6`; `__items` has no list styling |
 | `&__items > .is-dragging` | `opacity: 0.3` (v1) |
+| `&--grid &__items` | Row-wrapping flex, two columns from MD (089 §6.5) |
 | `&__actions` | Flex, `justify-content: space-between`, centred |
 
 ### 6.5 Copy

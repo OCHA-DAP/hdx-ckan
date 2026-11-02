@@ -225,7 +225,8 @@ No LESS, JS or bundle changes. `admin/package_links.html` moves onto the base wi
 
 - Base (D12): extends `v2/sysadmin-base.html`; the `scripts` block adds `hdx_theme/v2-config-item-scripts`.
   Children set, at top level, `nav_active`, `page_label`, `list_subtitle`, `update_url`, `delete_url` (with
-  `__id__`), `title_format` (with `{n}`), `error_message`, `id_prefix` and `fields_snippet`; the view passes `items`.
+  `__id__`), `title_format` (with `{n}`), `error_message`, `id_prefix` and `fields_snippet`, optionally
+  `list_layout` (089 D20); the view passes `items`.
 - Header: `v2/list-header.html`, `list_title=page_label`, `list_subtitle`, `title_tag='h1'`,
   `title_size='dashboard'`, `show_controls=False`, `show_filters=False`, no `count`.
 - Body: the `c-config-item-list` markup (087 §5.3) with the child's URLs, title format and error message. One

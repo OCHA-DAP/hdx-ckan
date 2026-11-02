@@ -1,6 +1,7 @@
 // ============================================================
-// c-image-upload — image field: upload / link / remove
-// Figma: llm_docs/redesign/figma_exports/xl-edit-org-page.html
+// c-image-upload — image field: upload / link / remove; optional large preview
+// Figma: llm_docs/redesign/figma_exports/xl-edit-org-page.html,
+//        xl-sysadmin-homepage-highlights.html (thumbnail)
 // ============================================================
 @import "../mixins.less";
 
@@ -25,6 +26,21 @@
         &[hidden] { display: none; }
     }
 
+    &__preview {
+        display:          flex;
+        align-items:      center;
+        min-height:       10rem;
+        background-color: var(--hdx-neutral-05);
+    }
+
+    &__preview-image {
+        display: block;
+        width:   100%;
+        height:  auto;
+
+        &[hidden] { display: none; }
+    }
+
     &__name {
         .hdx-body-m();
         min-width:     0;
@@ -44,5 +60,7 @@
     &__error {
         .hdx-body-s();
         color: var(--hdx-error-6);
+
+        &:empty { display: none; }
     }
 }

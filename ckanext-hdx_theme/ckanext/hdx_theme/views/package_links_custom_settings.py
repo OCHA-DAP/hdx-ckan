@@ -136,11 +136,15 @@ def _process_request():
     if not title:
         return None
     else:
+        try:
+            order = int(request.form.get('order', -1))
+        except ValueError:
+            return None
         item = {
             'title': title,
             'url': request.form.get('url'),
             'label': request.form.get('label'),
-            'order': int(request.form.get('order', -1)),
+            'order': order,
             'newTab': True if request.form.get('newTab') == 'true' else False,
             'package_list': (request.form.get('package_list') or '').replace(' ', ''),
             'new': False if request.form.get('id') else True,

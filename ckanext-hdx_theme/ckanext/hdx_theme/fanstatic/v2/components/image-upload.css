@@ -20,6 +20,20 @@
 .c-image-upload__thumb[hidden] {
   display: none;
 }
+.c-image-upload__preview {
+  display: flex;
+  align-items: center;
+  min-height: 10rem;
+  background-color: var(--hdx-neutral-05);
+}
+.c-image-upload__preview-image {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.c-image-upload__preview-image[hidden] {
+  display: none;
+}
 .c-image-upload__name {
   font-family: var(--hdx-font-body);
   font-size: var(--hdx-fs-m);
@@ -44,4 +58,7 @@
   font-weight: var(--hdx-fw-regular);
   line-height: var(--hdx-lh-normal);
   color: var(--hdx-error-6);
+}
+.c-image-upload__error:empty {
+  display: none;
 }

@@ -61,6 +61,19 @@
 .c-config-item-list__items > .is-dragging {
   opacity: 0.3;
 }
+.c-config-item-list--grid .c-config-item-list__items {
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+.c-config-item-list--grid .c-config-item-list__items > li {
+  width: 100%;
+}
+@media (min-width: 48rem) {
+  .c-config-item-list--grid .c-config-item-list__items > li {
+    width: calc((100% - var(--hdx-space-6)) / 2);
+  }
+}
 .c-config-item-list__actions {
   display: flex;
   justify-content: space-between;
