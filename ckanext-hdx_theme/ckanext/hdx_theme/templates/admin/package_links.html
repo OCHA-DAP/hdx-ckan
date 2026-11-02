@@ -1,58 +1,11 @@
-{% extends "v2/sysadmin-base.html" %}
+{% extends "admin/config-item-base.html" %}
 
 {% set nav_active = 'package_links' %}
 {% set page_label = _('Package Links') %}
-
-{% block scripts %}
-  {{ super() }}
-  {% asset 'hdx_theme/v2-config-item-scripts' %}
-{% endblock %}
-
-{% block primary %}
-  {% snippet 'v2/list-header.html',
-      list_title=page_label,
-      list_subtitle=_('Manage datasets associated with location Data Grid'),
-      title_tag='h1',
-      title_size='dashboard',
-      show_controls=False,
-      show_filters=False %}
-
-  <div class="c-config-item-list" data-config-item-list
-       data-update-url="{{ h.url_for('hdx_package_links.update') }}"
-       data-delete-url="{{ h.url_for('hdx_package_links.delete', id='__id__') }}"
-       data-title-format="{{ _('Package Links Item {n}') }}"
-       data-error-message="{{ _('There was an error saving the package links. Please try again.') }}">
-    <ol class="c-config-item-list__items">
-      {% for item in items %}
-        {% set prefix = 'package-link-' ~ loop.index %}
-        <li>
-          {% call h.snippet('v2/components/config-item.html',
-              title=_('Package Links Item {n}').format(n=loop.index),
-              id=prefix,
-              item_id=item.id) %}
-            {% snippet 'admin/snippets/package_link_fields.html', item=item, prefix=prefix %}
-          {% endcall %}
-        </li>
-      {% endfor %}
-    </ol>
-    <template data-config-item-template>
-      <li>
-        {% call h.snippet('v2/components/config-item.html',
-            title=_('Package Links Item {n}').format(n='__index__'),
-            id='package-link-__index__') %}
-          {% snippet 'admin/snippets/package_link_fields.html', prefix='package-link-__index__' %}
-        {% endcall %}
-      </li>
-    </template>
-    {% snippet 'v2/components/alert.html', hidden=True, extra_attrs='data-config-item-error' %}
-    <div class="c-config-item-list__actions">
-      {% snippet 'v2/components/button.html',
-          style='tertiary', label=_('New Item'),
-          icon_src='v2/icons/plus.svg',
-          attrs={'data-config-item-add': ''} %}
-      {% snippet 'v2/components/button.html',
-          style='primary', label=_('Save'),
-          attrs={'data-config-item-save': ''} %}
-    </div>
-  </div>
-{% endblock %}
+{% set list_subtitle = _('Manage datasets associated with location Data Grid') %}
+{% set update_url = h.url_for('hdx_package_links.update') %}
+{% set delete_url = h.url_for('hdx_package_links.delete', id='__id__') %}
+{% set title_format = _('Package Links Item {n}') %}
+{% set error_message = _('There was an error saving the package links. Please try again.') %}
+{% set id_prefix = 'package-link' %}
+{% set fields_snippet = 'admin/snippets/package_link_fields.html' %}

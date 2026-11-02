@@ -289,8 +289,8 @@ text. `aria-labelledby` overrides the `aria-label` that `button.html` sets from 
 
 ### 6.2 Page template (`THEME/templates/admin/package_links.html`)
 
-- Extends `v2/sysadmin-base.html`; `nav_active='package_links'`, `page_label=_('Package Links')`; the `scripts`
-  block adds `hdx_theme/v2-config-item-scripts`.
+- Extends `admin/config-item-base.html` (088 §6.2), on `v2/sysadmin-base.html`, which renders the header, §5.3 and
+  `hdx_theme/v2-config-item-scripts` from the page's values; `nav_active='package_links'`, `page_label=_('Package Links')`.
 - Header: `v2/list-header.html`, `list_title=page_label`, `list_subtitle` (§6.5), `title_tag='h1'`,
   `title_size='dashboard'`, `show_controls=False`, `show_filters=False`, no `count`.
 - Body: §5.3. The snippet `THEME/templates/admin/snippets/package_link_fields.html` (`item`, `prefix`) renders one
@@ -490,25 +490,12 @@ Not changed: v1 `admin/package_links.js` / `.css`, `admin-package-links-scripts`
 5. Apply the D8 fixes and `items` in the view; add the three test cases.
 6. Replace `admin/package_links.html`.
 7. Add the components demo entry.
-8. Run the §12 checks, then hand the visual test to the user.
+8. Run render-level checks, then hand the visual test to the user.
 9. Update the docs in §10 and `STATUS.md`.
 
 ---
 
-## 12. Verification
-
-- **Render:** `/ckan-admin/package-links/show` as a sysadmin and as a quick-links holder → 200, one card per
-  stored item, unique ids; as an ordinary user and anonymously → 403.
-- **Unchanged HTML** (asset hashes aside): the step-1 pages.
-- **Tests:** `test_package_links.py` on the repo test stack, after asking.
-- **Visual (user):** drag, collapse, Delete, New Item; Save success; Save with an empty Title / URL; Save failure
-  (e.g. an expired session) and a retry (no duplicates); login and forgot-password field errors; signup,
-  change-email and notification-signup validator errors (text, checkbox, border-only); a dataset page that lists a
-  package link.
-
----
-
-## 13. Risks & Edge Cases
+## 12. Risks & Edge Cases
 
 | Case | Handling |
 |---|---|

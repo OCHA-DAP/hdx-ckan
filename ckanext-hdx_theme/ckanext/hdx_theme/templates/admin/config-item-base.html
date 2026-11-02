@@ -1,0 +1,75 @@
+{% extends "v2/sysadmin-base.html" %}
+
+{#
+  Base for the sysadmin settings editors built on c-config-item, on
+  v2/sysadmin-base.html: a list-header (h1 + subtitle, no count) and a
+  c-config-item-list with one c-config-item per stored item, the New Item
+  <template>, the Save error c-alert and the New Item / Save row, driven by
+  components/config-item.js (v2-config-item-scripts).
+
+  Children set (besides nav_active and page_label):
+    list_subtitle   {string}  Header subtitle
+    update_url      {string}  POST URL that creates or replaces one item
+    delete_url      {string}  POST URL with '__id__' for the item id
+    title_format    {string}  Card title with '{n}' for the position
+                              (e.g. _('Package Links Item {n}'))
+    error_message   {string}  Save error text
+    id_prefix       {string}  Card id prefix (e.g. 'package-link')
+    fields_snippet  {string}  Snippet rendering one item's fields; gets item
+                              (absent for a new one) and prefix
+  The view passes items (the stored list).
+#}
+
+{% block scripts %}
+  {{ super() }}
+  {% asset 'hdx_theme/v2-config-item-scripts' %}
+{% endblock %}
+
+{% block primary %}
+  {% snippet 'v2/list-header.html',
+      list_title=page_label,
+      list_subtitle=list_subtitle,
+      title_tag='h1',
+      title_size='dashboard',
+      show_controls=False,
+      show_filters=False %}
+
+  <div class="c-config-item-list" data-config-item-list
+       data-update-url="{{ update_url }}"
+       data-delete-url="{{ delete_url }}"
+       data-title-format="{{ title_format }}"
+       data-error-message="{{ error_message }}">
+    <ol class="c-config-item-list__items">
+      {% for item in items %}
+        {% set prefix = id_prefix ~ '-' ~ loop.index %}
+        <li>
+          {% call h.snippet('v2/components/config-item.html',
+              title=title_format.format(n=loop.index),
+              id=prefix,
+              item_id=item.id) %}
+            {% snippet fields_snippet, item=item, prefix=prefix %}
+          {% endcall %}
+        </li>
+      {% endfor %}
+    </ol>
+    <template data-config-item-template>
+      <li>
+        {% call h.snippet('v2/components/config-item.html',
+            title=title_format.format(n='__index__'),
+            id=id_prefix ~ '-__index__') %}
+          {% snippet fields_snippet, prefix=id_prefix ~ '-__index__' %}
+        {% endcall %}
+      </li>
+    </template>
+    {% snippet 'v2/components/alert.html', hidden=True, extra_attrs='data-config-item-error' %}
+    <div class="c-config-item-list__actions">
+      {% snippet 'v2/components/button.html',
+          style='tertiary', label=_('New Item'),
+          icon_src='v2/icons/plus.svg',
+          attrs={'data-config-item-add': ''} %}
+      {% snippet 'v2/components/button.html',
+          style='primary', label=_('Save'),
+          attrs={'data-config-item-save': ''} %}
+    </div>
+  </div>
+{% endblock %}
