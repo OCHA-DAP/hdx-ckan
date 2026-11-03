@@ -99,6 +99,16 @@ table.c-table {
                 -webkit-mask-image: url('/icons/chevron-down.svg');
                 mask-image:         url('/icons/chevron-down.svg');
             }
+
+            .dt-column-order {
+                position: absolute;
+                inset:    0;
+
+                &:focus-visible {
+                    .hdx-focus-ring();
+                    outline-offset: -2px;
+                }
+            }
         }
     }
 
@@ -131,6 +141,11 @@ table.c-table {
     border:        1px solid var(--hdx-neutral-1);
     border-radius: var(--hdx-radius-sm);
     overflow:      clip;
+
+    .c-table-container & {
+        border:        none;
+        border-radius: 0;
+    }
 
     .dt-layout-row {
         &.dt-layout-table > .dt-layout-cell {

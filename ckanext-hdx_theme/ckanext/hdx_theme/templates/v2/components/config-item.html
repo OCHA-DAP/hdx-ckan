@@ -7,7 +7,9 @@
   toggle and Delete, above the caller's fields. Items go in a
   c-config-item-list (page markup, see the example), whose data attributes
   drive components/config-item.js (v2-config-item-scripts bundle): drag
-  reordering, collapse, New Item, Delete and Save.
+  reordering, collapse, New Item, Delete and Save. With
+  data-config-item-form on the list (form mode) the items are posted by the
+  surrounding page form: no reordering, no Save, no AJAX.
 
   Parameters
   ─────────────────────────────────────────────────
@@ -17,6 +19,9 @@
   item_id       {string}  Stored item id (data-config-item-id); empty for an
                           unsaved item.  default: ''
   expanded      {bool}    Render the body open.  default: True
+  draggable     {bool}    Render the drag handle; False adds
+                          c-config-item--static (no grab cursor).  default: True
+  title_tag     {string}  Title element.  default: 'h2'
   caller()      block     The item's fields.
   ─────────────────────────────────────────────────
   Example
@@ -47,12 +52,16 @@
 {% set title    = title    if title    is defined else '' %}
 {% set id       = id       if id       is defined else '' %}
 {% set item_id  = item_id  if item_id  is defined else '' %}
-{% set expanded = expanded if expanded is defined else True %}
+{% set expanded  = expanded  if expanded  is defined else True %}
+{% set draggable = draggable if draggable is defined else True %}
+{% set title_tag = title_tag if title_tag is defined else 'h2' %}
 
-<div class="c-config-item" data-config-item{% if item_id %} data-config-item-id="{{ item_id }}"{% endif %}>
+<div class="c-config-item{% if not draggable %} c-config-item--static{% endif %}" data-config-item{% if item_id %} data-config-item-id="{{ item_id }}"{% endif %}>
   <div class="c-config-item__header">
+    {% if draggable %}
     <span class="c-config-item__handle" aria-hidden="true">{{ h.hdx_v2_icon('v2/icons/format-paragraph-spacing.svg') }}</span>
-    <h2 class="c-config-item__title" id="{{ id }}-heading" data-config-item-title>{{ title }}</h2>
+    {% endif %}
+    <{{ title_tag }} class="c-config-item__title" id="{{ id }}-heading" data-config-item-title>{{ title }}</{{ title_tag }}>
     <div class="c-config-item__actions">
       {% snippet 'v2/components/button.html',
           type='icon-only', style='tertiary', size='s',

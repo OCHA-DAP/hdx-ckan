@@ -1917,6 +1917,18 @@ v2-sysadmin-page-styles:
   contents:
     - v2/pages/sysadmin.css
 
+v2-custom-page-form-page-scripts:
+  <<: *common-js
+  output: ckanext-hdx_theme/%(version)s_v2-custom-page-form-page-scripts.js
+  contents:
+    - v2/pages/custom-page-form.js
+
+v2-custom-pages-page-scripts:
+  <<: *common-js
+  output: ckanext-hdx_theme/%(version)s_v2-custom-pages-page-scripts.js
+  contents:
+    - v2/pages/custom-pages.js
+
 v2-hdx-connect-page-styles:
   output: ckanext-hdx_theme/%(version)s_v2-hdx-connect-page-styles.css
   <<: *common-css

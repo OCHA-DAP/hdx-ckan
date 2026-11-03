@@ -1193,6 +1193,16 @@
             searchable=True %}
       </div>
     </div>
+
+    <h2 class="demo-subsection__heading">Select — multiple (Select2 chips; multiple=True)</h2>
+    <div class="demo-row--column demo-max-width-l">
+      <div class="c-form-field">
+        {% snippet 'v2/components/select.html',
+            label='Countries', placeholder='Select countries', id='demo-select-multiple',
+            name='demo-select-multiple', options={'sd': 'Sudan', 'td': 'Chad', 'ml': 'Mali', 'ne': 'Niger', 'ci': 'Côte d’Ivoire'},
+            selected=['sd', 'td'], multiple=True, searchable=True %}
+      </div>
+    </div>
   </section>
 
   <br><br><br><br><br>
@@ -1293,6 +1303,16 @@
         {% snippet 'v2/components/text-field.html',
             size='m', multiline=True, id='demo-counter-textarea', name='demo-counter-textarea',
             label='Message', required=True, character_count=True %}
+      </div>
+    </div>
+
+    <h2 class="demo-subsection__heading">Text field — with hint (hint)</h2>
+    <div class="demo-row--column demo-max-width-l">
+      <div class="c-form-field">
+        {% snippet 'v2/components/text-field.html',
+            size='m', multiline=True, id='demo-hint-textarea', name='demo-hint-textarea',
+            label='Long description',
+            hint=('You can use <a href="#">Markdown formatting</a> here' | safe) %}
       </div>
     </div>
 
@@ -1709,9 +1729,9 @@
       {% snippet 'v2/components/radio.html',
           name='demo', value='b', label='Checked radio',   checked=True %}
       {% snippet 'v2/components/radio.html',
-          name='demo', value='c', label='Disabled unchecked', state='disabled' %}
+          name='demo-disabled', value='c', label='Disabled unchecked', state='disabled' %}
       {% snippet 'v2/components/radio.html',
-          name='demo', value='d', label='Disabled checked', checked=True, state='disabled' %}
+          name='demo-disabled', value='d', label='Disabled checked', checked=True, state='disabled' %}
     </div>
 
     <h2 class="demo-subsection__heading">Radio inputs — with info tooltip</h2>
@@ -1723,10 +1743,10 @@
           name='demo-hint', value='b', label='Checked with info',
           checked=True, hint=True, hint_text='Additional context for this option' %}
       {% snippet 'v2/components/radio.html',
-          name='demo-hint', value='c', label='Disabled unchecked with info',
+          name='demo-hint-disabled', value='c', label='Disabled unchecked with info',
           state='disabled', hint=True, hint_text='Additional context for this option' %}
       {% snippet 'v2/components/radio.html',
-          name='demo-hint', value='d', label='Disabled checked with info',
+          name='demo-hint-disabled', value='d', label='Disabled checked with info',
           checked=True, state='disabled', hint=True, hint_text='Additional context for this option' %}
     </div>
 

@@ -1,6 +1,7 @@
 // ============================================================
 // c-config-item      — editable, reorderable item of a sysadmin
-//                      settings editor (handle, title, toggle, Delete, fields)
+//                      settings editor (handle, title, toggle, Delete, fields);
+//                      --static: no drag handle, no grab cursor
 // c-config-item-list — its list: items, error alert, actions row;
 //                      --grid: two columns from MD up
 // Compiled output: fanstatic/v2/components/config-item.css
@@ -57,6 +58,10 @@
         gap:            var(--hdx-space-2);
 
         &[hidden] { display: none; }
+    }
+
+    &--static &__header {
+        cursor: auto;
     }
 }
 

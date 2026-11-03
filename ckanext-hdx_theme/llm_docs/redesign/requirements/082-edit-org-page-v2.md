@@ -365,7 +365,8 @@ Removed from these pages:
   `prefix` (domain + path), `preview_placeholder` (`<organization>`), `target_id` (the title input to follow).
 - **Server render:**
   - the `text-field` (label 'URL', `required`) inside a wrapper, with no prefix;
-  - a `hidden` preview row "**URL:** {prefix}{slug} [Edit]", Edit being a `c-text-button`.
+  - a `hidden` preview row "**URL:** {prefix}{slug} [Edit]", Edit being a `c-text-button`; the prefix sits in a
+    `[data-slug-preview-prefix]` span page JS may rewrite (090 §6.6).
 - **JS:**
   - Swaps the field for the preview on init unless the field has errors.
   - Restricts and slugifies the input.

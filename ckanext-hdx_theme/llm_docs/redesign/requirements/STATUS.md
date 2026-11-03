@@ -91,3 +91,4 @@
 | 087 | [sysadmin-package-links-v2](087-sysadmin-package-links-v2.md)                                                   | implemented | |
 | 088 | [sysadmin-products-menu-v2](088-sysadmin-products-menu-v2.md)                                                   | implemented | |
 | 089 | [sysadmin-homepage-highlights-v2](089-sysadmin-homepage-highlights-v2.md)                                       | implemented | |
+| 090 | [sysadmin-custom-pages-v2](090-sysadmin-custom-pages-v2.md)                                                     | implemented | |

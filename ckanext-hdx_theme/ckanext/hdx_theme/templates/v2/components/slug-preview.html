@@ -20,8 +20,9 @@
   required            {bool}    Required field (asterisk + native required).  default: False
   errors              {list|string}  Field error(s); the field stays visible.  default: None
   placeholder         {string}  Input placeholder.  default: ''
-  prefix              {string}  Text before the slug in the preview (domain + path).
-                                default: ''
+  prefix              {string}  Text before the slug in the preview (domain + path),
+                                in a [data-slug-preview-prefix] span page JS may
+                                rewrite.  default: ''
   preview_placeholder {string}  Preview text while the slug is empty.  default: '<slug>'
   target_id           {string}  id of the field the slug follows.  default: ''
   extra_classes       {string}  default: ''
@@ -64,7 +65,7 @@
   </div>
   <p class="c-slug-preview__preview" data-slug-preview-preview hidden>
     <span class="c-slug-preview__label">{{ label }}:</span>
-    <span class="c-slug-preview__url">{{ prefix }}<span data-slug-preview-value data-slug-preview-placeholder="{{ preview_placeholder }}">{{ value or preview_placeholder }}</span></span>
+    <span class="c-slug-preview__url"><span data-slug-preview-prefix>{{ prefix }}</span><span data-slug-preview-value data-slug-preview-placeholder="{{ preview_placeholder }}">{{ value or preview_placeholder }}</span></span>
     {% snippet 'v2/components/text-button.html',
         style='primary',
         size='m',

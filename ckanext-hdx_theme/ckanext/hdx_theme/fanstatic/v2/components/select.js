@@ -24,6 +24,11 @@
       allowClear:        !!placeholder
     };
 
+    if (select.multiple) {
+      options.placeholder = select.getAttribute('data-placeholder');
+      options.allowClear  = false;
+    }
+
     if (source) {
       options.minimumInputLength = 1;
       options.ajax = {
@@ -39,18 +44,33 @@
           };
         }
       };
+      if (select.getAttribute('data-source-type') === 'tag') {
+        options.ajax.data = function (params) { return { incomplete: params.term }; };
+        options.ajax.processResults = function (reply) {
+          return {
+            results: reply.ResultSet.Result.map(function (tag) {
+              return { id: tag.Name, text: tag.Name };
+            })
+          };
+        };
+      }
     }
 
     $select.select2(options);
 
     var selection   = wrapper.querySelector('.select2-selection');
+    var inline      = wrapper.querySelector('.select2-search--inline .select2-search__field');
     var ids         = labelIds(select);
     var describedBy = select.getAttribute('aria-describedby');
 
     if (ids.length) {
       selection.setAttribute('aria-labelledby', ids.concat(selection.getAttribute('aria-labelledby') || []).join(' '));
+      if (inline) inline.setAttribute('aria-labelledby', ids.join(' '));
     }
-    if (describedBy) selection.setAttribute('aria-describedby', describedBy);
+    if (describedBy) {
+      selection.setAttribute('aria-describedby', describedBy);
+      if (inline) inline.setAttribute('aria-describedby', describedBy + ' ' + inline.getAttribute('aria-describedby'));
+    }
 
     $select.on('select2:open', function () {
       var search = wrapper.querySelector('.select2-search__field');

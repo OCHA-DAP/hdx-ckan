@@ -47,6 +47,26 @@
     overflow-x:     hidden;
 }
 
+// Select2 × buttons: a masked close.svg in the button's background colour
+.c-dropdown-close-icon() {
+    padding:      0;
+    border:       none;
+    -webkit-mask: url('/v2/icons/close.svg') center / contain no-repeat;
+    mask:         url('/v2/icons/close.svg') center / contain no-repeat;
+    cursor:       pointer;
+
+    span {
+        display: none;
+    }
+}
+
+.c-dropdown-field-focus() {
+    background-color: @c-dropdown-bg-hover;
+    border-color:     @c-dropdown-border-color-hover;
+    outline:          1px solid @c-dropdown-border-color-hover;
+    outline-offset:   0;
+}
+
 
 // ────────────────────────────────────────────────────────────
 // 1. c-dropdown — wrapper
@@ -476,21 +496,82 @@
                 right:               var(--hdx-space-8);
                 transform:           translateY(-50%);
                 .hdx-icon-size(var(--hdx-space-4));
-                padding:             0;
-                border:              none;
+                .c-dropdown-close-icon();
                 background-color:    @c-dropdown-text;
-                -webkit-mask:        url('/v2/icons/close.svg') center / contain no-repeat;
-                mask:                url('/v2/icons/close.svg') center / contain no-repeat;
-                cursor:              pointer;
-
-                span {
-                    display: none;
-                }
 
                 &:hover {
                     background-color: var(--hdx-neutral-95);
                 }
             }
+        }
+
+        // Multiple: chips (the c-selection-item look) + inline search
+        .select2-selection--multiple {
+            display:     flex;
+            flex-wrap:   wrap;
+            align-items: center;
+            gap:         var(--hdx-space-1);
+            height:      auto;
+            min-height:  @c-dropdown-m-h;
+            padding:     var(--hdx-space-1) var(--hdx-space-8) var(--hdx-space-1) var(--hdx-space-1);
+
+            .select2-selection__rendered {
+                display:   inline-flex;
+                flex-wrap: wrap;
+                gap:       var(--hdx-space-1);
+                min-width: 0;
+                margin:    0;
+                padding:   0;
+
+                &:empty { display: none; }
+            }
+
+            .select2-selection__choice {
+                .hdx-chip();
+                .hdx-chip-active();
+                .hdx-chip-size-s();
+                max-width: 100%;
+                cursor:    default;
+            }
+
+            .select2-selection__choice__display {
+                min-width:     0;
+                overflow:      hidden;
+                text-overflow: ellipsis;
+                white-space:   nowrap;
+            }
+
+            .select2-selection__choice__remove {
+                .hdx-icon-size(0.875rem);
+                .c-dropdown-close-icon();
+                order:            1;
+                flex-shrink:      0;
+                background-color: currentColor;
+            }
+
+            .select2-search--inline {
+                flex:      1;
+                min-width: 4rem;
+            }
+
+            .select2-search__field {
+                width:            100%;
+                height:           1.5rem;
+                margin:           0;
+                padding:          0 var(--hdx-space-13);
+                background-color: transparent;
+                .hdx-body-s();
+                line-height:      1.5rem;
+                color:            var(--hdx-neutral-95);
+
+                &:focus {
+                    outline: none;
+                }
+            }
+        }
+
+        &.select2-container--focus .select2-selection--multiple {
+            .c-dropdown-field-focus();
         }
 
         .select2-dropdown {
@@ -525,7 +606,7 @@
             }
         }
 
-        .select2-search__field {
+        .select2-search--dropdown .select2-search__field {
             -webkit-appearance: none;
             appearance:         none;
             height:             @c-dropdown-m-h;
@@ -542,10 +623,7 @@
             }
 
             &:focus {
-                background-color: @c-dropdown-bg-hover;
-                border-color:     @c-dropdown-border-color-hover;
-                outline:          1px solid @c-dropdown-border-color-hover;
-                outline-offset:   0;
+                .c-dropdown-field-focus();
             }
         }
 

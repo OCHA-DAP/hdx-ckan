@@ -124,6 +124,7 @@ CSS custom property equivalents (`--hdx-*`) are defined in `v2/foundation.css` (
 | Package Links (sysadmin) | `admin/package_links.html` | Extends `admin/config-item-base.html` (on `v2/sysadmin-base.html`; the page sets only its values); `v2/list-header.html` without a count; one `c-config-item` per stored item in a `c-config-item-list` (fields from `admin/snippets/package_link_fields.html`, a `<template>` copy for New Item); drag reordering, collapse, Delete and Save in `components/config-item.js` on the kept v1 endpoints (sequential delete + update calls, reload, error `c-alert`); see `requirements/087-sysadmin-package-links-v2.md` |
 | Products Menu (sysadmin) | `admin/quick_links.html` | Extends `admin/config-item-base.html`, as Package Links; the same editor (`c-config-item-list`, `components/config-item.js`) on the kept v1 quick-links endpoints, fields from `admin/snippets/quick_link_fields.html` (Title, URL, Open in a new tab, Archived); the stored list feeds the header / footer Products menus and `/crisis-pages`; see `requirements/088-sysadmin-products-menu-v2.md` |
 | Homepage Highlights (sysadmin) | `admin/carousel.html` | Extends `admin/config-item-base.html` with `list_layout='grid'` (two columns from MD); the same editor on the kept v1 carousel endpoints, fields from `admin/snippets/homepage_highlight_fields.html` (thumbnail `c-image-upload` with a large preview and the 50KB / 550px check, Title, URL, Open in a new tab; stored description / embed / buttonText as hidden inputs); the chosen file posts with its card's update; see `requirements/089-sysadmin-homepage-highlights-v2.md` |
+| Custom Pages (sysadmin) | `admin/pages.html`, `pages/edit_page.html` | Both extend `v2/sysadmin-base.html`. Listing: `v2/list-header.html` with a Create button, `table.html` with links, Edit and a per-row delete `c-drawer` (`admin/snippets/custom_page_delete_drawer.html`), DataTables sort (`pages/custom-pages.js`). Form: v1 fields and POST contract, Location / Tags Select2 multi-selects, sections as `c-config-item` cards in form mode (`admin/snippets/custom_page_section_fields.html`, `pages/custom-page-form.js`); see `requirements/090-sysadmin-custom-pages-v2.md` |
 
 ### Pages in holding state (on `page_light.html`)
 
@@ -175,7 +176,7 @@ Each page below extends `page_light.html`, manually overrides `{% block styles %
 - [x] Stats card — `stats-card.html` / `stats-card.less`; KPI figure + label card
 - [x] Member list card — `member-list-card.html` / `member-list-card.less`; avatar + profile links + role/registered line + counters, `caller()` actions body, `--stacked` variant
 - [x] User item — `user-item.html` / `user-item.less`; compact user row: xs avatar (`h.hdx_initials`), name link + optional meta on one line (ellipsis), `caller()` actions at the right end; own `c-user-item-grid` grid (one column, two from MD)
-- [x] Config item — `config-item.html` / `config-item.less` + `config-item.js`; editable item of a sysadmin settings editor: drag handle, `<h2>` title, collapse toggle (`expanded`), Delete, `caller()` fields; own `c-config-item-list` (page markup: items `<ol>`, New Item `<template>`, error `c-alert`, actions row; `--grid` wraps into two columns from MD), whose data attributes drive the JS; file inputs post their chosen file; a New Item card dispatches a bubbling `config-item:add`
+- [x] Config item — `config-item.html` / `config-item.less` + `config-item.js`; editable item of a sysadmin settings editor: drag handle (`draggable`), `<h2>` title (`title_tag`), collapse toggle (`expanded`), Delete, `caller()` fields; own `c-config-item-list` (page markup: items `<ol>`, New Item `<template>`, error `c-alert`, actions row; `--grid` wraps into two columns from MD), whose data attributes drive the JS (`data-config-item-form`: form mode, posted by the page form); file inputs post their chosen file; a New Item card dispatches a bubbling `config-item:add`
 - [x] Request card / item / archive — `request-card.html`, `request-item.html`, `request-archive.html` + `request-archive-row.html` / `request-card.less`, `request-item.less`, `request-archive.less`; HDX Connect dataset group card, one request (avatar, chips with tooltip, clamped message quote, footer bar with `caller()` actions or archived status), and the Archive `<details>` grid
 - [x] Data grid status — `data-grid-status.html` / `data-grid-status.less`; presentational availability swatch (not a real checkbox)
 - [x] Dataviz card — `dataviz-card.html` / `dataviz-card.less`; thumbnail + title + clamped description + date/DATA-link footer + gated Edit link; own `c-dataviz-card-grid` wrapper
@@ -188,7 +189,7 @@ Each page below extends `page_light.html`, manually overrides `{% block styles %
 - [x] Copy button — `copy-button.html` / `copy-button.less`
 - [x] Graph point — `graph-point.html`; styles in `selection.less`; chart data-point dot with focus ring
 - [x] Radio — `radio.html`; styles in `selection.less`
-- [x] Slug preview — `slug-preview.html` / `slug-preview.less` / `slug-preview.js` (page-loaded `v2-slug-preview-scripts`); slug field + "URL: prefix/slug [Edit]" preview, follows a target field (core `$.url.slugify`)
+- [x] Slug preview — `slug-preview.html` / `slug-preview.less` / `slug-preview.js` (page-loaded `v2-slug-preview-scripts`); slug field + "URL: prefix/slug [Edit]" preview (prefix in `[data-slug-preview-prefix]`), follows a target field (core `$.url.slugify`)
 - [x] Image upload — `image-upload.html` / `image-upload.less` / `image-upload.js`; uploaded file or linked URL (blank / attached / web states, CKAN url/upload/clear fields), `image-upload:change` event; optional `link_enabled` / `remove_enabled` / `upload_label`, `preview='l'` (full-width preview box) and a `max_bytes` / `image_width` file check with `check_message`; also initialises inside `config-item:add` targets
 
 Each component file should have:
@@ -227,7 +228,7 @@ Bundle configuration:
 - `hdx_theme/v2-resource-page-styles` — resource page: adds `v2/pages/resource.css`
 - `hdx_theme/v2-resource-page-scripts` — resource page: preloads `v2-datatable-scripts`, adds `v2/pages/resource.js` (Data dictionary AJAX
   load via `datastore_info`; loaded only when `res.datastore_active`)
-- `hdx_theme/v2-datatable-scripts` — DataTables lib (`vendor/datatables-2.3.8/dataTables.min.js`); preloaded by `v2-resource-page-scripts`
+- `hdx_theme/v2-datatable-scripts` — DataTables lib (`vendor/datatables-2.3.8/dataTables.min.js`); preloaded by `v2-resource-page-scripts`; otherwise loaded by the consuming template
 - `hdx_theme/v2-select2-styles` / `v2-select2-scripts` — Select2 4.1.0-rc.0 lib (`vendor/select2-4/select2.min.css` / `select2.min.js`) + `v2/components/select.js` (`select.html` `searchable`); loaded by the consuming template
 - `hdx_theme/v2-slug-preview-scripts` — `v2/components/slug-preview.js` (`slug-preview.html`); uses the core slug plugins already in `base-main`; loaded by the consuming template
 - `hdx_theme/v2-config-item-scripts` — vendored Sortable 1.3.0 (`vendor/sortable/Sortable.js`) + `v2/components/config-item.js` (`c-config-item-list`); loaded by the consuming template
@@ -241,6 +242,8 @@ Bundle configuration:
 - `hdx_theme/v2-dashboard-page-styles` — Dashboard shell (via `v2/dashboard-base.html`): adds `v2/pages/dashboard.css` (left menu, empty state); loaded after `v2-search-page-styles`, whose sidebar/content classes the base reuses
 - `hdx_theme/v2-user-dashboard-page-styles` — User dashboard/settings pages (via `v2/user-dashboard-base.html`): adds `v2/pages/user-dashboard.css`
 - `hdx_theme/v2-sysadmin-page-styles` — Sysadmin pages (via `v2/sysadmin-base.html`): adds `v2/pages/sysadmin.css`
+- `hdx_theme/v2-custom-page-form-page-scripts` — Custom page form: adds `v2/pages/custom-page-form.js` (section type → fields, `hdx_counter`, URL prefix by type)
+- `hdx_theme/v2-custom-pages-page-scripts` — Custom Pages listing: adds `v2/pages/custom-pages.js` (DataTables sort; loaded after `v2-datatable-scripts`)
 - `hdx_theme/v2-hdx-connect-page-styles` / `-scripts` — HDX Connect requests: adds `v2/pages/hdx-connect.css` / `v2/url-nav.js` + `v2/pages/hdx-connect.js` (sort, drawers, Reply / Decline / Yes / No, Maintainer and Organisation filters)
 - `hdx_theme/v2-hdx-connect-scripts` — `v2/pages/hdx-connect.js` only (no `url-nav.js`)
 - `hdx_theme/v2-notifications-settings-page-scripts` — Notifications Settings page: adds `v2/pages/notifications-settings.js` (fills and opens the unsubscribe drawers, reloads after success); requires `notification-platform-util-scripts` loaded first in the template

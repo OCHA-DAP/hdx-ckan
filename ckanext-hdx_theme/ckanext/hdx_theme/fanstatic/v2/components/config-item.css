@@ -47,6 +47,9 @@
 .c-config-item__body[hidden] {
   display: none;
 }
+.c-config-item--static .c-config-item__header {
+  cursor: auto;
+}
 .c-config-item-list,
 .c-config-item-list__items {
   display: flex;

@@ -7,6 +7,7 @@
     var alertEl    = list.querySelector('[data-config-item-error]');
     var addButton  = list.querySelector('[data-config-item-add]');
     var saveButton = list.querySelector('[data-config-item-save]');
+    var formMode   = list.hasAttribute('data-config-item-form');
     var counter    = items.children.length;
     var deletedIds = [];
     var knownIds   = cards().map(function (card) { return card.dataset.configItemId; }).filter(Boolean);
@@ -95,12 +96,14 @@
         });
     }
 
-    Sortable.create(items, {
-      handle: '.c-config-item__header',
-      animation: window.hdxV2.prefersReducedMotion() ? 0 : 250,
-      ghostClass: 'is-dragging',
-      onUpdate: renumber
-    });
+    if (!formMode) {
+      Sortable.create(items, {
+        handle: '.c-config-item__header',
+        animation: window.hdxV2.prefersReducedMotion() ? 0 : 250,
+        ghostClass: 'is-dragging',
+        onUpdate: renumber
+      });
+    }
 
     items.addEventListener('click', function (e) {
       var toggle = e.target.closest('[data-config-item-toggle]');
@@ -129,10 +132,12 @@
       renumber();
       items.lastElementChild.querySelector('[data-config-item]')
         .dispatchEvent(new CustomEvent('config-item:add', { bubbles: true }));
-      items.lastElementChild.querySelector('.c-search-input input, .c-search-input textarea').focus();
+      items.lastElementChild.querySelector(formMode
+        ? '.c-config-item__body :is(input:not([type="hidden"]), select, textarea):not(:disabled)'
+        : '.c-search-input input, .c-search-input textarea').focus();
     });
 
-    saveButton.addEventListener('click', save);
+    if (!formMode) saveButton.addEventListener('click', save);
   }
 
   document.addEventListener('DOMContentLoaded', function () {

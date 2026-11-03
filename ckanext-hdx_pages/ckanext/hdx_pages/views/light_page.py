@@ -26,7 +26,6 @@ check_access = logic.check_access
 render = tk.render
 abort = tk.abort
 log = logging.getLogger(__name__)
-checked = 'checked="checked"'
 
 NotAuthorized = tk.NotAuthorized
 NotFound = logic.NotFound
@@ -203,8 +202,10 @@ def _init_data(data, error_summary, errors):
                                   {'value': 'data_list', 'text': _('Data List')}]}
     if data:
         data['sections'] = json.loads(data.get('sections', ''))
+        if isinstance(data.get('extras'), string_types):
+            data['extras'] = json.loads(data['extras'])
     else:
-        data = {'event': checked, 'ongoing': checked, 'hdx_counter': 0}
+        data = {'hdx_counter': 0}
     extra_vars = {'data': data, 'data_dict': data_dict, 'errors': errors,
                   'error_summary': error_summary, 'action': 'new'}
     return context, extra_vars
@@ -221,6 +222,9 @@ def _populate_sections():
     sections = []
 
     data_dict_temp = clean_dict(dict_fns.unflatten(tuplize_dict(parse_params(request.form))))
+    tag_string = data_dict_temp.get("tag_string", "")
+    if not isinstance(tag_string, string_types):
+        tag_string = ','.join(tag_string)
 
     for _i in range(0, sections_no):
         if "field_section_" + str(_i) + "_type" in request.form and request.form.get(
@@ -250,10 +254,8 @@ def _populate_sections():
                  "extras": json.dumps({"show_title": request.form.get("show_title", "off")}),
                  "sections": json.dumps(sections),
                  "groups": _process_groups(data_dict_temp.get("groups", [])),
-                 "tags": _process_tags(data_dict_temp.get("tag_string", "")),
-                 "tag_string": data_dict_temp.get("tag_string", ""),
-                 request.form.get("type") or 'event': checked,
-                 request.form.get("status") or 'ongoing': checked,
+                 "tags": _process_tags(tag_string),
+                 "tag_string": tag_string,
                  "hdx_counter": len(sections),
                  "id": request.form.get("id"),
                  'state': request.form.get("save_custom_page") or request.form.get("save_as_draft_custom_page")}
@@ -278,7 +280,7 @@ def _process_tags(tag_string):
 def _generate_action_name(_type):
     if _type == 'event':
         return u'hdx_event.read_event'
-    if _type == 'dashboard':
+    if _type in ('dashboard', 'dashboards'):
         return u'hdx_dashboard.read_dashboard'
     return u'hdx_event.read_event'
 
@@ -291,11 +293,13 @@ def _init_extra_vars_edit(extra_vars):
 
     _data = extra_vars.get('data')
     _data['sections'] = json.loads(_data.get('sections', ''))
-    _data['groups'] = logic.get_action('page_group_list')(context, {'id': _data.get('id')})
-    _type = _data['type'] or 'event'
-    _data[_type] = checked
-    _status = _data['status'] or 'ongoing'
-    _data[_status] = checked
+    _data['groups'] = []
+    for group_id in logic.get_action('page_group_list')(context, {'id': _data.get('id')}):
+        group = model.Group.get(group_id)
+        if group:
+            _data['groups'].append(group.name)
+        else:
+            log.warning('Page {} links to missing group {}'.format(_data.get('id'), group_id))
     _data['hdx_counter'] = len(_data['sections'])
     _data['description'] = _data.get('description')
     _data['extras'] = _data.get('extras') or json.loads('{"show_title": "on"}')

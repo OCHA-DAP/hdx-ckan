@@ -48,7 +48,6 @@
 {% set is_disabled = (state == 'disabled') %}
 
 {% set classes = ['c-radio'] %}
-{% if checked     %}{% set classes = classes + ['c-radio--checked']  %}{% endif %}
 {% if is_disabled %}{% set classes = classes + ['c-radio--disabled'] %}{% endif %}
 {% if extra_classes %}{% set classes = classes + [extra_classes]     %}{% endif %}
 

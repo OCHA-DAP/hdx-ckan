@@ -34,6 +34,9 @@
                           inside the label (when label is set).  default: False
   character_count {bool}  Renders an "N characters" .c-form-field__hint counter below
                           the field, kept in sync by input-field.js.  default: False
+  hint          {string}  Help text below the field (may be Markup, e.g. a link),
+                          left-aligned (.c-form-field__hint--start), id <id>-hint,
+                          referenced by the control's aria-describedby.  default: ''
   ─────────────────────────────────────────────────
   Examples
 
@@ -62,6 +65,10 @@
 {% set label         = label         if label         is defined else none %}
 {% set required      = required      if required      is defined else false %}
 {% set character_count = character_count if character_count is defined else False %}
+{% set hint          = hint          if hint          is defined else '' %}
+{% if hint %}
+  {% set input_attrs = dict(input_attrs, **{'aria-describedby': (id ~ '-hint ' ~ input_attrs.get('aria-describedby', '')) | trim}) %}
+{% endif %}
 
 {% set classes = ['c-search-input', 'c-search-input--size-' ~ size] %}
 {% if state == 'active' %}{% set classes = classes + ['c-search-input--active']    %}{% endif %}
@@ -114,6 +121,9 @@
 {% if character_count %}
   {% set char_total = (value or '') | length %}
   <span class="c-form-field__hint">{{ ungettext('{num} character', '{num} characters', char_total).format(num=char_total) }}</span>
+{% endif %}
+{% if hint %}
+  <span class="c-form-field__hint c-form-field__hint--start" id="{{ id }}-hint">{{ hint }}</span>
 {% endif %}
 <span class="c-search-input__error">{% if errors %}{{ errors | join(', ') if errors is iterable and errors is not string else errors }}{% endif %}</span>
 <ul class="c-form-validator__live-feedback" hidden></ul>

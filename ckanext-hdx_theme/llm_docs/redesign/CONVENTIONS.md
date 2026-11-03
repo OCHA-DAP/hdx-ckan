@@ -511,8 +511,8 @@ Each component gets its own file in `components/`. Do not group unrelated compon
 Five distinct components cover form fields; pick by field type, don't extend the wrong one:
 
 - `search-input.html` — search boxes only (`type='search'`).
-- `text-field.html` — generic text/email/password/textarea fields (password-toggle, multiline).
-- `select.html` — native `<select>`-backed fields; `searchable=True` for long option lists (Select2).
+- `text-field.html` — generic text/email/password/textarea fields (password-toggle, multiline, `hint`).
+- `select.html` — native `<select>`-backed fields; `searchable=True` for long option lists (Select2); `multiple=True` for several values (chips with `searchable`).
 - `slug-preview.html` — URL slug fields with a "URL: prefix/slug [Edit]" preview (wraps `text-field.html`).
 - `image-upload.html` — image fields that take an upload or a linked URL (CKAN url/upload/clear fields).
 

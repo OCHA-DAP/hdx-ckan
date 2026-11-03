@@ -62,6 +62,17 @@ table.c-table thead th.dt-orderable-desc::after {
   -webkit-mask-image: url('/icons/chevron-down.svg');
   mask-image: url('/icons/chevron-down.svg');
 }
+table.c-table thead th.dt-orderable-asc .dt-column-order,
+table.c-table thead th.dt-orderable-desc .dt-column-order {
+  position: absolute;
+  inset: 0;
+}
+table.c-table thead th.dt-orderable-asc .dt-column-order:focus-visible,
+table.c-table thead th.dt-orderable-desc .dt-column-order:focus-visible {
+  outline: 2px solid var(--hdx-primary-5);
+  outline-offset: 2px;
+  outline-offset: -2px;
+}
 table.c-table tbody td {
   font-family: var(--hdx-font-body);
   font-size: var(--hdx-fs-xs);
@@ -96,6 +107,10 @@ table.c-table.dataTable {
   border: 1px solid var(--hdx-neutral-1);
   border-radius: var(--hdx-radius-sm);
   overflow: clip;
+}
+.c-table-container .dt-container {
+  border: none;
+  border-radius: 0;
 }
 .dt-container .dt-layout-row.dt-layout-table > .dt-layout-cell {
   overflow-x: auto;

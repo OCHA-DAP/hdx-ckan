@@ -10,8 +10,13 @@
   size          {string}  'm' | 's'  default: 'm'
   label         {string}  Label text above the select.  default: '' (hidden)
   placeholder   {string}  Text of a disabled empty first option, selected while
-                          `selected` is empty. Omit for no such option.  default: ''
-  selected      {string}  Current selected value (if any).  default: ''
+                          `selected` is empty (with `multiple`: Select2's
+                          data-placeholder, no option). Omit for none.  default: ''
+  selected      {string}  Current selected value (if any); a list with
+                          `multiple`.  default: '' ([] with `multiple`)
+  multiple      {bool}    Multi-select: the <select> gets `multiple` and posts
+                          one value per selected option; with `searchable`,
+                          Select2 shows them as chips.  default: False
   state         {string}  'enabled' | 'disabled'  default: 'enabled'
   chevron_src   {string}  Chevron icon path.  default: 'v2/icons/chevron-down.svg'
   extra_classes {string}  Additional classes on the wrapper div.  default: ''
@@ -37,6 +42,8 @@
                           select_attrs loads the options from a user autocomplete
                           endpoint as the user types (at least one character):
                           value = name, text = "fullname (name)" or the name.
+                          With data-source-type="tag" as well, the endpoint is
+                          the tag autocomplete: value = text = the tag name.
                           default: False
   ─────────────────────────────────────────────────
 
@@ -54,12 +61,17 @@
       label='User', placeholder='Username', name='username', id='username',
       select_attrs={'data-source': '/api/2/util/user/autocomplete'},
       searchable=True %}
+
+  {% snippet 'v2/components/select.html',
+      label='Location', name='groups', id='field-groups',
+      options=locations, selected=['sdn', 'tcd'], multiple=True, searchable=True %}
 #}
 
 {% set size             = size             if size             is defined else 'm' %}
 {% set label            = label            if label            is defined else '' %}
 {% set placeholder      = placeholder      if placeholder      is defined else '' %}
-{% set selected         = selected         if selected         is defined else '' %}
+{% set multiple         = multiple         if multiple         is defined else false %}
+{% set selected         = selected         if selected         is defined else ([] if multiple else '') %}
 {% set state            = state            if state            is defined else 'enabled' %}
 {% set chevron_src      = chevron_src      if chevron_src      is defined else 'v2/icons/chevron-down.svg' %}
 {% set extra_classes    = extra_classes    if extra_classes    is defined else '' %}
@@ -94,12 +106,13 @@
           {% if required %}required{% endif %}
           {% if is_disabled %}disabled aria-disabled="true"{% endif %}
           {% if searchable %}data-searchable{% endif %}
+          {% if multiple %}multiple{% if placeholder %} data-placeholder="{{ placeholder }}"{% endif %}{% endif %}
           {% for key, val in select_attrs.items() %} {{ key }}="{{ val }}"{% endfor %}>
-    {% if placeholder %}
+    {% if placeholder and not multiple %}
       <option value="" disabled {% if not selected %}selected{% endif %}>{{ placeholder }}</option>
     {% endif %}
     {% for value, opt_label in options.items() %}
-      <option value="{{ value }}" {% if selected == value %}selected{% endif %}
+      <option value="{{ value }}" {% if ((value in selected) if multiple else (selected == value)) %}selected{% endif %}
         {% if option_attrs.get(value) %}{% for attr_key, attr_val in option_attrs[value].items() %}{{ attr_key }}="{{ attr_val }}" {% endfor %}{% endif %}>{{ opt_label }}</option>
     {% endfor %}
   </select>

@@ -227,6 +227,8 @@ the same Afghanistan dataset list; "Datasets to higlight" (typo).
 | `id` | string | required | Unique prefix: body `<id>-body`, title `<id>-heading` (D23), Delete `<id>-delete` |
 | `item_id` | string | `''` | Stored id → `data-config-item-id`; empty for a new item |
 | `expanded` | bool | `True` | `False` renders `aria-expanded="false"` and the body `hidden` (D20) |
+| `draggable` | bool | `True` | `False` drops the handle and adds `c-config-item--static` (090 §6.6) |
+| `title_tag` | string | `'h2'` | Title element (090 §6.6) |
 | `caller()` | block | — | The fields |
 
 Markup:
@@ -327,6 +329,8 @@ On `DOMContentLoaded`, for each `[data-config-item-list]`:
 - **Delete:** a card with `data-config-item-id` queues that id; the `<li>` is removed and the list renumbered;
   focus moves to the next card's toggle, or to New Item when no card follows. No confirmation; nothing is sent
   until Save.
+- **Form mode** (`data-config-item-form` on the list): no Reorder and no Save; New Item focuses the card's first
+  enabled control; the surrounding page form posts the fields (090 §6.6).
 - **Save:**
   1. Clear the field errors and hide the alert. For each `[required]` control with an empty trimmed value:
      `hdxV2.setFieldError(control, control.dataset.requiredMessage)`, expand its card. If any failed, focus the

@@ -1,7 +1,8 @@
 // ============================================================
 // pages/sysadmin.less
 // Sysadmin pages (v2/sysadmin-base.html) — v2 page-specific styles
-// Figma: llm_docs/redesign/figma_exports/xl-sysadmin-all-sysadmins.html
+// Figma: llm_docs/redesign/figma_exports/xl-sysadmin-all-sysadmins.html,
+//        xl-sysadmin-custom-pages.html
 // ============================================================
 
 @import "../mixins.less";
@@ -19,5 +20,74 @@
     &__actions {
         display:         flex;
         justify-content: flex-end;
+    }
+}
+
+// ── Custom Pages: listing table ───────────────────────────────
+.hdx-v2-custom-pages-table {
+    td:nth-child(-n+2),
+    td:last-child {
+        max-width: none;
+        overflow:  visible;
+    }
+
+    &__actions {
+        display:     flex;
+        align-items: center;
+        gap:         var(--hdx-space-3);
+    }
+}
+
+// ── Custom Pages: create / edit form ──────────────────────────
+.hdx-v2-custom-page-form {
+    display:        flex;
+    flex-direction: column;
+    gap:            var(--hdx-space-12);
+
+    @media (min-width: @hdx-bp-md) { width: 80%; }
+
+    &__group {
+        display:        flex;
+        flex-direction: column;
+        gap:            var(--hdx-space-5);
+    }
+
+    &__section-title {
+        .hdx-section-title();
+    }
+
+    &__checkbox {
+        .v2-checkbox-row();
+    }
+
+    &__fieldset {
+        min-width: 0;
+        margin:    0;
+        padding:   0;
+        border:    none;
+
+        legend {
+            margin-bottom: var(--hdx-space-2);
+            padding:       0;
+        }
+    }
+
+    &__options {
+        display:        flex;
+        flex-direction: column;
+        align-items:    flex-start;
+        gap:            var(--hdx-space-2);
+    }
+
+    &__actions,
+    &__save {
+        display:     flex;
+        flex-wrap:   wrap;
+        align-items: center;
+        gap:         var(--hdx-space-3);
+    }
+
+    &__save {
+        margin-left: auto;
     }
 }
