@@ -6,7 +6,7 @@ bleach==6.1.0
 blinker==1.8.2
 certifi>=2024.7.4
 click==8.1.7
-dominate==2.9.1
+dominate==3.1.0
 feedgen==1.0.0
 Flask==3.0.3
 Flask-Babel==4.0.0
