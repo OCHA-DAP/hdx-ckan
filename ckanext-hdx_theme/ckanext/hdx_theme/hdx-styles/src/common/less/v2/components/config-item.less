@@ -1,6 +1,7 @@
 // ============================================================
 // c-config-item      — editable, reorderable item of a sysadmin
-//                      settings editor (handle, title, toggle, Delete, fields);
+//                      settings editor (handle, title, Move up / down, toggle,
+//                      Delete, fields, optional footer Delete);
 //                      --static: no drag handle, no grab cursor
 // c-config-item-list — its list: items, error alert, actions row;
 //                      --grid: two columns from MD up
@@ -48,6 +49,16 @@
         cursor:      auto;
     }
 
+    &__move {
+        display:     flex;
+        align-items: center;
+        gap:         var(--hdx-space-2);
+    }
+
+    &__sort {
+        .hdx-body-s();
+    }
+
     &__toggle[aria-expanded="false"] svg {
         transform: rotate(180deg);
     }
@@ -58,6 +69,11 @@
         gap:            var(--hdx-space-2);
 
         &[hidden] { display: none; }
+    }
+
+    &__footer {
+        display:         flex;
+        justify-content: flex-end;
     }
 
     &--static &__header {
@@ -79,6 +95,8 @@
         padding:    0;
 
         > .is-dragging { opacity: 0.3; }
+
+        &:not(:has(> li)) { display: none; }
     }
 
     &--grid &__items {

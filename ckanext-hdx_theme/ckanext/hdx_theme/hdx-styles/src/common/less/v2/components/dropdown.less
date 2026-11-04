@@ -505,7 +505,7 @@
             }
         }
 
-        // Multiple: chips (the c-selection-item look) + inline search
+        // Multiple: chips (the c-label size S look, grey) + inline search
         .select2-selection--multiple {
             display:     flex;
             flex-wrap:   wrap;
@@ -527,9 +527,9 @@
             }
 
             .select2-selection__choice {
-                .hdx-chip();
-                .hdx-chip-active();
-                .hdx-chip-size-s();
+                .hdx-label();
+                .hdx-label-size-s();
+                .hdx-label-grey();
                 max-width: 100%;
                 cursor:    default;
             }
@@ -650,5 +650,9 @@
         .select2-results__message {
             color: var(--hdx-neutral-7);
         }
+    }
+
+    &.c-dropdown--chips-cyan .select2-container--hdx-v2 .select2-selection--multiple .select2-selection__choice {
+        .hdx-label-cyan();
     }
 }

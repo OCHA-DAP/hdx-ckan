@@ -154,6 +154,21 @@
   position: relative;
   line-height: var(--hdx-lh-normal);
 }
+.c-radio__description {
+  font-family: var(--hdx-font-body);
+  font-size: var(--hdx-fs-s);
+  font-weight: var(--hdx-fw-regular);
+  line-height: var(--hdx-lh-normal);
+  flex-basis: 100%;
+  color: var(--hdx-neutral-7);
+  overflow-wrap: anywhere;
+}
+.c-radio--has-description {
+  align-items: flex-start;
+}
+.c-radio--has-description .c-radio__body {
+  flex-wrap: wrap;
+}
 input:checked ~ .c-radio__input .c-radio__ring {
   border: 1px solid var(--hdx-primary-5);
   background: transparent;

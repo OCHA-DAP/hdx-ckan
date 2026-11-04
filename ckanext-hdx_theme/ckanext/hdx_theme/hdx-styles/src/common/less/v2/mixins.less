@@ -440,35 +440,28 @@
     &::after  { content: '\201D'; }
 }
 
-// ── Chip ────────────────────────────────────────────────────────
-// The c-selection-item look: light chip, active state, size S.
+// ── Label ───────────────────────────────────────────────────────
+// The c-label look: base, size S, grey and cyan colours.
 
-.hdx-chip() {
-    display:          inline-flex;
-    align-items:      center;
-    justify-content:  center;
-    border-radius:    var(--hdx-radius-sm);
-    box-shadow:       var(--hdx-shadow-sm);
-    background-color: var(--hdx-neutral-0);  // #fff
-    border:           1px solid var(--hdx-neutral-2);  // #d8e0e1
-    box-sizing:       border-box;
-    font-family:      var(--hdx-font-body);
-    font-weight:      var(--hdx-fw-medium);
-    color:            var(--hdx-neutral-8);
+.hdx-label() {
+    display:         inline-flex;
+    align-items:     center;
+    justify-content: center;
+    border-radius:   var(--hdx-radius-md);  // 4 px
+    .hdx-body-regular-base();
+    white-space:     nowrap;
+    box-sizing:      border-box;
+    text-decoration: none;
 }
 
-.hdx-chip-active() {
-    border-color: var(--hdx-neutral-95);  // #101212
-    color:        var(--hdx-neutral-95);
-    box-shadow:   none;
+.hdx-label-size-s() {
+    padding:   var(--hdx-space-15) var(--hdx-space-13);  // 2 6
+    gap:       var(--hdx-space-1);  //  4 px
+    font-size: var(--hdx-fs-s);  // 14 px
 }
 
-.hdx-chip-size-s() {
-    height:    1.5rem;  // 24 px
-    padding:   var(--hdx-space-13);  //  6 px
-    gap:       var(--hdx-space-1);   //  4 px
-    font-size: var(--hdx-fs-xs);     // 12 px
-}
+.hdx-label-grey() { background-color: var(--hdx-neutral-1); color: var(--hdx-neutral-95); }  // whitesmoke-200
+.hdx-label-cyan() { background-color: var(--hdx-brand-1);   color: var(--hdx-brand-85);   }  // lightcyan
 
 // ── Focus ring ──────────────────────────────────────────────────
 // Keyboard-focus outline. Inverse variant is for dark surfaces

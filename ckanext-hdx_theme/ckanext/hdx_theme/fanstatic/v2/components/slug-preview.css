@@ -16,6 +16,9 @@
 .c-slug-preview__preview[hidden] {
   display: none;
 }
+.c-slug-preview__description {
+  flex-basis: 100%;
+}
 .c-slug-preview__label {
   font-family: var(--hdx-font-body);
   font-size: var(--hdx-fs-m);

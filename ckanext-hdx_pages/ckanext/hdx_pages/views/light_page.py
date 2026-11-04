@@ -195,11 +195,11 @@ def _init_data(data, error_summary, errors):
                u'auth_user_obj': g.userobj}
     errors = errors or {}
     data_dict = {'content_type': [{'value': 'empty', 'text': _('Select content type')},
-                                  {'value': 'description', 'text': _('Description/Text')},
+                                  {'value': 'description', 'text': _('Description/text')},
                                   {'value': 'map', 'text': _('Map')},
-                                  {'value': 'key_figures', 'text': _('Key Figures')},
-                                  {'value': 'interactive_data', 'text': _('Interactive Data')},
-                                  {'value': 'data_list', 'text': _('Data List')}]}
+                                  {'value': 'key_figures', 'text': _('Key figures')},
+                                  {'value': 'interactive_data', 'text': _('Interactive data')},
+                                  {'value': 'data_list', 'text': _('Data list')}]}
     if data:
         data['sections'] = json.loads(data.get('sections', ''))
         if isinstance(data.get('extras'), string_types):

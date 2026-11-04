@@ -25,6 +25,9 @@
                                 rewrite.  default: ''
   preview_placeholder {string}  Preview text while the slug is empty.  default: '<slug>'
   target_id           {string}  id of the field the slug follows.  default: ''
+  description         {string}  Help text under the field label (text-field.html
+                                `description`), repeated above the preview row.
+                                default: ''
   extra_classes       {string}  default: ''
   ─────────────────────────────────────────────────
   Example
@@ -45,6 +48,7 @@
 {% set prefix              = prefix              if prefix              is defined else '' %}
 {% set preview_placeholder = preview_placeholder if preview_placeholder is defined else '<slug>' %}
 {% set target_id           = target_id           if target_id           is defined else '' %}
+{% set description         = description         if description         is defined else '' %}
 {% set extra_classes       = extra_classes       if extra_classes       is defined else '' %}
 {% set field_id = id ~ '-field' %}
 
@@ -61,9 +65,13 @@
         required=required,
         value=value,
         placeholder=placeholder,
+        description=description,
         errors=errors %}
   </div>
   <p class="c-slug-preview__preview" data-slug-preview-preview hidden>
+    {% if description %}
+    <span class="c-form-field__description c-slug-preview__description">{{ description }}</span>
+    {% endif %}
     <span class="c-slug-preview__label">{{ label }}:</span>
     <span class="c-slug-preview__url"><span data-slug-preview-prefix>{{ prefix }}</span><span data-slug-preview-value data-slug-preview-placeholder="{{ preview_placeholder }}">{{ value or preview_placeholder }}</span></span>
     {% snippet 'v2/components/text-button.html',

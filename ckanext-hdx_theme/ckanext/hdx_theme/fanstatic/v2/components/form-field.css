@@ -17,6 +17,14 @@
 .c-form-field__required {
   color: var(--hdx-error-5);
 }
+.c-form-field__description {
+  font-family: var(--hdx-font-body);
+  font-size: var(--hdx-fs-m);
+  font-weight: var(--hdx-fw-regular);
+  line-height: var(--hdx-lh-normal);
+  color: var(--hdx-neutral-8);
+  display: block;
+}
 .c-form-field__hint {
   font-family: var(--hdx-font-body);
   font-size: var(--hdx-fs-s);

@@ -1203,6 +1203,16 @@
             selected=['sd', 'td'], multiple=True, searchable=True %}
       </div>
     </div>
+
+    <h2 class="demo-subsection__heading">Select — multiple, cyan chips (chip_color='cyan')</h2>
+    <div class="demo-row--column demo-max-width-l">
+      <div class="c-form-field">
+        {% snippet 'v2/components/select.html',
+            label='Locations', placeholder='Select locations', id='demo-select-multiple-cyan',
+            name='demo-select-multiple-cyan', options={'sd': 'Sudan', 'td': 'Chad', 'ml': 'Mali', 'ne': 'Niger'},
+            selected=['sd', 'ml'], multiple=True, searchable=True, chip_color='cyan' %}
+      </div>
+    </div>
   </section>
 
   <br><br><br><br><br>
@@ -1313,6 +1323,15 @@
             size='m', multiline=True, id='demo-hint-textarea', name='demo-hint-textarea',
             label='Long description',
             hint=('You can use <a href="#">Markdown formatting</a> here' | safe) %}
+      </div>
+    </div>
+
+    <h2 class="demo-subsection__heading">Text field — with description (description)</h2>
+    <div class="demo-row--column demo-max-width-l">
+      <div class="c-form-field">
+        {% snippet 'v2/components/text-field.html',
+            size='m', id='demo-description-input', name='demo-description-input',
+            label='Keywords', description='Separate the keywords with commas.' %}
       </div>
     </div>
 
@@ -1591,6 +1610,19 @@
       </div>
     </div>
 
+    <h2 class="demo-subsection__heading">Anchor links — numbered (c-anchor-links--numbered), with heading</h2>
+    <div class="demo-row demo-row--flex-start">
+      <div class="demo-anchor-links-sidebar">
+        {% snippet 'v2/components/anchor-links.html',
+            items=[
+              {'label': 'Describe crisis page', 'href': '#describe', 'active': True},
+              {'label': 'Build sections',       'href': '#build',    'active': False},
+            ],
+            heading='On this page',
+            extra_classes='c-anchor-links--numbered' %}
+      </div>
+    </div>
+
     <h2 class="demo-subsection__heading">Anchor links — mobile dropdown (default label = current section)</h2>
     <div class="demo-row demo-row--flex-start">
       {% snippet 'v2/components/anchor-links.html',
@@ -1748,6 +1780,16 @@
       {% snippet 'v2/components/radio.html',
           name='demo-hint-disabled', value='d', label='Disabled checked with info',
           checked=True, state='disabled', hint=True, hint_text='Additional context for this option' %}
+    </div>
+
+    <h2 class="demo-subsection__heading">Radio inputs — with description (description)</h2>
+    <div class="demo-row--column">
+      {% snippet 'v2/components/radio.html',
+          name='demo-description', value='a', label='Event',
+          description='URL: https://example.org/event/page_id', checked=True %}
+      {% snippet 'v2/components/radio.html',
+          name='demo-description', value='b', label='Dashboards',
+          description='URL: https://example.org/dashboards/page_id' %}
     </div>
 
     <h2 class="demo-subsection__heading">Toggles</h2>

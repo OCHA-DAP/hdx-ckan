@@ -16,6 +16,10 @@
                           default: False
   hint_text     {string}  Tooltip text shown on icon hover/focus. When empty,
                           the icon renders without a tooltip.  default: ''
+  description   {string}  Second line under the label (e.g. a URL), id
+                          <id>-description, referenced by the input's
+                          aria-describedby; adds c-radio--has-description.
+                          default: ''
   id            {string}  Input id (generated from name+value if omitted).
                           default: ''
   extra_classes {string}  default: ''
@@ -32,6 +36,10 @@
   {% snippet 'v2/components/radio.html',
       name='format', value='csv', label='CSV',
       hint=True, hint_text='Comma-separated values' %}
+
+  {% snippet 'v2/components/radio.html',
+      name='type', value='event', label='Event',
+      description='URL: https://data.humdata.org/event/page_id' %}
 #}
 
 {% set name          = name          if name          is defined else 'radio-group' %}
@@ -41,14 +49,19 @@
 {% set state         = state         if state         is defined else 'enabled' %}
 {% set hint          = hint          if hint          is defined else False %}
 {% set hint_text     = hint_text     if hint_text     is defined else '' %}
+{% set description   = description   if description   is defined else '' %}
 {% set id            = id            if id            is defined else (name ~ '-' ~ value) %}
 {% set extra_classes = extra_classes if extra_classes is defined else '' %}
 {% set attrs         = attrs         if attrs         is defined else {} %}
+{% if description %}
+  {% set attrs = dict(attrs, **{'aria-describedby': (id ~ '-description ' ~ attrs.get('aria-describedby', '')) | trim}) %}
+{% endif %}
 
 {% set is_disabled = (state == 'disabled') %}
 
 {% set classes = ['c-radio'] %}
 {% if is_disabled %}{% set classes = classes + ['c-radio--disabled'] %}{% endif %}
+{% if description %}{% set classes = classes + ['c-radio--has-description'] %}{% endif %}
 {% if extra_classes %}{% set classes = classes + [extra_classes]     %}{% endif %}
 
 <label class="{{ classes | join(' ') }}" for="{{ id }}">
@@ -69,7 +82,7 @@
     <span class="c-radio__dot"></span>
   </span>
 
-  {% if label or hint %}
+  {% if label or hint or description %}
     <span class="c-radio__body">
 
       {% if label %}
@@ -80,6 +93,10 @@
         {% snippet 'v2/components/info-icon.html',
             aria_label='More information about ' ~ label,
             tooltip_text=hint_text, tooltip_id=id ~ '-tooltip' %}
+      {% endif %}
+
+      {% if description %}
+        <span class="c-radio__description" id="{{ id }}-description" aria-hidden="true">{{ description }}</span>
       {% endif %}
 
     </span>

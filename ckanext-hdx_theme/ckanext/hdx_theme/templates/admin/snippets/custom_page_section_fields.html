@@ -39,11 +39,11 @@
 
 {% for field, label, placeholder, value in [
     ('data_url', _('Data URL'), _('Enter URL'), section.data_url),
-    ('section_title', _('Title of Section'), _('Title of Section (optional)'), section.section_title),
-    ('section_description', _('Description (optional)'), _('eg. Description of the section'), section.description),
-    ('section_long_description', _('Long Description'), _('eg. Long Description of the section'), section.long_description),
-    ('max_height', _('Max Height'), _('400px recommended'), section.max_height),
-    ('m_max_height', _('Mobile Max Height'), _('400px recommended'), section.m_max_height)] %}
+    ('section_title', _('Title of the section'), _('Title of Section (optional)'), section.section_title),
+    ('section_description', _('Description'), _('eg. Description of the section'), section.description),
+    ('section_long_description', _('Long description'), _('eg. Long Description of the section'), section.long_description),
+    ('max_height', _('Max height'), _('400px recommended'), section.max_height),
+    ('m_max_height', _('Mobile max height'), _('400px recommended'), section.m_max_height)] %}
   {% set long = field == 'section_long_description' %}
   <div class="c-form-field" data-section-field="{{ field }}"{% if field not in used %} hidden{% endif %}>
     {% snippet 'v2/components/text-field.html',

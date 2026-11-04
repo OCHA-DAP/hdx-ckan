@@ -411,21 +411,18 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border-radius: var(--hdx-radius-sm);
-  box-shadow: var(--hdx-shadow-sm);
-  background-color: var(--hdx-neutral-0);
-  border: 1px solid var(--hdx-neutral-2);
-  box-sizing: border-box;
+  border-radius: var(--hdx-radius-md);
   font-family: var(--hdx-font-body);
-  font-weight: var(--hdx-fw-medium);
-  color: var(--hdx-neutral-8);
-  border-color: var(--hdx-neutral-95);
-  color: var(--hdx-neutral-95);
-  box-shadow: none;
-  height: 1.5rem;
-  padding: var(--hdx-space-13);
+  font-weight: var(--hdx-fw-regular);
+  line-height: var(--hdx-lh-normal);
+  white-space: nowrap;
+  box-sizing: border-box;
+  text-decoration: none;
+  padding: var(--hdx-space-15) var(--hdx-space-13);
   gap: var(--hdx-space-1);
-  font-size: var(--hdx-fs-xs);
+  font-size: var(--hdx-fs-s);
+  background-color: var(--hdx-neutral-1);
+  color: var(--hdx-neutral-95);
   max-width: 100%;
   cursor: default;
 }
@@ -556,4 +553,8 @@
 }
 .c-dropdown--native .select2-container--hdx-v2 .select2-results__message {
   color: var(--hdx-neutral-7);
+}
+.c-dropdown--native.c-dropdown--chips-cyan .select2-container--hdx-v2 .select2-selection--multiple .select2-selection__choice {
+  background-color: var(--hdx-brand-1);
+  color: var(--hdx-brand-85);
 }

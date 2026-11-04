@@ -3,25 +3,36 @@
   Path:    templates/v2/components/config-item.html
 
   Renders a c-config-item — one editable, reorderable item of a sysadmin
-  settings editor: a header with a drag handle, the title (<h2>), a collapse
-  toggle and Delete, above the caller's fields. Items go in a
-  c-config-item-list (page markup, see the example), whose data attributes
-  drive components/config-item.js (v2-config-item-scripts bundle): drag
-  reordering, collapse, New Item, Delete and Save. With
-  data-config-item-form on the list (form mode) the items are posted by the
-  surrounding page form: no reordering, no Save, no AJAX.
+  settings editor: a header with a drag handle, the title (<h2>), optional
+  Move up / down, a collapse toggle and Delete (or a footer Delete), above
+  the caller's fields. Items go in a c-config-item-list (page markup, see the
+  example), whose data attributes drive components/config-item.js
+  (v2-config-item-scripts bundle): drag reordering, Move up / down, collapse,
+  New Item, Delete and Save. With data-config-item-form on the list (form
+  mode) the items are posted by the surrounding page form: no drag
+  reordering, no Save, no AJAX.
 
   Parameters
   ─────────────────────────────────────────────────
   title         {string}  Header text, e.g. 'Package Links Item 1'.  Required.
   id            {string}  Unique id prefix: <id>-heading (title), <id>-body,
-                          <id>-delete.  Required.
+                          <id>-delete, <id>-move-up, <id>-move-down.  Required.
   item_id       {string}  Stored item id (data-config-item-id); empty for an
                           unsaved item.  default: ''
   expanded      {bool}    Render the body open.  default: True
   draggable     {bool}    Render the drag handle; False adds
                           c-config-item--static (no grab cursor).  default: True
   title_tag     {string}  Title element.  default: 'h2'
+  collapsible   {bool}    Render the collapse toggle; False keeps the body
+                          open and makes the title focusable (tabindex -1),
+                          so Delete can move focus to it.  default: True
+  move_buttons  {bool}    Render "Sort:" with Move up / Move down buttons in
+                          the header; config-item.js moves the item, disables
+                          the first up / last down and announces the position
+                          in the list's [data-config-item-status].  default: False
+  delete_position {string}  'header' | 'footer' (a row after the fields).
+                          default: 'header'
+  delete_label  {string}  Delete button text.  default: 'Delete'
   caller()      block     The item's fields.
   ─────────────────────────────────────────────────
   Example
@@ -47,6 +58,10 @@
       ...New Item button with data-config-item-add, Save button with data-config-item-save...
     </div>
   </div>
+
+  With move_buttons, the list also carries
+  data-move-message="{{ _('Moved to position {n} of {total}') }}" and
+  <span class="sr-only" aria-live="polite" data-config-item-status></span>.
 #}
 
 {% set title    = title    if title    is defined else '' %}
@@ -55,14 +70,47 @@
 {% set expanded  = expanded  if expanded  is defined else True %}
 {% set draggable = draggable if draggable is defined else True %}
 {% set title_tag = title_tag if title_tag is defined else 'h2' %}
+{% set collapsible     = collapsible     if collapsible     is defined else True %}
+{% set move_buttons    = move_buttons    if move_buttons    is defined else False %}
+{% set delete_position = delete_position if delete_position is defined else 'header' %}
+{% set delete_label    = delete_label    if delete_label    is defined else _('Delete') %}
+{% set expanded = expanded or not collapsible %}
+
+{% set delete_button %}
+      {% snippet 'v2/components/text-button.html',
+          style='tertiary', size='s', label=delete_label,
+          icon_src='v2/icons/delete.svg',
+          tag='button',
+          attrs={
+            'id': id ~ '-delete',
+            'aria-labelledby': id ~ '-delete ' ~ id ~ '-heading',
+            'data-config-item-delete': ''
+          } %}
+{% endset %}
 
 <div class="c-config-item{% if not draggable %} c-config-item--static{% endif %}" data-config-item{% if item_id %} data-config-item-id="{{ item_id }}"{% endif %}>
   <div class="c-config-item__header">
     {% if draggable %}
     <span class="c-config-item__handle" aria-hidden="true">{{ h.hdx_v2_icon('v2/icons/format-paragraph-spacing.svg') }}</span>
     {% endif %}
-    <{{ title_tag }} class="c-config-item__title" id="{{ id }}-heading" data-config-item-title>{{ title }}</{{ title_tag }}>
+    <{{ title_tag }} class="c-config-item__title" id="{{ id }}-heading"{% if not collapsible %} tabindex="-1"{% endif %} data-config-item-title>{{ title }}</{{ title_tag }}>
     <div class="c-config-item__actions">
+      {% if move_buttons %}
+      <div class="c-config-item__move">
+        <span class="c-config-item__sort" aria-hidden="true">{{ _('Sort:') }}</span>
+        {% for direction, label, icon in [('up', _('Move up'), 'chevron-up'), ('down', _('Move down'), 'chevron-down')] %}
+          {% snippet 'v2/components/button.html',
+              type='icon-only', style='tertiary', size='s', label=label,
+              icon_src='v2/icons/' ~ icon ~ '.svg',
+              attrs={
+                'id': id ~ '-move-' ~ direction,
+                'aria-labelledby': id ~ '-move-' ~ direction ~ ' ' ~ id ~ '-heading',
+                'data-config-item-move': direction
+              } %}
+        {% endfor %}
+      </div>
+      {% endif %}
+      {% if collapsible %}
       {% snippet 'v2/components/button.html',
           type='icon-only', style='tertiary', size='s',
           icon_src='v2/icons/chevron-up.svg',
@@ -73,18 +121,14 @@
             'aria-labelledby': id ~ '-heading',
             'data-config-item-toggle': ''
           } %}
-      {% snippet 'v2/components/text-button.html',
-          style='tertiary', size='s', label=_('Delete'),
-          icon_src='v2/icons/delete.svg',
-          tag='button',
-          attrs={
-            'id': id ~ '-delete',
-            'aria-labelledby': id ~ '-delete ' ~ id ~ '-heading',
-            'data-config-item-delete': ''
-          } %}
+      {% endif %}
+      {% if delete_position == 'header' %}{{ delete_button }}{% endif %}
     </div>
   </div>
   <div class="c-config-item__body" id="{{ id }}-body"{% if not expanded %} hidden{% endif %}>
     {{ caller() }}
   </div>
+  {% if delete_position == 'footer' %}
+  <div class="c-config-item__footer">{{ delete_button }}</div>
+  {% endif %}
 </div>

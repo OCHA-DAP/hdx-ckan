@@ -7,6 +7,7 @@
     var alertEl    = list.querySelector('[data-config-item-error]');
     var addButton  = list.querySelector('[data-config-item-add]');
     var saveButton = list.querySelector('[data-config-item-save]');
+    var statusEl   = list.querySelector('[data-config-item-status]');
     var formMode   = list.hasAttribute('data-config-item-form');
     var counter    = items.children.length;
     var deletedIds = [];
@@ -23,8 +24,38 @@
       });
     }
 
+    function refreshMove() {
+      var all = cards();
+      all.forEach(function (card, index) {
+        var up = card.querySelector('[data-config-item-move="up"]');
+        if (!up) return;
+        window.hdxV2.setDisabled(up, index === 0);
+        window.hdxV2.setDisabled(card.querySelector('[data-config-item-move="down"]'), index === all.length - 1);
+      });
+    }
+
+    function move(button) {
+      var card    = button.closest('[data-config-item]');
+      var row     = card.parentElement;
+      var up      = button.getAttribute('data-config-item-move') === 'up';
+      var sibling = up ? row.previousElementSibling : row.nextElementSibling;
+      if (up) {
+        sibling.before(row);
+      } else {
+        sibling.after(row);
+      }
+      renumber();
+      refreshMove();
+      (button.disabled ? card.querySelector('[data-config-item-move]:not(:disabled)') : button).focus();
+      var all = cards();
+      statusEl.textContent = list.dataset.moveMessage
+        .replace('{n}', all.indexOf(card) + 1)
+        .replace('{total}', all.length);
+    }
+
     function setExpanded(card, expanded) {
-      card.querySelector('[data-config-item-toggle]').setAttribute('aria-expanded', String(expanded));
+      var toggle = card.querySelector('[data-config-item-toggle]');
+      if (toggle) toggle.setAttribute('aria-expanded', String(expanded));
       card.querySelector('.c-config-item__body').hidden = !expanded;
     }
 
@@ -111,6 +142,11 @@
         setExpanded(toggle.closest('[data-config-item]'), toggle.getAttribute('aria-expanded') !== 'true');
         return;
       }
+      var moveButton = e.target.closest('[data-config-item-move]');
+      if (moveButton) {
+        move(moveButton);
+        return;
+      }
       var deleteButton = e.target.closest('[data-config-item-delete]');
       if (!deleteButton) return;
       var card = deleteButton.closest('[data-config-item]');
@@ -119,7 +155,8 @@
       if (card.dataset.configItemId) deletedIds.push(card.dataset.configItemId);
       row.remove();
       renumber();
-      (next ? next.querySelector('[data-config-item-toggle]') : addButton).focus();
+      refreshMove();
+      (next ? next.querySelector('[data-config-item-toggle]') || next.querySelector('[data-config-item-title]') : addButton).focus();
     });
 
     items.addEventListener('input', function (e) {
@@ -130,6 +167,7 @@
       counter += 1;
       items.insertAdjacentHTML('beforeend', template.innerHTML.replace(/__index__/g, counter));
       renumber();
+      refreshMove();
       items.lastElementChild.querySelector('[data-config-item]')
         .dispatchEvent(new CustomEvent('config-item:add', { bubbles: true }));
       items.lastElementChild.querySelector(formMode
@@ -138,6 +176,7 @@
     });
 
     if (!formMode) saveButton.addEventListener('click', save);
+    refreshMove();
   }
 
   document.addEventListener('DOMContentLoaded', function () {

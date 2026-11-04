@@ -1,7 +1,7 @@
 {% extends "v2/sysadmin-base.html" %}
 
 {% set nav_active = 'custom_pages' %}
-{% set page_label = _('Edit custom page') if data.id else _('Create custom page') %}
+{% set page_label = _('Edit crisis page') if data.id else _('Create crisis page') %}
 {% set errors = errors or {} %}
 {% set page_type = data.type or 'event' %}
 {% set page_status = data.status or 'ongoing' %}
@@ -23,12 +23,25 @@
 {% for option in data_dict.content_type %}
   {% do type_options.update({option.value: option.text}) %}
 {% endfor %}
+{% set section_card = {
+    'draggable': False, 'title_tag': 'h3',
+    'move_buttons': True, 'collapsible': False,
+    'delete_position': 'footer', 'delete_label': _('Delete this section')} %}
 
 {% block breadcrumb_items %}
   {% set crumbs = [{'label': nav.section.label, 'href': nav.section['items'][0].href}] if nav.section else [] %}
   {% set crumbs = crumbs + [{'label': _('Custom Pages'), 'href': h.url_for('hdx_custom_pages.index')},
                             {'label': page_label, 'href': ''}] %}
   {% snippet 'v2/components/breadcrumb.html', items=crumbs %}
+{% endblock %}
+
+{% block secondary_content %}
+  {% snippet 'v2/components/anchor-links.html',
+      items=[
+        {'label': _('Describe crisis page'), 'href': '#describe-crisis-page', 'active': True},
+        {'label': _('Build sections'), 'href': '#build-sections'}],
+      heading=_('On this page'),
+      extra_classes='c-anchor-links--numbered' %}
 {% endblock %}
 
 {% block styles %}
@@ -61,10 +74,12 @@
 
   {% snippet 'v2/list-header.html',
       list_title=page_label,
+      list_subtitle=_('You can use this form to create a custom page for different sections of the site (such as an event page). When you finish, save the page, or save it as a draft that only sysadmins can see.'),
       title_tag='h1',
       title_size='dashboard',
       show_controls=False,
       show_filters=False %}
+  <p class="hdx-v2-custom-page-form__note">{{ _('Required sections and fields are marked with an asterisk (*).') }}</p>
 
   <form id="create_page_form" class="hdx-v2-custom-page-form" method="post" enctype="multipart/form-data">
     {{ h.csrf_input() }}
@@ -73,139 +88,146 @@
       {% snippet 'v2/components/alert.html', message=other_errors | join(' '), dismissible=False %}
     {% endif %}
 
-    <section class="hdx-v2-custom-page-form__group">
-      <h2 class="hdx-v2-custom-page-form__section-title">{{ _('Page details') }}</h2>
+    <section id="describe-crisis-page" class="hdx-v2-content-columns hdx-v2-content-columns--stack hdx-v2-custom-page-form__group">
+      <h2 class="hdx-v2-content-columns__sidebar hdx-v2-custom-page-form__group-title">{{ _('Describe crisis page') }}<span class="c-form-field__required" aria-hidden="true"> *</span></h2>
 
-      <div class="c-form-field">
-        {% snippet 'v2/components/text-field.html',
-            size='m', name='title', id='field_title',
-            label=_('Title of the page'), required=True,
-            value=data.title or '', placeholder=_('eg. A descriptive title'),
-            errors=errors.title %}
-      </div>
-
-      {% snippet 'v2/components/slug-preview.html',
-          name='name', id='field_name', label=_('URL'), required=True,
-          value=data.name or '', placeholder=_('eg. page_id'),
-          prefix=slug_prefixes[page_type] or slug_prefixes.event, preview_placeholder='page_id',
-          target_id='field_title', errors=errors.name %}
-
-      <div class="hdx-v2-custom-page-form__checkbox">
-        {% snippet 'v2/components/checkbox.html',
-            id='field_show_title', name='show_title',
-            checked=not (data.extras and data.extras.show_title == 'off'),
-            label=_('Display page title'), error_slot=false %}
-      </div>
-
-      <fieldset class="hdx-v2-custom-page-form__fieldset">
-        <legend class="c-form-field__label">{{ _('This page is located under') }}</legend>
-        <div class="hdx-v2-custom-page-form__options">
-          {% snippet 'v2/components/radio.html',
-              name='type', value='event', id='hdx_event_type',
-              label=_('Event (URL: {url})').format(url=event_url),
-              checked=page_type == 'event',
-              attrs={'data-slug-prefix': slug_prefixes.event} %}
-          {% snippet 'v2/components/radio.html',
-              name='type', value='dashboards', id='hdx_dashboard_type',
-              label=_('Dashboards (URL: {url})').format(url=dashboards_url),
-              checked=page_type == 'dashboards',
-              attrs={'data-slug-prefix': slug_prefixes.dashboards} %}
+      <div class="hdx-v2-content-columns__content hdx-v2-custom-page-form__fields">
+        <div class="c-form-field">
+          {% snippet 'v2/components/text-field.html',
+              size='m', name='title', id='field_title',
+              label=_('Title of the page'), required=True,
+              value=data.title or '', placeholder=_('eg. A descriptive title'),
+              errors=errors.title %}
+          <div class="hdx-v2-custom-page-form__checkbox">
+            {% snippet 'v2/components/checkbox.html',
+                id='field_show_title', name='show_title',
+                checked=not (data.extras and data.extras.show_title == 'off'),
+                label=_('Display page title'), error_slot=false %}
+          </div>
         </div>
-      </fieldset>
 
-      <fieldset class="hdx-v2-custom-page-form__fieldset">
-        <legend class="c-form-field__label">{{ _('Status') }}</legend>
-        <div class="hdx-v2-custom-page-form__options">
-          {% snippet 'v2/components/radio.html',
-              name='status', value='ongoing', id='hdx_page_ongoing',
-              label=_('Ongoing'), checked=page_status == 'ongoing' %}
-          {% snippet 'v2/components/radio.html',
-              name='status', value='archived', id='hdx_page_archived',
-              label=_('Archived'), checked=page_status == 'archived' %}
+        <fieldset class="hdx-v2-custom-page-form__fieldset">
+          <legend class="c-form-field__label">{{ _('This page is located under') }}<span class="c-form-field__required" aria-hidden="true"> *</span></legend>
+          <div class="hdx-v2-custom-page-form__options">
+            {% snippet 'v2/components/radio.html',
+                name='type', value='event', id='hdx_event_type',
+                label=_('Event'),
+                description=_('URL: {url}').format(url=event_url),
+                checked=page_type == 'event',
+                attrs={'data-slug-prefix': slug_prefixes.event} %}
+            {% snippet 'v2/components/radio.html',
+                name='type', value='dashboards', id='hdx_dashboard_type',
+                label=_('Dashboards'),
+                description=_('URL: {url}').format(url=dashboards_url),
+                checked=page_type == 'dashboards',
+                attrs={'data-slug-prefix': slug_prefixes.dashboards} %}
+          </div>
+        </fieldset>
+
+        {% snippet 'v2/components/slug-preview.html',
+            name='name', id='field_name', label=_('URL'), required=True,
+            value=data.name or '', placeholder=_('eg. page_id'),
+            description=_('This is how the URL will appear on HDX.'),
+            prefix=slug_prefixes[page_type] or slug_prefixes.event, preview_placeholder='page_id',
+            target_id='field_title', errors=errors.name %}
+
+        <fieldset class="hdx-v2-custom-page-form__fieldset">
+          <legend class="c-form-field__label">{{ _('Status') }}<span class="c-form-field__required" aria-hidden="true"> *</span></legend>
+          <div class="hdx-v2-custom-page-form__options">
+            {% snippet 'v2/components/radio.html',
+                name='status', value='ongoing', id='hdx_page_ongoing',
+                label=_('Ongoing'), checked=page_status == 'ongoing' %}
+            {% snippet 'v2/components/radio.html',
+                name='status', value='archived', id='hdx_page_archived',
+                label=_('Archived'), checked=page_status == 'archived' %}
+          </div>
+        </fieldset>
+
+        <div class="c-form-field">
+          {% snippet 'v2/components/select.html',
+              label=_('Location'), name='groups', id='field_groups',
+              description=_('Describe the location(s) or country / countries that this page covers.'),
+              options=location_options, selected=data.groups or [],
+              multiple=True, searchable=True, chip_color='cyan' %}
         </div>
-      </fieldset>
 
-      <div class="c-form-field">
-        {% snippet 'v2/components/select.html',
-            label=_('Location'), name='groups', id='field_groups',
-            options=location_options, selected=data.groups or [],
-            multiple=True, searchable=True %}
-      </div>
+        <div class="c-form-field">
+          {% snippet 'v2/components/text-field.html',
+              size='m', name='description', id='field_description',
+              label=_('Keywords'), value=data.description or '',
+              placeholder=_('Keywords with comma separated. e.g covid19, coronavirus') %}
+        </div>
 
-      <div class="c-form-field">
-        {% snippet 'v2/components/text-field.html',
-            size='m', name='description', id='field_description',
-            label=_('Keywords'), value=data.description or '',
-            placeholder=_('Keywords with comma separated. e.g covid19, coronavirus') %}
-      </div>
-
-      <div class="c-form-field">
-        {% snippet 'v2/components/select.html',
-            label=_('Tags'), name='tag_string', id='field_tag_string',
-            placeholder=_('eg. economy, mental health, government'),
-            options=tag_options, selected=tags,
-            multiple=True, searchable=True,
-            select_attrs={'data-source': '/api/2/util/tag/autocomplete', 'data-source-type': 'tag'},
-            errors=errors.tag_string %}
+        <div class="c-form-field">
+          {% snippet 'v2/components/select.html',
+              label=_('Tags'), name='tag_string', id='field_tag_string',
+              placeholder=_('eg. economy, mental health, government'),
+              options=tag_options, selected=tags,
+              multiple=True, searchable=True,
+              select_attrs={'data-source': '/api/2/util/tag/autocomplete', 'data-source-type': 'tag'},
+              errors=errors.tag_string %}
+        </div>
       </div>
     </section>
 
-    <hr class="c-divider">
+    <section id="build-sections" class="hdx-v2-content-columns hdx-v2-content-columns--stack hdx-v2-custom-page-form__group">
+      <h2 class="hdx-v2-content-columns__sidebar hdx-v2-custom-page-form__group-title">{{ _('Build sections') }}</h2>
 
-    <section class="hdx-v2-custom-page-form__group">
-      <h2 class="hdx-v2-custom-page-form__section-title">{{ _('Sections') }}</h2>
-
-      <div class="c-config-item-list" data-config-item-list data-config-item-form
-           data-title-format="{{ _('Section {n}') }}"
-           data-section-fields="{{ h.dump_json(section_fields) }}">
-        <ol class="c-config-item-list__items">
-          {% for section in data.sections %}
-            {% set index = loop.index0 %}
+      <div class="hdx-v2-content-columns__content hdx-v2-custom-page-form__fields">
+        <div class="c-config-item-list" data-config-item-list data-config-item-form
+             data-title-format="{{ _('Section {n}') }}"
+             data-move-message="{{ _('Moved to position {n} of {total}') }}"
+             data-section-fields="{{ h.dump_json(section_fields) }}">
+          <div class="c-config-item-list__actions">
+            {% snippet 'v2/components/button.html',
+                style='primary', label=_('Add more sections'),
+                icon_src='v2/icons/file-plus.svg',
+                attrs={'data-config-item-add': ''} %}
+          </div>
+          <ol class="c-config-item-list__items">
+            {% for section in data.sections %}
+              {% set index = loop.index0 %}
+              <li>
+                {% call h.snippet('v2/components/config-item.html',
+                    title=_('Section {n}').format(n=loop.index),
+                    id='custom-page-section-' ~ index,
+                    **section_card) %}
+                  {% snippet 'admin/snippets/custom_page_section_fields.html',
+                      section=section, index=index,
+                      fields=section_fields, type_options=type_options %}
+                {% endcall %}
+              </li>
+            {% endfor %}
+          </ol>
+          <template data-config-item-template>
             <li>
               {% call h.snippet('v2/components/config-item.html',
-                  title=_('Section {n}').format(n=loop.index),
-                  id='custom-page-section-' ~ index,
-                  draggable=False, title_tag='h3') %}
+                  title=_('Section {n}').format(n='__index__'),
+                  id='custom-page-section-__index__',
+                  **section_card) %}
                 {% snippet 'admin/snippets/custom_page_section_fields.html',
-                    section=section, index=index,
-                    fields=section_fields, type_options=type_options %}
+                    index='__index__', fields=section_fields, type_options=type_options %}
               {% endcall %}
             </li>
-          {% endfor %}
-        </ol>
-        <template data-config-item-template>
-          <li>
-            {% call h.snippet('v2/components/config-item.html',
-                title=_('Section {n}').format(n='__index__'),
-                id='custom-page-section-__index__',
-                draggable=False, title_tag='h3') %}
-              {% snippet 'admin/snippets/custom_page_section_fields.html',
-                  index='__index__', fields=section_fields, type_options=type_options %}
-            {% endcall %}
-          </li>
-        </template>
-        <div class="c-config-item-list__actions">
-          {% snippet 'v2/components/button.html',
-              style='tertiary', label=_('Add More Sections'),
-              icon_src='v2/icons/plus.svg',
-              attrs={'data-config-item-add': ''} %}
+          </template>
+          <span class="sr-only" aria-live="polite" data-config-item-status></span>
         </div>
+        <input type="hidden" id="hdx_counter" name="hdx_counter" value="{{ data.hdx_counter }}">
       </div>
-      <input type="hidden" id="hdx_counter" name="hdx_counter" value="{{ data.hdx_counter }}">
     </section>
 
     <div class="hdx-v2-custom-page-form__actions">
       {% if data.id %}
         {% snippet 'v2/components/button.html',
-            style='tertiary', label=_('Delete This Page'),
+            style='tertiary', label=_('Delete this page'),
             attrs={'onclick': "window.hdxV2Drawer('delete-custom-page-" ~ data.id ~ "').open()"} %}
       {% endif %}
       <div class="hdx-v2-custom-page-form__save">
         {% snippet 'v2/components/button.html',
-            style='primary', button_type='submit', label=_('Save This Page'),
+            style='primary', button_type='submit', label=_('Save this page'),
             attrs={'id': 'save_custom_page', 'name': 'save_custom_page', 'value': 'active'} %}
         {% snippet 'v2/components/button.html',
-            style='secondary', button_type='submit', label=_('Save As Draft'),
+            style='secondary', button_type='submit', label=_('Save as draft'),
             attrs={'id': 'save_as_draft_custom_page', 'name': 'save_as_draft_custom_page', 'value': 'draft'} %}
       </div>
     </div>

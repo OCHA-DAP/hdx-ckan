@@ -125,7 +125,7 @@ class TestHDXControllerPageNew(TestHDXControllerPage):
         # url = h.url_for('hdx_custom_page.new')
         page = self._get_url(app, url, self._get_token_for_user(SYSADMIN))
         assert '200' in page.status
-        assert 'Save This Page' in page.body
+        assert 'Save this page' in page.body
         assert 'field_title' in page.body
         assert 'hdx_event_type' in page.body
         assert 'hdx_page_ongoing' in page.body
@@ -190,7 +190,7 @@ class TestHDXControllerPageEdit(TestHDXControllerPage):
         url = h.url_for(u'hdx_custom_page.edit', id=page_dict.get('id'))
         page = self._get_url(app, url, self._get_token_for_user(SYSADMIN))
         assert '200' in page.status
-        assert 'Save This Page' in page.body
+        assert 'Save this page' in page.body
         assert 'field_title' in page.body
         assert 'hdx_event_type' in page.body
         assert 'hdx_page_ongoing' in page.body

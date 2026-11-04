@@ -27,9 +27,14 @@
       }
     });
 
-    list.addEventListener('config-item:add', function (e) {
-      var index = parseInt(e.target.querySelector('[data-section-type]').name.match(/^field_section_(\d+)_type$/)[1], 10);
-      counter.value = Math.max(parseInt(counter.value, 10) || 0, index + 1);
+    form.addEventListener('submit', function () {
+      var cards = list.querySelectorAll('[data-config-item]');
+      cards.forEach(function (card, index) {
+        card.querySelectorAll('[name^="field_section_"]').forEach(function (control) {
+          control.name = control.name.replace(/^field_section_\d+_/, 'field_section_' + index + '_');
+        });
+      });
+      counter.value = cards.length;
     });
   });
 })();

@@ -16,7 +16,14 @@
                           `multiple`.  default: '' ([] with `multiple`)
   multiple      {bool}    Multi-select: the <select> gets `multiple` and posts
                           one value per selected option; with `searchable`,
-                          Select2 shows them as chips.  default: False
+                          Select2 shows them as chips (c-label grey, size S).
+                          default: False
+  chip_color    {string}  Chip colour with `multiple`: '' (grey) | 'cyan'
+                          (c-dropdown--chips-cyan).  default: ''
+  description   {string}  Help text between the label and the select
+                          (.c-form-field__description), id <id>-description,
+                          referenced by the select's aria-describedby
+                          (select.js copies it to Select2).  default: ''
   state         {string}  'enabled' | 'disabled'  default: 'enabled'
   chevron_src   {string}  Chevron icon path.  default: 'v2/icons/chevron-down.svg'
   extra_classes {string}  Additional classes on the wrapper div.  default: ''
@@ -64,7 +71,9 @@
 
   {% snippet 'v2/components/select.html',
       label='Location', name='groups', id='field-groups',
-      options=locations, selected=['sdn', 'tcd'], multiple=True, searchable=True %}
+      description='The countries this page covers.',
+      options=locations, selected=['sdn', 'tcd'], multiple=True, searchable=True,
+      chip_color='cyan' %}
 #}
 
 {% set size             = size             if size             is defined else 'm' %}
@@ -84,18 +93,27 @@
 {% set required         = required         if required         is defined else false %}
 {% set select_attrs     = select_attrs     if select_attrs     is defined else {} %}
 {% set searchable       = searchable       if searchable       is defined else false %}
+{% set chip_color       = chip_color       if chip_color       is defined else '' %}
+{% set description      = description      if description      is defined else '' %}
+{% if description %}
+  {% set select_attrs = dict(select_attrs, **{'aria-describedby': (id ~ '-description ' ~ select_attrs.get('aria-describedby', '')) | trim}) %}
+{% endif %}
 
 {% set is_disabled = (state == 'disabled') %}
 
 {% set classes = ['c-dropdown', 'c-dropdown--size-' ~ size, 'c-dropdown--native'] %}
 {% if is_disabled %}{% set classes = classes + ['c-dropdown--disabled'] %}{% endif %}
 {% if errors      %}{% set classes = classes + ['c-dropdown--error']    %}{% endif %}
+{% if chip_color  %}{% set classes = classes + ['c-dropdown--chips-' ~ chip_color] %}{% endif %}
 {% if extra_classes %}{% set classes = classes + [extra_classes] %}{% endif %}
 
 {% if label %}
 <label class="c-form-field__label"{% if id %} for="{{ id }}"{% endif %}>
   {{ label }}{% if required %}<span class="c-form-field__required" aria-hidden="true"> *</span>{% endif %}
 </label>
+{% endif %}
+{% if description %}
+<span class="c-form-field__description" id="{{ id }}-description">{{ description }}</span>
 {% endif %}
 <div class="{{ classes | join(' ') }}"
      {% for key, val in attrs.items() %}{{ key }}="{{ val }}" {% endfor %}>

@@ -37,6 +37,9 @@
   hint          {string}  Help text below the field (may be Markup, e.g. a link),
                           left-aligned (.c-form-field__hint--start), id <id>-hint,
                           referenced by the control's aria-describedby.  default: ''
+  description   {string}  Help text between the label and the field
+                          (.c-form-field__description), id <id>-description,
+                          referenced by the control's aria-describedby.  default: ''
   ─────────────────────────────────────────────────
   Examples
 
@@ -66,8 +69,12 @@
 {% set required      = required      if required      is defined else false %}
 {% set character_count = character_count if character_count is defined else False %}
 {% set hint          = hint          if hint          is defined else '' %}
+{% set description   = description   if description   is defined else '' %}
 {% if hint %}
   {% set input_attrs = dict(input_attrs, **{'aria-describedby': (id ~ '-hint ' ~ input_attrs.get('aria-describedby', '')) | trim}) %}
+{% endif %}
+{% if description %}
+  {% set input_attrs = dict(input_attrs, **{'aria-describedby': (id ~ '-description ' ~ input_attrs.get('aria-describedby', '')) | trim}) %}
 {% endif %}
 
 {% set classes = ['c-search-input', 'c-search-input--size-' ~ size] %}
@@ -81,6 +88,9 @@
 <label class="c-search-input__label" {% if id %}for="{{ id }}"{% endif %}>
   {{ label }}{% if required %}<span class="c-search-input__required" aria-hidden="true"> *</span>{% endif %}
 </label>
+{% endif %}
+{% if description %}
+<span class="c-form-field__description" id="{{ id }}-description">{{ description }}</span>
 {% endif %}
 <div class="{{ classes | join(' ') }}"
      {% if character_count %}data-character-count{% endif %}

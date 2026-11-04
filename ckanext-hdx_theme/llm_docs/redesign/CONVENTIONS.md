@@ -516,6 +516,8 @@ Five distinct components cover form fields; pick by field type, don't extend the
 - `slug-preview.html` — URL slug fields with a "URL: prefix/slug [Edit]" preview (wraps `text-field.html`).
 - `image-upload.html` — image fields that take an upload or a linked URL (CKAN url/upload/clear fields).
 
+Help text between a field's label and its control is the `description` param (`.c-form-field__description`) on `text-field.html`, `select.html` and `slug-preview.html`; `radio.html`'s `description` is a second line under its label.
+
 `search-input.html` used to cover the generic-field role too; it split into `text-field.html` once form pages (contact contributor, request access, auth) needed password toggles and textareas.
 
 JS field errors: `window.hdxV2.setFieldError(input, message, invalid)` (`utils.js`) sets a `text-field.html` or `checkbox.html` control's error text and toggles its `--error` modifier (on with a message, or with `invalid` true for a border without text) — no local copies.

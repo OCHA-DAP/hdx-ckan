@@ -59,6 +59,18 @@
     &__item--inactive &__border { background-color: transparent; }
     &__item--inactive &__label  { font-weight: var(--hdx-fw-regular); color: var(--hdx-neutral-8); }
 
+    &--numbered {
+        counter-reset: anchor-links;
+    }
+
+    &--numbered &__item {
+        counter-increment: anchor-links;
+    }
+
+    &--numbered &__label::before {
+        content: counter(anchor-links) ". ";
+    }
+
     //&__item:hover:not(&__item--active) &__border { background-color: var(--hdx-neutral-2); }
     //&__item:hover:not(&__item--active) &__label  { color: var(--hdx-neutral-95); }
 }

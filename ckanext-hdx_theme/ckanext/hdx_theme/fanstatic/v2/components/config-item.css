@@ -36,6 +36,17 @@
   gap: var(--hdx-space-3);
   cursor: auto;
 }
+.c-config-item__move {
+  display: flex;
+  align-items: center;
+  gap: var(--hdx-space-2);
+}
+.c-config-item__sort {
+  font-family: var(--hdx-font-body);
+  font-size: var(--hdx-fs-s);
+  font-weight: var(--hdx-fw-regular);
+  line-height: var(--hdx-lh-normal);
+}
 .c-config-item__toggle[aria-expanded="false"] svg {
   transform: rotate(180deg);
 }
@@ -46,6 +57,10 @@
 }
 .c-config-item__body[hidden] {
   display: none;
+}
+.c-config-item__footer {
+  display: flex;
+  justify-content: flex-end;
 }
 .c-config-item--static .c-config-item__header {
   cursor: auto;
@@ -63,6 +78,9 @@
 }
 .c-config-item-list__items > .is-dragging {
   opacity: 0.3;
+}
+.c-config-item-list__items:not(:has(> li)) {
+  display: none;
 }
 .c-config-item-list--grid .c-config-item-list__items {
   flex-direction: row;
