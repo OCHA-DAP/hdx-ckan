@@ -87,7 +87,8 @@ and `light/snippets/package_list.html`.
 
 Backend: `search_logic.py`:
 - `class ArchivedUrlHelper` computes `archived_url` (adds `ext_archived=1`) and
-  `unarchived_url` (strips it), `show_archived_link`/`show_unarchived_link`,
+  `unarchived_url` (strips it), both keeping the rest of the query except `page`,
+  `show_archived_link`/`show_unarchived_link`,
   `archived_disabled`/`unarchived_disabled` (a tab renders as disabled text instead of a link when
   it would show 0 results), and `redirect_if_needed()` — force-redirects to the archived view if
   the default (unarchived) view has 0 results but archived datasets exist.

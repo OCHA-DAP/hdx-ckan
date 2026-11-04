@@ -147,7 +147,7 @@ The old `hdx_carousel_item.html` snippet is v1 (Bootstrap grid, `.sub-item` clas
 
 ### Position
 
-Insert the new section **after the alert bar** (`{% if alert_bar ... %}` block) and **before `#homepage-alerts`**. This replaces the commented-out block — delete the commented-out code.
+Insert the new section **after the alert bar** (`{% if alert_bar ... %}` block). This replaces the commented-out block — delete the commented-out code.
 
 ### Section wrapper structure
 

@@ -198,7 +198,7 @@ shell. The 2FA popup becomes a `c-drawer`, and so does the delete confirmation.
 | Element | Current (v1) | Target (v2) |
 |---|---|---|
 | Shell | v1 `page.html`, BS5 tab bar, col-3 card | `v2/user-dashboard-base.html`, left menu at XL (D1) |
-| Identity | Profile card | Profile header on own and other pages, with "View public profile" (D2, D3) |
+| Identity | Profile card | Profile header on own and other pages, no public profile link (D2, D3) |
 | Breadcrumb | Users / {name} | Own: Home / Account and Settings / Profile and Password. Others: Home / All Users / {name} / Profile and Password |
 | Header | "User Settings" + "Profile" legend | "Profile and Password" + own/other subtitle (D2) |
 | Fields | `form.input` / `form.textarea` in a Bootstrap grid | `text-field.html` `m`, sentence-case labels (D6, D7) |
@@ -211,8 +211,7 @@ shell. The 2FA popup becomes a `c-drawer`, and so does the delete confirmation.
 | Need | Mapping |
 |---|---|
 | Shell, menu, breadcrumb, `subtitle` | **Reuse** the base with `nav_active='profile_and_password'`, `page_label=_('Profile and Password')` |
-| Profile header | **Reuse** the base's `user_profile_header` block, with a child flag for the link (D5) |
-| Public profile link | **Extend** `page-header.html`: `cta_style`, `cta_attrs` (D4) |
+| Profile header | **Reuse** the base's `user_profile_header` block |
 | Header | **Reuse** the `.hdx-v2-user-dashboard-header` markup |
 | Fields, checkbox, buttons, text-button | **Reuse** `c-form-field`, `text-field.html`, `checkbox.html`, `button.html`, `text-button.html` |
 | Section rows | **Reuse** `.hdx-page-section-header()`; **extend** it with `flex-wrap: wrap` (D11) |
@@ -243,17 +242,12 @@ shell. The 2FA popup becomes a `c-drawer`, and so does the delete confirmation.
 ## 5. Page Structure
 
 - **Top** (`{% block primary %}`):
-  1. `{% set public_profile_link = true %}` (top level), then `{{ self.user_profile_header() }}` for every
-     viewer (D2, D5).
+  1. `{{ self.user_profile_header() }}` for every viewer (D2).
   2. `.hdx-v2-user-dashboard-header`:
      - title "Profile and Password" as `<h2>`;
      - subtitle "Update your account details, password, and login preferences", or "Update {name}'s
        account details, password, and login preferences" (display name) on another user's page (D2).
   3. `<div class="hdx-v2-user-profile">`, the settings stack.
-- **Profile header link** (base block, when `public_profile_link` is set):
-  - `cta_style='text'`, `cta_label=_('View public profile')`,
-    `cta_href=h.url_for('hdx_user.read', id=user_dict.name)`, `cta_icon_src='v2/icons/link-external.svg'`;
-  - `cta_attrs={'target': '_blank', 'rel': 'noopener noreferrer'}` (D3, D4).
 - **Stack:**
   1. `<form method="POST" class="hdx-v2-user-profile__form">` + `h.csrf_input()`.
      - **Non-field error:** when `error_summary and not errors`, `alert.html` (error) with the summary
@@ -367,8 +361,7 @@ shell. The 2FA popup becomes a `c-drawer`, and so does the delete confirmation.
 | Validation error | 200 re-render; messages under their fields; new/confirm keep their values (D9) |
 | Wrong old/sysadmin password | "Password entered was incorrect" under the old-password field |
 | Unexpected error | Error `c-alert` with "An unexpected error occurred. Please try again or contact us." |
-| Sysadmin on another user | Profile header + link to their public page; title `<h2>` under it; "Sysadmin password"; 2FA and delete act on that user |
-| Own page, link | Opens `/user/<me>` (My Datasets) in a new tab |
+| Sysadmin on another user | Profile header; title `<h2>` under it; "Sysadmin password"; 2FA and delete act on that user |
 | Deleted user (sysadmin) | Red "Deleted" label in the profile header; the form still saves |
 | Non-sysadmin | No 2FA or delete sections; no page script |
 | Sysadmin forced to set up 2FA | Redirect with `?show_totp` opens the drawer |
@@ -406,9 +399,7 @@ shell. The 2FA popup becomes a `c-drawer`, and so does the delete confirmation.
 |---|---|
 | D1 Template | Replace `user/edit_user_form.html` wholesale; it extends `v2/user-dashboard-base.html`. The view only stops setting `g.totp_secret`. |
 | D2 Profile header | Shown on your own page and on another user's. Profile header `<h1>`, page title `<h2>`, section titles `<h3>`. Figma subtitle on your own page; "Update {name}'s account details, password, and login preferences" on another user's. |
-| D3 Public link | "View public profile" → `hdx_user.read` for the viewed user (own page: My Datasets). New tab, `link-external.svg` on the left. |
-| D4 page-header CTA | New `cta_style` (`'button'` default, `'text'` → `text-button.html` primary m) and `cta_attrs` (dict, like `header_actions[].attrs`). The header comment documents `cta_label`, `cta_href`, `cta_icon_src`, `cta_style`, `cta_attrs`. Signals is unchanged. |
-| D5 Block hook | Child flag `public_profile_link`; the base `user_profile_header` passes the CTA only when it is set. |
+| D3 Public link | Figma's "View public profile" is not built: on your own page `hdx_user.read` is My Datasets, not the public view, and another user's public page is the menu's Datasets item. |
 | D6 Copy | Figma sentence case: "Old password"/"Sysadmin password" (by viewer), "New password", "Confirm new password", "Update profile", "Delete account". Asterisks only on Full name and Email. No visible "Profile" heading. |
 | D7 Fields | `text-field.html` size `m`; About at the component's 100px; distinct ids; autocomplete `name`/`email`/`current-password`/`new-password`; submit `attrs={'name': 'save'}`; notifications checkbox kept behind its config, checked from the viewed user (`data`; v1 used the viewer). |
 | D8 Errors | Per field. An error `c-alert` only when `error_summary` has no field errors. Server-side checks only (no `form-validator.js`), as v1. |
@@ -423,7 +414,7 @@ shell. The 2FA popup becomes a `c-drawer`, and so does the delete confirmation.
 | D17 Drawer list | `.hdx-v2-org-members__pkg-list` moves to `drawer.less` as `c-drawer-form__list`; its markup moves to `v2/maintainer-datasets-list.html`, which the org members drawer uses too. |
 | D18 Width | `.hdx-v2-user-profile` 100% at SM, 80% from MD (own rule). |
 | D19 Analytics | No new events. The Mixpanel page title follows the base subtitle, "Profile and Password \| {name} \| All Users", as on 072–078. |
-| D20 Tests | Update the five `TestEditUserEmail` tests for the v2 markup (email errors under the Email field). Add to `TestEditUserEmail`: own GET (title, link with `target="_blank"`); 2FA section/drawer only for sysadmin viewers; delete drawer only for sysadmins, with Confirm disabled for maintainers; wrong old password → error under its field. Add to `test_mfa.py`: 2FA on → the on state without the stored secret. |
+| D20 Tests | Update the five `TestEditUserEmail` tests for the v2 markup (email errors under the Email field). Add to `TestEditUserEmail`: own GET (title, no public profile link); 2FA section/drawer only for sysadmin viewers; delete drawer only for sysadmins, with Confirm disabled for maintainers; wrong old password → error under its field. Add to `test_mfa.py`: 2FA on → the on state without the stored secret. |
 | D21 Unchanged | View (except D1), actions, schema, validators, auth, 2FA endpoints and flashes, core delete view, `_before_request` redirect, field names, CSRF. |
 | D22 New copy | The other-user subtitle; "Two-step verification is on."; the 2FA drawer title "Two-step verification" (v1: "How to turn on two-step verification"); the delete drawer title "Delete account" with the org drawer's "Confirm". |
 | D23 Hidden layers | Figma's Comments textarea, count, sort/page-size and secondary buttons are not built. |
@@ -437,9 +428,8 @@ shell. The 2FA popup becomes a `c-drawer`, and so does the delete confirmation.
 
 | File | Change |
 |---|---|
-| `THEME/templates/user/edit_user_form.html` | Rewritten: dashboard base, profile header + link, header, form, 2FA and delete sections, drawers (D1–D16) |
-| `THEME/templates/v2/user-dashboard-base.html` | `user_profile_header` passes the CTA when `public_profile_link` is set; header comment documents the flag (D5) |
-| `THEME/templates/v2/components/page-header.html` | `cta_style`, `cta_attrs`; one CTA snippet call; header comment (D4) |
+| `THEME/templates/user/edit_user_form.html` | Rewritten: dashboard base, profile header, header, form, 2FA and delete sections, drawers (D1–D16) |
+| `THEME/templates/v2/components/page-header.html` | Header comment documents `cta_label`, `cta_href`, `cta_icon_src` |
 | `THEME/templates/user/api_tokens.html` | Submit row in `.hdx-v2-user-dashboard-actions` (D25) |
 | `THEME/templates/user/snippets/api_token_created.html` | Token in `.hdx-v2-user-dashboard-secret` (D25) |
 | `THEME/tests/test_actions/test_api_token_create.py` | Token regex follows the class (D25) |
@@ -458,15 +448,14 @@ shell. The 2FA popup becomes a `c-drawer`, and so does the delete confirmation.
 | `USERS/views/user_edit_view.py` | `HDXEditView.get` no longer sets `g.totp_secret` (D1) |
 | `USERS/tests/test_emails/test_email_access.py` | Updated + new render tests (D20) |
 | `USERS/tests/test_mfa.py` | 2FA on-state render test (D20) |
-| `ckanext-hdx_theme/llm_docs/redesign/PROGRESS.md` | Migrated-pages row; Page header bullet (D4) |
-| `ckanext-hdx_theme/llm_docs/LLM_CONTEXT_HDX_DESIGN.md` | Key-pages entry; base contract `public_profile_link` (D5) |
+| `ckanext-hdx_theme/llm_docs/redesign/PROGRESS.md` | Migrated-pages row |
+| `ckanext-hdx_theme/llm_docs/LLM_CONTEXT_HDX_DESIGN.md` | Key-pages entry |
 | `ckanext-hdx_theme/llm_docs/redesign/CONVENTIONS.md` | `showAlert` signature (D24); page-section header wraps (D11) |
 | `ckanext-hdx_theme/llm_docs/redesign/requirements/STATUS.md` | 079 status |
-| `ckanext-hdx_theme/llm_docs/redesign/requirements/037-dataset-page-header-v2.md` | §4.2: `cta_style`, `cta_attrs` (D4) |
-| `ckanext-hdx_theme/llm_docs/redesign/requirements/054-signals-landing-page.md` | §7: `cta_style`, `cta_attrs` and the current CTA markup (D4) |
+| `ckanext-hdx_theme/llm_docs/redesign/requirements/054-signals-landing-page.md` | §7: the current CTA markup |
 | `ckanext-hdx_theme/llm_docs/redesign/requirements/070-v2-full-audit.md` | Excluded: user dashboard/settings migrated in 072–079 |
 | `ckanext-hdx_theme/llm_docs/redesign/requirements/072-user-dashboard-my-organisations-v2.md` | v1-sibling notes dropped |
-| `ckanext-hdx_theme/llm_docs/redesign/requirements/073-user-dashboard-my-datasets-v2.md` | D24: no `read_base.html` child left; D27: `public_profile_link` CTA (D5) |
+| `ckanext-hdx_theme/llm_docs/redesign/requirements/073-user-dashboard-my-datasets-v2.md` | D24: no `read_base.html` child left |
 | `ckanext-hdx_theme/llm_docs/redesign/requirements/074-user-dashboard-hdx-connect-requests-v2.md` | `showAlert` signature (D24) |
 | `ckanext-hdx_theme/llm_docs/redesign/requirements/077-user-settings-api-tokens-v2.md` | Shared dashboard classes (D25) |
 | `ckanext-hdx_theme/llm_docs/redesign/requirements/078-user-settings-notifications-v2.md` | §4: `read_base.html` line |

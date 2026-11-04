@@ -634,17 +634,16 @@ inside the left column of the page header. Extend `c-page-header` with optional 
 | `cta_label` | string | `""` | CTA button text |
 | `cta_href` | string | `""` | CTA button href (anchor) |
 | `cta_icon_src` | string | `""` | Optional icon SVG path (e.g. `'v2/icons/bell.svg'`) |
-| `cta_style` | string | `"button"` | `'button'` (primary `c-button` m) or `'text'` (primary `c-text-button` m) |
-| `cta_attrs` | dict | `{}` | Extra attrs on the CTA link |
 
 In `page-header.html`, inside the left column, after `description`:
 ```jinja2
 {% if cta_href %}
-  {% snippet 'v2/components/text-button.html' if cta_style == 'text' else 'v2/components/button.html',
+  {% snippet 'v2/components/button.html',
       tag='a', href=cta_href,
+      style='primary', type='text', size='m',
+      state='enabled',
       icon_src=cta_icon_src,
-      label=cta_label,
-      attrs=cta_attrs %}
+      label=cta_label %}
 {% endif %}
 ```
 

@@ -154,7 +154,7 @@ Example page-specific template (light search):
 ### Homepage (`/`)
 
 - **Template**: `ckanext-hdx_theme/ckanext/hdx_theme/templates/home/index.html`
-  - Extends `v2/page.html`. Adds `hdx_theme/v2-home-page-styles` (hero, intro, highlights, bar-chart) and `hdx_theme/v2-home-page-scripts` (Hammer.js, highlights-carousel.js, bar-chart.js).
+  - Extends `v2/page.html`. Adds `hdx_theme/v2-home-page-styles` (hero, intro, highlights, bar-chart) and `hdx_theme/v2-home-page-scripts` (Hammer.js, highlights-carousel.js, bar-chart.js). Overrides `content` (no breadcrumb row), so it outputs `{{ self.flash() }}` itself, first, above the hero band.
 
 ---
 
@@ -219,7 +219,7 @@ Example page-specific template (light search):
 ### My Organisations dashboard (`/user/organizations/<id>`, own page only)
 
 - **Template**: `ckanext-hdx_theme/ckanext/hdx_theme/templates/user/read_organizations.html`
-  - Extends `v2/user-dashboard-base.html` (menu from `h.hdx_get_user_dashboard_nav_sections()`, `<title>`, profile header), which extends the shared shell `v2/dashboard-base.html` (layout, left menu at XL, breadcrumb), which extends `v2/page.html`. Children set `nav_active` and `page_label` (optionally `public_profile_link`).
+  - Extends `v2/user-dashboard-base.html` (menu from `h.hdx_get_user_dashboard_nav_sections()`, `<title>`, profile header), which extends the shared shell `v2/dashboard-base.html` (layout, left menu at XL, breadcrumb), which extends `v2/page.html`. Children set `nav_active` and `page_label`.
 - **Core assets**: `hdx_theme/v2-search-page-styles` (sidebar/content layout classes), `hdx_theme/v2-dashboard-page-styles` (left menu, empty state), `hdx_theme/v2-user-dashboard-page-styles`.
 
 ---
@@ -283,7 +283,7 @@ Example page-specific template (light search):
 ### Profile and Password settings (`/user/edit/<id>`)
 
 - **Template**: `ckanext-hdx_theme/ckanext/hdx_theme/templates/user/edit_user_form.html`
-  - Extends `v2/user-dashboard-base.html`; the profile header shows for every viewer (own page included), with a "View public profile" link (`public_profile_link` → `c-page-header` `cta_style='text'`). A profile + password form of `c-form-field`s with errors under each field.
+  - Extends `v2/user-dashboard-base.html`; the profile header shows for every viewer (own page included). A profile + password form of `c-form-field`s with errors under each field.
   - Sysadmin viewers also get two-step verification (a `c-drawer` driven by `v2/pages/user-profile.js`, calling the `hdx_user` `configure_mfa` endpoints) and Delete account (a `c-drawer` posting to core `user.delete`; maintainers get `v2/maintainer-datasets-list.html` and a disabled Confirm).
   - `HDXEditView` is unchanged, except that `get` no longer sets `g.totp_secret`.
 - **Core assets**: as My Organisations, plus `v2-user-profile-page-scripts` for sysadmin viewers.

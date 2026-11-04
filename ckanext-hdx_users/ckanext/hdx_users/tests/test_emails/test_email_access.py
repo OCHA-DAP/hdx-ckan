@@ -364,15 +364,13 @@ class TestEditUserEmail(hdx_test_base.HdxFunctionalBaseTest):
         assert user.email == sue_user.get('email')
 
     def test_edit_own_page(self):
-        '''A user's own page has the public profile link and no sysadmin sections.'''
+        '''A user's own page has no public profile link and no sysadmin sections.'''
         factories.User(name='sue', email='sue@example.com', password='Abcdefgh12')
         sue_token = factories.APIToken(user='sue', expires_in=2, unit=60 * 60)['token']
 
         response = self.app.get(url=h.url_for('user.edit'), headers={'Authorization': sue_token})
         assert '<h2 class="hdx-v2-user-dashboard-header__title">Profile and Password</h2>' in response.body
-        assert 'View public profile' in response.body
-        assert 'href="/user/sue"' in response.body
-        assert 'target="_blank" rel="noopener noreferrer"' in response.body
+        assert 'View public profile' not in response.body
         assert 'Old password' in response.body
         assert 'id="two-step-drawer"' not in response.body
         assert 'id="delete-user-drawer"' not in response.body
