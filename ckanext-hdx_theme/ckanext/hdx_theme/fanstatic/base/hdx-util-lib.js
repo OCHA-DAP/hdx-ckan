@@ -212,6 +212,7 @@
 
     var NOTIFICATION_OPTIN_KEY = 'notification_optin_location';
     var NOTIFICATION_OPTIN_OPTIONS = ['action_menu']; // ['action_menu', 'floating_button']
+    var NOTIFICATION_OPTIN_AB_TESTING = NOTIFICATION_OPTIN_OPTIONS.length > 1;
 
     hdxUtil.net.getNotificationOptinLocation = function (object, objectType) {
       var subscribedObjects = hdxUtil.net.getNotificationSubscribedObjects(objectType);
@@ -224,7 +225,9 @@
         var randomIndex = Math.floor(Math.random() * NOTIFICATION_OPTIN_OPTIONS.length);
         optinLocation = NOTIFICATION_OPTIN_OPTIONS[randomIndex];
         localStorage.setItem(NOTIFICATION_OPTIN_KEY, optinLocation);
-        hdxUtil.analytics.sendABTestingEvent('notification platform', optinLocation.replace('_', ' '));
+        if (NOTIFICATION_OPTIN_AB_TESTING) {
+          hdxUtil.analytics.sendABTestingEvent('notification platform', optinLocation.replace('_', ' '));
+        }
       }
 
       return optinLocation;
