@@ -37,7 +37,8 @@
   errors        {list|string}  Error message(s). Adds the c-dropdown--error modifier
                           and renders .c-dropdown__error below the wrapper.
                           default: None
-  required      {bool}    Appends a red asterisk inside the label.  default: False
+  required      {bool}    Red asterisk in the label + native `required` on the
+                          <select>.  default: False
   select_attrs  {dict}    Extra HTML attrs on the <select> itself
                           (e.g. aria-labelledby).  default: {}
   searchable    {bool}    Turns the select into a Select2 field with a search box in

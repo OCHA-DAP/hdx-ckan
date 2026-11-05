@@ -1,132 +1,147 @@
-{% extends "group/snippets/group_form.html" %}
+{% set is_edit = action == 'edit' %}
+{% set errors = errors or {} %}
+{% set can_delete = is_edit and h.check_access('group_delete', {'id': group_dict.id}) %}
+{% set status_options = {'inactive': _('Inactive'), 'active': _('Active')} %}
+{% set slug_prefix = h.url_for('group.read', id='', qualified=true) | replace('http://', '') | replace('https://', '') %}
 
-{#
-As the form is rendered as a seperate page we take advantage of this by
-overriding the form blocks depending on the current context
-#}
-{% block dataset_fields %}
-  {% if action == "edit" %}{{ super() }}{% endif %}
-{% endblock %}
+<form id="create-group-form"
+      class="hdx-v2-signup-form-page__card"
+      method="post">
+  {{ h.csrf_input() }}
 
-{% block custom_fields %}
-  <div class="">
-  	<label class="control-label" for="field-language_code">{{ _("Language Code")}}</label>
-  	<div class="controls">
-  		<input type="text" id="field-language_code" class="form-control" name="language_code" {% if data.get('language_code', False)%} value="{{data.get('language_code', False)}}"{% endif %}>
-  	</div>
-  </div>
+  <h1 class="hdx-v2-signup-form-page__heading">{{ _('Edit location page') if is_edit else _('Create location') }}</h1>
 
-  <div class="">
-  	<label class="control-label" for="field-relief_web_url">{{ _("Relief Web URL")}}</label>
-  	<div class="controls">
-  		<input type="text" id="field-relief_web_url" class="form-control" name="relief_web_url" value="{{data.get('relief_web_url', '')}}">
-  	</div>
-  </div>
+  {% if error_summary and not errors %}
+    {% snippet 'v2/components/alert.html', message=error_summary.values() | join(' ') %}
+  {% endif %}
 
-  <div class="">
-  	<label class="control-label" for="field-hr_info_url">{{ _("HR.info URL")}}</label>
-  	<div class="controls">
-  		<input type="text" id="field-hr_info_url" class="form-control" name="hr_info_url" value="{{data.get('hr_info_url', '')}}">
-  	</div>
-  </div>
-
-  <div class="">
-  	<label class="control-label" for="field-alert_bar_title">{{ _("Alert Bar Title")}}</label>
-  	<div class="controls">
-  		<input type="text" id="field-alert_bar_title" class="form-control" name="alert_bar_title" {% if data.get('alert_bar_title', False)%} value="{{data.get('alert_bar_title', False)}}"{% endif %}>
-  	</div>
-  </div>
-
-  <div class="">
-  	<label class="control-label" for="field-alert_bar_url">{{ _("Alert Bar URL")}}</label>
-  	<div class="controls">
-  		<input type="text" id="field-alert_bar_url" class="form-control" name="alert_bar_url" value="{{data.get('alert_bar_url', '')}}">
-  	</div>
-  </div>
-
-  <div class="">
-    <label class="control-label" for="field-geojson">{{ _("Geojson")}}</label>
-    <div class="controls">
-      <textarea id="field-geojson" name="geojson" class="form-control taller-textarea">{{data.get('geojson', '')}}</textarea>
+  <div class="hdx-v2-signup-form-page__fields">
+    <div class="c-form-field">
+      {% snippet 'v2/components/text-field.html',
+          size='m',
+          name='title',
+          id='field-title',
+          label=_('Title'),
+          required=True,
+          value=data.get('title') or '',
+          placeholder=_('My location'),
+          errors=errors.get('title') %}
     </div>
+
+    {% snippet 'v2/components/slug-preview.html',
+        name='name',
+        id='field-url',
+        label=_('URL'),
+        required=True,
+        value=data.get('name') or '',
+        placeholder=_('my-location'),
+        prefix=slug_prefix,
+        preview_placeholder='<location>',
+        target_id='field-title',
+        errors=errors.get('name') %}
+
+    <div class="c-form-field">
+      {% snippet 'v2/components/text-field.html',
+          size='m',
+          multiline=True,
+          name='description',
+          id='field-description',
+          label=_('Description'),
+          value=data.get('description') or '',
+          placeholder=_('A little information about my location...'),
+          errors=errors.get('description') %}
+    </div>
+
+    <div class="c-form-field">
+      {% snippet 'v2/components/text-field.html',
+          size='m',
+          type='url',
+          name='image_url',
+          id='field-image-url',
+          label=_('Image URL'),
+          value=data.get('image_url') or '',
+          placeholder=_('https://example.com/my-image.jpg'),
+          errors=errors.get('image_url') %}
+    </div>
+
+    {% for name, label in [
+        ('language_code', _('Language Code')),
+        ('relief_web_url', _('ReliefWeb URL')),
+        ('hr_info_url', _('HR.info URL')),
+        ('alert_bar_title', _('Alert Bar Title')),
+        ('alert_bar_url', _('Alert Bar URL'))] %}
+      <div class="c-form-field">
+        {% snippet 'v2/components/text-field.html',
+            size='m',
+            name=name,
+            id='field-' ~ name | replace('_', '-'),
+            label=label,
+            value=data.get(name) or '',
+            errors=errors.get(name) %}
+      </div>
+    {% endfor %}
+
+    <div class="c-form-field">
+      {% snippet 'v2/components/text-field.html',
+          size='m',
+          multiline=True,
+          name='geojson',
+          id='field-geojson',
+          label=_('Geojson'),
+          value=data.get('geojson') or '',
+          errors=errors.get('geojson') %}
+    </div>
+
+    {% for name, label in [
+        ('activity_level', _('Activity Level')),
+        ('key_figures', _('Key Figures')),
+        ('data_completeness', _('Data Grid Availability'))] %}
+      <div class="c-form-field">
+        {% snippet 'v2/components/select.html',
+            name=name,
+            id='field-' ~ name | replace('_', '-'),
+            label=label,
+            required=True,
+            options=status_options,
+            selected=data.get(name) or '',
+            errors=errors.get(name) %}
+      </div>
+    {% endfor %}
   </div>
 
-  {% set activity_level = data.get('activity_level', '') %}
-  <div class="">
-  	<label class="control-label" for="field-activity-level">{{ _("Activity Level")}}</label>
-  	<div class="controls">
-        <select id="field-activity-level" name="activity_level" class="form-select">
-            <option value="inactive" {% if activity_level == 'inactive' %}selected="selected"{% endif %}>
-                {{ _('Inactive') }}
-            </option>
-            <option value="active"
-                    {% if activity_level == 'active' %}selected="selected"{% endif %}>
-                {{ _('Active') }}
-            </option>
-        </select>
-  	</div>
+  <div class="hdx-v2-signup-form-page__actions">
+    {% if can_delete %}
+      {% snippet 'v2/components/button.html',
+          label=_('Delete'),
+          style='tertiary',
+          size='l',
+          attrs={'onclick': "window.hdxV2Drawer('delete-location-drawer').open()"} %}
+    {% endif %}
+    {% snippet 'v2/components/button.html',
+        label=_('Update Location') if is_edit else _('Create Location'),
+        style='primary',
+        size='l',
+        button_type='submit',
+        attrs={'name': 'save', 'value': 'save'} %}
   </div>
+</form>
 
-{#  {% set featured_section = data.get('featured_section', '') %}#}
-{#  <div class="control-full">#}
-{#  	<label class="control-label" for="field-featured-section">{{ _("Featured Section")}}</label>#}
-{#  	<div class="controls">#}
-{#        <select id="field-featured-section" name="featured_section">#}
-{#            <option value="inactive" {% if featured_section == 'inactive' %}selected="selected"{% endif %}>#}
-{#                {{ _('Inactive') }}#}
-{#            </option>#}
-{#            <option value="active"#}
-{#                    {% if featured_section == 'active' %}selected="selected"{% endif %}>#}
-{#                {{ _('Active') }}#}
-{#            </option>#}
-{#        </select>#}
-{#  	</div>#}
-{#  </div>#}
-
-  {% set key_figures = data.get('key_figures', '') %}
-  <div class="">
-  	<label class="control-label" for="field-key-figures">{{ _("Key Figures")}}</label>
-  	<div class="controls">
-        <select id="field-key-figures" name="key_figures" class="form-select">
-            <option value="inactive" {% if key_figures == 'inactive' %}selected="selected"{% endif %}>
-                {{ _('Inactive') }}
-            </option>
-            <option value="active"
-                    {% if key_figures == 'active' %}selected="selected"{% endif %}>
-                {{ _('Active') }}
-            </option>
-        </select>
-  	</div>
-  </div>
-
-  {% set data_completeness = data.get('data_completeness', '') %}
-  <div class="">
-  	<label class="control-label" for="field-data-completeness">{{ _("Data Grid Availability")}}</label>
-  	<div class="controls">
-        <select id="field-data-completeness" name="data_completeness" class="form-select">
-            <option value="inactive" {% if data_completeness == 'inactive' %}selected="selected"{% endif %}>
-                {{ _('Inactive') }}
-            </option>
-            <option value="active"
-                    {% if data_completeness == 'active' %}selected="selected"{% endif %}>
-                {{ _('Active') }}
-            </option>
-        </select>
-  	</div>
-  </div>
-
-
-  {% if action == "edit" %}{{ super() }}{% endif %}
-{% endblock %}
-
-{% block save_text %}
-  {%- if action == "edit" -%}
-    {{ _('Update Group') }}
-  {%- else -%}
-    {{ _('Create Group') }}
-  {%- endif -%}
-{% endblock %}
-
-{% block delete_button %}
-  {% if action == "edit" %}{{ super() }}{% endif %}
-{% endblock %}
+{% if can_delete %}
+  {% call h.snippet('v2/components/drawer.html',
+      drawer_id='delete-location-drawer',
+      title=_('Delete location')) %}
+    <form class="c-drawer-form" method="post"
+          action="{{ h.url_for('group.delete', id=group_dict.id) }}">
+      {{ h.csrf_input() }}
+      <p class="c-drawer-form__text">
+        {{ _("Are you sure you want to delete this location? Datasets will no longer be tagged with this location. This can't be undone.") }}
+      </p>
+      <div class="c-drawer-form__buttons">
+        {% snippet 'v2/components/button.html',
+            style='tertiary', label=_('Cancel'), attrs={'data-drawer-close': ''} %}
+        {% snippet 'v2/components/button.html',
+            style='primary', button_type='submit', label=_('Delete') %}
+      </div>
+    </form>
+  {% endcall %}
+{% endif %}

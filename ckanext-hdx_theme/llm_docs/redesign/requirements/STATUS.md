@@ -93,3 +93,4 @@
 | 089 | [sysadmin-homepage-highlights-v2](089-sysadmin-homepage-highlights-v2.md)                                       | implemented | |
 | 090 | [sysadmin-custom-pages-v2](090-sysadmin-custom-pages-v2.md)                                                     | implemented | |
 | 091 | [crisis-page-edit-form-v2](091-crisis-page-edit-form-v2.md)                                                     | implemented | |
+| 092 | [edit-location-page-v2](092-edit-location-page-v2.md)                                                           | implemented | |

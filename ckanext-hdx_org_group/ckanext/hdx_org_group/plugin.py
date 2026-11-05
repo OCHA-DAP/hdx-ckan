@@ -349,6 +349,9 @@ class HDXGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultGroupForm):
         # invalidate caches
         tk.get_action('invalidate_cache_for_groups')({'ignore_auth': True}, {})
 
+    def delete(self, country):
+        tk.get_action('invalidate_cache_for_groups')({'ignore_auth': True}, {})
+
     # IBlueprint
     def get_blueprint(self):
         import ckanext.hdx_org_group.views.group as group

@@ -417,6 +417,16 @@ Example page-specific template (light search):
 
 ---
 
+### Edit / create location (`/group/edit/<name>`, `/group/new`, sysadmins only)
+
+- **Templates**: `group/edit.html` and `group/new.html` extend `v2/page.html` with the signup layout variables and shell; both render the standalone form `group/new_group_form.html`, which branches on `action`. Core `EditGroupView` / `CreateGroupView` are unchanged.
+  - The form: no sections, `c-slug-preview` for the URL, the v1 field set. A save deletes every stored extra the form doesn't post (core `group_dict_save`), so the field set must stay complete.
+  - After a failed save `data` is the posted form; the breadcrumb, Delete gate and drawer read `group_dict`.
+  - Edit: Delete `c-drawer` (core `group.delete`); `HDXGroupPlugin.delete` invalidates the group caches.
+- **Core assets**: `hdx_theme/v2-signup-page-styles`, `v2-slug-preview-scripts`.
+
+---
+
 ### Signals page (`/signals`)
 
 - **Template**: `ckanext-hdx_theme/ckanext/hdx_theme/templates/landing_pages/signals.html`
