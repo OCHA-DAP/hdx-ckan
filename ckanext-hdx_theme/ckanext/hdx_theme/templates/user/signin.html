@@ -1,8 +1,8 @@
 {#
   Login page (v2). Real page content — no popup/widget indirection.
   View: hdx_signin.login() — ckanext-hdx_users/ckanext/hdx_users/views/signin.py
-  Figma: xl-login-filled-with-error.html, sm-login.html
-  Requirements: llm_docs/redesign/requirements/064-auth-pages-v2.md
+  Figma: xl-login-filled-with-error.html, sm-login.html, xl-login-password-reset.html
+  Requirements: llm_docs/redesign/requirements/064-auth-pages-v2.md, 093-password-reset-confirmation.md
 #}
 {% extends "v2/page.html" %}
 
@@ -26,6 +26,8 @@
 
 {% block toolbar %}{% endblock %}
 
+{% block flash %}{% endblock %}
+
 {% block main_content %}
 <div class="hdx-v2-auth-page">
   <div class="hdx-v2-auth-card">
@@ -34,8 +36,14 @@
       <h1 class="hdx-v2-auth-card__title">{{ _('Log in') }}</h1>
     </div>
 
-    {% if info_message %}
-      {% snippet 'v2/components/alert.html', message=info_message, variant='info' %}
+    {% set flash_output = self.flash_inner() %}
+    {% if flash_output | trim or info_message %}
+      <div class="hdx-v2-auth-card__messages">
+        {{ flash_output }}
+        {% if info_message %}
+          {% snippet 'v2/components/alert.html', message=info_message, variant='info' %}
+        {% endif %}
+      </div>
     {% endif %}
 
     <div class="hdx-v2-auth-card__returning-user" id="auth-returning-user" hidden>

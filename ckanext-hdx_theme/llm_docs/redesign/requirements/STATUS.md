@@ -94,3 +94,4 @@
 | 090 | [sysadmin-custom-pages-v2](090-sysadmin-custom-pages-v2.md)                                                     | implemented | |
 | 091 | [crisis-page-edit-form-v2](091-crisis-page-edit-form-v2.md)                                                     | implemented | |
 | 092 | [edit-location-page-v2](092-edit-location-page-v2.md)                                                           | implemented | |
+| 093 | [password-reset-confirmation](093-password-reset-confirmation.md)                                               | implemented | |

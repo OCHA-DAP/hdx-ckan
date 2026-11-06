@@ -123,3 +123,32 @@ class TestPasswordReset(hdx_test_base.HdxBaseTest):
         reset_page_url = url_for('hdx_user.perform_reset', id=user.id, key=expired_key)
         response = self.app.get(reset_page_url)
         assert 'has expired' in response.body
+
+    @mock.patch('ckanext.hdx_users.actions.update.hdx_mailer.mail_recipient')
+    def test_reset_success_lands_on_login(self, mocked_mail_recipient):
+        '''
+        Tests that a successful reset redirects to the login page, which shows the confirmation inside the card
+        '''
+        email = 'reset_lands_on_login_user@hdx.hdxtest.org'
+        user_dict = factories.User(name='reset_lands_on_login_user', email=email)
+
+        data_dict = {
+            'id': email
+        }
+        _get_action('hdx_send_reset_link')({}, data_dict)
+        user = model.User.get(user_dict['id'])
+
+        client = self.app.test_client()
+        reset_page_url = url_for('hdx_user.perform_reset', id=user.id, key=user.reset_key)
+        form = {
+            'password1': 'Dummy_Password34',
+            'password2': 'Dummy_Password34',
+        }
+        response = client.post(reset_page_url, data=form, follow_redirects=False)
+        assert response.status_code == 302
+        assert response.headers['Location'].endswith(url_for('hdx_signin.login'))
+
+        response = client.get(url_for('hdx_signin.login'))
+        assert '<div class="hdx-v2-auth-card__messages">' in response.body
+        assert '<span class="c-alert__message">Your password has been reset.</span>' in response.body
+        assert '<div class="flash-messages">' not in response.body
