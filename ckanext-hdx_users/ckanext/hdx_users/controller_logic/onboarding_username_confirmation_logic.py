@@ -110,7 +110,10 @@ def _is_subscribed_to_emails(user_data: DataDict) -> bool:
         'user_id': user_data.get('id'),
         'key': ONBOARDING_MAILCHIMP_OPTIN_KEY
     }
-    ue_extra = get_action('user_extra_value_by_key_show')(context, ue_data_dict)
+    try:
+        ue_extra = get_action('user_extra_value_by_key_show')(context, ue_data_dict)
+    except tk.ObjectNotFound:
+        return False
 
     return ue_extra and ue_extra.get('hdx_onboarding_mailchimp_optin') == 'true'
 
