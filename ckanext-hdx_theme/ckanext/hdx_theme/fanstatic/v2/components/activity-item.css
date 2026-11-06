@@ -69,6 +69,17 @@
   color: inherit;
   text-decoration: underline;
 }
+.c-activity-item__links {
+  align-self: stretch;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--hdx-space-13);
+  font-family: var(--hdx-font-body);
+  font-size: var(--hdx-fs-xs);
+  font-weight: var(--hdx-fw-regular);
+  line-height: var(--hdx-lh-normal);
+}
 .c-activity-item__time {
   align-self: stretch;
   font-family: var(--hdx-font-body);
@@ -91,4 +102,7 @@
   line-height: var(--hdx-lh-normal);
   color: var(--hdx-neutral-85);
   margin: 0;
+}
+.c-activity-stream__load-more {
+  margin-top: var(--hdx-space-6);
 }

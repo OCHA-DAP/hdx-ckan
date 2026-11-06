@@ -168,10 +168,10 @@ v2 pages will need a new bundle (see §8.3).
 | Element | Figma value | v2 component |
 |---|---|---|
 | Step pager | 32px circles, 2px border, horizontal connecting lines | `c-step-pager` (new) |
-| Active step badge | white bg, `#0162dd` border, bold number | `.c-step-pager__badge--active` |
+| Active step badge | white bg, `#0162dd` border, bold number | `.c-step-pager__step--active .c-step-pager__badge` |
 | Inactive step badge | `#ccc` bg + border | default state |
 | Step labels | visible XL/MD, hidden SM | responsive CSS |
-| Page title | Merriweather, 2rem / 1.75rem / 1.5rem | `.hdx-display-s()` |
+| Page title | Merriweather, 2rem / 1.75rem / 1.5rem | `.hdx-page-title-scale()` |
 | Mandatory note ("* indicates mandatory fields") | body-s | `.hdx-body-s()` |
 | Text input | 37px height, 1px gainsboro border, 2px radius | `c-search-input --size-m` |
 | Password field | same + eye-off SVG toggle | `c-search-input --size-m` with `type='password'` |
@@ -277,27 +277,30 @@ Purpose: Horizontal 3-step progress indicator shown at the top of all signup for
 | `current_step` | integer (1-based) | required | Index of the currently active step |
 
 **States** (derived in template from `loop.index` vs `current_step`):
-- `loop.index < current_step` → completed: blue filled circle with checkmark icon, blue connecting line
+- `loop.index < current_step` → completed: blue filled circle with the white step number, blue connecting line
 - `loop.index == current_step` → active: white bg circle, 2px blue border, bold number
 - `loop.index > current_step` → inactive: neutral-2 bg circle, neutral-2 border, normal number
 
 **Jinja structure:**
 
-A `<div class="c-step-pager__connector">` is inserted between each step. When `loop.index <= current_step` the connector also receives the `--filled` modifier. No inline style or CSS custom property is used.
+An `<ol>` of `<li class="c-step-pager__item">`; every item after the first starts with an `aria-hidden` `<div class="c-step-pager__connector">`, which gets the `--filled` modifier when `loop.index <= current_step`. The active item carries `aria-current="step"`. The visible label is `aria-hidden`; an `.sr-only` copy (", completed" on completed steps) is read at every width. No inline style or CSS custom property is used.
 
 ```jinja2
-<div class="c-step-pager">
+<ol class="c-step-pager">
   {% for step in steps %}
-    {% if not loop.first %}
-      <div class="c-step-pager__connector{% if loop.index <= current_step %} c-step-pager__connector--filled{% endif %}"></div>
-    {% endif %}
     {% set state = 'completed' if loop.index < current_step else 'active' if loop.index == current_step else '' %}
-    <div class="c-step-pager__step{% if state %} c-step-pager__step--{{ state }}{% endif %}">
-      <div class="c-step-pager__badge">{{ loop.index }}</div>
-      <div class="c-step-pager__label">{{ step }}</div>
-    </div>
+    <li class="c-step-pager__item"{% if state == 'active' %} aria-current="step"{% endif %}>
+      {% if not loop.first %}
+        <div class="c-step-pager__connector{% if loop.index <= current_step %} c-step-pager__connector--filled{% endif %}" aria-hidden="true"></div>
+      {% endif %}
+      <div class="c-step-pager__step{% if state %} c-step-pager__step--{{ state }}{% endif %}">
+        <div class="c-step-pager__badge">{{ loop.index }}</div>
+        <div class="c-step-pager__label" aria-hidden="true">{{ step }}</div>
+        <span class="sr-only">{{ step }}{% if state == 'completed' %}, {{ _('completed') }}{% endif %}</span>
+      </div>
+    </li>
   {% endfor %}
-</div>
+</ol>
 ```
 
 **CSS structure:**
@@ -309,6 +312,16 @@ Connectors are real DOM elements that flex-grow between steps. The `--filled` mo
     display:     flex;
     align-items: flex-start;
     width:       100%;
+    margin:      0;
+    padding:     0;
+    list-style:  none;
+
+    &__item {
+        display:     flex;
+        align-items: flex-start;
+
+        &:not(:first-child) { flex: 1 1 auto; }
+    }
 
     &__connector {
         flex:       1;
@@ -709,7 +722,7 @@ Two existing scripts were rewritten in place (no `v2/onboarding/` subdirectory c
 ## 10. Decisions Taken
 
 **D1. `c-step-pager` connector layout** → **Connector `<div>` elements with `--filled` modifier.**
-One `<div class="c-step-pager__connector">` is inserted between each step in the Jinja loop. When `loop.index <= current_step` the `--filled` modifier switches the background to `var(--hdx-primary-5)`. No pseudo-elements or `--pager-fill-ratio` custom property. See §3.2.
+One `<div class="c-step-pager__connector">` opens each `<li>` after the first in the Jinja loop. When `loop.index <= current_step` the `--filled` modifier switches the background to `var(--hdx-primary-5)`. No pseudo-elements or `--pager-fill-ratio` custom property. See §3.2.
 
 **D2. Feature number badge** → **Bespoke `div`, no `c-label`. Numbered badges apply only to the "Share data" tier.**
 Style `.c-signup-tier__feature-number` entirely within `signup-tier.less`. No dependency on the `c-label` component. Numbered badges render only for the third tier ("Share data", for orgs), whose 3 features are sequential steps and each pass `'number': 1/2/3`. The first two tiers ("Search Data", "Sign up") list unordered benefits with no `number` key, so `signup-tier.html` renders checkmark icons for them instead — this is correct, not a gap.

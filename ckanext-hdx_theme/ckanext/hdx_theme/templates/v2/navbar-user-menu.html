@@ -1,3 +1,20 @@
+{#
+  Snippet: navbar-user-menu.html
+  Path:    templates/v2/navbar-user-menu.html
+
+  Desktop user menu panel (#hdx-v2-panel-user-menu), opened by the navbar
+  avatar: user name + close, one collapsible group per section, Log out.
+
+  Parameters
+  ─────────────────────────────────────────────────
+  sections  {list}  Menu groups from h.hdx_get_user_menu_sections():
+                    [{id, label, items: [{id, label, href}]}].  Required.
+  ─────────────────────────────────────────────────
+  Example
+
+  {% snippet 'v2/navbar-user-menu.html', sections=user_menu_sections %}
+#}
+
 <div class="hdx-v2-user-menu" id="hdx-v2-panel-user-menu" hidden>
 
   <div class="hdx-v2-user-menu__header">
@@ -9,7 +26,7 @@
     </button>
   </div>
 
-  {% for section in h.hdx_get_user_menu_sections() %}
+  {% for section in sections %}
   <div class="hdx-v2-user-menu__section">
     <button class="hdx-v2-user-menu__section-toggle" type="button"
             aria-expanded="true" aria-controls="desk-{{ section.id }}">

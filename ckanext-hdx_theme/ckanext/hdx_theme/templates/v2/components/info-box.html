@@ -1,0 +1,30 @@
+{#
+  Snippet: info-box.html
+  Path:    templates/v2/components/info-box.html
+
+  Renders a c-info-box — a light-blue panel with an info icon and one or
+  more paragraphs of static text (no live-region role).
+
+  Parameters
+  ─────────────────────────────────────────────────
+  paragraphs    {list}    Paragraph strings.  default: []
+  extra_classes {string}  Additional classes on the wrapper.  default: ''
+  ─────────────────────────────────────────────────
+
+  Example
+
+  {% snippet 'v2/components/info-box.html',
+      paragraphs=['First paragraph.', 'Second paragraph.'] %}
+#}
+
+{% set paragraphs    = paragraphs    if paragraphs    is defined else [] %}
+{% set extra_classes = extra_classes if extra_classes is defined else '' %}
+
+<div class="c-info-box{{ ' ' ~ extra_classes if extra_classes else '' }}">
+  <span class="c-info-box__icon">{{ h.hdx_v2_icon('v2/icons/info-fill.svg') }}</span>
+  <div class="c-info-box__body">
+    {% for paragraph in paragraphs %}
+      <p class="c-info-box__text">{{ paragraph }}</p>
+    {% endfor %}
+  </div>
+</div>

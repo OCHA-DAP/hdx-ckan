@@ -36,20 +36,20 @@ Decisions confirmed with the requester are listed in §10.
 
 - `ckanext-hdx_theme/ckanext/hdx_theme/templates/error_document_template.html` overrides CKAN
   core's `ckan/templates/error_document_template.html`. It extends `page_light.html` → `base.html`.
-- Branches on `h.hdx_check_http_response(code, N)` (`ckanext-hdx_theme/ckanext/hdx_theme/plugin.py:263`)
+- Branches on `h.hdx_check_http_response(code, N)` (`ckanext-hdx_theme/ckanext/hdx_theme/plugin.py`)
   for exactly `404`, `403`, and `500`; every other code (**including 503**) falls into a generic
   "Something went wrong" else-branch. There is no dedicated 503/other-5xx design today.
 - Shows a `hdx_bot2.gif` image, a heading/copy pair, and a single "Back to homepage" button
   (`hdx_splash.index`). No distinct visual treatment per error type beyond the copy.
-- Registered dynamically in `ckan/config/middleware/flask_app.py`, `_register_error_handler`
-  (~line 518-552): `app.register_error_handler(code, error_handler)` for all default exceptions,
+- Registered dynamically in `ckan/config/middleware/flask_app.py`, `_register_error_handler`:
+  `app.register_error_handler(code, error_handler)` for all default exceptions,
   plus a catch-all `Exception` handler outside debug/testing. `error_handler` calls
   `base.render('error_document_template.html', extra_vars)`. This is fully server-rendered per
   request — confirms 404/5xx cannot become static files without app changes (excluded from scope).
 
 ### Inherited chrome and asset payload (the core problem this task addresses)
 
-`page_light.html` still includes the full v1 header (`header-mobile.html`, 158 lines) and footer
+`page_light.html` still includes the full v1 header (`header-mobile.html`) and footer
 (`footer-wide.html` → `footer.html`), plus:
 - Styles: `page-light-styles` (preloads `page-common-styles`, `search-styles`,
   `adaptive-page-styles`) + an onboarding bulk styles bundle depending on login state.
@@ -63,7 +63,7 @@ None of this is needed for a static error message with two buttons.
 ### Analytics
 
 GTM (`GTM-MFNPQ7K`) and Mixpanel are injected globally by `base.html`'s `google_analytics_init` /
-`mixpanel_init` blocks (lines ~16-88, ~191-195) — inherited automatically by every page that extends
+`mixpanel_init` blocks — inherited automatically by every page that extends
 `base.html`, including today's error pages. **There is no error-specific tracking** (e.g. no "user
 hit a 404" event) — just the same sitewide analytics every page gets for free.
 
@@ -80,13 +80,13 @@ a simple WSGI-app listener config with no static-error-page directives.
 - `v2/page.html` is the established base for every v2-redesigned page — `search/search.html`,
   `organization/*.html`, `package/resource_read.html`, `home/index.html`, etc. all extend it
   directly. It extends `base.html` directly (not `page_light.html`), and supplies its own
-  `v2/header.html` (446 lines) / `v2/footer.html` (250 lines), Google Fonts (Merriweather +
+  `v2/header.html` / `v2/footer.html`, Google Fonts (Merriweather +
   Roboto — the same families Figma uses here), and the `v2-page-styles`/`v2-page-scripts` asset
   bundles. `v2-page-styles` preloads `v2-components-styles`, which bundles **every** v2 component's
   CSS (accordion, activity-card, dataset-card, dropdown, checkbox, ... — dozens of files) — far more
   than an error page needs.
 - Font Awesome's CDN `<link>` (`cdnjs.cloudflare.com/.../font-awesome/...`) is hardcoded directly in
-  `base.html`'s `<head>`, outside any `{% block %}` (~line 177) — so every page that extends
+  `base.html`'s `<head>`, outside any `{% block %}` — so every page that extends
   `base.html`, v1 or v2, pays for it. A repo-wide grep across `templates/v2/` and
   `hdx-styles/src/common/less/v2/` for `fa-`/`class="fa`/`"fas `/`"far `/`"fab ` returns **zero**
   matches: v2 does not use Font Awesome anywhere, it exclusively uses SVG icons (e.g.

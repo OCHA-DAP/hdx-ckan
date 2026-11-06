@@ -1,0 +1,32 @@
+.c-info-box {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--hdx-space-3);
+  padding: var(--hdx-space-6);
+  border-radius: var(--hdx-radius-md);
+  background-color: var(--hdx-primary-05);
+}
+.c-info-box__icon {
+  flex-shrink: 0;
+  line-height: 0;
+  color: var(--hdx-primary-5);
+}
+.c-info-box__icon svg {
+  width: var(--hdx-space-6);
+  height: var(--hdx-space-6);
+}
+.c-info-box__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hdx-space-5);
+  flex: 1;
+  min-width: 0;
+}
+.c-info-box__text {
+  font-family: var(--hdx-font-body);
+  font-size: var(--hdx-fs-m);
+  font-weight: var(--hdx-fw-regular);
+  line-height: var(--hdx-lh-normal);
+  color: var(--hdx-neutral-95);
+  margin: 0;
+}

@@ -1,27 +1,257 @@
-{% extends "organization/snippets/organization_form.html" %}
+{% set is_edit = action == 'edit' %}
+{% set stored = group_dict if is_edit else {} %}
+{% set errors = errors or {} %}
 
-{#
-As the form is rendered as a seperate page we take advantage of this by
-overriding the form blocks depending on the current context
-#}
-{% block dataset_fields %}
-  {% if action == "edit" %}{{ super() }}{% endif %}
-{% endblock %}
+{% set stored_customization = h.hdx_get_extras_element(stored, value_key='customization') %}
+{% set stored_customization = h.load_json(stored_customization) if stored_customization else {} %}
+{% set customization = {} %}
+{% for key, value in stored_customization.items() if key not in ['image_sq', 'image_rect'] %}
+  {% do customization.update({key: value}) %}
+{% endfor %}
 
-{% block custom_fields %}
-  {#
-  {% if action == "edit" %}{{ super() }}{% endif %}
-  #}
-{% endblock %}
+{% set stored_logo = stored_customization.get('image_rect') or '' %}
+{% set logo = (data.get('image_rect') or '') if 'image_rect' in data else stored_logo %}
+{% set logo_clear = data.get('clear_image_rect') or '' %}
+{% if logo and not logo.startswith('http') and logo != stored_logo %}
+  {% set logo = stored_logo %}
+  {% set logo_clear = '' %}
+{% endif %}
 
-{% block save_text %}
-  {%- if action == "edit" -%}
-    {{ _('Update Organisation') }}
-  {%- else -%}
-    {{ _('Submit') }}
-  {%- endif -%}
-{% endblock %}
+{% set custom_org = h.hdx_get_extras_element(data, value_key='custom_org') %}
+{% set closed_organization = h.hdx_get_extras_element(data, value_key='closed_organization') in [True, 'true', 'True'] %}
+{% set request_membership = (h.hdx_get_extras_element(data, value_key='request_membership') or 'true') == 'true' %}
+{% set slug_prefix = h.url_for('organization.read', id='', qualified=true) | replace('http://', '') | replace('https://', '') %}
 
-{% block delete_button %}
-  {% if action == "edit" %}{{ super() }}{% endif %}
-{% endblock %}
+<form id="req-create-org-form"
+      class="hdx-v2-signup-form-page__card"
+      method="post"
+      enctype="multipart/form-data">
+  {{ h.csrf_input() }}
+
+  <h1 class="hdx-v2-signup-form-page__heading">{{ _('Edit org page') if is_edit else _('Create an organisation') }}</h1>
+
+  {% if not is_edit %}
+    {% snippet 'v2/components/info-box.html',
+        paragraphs=[_('Creating an organisation is easy.'),
+                    _("Organisations don't have to be legal entities - they can be informal groups that users create to share data publicly or privately.")] %}
+  {% endif %}
+
+  {% if error_summary and not errors %}
+    {% snippet 'v2/components/alert.html', message=error_summary.values() | join(' ') %}
+  {% endif %}
+
+  <section class="hdx-v2-signup-form-page__fields">
+    <h2 class="hdx-v2-org-edit__section-title">1. {{ _('Basic Details') }}</h2>
+
+    <div class="c-form-field">
+      {% snippet 'v2/components/text-field.html',
+          size='m',
+          name='title',
+          id='field-title',
+          label=_('Name of organisation'),
+          required=True,
+          value=data.get('title') or '',
+          errors=errors.get('title') %}
+    </div>
+
+    {% snippet 'v2/components/slug-preview.html',
+        name='name',
+        id='field-url',
+        label=_('URL'),
+        required=True,
+        value=data.get('name') or '',
+        placeholder=_('my-organisation'),
+        prefix=slug_prefix,
+        preview_placeholder='<organization>',
+        target_id='field-title',
+        errors=errors.get('name') %}
+
+    <div class="c-form-field">
+      {% snippet 'v2/components/text-field.html',
+          size='m',
+          type='url',
+          name='org_url',
+          id='field-org-url',
+          label=_('URL of organisation'),
+          value=h.hdx_get_extras_element(data),
+          placeholder=_('https://example.com/about'),
+          errors=errors.get('org_url') %}
+    </div>
+
+    <div class="c-form-field">
+      {% snippet 'v2/components/text-field.html',
+          size='m',
+          multiline=True,
+          name='description',
+          id='field-description',
+          label=_('Description of organisation'),
+          required=True,
+          value=data.get('description') or '',
+          errors=errors.get('description') %}
+    </div>
+
+    <div class="c-form-field">
+      {% snippet 'v2/components/text-field.html',
+          size='m',
+          name='org_acronym',
+          id='field-org-acronym-id',
+          label=_('Organisation Acronym'),
+          value=h.hdx_get_extras_element(data, value_key='org_acronym'),
+          errors=errors.get('org_acronym') %}
+    </div>
+
+    <div class="c-form-field">
+      {% snippet 'v2/components/select.html',
+          name='hdx_org_type',
+          id='field-hdx-org-type-id',
+          label=_('Organisation type'),
+          required=True,
+          placeholder=_('Select'),
+          options=h.hdx_organization_type_dict(),
+          selected=h.hdx_get_extras_element(data, value_key='hdx_org_type'),
+          errors=errors.get('hdx_org_type') %}
+    </div>
+
+    {% if c.userobj.sysadmin %}
+      <div class="c-form-field">
+        {% snippet 'v2/components/text-field.html',
+            size='m',
+            name='fts_id',
+            id='field-fts-id',
+            label=_('FTS ID'),
+            value=h.hdx_get_extras_element(data, value_key='fts_id'),
+            errors=errors.get('fts_id') %}
+      </div>
+    {% endif %}
+
+    <div class="hdx-v2-signup-form-page__checkbox-group">
+      <div class="hdx-v2-signup-form-page__checkbox-row" id="customization-trigger">
+        {% snippet 'v2/components/checkbox.html',
+            id='field-custom_org',
+            name='custom_org',
+            value='1',
+            checked=custom_org,
+            label=_('Use custom organisation page'),
+            error_slot=false %}
+      </div>
+      <div class="hdx-v2-signup-form-page__checkbox-row">
+        {% snippet 'v2/components/checkbox.html',
+            id='field-closed_organization',
+            checked=closed_organization,
+            label=_('This organisation is closed/inactive'),
+            error_slot=false %}
+        <input type="hidden" name="closed_organization" id="hidden-field-closed_organization" value="{{ 'true' if closed_organization else 'false' }}">
+      </div>
+      <div class="hdx-v2-signup-form-page__checkbox-row">
+        {% snippet 'v2/components/checkbox.html',
+            id='field-request_membership',
+            checked=request_membership,
+            label=_('Allow membership requests'),
+            error_slot=false %}
+        <input type="hidden" name="request_membership" id="hidden-field-request_membership" value="{{ 'true' if request_membership else 'false' }}">
+      </div>
+    </div>
+  </section>
+
+  <section class="hdx-v2-signup-form-page__fields">
+    <h2 class="hdx-v2-org-edit__section-title">2. {{ _('Logo') }}</h2>
+
+    {% snippet 'v2/components/image-upload.html',
+        field_url='image_rect',
+        field_upload='image_rect_upload',
+        field_clear='clear_image_rect',
+        value=logo,
+        preview_url=h.hdx_organization_logo_url(logo) or '',
+        clear_value=logo_clear,
+        label=_('Organisation logo'),
+        url_label=_('Organisation logo URL'),
+        remove_label=_('Remove organisation logo'),
+        id='field-image-rect',
+        upload_enabled=h.uploads_enabled(),
+        accept='image/png,image/gif,image/jpeg',
+        errors=errors.get('image_rect_upload') or errors.get('upload') %}
+  </section>
+
+  {% if c.userobj.sysadmin %}
+    <section class="hdx-v2-signup-form-page__fields">
+      <h2 class="hdx-v2-org-edit__section-title">3. {{ _('Optional user survey') }}</h2>
+
+      <div class="c-form-field">
+        {% snippet 'v2/components/text-field.html',
+            size='m',
+            name='user_survey_url',
+            id='field-user-survey-url',
+            label=_('User survey URL'),
+            value=h.hdx_get_extras_element(data, value_key='user_survey_url'),
+            errors=errors.get('user_survey_url') %}
+      </div>
+    </section>
+  {% endif %}
+
+  <input type="hidden" name="customization" value="{{ h.dump_json(customization) }}">
+  <input type="hidden" name="visualization_config" value="{{ h.hdx_get_extras_element(stored, value_key='visualization_config') }}">
+  <input type="hidden" name="modified_at" id="field-modified_at">
+
+  <div class="hdx-v2-signup-form-page__actions">
+    {% snippet 'v2/components/button.html',
+        label=_('Cancel'),
+        style='tertiary',
+        size='l',
+        tag='a',
+        href=h.url_for('organization.read', id=group_dict.name) if is_edit else h.url_for('organization.index') %}
+    {% snippet 'v2/components/button.html',
+        label=_('Submit'),
+        style='primary',
+        size='l',
+        button_type='submit',
+        attrs={'name': 'save', 'value': 'save'} %}
+  </div>
+</form>
+
+{% if is_edit and group_dict.state in ['active', 'deleted'] and h.check_access('organization_delete', {'id': group_dict.id}) %}
+  <div class="hdx-v2-signup-form-page__card">
+    <hr class="c-divider">
+    <div class="hdx-v2-org-edit__danger">
+      {% if group_dict.state == 'active' %}
+        <h2 class="hdx-v2-org-edit__section-title">{{ _('Delete organisation') }}</h2>
+        {% snippet 'v2/components/button.html',
+            style='tertiary',
+            size='m',
+            label=_('Delete organisation'),
+            attrs={'onclick': "window.hdxV2Drawer('delete-org-drawer').open()"} %}
+      {% else %}
+        <h2 class="hdx-v2-org-edit__section-title">{{ _('Restore organisation') }}</h2>
+        <form method="post" action="{{ h.url_for('hdx_org.restore', id=group_dict.id) }}">
+          {{ h.csrf_input() }}
+          {% snippet 'v2/components/button.html',
+              style='tertiary',
+              size='m',
+              button_type='submit',
+              label=_('Restore organisation') %}
+        </form>
+      {% endif %}
+    </div>
+  </div>
+
+  {% if group_dict.state == 'active' %}
+    {% set has_datasets = (group_dict.package_count or 0) > 0 %}
+    {% call h.snippet('v2/components/drawer.html',
+        drawer_id='delete-org-drawer',
+        title=_('Delete organisation')) %}
+      <form class="c-drawer-form" method="post"
+            action="{{ h.url_for('organization.delete', id=group_dict.id) }}">
+        {{ h.csrf_input() }}
+        <p class="c-drawer-form__text">
+          {{ _('This organisation cannot be deleted while it still has datasets.') if has_datasets else _('Are you sure you want to delete this organisation?') }}
+        </p>
+        <div class="c-drawer-form__buttons">
+          {% snippet 'v2/components/button.html',
+              style='tertiary', label=_('Cancel'), attrs={'data-drawer-close': ''} %}
+          {% snippet 'v2/components/button.html',
+              style='primary', button_type='submit', label=_('Delete'),
+              state='disabled' if has_datasets else 'enabled' %}
+        </div>
+      </form>
+    {% endcall %}
+  {% endif %}
+{% endif %}

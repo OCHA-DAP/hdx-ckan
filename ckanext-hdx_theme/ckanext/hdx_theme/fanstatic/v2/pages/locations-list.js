@@ -97,16 +97,8 @@
       var section = id ? document.getElementById(id) : null;
       var visible = section && section.style.display !== 'none';
 
-      anchor.classList.toggle('is-disabled', !visible);
-
-      if (!visible) {
-        anchor.classList.remove('is-active');
-        anchor.setAttribute('aria-disabled', 'true');
-        anchor.setAttribute('tabindex', '-1');
-      } else {
-        anchor.removeAttribute('aria-disabled');
-        anchor.removeAttribute('tabindex');
-      }
+      window.hdxV2.setDisabled(anchor, !visible);
+      if (!visible) anchor.classList.remove('is-active');
     });
   }
 

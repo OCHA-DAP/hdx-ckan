@@ -39,19 +39,19 @@ and §6 Dataset Page Integration for the resulting decisions.
 | | Request Data Access | Contact Contributor |
 |---|---|---|
 | Route | `/dataset/<id>/request-access/` → `hdx_dataset.request_access` | `/dataset/<id>/contact/` → `hdx_dataset.contact_contributor` |
-| View class | `DatasetRequestAccessView` — `ckanext-hdx_package/ckanext/hdx_package/views/dataset.py:651-769` | `DatasetContactContributorView` — same file, lines 547-648 |
+| View class | `DatasetRequestAccessView` — `ckanext-hdx_package/ckanext/hdx_package/views/dataset.py` | `DatasetContactContributorView` — same file |
 | Logic class | `DatasetRequestAccessLogic` — `controller_logic/dataset_request_access_logic.py` | `DatasetContactContributorLogic` — `controller_logic/dataset_contact_contributor_logic.py` |
-| Auth function | `hdx_request_access` — `actions/authorize.py:174-183` (any logged-in user) | `hdx_send_mail_contributor` — `actions/authorize.py:52-66` (any logged-in user) |
+| Auth function | `hdx_request_access` — `actions/authorize.py` (any logged-in user) | `hdx_send_mail_contributor` — `actions/authorize.py` (any logged-in user) |
 | 404 condition | `NOT pkg_dict.is_requestdata_type` → 404 | `pkg_dict.is_requestdata_type` → 404 |
 | Anonymous user | Redirect to `hdx_signin.login`, `info_message_type='hdx-connect'`, `came_from` | Redirect to `hdx_signin.login`, `info_message_type='contact-contributor'`, `came_from` |
-| Extra guard | Duplicate-request block: `h.hdx_pending_request_data(...)` (`helpers.py:1066-1067`) — form hidden, notice shown if a request is already pending | none |
+| Extra guard | Duplicate-request block: `h.hdx_pending_request_data(...)` (`helpers.py`) — form hidden, notice shown if a request is already pending | none |
 
 These two flows are **mutually exclusive by dataset type** — confirmed exact-inverse 404 guards.
 No changes to any of the above are in scope.
 
-### Request Access form fields (current v1, `request_access.html:73-192`)
+### Request Access form fields (current v1, `request_access.html`)
 
-Schema: `request_create_schema()` — `src/ckanext-requestdata/ckanext/requestdata/logic/schema.py:18-31`.
+Schema: `request_create_schema()` — `src/ckanext-requestdata/ckanext/requestdata/logic/schema.py`.
 
 | Field | Type/widget (v1) | Required | Validators | Prefill |
 |---|---|---|---|---|
@@ -76,13 +76,13 @@ events. See §4/§11 for the v2 equivalent.
 ### Submission handling
 
 Standard HTML form POST (no AJAX) to `hdx_dataset.request_access`. On success, the view
-re-renders the same template with `request_sent=True` (`views/dataset.py:691-696`); on
-validation error, re-renders with `errors`/`data`/`error_summary` (`views/dataset.py:682-712`);
-unhandled exceptions show a generic "contact an administrator" message (`views/dataset.py:719-722`).
+re-renders the same template with `request_sent=True` (`views/dataset.py`); on
+validation error, re-renders with `errors`/`data`/`error_summary` (`views/dataset.py`);
+unhandled exceptions show a generic "contact an administrator" message (`views/dataset.py`).
 
 ### Success state (current v1)
 
-Same template toggles on `request_sent` (`request_access.html:34-52`), injecting
+Same template toggles on `request_sent` (`request_access.html`), injecting
 `<input type="hidden" id="request_sent" value="{{ request_sent }}">` for the analytics script.
 
 Current copy (`helpers/ui_constants/request_access/__init__.py`) — **verified identical to the
@@ -94,32 +94,32 @@ new Figma exports, no content changes needed**:
 
 | Event | Trigger | Implementation | Present in v2 entry point? |
 |---|---|---|---|
-| `sendMessagingEvent('dataset', 'data request', null, null, true)` | Form submitted successfully | `fanstatic/v2/pages/request-access.js:5-11`, reads `#request_sent` | N/A — fires from the destination page, unaffected by entry-point version |
-| `hdx_click_stopper` → `sendLinkClickEvent({linkType:'dataset resources', label:'Request data', ...})` | Click on "Request data" CTA | v1: `resources_list.html:59-61` / `resource_req_item.html`; v2: `resource_item_v2.html`'s `request_attrs` dict, forwarded to `resource-card.html`'s button `attrs` (also wired in `resources_list.html`'s empty-resources branch) | ✅ Present |
-| `hdx-onboarding-flow` state priming (`data-start-page-type="hdx-connect"`) | Anonymous user clicks CTA | v1: `resources_list.html:59-61`, consumed by `fanstatic/hdx-onboarding-flow.js`; v2: same `request_attrs` dict, added only when `not current_user.is_authenticated` | ✅ Present |
+| `sendMessagingEvent('dataset', 'data request', null, null, true)` | Form submitted successfully | `fanstatic/v2/pages/request-access.js`, reads `#request_sent` | N/A — fires from the destination page, unaffected by entry-point version |
+| `hdx_click_stopper` → `sendLinkClickEvent({linkType:'dataset resources', label:'Request data', ...})` | Click on "Request data" CTA | v1: `resources_list.html` / `resource_req_item.html`; v2: `resource_item_v2.html`'s `request_attrs` dict, forwarded to `resource-card.html`'s button `attrs` (also wired in `resources_list.html`'s empty-resources branch) | ✅ Present |
+| `hdx-onboarding-flow` state priming (`data-start-page-type="hdx-connect"`) | Anonymous user clicks CTA | v1: `resources_list.html`, consumed by `fanstatic/hdx-onboarding-flow.js`; v2: same `request_attrs` dict, added only when `not current_user.is_authenticated` | ✅ Present |
 
 See §8 for the full analytics table.
 
 ### Permissions / visibility
 
 - CTA rendered only when `pkg.is_requestdata_type` is true (both v1 and v2).
-- `custom_validator.py:710-712` (`hdx_resources_not_allowed_if_requested_data`) blocks uploaded
+- `custom_validator.py` (`hdx_resources_not_allowed_if_requested_data`) blocks uploaded
   file resources on `is_requestdata_type` datasets at the schema level (unrelated to this task,
   reference only).
 - Access to the form itself: any authenticated user, no org-membership/role gate.
 
 ### Entry point (dataset page, already v2 — audit only, not a rebuild target)
 
-- `templates/package/snippets/resource_item_v2.html:26-27,48` sets `hdx_connect =
+- `templates/package/snippets/resource_item_v2.html` sets `hdx_connect =
   pkg.is_requestdata_type` and `request_href`.
-- `templates/v2/components/resource-card.html:198-206,221-225` renders the primary "Request
+- `templates/v2/components/resource-card.html` renders the primary "Request
   data" button + eye-off icon overlay in place of the Download button.
-- Empty-resources case: `templates/package/snippets/resources_list.html:38-45` renders the same
+- Empty-resources case: `templates/package/snippets/resources_list.html` renders the same
   card with `hdx_connect=True` and description "To access data please use the request button."
-- Page header: `templates/v2/components/page-header.html:133-137` renders a "Request only data"
-  yellow label chip (via `page-header.html:24,135`) when `pkg.is_requestdata_type`.
+- Page header: `templates/v2/components/page-header.html` renders a "Request only data"
+  yellow label chip (via its `request_only` param) when `pkg.is_requestdata_type`.
 - **Confirmed via `grep`: this label chip exists in exactly one place in the current codebase**
-  (`page-header.html:135`) — see §2/§6/§11 for the second location Figma shows and the decision
+  (`page-header.html`) — see §2/§6/§11 for the second location Figma shows and the decision
   to add it.
 
 ---
@@ -169,10 +169,10 @@ Full dataset-page export for an `is_requestdata_type` dataset. Confirms:
 - Resource card renders "Request data" primary button + eye-off icon + "To access data please
   use the request button" description — **matches current v2 `resource-card.html` exactly**.
 - "Request only data" label chip appears in the title area (`.label` with lock icon) — **matches
-  current `page-header.html:135`**.
+  current `page-header.html`**.
 - **Gap found:** a *second* "Request only data" chip (`.label5`, lock icon) appears in the "Data
   and resources" accordion section header. Grepping the current codebase found the label string
-  in exactly one place (`page-header.html:135`) — this second chip does not currently exist
+  in exactly one place (`page-header.html`) — this second chip does not currently exist
   anywhere in code. **Decision: in scope** — add as a third dataset-page fix alongside §6's two
   decisions, confirmed with requester.
 - **Gap found:** a "Contact organisation" button is shown in the top-right org card, even though
@@ -226,7 +226,7 @@ closest existing-component extension (no new component), confirmed with requeste
 
 **Decision — checkbox errors/required state:** `checkbox.html` gets an `errors` param, mirroring
 the `text-field.html`/`dropdown.html` convention — adds a `c-checkbox--error` modifier class and
-populates the existing `.c-checkbox__error` span (`checkbox.less:122-140` already defines the
+populates the existing `.c-checkbox__error` span (`checkbox.less` already defines the
 modifier and its sibling-selector display rule). It also gets a required-asterisk span
 (`c-checkbox__required`), mirroring `c-search-input__required`/`c-form-field__required` — the
 component had no visible required indicator at all before this task, only the native
@@ -280,8 +280,8 @@ submitted values           input injected; GA event
 ```
 
 Duplicate-request case: if `h.hdx_pending_request_data(...)` finds an existing pending request
-for this user+dataset, the form is hidden and a notice is shown instead (`request_access.html:69`,
-`views/dataset.py:670-672`) — this is a third page state to preserve, not shown in the Figma
+for this user+dataset, the form is hidden and a notice is shown instead (`request_access.html`,
+`views/dataset.py`) — this is a third page state to preserve, not shown in the Figma
 exports (which only cover default-form and sent states) — see Edge Cases §10.
 
 ---
@@ -295,13 +295,13 @@ exports (which only cover default-form and sent states) — see Edge Cases §10.
 
 ### Three in-scope fixes, confirmed with requester before drafting this doc
 
-1. **Contact-organisation visibility guard.** `page-header.html:300-305` (MD+ card) and
-   `:226-230` (SM-only card) render the "Contact organisation" button whenever `org_name` is set,
+1. **Contact-organisation visibility guard.** `page-header.html`'s org card renders the
+   contact button whenever `org_name` is set,
    with no check on `is_requestdata_type` — unlike v1's `base_actions_menu.html`, which computes
    `hide_contact_contributor = pkg.is_requestdata_type` and hides the link. Since the Contact
    Contributor route 404s for `is_requestdata_type` datasets, the current v2 page header can
    render a button that dead-ends in a 404. **Decision: add the same `is_requestdata_type` guard
-   to `page-header.html`'s two "Contact organisation" render blocks**, matching v1 behavior. This
+   to `page-header.html`'s org-card "Contact the contributor" button** (via `request_only`, which `hdx_read.html` sets from `pkg.is_requestdata_type`), matching v1 behavior. This
    is an explicit, confirmed deviation from the literal Figma export (which still shows the
    button) — the underlying backend 404 cannot be changed (excluded from scope), so hiding the
    button is the only option that doesn't regress existing functionality.
@@ -313,7 +313,7 @@ exports (which only cover default-form and sent states) — see Edge Cases §10.
    analytics/functionality" is a stated critical constraint and this is a real, unintentional gap
    versus v1 — not a deliberate v2 design change.
 3. **Second "Request only data" chip.** Add a second lock-icon chip (matching the existing
-   `page-header.html:135` chip's copy/styling) to the "Data and resources" accordion section
+   `page-header.html` chip's copy/styling) to the "Data and resources" accordion section
    header, matching `dataset-page-hdx-connect-xl.html`. **Decision: confirmed in scope** — treated
    as a genuine Figma-confirmed gap, not an export artifact.
 
@@ -338,10 +338,10 @@ already established by Contact Contributor's v2 migration (`50%`/`80%`/full-widt
 
 | Event | Source | Must preserve | Status after migration |
 |---|---|---|---|
-| `sendMessagingEvent('dataset', 'data request', null, null, true)` on success | `request-access.js:5-11`, reads `#request_sent` | ✅ | Unchanged — same hidden-input + JS pattern as Contact Contributor's `#message_sent` |
+| `sendMessagingEvent('dataset', 'data request', null, null, true)` on success | `request-access.js`, reads `#request_sent` | ✅ | Unchanged — same hidden-input + JS pattern as Contact Contributor's `#message_sent` |
 | Click-tracking on "Request data" CTA (`sendLinkClickEvent`, `linkType: 'dataset resources'`, `label: 'Request data'`) | v1 `hdx_click_stopper` data-module | ✅ | Present in v2 via `resource_item_v2.html`'s `request_attrs` dict, forwarded to `resource-card.html`'s button `attrs` |
 | Anonymous onboarding-flow priming (`data-start-page-type="hdx-connect"`) | v1 `hdx-onboarding-flow` data-module, `hdx-onboarding-flow.js` | ✅ | Present in v2 via the same `request_attrs` dict, added only when `not current_user.is_authenticated` |
-| Sign-in banner copy for anonymous users (`info_message_type='hdx-connect'`) | `ui_constants/signin/__init__.py:3` | ✅ | Unchanged — server-side redirect logic untouched |
+| Sign-in banner copy for anonymous users (`info_message_type='hdx-connect'`) | `ui_constants/signin/__init__.py` | ✅ | Unchanged — server-side redirect logic untouched |
 
 ---
 
@@ -381,7 +381,7 @@ already established by Contact Contributor's v2 migration (`50%`/`80%`/full-widt
    conditionally-shown `v2/components/text-field.html` next to the `select.html` dropdown,
    toggled via JS — the closest existing-component extension, no new component built.
 2. **Second "Request only data" chip.** **Decision: in scope** — see §6/§9. Added to the "Data
-   and resources" accordion section header, matching the existing `page-header.html:135` chip.
+   and resources" accordion section header, matching the existing `page-header.html` chip.
 3. **`user_info_accept_terms` server-side enforcement.** Confirmed this field is validated
    client-side only (HTML `required` attr) and is absent from `request_create_schema()`.
    **Decision: preserve as-is** — fixing server-side validation is a backend change, explicitly
@@ -390,7 +390,7 @@ already established by Contact Contributor's v2 migration (`50%`/`80%`/full-widt
 4. **Checkbox component fit.** `v2/components/checkbox.html` exists but has not yet been used
    inside a real submitted form. **Decision:** extend it with an `errors` param mirroring the
    established `text-field.html`/`dropdown.html` convention — adds a `c-checkbox--error`
-   modifier class and populates the existing `.c-checkbox__error` span. `checkbox.less:122-140`
+   modifier class and populates the existing `.c-checkbox__error` span. `checkbox.less`
    already defines the `--error` modifier and its sibling-selector display rule, so this is a
    direct match to existing convention (verified before confirming), not a new pattern. It also
    gets a `c-checkbox__required` asterisk span, matching `text-field.html`/`dropdown.html` —

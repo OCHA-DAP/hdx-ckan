@@ -134,8 +134,8 @@ body.is-drawer-open {
 }
 
 
-// ── c-drawer-form — notification subscribe form content ───────
-// Styles for the subscribe / unsubscribe content rendered inside a drawer.
+// ── c-drawer-form — drawer body content ───────────────────────
+// Text, lists, fields and button rows rendered inside a drawer.
 
 .c-drawer-form {
     display: flex;
@@ -179,6 +179,17 @@ body.is-drawer-open {
         .hdx-body-m();
         color: var(--hdx-neutral-8);
         margin: 0;
+    }
+
+    &__list {
+        .hdx-body-s();
+        max-height: 12rem;
+        overflow-y: auto;
+        color:      var(--hdx-neutral-85);
+
+        p  { margin: 0 0 var(--hdx-space-1); }
+        ul { margin: 0 0 var(--hdx-space-3); padding-left: var(--hdx-space-5); }
+        a  { .hdx-link-s(); color: inherit; }
     }
 
     &__checkbox-row {

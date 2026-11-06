@@ -26,6 +26,13 @@ CONSTANTS = {
         'START_PAGE_ADD_DATA': ONBOARDING_START_PAGE_ADD_DATA,
     },
     'PASSWORD_RULES': MIN_LEN_ERROR.format(MIN_PASSWORD_LENGTH),
+    'V2_MAIN_NAV_SECTIONS': (
+        ('data', '/dataset', ('/dataset', '/search')),
+        ('locations', '/group', ('/group',)),
+        ('organisations', '/organization', ('/organization', '/org')),
+        ('products', None, ('/dataviz-gallery', '/signals', '/crisis-pages', '/event', '/dashboards')),
+        ('home', '/', ('/',)),
+    ),
 }
 
 

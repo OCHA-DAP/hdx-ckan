@@ -68,7 +68,7 @@ There are three active layout base templates. The goal is to maintain exactly th
   - New v2 layout. Extends `base.html` directly.
   - Loads Google Fonts and `hdx_theme/v2-page-styles`; legacy onboarding and `page-scripts` bundles commented out.
   - `{% block toolbar %}` renders the breadcrumb row; pages override only `{% block breadcrumb_items %}` inside it. Set `breadcrumb_row_class` to add modifier classes on the row div (e.g. `'hdx-v2-breadcrumb-row--white'` for white background, no bottom border).
-  - Flash messages use `hdx-v2-flash {{ category }}` class (no Bootstrap `.alert`).
+  - Flash messages render as `c-alert` (`alert.html`, `extra_classes='hdx-v2-flash'`, category→variant).
   - Includes `v2/header.html` and `v2/footer.html` via `{% snippet %}`, passing `quick_links` fetched once at the top (pages without those menus set it to `[]`).
   - Target base for all pages once the v2 redesign is complete.
 
@@ -89,7 +89,7 @@ There are three active layout base templates. The goal is to maintain exactly th
 - `ckanext-hdx_theme/ckanext/hdx_theme/templates/v2/header.html` — top-bar + responsive navbar (fully implemented)
 - `ckanext-hdx_theme/ckanext/hdx_theme/templates/v2/footer.html` — dark-teal footer panel (fully implemented)
 
-Pages in holding state on `page_light.html` (org/join, etc.) manually override `{% block header_core %}` to include the legacy `header-mobile.html`. The following pages have been migrated to `v2/page.html`: homepage, dataset search, dataset page, resource page, all locations, all organisations, organization page (Datasets / Activity / Stats / Members tabs; HDX Connect tab postponed), contact contributor, signup flow (all five pages), HAPI landing page, and Signals landing page. See [**redesign/PROGRESS.md**](redesign/PROGRESS.md) for the full holding-state and migrated-pages lists.
+Pages in holding state on `page_light.html` (create/edit dataset) manually override `{% block header_core %}` to include the legacy `header-mobile.html`. See [**redesign/PROGRESS.md**](redesign/PROGRESS.md) for the full holding-state and migrated-pages lists.
 
 ## BEM components (HDX custom UI blocks)
 
@@ -154,7 +154,7 @@ Example page-specific template (light search):
 ### Homepage (`/`)
 
 - **Template**: `ckanext-hdx_theme/ckanext/hdx_theme/templates/home/index.html`
-  - Extends `v2/page.html`. Adds `hdx_theme/v2-home-page-styles` (hero, intro, highlights, bar-chart) and `hdx_theme/v2-home-page-scripts` (Hammer.js, highlights-carousel.js, bar-chart.js).
+  - Extends `v2/page.html`. Adds `hdx_theme/v2-home-page-styles` (hero, intro, highlights, bar-chart) and `hdx_theme/v2-home-page-scripts` (Hammer.js, highlights-carousel.js, bar-chart.js). Overrides `content` (no breadcrumb row), so it outputs `{{ self.flash() }}` itself, first, above the hero band.
 
 ---
 
@@ -216,6 +216,147 @@ Example page-specific template (light search):
 
 ---
 
+### My Organisations dashboard (`/user/organizations/<id>`, own page only)
+
+- **Template**: `ckanext-hdx_theme/ckanext/hdx_theme/templates/user/read_organizations.html`
+  - Extends `v2/user-dashboard-base.html` (menu from `h.hdx_get_user_dashboard_nav_sections()`, `<title>`, profile header), which extends the shared shell `v2/dashboard-base.html` (layout, left menu at XL, breadcrumb), which extends `v2/page.html`. Children set `nav_active` and `page_label`.
+- **Core assets**: `hdx_theme/v2-search-page-styles` (sidebar/content layout classes), `hdx_theme/v2-dashboard-page-styles` (left menu, empty state), `hdx_theme/v2-user-dashboard-page-styles`.
+
+---
+
+### My Datasets dashboard (`/user/<id>`, any user)
+
+- **Template**: `ckanext-hdx_theme/ckanext/hdx_theme/templates/user/read.html`
+  - Extends `v2/user-dashboard-base.html`; the search-page filters (plus an Update status dropdown) fill `{% block tertiary_content %}`, the right-hand column.
+  - Another user's page: the base's `user_profile_header` block (`c-page-header` + `avatar`) and the public search cards.
+  - List: `search_results_wrapper.html` with `admin_view=is_myself`, `title_size='dashboard'` and `list_subtitle`; cards via `package_item_v2.html`'s `admin_view` branch.
+- **Core assets**: as My Organisations, plus `hdx_theme/v2-search-page-scripts`.
+
+---
+
+### HDX Connect Requests dashboard (`/user/my_requested_data/<username>`)
+
+- **Template**: `ckanext-hdx_theme/ckanext/hdx_theme/templates/requestdata/my_requested_data.html` (HDX core override; the `ckanext-requestdata` view is unchanged)
+  - Extends `v2/user-dashboard-base.html`; sets `user_dict` from `g.userobj`. Body: `v2/hdx-connect-sections.html` (title and New / Open / Archived headings via `v2/list-header.html`).
+  - Request markup: `v2/hdx-connect-request.html` (request dict → `c-request-item` + actions), cards `c-request-card`, Archived grid `c-request-archive`; Reply / Decline drawers in `v2/hdx-connect-drawers.html`.
+- **Core assets**: as My Organisations, plus `hdx_theme/v2-hdx-connect-page-styles` / `-scripts` (`url-nav.js` + `hdx-connect.js`).
+
+---
+
+### My Activity Stream dashboard (`/user/activity/<id>`)
+
+- **Template**: `ckanext-hdx_theme/ckanext/hdx_theme/templates/user/activity_stream.html` (HDX override of the core activity plugin's template; the `activity.user_activity` view is unchanged)
+  - Extends `v2/user-dashboard-base.html` for every user's stream; other users' streams get the profile header, "Activity Stream" labels and a Home / All Users / {name} / Activity Stream breadcrumb.
+  - Timeline: `v2/activity-stream.html` with `object_type='user'`, `show_detail_links` (core's `activity_list` check) and `actor_names` (the owner's name for actor-less rows); "Load more" (`load_more_href`) links to `older_activities_url`.
+- **Core assets**: as My Organisations.
+
+---
+
+### User Permission settings (`/user/permission/<id>`, sysadmins only)
+
+- **Template**: `ckanext-hdx_theme/ckanext/hdx_theme/templates/user/permission.html`
+  - Extends `v2/user-dashboard-base.html`; another user's page gets the profile header. A fieldset of `c-checkbox` rows (`.v2-checkbox-row()`) and a `c-button` submit.
+  - The `hdx_user_permission.read` view flashes "Permissions updated." and redirects after a save; unknown ids give 404.
+- **Core assets**: as My Organisations.
+
+---
+
+### API Tokens settings (`/user/<id>/api-tokens`)
+
+- **Template**: `ckanext-hdx_theme/ckanext/hdx_theme/templates/user/api_tokens.html`
+  - Extends `v2/user-dashboard-base.html`; another user's page gets the profile header. A create form (`text-field.html`, `select.html`, `c-button`) and the token list (`user/snippets/api_token_list.html` → `table.html`, a tertiary `c-button` Revoke form per row).
+  - `HDXApiTokenView` (`hdx_user.api_tokens`, same URL as core's `user.api_tokens`) runs a bare `user_show`, 404s unknown ids and flashes the new token through `user/snippets/api_token_created.html` (`c-copy-button`). Revoking stays core's `user.api_token_revoke`.
+- **Core assets**: as My Organisations.
+
+---
+
+### Notifications Settings (`/user/notifications/<id>`)
+
+- **Template**: `ckanext-hdx_theme/ckanext/hdx_theme/templates/user/notifications.html`
+  - Extends `v2/user-dashboard-base.html`; another user's page (sysadmins only) gets the profile header and a read-only list. One `c-dataset-card` per subscription in a `c-dataset-card-list` `<ul>`: "{Type}: {title}", `meta_items` (Update type / Receive notifications / Update frequency), and an Unsubscribe `title_action` on your own page when the subscription has an active token.
+  - Unsubscribe fills and opens the 051 drawers (`notification_platform/unsubscribe_drawers.html`, also included by `modals.html`); `onUnsubscribeSubmit` posts; closing the success drawer reloads the page.
+  - The `hdx_user.notifications` view uses `_extra_template_variables()` and drops subscriptions whose object is gone or unreadable.
+- **Core assets**: as My Organisations, plus `notification-platform-util-scripts` and `v2-notifications-settings-page-scripts` on your own page when it has subscriptions.
+
+---
+
+### Profile and Password settings (`/user/edit/<id>`)
+
+- **Template**: `ckanext-hdx_theme/ckanext/hdx_theme/templates/user/edit_user_form.html`
+  - Extends `v2/user-dashboard-base.html`; the profile header shows for every viewer (own page included). A profile + password form of `c-form-field`s with errors under each field.
+  - Sysadmin viewers also get two-step verification (a `c-drawer` driven by `v2/pages/user-profile.js`, calling the `hdx_user` `configure_mfa` endpoints) and Delete account (a `c-drawer` posting to core `user.delete`; maintainers get `v2/maintainer-datasets-list.html` and a disabled Confirm).
+  - `HDXEditView` is unchanged, except that `get` no longer sets `g.totp_secret`.
+- **Core assets**: as My Organisations, plus `v2-user-profile-page-scripts` for sysadmin viewers.
+
+---
+
+### All Sysadmins (`/ckan-admin`, sysadmins only)
+
+- **Template**: `ckanext-hdx_theme/ckanext/hdx_theme/templates/admin/index.html` (HDX override of core's; core `admin.index` view unchanged)
+  - Extends `v2/sysadmin-base.html` (menu from `h.hdx_get_sysadmin_nav_sections()`, `<title>` "{page} | Sysadmin"), which extends `v2/dashboard-base.html`. Children set `nav_active` and `page_label`. The menu has every item for sysadmins and only the items they may open for other users.
+  - `v2/list-header.html` (h1 + count + subtitle); `c-user-item` rows (`h.hdx_get_user_info` per row) in a `c-user-item-grid`, each with a one-click Remove form to core `user.sysadmin`, except the site user's and your own; a Promote form with `select.html` `searchable` loading users from core `/api/2/util/user/autocomplete` (`data-source`).
+- **New components**: `v2/components/user-item.html` (`c-user-item`, `c-user-item-grid`).
+- **Core assets**: `hdx_theme/v2-search-page-styles`, `hdx_theme/v2-dashboard-page-styles`, `hdx_theme/v2-sysadmin-page-styles`, `hdx_theme/v2-select2-styles` / `v2-select2-scripts`.
+
+---
+
+### All Users (`/user/`, any logged-in user)
+
+- **Template**: `ckanext-hdx_theme/ckanext/hdx_theme/templates/user/list.html` (HDX override of core's; core `user.index` view, parameters and auth unchanged)
+  - Extends `v2/sysadmin-base.html`; non-sysadmins get no subtitle and no emails (breadcrumb Home / All Users).
+  - `v2/list-header.html` (h1 + `page.item_count`); a GET search form submitting only `q`; `c-user-item` rows in a `c-user-item-grid`, with "- {email}" `meta` for sysadmin viewers; "No users found." (`.hdx-v2-dashboard-empty`) when empty; `c-pagination` carrying `q` and `order_by`. No sort or page-size controls.
+- **Core assets**: as All Sysadmins, without the select2 bundles.
+
+---
+
+### HDX Connect Dashboard (`/ckan-admin/requests_data`, sysadmins and request-data permission holders)
+
+- **Template**: `ckanext-hdx_theme/ckanext/hdx_theme/templates/admin/all_requests_data.html` (HDX override; the `ckanext-requestdata` view is unchanged)
+  - Extends `v2/sysadmin-base.html`. Body: `v2/hdx-connect-sections.html` with `groups` (one New / Open / Archived set per organisation, no Archived sort); a CSV / JSON Download navigate `c-dropdown` in the header's `caller()` slot.
+  - Organisation filter (checklist `c-dropdown`) in the right column / MD/SM overlay; `hdx-connect.js` writes `filter_by_organizations=a,b`.
+- **Core assets**: as All Users, plus `hdx_theme/v2-hdx-connect-page-styles`, `v2-search-page-scripts` and `v2-hdx-connect-scripts`.
+
+---
+
+### Package Links (`/ckan-admin/package-links/show`, sysadmins and quick-links permission holders)
+
+- **Template**: `ckanext-hdx_theme/ckanext/hdx_theme/templates/admin/package_links.html`; view `views/package_links_custom_settings.py` (`show` passes the stored list as `items`; `update` / `delete` unchanged apart from 400 on a missing title or a non-integer `order`, `''` for an absent `package_list`, and appending an unknown id).
+  - Extends `admin/config-item-base.html` (on `v2/sysadmin-base.html`; the page sets its labels, endpoints, id prefix and fields snippet): `v2/list-header.html` (h1 + subtitle, no count); one `c-config-item` per stored item in a `c-config-item-list`, fields from `admin/snippets/package_link_fields.html`, plus a `<template>` copy for New Item.
+  - `components/config-item.js`: Sortable drag on the card header, collapse, Delete (queued until Save), New Item, required Title / URL (`hdxV2.setFieldError`), and Save: sequential POSTs (deletes, then one update per card with `order` = position), reload on success, error `c-alert` otherwise; a retry neither recreates new items nor resends finished deletes.
+- **New components**: `v2/components/config-item.html` (`c-config-item`, `c-config-item-list`).
+- **Core assets**: as All Users, plus `hdx_theme/v2-config-item-scripts`.
+
+---
+
+### Products Menu (`/ckan-admin/quick-links/show`, sysadmins and quick-links permission holders)
+
+- **Template**: `ckanext-hdx_theme/ckanext/hdx_theme/templates/admin/quick_links.html`; view `views/quick_links_custom_settings.py` (`show` passes the stored list as `items`; `update` / `delete` unchanged apart from 400 on a missing title or URL or a non-integer `order`, and appending an unknown id).
+  - Extends `admin/config-item-base.html`, as Package Links (same structure and `components/config-item.js` behaviour); fields from `admin/snippets/quick_link_fields.html` (Title, URL, Open in a new tab, Archived).
+  - The stored list (`hdx.quick_links.config`) feeds the header / offcanvas / footer Products menus and `/crisis-pages`.
+- **Core assets**: as Package Links.
+
+---
+
+### Homepage Highlights (`/ckan-admin/carousel/show`, sysadmins and carousel permission holders)
+
+- **Template**: `ckanext-hdx_theme/ckanext/hdx_theme/templates/admin/carousel.html`; view `views/custom_settings.py` (`show` passes the stored list as `items`; every view aborts 403 without the permission; `update` returns 400 on a missing title or URL, a non-integer `order` or a failed upload, stores a new file before deleting the old one, and appends an unknown id).
+  - Extends `admin/config-item-base.html` with `list_layout='grid'` (`c-config-item-list--grid`: two columns from MD); fields from `admin/snippets/homepage_highlight_fields.html`: Upload new thumbnail (`c-image-upload` with `preview='l'`, no Link or Remove, PNG, GIF or JPEG files up to 50KB and exactly 550px wide unless the page URL has `overrideImage=true`), Title, URL, Open in a new tab; the stored description / embed / buttonText as hidden inputs.
+  - `components/config-item.js` posts each card's chosen file as `graphic_upload`; `image-upload.js` initialises a New Item card's uploader on its `config-item:add` event.
+  - The stored list (`hdx.carousel.config`) feeds the homepage highlights (first three items).
+- **Core assets**: as Package Links.
+
+---
+
+### Custom Pages (`/ckan-admin/pages/show`, `/page/new`, `/page/edit/<id>`, sysadmins and manage-crisis permission holders)
+
+- **Templates**: `ckanext-hdx_theme/ckanext/hdx_theme/templates/admin/pages.html` (listing) and `templates/pages/edit_page.html` (form); views `views/custom_pages.py` and `ckanext-hdx_pages` `views/light_page.py` (POST contract, 404s and redirects as v1).
+  - Both extend `v2/sysadmin-base.html`; the form's crumb is Home / Sysadmin / Custom Pages / {Create | Edit crisis page}.
+  - Listing: `v2/list-header.html` with a "Create new page" button; `table.html` (Title / Slug `c-text-link`s to the slug URL with `hdx_click_stopper`, raw Type / Archived / Ongoing / Status, Edit + Delete), sorted client-side by DataTables (`pages/custom-pages.js`); one delete `c-drawer` per row (`admin/snippets/custom_page_delete_drawer.html`).
+  - Form: numbered step links (`anchor-links.html`, `c-anchor-links--numbered`, heading "On this page") replace the menu at XL; intro and required note under the h1; numbered groups on `hdx-v2-content-columns--stack`. Describe crisis page: Title, Display page title, Type fieldset (`c-radio` with URL descriptions), `c-slug-preview` URL whose prefix follows Type, Status fieldset, Location (cyan chips), Keywords, Tags (Location and Tags `select.html` `multiple` Select2). Build sections: `c-config-item` cards in form mode with Move up / down and a footer Delete (`admin/snippets/custom_page_section_fields.html`); `pages/custom-page-form.js` shows fields per section type and renumbers the posted sections to the card order.
+- **Core assets**: as All Users; the listing adds `hdx_theme/v2-datatable-scripts` and `v2-custom-pages-page-scripts`; the form adds `hdx_theme/v2-select2-styles` / `-scripts`, `v2-slug-preview-scripts`, `v2-config-item-scripts` and `v2-custom-page-form-page-scripts`.
+
+---
+
 ### Organisation page (`/organization/<name>`)
 
 - **Templates** (one per tab, all extend `v2/page.html` and share the `v2/org-hero.html` hero — `c-page-header` + `c-tabs`):
@@ -223,8 +364,8 @@ Example page-specific template (light search):
   - Activity: `organization/activity_stream.html`
   - Stats: `organization/stats.html` (Chart.js via `hdx_theme/v2-chart-scripts`)
   - Members: `organization/members.html` (role-grouped `c-member-list-card` list, right-side sidebar, one-click `c-dropdown--link` change-role/approve dropdowns, remove/leave + group-message drawers)
-- **Core assets**: `hdx_theme/v2-org-page-styles` on every tab; plus per tab: `v2-search-page-styles`/`-scripts` (Datasets), `v2-chart-scripts` (Stats), `hdx_theme/v2-org-members-page-scripts` (Members: `url-nav.js` + `org-members-page.js`).
-- The HDX Connect tab is postponed; the Requested Data tab remains v1.
+  - Requested Data: `requestdata/organization_requested_data.html` (HDX core override of the `ckanext-requestdata` view; `v2/hdx-connect-sections.html` body, Maintainer filter in the search-page filter column / overlay)
+- **Core assets**: `hdx_theme/v2-org-page-styles` on every tab; plus per tab: `v2-search-page-styles`/`-scripts` (Datasets), `v2-chart-scripts` (Stats), `hdx_theme/v2-org-members-page-scripts` (Members: `url-nav.js` + `org-members-page.js`), `v2-search-page-styles`/`-scripts` + `v2-hdx-connect-page-styles` + `v2-hdx-connect-scripts` (Requested Data).
 
 ---
 
@@ -253,6 +394,36 @@ Example page-specific template (light search):
   - Legacy `hdx-verify-email-scripts` — verify-email page only
 - **Constants**: string copy in `ckanext/hdx_theme/helpers/ui_constants/onboarding/` (one file per page).
 - **Analytics**: `hdx_click_stopper` modules on tier CTA buttons preserved; `analytics_account_type` block in account-validated preserved.
+
+---
+
+### Org join / create flow (`/org/join/*`, `/org/request/*`)
+
+- **Templates**: `org/join/find_organisation.html`, `confirm_organisation.html`, `reason_request.html`, `completed.html` and `org/request/org_new_request.html`, `completed_request.html`. All extend `v2/page.html` with the signup layout variables and shell (`hdx-v2-signup-form-page`, 3-step `c-step-pager`); views and schema are unchanged.
+  - Find: `c-info-box` + `select.html` `searchable=True` (Select2, `hdx-v2` theme, `select.js`); `?selected=` preselects.
+  - Confirm / Reason: an error `c-alert` instead of the form when `organization_show` finds no org.
+- **Core assets**: `hdx_theme/v2-signup-page-styles`; plus `hdx_theme/v2-select2-styles` / `v2-select2-scripts` on Find and `hdx_theme/v2-org-request-page-styles` on Confirm and Reason.
+- **Constants**: `helpers/ui_constants/onboarding/` (one file per page).
+
+---
+
+### Edit / create organisation (`/organization/edit/<name>`, `/organization/new`)
+
+- **Templates**: `organization/edit.html` and `organization/new.html` extend `v2/page.html` with the signup layout variables and shell; both render the standalone form `organization/new_organization_form.html`, which branches on `action`. Core `EditGroupView` / `CreateGroupView` are unchanged.
+  - The form: numbered sections, `c-slug-preview` for the URL, `c-image-upload` for the logo (`customization.image_rect`, resolved by the `hdx_organization_logo_url` helper), hidden `customization` / `visualization_config` carrying what the form doesn't edit.
+  - After a failed save `data` is the posted form; the Delete / Restore gate, breadcrumb and Cancel read `group_dict`.
+  - Edit: Delete `c-drawer` (core `organization.delete`, disabled while the org has datasets) or a Restore form (`hdx_org.restore`).
+- **Core assets**: `hdx_theme/v2-signup-page-styles`, `v2-org-edit-page-styles`, `v2-slug-preview-scripts`, `v2-org-edit-page-scripts`.
+
+---
+
+### Edit / create location (`/group/edit/<name>`, `/group/new`, sysadmins only)
+
+- **Templates**: `group/edit.html` and `group/new.html` extend `v2/page.html` with the signup layout variables and shell; both render the standalone form `group/new_group_form.html`, which branches on `action`. Core `EditGroupView` / `CreateGroupView` are unchanged.
+  - The form: no sections, `c-slug-preview` for the URL, the v1 field set. A save deletes every stored extra the form doesn't post (core `group_dict_save`), so the field set must stay complete.
+  - After a failed save `data` is the posted form; the breadcrumb, Delete gate and drawer read `group_dict`.
+  - Edit: Delete `c-drawer` (core `group.delete`); `HDXGroupPlugin.delete` invalidates the group caches.
+- **Core assets**: `hdx_theme/v2-signup-page-styles`, `v2-slug-preview-scripts`.
 
 ---
 
@@ -306,16 +477,17 @@ Example page-specific template (light search):
 - **Template**: `ckanext-hdx_theme/ckanext/hdx_theme/templates/v2/components.html`
   - Extends `templates/v2/page.html` (v2 layout scaffold).
   - **Purpose**: Demo page rendering all v2 components side-by-side for development verification.
-- **Route disabled**: uncomment it in `views/landing_pages.py` to use it locally.
+- **Non-prod only**: returns 404 when the `ckan.site_url` host is `data.humdata.org` (`components()` in `views/landing_pages.py`).
 - **Core assets**:
   - `hdx_theme/v2-components-styles` — all v2 component styles (loaded by `v2/page.html`).
   - `hdx_theme/v2-components-scripts` — all v2 component JS (loaded by `v2/page.html`).
+  - `hdx_theme/v2-select2-styles` / `v2-select2-scripts` — Select2 for the searchable-select demo (loaded by the template).
 
 ---
 
 ## V2 JavaScript Patterns
 
-All v2 JavaScript is vanilla — no jQuery. Follow these patterns consistently.
+New v2 JavaScript is vanilla — no jQuery; the exceptions are the Select2 API calls in `fanstatic/v2/components/select.js` and core's slug plugins (`$.url.slugify`, `$.fn.slug`) in `fanstatic/v2/components/slug-preview.js` (jQuery is already loaded by `hdx_theme/ckan`). Follow these patterns consistently.
 
 ### No jQuery
 
@@ -353,7 +525,7 @@ Add `data-hdx-v2-form-validator` to a `<form>` element. The validator (`fanstati
 
 **Error display — `c-search-input` fields**: the validator adds `c-search-input--error` to the input wrapper; a sibling `<span class="c-search-input__error">` (always rendered by the snippet, empty by default) is revealed via the CSS sibling rule `&--error ~ &__error { display: block }`. Server-side errors pre-populate the span and pre-add the modifier class from the template. No `style.display` manipulation — CSS drives visibility entirely.
 
-**Error display — `c-checkbox` fields**: same pattern — `c-checkbox--error` on the `.c-checkbox` wrapper drives a sibling `<span class="c-checkbox__error">` via CSS. The snippet renders the empty span after the label, unless `error_slot=false` (list-item checklist rows, never validated).
+**Error display — `c-checkbox` fields**: same pattern — `c-checkbox--error` on the `.c-checkbox` wrapper drives a sibling `<span class="c-checkbox__error">` via CSS. The snippet renders the empty span after the label, unless `error_slot=false` (for fields that are never validated).
 
 Pass `data-validation-error="…"` (via `input_attrs` / `attrs`) for the inline error text. Fields using `data-live-feedback` use the `c-form-validator__live-feedback` panel as the primary error UI and may omit `data-validation-error`.
 

@@ -884,7 +884,7 @@ class ArchivedUrlHelper(object):
         self.num_of_archived = num_of_archived
         self.url_for_search = base_search_url
         self.on_archived_page = next((True for tpl in params_no_page if tpl[0] == 'ext_archived'), False)
-        self.params = (tpl for tpl in params_no_page if tpl[0] != 'ext_archived')
+        self.params = [tpl for tpl in params_no_page if tpl[0] != 'ext_archived']
 
     @property
     def archived_url(self):

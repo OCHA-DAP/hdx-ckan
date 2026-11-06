@@ -1,0 +1,26 @@
+{#
+  Snippet: maintainer-datasets-list.html
+  Path:    templates/v2/maintainer-datasets-list.html
+
+  Org → datasets list of a user's maintained datasets, shown in a
+  remove/delete confirmation c-drawer (styles: .c-drawer-form__list).
+  Dataset links open in a new tab.
+
+  Parameters
+  ─────────────────────────────────────────────────
+  maint_orgs_pkgs  {list}  Required. maint_orgs_pkgs of
+                           h.hdx_get_org_member_info(): {name, title, pkgs}
+                           dicts, each pkgs a list of {name, title}.
+  ─────────────────────────────────────────────────
+#}
+
+<div class="c-drawer-form__list">
+  {% for m_org in maint_orgs_pkgs %}
+    <p><strong>{{ m_org.title or m_org.name }}:</strong></p>
+    <ul>
+      {% for p in m_org.pkgs %}
+        <li><a href="{{ h.url_for('dataset_read', id=p.name) }}" target="_blank">{{ p.title }}</a></li>
+      {% endfor %}
+    </ul>
+  {% endfor %}
+</div>

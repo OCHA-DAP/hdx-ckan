@@ -49,7 +49,7 @@ in its plugin). There is no separate crisis extension: "crisis" is the UI name f
 
 | Column | Meaning |
 |---|---|
-| `id`, `name`, `title`, `description` | identity fields; `description` is admin-entered SEO keywords (admin form labels it "Keywords", `edit_page.html:101`), also dictized as `keywords`; feeds the Lunr site-search index (`extra_terms`) — not rendered on the page |
+| `id`, `name`, `title`, `description` | identity fields; `description` is admin-entered SEO keywords (admin form labels it "Keywords", `edit_page.html`), also dictized as `keywords`; feeds the Lunr site-search index (`extra_terms`) — not rendered on the page |
 | `type` | `'event'` (crisis) or `'dashboards'` |
 | `state` | CKAN state (`active`, `draft` via "Save as draft") |
 | `status` | `'ongoing'` / `'archived'` |
@@ -60,8 +60,8 @@ in its plugin). There is no separate crisis extension: "crisis" is the UI name f
 Plus `page_group_association` (page ↔ countries) and `page_tag_association` (page ↔ tags), used
 for the feature-search/Lunr index, not for rendering.
 
-Each element of `sections` (built in
-`ckanext-hdx_pages/ckanext/hdx_pages/views/light_page.py:231-240`):
+Each element of `sections` (built in `_populate_sections()` in
+`ckanext-hdx_pages/ckanext/hdx_pages/views/light_page.py`):
 
 ```json
 {
@@ -75,14 +75,13 @@ Each element of `sections` (built in
 }
 ```
 
-Canonical section `type` values (`views/light_page.py:34-41`, admin dropdown at `:195-200`):
+Canonical section `type` values (`section_types` in `views/light_page.py`, admin dropdown in `_init_data()`):
 **`empty`, `description`, `map`, `key_figures`, `interactive_data`, `data_list`**. Sections are
 not schema-validated (`actions/validation.py` checks only name/title).
 
 ### 1.2 Routing / views
 
-`ckanext-hdx_pages/ckanext/hdx_pages/views/light_page.py` — five blueprints (`:44-50`, URL rules
-`:443-451`):
+`ckanext-hdx_pages/ckanext/hdx_pages/views/light_page.py` — five blueprints:
 
 | Route | View | Template |
 |---|---|---|
@@ -91,32 +90,32 @@ not schema-validated (`actions/validation.py` checks only name/title).
 | `GET /m/event/<id>`, `/m/dashboards/<id>` | `read_light_*` | `light/custom_pages/read.html` |
 | `/page/new`, `/page/edit/<id>`, `/page/delete/<id>` | `CreateView`/`EditView`/`DeleteView` | `pages/edit_page.html` |
 
-`_read` (`:151-185`): `page_show` → `_populate_template_data` → template vars
+`_read`: `page_show` → `_populate_template_data` → template vars
 (`page_dict`, `page_has_mobile_version`, `analytics`, unsubscribe-token vars via
-`add_unsubscribe_token(…, ObjectType.CRISIS, …)` `:180-181`). All read routes are wrapped in
+`add_unsubscribe_token(…, ObjectType.CRISIS, …)`). All read routes are wrapped in
 `@check_redirect_needed` (mobile/desktop redirect). Editing is gated by
-`PERMISSION_MANAGE_CRISIS` (`helpers/helper.py:93-99`).
+`PERMISSION_MANAGE_CRISIS` (`has_permission()` in `helpers/helper.py`).
 
-`_populate_template_data` (`:109-148`):
+`_populate_template_data`:
 
 1. `json.loads` the sections; per section computes the iframe style
-   (`helpers/helper.py:25-32`) — **v1 quirk: `is_mobile=True` is always passed
-   (`:115`), so the desktop page also uses `m_max_height`** (fallback height `400px`).
+   (`_compute_iframe_style()` in `helpers/helper.py`) — **v1 quirk: `is_mobile=True` is always passed,
+   so the desktop page also uses `m_max_height`** (fallback height `400px`).
    **Fixed in this task (D11):** `_populate_template_data` will pass the real per-request
    `is_mobile` flag so desktop uses `max_height` and mobile uses `m_max_height`, as originally
    intended.
 2. `data_list` sections: parse the saved search URL (`_find_dataset_filters`,
-   `helpers/helper.py:35-37`), build Solr params (`generate_dataset_results`,
-   `helpers/helper.py:40-74`: `q`→`text:(…)`, facet keys `organization`/`groups`/`vocab_Topics`/
+   `helpers/helper.py`), build Solr params (`generate_dataset_results`,
+   `helpers/helper.py`: `q`→`text:(…)`, facet keys `organization`/`groups`/`vocab_Topics`/
    `res_format`/`license_id`/`cod_level`, raw `fq`, `sort`→`default_sort_by`,
    `ext_page_size`→`num_of_items`; live request args except `page` merged), run
    `CustomPagesSearchLogic._search(...)`
    (`controller_logic/custom_pages_search_logic.py`, a `SearchLogic` subclass that only overrides
    URL generation so pager/facet links point to `/event/<name>…#datasets-section`,
-   `helpers/helper.py:49`), store the result on `section['template_data']`. Archived-URL redirect
-   handled via `add_archived_url_helper().redirect_if_needed()` (`:128-131`).
+   `pager_url` in `helpers/helper.py`), store the result on `section['template_data']`. Archived-URL redirect
+   handled via `add_archived_url_helper().redirect_if_needed()`.
 3. Desktop only: if the **first** section is a `map`, pop it into `page_dict['title_section']`
-   (`:145-147`) → rendered as a full-bleed map behind the title with a share button
+   → rendered as a full-bleed map behind the title with a share button
    (`pages/snippets/visualization_title.html`, `analytics_shared_item="crisis"`).
 
 ### 1.3 Templates and section dispatch (today)
@@ -124,24 +123,24 @@ not schema-validated (`actions/validation.py` checks only name/title).
 ```
 ckanext-hdx_theme/.../templates/pages/read_page.html      desktop page (extends v1 page.html)
   ├─ pages/snippets/visualization_title.html               full-bleed first-map title section
-  └─ pages/snippets/section_item.html                      per-section dispatch (loop at :62-65)
+  └─ pages/snippets/section_item.html                      per-section dispatch
 ckanext-hdx_theme/.../templates/light/custom_pages/read.html   mobile light page (untouched)
 ckanext-hdx_theme/.../templates/pages/edit_page.html      admin editor (untouched)
 ```
 
-`read_page.html`: analytics blocks (`:6-7`), subtitle `… | Crisis Datasets` (`:9`), meta
-description (`:10-13`), mobile `rel=alternate` link + canonical (`:15-20`), breadcrumb
-`Home / {type} / {title}` (`:22-32`), header with `show_title` gate (`:44-46`), state label when
-not `active` (`:47-49`), **page-level `description` commented out** (`:50`), notification buttons
-(`:51`), section loop (`:62-65`), notification modals with unsubscribe-token params (`:69-76`),
-assets (`:89-90`).
+`read_page.html`: analytics blocks, subtitle `… | Crisis Datasets`, meta
+description, mobile `rel=alternate` link + canonical, breadcrumb
+`Home / {type} / {title}`, header with `show_title` gate, state label when
+not `active`, **page-level `description` commented out**, notification buttons,
+section loop, notification modals with unsubscribe-token params,
+assets.
 
 `pages/snippets/section_item.html` — the type switch:
 
-- `data_list` (`:12-32`) → `search/snippets/package_list.html` (v1 params: `query`, `packages`,
+- `data_list` → `search/snippets/package_list.html` (v1 params: `query`, `packages`,
   `full_facet_info`, `ext_page_size`, `sorting_selected`, `other_links`) + `my_c.page.pager()`.
-- `description` (`:33-40`) → `h.render_markdown(section.long_description)`.
-- **else** — `map` / `key_figures` / `interactive_data` (`:41-67`) → optional `section_title`
+- `description` → `h.render_markdown(section.long_description)`.
+- **else** — `map` / `key_figures` / `interactive_data` → optional `section_title`
   header row + optional `section.description` text +
   `<iframe data-module="data-viewer" src="{{ section.data_url }}" style="{{ section.style }}">`
   with a `data-viewer-error` div. **There is no distinct rendering per iframe type** — all three
@@ -168,25 +167,25 @@ Iframes only — no native charting. Auto-resize + error handling via the CKAN m
 `v2/components/button.html` opt-in/opt-out buttons; `modals.html` loads
 `hdx_theme/v2-components-scripts`, `notification-platform-unsubscribe-scripts`,
 `v2-form-validator-scripts` and (when supported) `notification-platform-subscribe-scripts` — the
-same wiring the v2 dataset page uses (`package/hdx_read.html:117-120` passes
+same wiring the v2 dataset page uses (`package/hdx_read.html` passes
 `supports_notifications` + `notification_object_*` into `page-header.html`, which renders
-`buttons.html` at `v2/components/page-header.html:263-271`).
+`buttons.html` in `v2/components/page-header.html`).
 
 ### 1.7 Analytics
 
 - `_read` passes `analytics_came_from` + `analytics_supports_notifications`
-  (`views/light_page.py:175-178`, from `ckanext-hdx_package/.../helpers/analytics.py`) into the
+  (`views/light_page.py`, from `ckanext-hdx_package/.../helpers/analytics.py`) into the
   template's `analytics_came_from` / `analytics_supports_notifications` blocks
-  (`read_page.html:6-7`) → Mixpanel page-view init in `templates/base.html`.
+  (`read_page.html`) → Mixpanel page-view init in `templates/base.html`.
 - Dataset-card interactions: GA/Mixpanel via `data-*` attributes on the v2 card (038 convention)
   — comes along automatically with the reused v2 dataset list.
-- Share button (`visualization_title.html:22-23`, `analytics_shared_item="crisis"`) — dropped
+- Share button (`visualization_title.html`, `analytics_shared_item="crisis"`) — dropped
   together with the title-section variant (D6); no other share UI exists in the Figma design.
 
 ### 1.8 Assets (today)
 
 Desktop page loads `hdx_theme/search-scripts` + `hdx_theme/custom-pages-styles`
-(`read_page.html:89-90`); the `data-viewer` module ships in the v1 base bundle. None of these may
+(`read_page.html`); the `data-viewer` module ships in the v1 base bundle. None of these may
 be loaded by the v2 page (v1-assets-untouched rule).
 
 ---
@@ -301,20 +300,20 @@ combination — the dispatcher makes no assumptions about which sections exist (
 
 **Reuse, zero duplication.** `CustomPagesSearchLogic` already produces the same
 `template_data` shape (`q`, `page`, `item_count`, `full_facet_info`, `ext_page_size`,
-`sort_by_selected`, `other_links`) that `organization/read.html:87-88` feeds into the shared v2
+`sort_by_selected`, `other_links`) that `organization/read.html` feeds into the shared v2
 chain. The `data_list` branch of the dispatcher becomes:
 
 - Sidebar (XL): `<form id="search-page-filters-form">` + `v2/search-filters.html` with
   `facet_list=section.template_data.full_facet_info.get('facets', {})` — rendered via the page's
   `secondary_content` block using the search-page layout classes
-  (`hdx-v2-search-row/columns/sidebar/content`), exactly like `organization/read.html:64-82`.
+  (`hdx-v2-search-row/columns/sidebar/content`), exactly like `organization/read.html`.
 - Results: `search/snippets/search_results_wrapper.html` with
   `my_c=section.template_data, v2=true, tracking_enabled=g.tracking_enabled` — brings the list
   header + count, sort/per-page nav controls, inline search bar, active-filter chips, MD/SM
   filter overlay, `dataset-card` list and `c-pagination`, all unchanged.
 - Context adaptation only: pager/facet URLs already point at `/event/<name>…#datasets-section`
   (the wrapper already strips the `#fragment` when building the pagination `base_url` —
-  `search/snippets/search_results_wrapper.html:35-37`); in-page search,
+  `search/snippets/search_results_wrapper.html`); in-page search,
   filters, sort and page-size keep working through the existing merge of live request args over
   the saved filters (§1.2.2). `helper.py`'s `generate_dataset_results()` gained an
   `ext_archived` branch (hard `+extras_archived:"true"` fq + `hide_archived=False` when a
@@ -401,7 +400,7 @@ style); heights from the stored style + JS recalibration (D5).
 
 | What | How it is preserved |
 |---|---|
-| Mixpanel page view with `cameFrom` + `supportsNotifications` | Keep the `analytics_came_from` / `analytics_supports_notifications` template blocks on the v2 template (same mechanism as `organization/read.html:10-13`); the view already supplies the values — untouched |
+| Mixpanel page view with `cameFrom` + `supportsNotifications` | Keep the `analytics_came_from` / `analytics_supports_notifications` template blocks on the v2 template (same mechanism as `organization/read.html`); the view already supplies the values — untouched |
 | Notification signup/unsubscribe events | Carried by the reused `notification_platform` snippets + their bundles (§1.6) — unchanged |
 | Dataset interactions (card clicks, filters, search) | Come with the reused v2 dataset list — `dataset-card` GA `data-*` attributes (038), search/filter tracking identical to the search page and org Datasets tab |
 | Share event (`analytics_shared_item="crisis"`) | Removed with the share button (D6) — the only intentional analytics removal, requester-approved |

@@ -40,6 +40,7 @@ from ckanext.hdx_theme.util.jql import fetch_downloads_per_week_for_dataset
 from ckanext.hdx_theme.util.light_redirect import check_redirect_needed
 
 from ckanext.hdx_org_group.views.organization_join import set_custom_rect_logo_url
+from ckanext.hdx_org_group.helpers.organization_helper import hdx_organization_logo_url
 from ckanext.hdx_users.general_token_model import ObjectType
 from ckanext.hdx_users.helpers.notification_platform import add_unsubscribe_token
 
@@ -296,7 +297,7 @@ def _process_customizations(json_string):
             logo_config['logo_bg_color'] = logo_bg_color
         image_name = custom_dict.get('image_rect', None)
         if image_name:
-            logo_config['image_url'] = h.url_for('hdx_local_image_server.org_file', filename=image_name)
+            logo_config['image_url'] = hdx_organization_logo_url(image_name)
 
     return logo_config
 
@@ -338,7 +339,7 @@ def delete(id):
         if request.method == 'POST':
             get_action('hdx_dataset_purge')(context, {'id': id})  # Create new action to fully delete
             h.flash_notice(_('Dataset has been deleted.'))
-            return h.redirect_to('dashboard.datasets')
+            return h.redirect_to('hdx_user.read', id=g.user)
         pkg_dict = get_action('package_show')(context, {'id': id})
         # dataset_type = pkg_dict['type'] or 'dataset'
     except NotAuthorized:

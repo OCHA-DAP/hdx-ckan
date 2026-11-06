@@ -2,7 +2,6 @@ import json
 
 import ckan.model as model
 import ckan.authz as new_authz
-import ckan.lib.helpers as ckan_helpers
 import ckan.plugins.toolkit as tk
 
 
@@ -175,10 +174,8 @@ class OrgMetaDao(object):
             # Transform the json string representing the customizations to dict
             self.customization = org_extras['customization'] = json.loads(org_extras.get('customization', '').strip())
 
-            self.custom_sq_logo_url = ckan_helpers.url_for('hdx_local_image_server.org_file',
-                                                           filename=self.customization.get('image_sq'))
-            self.custom_rect_logo_url = ckan_helpers.url_for('hdx_local_image_server.org_file',
-                                                             filename=self.customization.get('image_rect'))
+            self.custom_sq_logo_url = org_helpers.hdx_organization_logo_url(self.customization.get('image_sq'))
+            self.custom_rect_logo_url = org_helpers.hdx_organization_logo_url(self.customization.get('image_rect'))
 
     def __check_access(self, action_name, data_dict=None):
         if data_dict is None:

@@ -1,238 +1,240 @@
-{% extends "page.html" %}
-{% import 'macros/form.html' as form %}
+{% extends "v2/sysadmin-base.html" %}
 
-{% block secondary %}{% endblock %}
-{% block toolbar %}
-<div class="hdx-form">
-    <div class="hdx-form-breadcrumb paddingRowHack">
-        <ol class="breadcrumb paddingLeftHack paddingRightHack">
-            <li class="breadcrumb-item active">
-                <div class="circle float-start">1</div> Create custom page - <span class="small">Please fill out all required fields</span>
-            </li>
-            <li class="breadcrumb-item">
-                <div class="circle float-start">2</div> Review and Submit
-            </li>
-        </ol>
-    </div>
-</div>
+{% set nav_active = 'custom_pages' %}
+{% set page_label = _('Edit crisis page') if data.id else _('Create crisis page') %}
+{% set errors = errors or {} %}
+{% set page_type = data.type or 'event' %}
+{% set page_status = data.status or 'ongoing' %}
+
+{% set event_url = h.url_for('hdx_event.read_event', id='page_id', qualified=true) %}
+{% set dashboards_url = h.url_for('hdx_dashboard.read_dashboard', id='page_id', qualified=true) %}
+{% set slug_prefixes = {
+    'event': h.url_for('hdx_event.read_event', id='', qualified=true) | replace('http://', '') | replace('https://', ''),
+    'dashboards': h.url_for('hdx_dashboard.read_dashboard', id='', qualified=true) | replace('http://', '') | replace('https://', '')} %}
+
+{% set section_fields = {
+    'empty': [],
+    'description': ['section_title', 'section_long_description', 'max_height', 'm_max_height'],
+    'map': ['data_url', 'section_title', 'max_height', 'm_max_height'],
+    'key_figures': ['data_url', 'section_title', 'section_description', 'max_height', 'm_max_height'],
+    'interactive_data': ['data_url', 'section_title', 'section_description', 'max_height', 'm_max_height'],
+    'data_list': ['data_url', 'section_title']} %}
+{% set type_options = {} %}
+{% for option in data_dict.content_type %}
+  {% do type_options.update({option.value: option.text}) %}
+{% endfor %}
+{% set section_card = {
+    'draggable': False, 'title_tag': 'h3',
+    'move_buttons': True, 'collapsible': False,
+    'delete_position': 'footer', 'delete_label': _('Delete this section')} %}
+
+{% block breadcrumb_items %}
+  {% set crumbs = [{'label': nav.section.label, 'href': nav.section['items'][0].href}] if nav.section else [] %}
+  {% set crumbs = crumbs + [{'label': _('Custom Pages'), 'href': h.url_for('hdx_custom_pages.index')},
+                            {'label': page_label, 'href': ''}] %}
+  {% snippet 'v2/components/breadcrumb.html', items=crumbs %}
 {% endblock %}
+
+{% block secondary_content %}
+  {% snippet 'v2/components/anchor-links.html',
+      items=[
+        {'label': _('Describe crisis page'), 'href': '#describe-crisis-page', 'active': True},
+        {'label': _('Build sections'), 'href': '#build-sections'}],
+      heading=_('On this page'),
+      extra_classes='c-anchor-links--numbered' %}
+{% endblock %}
+
+{% block styles %}
+  {{ super() }}
+  {% asset 'hdx_theme/v2-select2-styles' %}
+{% endblock %}
+
+{% block scripts %}
+  {{ super() }}
+  {% asset 'hdx_theme/v2-select2-scripts' %}
+  {% asset 'hdx_theme/v2-slug-preview-scripts' %}
+  {% asset 'hdx_theme/v2-config-item-scripts' %}
+  {% asset 'hdx_theme/v2-custom-page-form-page-scripts' %}
+{% endblock %}
+
 {% block primary %}
-<div id="section_container" data-module="hdx_custom_pages">
-    <form id="create_page_form" class="cp-form hdx-form" method="post" enctype="multipart/form-data" data-module="basic-form">
-        {{ h.csrf_input() }}
-        <div class="paddingRowHack background-gray pTopBottom35">
-            <div class="paddingLeftHack paddingRightHack">
-                <div class="form-section">
-                  <div class="row">
-                      <div class="col-3">
-                          <h3>How this page works</h3>
-                          <p> You can use this form to create a custom page for different sections of the site (such as event page)</p>
-                          <p> When you finish, you have options to <strong>see a preview</strong> (then publish or further edit) or <strong>save as draft</strong> (can be accessed by you and by sysadmins) which lets you come back for further editing</p>
-                      </div>
-                      <div class="col-9">
-                          {% if errors %}
-                            <div class="alert alert-danger error-explanation">
-                              <p>{{ _('The form contains invalid entries:') }}</p>
-                              <ul>
-                                {% for key, field_errors in errors.items() %}
-                                  <li>{{ key }}: {% for field_error in field_errors %}{{ field_error }}{% if not loop.last %}, {% endif %}{% endfor %}</li>
-                                {% endfor %}
-                              </ul>
-                            </div>
-                          {% endif %}
+  {% set location_options = {} %}
+  {% for location in h.hdx_location_list() %}
+    {% do location_options.update({location.value: location.text}) %}
+  {% endfor %}
+  {% set tags = (data.tag_string or '').split(',') | map('trim') | reject('equalto', '') | list %}
+  {% set tag_options = {} %}
+  {% for tag in tags %}
+    {% do tag_options.update({tag: tag}) %}
+  {% endfor %}
+  {% set other_errors = [] %}
+  {% for key, messages in errors.items() if key not in ['title', 'name', 'tag_string'] %}
+    {% do other_errors.append(messages | join(' ') if messages is iterable and messages is not string else messages) %}
+  {% endfor %}
 
-                          {{ form.input('title', id='field_title', label=_('Title of the page'), placeholder=_('eg. A descriptive title'), value=data.title, error=errors.title, classes=['mb-3', 'required', '', 'control-large'], attrs={'data-module': 'slug-preview-target', }) }}
-                          {% set prefix = h.url_for('hdx_event.read_event',id='') %}
-                          {% set full_domain_event = h.url_for('hdx_event.read_event',id='page_id', qualified=true) %}
-                          {% set full_domain_dashboards = h.url_for('hdx_dashboard.read_dashboard',id='page_id', qualified=true) %}
-                          {% set full_domain_event_no_id = full_domain_event|replace("page_id/", "")|replace("page_id", "") %}
-                          {% set attrs = {'data-module': 'slug-preview-slug', 'data-module-prefix': full_domain_event_no_id, 'data-module-placeholder': 'page_id'} %}
-                          {{ form.prepend('name', id='field_name', label=_('URL'), prepend=prefix, placeholder=_('eg. page_id'), value=data.name, error=errors.name, classes=['mb-3'], attrs=attrs) }}
-                          <div class="mb-3">
-                              <div class="checkbox">
-                                  <label>
-                                      <input type="checkbox" name="show_title" {% if (data.extras is not defined or data.extras.show_title is not defined) or data.extras.show_title == 'on' %}checked{% endif %}/>
-                                      Display page title
-                                  </label>
-                              </div>
-                          </div>
+  {% snippet 'v2/list-header.html',
+      list_title=page_label,
+      list_subtitle=_('You can use this form to create a custom page for different sections of the site (such as an event page). When you finish, save the page, or save it as a draft that only sysadmins can see.'),
+      title_tag='h1',
+      title_size='dashboard',
+      show_controls=False,
+      show_filters=False %}
+  <p class="hdx-v2-custom-page-form__note">{{ _('Required sections and fields are marked with an asterisk (*).') }}</p>
 
-                          <div class="mb-3">
-                              <label class="control-label">This page is located under</label>
-                              <div class="radio">
-                                  <label>
-                                      <input id="hdx_event_type" type="radio" name="type" value="event"  {{data.event}}/>
-                                      Event (URL:{{full_domain_event}})
-                                  </label>
-                              </div>
-                              <div class="radio">
-                                  <label>
-                                      <input id="hdx_dashboard_type" type="radio" name="type" value="dashboards" {{data.dashboards}} />
-                                      Dashboards (URL:{{full_domain_dashboards}})
-                                  </label>
-                              </div>
-                          </div>
+  <form id="create_page_form" class="hdx-v2-custom-page-form" method="post" enctype="multipart/form-data">
+    {{ h.csrf_input() }}
 
-                          <div class="mb-3">
-                              <label class="control-label">Status</label>
-                              <div class="radio">
-                                  <label>
-                                      <input id="hdx_page_ongoing" type="radio" name="status" value="ongoing"  {{data.ongoing}}/>
-                                      Ongoing
-                                  </label>
-                              </div>
-                              <div class="radio">
-                                  <label>
-                                      <input id="hdx_page_archived" type="radio" name="status" value="archived" {{data.archived}} />
-                                      Archived
-                                  </label>
-                              </div>
-                          </div>
-                          <div class="mb-3">
-                              <label class="control-label">Location</label>
-                              {% set group_list = h.hdx_location_list() %}
-                              <div data-module="hdx_form_element_manager" data-module-element_name="groups_list" >
-                                  {{ form.select('groups', id='field_groups', options=group_list, selected=data.groups, error=errors.groups, classes=['mb-3'], attrs={'multiple':'true'}) }}
-                              </div>
-                          </div>
-                          <div class="mb-3">
-                              <label class="control-label">Keywords</label>
-                              <div data-module="hdx_form_element_manager" data-module-element_name="description" >
-                                  {{ form.input('description', id='field_description', type='text',placeholder='Keywords with comma separated. e.g covid19, coronavirus', value=data.description, error=errors.description, classes=['mb-3'], attrs={}) }}
-                              </div>
-                          </div>
-                          <div class="mb-3">
-                            {% set tag_attrs = {'data-module': 'hdx_autocomplete',
-                                                'data-module-tags': 'false',
-                                                'data-module-multiple': 'multiple',
-                                                'data-module-width': '500px',
-                                                'data-module-placeholder': 'eg. economy, mental health, government',
-                                                'class':'choices-orange', 'multiple':'true',
-                                                'data-module-source': '/api/2/util/tag/autocomplete?incomplete=?'} %}
-                              <label class="control-label">Tags</label>
-                              <div data-module="hdx_form_element_manager" data-module-element_name="tag_string" data-module-broadcast_change="true" >
-                                  {{ form.input('tag_string', id='field_tag_string', value=data.tag_string, error=errors.tag_string, classes=['', 'mb-3', 'tags-select'], attrs=tag_attrs) }}
-                              </div>
-                          </div>
-                      </div>
-                  </div>
-                </div>
-                <div class="row">
-                    <div class="col-12">
-                        <hr class="form-hr"/>
-                    </div>
-                </div>
-                <div class="mTop15 form-horizontal form-section">
-                  <div class="row">
-                      <div class="col-3">
-                          <h3>Design a page in section</h3>
-                          <p> Custom page can be designed in section. Each section can display map, key figures, interactive data, data list or custom content (with your own header) by selecting section content type and entering corresponding fields.</p>
-                          <div class="sample-text">Sample page - reference only</div>
-                          <img style="width: 100%;" src="/images/new-page-section-sample.png" />
-                      </div>
-                      <div class="col-9">
-                          <div id="sections" class="row">
-                              {% for section in data.sections %}
-                                  {% set _i = ((loop.index-1) | string) %}
-                                  {% set s_id = "section_"+_i %}
-                                  {% set s_type= 'field_section_'+_i+'_type' %}
-                                  {% set s_data_url = 'field_section_'+_i+'_data_url' %}
-                                  {% set s_title = 'field_section_'+_i+'_section_title' %}
-                                  {% set s_description = 'field_section_'+_i+'_section_description' %}
-                                  {% set s_long_description = 'field_section_'+_i+'_section_long_description' %}
-                                  {% set s_max_height = 'field_section_'+_i+'_max_height' %}
-                                  {% set s_m_max_height = 'field_section_'+_i+'_m_max_height' %}
-                                  {% set s_del = 'del_section_'+_i %}
-                                  <div class="col-12 hdx-visible-element pTopBottom15" id="{{s_id}}" >
-                                      <div class="row">
-                                          <div class="col-9">
-                                              {{ form.select(s_type, id=s_type, label=_('Section'), options=data_dict['content_type'], selected=section.type, error=errors.type, classes=['mb-3'], attrs={})}}
-                                              {{ form.input(s_data_url, id=s_data_url, label=_('Data URL'), placeholder=_('Enter URL'), value=section.data_url, error=errors.data_url, classes=['mb-3', '', 'control-large', 'hdx-invisible-element', 'hdx-section-field'], attrs={'class':'custom-page-field'}) }}
-                                              {{ form.input(s_title, id=s_title, label=_('Title of Section'), placeholder=_('If missing will have the default value'), value=section.section_title, error=errors.section_title, classes=['mb-3', '', 'control-large', 'hdx-invisible-element', 'hdx-section-field'], attrs={'class':'custom-page-field'}) }}
-                                              {{ form.input(s_description, id=s_description, label=_('Description (optional)'), placeholder=_('eg. Description of the section'), value=section.description, error=errors.description, classes=['mb-3', '', 'control-large', 'hdx-invisible-element', 'hdx-section-field'], attrs={'class':'custom-page-field'}) }}
-  {#                                            {{ form.input(s_long_description, id=s_long_description, label=_('Long Description (optional)'), placeholder=_('eg. Long Description of the section'), value=section.long_description, error=errors.long_description, classes=['form-group', 'control-full', 'control-large', 'hdx-invisible-element', 'hdx-section-field'], attrs={}) }}#}
-                                              {{ form.markdown(s_long_description, id=s_long_description, label=_('Long Description'), placeholder=_('eg. Long Description of the section'), value=section.long_description, error=errors.long_description, classes=['mb-3', '', 'control-large', 'hdx-invisible-element', 'hdx-section-field'], attrs={'class':'custom-page-field'}) }}
-                                              {{ form.input(s_max_height, id=s_max_height, label=_('Max Height'), placeholder=_('400px recommended'), value=section.max_height, error=max_height, classes=['mb-3', '', 'control-large', 'hdx-invisible-element', 'hdx-section-field'], attrs={'class':'custom-page-field'}) }}
-                                              {{ form.input(s_m_max_height, id=s_m_max_height, label=_('Mobile Max Height'), placeholder=_('400px recommended'), value=section.m_max_height, error=m_max_height, classes=['mb-3', '', 'control-large', 'hdx-invisible-element', 'hdx-section-field'], attrs={'class':'custom-page-field'}) }}
-                                          </div>
-                                          <div class="col-3">
-                                              <a href="#" id="{{s_del}}" name="{{s_del}}">Delete this section</a>
-                                          </div>
-                                      </div>
-                                      <div class="row mTop20">
-                                          <div class="col-12">
-                                              <hr class="form-hr"/>
-                                          </div>
-                                      </div>
-                                  </div>
-
-                              {% endfor %}
-                          </div>
-                          <div class="row">
-                              <div class="col-12">
-                                  <button id="add_section" type="button" name="add_section" value="add_section" class="btn btn-primary float-start">+ Add More Sections</button>
-                              </div>
-                          </div>
-                      </div>
-                  </div>
-                </div>
-            </div>
-        </div>
-        <div class="paddingRowHack pTopBottom35">
-            <div class="paddingLeftHack paddingRightHack">
-                <div class="row">
-                    <div class="offset-3 col-9">
-                        {% if data.id %}
-                          <a class="btn btn btn-danger float-start"
-                             href="#confirmation-div-{{ data.id }}"
-                             data-bs-toggle="modal" title="{{ _('Delete This Page') }}">{{ _('Delete This Page') }}
-                          </a>
-                        {% endif %}
-                        <button class="btn btn-primary float-end" id="save_custom_page" type="submit" name="save_custom_page" value="active">Save This Page</button>
-                        <button class="btn btn-primary float-end mR30" id="save_as_draft_custom_page" type="submit" name="save_as_draft_custom_page" value="draft">Save As Draft</button>
-                        <input type="hidden" id="hdx_counter" name="hdx_counter" value="{{data.hdx_counter}}"/>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </form>
-
-    {% if data.id %}
-        {% snippet 'snippets/confirmation_post.html',
-          form_url=h.url_for('hdx_custom_page.delete_page', id=data.id),
-          modal_div_id='confirmation-div-' + data.id,
-          header='Confirm',
-          body='Are you sure you want to delete this page?',
-          confirm_btn_label='Confirm' %}
+    {% if other_errors %}
+      {% snippet 'v2/components/alert.html', message=other_errors | join(' '), dismissible=False %}
     {% endif %}
 
-    <div class="col-12 hdx-invisible-element pTopBottom15" id="section_template">
-        <div class="row">
-            <div class="col-9">
-                {{ form.select('field_section_template_type', id='field_section_template_type', label=_('Section'), options=data_dict['content_type'], selected="empty", error=errors.type, classes=['mb-3'], attrs={})}}
-                {{ form.input('field_section_template_data_url', id='field_section_template_data_url', label=_('Data URL'), placeholder=_('Enter URL'), classes=['mb-3', '', 'control-large', 'hdx-invisible-element', 'hdx-section-field'], attrs={'class':'custom-page-field'}) }}
-                {{ form.input('field_section_template_section_title', id='field_section_template_section_title', label=_('Title of Section'), placeholder=_('Title of Section (optional)'), classes=['mb-3', '', 'control-large', 'hdx-invisible-element', 'hdx-section-field'], attrs={'class':'custom-page-field'}) }}
-                {{ form.input('field_section_template_section_description', id='field_section_template_section_description', label=_('Description (optional)'), placeholder=_('eg. Description of the section'), classes=['mb-3', '', 'control-large', 'hdx-invisible-element', 'hdx-section-field'], attrs={'class':'custom-page-field'}) }}
-{#                {{ form.input('field_section_template_section_long_description', id='field_section_template_section_long_description', label=_('Long description (optional)'), placeholder=_('eg. Long description of the section'), classes=['form-group', 'control-full', 'control-large', 'hdx-invisible-element', 'hdx-section-field'], attrs={}) }}#}
-                {{ form.markdown('field_section_template_section_long_description', id='field_section_template_section_long_description', label=_('Long Description'), placeholder=_('eg. Long Description of the section'), classes=['mb-3', '', 'control-large', 'hdx-invisible-element', 'hdx-section-field'], attrs={'class':'custom-page-field'}) }}
-                {{ form.input('field_section_template_max_height', id='field_section_template_max_height', label=_('Max Height'), placeholder=_('400px recommended'), classes=['mb-3', '', 'control-large', 'hdx-invisible-element', 'hdx-section-field'], attrs={'class':'custom-page-field'}) }}
-                {{ form.input('field_section_template_m_max_height', id='field_section_template_m_max_height', label=_('Mobile Max Height'), placeholder=_('400px recommended'), classes=['mb-3', '', 'control-large', 'hdx-invisible-element', 'hdx-section-field'], attrs={'class':'custom-page-field'}) }}
-            </div>
-            <div class="col-3">
-                <a href="#" id="del_section" type="button" name="del_section">Delete this section</a>
-            </div>
-        </div>
-        <div class="row mTop10">
-            <div class="col-12">
-                <hr class="form-hr"/>
-            </div>
-        </div>
-    </div>
-</div>
-{% endblock %}
+    <section id="describe-crisis-page" class="hdx-v2-content-columns hdx-v2-content-columns--stack hdx-v2-custom-page-form__group">
+      <h2 class="hdx-v2-content-columns__sidebar hdx-v2-custom-page-form__group-title">{{ _('Describe crisis page') }}<span class="c-form-field__required" aria-hidden="true"> *</span></h2>
 
-{% block scripts2 %}
-    {{ super() }}
-{#    {% resource 'hdx_theme/custom-pages' %}#}
-    {% asset 'hdx_theme/custom-pages-scripts' %}
+      <div class="hdx-v2-content-columns__content hdx-v2-custom-page-form__fields">
+        <div class="c-form-field">
+          {% snippet 'v2/components/text-field.html',
+              size='m', name='title', id='field_title',
+              label=_('Title of the page'), required=True,
+              value=data.title or '', placeholder=_('eg. A descriptive title'),
+              errors=errors.title %}
+          <div class="hdx-v2-custom-page-form__checkbox">
+            {% snippet 'v2/components/checkbox.html',
+                id='field_show_title', name='show_title',
+                checked=not (data.extras and data.extras.show_title == 'off'),
+                label=_('Display page title'), error_slot=false %}
+          </div>
+        </div>
+
+        <fieldset class="hdx-v2-custom-page-form__fieldset">
+          <legend class="c-form-field__label">{{ _('This page is located under') }}<span class="c-form-field__required" aria-hidden="true"> *</span></legend>
+          <div class="hdx-v2-custom-page-form__options">
+            {% snippet 'v2/components/radio.html',
+                name='type', value='event', id='hdx_event_type',
+                label=_('Event'),
+                description=_('URL: {url}').format(url=event_url),
+                checked=page_type == 'event',
+                attrs={'data-slug-prefix': slug_prefixes.event} %}
+            {% snippet 'v2/components/radio.html',
+                name='type', value='dashboards', id='hdx_dashboard_type',
+                label=_('Dashboards'),
+                description=_('URL: {url}').format(url=dashboards_url),
+                checked=page_type == 'dashboards',
+                attrs={'data-slug-prefix': slug_prefixes.dashboards} %}
+          </div>
+        </fieldset>
+
+        {% snippet 'v2/components/slug-preview.html',
+            name='name', id='field_name', label=_('URL'), required=True,
+            value=data.name or '', placeholder=_('eg. page_id'),
+            description=_('This is how the URL will appear on HDX.'),
+            prefix=slug_prefixes[page_type] or slug_prefixes.event, preview_placeholder='page_id',
+            target_id='field_title', errors=errors.name %}
+
+        <fieldset class="hdx-v2-custom-page-form__fieldset">
+          <legend class="c-form-field__label">{{ _('Status') }}<span class="c-form-field__required" aria-hidden="true"> *</span></legend>
+          <div class="hdx-v2-custom-page-form__options">
+            {% snippet 'v2/components/radio.html',
+                name='status', value='ongoing', id='hdx_page_ongoing',
+                label=_('Ongoing'), checked=page_status == 'ongoing' %}
+            {% snippet 'v2/components/radio.html',
+                name='status', value='archived', id='hdx_page_archived',
+                label=_('Archived'), checked=page_status == 'archived' %}
+          </div>
+        </fieldset>
+
+        <div class="c-form-field">
+          {% snippet 'v2/components/select.html',
+              label=_('Location'), name='groups', id='field_groups',
+              description=_('Describe the location(s) or country / countries that this page covers.'),
+              options=location_options, selected=data.groups or [],
+              multiple=True, searchable=True, chip_color='cyan' %}
+        </div>
+
+        <div class="c-form-field">
+          {% snippet 'v2/components/text-field.html',
+              size='m', name='description', id='field_description',
+              label=_('Keywords'), value=data.description or '',
+              placeholder=_('Keywords with comma separated. e.g covid19, coronavirus') %}
+        </div>
+
+        <div class="c-form-field">
+          {% snippet 'v2/components/select.html',
+              label=_('Tags'), name='tag_string', id='field_tag_string',
+              placeholder=_('eg. economy, mental health, government'),
+              options=tag_options, selected=tags,
+              multiple=True, searchable=True,
+              select_attrs={'data-source': '/api/2/util/tag/autocomplete', 'data-source-type': 'tag'},
+              errors=errors.tag_string %}
+        </div>
+      </div>
+    </section>
+
+    <section id="build-sections" class="hdx-v2-content-columns hdx-v2-content-columns--stack hdx-v2-custom-page-form__group">
+      <h2 class="hdx-v2-content-columns__sidebar hdx-v2-custom-page-form__group-title">{{ _('Build sections') }}</h2>
+
+      <div class="hdx-v2-content-columns__content hdx-v2-custom-page-form__fields">
+        <div class="c-config-item-list" data-config-item-list data-config-item-form
+             data-title-format="{{ _('Section {n}') }}"
+             data-move-message="{{ _('Moved to position {n} of {total}') }}"
+             data-section-fields="{{ h.dump_json(section_fields) }}">
+          <div class="c-config-item-list__actions">
+            {% snippet 'v2/components/button.html',
+                style='primary', label=_('Add more sections'),
+                icon_src='v2/icons/file-plus.svg',
+                attrs={'data-config-item-add': ''} %}
+          </div>
+          <ol class="c-config-item-list__items">
+            {% for section in data.sections %}
+              {% set index = loop.index0 %}
+              <li>
+                {% call h.snippet('v2/components/config-item.html',
+                    title=_('Section {n}').format(n=loop.index),
+                    id='custom-page-section-' ~ index,
+                    **section_card) %}
+                  {% snippet 'admin/snippets/custom_page_section_fields.html',
+                      section=section, index=index,
+                      fields=section_fields, type_options=type_options %}
+                {% endcall %}
+              </li>
+            {% endfor %}
+          </ol>
+          <template data-config-item-template>
+            <li>
+              {% call h.snippet('v2/components/config-item.html',
+                  title=_('Section {n}').format(n='__index__'),
+                  id='custom-page-section-__index__',
+                  **section_card) %}
+                {% snippet 'admin/snippets/custom_page_section_fields.html',
+                    index='__index__', fields=section_fields, type_options=type_options %}
+              {% endcall %}
+            </li>
+          </template>
+          <span class="sr-only" aria-live="polite" data-config-item-status></span>
+        </div>
+        <input type="hidden" id="hdx_counter" name="hdx_counter" value="{{ data.hdx_counter }}">
+      </div>
+    </section>
+
+    <div class="hdx-v2-custom-page-form__actions">
+      {% if data.id %}
+        {% snippet 'v2/components/button.html',
+            style='tertiary', label=_('Delete this page'),
+            attrs={'onclick': "window.hdxV2Drawer('delete-custom-page-" ~ data.id ~ "').open()"} %}
+      {% endif %}
+      <div class="hdx-v2-custom-page-form__save">
+        {% snippet 'v2/components/button.html',
+            style='primary', button_type='submit', label=_('Save this page'),
+            attrs={'id': 'save_custom_page', 'name': 'save_custom_page', 'value': 'active'} %}
+        {% snippet 'v2/components/button.html',
+            style='secondary', button_type='submit', label=_('Save as draft'),
+            attrs={'id': 'save_as_draft_custom_page', 'name': 'save_as_draft_custom_page', 'value': 'draft'} %}
+      </div>
+    </div>
+  </form>
+
+  {% if data.id %}
+    {% snippet 'admin/snippets/custom_page_delete_drawer.html',
+        page=data, drawer_id='delete-custom-page-' ~ data.id %}
+  {% endif %}
 {% endblock %}

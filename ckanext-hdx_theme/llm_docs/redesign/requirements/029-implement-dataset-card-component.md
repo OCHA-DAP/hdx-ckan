@@ -88,7 +88,7 @@ No component extension required — all variants are already supported.
 | Use | Component | Props |
 |---|---|---|
 | "Show more" / "Show less" | `c-text-button` | `style=tertiary, size=s, icon=true, icon_position=right, icon_src='v2/icons/chevron-down.svg'` |
-| Location label | `c-label` | `size=xs, color=cyan, icon=false` |
+| Location label | `c-label` | `size=xs, color=cyan, icon=false`; ellipsis at the column width |
 | Subnational label | `c-label` | `size=xs, color=grey, icon=false` |
 | Private / archived badge | `c-label` | `size=xs, color=dark, icon_only=true, icon=true, icon_src='v2/icons/lock.svg'` |
 | COD / COD+ badge | `c-label` | `size=xs, color=dark, icon=false` |
@@ -121,6 +121,12 @@ Rendered when there are more file formats than the visible set:
 | `show_others_href` | string | `'#'` | Footer link URL |
 | `query` | string | `''` | Search term to highlight in title/description via the `highlight` JS module |
 | `extra_classes` | string | `''` | Additional CSS classes on root `.c-dataset-card` element |
+| `labels` | list | `[]` | `c-label` param dicts; when non-empty the org line becomes a `__top` row (org left, `__labels` right, wrapping under the org) |
+| `title_action` | dict | `{}` | `button.html` params; when non-empty the title becomes a `__title-row` with the button on the right, wrapping under the title at SM |
+| `meta_items` | list | `[]` | `{label, value, tooltip?, chip?}` dicts (`tooltip` = `{text, id, aria_label}` info-icon, `chip` = `{text, color}` xs `c-label`, cyan by default); a `__meta` `<dl>` in `__left` below the title, 20px from it; equal `__meta-item` columns at MD+, stacked at SM |
+| `caller()` | block | — | Optional `__actions` row below the body; children are `__actions-group` divs at opposite ends; a single group aligns right |
+
+`__right` renders only when `location`, `date_range` or `formats` is set.
 
 ## JS Behavior
 
@@ -129,7 +135,7 @@ Rendered when there are more file formats than the visible set:
 **On "Show more" click:**
 1. Toggle `is-open` class on `.c-dataset-card__desc-text` — CSS controls `display: none` / `display: block`
 2. Toggle button label text: `"Show more"` ↔ `"Show less"`
-3. Chevron rotates via CSS (`&.is-open .c-text-button__icon { transform: rotate(180deg); }`) — no icon-src swap in JS
+3. Chevron rotates via CSS (`.hdx-clamp-toggle()` in `mixins.less`: `.is-open` rotates the toggle's icon 180°) — no icon-src swap in JS
 
 No height animation required. The module does not need to run at SM breakpoint since `.c-dataset-card__desc` is hidden in CSS at that size.
 

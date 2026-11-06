@@ -241,6 +241,4 @@ class HDXEditView(EditView):
         tc = utils._setup_totp_template_variables(context, data_dict)
         if hasattr(tc, 'totp_challenger_uri'):
             g.totp_challenger_uri = tc.totp_challenger_uri
-        if hasattr(tc, 'totp_secret'):
-            g.totp_secret = tc.totp_secret
         return base.render(u'user/edit_user_form.html', extra_vars=vars)

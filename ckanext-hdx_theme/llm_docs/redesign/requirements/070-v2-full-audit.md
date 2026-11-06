@@ -11,7 +11,8 @@ Every finding carries a proposed fix. §7 records the decision on each. The code
 templates, `webassets.yml`'s v2 section, and `requirements/001–069`.
 
 **Excluded** (next cycle, per the task owner): sysadmin dashboard, user settings, user dashboard,
-requested data (org page), contribute flow, find/request org.
+requested data (org page), contribute flow, find/request org. User dashboard, user settings and the org
+Requested Data tab were migrated later (072–080).
 
 **Method.** Every count below is reproducible by the grep quoted next to it. Every file path was
 resolved against the filesystem. No claim here rests on a requirement doc alone — where a doc and
@@ -75,7 +76,7 @@ page-specific) and drop the four `@import`s.
 
 ### A5 — Org index hand-rolls the nav-controls markup
 
-`templates/organization/index.html:89-110` writes `hdx-v2-nav-controls` / `hdx-v2-nav-ctrl-pair` /
+`templates/organization/index.html` writes `hdx-v2-nav-controls` / `hdx-v2-nav-ctrl-pair` /
 `hdx-v2-nav-ctrl-label` markup by hand. `templates/dataviz/index.html`,
 `templates/organization/members.html` and `templates/search/snippets/package_list.html` all call
 `v2/search-nav-controls.html` instead — the snippet that task 059 D4 generalized precisely so that
@@ -85,7 +86,7 @@ callers could supply their own option lists and param names.
 
 ### A6 — FocusTrap implemented twice
 
-`navbar.js:7` defines a `FocusTrap` prototype. `components/drawer.js:11-60` re-implements
+`navbar.js` defines a `FocusTrap` prototype. `components/drawer.js` re-implements
 focus containment inline, in jQuery. `.claude/skills/hdx-v2-styles/references/conventions.md`
 currently instructs authors to *copy* the class when a new component needs one — the duplication
 is documented policy, not an accident. A third file, `focus-trap.js`, existed as a shared module
@@ -124,7 +125,7 @@ decisions, so it needs a deliberate call rather than being treated as cleanup.
 
 **This is the cause of the reported "signup tier looks different in the demo than on the
 value-proposition page".** The real layout contract lives in page LESS:
-`pages/signup.less:48-62` — `.hdx-v2-signup-tiers-page__tiers`, column at SM, `flex-direction: row`
+`pages/signup.less` — `.hdx-v2-signup-tiers-page__tiers`, column at SM, `flex-direction: row`
 + `align-items: stretch` at MD, wider gap at XL. The showcase has no access to it and wraps the
 cards in `.demo-row` instead (row, `flex-wrap: wrap`, `align-items: flex-start`, 1.5rem gap), so
 the two render at different widths and alignment.
@@ -142,14 +143,14 @@ value-proposition page and the showcase. Worth a sweep for other components in t
 
 | # | Finding | Detail |
 |---|---|---|
-| B3 | `hdx-v2-*` page class inside `components/` | `components/signal-card.less:108-178` defines `.hdx-v2-signals-cards`, `.hdx-v2-signal-slide`, `.hdx-v2-signals-carousel-footer` and `.hdx-v2-signals-dots`. LESS rules put `hdx-v2-*` patterns at the top level of `less/v2/`, not in `components/`. It also hard-codes `width: 19.938rem` below XL, against "no fixed layout column widths" — contained today only because the parent sets `overflow: hidden` below XL |
-| B4 | Bootstrap classes on v2 pages — **one is documented, one is not** | `country/country.html:102-186` (`row`, `col-4`, `col-12`, `d-none`, `mTop35`) is the "Key Figures" block that **063 D5 explicitly left rendering as v1, untouched** — deliberate, not drift; recorded here only so it isn't rediscovered as a bug. `landing_pages/signals.html:95` (`col-12 col-md-10 col-lg-8 mx-auto`) and `:102` (`indicates-required mb-3`) wrap the vendored Mailchimp embed and carry no such decision |
+| B3 | `hdx-v2-*` page class inside `components/` | `components/signal-card.less` defines `.hdx-v2-signals-cards`, `.hdx-v2-signal-slide`, `.hdx-v2-signals-carousel-footer` and `.hdx-v2-signals-dots`. LESS rules put `hdx-v2-*` patterns at the top level of `less/v2/`, not in `components/`. It also hard-codes `width: 19.938rem` below XL, against "no fixed layout column widths" — contained today only because the parent sets `overflow: hidden` below XL |
+| B4 | Bootstrap classes on v2 pages — **one is documented, one is not** | `country/country.html` (`row`, `col-4`, `col-12`, `d-none`, `mTop35`) is the "Key Figures" block that **063 D5 explicitly left rendering as v1, untouched** — deliberate, not drift; recorded here only so it isn't rediscovered as a bug. `landing_pages/signals.html` (`col-12 col-md-10 col-lg-8 mx-auto`, `indicates-required mb-3`) wrap the vendored Mailchimp embed and carry no such decision |
 | B5 | jQuery in v2 | `components/drawer.js`, `pages/dataset.js`, `pages/shape-view.js`. Conventions allow the existing few but forbid adding more; `drawer.js` is the only *component* still on it |
-| B6 | Direct `breakpoints.less` import | `pages/signals-landing.less:8` imports it alongside `mixins.less`, which already re-exports it. Single-import rule |
+| B6 | Direct `breakpoints.less` import | `pages/signals-landing.less` imports it alongside `mixins.less`, which already re-exports it. Single-import rule |
 | B7 | Unbundled compiled CSS in the repo | `fanstatic/v2/{typography,mixins,radius,overlays,motion,spacing,elevation,breakpoints,colors}.css` are compiled artifacts of token/mixin-only sources that no bundle references. `nav-controls.css` is in the same directory but is a real stylesheet — see A4 |
 | B8 | `select.html` has no `/components` demo | Used by `v2/group-message-drawer.html`, `package/contact_contributor.html`, `package/request_access.html`, `organization/members.html`. It has its own row in the skill's component catalog (`dropdown.html`'s row no longer claims a `native` mode); the missing showcase demo itself is tracked as D1 |
-| B9 | Layout variable `columns_class` | `v2/page.html:98` reads `columns_class`, a 4th layout var alongside `outer_row_class` / `sidebar_class` / `content_class`. Documented in `CONVENTIONS.md`'s "Layout variable completeness" section and the skill's `workflows.md` |
-| B10 | **Not a defect** — inert motion helpers | `.hdx-motion()` (51 call sites) and `window.hdxV2.prefersReducedMotion()` return nothing / `false` by design, per **069's Reduced-motion decision**, at the task owner's request. Restoring real behavior is a one-line uncomment in `mixins.less:243` and `utils.js:108`. Listed as an open follow-up, not a finding |
+| B9 | Layout variable `columns_class` | `v2/page.html` reads `columns_class`, a 4th layout var alongside `outer_row_class` / `sidebar_class` / `content_class`. Documented in `CONVENTIONS.md`'s "Layout variable completeness" section and the skill's `workflows.md` |
+| B10 | **Not a defect** — inert motion helpers | `.hdx-motion()` (51 call sites) and `window.hdxV2.prefersReducedMotion()` return nothing / `false` by design, per **069's Reduced-motion decision**, at the task owner's request. Restoring real behavior is a one-line uncomment in `.hdx-motion()` in `mixins.less` and `prefersReducedMotion()` in `utils.js`. Listed as an open follow-up, not a finding |
 
 ---
 
@@ -220,21 +221,21 @@ grep -ohE '(ckanext-hdx_theme/)?(ckanext/hdx_theme/)?(templates|fanstatic|hdx-st
 
 | Doc | Finding |
 |---|---|
-| **056** D3 | Activity, Members, Stats and Datasets tabs are full v2 (057/058/059); Requested Data is the only tab still on v1, matching the excluded-scope list. Doc corrected |
-| **056** D14 | Only `requestdata/organization_requested_data.html` extends `organization/read_v1_base.html`; `members.html`, `stats.html` and `activity_stream.html` extend `v2/page.html`. Doc corrected |
-| **056** D17 / Files Affected | The hero renders via `templates/v2/org-hero.html`, a shared wrapper used by all four org tabs that calls `page-header.html`. Doc corrected |
+| **056** D3 | Activity, Members, Stats, Datasets and Requested Data tabs are full v2 (057/058/059, 080). Doc corrected |
+| **056** D14 | No template extends `organization/read_v1_base.html`; `members.html`, `stats.html`, `activity_stream.html` and `requestdata/organization_requested_data.html` extend `v2/page.html`. Doc corrected |
+| **056** D17 / Files Affected | The hero renders via `templates/v2/org-hero.html`, a shared wrapper that calls `page-header.html`. Doc corrected |
 | **056** D18 | `contribute.js` is bundled on v2 pages: `v2/contribute.js` is in `v2-page-scripts`. Doc corrected |
 | **061** D5 / D6 | The `errors` param, the `c-dropdown--error` / `c-dropdown__error` pair and `option_attrs` live in `v2/components/select.html` (`dropdown.less` carries the error styles, which `select.html` reuses). Doc corrected to name `select.html` throughout, including its Component Mapping table |
 | **061** D7 | No `novalidate` remains on either form |
 | **062** | `planned-maintenance.html` is not in this repo and has no git history here — it ships from infra outside `hdx-ckan`, per the doc's own deployment story (§Scope, §Context). Not a discrepancy |
-| **064** Decision 6 | `widget/onboarding/login.html` has no `h.csrf_input()` and is orphaned (referenced only from commented-out lines in `page.html` / `page_light.html`). The live v2 login form is `user/signin.html:53-56`, which does have it. Doc corrected to name `signin.html` |
+| **064** Decision 6 | `widget/onboarding/login.html` has no `h.csrf_input()` and is orphaned (referenced only from commented-out lines in `page.html` / `page_light.html`). The live v2 login form is `user/signin.html`, which does have it. Doc corrected to name `signin.html` |
 | **065** | The only page doc in 056–069 with no "Decisions Taken" section — its decisions are distributed through §§4–7 instead. Structural inconsistency; flagged, no content problem found |
-| **068** | All three headline decisions are shipped: D1 (`res.datastore_active` branch in `resource_read.html`), D2 (`validate_csrf` override in `ckanext-hdx_package/.../authorize.py:190-266`), D3 (Data Dictionary AJAX section, `pages/resource.js:48-79`). STATUS.md now reads `implemented`; a `c-spinner` component (D11) was later built and is wired into the Data Dictionary AJAX load and the TDE fetch — doc references corrected accordingly |
+| **068** | All three headline decisions are shipped: D1 (`res.datastore_active` branch in `resource_read.html`), D2 (`validate_csrf` override in `ckanext-hdx_package/.../authorize.py`), D3 (Data Dictionary AJAX section, `pages/resource.js`). STATUS.md now reads `implemented`; a `c-spinner` component (D11) was later built and is wired into the Data Dictionary AJAX load and the TDE fetch — doc references corrected accordingly |
 
 Docs **057, 058, 059, 060, 063, 066, 067, 069** re-verified with no behavior drift found beyond the
 path staleness in §4.1. Spot-confirmed: 059 D4 (`search-nav-controls.html` generalized and reused
 by three callers), 060 D6 (iframe sections container-constrained via `hdx-v2-container`), 063 D8
-(`c-stats-card--divided` / `--plain`), 067 D4 (page sizes 12/24/36 in `dataviz/index.html:57`),
+(`c-stats-card--divided` / `--plain`), 067 D4 (page sizes 12/24/36 in `dataviz/index.html`),
 069 (motion tokens shipped, reduced-motion deliberately inert).
 
 ### 4.3 STATUS.md
@@ -248,15 +249,15 @@ consistent: none of them were ever opened as tasks.
 
 ### D1 — Missing demos
 
-`select.html` (4 real call sites, see B8), `c-form-field`, `c-divider`. `graph-point.html` and
-`table.html` appear *only* in the showcase — `c-table` reaches real pages via the DataTables path
-rather than the snippet, and `c-graph-point` via the charts; worth confirming that is intended
-rather than an orphan.
+`select.html` (real call sites in B8), `c-form-field`, `c-divider`. `graph-point.html`
+appears *only* in the showcase — `c-graph-point` reaches real pages via the charts; worth
+confirming that is intended rather than an orphan. `table.html` renders the API Tokens list;
+`c-table` also reaches real pages via the DataTables path.
 
 ### D2 — Undefined classes
 
-`demo-section__heading` on the Drawer (`components.html:2377`) and Alert (`:2482`) sections, and
-`dl-h2` on Avatars (`:1013`), are never defined in the page's `<style>` block. The real classes are
+`demo-section__heading` on the Drawer (`components.html`) and Alert sections, and
+`dl-h2` on Avatars, are never defined in the page's `<style>` block. The real classes are
 `demo-section__title` and `demo-subsection__heading`.
 
 ### D3 — Inconsistent section anchors
@@ -287,10 +288,10 @@ remains `CONVENTIONS.md` plus `.claude/skills/hdx-v2-styles/references/conventio
 
 **Documented but violated in shipped code:**
 
-- "No fixed layout column widths" — `signal-card.less:137` (B3).
+- "No fixed layout column widths" — `signal-card.less` (B3).
 - "`hdx-v2-*` patterns go at the top level of `less/v2/`, not in `components/`" — same file (B3).
 - "Component wrapper ownership" — `c-signup-tier`'s row lives in `pages/signup.less` (B2).
-- "Single import: `mixins.less`" — `pages/signals-landing.less:8` (B6).
+- "Single import: `mixins.less`" — `pages/signals-landing.less` (B6).
 - "Vanilla JS for all new code" — `components/drawer.js` (B5).
 - "Copy the FocusTrap class if a new component needs one" is itself the anti-pattern (A6); the
   rule should be replaced rather than followed.
@@ -308,7 +309,7 @@ remains `CONVENTIONS.md` plus `.claude/skills/hdx-v2-styles/references/conventio
 | A4 | Apply the proposed fix: ship `nav-controls.css` once via `v2-page-styles`, drop the four page-bundle `@import`s. | Landed |
 | A5 | Route `organization/index.html` through `v2/search-nav-controls.html` instead of hand-rolled markup. | Landed |
 | A6 | Promote `FocusTrap` to `window.hdxV2.FocusTrap` in `utils.js`; replace the "copy the class" instruction in `conventions.md` and the skill. | Landed |
-| B1 | Merge `c-kpi-card` and `c-stats-card` into one component with variants, preserving the exact current visual output on every call site (All Locations, All Organisations, org Stats tab, location page KPI row). | Landed — supersedes 058 D14 / 063 D8. Since then, 3 of those 4 call sites (All Locations, All Organisations, location page KPI/`header_stats` row) have been commented out in a later polish pass — only the org Stats tab still renders the merged component live. |
+| B1 | Merge `c-kpi-card` and `c-stats-card` into one component with variants, preserving the exact current visual output on every call site (All Locations, All Organisations, org Stats tab, location page KPI row). | Landed — supersedes 058 D14 / 063 D8. |
 | B2 | Add `c-signup-tier-row` to `components/signup-tier.less`; use it on both the value-proposition page and the showcase. | Landed |
 | B3 | Relocate `.hdx-v2-signals-*` out of `components/signal-card.less` to the top level of `less/v2/`; remove the hardcoded `19.938rem` width at every breakpoint. | Landed |
 | B4 | Wrap the Mailchimp embed in `landing_pages/signals.html` with v2-equivalent layout classes instead of Bootstrap grid classes. | Deferred to next cycle — nothing is visually broken today (Bootstrap's own CSS still styles the form); this is an architectural cleanup on a live, complex third-party embed with no existing v2 CSS to build on |
@@ -322,6 +323,6 @@ remains `CONVENTIONS.md` plus `.claude/skills/hdx-v2-styles/references/conventio
 | 4.2 | Behavior-drift corrected in 056 (D3, D14, D17, D18), 061 (D5/D6 filename + Component Mapping table), 064 (Decision 6). | Done in this pass |
 | 062 | `planned-maintenance.html` ships from infra outside this repo — not a discrepancy, no doc change needed beyond the note already added to this audit. | Resolved |
 | 068 | STATUS.md updated to `implemented`; a `c-spinner` component was later built and wired into the Data Dictionary AJAX load and the TDE fetch — doc references corrected accordingly. | Done in this pass |
-| D1 | Add showcase demos for `select.html`, `c-form-field`, `c-divider`. `table.html` / `graph-point.html` confirmed intentionally showcase-only — no orphan cleanup needed. | Landed |
+| D1 | Add showcase demos for `select.html`, `c-form-field`, `c-divider`. `graph-point.html` confirmed intentionally showcase-only, and `table.html` has a real caller (API Tokens) — no orphan cleanup needed. | Landed |
 | D2 | Rename the undefined showcase classes (`demo-section__heading` → `demo-subsection__heading`, `dl-h2` → the real class) to match what's actually defined. | Landed |
 | D3 | Add `id`s to every showcase section plus a table of contents. | Landed |

@@ -1,0 +1,68 @@
+{#
+  Snippet: unsubscribe_drawers.html
+  Path:    templates/notification_platform/unsubscribe_drawers.html
+
+  The notification platform's Unsubscribe confirmation and Unsubscribed
+  success c-drawers, rendered once per page. The page's JS binds the submit
+  button to onUnsubscribeSubmit (fanstatic/notification_platform/util.js),
+  which shows errors in the first drawer's c-alert and opens the second on
+  success.
+  Ids: notificationsUnsubscribeDrawer, notificationsUnsubscribedDrawer,
+  notificationsUnsubscribeButton (submit).
+
+  Parameters
+  ─────────────────────────────────────────────────
+  confirmation_text  {string}  Unsubscribe drawer text.  default: ''
+  unsubscribed_text  {string}  Unsubscribed drawer c-alert text.  default: ''
+  submit_attrs       {dict}    c-button attrs of the Unsubscribe submit button
+                               (id + the data-* read by the page's JS).
+                               default: {'id': 'notificationsUnsubscribeButton'}
+  ─────────────────────────────────────────────────
+  Example
+
+  {% snippet 'notification_platform/unsubscribe_drawers.html',
+      confirmation_text=confirmation_modal_text,
+      unsubscribed_text=unsubscribed_modal_text,
+      submit_attrs=submit_btn_attrs %}
+#}
+
+{% set confirmation_text = confirmation_text if confirmation_text is defined else '' %}
+{% set unsubscribed_text = unsubscribed_text if unsubscribed_text is defined else '' %}
+{% set submit_attrs      = submit_attrs      if submit_attrs      is defined else {'id': 'notificationsUnsubscribeButton'} %}
+
+{% set CONST_NOTIFICATION_PLATFORM = h.HDX_CONST('UI_CONSTANTS')['NOTIFICATION_PLATFORM'] %}
+
+{# ── Unsubscribe confirmation drawer ── #}
+{% call h.snippet('v2/components/drawer.html',
+    drawer_id='notificationsUnsubscribeDrawer',
+    title=CONST_NOTIFICATION_PLATFORM.UNSUBSCRIBE_CONFIRMATION_MODAL_TITLE) %}
+  <div class="c-drawer-form">
+    <p class="c-drawer-form__text">{{ confirmation_text|safe }}</p>
+    {% snippet 'v2/components/alert.html', hidden=True %}
+    <div class="c-drawer-form__buttons">
+      {{ h.snippet('v2/components/button.html',
+          style='tertiary',
+          label=CONST_NOTIFICATION_PLATFORM.UNSUBSCRIBE_CONFIRMATION_MODAL_TEXT_CLOSE_BUTTON,
+          attrs={'data-drawer-close': ''}) }}
+      {{ h.snippet('v2/components/button.html',
+          style='primary',
+          label=CONST_NOTIFICATION_PLATFORM.UNSUBSCRIBE_CONFIRMATION_MODAL_TEXT_SUBMIT_BUTTON,
+          attrs=submit_attrs) }}
+    </div>
+  </div>
+{% endcall %}
+
+{# ── Unsubscribed success drawer ── #}
+{% call h.snippet('v2/components/drawer.html',
+    drawer_id='notificationsUnsubscribedDrawer',
+    title=CONST_NOTIFICATION_PLATFORM.UNSUBSCRIBED_MODAL_TITLE) %}
+  <div class="c-drawer-form">
+    {% snippet 'v2/components/alert.html', message=(unsubscribed_text | safe), variant='success' %}
+    <div class="c-drawer-form__buttons">
+      {{ h.snippet('v2/components/button.html',
+          style='primary',
+          label=CONST_NOTIFICATION_PLATFORM.UNSUBSCRIBED_MODAL_TEXT_CLOSE_BUTTON,
+          attrs={'data-drawer-close': ''}) }}
+    </div>
+  </div>
+{% endcall %}

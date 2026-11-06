@@ -1,44 +1,58 @@
-import logging
+from flask import Blueprint, redirect
 
-from flask import Blueprint
-
-import ckan.lib.base as base
 import ckan.plugins.toolkit as tk
-from ckanext.hdx_users.controller_logic.dashboard_dataset_logic import DashboardDatasetLogic
 
-log = logging.getLogger(__name__)
-
-render = tk.render
-get_action = tk.get_action
 request = tk.request
 g = tk.g
 h = tk.h
 _ = tk._
-abort = base.abort
-NotFound = tk.ObjectNotFound
-NotAuthorized = tk.NotAuthorized
 
 hdx_user_dashboard = Blueprint(u'hdx_user_dashboard', __name__, url_prefix=u'/dashboard')
 
 
+def _redirect_keeping_query(url, code=302):
+    if request.query_string:
+        url = u'{}?{}'.format(url, request.query_string.decode(u'utf-8'))
+    return redirect(url, code=code)
+
+
 def datasets():
     """
-    Dashboard tab for datasets. Modified to add the ability to change
-    the order and ultimately filter datasets displayed
+    Moved to the user's page (/user/<id>)
     """
 
     if not g.user:
         h.flash_error(_(u'Not authorized to see this page'))
         return h.redirect_to(u'home.index')
 
-    dashboard_dataset_logic = DashboardDatasetLogic(g.userobj).read()
-    if dashboard_dataset_logic.redirect_result:
-        return dashboard_dataset_logic.redirect_result
-    else:
-        return render('user/dashboard_datasets.html', extra_vars={
-            'user_dict': dashboard_dataset_logic.user_dict,
-            'search_data': dashboard_dataset_logic.search_data
-        })
+    return _redirect_keeping_query(h.url_for(u'hdx_user.read', id=g.user))
 
 
+def organizations():
+    """
+    Moved to /user/organizations/<id>
+    """
+
+    if not g.user:
+        h.flash_error(_(u'Not authorized to see this page'))
+        return h.redirect_to(u'user.login')
+
+    return _redirect_keeping_query(h.url_for(u'hdx_user.read_organizations', id=g.user))
+
+
+def newsfeed():
+    """
+    The Newsfeed was removed: /dashboard goes to the user's page (/user/<id>),
+    without the Newsfeed query string
+    """
+
+    if not g.user:
+        h.flash_error(_(u'Not authorized to see this page'))
+        return h.redirect_to(u'user.login')
+
+    return h.redirect_to(u'hdx_user.read', id=g.user)
+
+
+hdx_user_dashboard.add_url_rule(u'/', view_func=newsfeed, strict_slashes=False)
 hdx_user_dashboard.add_url_rule(u'/datasets', view_func=datasets)
+hdx_user_dashboard.add_url_rule(u'/organizations', view_func=organizations)

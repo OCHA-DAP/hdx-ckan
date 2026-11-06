@@ -1,0 +1,22 @@
+{% extends "v2/dashboard-base.html" %}
+
+{#
+  Base for the v2 sysadmin pages, on the shared v2/dashboard-base.html shell
+  (left menu, breadcrumb, layout), plus <title> and page styles.
+
+  Children set:
+    nav_active  {string}  Item id from h.hdx_get_sysadmin_nav_sections()
+                          (e.g. 'all_sysadmins')
+    page_label  {string}  Page name for the breadcrumb and <title>
+  and fill {% block primary %}.
+#}
+
+{% set nav_sections   = h.hdx_get_sysadmin_nav_sections() %}
+{% set nav_aria_label = _('Sysadmin dashboard') %}
+
+{% block subtitle %}{{ page_label }}{% if nav.section %} {{ g.template_title_delimiter }} {{ nav.section.label }}{% endif %}{% endblock %}
+
+{% block styles %}
+  {{ super() }}
+  {% asset 'hdx_theme/v2-sysadmin-page-styles' %}
+{% endblock %}

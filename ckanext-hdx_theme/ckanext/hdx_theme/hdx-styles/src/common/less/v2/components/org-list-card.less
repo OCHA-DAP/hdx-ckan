@@ -76,11 +76,7 @@
             align-self:     stretch;
         }
 
-        .c-text-button { display: none; }
-        &.is-clamped .c-text-button { display: inline-flex; }
-
-        .c-text-button__icon            { transition: transform 0.15s ease; .hdx-motion(); }
-        &.is-open .c-text-button__icon  { transform: rotate(180deg); }
+        .hdx-clamp-toggle();
     }
 
     // Fully hidden by default; clamped-text.js detects scrollHeight > 0
