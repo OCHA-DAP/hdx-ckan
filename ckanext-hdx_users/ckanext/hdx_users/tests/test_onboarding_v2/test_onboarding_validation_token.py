@@ -4,6 +4,7 @@ from mock.mock import MagicMock
 
 import ckan.plugins.toolkit as tk
 import ckan.model as model
+import ckan.tests.factories as factories
 
 import ckanext.hdx_users.helpers.tokens as tokens
 import ckanext.hdx_users.model as umodel
@@ -102,6 +103,20 @@ def test_validation_token_expiration(mock_send_validation_email: MagicMock, app:
 
     initial_token_response = _validate_account(app, initial_token)
     assert initial_token_response.status_code == 200
+
+
+@pytest.mark.usefixtures('hdx_clean_db', 'clean_index', 'with_request_context')
+@mock.patch('ckanext.hdx_users.views.onboarding.send_username_confirmation_email')
+def test_validation_without_mailchimp_optin_extra(mock_send_username_confirmation_email: MagicMock,
+                                                   app: CKANTestApp):
+    user_dict = factories.User(name='no_optin_user', email='no_optin_user@test.ttt')
+    token = _get_action('token_create')({'model': model, 'session': model.Session, 'ignore_auth': True},
+                                        user_dict)['token']
+
+    account_validation_response = _validate_account(app, token)
+    assert account_validation_response.status_code == 200
+    assert 'your HDX account has been created' in account_validation_response.body
+    assert _get_action('user_show')({}, {'id': user_dict['id']})['state'] == 'active'
 
 
 
