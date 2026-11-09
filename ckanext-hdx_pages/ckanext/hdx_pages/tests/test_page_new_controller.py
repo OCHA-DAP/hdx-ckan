@@ -115,3 +115,46 @@ class TestHDXPageController(object):
             assert 'Page name cannot be empty' in res.body
         except Exception as ex:
             assert False
+
+    def test_page_create_dashboard_redirect(self, app):
+        post_params = self._get_page_post_param()
+        post_params['type'] = 'dashboards'
+        res = app.post(url_for(u'hdx_custom_page.new'), data=post_params,
+                       headers={"Authorization": self._get_token_for_user(SYSADMIN)}, follow_redirects=False)
+        assert '302 FOUND' in res.status
+        assert url_for(u'hdx_dashboard.read_dashboard', id='elnino') in res.headers['Location']
+
+    def test_page_create_error_keeps_show_title(self, app):
+        url = url_for(u'hdx_custom_page.new')
+        res = app.get(url, headers={"Authorization": self._get_token_for_user(SYSADMIN)})
+        assert 'checked="checked"' in res.body
+
+        post_params = self._get_page_post_param()
+        del post_params['title']
+        res = app.post(url, data=post_params, headers={"Authorization": self._get_token_for_user(SYSADMIN)},
+                       follow_redirects=False)
+        assert 'Page title cannot be empty' in res.body
+        assert 'checked="checked"' not in res.body
+
+    def test_page_create_tag_list(self, app):
+        context = {'model': model, 'session': model.Session, 'user': SYSADMIN}
+        model.Session.add(model.Tag(name='tag1'))
+        model.Session.add(model.Tag(name='tag2'))
+        model.Session.commit()
+
+        post_params = self._get_page_post_param()
+        post_params['tag_string'] = ['tag1', 'tag2']
+        res = app.post(url_for(u'hdx_custom_page.new'), data=post_params,
+                       headers={"Authorization": self._get_token_for_user(SYSADMIN)}, follow_redirects=False)
+        assert '302 FOUND' in res.status
+
+        elnino = _get_action('page_show')(context, {'id': 'elnino'})
+        assert sorted(tag.get('name') for tag in elnino.get('tags')) == ['tag1', 'tag2']
+
+    def test_page_create_unknown_tag(self, app):
+        post_params = self._get_page_post_param()
+        post_params['tag_string'] = 'some_new_tag'
+        res = app.post(url_for(u'hdx_custom_page.new'), data=post_params,
+                       headers={"Authorization": self._get_token_for_user(SYSADMIN)}, follow_redirects=False)
+        assert '200 OK' in res.status
+        assert 'Tag some_new_tag not found' in res.body

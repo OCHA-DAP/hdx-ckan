@@ -12,9 +12,11 @@ from ckanext.hdx_package.helpers.freshness_calculator import UPDATE_STATUS_URL_F
 
 class DashboardSearchLogic(sl.SearchLogic):
 
-    def __init__(self):
+    def __init__(self, user_name, owner_view):
         super(DashboardSearchLogic, self).__init__()
-        self.flask_route_name = 'hdx_user_dashboard.datasets'
+        self.user_name = user_name
+        self.owner_view = owner_view
+        self.flask_route_name = 'hdx_user.read'
 
     def _search_url(self, params, package_type=None):
         '''
@@ -31,11 +33,13 @@ class DashboardSearchLogic(sl.SearchLogic):
         return sl.url_with_params(url, params)
 
     def _current_url(self):
-        url = h.url_for(self.flask_route_name)
+        url = h.url_for(self.flask_route_name, id=self.user_name)
         return url
 
     def _add_additional_faceting_queries(self, search_data_dict):
         super(DashboardSearchLogic, self)._add_additional_faceting_queries(search_data_dict)
+        if not self.owner_view:
+            return
         now_string = datetime.datetime.utcnow().isoformat() + 'Z'
         freshness_facet_extra = 'ex={},{}'.format(UPDATE_STATUS_URL_FILTER, 'batch')
         search_data_dict.update({

@@ -80,6 +80,15 @@
         }
     }
 
+    &__links {
+        align-self:  stretch;
+        display:     flex;
+        flex-wrap:   wrap;
+        align-items: center;
+        gap:         var(--hdx-space-13);
+        .hdx-body-xs();
+    }
+
     &__time {
         align-self:  stretch;
         .hdx-body-xs();
@@ -102,5 +111,9 @@
         .hdx-body-s();
         color: var(--hdx-neutral-85);
         margin: 0;
+    }
+
+    &__load-more {
+        margin-top: var(--hdx-space-6);
     }
 }

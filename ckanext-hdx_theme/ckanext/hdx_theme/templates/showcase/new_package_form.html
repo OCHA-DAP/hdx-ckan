@@ -1,115 +1,219 @@
-{% import 'macros/form.html' as form %}
-{% set action = c.form_action or '' %}
-{#{% set form_style = c.form_style or c.action %}#}
-{% set form_style = g.view %}
-{% set showcase_read_route = 'showcase_blueprint.read' %}
-{% set showcase_delete_route = 'showcase_blueprint.delete' %}
+{% set is_edit = action == 'edit' %}
+{% set errors = errors or {} %}
+{% set pkg = pkg_dict if is_edit else {} %}
+{% set can_delete = pkg and pkg.state != 'deleted' and h.check_access('ckanext_showcase_delete', {'id': pkg.id}) %}
+{% set slug_prefix = h.url_for('showcase_blueprint.read', id='', qualified=true) | replace('http://', '') | replace('https://', '') %}
+{% set markdown_link = ('<a href="https://daringfireball.net/projects/markdown/syntax" target="_blank" rel="noopener noreferrer">' | safe) ~ _('Markdown formatting') ~ ('</a>' | safe) %}
 
-<form id="dataset-edit" class="hdx-form" method="post" action="{{ action }}" data-module="basic-form" enctype="multipart/form-data">
+{% set tags = data.tag_string if data.tag_string is not string and data.tag_string is iterable else (data.tag_string or '').split(',') %}
+{% set tags = tags | map('trim') | reject('equalto', '') | list %}
+{% set tag_options = {} %}
+{% for tag in tags %}
+  {% do tag_options.update({tag: tag}) %}
+{% endfor %}
+
+{% set image_url = data.image_url or '' %}
+
+{% set has_dataviz = h.has_dataviz_gallery_permission() %}
+{% set in_gallery = h.asbool(data.in_dataviz_gallery) %}
+{% set yes_no = {'true': _('Yes'), 'false': _('No')} %}
+
+{% set ns = namespace(visible_errors=false) %}
+{% for key in errors %}
+  {% if not (has_dataviz and not in_gallery and key in ['image_frame_mode', 'data_url', 'in_carousel_section', 'priority']) %}
+    {% set ns.visible_errors = true %}
+  {% endif %}
+{% endfor %}
+
+<form id="dataset-edit"
+      class="hdx-v2-signup-form-page__fields"
+      method="post"
+      action="{{ c.form_action or '' }}"
+      enctype="multipart/form-data">
   {{ h.csrf_input() }}
 
-  <input type="hidden" name="_ckan_phase" value="dataset_new_1" />
-  {# pkg_name used in 3 stage edit #}
-  <input type="hidden" name="pkg_name" value="{{ data.id }}" />
-  {% block errors %}{{ form.errors(error_summary) }}{% endblock %}
+  <p class="hdx-v2-signup-form-page__mandatory-note">{{ _('* indicates mandatory fields') }}</p>
 
-  {% block basic_fields %}
-    <div>
-      {% block package_basic_fields_title %}
-        {{ form.input('title', id='field-title', label=_('Title'), placeholder=_('eg. A descriptive title'), value=data.title, error=errors.title, classes=['', 'mb-3', 'control-large'], attrs={'data-module': 'slug-preview-target'}) }}
-      {% endblock %}
+  {% if error_summary and not ns.visible_errors %}
+    {% snippet 'v2/components/alert.html', message=error_summary.values() | join(' ') %}
+  {% endif %}
 
-      {% block package_basic_fields_url %}
-        {% set prefix = h.url_for(showcase_read_route, id='') %}
-        {% set domain = h.url_for(showcase_read_route, id='', qualified=true) %}
-        {% set domain = domain|replace("http://", "")|replace("https://", "") %}
-        {% set attrs = {'data-module': 'slug-preview-slug', 'data-module-prefix': domain, 'data-module-placeholder': '<showcase>'} %}
+  <div class="c-form-field">
+    {% snippet 'v2/components/text-field.html',
+        size='m',
+        name='title',
+        id='field-title',
+        label=_('Title'),
+        required=True,
+        value=data.title or '',
+        placeholder=_('eg. A descriptive title'),
+        errors=errors.get('title') %}
+  </div>
 
-        {{ form.prepend('name', id='field-name', label=_('URL'), prepend=prefix, placeholder=_('eg. my-showcase'), value=data.name, error=errors.name, attrs=attrs, classes=['mb-3'], is_required=true) }}
-      {% endblock %}
+  {% snippet 'v2/components/slug-preview.html',
+      name='name',
+      id='field-name',
+      label=_('URL'),
+      required=True,
+      value=data.name or '',
+      placeholder=_('eg. my-showcase'),
+      description=_('This is how the URL will appear on HDX, you can change this below.'),
+      prefix=slug_prefix,
+      preview_placeholder='<showcase>',
+      target_id='field-title',
+      errors=errors.get('name') %}
 
-      {% block package_basic_fields_description %}
-        {{ form.markdown('notes', id='field-notes', label=_('Description'), placeholder=_('eg. Some useful notes about the data'), value=data.notes, error=errors.notes, classes=['mb-3'], attrs={}) }}
-      {% endblock %}
+  <div class="c-form-field">
+    {% snippet 'v2/components/text-field.html',
+        size='m',
+        multiline=True,
+        rows=5,
+        name='notes',
+        id='field-notes',
+        label=_('Description'),
+        value=data.notes or '',
+        placeholder=_('eg. Some useful notes about the data'),
+        hint=_('You can use {link} here').format(link=markdown_link),
+        errors=errors.get('notes') %}
+  </div>
 
-      {% block package_basic_fields_tags %}
-        {% set tag_attrs = {
-                'data-module': 'hdx_autocomplete',
-                'data-module-tags': 'false',
-                'data-module-multiple': 'multiple',
-                'data-module-include-tokenizer': 'true',
-                'data-module-source': '/api/2/util/tag/autocomplete?incomplete=?'
-            }
-        %}
-        {{ form.input('tag_string', id='field-tags', label=_('Tags'), placeholder=_('eg. economy, mental health, government'), value=data.tag_string, error=errors.tags, classes=['', 'mb-3'], attrs=tag_attrs) }}
-      {% endblock %}
+  <div class="c-form-field">
+    {% snippet 'v2/components/select.html',
+        label=_('Tags'),
+        name='tag_string',
+        id='field-tags',
+        description=_('Add tags to help others find your showcase.'),
+        placeholder=_('eg. economy, mental health, government'),
+        options=tag_options,
+        selected=tags,
+        multiple=True,
+        searchable=True,
+        select_attrs={'data-source': '/api/2/util/tag/autocomplete', 'data-source-type': 'tag'},
+        errors=errors.get('tag_string') %}
+  </div>
 
-      {% set is_upload = data.image_url and not data.image_url.startswith('http') %}
-      {% set is_url = data.image_url and data.image_url.startswith('http') %}
+  {% snippet 'v2/components/image-upload.html',
+      field_url='image_url',
+      field_upload='image_upload',
+      field_clear='clear_upload',
+      value=image_url,
+      preview_url=h.url_for_static('uploads/showcase/' ~ image_url, qualified=True) if image_url and not image_url.startswith('http') else '',
+      clear_value=data.clear_upload or '',
+      label=_('Upload new thumbnail'),
+      upload_label=_('Upload file'),
+      id='field-image-url',
+      upload_enabled=h.uploads_enabled(),
+      max_bytes=2097152,
+      check_message=_('Please keep files under 2 MB.'),
+      errors=errors.get('image_upload') or errors.get('image_url') %}
 
-      {% if is_upload %}
-        {% set url_label=_('Image name') %}
-        {% set attrs={} %}
-      {% else %}
-        {% set url_label=_('Image URL (https only)') %}
-        {% set attrs={'pattern': 'https://.*'} %}
-      {% endif %}
-      {{ form.image_upload(data, errors, is_upload_enabled=h.uploads_enabled(), is_url=is_url, is_upload=is_upload, placeholder=_('https://example.com/my-image.jpg'), url_label=url_label, attrs=attrs) }}
+  {% for name, label, placeholder in [
+      ('url', _('External link'), _('https://www.example.com')),
+      ('author', _('Submitted by'), _('Joe Bloggs')),
+      ('author_email', _('Submitter email'), _('joe@example.com'))] %}
+    <div class="c-form-field">
+      {% snippet 'v2/components/text-field.html',
+          size='m',
+          name=name,
+          id='field-' ~ name | replace('_', '-'),
+          label=label,
+          value=data.get(name) or '',
+          placeholder=placeholder,
+          errors=errors.get(name) %}
     </div>
-  {% endblock %}
+  {% endfor %}
 
-  {% block metadata_fields %}
-    <div class="my-3">
-      {% block package_metadata_fields_url %}
-        {{ form.input('url', label=_('External link'), id='field-url', placeholder=_('https://www.example.com'), value=data.url, error=errors.url, classes=['', 'mb-3'], attrs={}) }}
-      {% endblock %}
-
-      {% block package_metadata_author %}
-        {{ form.input('author', label=_('Submitted By'), id='field-author', placeholder=_('Joe Bloggs'), value=data.author, error=errors.author, classes=['', 'mb-3'], attrs={}) }}
-
-        {{ form.input('author_email', label=_('Submitter Email'), id='field-author-email', placeholder=_('joe@example.com'), value=data.author_email, error=errors.author_email, classes=['', 'mb-3'], attrs={}) }}
-      {% endblock %}
+  {% if has_dataviz %}
+    <div class="c-form-field">
+      {% snippet 'v2/components/select.html',
+          label=_('Show in Dataviz Gallery'),
+          name='in_dataviz_gallery',
+          id='field-in-dataviz-gallery',
+          options=yes_no,
+          selected='true' if in_gallery else 'false',
+          errors=errors.get('in_dataviz_gallery') %}
     </div>
-  {% endblock %}
 
-  {% block dataviz_gallery_fields %}
-    {% if h.has_dataviz_gallery_permission() %}
-      {% set in_dataviz_gallery = 'true' if h.asbool(data.in_dataviz_gallery) else 'false' %}
-      {{ form.select('in_dataviz_gallery', label=_('Show in Dataviz Gallery'),  id='field-in-dataviz-gallery',
-            options=[{'value': 'true', 'text': 'Yes'}, {'value': 'false', 'text': 'No'}], selected=in_dataviz_gallery,
-            error=errors.in_dataviz_gallery, classes=['', 'mb-3'], attrs={}) }}
-      <div id="dataviz-gallery-section">
-        {% set image_frame_mode = 'true' if h.asbool(data.image_frame_mode) else 'false' %}
-        {{ form.select('image_frame_mode', label=_('The Showcase Image contains a Frame'),  id='field-image-frame-mode',
-              options=[{'value': 'true', 'text': 'Yes'}, {'value': 'false', 'text': 'No'}], selected=image_frame_mode,
-              error=errors.image_frame_mode, classes=['', 'mb-3'], attrs={}) }}
+    <div id="dataviz-gallery-section"{% if not in_gallery %} hidden{% endif %}>
+      <div class="hdx-v2-signup-form-page__fields">
+        <div class="c-form-field">
+          {% snippet 'v2/components/select.html',
+              label=_('The showcase image contains a frame'),
+              name='image_frame_mode',
+              id='field-image-frame-mode',
+              options=yes_no,
+              selected='true' if h.asbool(data.image_frame_mode) else 'false',
+              errors=errors.get('image_frame_mode') %}
+        </div>
 
-        {{ form.input('dataviz_label', label=_('Label'), id='field-dataviz-label', placeholder=_('Label to be shown over the gallery icon'), value=data.dataviz_label, is_required=True, error=errors.dataviz_label, classes=['', 'mb-3'], attrs={}) }}
-        {{ form.input('data_url', label=_('Data URL (Defaults to showcase URL)'), id='field-data-url', placeholder=_('URL for visualisation data'), value=data.data_url, type='url', error=errors.data_url, classes=['', 'mb-3'], attrs={}) }}
-        {% set in_carousel_section = 'true' if h.asbool(data.in_carousel_section) else 'false' %}
-        {{ form.select('in_carousel_section', label=_('Show in the Carousel Section of the Dataviz Gallery'),  id='field-in-carousel-section',
-              options=[{'value': 'true', 'text': 'Yes'}, {'value': 'false', 'text': 'No'}], selected=in_carousel_section,
-              error=errors.in_carousel_section, classes=['', 'mb-3'], attrs={}) }}
-        {{ form.input('priority', label=_('Priority (Decides the order in the carousel)'), id='field-priority', placeholder=_('Enter a number, higher ones appear first'), value=data.priority, error=errors.priority, classes=['', 'mb-3'], attrs={}) }}
+        <div class="c-form-field">
+          {% snippet 'v2/components/text-field.html',
+              size='m',
+              name='data_url',
+              id='field-data-url',
+              label=_('Data URL (Defaults to showcase URL)'),
+              value=data.data_url or '',
+              placeholder=_('URL for visualisation data'),
+              errors=errors.get('data_url') %}
+        </div>
+
+        <div class="c-form-field">
+          {% snippet 'v2/components/select.html',
+              label=_('Show in the carousel section of the dataviz gallery'),
+              name='in_carousel_section',
+              id='field-in-carousel-section',
+              options=yes_no,
+              selected='true' if h.asbool(data.in_carousel_section) else 'false',
+              errors=errors.get('in_carousel_section') %}
+        </div>
+
+        <div class="c-form-field">
+          {% snippet 'v2/components/text-field.html',
+              size='m',
+              name='priority',
+              id='field-priority',
+              label=_('Priority'),
+              value=data.priority or '',
+              placeholder=_('Enter a number, higher ones appear first'),
+              errors=errors.get('priority') %}
+        </div>
       </div>
-    {% endif %}
-  {% endblock %}
-
-  {% block form_actions %}
-    <div class="form-actions" style="margin-left: 0;">
-      {% block delete_button %}
-        {% if form_style == 'edit' and h.check_access('ckanext_showcase_delete', {'id': data.id}) and not data.state == 'deleted' %}
-          {% set locale = h.dump_json({'content': _('Are you sure you want to delete this showcase?')}) %}
-          <a class="btn btn-danger float-start" href="{{ h.url_for(showcase_delete_route, id=data.id) }}" data-module="hdx_confirm-action" data-module-i18n="{{ locale }}">{% block delete_button_text %}{{ _('Delete') }}{% endblock %}</a>
-        {% endif %}
-      {% endblock %}
-      {% block save_button %}
-        <button class="btn btn-primary" type="submit" name="save">{% block save_button_text %}{% if form_style != 'edit' %}{{ _('Create Showcase') }}{% else %}{{ _('Update Showcase') }}{% endif %}{% endblock %}</button>
-      {% endblock %}
-      {{ form.required_message() }}
     </div>
-  {% endblock %}
+  {% endif %}
+
+  <div class="hdx-v2-signup-form-page__actions">
+    {% if can_delete %}
+      {% snippet 'v2/components/button.html',
+          label=_('Delete'),
+          style='tertiary',
+          size='l',
+          attrs={'onclick': "window.hdxV2Drawer('delete-showcase-drawer').open()"} %}
+    {% endif %}
+    {% snippet 'v2/components/button.html',
+        label=_('Update showcase') if is_edit else _('Create showcase'),
+        style='primary',
+        size='l',
+        button_type='submit',
+        attrs={'name': 'save', 'value': 'save'} %}
+  </div>
 </form>
 
-{% asset 'hdx_theme/hdx-autocomplete' %}
-{% asset 'hdx_theme/custom-showcase-creation-scripts' %}
+{% if can_delete %}
+  {% call h.snippet('v2/components/drawer.html',
+      drawer_id='delete-showcase-drawer',
+      title=_('Delete showcase')) %}
+    <form class="c-drawer-form" method="post"
+          action="{{ h.url_for('showcase_blueprint.delete', id=pkg.id) }}">
+      {{ h.csrf_input() }}
+      <p class="c-drawer-form__text">
+        {{ _("Are you sure you want to delete this showcase? This can't be undone.") }}
+      </p>
+      <div class="c-drawer-form__buttons">
+        {% snippet 'v2/components/button.html',
+            style='tertiary', label=_('Cancel'), attrs={'data-drawer-close': ''} %}
+        {% snippet 'v2/components/button.html',
+            style='primary', button_type='submit', label=_('Delete') %}
+      </div>
+    </form>
+  {% endcall %}
+{% endif %}

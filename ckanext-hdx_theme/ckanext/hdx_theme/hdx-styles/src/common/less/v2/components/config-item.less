@@ -1,0 +1,121 @@
+// ============================================================
+// c-config-item      — editable, reorderable item of a sysadmin
+//                      settings editor (handle, title, Move up / down, toggle,
+//                      Delete, fields, optional footer Delete);
+//                      --static: no drag handle, no grab cursor
+// c-config-item-list — its list: items, error alert, actions row;
+//                      --grid: two columns from MD up
+// Compiled output: fanstatic/v2/components/config-item.css
+// Figma: llm_docs/redesign/figma_exports/xl-sysadmin-package-links.html
+// ============================================================
+@import "../mixins.less";
+
+.c-config-item {
+    display:          flex;
+    flex-direction:   column;
+    gap:              var(--hdx-space-14);
+    padding:          var(--hdx-space-4) var(--hdx-space-5);
+    background-color: var(--hdx-neutral-0);
+    border:           1px solid var(--hdx-neutral-3);
+    border-radius:    var(--hdx-radius-sm);
+
+    &__header {
+        display:     flex;
+        align-items: center;
+        gap:         var(--hdx-space-2);
+        color:       var(--hdx-neutral-10);
+        cursor:      grab;
+    }
+
+    &__handle {
+        flex-shrink: 0;
+
+        svg {
+            .hdx-icon-size(var(--hdx-space-4));
+            display: block;
+        }
+    }
+
+    &__title {
+        .hdx-body-m-medium();
+        flex:   1;
+        margin: 0;
+    }
+
+    &__actions {
+        display:     flex;
+        align-items: center;
+        gap:         var(--hdx-space-3);
+        cursor:      auto;
+    }
+
+    &__move {
+        display:     flex;
+        align-items: center;
+        gap:         var(--hdx-space-2);
+    }
+
+    &__sort {
+        .hdx-body-s();
+    }
+
+    &__toggle[aria-expanded="false"] svg {
+        transform: rotate(180deg);
+    }
+
+    &__body {
+        display:        flex;
+        flex-direction: column;
+        gap:            var(--hdx-space-2);
+
+        &[hidden] { display: none; }
+    }
+
+    &__footer {
+        display:         flex;
+        justify-content: flex-end;
+    }
+
+    &--static &__header {
+        cursor: auto;
+    }
+}
+
+.c-config-item-list {
+    &,
+    &__items {
+        display:        flex;
+        flex-direction: column;
+        gap:            var(--hdx-space-6);
+    }
+
+    &__items {
+        list-style: none;
+        margin:     0;
+        padding:    0;
+
+        > .is-dragging { opacity: 0.3; }
+
+        &:not(:has(> li)) { display: none; }
+    }
+
+    &--grid &__items {
+        flex-direction: row;
+        flex-wrap:      wrap;
+        align-items:    flex-start;
+
+        > li {
+            width: 100%;
+
+            @media (min-width: @hdx-bp-md) {
+                width: calc((100% - var(--hdx-space-6)) / 2);
+            }
+        }
+    }
+
+    &__actions {
+        display:         flex;
+        justify-content: space-between;
+        align-items:     center;
+    }
+}

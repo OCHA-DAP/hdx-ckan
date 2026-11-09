@@ -154,3 +154,141 @@ def test_quick_links_update_and_delete_via_http_with_token(app):
 
     shown_after_delete = get_action('hdx_quick_links_settings_show')(context, {})
     assert shown_after_delete == []
+
+
+@pytest.mark.usefixtures('hdx_clean_db')
+def test_quick_links_update_with_unknown_id_appends(app):
+    sysadmin = factories.Sysadmin()
+    api_token = factories.APIToken(user=sysadmin['id'], expires_in=2, unit=60 * 60)
+    admin_headers = {'Authorization': api_token['token']}
+
+    get_action = tk.get_action
+    context: Context = {'model': model, 'session': model.Session, 'user': sysadmin['name']}
+
+    existing_item = {
+        'id': 'existing-id',
+        'title': 'Existing',
+        'url': '/existing',
+        'order': 1,
+        'newTab': False,
+        'archived': False,
+    }
+    get_action('hdx_quick_links_settings_update')(context, {'hdx.quick_links.config': [existing_item]})
+
+    update_resp = app.post('/ckan-admin/quick-links/update', params={
+        'id': 'unknown-id',
+        'title': 'Unknown',
+        'url': '/unknown',
+        'order': '2',
+        'newTab': 'true',
+        'archived': 'true',
+    }, headers=admin_headers)
+    assert update_resp.status_code == 200
+
+    shown = get_action('hdx_quick_links_settings_show')(context, {})
+    assert len(shown) == 2
+    assert shown[0] == existing_item
+    assert shown[1]['id'] == 'unknown-id'
+    assert shown[1]['title'] == 'Unknown'
+    assert shown[1]['newTab'] is True
+    assert shown[1]['archived'] is True
+
+
+@pytest.mark.usefixtures('hdx_clean_db')
+def test_quick_links_update_without_title_is_rejected(app):
+    sysadmin = factories.Sysadmin()
+    api_token = factories.APIToken(user=sysadmin['id'], expires_in=2, unit=60 * 60)
+    admin_headers = {'Authorization': api_token['token']}
+
+    get_action = tk.get_action
+    context: Context = {'model': model, 'session': model.Session, 'user': sysadmin['name']}
+
+    existing_item = {
+        'id': 'existing-id',
+        'title': 'Existing',
+        'url': '/existing',
+        'order': 1,
+        'newTab': False,
+        'archived': False,
+    }
+    get_action('hdx_quick_links_settings_update')(context, {'hdx.quick_links.config': [existing_item]})
+
+    update_resp = app.post('/ckan-admin/quick-links/update', params={
+        'id': 'existing-id',
+        'url': '/untitled',
+        'order': '1',
+        'newTab': 'false',
+        'archived': 'false',
+    }, headers=admin_headers, expect_errors=True)
+    assert update_resp.status_code == 400
+    assert 'Badly formatted data' in update_resp.text
+
+    shown = get_action('hdx_quick_links_settings_show')(context, {})
+    assert shown == [existing_item]
+
+
+@pytest.mark.usefixtures('hdx_clean_db')
+def test_quick_links_update_without_url_is_rejected(app):
+    sysadmin = factories.Sysadmin()
+    api_token = factories.APIToken(user=sysadmin['id'], expires_in=2, unit=60 * 60)
+    admin_headers = {'Authorization': api_token['token']}
+
+    get_action = tk.get_action
+    context: Context = {'model': model, 'session': model.Session, 'user': sysadmin['name']}
+
+    existing_item = {
+        'id': 'existing-id',
+        'title': 'Existing',
+        'url': '/existing',
+        'order': 1,
+        'newTab': False,
+        'archived': False,
+    }
+    get_action('hdx_quick_links_settings_update')(context, {'hdx.quick_links.config': [existing_item]})
+
+    update_resp = app.post('/ckan-admin/quick-links/update', params={
+        'id': 'existing-id',
+        'title': 'No URL',
+        'order': '1',
+        'newTab': 'false',
+        'archived': 'false',
+    }, headers=admin_headers, expect_errors=True)
+    assert update_resp.status_code == 400
+    assert 'Badly formatted data' in update_resp.text
+
+    shown = get_action('hdx_quick_links_settings_show')(context, {})
+    assert shown == [existing_item]
+
+
+@pytest.mark.usefixtures('hdx_clean_db')
+def test_quick_links_update_with_non_integer_order_is_rejected(app):
+    sysadmin = factories.Sysadmin()
+    api_token = factories.APIToken(user=sysadmin['id'], expires_in=2, unit=60 * 60)
+    admin_headers = {'Authorization': api_token['token']}
+
+    get_action = tk.get_action
+    context: Context = {'model': model, 'session': model.Session, 'user': sysadmin['name']}
+
+    existing_item = {
+        'id': 'existing-id',
+        'title': 'Existing',
+        'url': '/existing',
+        'order': 1,
+        'newTab': False,
+        'archived': False,
+    }
+    get_action('hdx_quick_links_settings_update')(context, {'hdx.quick_links.config': [existing_item]})
+
+    update_resp = app.post('/ckan-admin/quick-links/update', params={
+        'id': 'existing-id',
+        'title': 'Existing',
+        'url': '/existing',
+        'order': 'first',
+        'newTab': 'false',
+        'archived': 'false',
+    }, headers=admin_headers, expect_errors=True)
+    assert update_resp.status_code == 400
+    assert 'Badly formatted data' in update_resp.text
+
+    shown = get_action('hdx_quick_links_settings_show')(context, {})
+    assert shown == [existing_item]

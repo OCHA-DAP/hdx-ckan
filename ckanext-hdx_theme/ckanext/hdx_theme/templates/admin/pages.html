@@ -1,76 +1,72 @@
-{% import 'macros/autoform.html' as autoform %}
-{% import 'macros/form.html' as form %}
+{% extends "v2/sysadmin-base.html" %}
 
+{% set nav_active = 'custom_pages' %}
+{% set page_label = _('Custom Pages') %}
 
-{% extends "admin/base.html" %}
-
-{% block primary_content_module_margin %}{% endblock %}
-{% block primary_content_inner %}
-
-  <div id="carousel-config-main" data-module="hdx_custom_pages" class="paddingLeftHack">
-    <div style="float:right" class="mBottom20"><a class="btn" href="/page/new">Create New Page</a></div>
-    <table class="table table-header table-hover table-bordered">
-      <tr>
-        <th>Title</th>
-        <th>Slug</th>
-        <th>Type</th>
-        <th>Archived/Ongoing</th>
-        <th>Status</th>
-        <th>Actions</th>
-      </tr>
-      {% for p in page_list %}
-        <tr>
-          <td><a href="/{{p.type}}/{{p.id}}" data-module="hdx_click_stopper" data-module-link_type="main nav">{{ p.title }}</a></td>
-          <td><a href="/{{p.type}}/{{p.name}}" data-module="hdx_click_stopper" data-module-link_type="main nav">{{ p.name }}</a></td>
-          <td>{{ p.type }}</td>
-          <td>{{ p.status }}</td>
-          <td>{{ p.state }}</td>
-          <td>
-            <a href="/page/edit/{{p.id}}" >Edit</a> | <a href="#confirmation-div-{{ p.id }}" data-bs-toggle="modal" title="{{ _('Delete') }}">{{ _('Delete') }}</a>
-            {% snippet 'snippets/confirmation_post.html',
-              form_url=h.url_for('hdx_custom_page.delete_page', id=p.id),
-              modal_div_id='confirmation-div-' + p.id,
-              header='Confirm',
-              body='Are you sure you want to delete this page?',
-              confirm_btn_label='Confirm' %}
-          </td>
-        </tr>
-      {% endfor %}
-
-    </table>
-  </div>
-
+{% block scripts %}
+  {{ super() }}
+  {% asset 'hdx_theme/v2-datatable-scripts' %}
+  {% asset 'hdx_theme/v2-custom-pages-page-scripts' %}
 {% endblock %}
 
-{% block secondary_content %}
-  <div class="module module-narrow module-shallow">
-    <h2 class="module-heading">
-      <i class="icon-info-sign"></i>
-      {{ _('Event/Custom Pages') }}
-    </h2>
-    <div class="module-content">
-      {% block admin_form_help %}
+{% block primary %}
+  {% call h.snippet('v2/list-header.html',
+      list_title=page_label,
+      list_subtitle=_('Create and manage crisis pages'),
+      title_tag='h1',
+      title_size='dashboard',
+      show_controls=False,
+      show_filters=False) %}
+    {% snippet 'v2/components/button.html',
+        style='primary', tag='a',
+        label=_('Create new page'),
+        href=h.url_for('hdx_custom_page.new'),
+        icon_src='v2/icons/file-plus.svg' %}
+  {% endcall %}
 
-        {% trans %}
-          <h3>How to create a new event/custom page:</h3>
-          <p>Click on “CREATE NEW PAGE” and follow the instructions to fill out the required fields.</p>
+  {% set table = namespace(rows=[]) %}
+  {% for p in page_list %}
+    {% set read_endpoint = 'hdx_dashboard.read_dashboard' if p.type == 'dashboards' else 'hdx_event.read_event' %}
+    {% set row_id = 'custom-page-' ~ p.id %}
+    {% set title_link %}
+      {% snippet 'v2/components/text-link.html',
+          style='secondary', size='xs', label=p.title,
+          href=h.url_for(read_endpoint, id=p.name),
+          attrs={'id': row_id ~ '-title', 'data-module': 'hdx_click_stopper', 'data-module-link_type': 'main nav'} %}
+    {% endset %}
+    {% set slug_link %}
+      {% snippet 'v2/components/text-link.html',
+          style='secondary', size='xs', label=p.name,
+          href=h.url_for(read_endpoint, id=p.name),
+          attrs={'data-module': 'hdx_click_stopper', 'data-module-link_type': 'main nav'} %}
+    {% endset %}
+    {% set actions %}
+      <div class="hdx-v2-custom-pages-table__actions">
+        {% snippet 'v2/components/button.html',
+            style='tertiary', size='s', tag='a',
+            label=_('Edit'),
+            href=h.url_for('hdx_custom_page.edit', id=p.id),
+            icon_src='v2/icons/file-edit.svg',
+            attrs={'id': row_id ~ '-edit', 'aria-labelledby': row_id ~ '-edit ' ~ row_id ~ '-title'} %}
+        {% snippet 'v2/components/text-button.html',
+            style='tertiary', size='s', tag='button',
+            label=_('Delete'),
+            icon_src='v2/icons/delete.svg',
+            attrs={'id': row_id ~ '-delete',
+                   'aria-labelledby': row_id ~ '-delete ' ~ row_id ~ '-title',
+                   'onclick': "window.hdxV2Drawer('delete-" ~ row_id ~ "').open()"} %}
+      </div>
+    {% endset %}
+    {% set table.rows = table.rows + [[title_link, slug_link, p.type, p.status, p.state, actions]] %}
+  {% endfor %}
 
-          <h3>How to edit or delete existing event/custom page:</h3>
-          <p>Click on edit or delete for the the page you want to modify in the table. </p>
+  {% snippet 'v2/components/table.html',
+      headers=[_('Title'), _('Slug'), _('Type'), _('Archived / Ongoing'), _('Status'), _('Actions')],
+      rows=table.rows,
+      extra_classes='hdx-v2-custom-pages-table' %}
 
-          <h3>How to archive existing event/custom page:</h3>
-          <p>Click on edit for the page you want to archive in the table. Update the "Status" field to "Archived".
-            This pushes the page to the list in
-            <a href="/archive" style="color:#007CE0;text-decoration: none">archived page</a>.
-            Location page should be deleted instead of archived as the list of data would no longer be relevant. </p>
-        {% endtrans %}
-      {% endblock %}
-    </div>
-  </div>
-{% endblock %}
-
-{% block scripts2 %}
-    {{ super() }}
-{#    {% resource 'hdx_theme/custom-pages' %}#}
-{#    {% resource 'hdx_theme/carousel-admin' %}#}
+  {% for p in page_list %}
+    {% snippet 'admin/snippets/custom_page_delete_drawer.html',
+        page=p, drawer_id='delete-custom-page-' ~ p.id %}
+  {% endfor %}
 {% endblock %}

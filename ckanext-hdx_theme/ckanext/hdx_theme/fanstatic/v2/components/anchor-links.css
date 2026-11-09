@@ -53,6 +53,15 @@
   font-weight: var(--hdx-fw-regular);
   color: var(--hdx-neutral-8);
 }
+.c-anchor-links--numbered {
+  counter-reset: anchor-links;
+}
+.c-anchor-links--numbered .c-anchor-links__item {
+  counter-increment: anchor-links;
+}
+.c-anchor-links--numbered .c-anchor-links__label::before {
+  content: counter(anchor-links) ". ";
+}
 .c-anchor-links-wrapper {
   position: sticky;
   top: var(--hdx-space-12);

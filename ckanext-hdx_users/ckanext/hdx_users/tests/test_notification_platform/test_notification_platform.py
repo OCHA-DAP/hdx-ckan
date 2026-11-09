@@ -70,6 +70,32 @@ def _create_dataset(with_resources=True):
     return package_dict
 
 
+def _create_private_dataset(name):
+    context = {'model': model, 'session': model.Session, 'user': SYSADMIN_USER}
+    dataset_dict = dict(DATASET_DICT)
+    dataset_dict['name'] = name
+    dataset_dict['title'] = 'Test Dataset ' + name
+    dataset_dict['owner_org'] = ORG_NAME
+    dataset_dict['private'] = True
+    return _get_action('package_create')(context, dataset_dict)
+
+
+def _subscribe(user_id, object_type, object_id):
+    unsubscribe_token_obj = generate_new_token_obj(
+        model.Session, TokenType.UNSUBSCRIBE_FOR_NOTIFICATION,
+        user_id, object_type=object_type, object_id=object_id
+    )
+    generate_notifications_subscription(
+        session=model.Session,
+        user_id=user_id,
+        object_type=object_type,
+        object=object_id,
+        event_type=EventType.NEW_DATASET_ADDED,
+        unsubscribe_token_id=unsubscribe_token_obj.id,
+    )
+    return unsubscribe_token_obj.token
+
+
 def _create_org():
     org_name = ORG_NAME
     factories.Organization(
@@ -267,4 +293,61 @@ class TestNotificationPlatform(object):
         assert subscription['object'] == DATASET_ID
         # assert subscription['event_type'] == EventType.DATASET_UPDATED.value
         assert subscription['event_type'] == EventType.NEW_DATASET_ADDED.value
+
+    @mock.patch('flask_login.utils._get_user')
+    def test_notifications_settings_own_page(self, current_user, app):
+        user_dict = factories.User(name='standard_user')
+        current_user.return_value = model.User.get(user_dict['id'])
+        unsubscribe_token = _subscribe(user_dict['id'], ObjectType.DATASET, DATASET_ID)
+
+        url = tk.url_for('hdx_user.notifications', id='standard_user')
+        response = app.get(url)
+
+        assert response.status_code == 200
+        assert DATASET_ID in response.body
+        assert 'data-notifications-unsubscribe' in response.body
+        assert unsubscribe_token in response.body
+        assert 'notificationsUnsubscribeDrawer' in response.body
+
+    @mock.patch('flask_login.utils._get_user')
+    def test_notifications_settings_other_user(self, current_user, app):
+        user_dict = factories.User(name='standard_user')
+        other_user_dict = factories.User(name='other_user')
+        _subscribe(user_dict['id'], ObjectType.DATASET, DATASET_ID)
+
+        url = tk.url_for('hdx_user.notifications', id='standard_user')
+        current_user.return_value = model.User.get(other_user_dict['id'])
+        response = app.get(url)
+        assert response.status_code == 403
+
+        current_user.return_value = model.User.by_name(SYSADMIN_USER)
+        response = app.get(url)
+        assert response.status_code == 200
+        assert DATASET_ID in response.body
+        assert 'data-notifications-unsubscribe' not in response.body
+        assert 'notificationsUnsubscribeDrawer' not in response.body
+
+    def test_notifications_settings_anonymous(self, app):
+        factories.User(name='standard_user')
+
+        url = tk.url_for('hdx_user.notifications', id='standard_user')
+        response = app.get(url, follow_redirects=False)
+
+        assert response.status_code == 302
+        assert '/user/login' in response.headers['Location']
+
+    @mock.patch('flask_login.utils._get_user')
+    def test_notifications_settings_inaccessible_object(self, current_user, app):
+        user_dict = factories.User(name='standard_user')
+        current_user.return_value = model.User.get(user_dict['id'])
+        private_dataset = _create_private_dataset('private_dataset_for_notification_platform')
+        _subscribe(user_dict['id'], ObjectType.DATASET, DATASET_ID)
+        _subscribe(user_dict['id'], ObjectType.DATASET, private_dataset['id'])
+
+        url = tk.url_for('hdx_user.notifications', id='standard_user')
+        response = app.get(url)
+
+        assert response.status_code == 200
+        assert DATASET_ID in response.body
+        assert private_dataset['id'] not in response.body
 

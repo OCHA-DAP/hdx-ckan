@@ -1,4 +1,8 @@
-{% extends "organization/base_form_page.html" %}
+{% extends "v2/page.html" %}
+
+{% set outer_row_class      = 'hdx-v2-signup-outer-row' %}
+{% set breadcrumb_row_class = 'hdx-v2-breadcrumb-row--white' %}
+{% set content_class        = 'hdx-v2-content-columns__content' %}
 
 {# The lines below are for analytics #}
 {% block analytics_org_name %}{{ data.name }}{% endblock %}
@@ -7,23 +11,29 @@
 
 {% block subtitle %}{{ _('Edit Organisation') }}{% endblock %}
 
-{% block page_heading_class %}hide-heading{% endblock %}
-{% block page_heading %}{{ _('Edit Organisation') }}{% endblock %}
+{% block styles %}
+  {{ super() }}
+  {% asset 'hdx_theme/v2-signup-page-styles' %}
+  {% asset 'hdx_theme/v2-org-edit-page-styles' %}
+{% endblock %}
 
-{% block breadcrumb_content %}
-  {% snippet "snippets/other_breadcrumb_item.html", title=_('Organizations'), controller='organization', action='index', position=2 %}
-  {% block breadcrumb_content_inner %}
-    {% snippet "snippets/other_breadcrumb_item.html", title=group_dict.display_name|truncate(35), controller='organization', action='read', id=group_dict.name, position=3 %}
-    {% snippet "snippets/active_breadcrumb_item.html", title=_('Admin'), position=4 %}
-  {% endblock %}
+{% block scripts %}
+  {{ super() }}
+  {% asset 'hdx_theme/v2-slug-preview-scripts' %}
+  {% asset 'hdx_theme/v2-org-edit-page-scripts' %}
+{% endblock %}
+
+{% block breadcrumb_items %}
+  {% snippet 'v2/components/breadcrumb.html',
+      items=[
+        {'label': _('Organisations'), 'href': h.url_for('organization.index')},
+        {'label': group_dict.display_name, 'href': h.url_for('organization.read', id=group_dict.name)},
+        {'label': _('Edit org page'), 'href': ''}
+      ] %}
 {% endblock %}
 
 {% block primary %}
-    <div class="create-org">
-    {% block primary_content %}
-    	{{ super() }}
-    {% endblock %}
-    </div>
+<div class="hdx-v2-signup-form-page">
+  {{ form | safe }}
+</div>
 {% endblock %}
-
-{% block secondary %}{% endblock %}

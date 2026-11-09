@@ -10,11 +10,7 @@
 @import "../mixins.less";
 
 // ── Palette ──────────────────────────────────────────────────
-@c-sel-light-bg:     var(--hdx-neutral-0);       // #fff
-@c-sel-light-border: var(--hdx-neutral-2);       // #d8e0e1
 @c-sel-cyan-bg:      var(--hdx-brand-1);              // lightcyan
-
-@c-sel-active-border:    var(--hdx-neutral-95);  // #101212
 
 // Radio
 @c-radio-dim:           1rem;              // 16 px
@@ -38,19 +34,19 @@
     display:          inline-flex;
     align-items:      center;
     justify-content:  center;
-    width:            auto;
-    max-width:        none;
-    min-width:        0;
     border-radius:    var(--hdx-radius-sm);
     box-shadow:       var(--hdx-shadow-sm);
-    text-decoration:  none;
-    background-color: @c-sel-light-bg;
-    border:           1px solid @c-sel-light-border;
+    background-color: var(--hdx-neutral-0);  // #fff
+    border:           1px solid var(--hdx-neutral-2);  // #d8e0e1
     box-sizing:       border-box;
-    cursor:           pointer;
     font-family:      var(--hdx-font-body);
     font-weight:      var(--hdx-fw-medium);
     color:            var(--hdx-neutral-8);
+    width:            auto;
+    max-width:        none;
+    min-width:        0;
+    text-decoration:  none;
+    cursor:           pointer;
     transition:       background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
     .hdx-motion();
 
@@ -81,8 +77,8 @@
     // ── Colour variants ──────────────────────────────────────
 
     &--light {
-        background-color: @c-sel-light-bg;
-        border-color:     @c-sel-light-border;
+        background-color: var(--hdx-neutral-0);  // #fff
+        border-color:     var(--hdx-neutral-2);  // #d8e0e1
     }
 
     &--cyan {
@@ -104,14 +100,14 @@
 
     // Active (selected — close icon visible, border near-black)
     &--active {
-        border-color: @c-sel-active-border;
+        border-color: var(--hdx-neutral-95);  // #101212
         color:        var(--hdx-neutral-95);
         box-shadow:   none;
 
         .c-selection-item__close { display: block; }
 
         &:hover {
-            border-color: @c-sel-active-border;
+            border-color: var(--hdx-neutral-95);  // #101212
         }
 
         &.c-selection-item--cyan {
@@ -214,14 +210,29 @@
 
     &__label { position: relative; line-height: var(--hdx-lh-normal); }
 
+    &__description {
+        .hdx-body-s();
+        flex-basis:    100%;
+        color:         var(--hdx-neutral-7);
+        overflow-wrap: anywhere;
+    }
+
+    &--has-description {
+        align-items: flex-start;
+    }
+
+    &--has-description &__body {
+        flex-wrap: wrap;
+    }
+
     // ── States ──────────────────────────────────────────────
 
-    &--checked &__ring {
+    input:checked ~ &__input &__ring {
         border: 1px solid @c-radio-checked-color;
         background: transparent;
     }
 
-    &--checked &__dot {
+    input:checked ~ &__input &__dot {
         background-color: @c-radio-checked-color;
     }
 
@@ -236,11 +247,12 @@
         color:          var(--hdx-neutral-5);
     }
 
-    &--disabled &__ring {
+    &--disabled &__ring,
+    &--disabled input:checked ~ &__input &__ring {
         border-color: var(--hdx-neutral-1);
     }
 
-    &--disabled&--checked &__dot {
+    &--disabled input:checked ~ &__input &__dot {
         background-color: var(--hdx-neutral-2);  // gainsboro
     }
 
@@ -342,7 +354,7 @@
 
 // ────────────────────────────────────────────────────────────
 // c-selection-item-grid — grid wrapper for selection items
-// (2 cols SM/MD, 3 cols XL — locations-list page)
+// (2 cols SM/MD, 3 cols XL)
 // ────────────────────────────────────────────────────────────
 
 .c-selection-item-grid {
@@ -362,7 +374,7 @@
 
 // ────────────────────────────────────────────────────────────
 // c-selection-item-row — inline wrapping row of selection items
-// (applied filter pills — search page)
+// (applied filter pills)
 // ────────────────────────────────────────────────────────────
 
 .c-selection-item-row {

@@ -55,7 +55,7 @@ def page_create(context, data_dict):
                 # create the association
                 pages_model.PageTagAssociation.create(page=page, tag_id=tag_id, defer_commit=True)
             else:
-                raise logic.ValidationError({'tag_string': ['Tag % not found' % tag.get('name')]})
+                raise logic.ValidationError({'tag_string': ['Tag %s not found' % tag.get('name')]})
 
         model.Session.commit()
         page_dict = dictize.page_dictize(page)
@@ -65,4 +65,4 @@ def page_create(context, data_dict):
     except Exception as e:
         msg = str(e)
         log.error(msg)
-        raise logic.ValidationError({'message': ['Something went wrong while processing the request: %' % msg]})
+        raise logic.ValidationError({'message': ['Something went wrong while processing the request: %s' % msg]})

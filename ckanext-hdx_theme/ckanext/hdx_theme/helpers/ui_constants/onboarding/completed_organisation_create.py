@@ -4,6 +4,7 @@ from ckanext.hdx_theme.helpers.ui_constants.onboarding.request_create_organisati
 CONSTANTS = {
     'STEPS_1': REQUEST_CREATE_ORGANISATION_CONSTANTS['STEPS_1'],
     'STEPS_2': REQUEST_CREATE_ORGANISATION_CONSTANTS['STEPS_2'],
+    'STEPS_3': REQUEST_CREATE_ORGANISATION_CONSTANTS['STEPS_3'],
 
     'PAGE_TITLE': '''Request submitted''',
 

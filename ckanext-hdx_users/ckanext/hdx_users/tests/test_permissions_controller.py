@@ -55,29 +55,16 @@ class TestHDXControllerPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
 
     def test_permission_page_load(self):
         url = h.url_for(u'hdx_user_permission.read', id='tester')
-        try:
-            result = self.app.get(url)
-            assert False
-        except Exception as ex:
-            assert True
+        res = self.app.get(url)
+        assert res.status_code == 404
 
         user_token = factories.APIToken(user='tester', expires_in=2, unit=60 * 60)['token']
-        try:
-            res = self.app.get(url, headers={'Authorization': user_token})
-            assert False
-        except Exception as ex:
-            log.info(ex)
-            assert True
+        res = self.app.get(url, headers={'Authorization': user_token})
+        assert res.status_code == 404
 
         sysadmin_token = factories.APIToken(user='testsysadmin', expires_in=2, unit=60 * 60)['token']
-        try:
-            res = self.app.get(url, headers={'Authorization': sysadmin_token})
-            assert True
-        except Exception as ex:
-            log.info(ex)
-            assert False
-
-        assert ('200' in res.status), 'HTTP OK'
+        res = self.app.get(url, headers={'Authorization': sysadmin_token})
+        assert res.status_code == 200
         for key, value in ph.Permissions.ALL_PERMISSIONS_LABELS_DICT.items():
             assert key in res.body
             assert value in res.body
@@ -85,60 +72,49 @@ class TestHDXControllerPage(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
     def test_manage_permissions(self):
         url = h.url_for(u'hdx_user_permission.read', id='tester')
         test_client = self.get_backwards_compatible_test_client()
-        try:
-            res = test_client.post(url, params=permission)
-            assert False
-        except Exception as ex:
-            assert True
 
         tester = model.User.by_name('tester')
         tester.email = 'test@test.com'
         tester_token = factories.APIToken(user='tester', expires_in=2, unit=60 * 60)['token']
         auth = {'Authorization': tester_token}
-        try:
-            res = test_client.post(url, params=permission, headers=auth)
-            assert False
-        except Exception as ex:
-            assert True
+        res = test_client.post(url, params=permission, headers=auth)
+        assert res.status_code == 404
 
         sysadmin = model.User.by_name('testsysadmin')
         sysadmin.email = 'testsysadmin@test.com'
         sysadmin_token = factories.APIToken(user='testsysadmin', expires_in=2, unit=60 * 60)['token']
         auth = {'Authorization': sysadmin_token}
-        try:
-            res = test_client.post(url, params=permission, headers=auth)
-        except Exception as ex:
-            log.info(ex)
-            assert False
-        assert ('200' in res.status), 'HTTP OK'
+        res = test_client.post(url, params=permission, headers=auth)
+        assert res.status_code == 302
+        assert res.headers['Location'].endswith(url)
 
-        try:
-            res = test_client.get(url, headers=auth)
-            assert True
-        except Exception as ex:
-            log.info(ex)
-            assert False
-
+        res = test_client.get(url, headers=auth)
         for key, value in ph.Permissions.ALL_PERMISSIONS_LABELS_DICT.items():
             assert key in res.body
             assert value in res.body
-        assert res.body.count(' checked ') == 4
+        assert res.body.count('checked="checked"') == 4
 
-        try:
-            res = test_client.post(url, params=permission_carousel, headers=auth)
-        except Exception as ex:
-            log.info(ex)
-            assert False
-        assert ('200' in res.status), 'HTTP OK'
+        res = test_client.post(url, params=permission_carousel, headers=auth)
+        assert res.status_code == 302
+        assert res.headers['Location'].endswith(url)
 
-        try:
-            res = test_client.get(url, headers=auth)
-            assert True
-        except Exception as ex:
-            log.info(ex)
-            assert False
-
+        res = test_client.get(url, headers=auth)
         for key, value in ph.Permissions.ALL_PERMISSIONS_LABELS_DICT.items():
             assert key in res.body
             assert value in res.body
-        assert res.body.count(' checked ') == 1
+        assert res.body.count('checked="checked"') == 1
+
+    def test_permission_unknown_user(self):
+        url = h.url_for(u'hdx_user_permission.read', id='unknown-permission-user')
+        test_client = self.get_backwards_compatible_test_client()
+
+        sysadmin = model.User.by_name('testsysadmin')
+        sysadmin.email = 'testsysadmin@test.com'
+        sysadmin_token = factories.APIToken(user='testsysadmin', expires_in=2, unit=60 * 60)['token']
+        auth = {'Authorization': sysadmin_token}
+
+        res = test_client.get(url, headers=auth)
+        assert res.status_code == 404
+
+        res = test_client.post(url, params=permission, headers=auth)
+        assert res.status_code == 404

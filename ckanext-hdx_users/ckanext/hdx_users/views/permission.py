@@ -51,13 +51,10 @@ def _extra_template_variables(context, data_dict):
     if user_dict[u'state'] == u'deleted' and not is_sysadmin:
         abort(404, _(u'User not found'))
     is_myself = user_dict[u'name'] == g.user
-    about_formatted = h.render_markdown(user_dict[u'about'])
 
     extra = {
-        u'is_sysadmin': is_sysadmin,
         u'user_dict': user_dict,
-        u'is_myself': is_myself,
-        u'about_formatted': about_formatted
+        u'is_myself': is_myself
     }
     return extra
 
@@ -65,11 +62,14 @@ def _extra_template_variables(context, data_dict):
 def read(id):
     context = {u'model': model, u'session': model.Session,
                u'user': g.user, u'auth_user_obj': g.userobj,
-               u'for_view': True, u'with_related': True}
+               u'for_view': True}
     try:
         check_access(u'manage_permissions', context, {})
     except Exception as ex:
         abort(404, u'page not found')
+
+    data_dict = {u'id': id}
+    extra_vars = _extra_template_variables(context, data_dict)
 
     if request.method == 'POST':
         data = clean_dict(
@@ -78,7 +78,8 @@ def read(id):
             permissions = Permissions(id)
             perm_list = [p for p in Permissions.ALL_PERMISSIONS if p in data]
             permissions.set_permissions({u'user': g.userobj.id}, perm_list)
-            redirect(
+            h.flash_success(_(u'Permissions updated.'))
+            return redirect(
                 h.url_for(u'hdx_user_permission.read', id=id))
 
     perm_obj = Permissions(id)
@@ -91,11 +92,6 @@ def read(id):
             u'checked': True if key in crt_perm else False
         }
         perm_list.append(_p)
-    data_dict = {u'id': id,
-                 u'user_obj': g.userobj,
-                 u'include_datasets': True,
-                 u'include_num_followers': True}
-    extra_vars = _extra_template_variables(context, data_dict)
     extra_vars[u'permissions'] = perm_list
 
     return render('user/permission.html', extra_vars=extra_vars)

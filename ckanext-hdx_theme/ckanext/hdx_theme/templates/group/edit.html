@@ -1,24 +1,37 @@
-{% extends "group/base_form_page.html" %}
+{% extends "v2/page.html" %}
 
-{% block breadcrumb_content %}
-  {% snippet "snippets/other_breadcrumb_item.html", title=_('Groups'), controller='group', action='index', position=2 %}
-  {% block breadcrumb_content_inner %}
-    {% snippet "snippets/other_breadcrumb_item.html", title=organization.display_name|truncate(35), controller='group', action='read', id=organization.name, position=2 %}
-    {% snippet "snippets/active_breadcrumb_item.html", title=_('Manage'), position=4 %}
-  {% endblock %}
+{% set outer_row_class      = 'hdx-v2-signup-outer-row' %}
+{% set breadcrumb_row_class = 'hdx-v2-breadcrumb-row--white' %}
+{% set content_class        = 'hdx-v2-content-columns__content' %}
+
+{# The lines below are for analytics #}
+{% block analytics_group_names %}['{{ group_dict.name }}']{% endblock %}
+{% block analytics_group_ids %}['{{ group_dict.id }}']{% endblock %}
+
+
+{% block subtitle %}{{ _('Edit Location') }}{% endblock %}
+
+{% block styles %}
+  {{ super() }}
+  {% asset 'hdx_theme/v2-signup-page-styles' %}
+{% endblock %}
+
+{% block scripts %}
+  {{ super() }}
+  {% asset 'hdx_theme/v2-slug-preview-scripts' %}
+{% endblock %}
+
+{% block breadcrumb_items %}
+  {% snippet 'v2/components/breadcrumb.html',
+      items=[
+        {'label': _('Locations'), 'href': h.url_for('hdx_group.index')},
+        {'label': group_dict.display_name, 'href': h.url_for('group.read', id=group_dict.name)},
+        {'label': _('Edit location page'), 'href': ''}
+      ] %}
 {% endblock %}
 
 {% block primary %}
-    <div class="create-org">
-    {% block primary_content %}
-    	{{ super() }}
-    {% endblock %}
-    </div>
+<div class="hdx-v2-signup-form-page">
+  {{ form | safe }}
+</div>
 {% endblock %}
-
-{% block secondary %}{% endblock %}
-
-
-{% block page_heading_class %}hide-heading{% endblock %}
-{% block page_heading %}{{ _('Edit Group') }}{% endblock %}
-

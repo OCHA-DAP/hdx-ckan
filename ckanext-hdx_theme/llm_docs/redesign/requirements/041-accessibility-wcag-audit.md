@@ -316,7 +316,7 @@ Add `.sr-only` and `.sr-only--focusable` utility classes to `foundation.less` if
 
 ### R-02 — Focus trap utility (shared module)
 
-Shared `window.hdxV2.FocusTrap` in `fanstatic/v2/utils.js` — a single lightweight `FocusTrap` class consumed by both `navbar.js` (offcanvas) and `components/drawer.js`.
+Shared `window.hdxV2.FocusTrap` in `fanstatic/v2/utils.js` — a single lightweight `FocusTrap` class.
 
 Minimal interface:
 
@@ -497,7 +497,8 @@ Every state change that affects the user's understanding of the UI must update a
 | Checked / unchecked | `aria-checked="true/false"` |
 | Selected / unselected | `aria-selected="true/false"` |
 | Hidden / visible (structural) | `aria-hidden="true/false"` |
-| Current item in nav/list | `aria-current="true"` |
+| Link to the current page (nav-item, tabs, pagination) | `aria-current="page"` |
+| Current in-page anchor (anchor-links) | `aria-current="true"` |
 
 ---
 
@@ -577,7 +578,7 @@ Every page that renders `v2/header.html` must include the skip-to-main-content l
 
 ### RF-01 — Shared focus trap module
 
-Shared `window.hdxV2.FocusTrap` in `fanstatic/v2/utils.js` (see R-02), used by `navbar.js`, `components/drawer.js` and `pages/search.js` (filter overlay). Prevents duplication of focus-trap logic across multiple files.
+Shared `window.hdxV2.FocusTrap` in `fanstatic/v2/utils.js` (see R-02). Prevents duplication of focus-trap logic across multiple files.
 
 ### RF-02 — `sr-only` utility in `foundation.less`
 

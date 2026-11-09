@@ -1,0 +1,51 @@
+{#
+  Snippet: user-item.html
+  Path:    templates/v2/components/user-item.html
+
+  Renders a c-user-item — a compact user row: an xs c-avatar with the
+  name's initials (h.hdx_initials), the name as a c-text-link and optional
+  meta text on one line (ellipsis), and a caller-provided actions area at
+  the row's right end. Rows go in a <ul class="c-user-item-grid"> (one
+  column, two from MD), one <li> per row.
+
+  Parameters
+  ─────────────────────────────────────────────────
+  name          {string}  Display name: link text and avatar initials.
+                          default: ''
+  href          {string}  Profile URL.  default: ''
+  meta          {string}  Text after the name, e.g. '- jane@example.org'.
+                          Omitted when empty.  default: ''
+  extra_classes {string}  Additional classes on the root.  default: ''
+  caller()      block     Optional. Actions area content (e.g. a Remove form).
+  ─────────────────────────────────────────────────
+  Example
+
+  <ul class="c-user-item-grid">
+    <li>
+      {% call h.snippet('v2/components/user-item.html',
+          name='Ada Lovelace', href=h.url_for('user.read', id='ada')) %}
+        ...actions markup...
+      {% endcall %}
+    </li>
+  </ul>
+#}
+
+{% set name          = name          if name          is defined else '' %}
+{% set href          = href          if href          is defined else '' %}
+{% set meta          = meta          if meta          is defined else '' %}
+{% set extra_classes = extra_classes if extra_classes is defined else '' %}
+
+<div class="c-user-item{{ ' ' ~ extra_classes if extra_classes else '' }}">
+  {% snippet 'v2/components/avatar.html', size='xs', initials=h.hdx_initials(name) %}
+  {% snippet 'v2/components/text-link.html',
+      label=name, href=href, style='secondary', size='s',
+      extra_classes='c-user-item__name' %}
+  {% if meta %}
+    <span class="c-user-item__meta">{{ meta }}</span>
+  {% endif %}
+  {% if caller is defined %}
+    <div class="c-user-item__actions">
+      {{ caller() }}
+    </div>
+  {% endif %}
+</div>

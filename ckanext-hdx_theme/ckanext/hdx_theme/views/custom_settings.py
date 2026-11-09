@@ -7,7 +7,7 @@ from six import text_type
 
 import ckan.plugins.toolkit as tk
 
-from ckanext.hdx_theme.helpers.uploader import GlobalUpload
+from ckanext.hdx_theme.helpers.uploader import GlobalUpload, GlobalUploadException
 
 abort = tk.abort
 _ = tk._
@@ -25,13 +25,14 @@ hdx_carousel = flask.Blueprint(u'hdx_carousel', __name__, url_prefix=u'/ckan-adm
 
 def show():
     context = {u'user': g.user}
-    check_access('hdx_carousel_update', context, {})
+    try:
+        check_access('hdx_carousel_update', context, {})
+    except tk.NotAuthorized:
+        return abort(403, _('Not authorized to access this page'))
 
     setting_value = get_action('hdx_carousel_settings_show')({}, {})
     template_data = {
-        'data': {
-            'hdx.carousel.config': json.dumps(setting_value)
-        }
+        'items': setting_value
     }
 
     return render('admin/carousel.html', extra_vars=template_data)
@@ -39,7 +40,10 @@ def show():
 
 def delete(id):
     context = {u'user': g.user}
-    check_access('hdx_carousel_update', context, {})
+    try:
+        check_access('hdx_carousel_update', context, {})
+    except tk.NotAuthorized:
+        return abort(403, _('Not authorized to access this page'))
     # delete_id = request.params.get('id')
     existing_setting_list = get_action('hdx_carousel_settings_show')({'not_initial': True}, {})
     remove_index, remove_element = _find_carousel_item_by_id(existing_setting_list, id)
@@ -62,19 +66,30 @@ def delete(id):
 
 def update():
     context = {u'user': g.user}
-    check_access('hdx_carousel_update', context, {})
+    try:
+        check_access('hdx_carousel_update', context, {})
+    except tk.NotAuthorized:
+        return abort(403, _('Not authorized to access this page'))
 
     item = _process_request()
 
     if item:
         existing_setting_list = get_action('hdx_carousel_settings_show')({'not_initial': True}, {})
-        _persist_file(item)
+        try:
+            _persist_file(item)
+        except GlobalUploadException as e:
+            return json.dumps({
+                'message': str(e)
+            }), 400
 
         if item.pop('new'):
             existing_setting_list.append(item)
         else:
             existing_index, existing_element = _find_carousel_item_by_id(existing_setting_list, item.get('id'))
-            existing_setting_list[existing_index] = item
+            if existing_index >= 0:
+                existing_setting_list[existing_index] = item
+            else:
+                existing_setting_list.append(item)
 
         data_dict = {
             'hdx.carousel.config': _sort_carousel_items(existing_setting_list)
@@ -84,7 +99,7 @@ def update():
     else:
         ret = json.dumps({
             'message': _('Badly formatted data')
-        })
+        }), 400
 
     # response.headers['Content-Type'] = CONTENT_TYPES['json']
     return ret
@@ -131,15 +146,16 @@ def _remove_file_by_path(path):
 def _persist_file(item):
     # For some reason FieldStorage has the boolean value of false so we compare to None
     graphic_upload = item.get('graphic_upload')
-    if graphic_upload is not None and graphic_upload != 'undefined':
-        # remove previous file if exists
-        _remove_file_by_path(item.get('graphic'))
-
+    if graphic_upload is not None:
         upload = GlobalUpload({
             'filename': '{}_{}'.format(item.get('id')[0:4], text_type(uuid.uuid4())),
             'upload': graphic_upload
         })
         upload.upload()
+
+        # remove previous file if exists
+        _remove_file_by_path(item.get('graphic'))
+
         item['graphic'] = h.url_for('hdx_global_file_server.global_file_download', filename=upload.filename)
         del item['graphic_upload']
 
@@ -151,16 +167,20 @@ def _process_request():
     '''
 
     title = request.form.get('title')
-    if not title:
+    if not title or not request.form.get('url'):
         return None
     else:
+        try:
+            order = int(request.form.get('order', -1))
+        except ValueError:
+            return None
         item = {
             'title': title,
             'description': request.form.get('description'),
             'graphic': request.form.get('graphic'),
             'graphic_upload': request.files.get('graphic_upload'),
             'url': request.form.get('url'),
-            'order': int(request.form.get('order', -1)),
+            'order': order,
             'newTab': True if request.form.get('newTab') == 'true' else False,
             'embed': True if request.form.get('embed') == 'true' else False,
             'new': False if request.form.get('id') else True,

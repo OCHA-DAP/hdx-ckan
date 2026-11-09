@@ -5,8 +5,7 @@
 // ============================================================
 // Demo:    templates/v2/components/table.html
 // Also covers DataTables-enhanced tables (table.c-table + `new
-// DataTable(...)`): resource page Data dictionary, and
-// ckanext-hdx_office_preview's Data Explorer/CSV preview.
+// DataTable(...)`).
 // ============================================================
 
 // ── Public mixins ─────────────────────────────────────────────
@@ -100,6 +99,16 @@ table.c-table {
                 -webkit-mask-image: url('/icons/chevron-down.svg');
                 mask-image:         url('/icons/chevron-down.svg');
             }
+
+            .dt-column-order {
+                position: absolute;
+                inset:    0;
+
+                &:focus-visible {
+                    .hdx-focus-ring();
+                    outline-offset: -2px;
+                }
+            }
         }
     }
 
@@ -122,16 +131,21 @@ table.c-table {
 
 // ============================================================
 // DataTables adapter — chrome the library generates around a
-// table.c-table when a page enhances it with `new DataTable(...)`
-// (Data dictionary, Data Explorer/CSV preview). Everything DataTables
-// renders lives inside its own .dt-container wrapper, so this nests
-// the same way. Column widths and row data stay with each caller.
+// table.c-table when a page enhances it with `new DataTable(...)`.
+// Everything DataTables renders lives inside its own .dt-container
+// wrapper, so this nests the same way. Column widths and row data
+// stay with each caller.
 // ============================================================
 
 .dt-container {
     border:        1px solid var(--hdx-neutral-1);
     border-radius: var(--hdx-radius-sm);
     overflow:      clip;
+
+    .c-table-container & {
+        border:        none;
+        border-radius: 0;
+    }
 
     .dt-layout-row {
         &.dt-layout-table > .dt-layout-cell {

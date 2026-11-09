@@ -13,14 +13,7 @@
 // ────────────────────────────────────────────────────────────
 
 .c-label {
-    display:         inline-flex;
-    align-items:     center;
-    justify-content: center;
-    border-radius:   var(--hdx-radius-md);  // 4 px
-    .hdx-body-regular-base();
-    white-space:     nowrap;
-    box-sizing:      border-box;
-    text-decoration: none;
+    .hdx-label();
 
     &__icon {
         line-height: 0;
@@ -43,9 +36,7 @@
     }
 
     &--size-s {
-        padding:   var(--hdx-space-15) var(--hdx-space-13);  // 2 6
-        gap:       var(--hdx-space-1);  //  4 px
-        font-size: var(--hdx-fs-s);  // 14 px
+        .hdx-label-size-s();
         .c-label__icon { width: 0.875rem; }  // 14 px
     }
 
@@ -69,11 +60,12 @@
     // ── Colour modifiers ─────────────────────────────────────
 
     &--light  { background-color: var(--hdx-neutral-05);  color: var(--hdx-neutral-95);  }  // whitesmoke-100  → var(--hdx-neutral-05)
-    &--grey   { background-color: var(--hdx-neutral-1);   color: var(--hdx-neutral-95);   }  // whitesmoke-200
+    &--grey   { .hdx-label-grey(); }
     &--dark   { background-color: var(--hdx-neutral-2);   color: var(--hdx-neutral-95);   }  // gainsboro #d8e0e1
-    &--cyan   { background-color: var(--hdx-brand-1);   color: var(--hdx-brand-85);   }  // lightcyan
+    &--cyan   { .hdx-label-cyan(); }
     &--yellow { background-color: var(--hdx-warning-1); color: var(--hdx-warning-8);; }  // antiquewhite
     &--blue   { background-color: var(--hdx-primary-1);   color: var(--hdx-primary-9);;   }  // lavender
+    &--red    { background-color: var(--hdx-error-1);   color: var(--hdx-error-8);   }  // mistyrose
 }
 
 

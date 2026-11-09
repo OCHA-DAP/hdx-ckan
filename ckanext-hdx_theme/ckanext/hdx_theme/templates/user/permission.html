@@ -1,17 +1,37 @@
-{% extends "user/read.html" %}
+{% extends "v2/user-dashboard-base.html" %}
 
-{% block subtitle %}{{ _('User Permission') }}{% endblock %}
+{% set nav_active      = 'user_permission' %}
+{% set page_label      = _('User Permission') %}
 
-{% block primary_content_inner %}
-{% import 'macros/form.html' as form %}
-  <h2 class="hide-heading">{% block page_heading %}{{ _('User Permission') }}{% endblock %}</h2>
-  <div class="paddingLeftHack">
-    <form method="POST" data-module="basic-form">
-      {{ h.csrf_input() }}
-      {% for p in permissions %}
-        {{ form.checkbox(p.key, id='field_'+ p.key , label=p.label, value=p.key, checked=p.checked, classes=[""]) }}
-      {% endfor %}
-      <button class="btn btn-primary" type="submit" name="update_permissions" value="update">{{ _("Update Permissions") }}</button>
-    </form>
+{% block primary %}
+  {% if not is_myself %}
+    {{ self.user_profile_header() }}
+  {% endif %}
+  {% set title_tag = 'h1' if is_myself else 'h2' %}
+  <div class="hdx-v2-user-dashboard-header">
+    <div class="hdx-v2-user-dashboard-header__text">
+      <{{ title_tag }} class="hdx-v2-user-dashboard-header__title">{{ page_label }}</{{ title_tag }}>
+      <p class="hdx-v2-user-dashboard-header__subtitle">
+        {{ _('Choose which HDX admin features you can use') if is_myself else _('Choose which HDX admin features {name} can use').format(name=user_dict.display_name) }}
+      </p>
+    </div>
   </div>
+
+  <form method="POST" class="hdx-v2-user-permission">
+    {{ h.csrf_input() }}
+    <fieldset class="hdx-v2-user-permission__fieldset">
+      <legend class="sr-only">{{ _('Permissions') }}</legend>
+      {% for p in permissions %}
+        <div class="hdx-v2-user-permission__item">
+          {% snippet 'v2/components/checkbox.html',
+              id=p.key, name=p.key, value=p.key, checked=p.checked,
+              label=p.label, error_slot=false %}
+        </div>
+      {% endfor %}
+    </fieldset>
+    {% snippet 'v2/components/button.html',
+        style='primary', size='m', button_type='submit',
+        label=_('Update Permissions'),
+        attrs={'name': 'update_permissions', 'value': 'update'} %}
+  </form>
 {% endblock %}
