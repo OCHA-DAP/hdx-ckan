@@ -1,24 +1,62 @@
-{% ckan_extends %}
+{% extends "v2/page.html" %}
+
+{% set pkg = pkg_dict or g.pkg_dict %}
+
+{% set outer_row_class      = 'hdx-v2-signup-outer-row' %}
+{% set breadcrumb_row_class = 'hdx-v2-breadcrumb-row--white' %}
+{% set content_class        = 'hdx-v2-content-columns__content' %}
+
+{% set is_new_page = showcase_page == 'new' %}
+{% set heading = _('Add showcase') if is_new_page else _('Edit showcase') %}
+
+{% block subtitle %}{{ _('Manage showcase datasets') if showcase_page == 'manage' else heading }}{% endblock %}
+
+{% block styles %}
+  {{ super() }}
+  {% asset 'hdx_theme/v2-signup-page-styles' %}
+  {% if showcase_page == 'manage' %}
+    {% asset 'hdx_theme/v2-search-page-styles' %}
+  {% else %}
+    {% asset 'hdx_theme/v2-select2-styles' %}
+  {% endif %}
+{% endblock %}
 
 {% block scripts %}
   {{ super() }}
+  {% if showcase_page == 'manage' %}
+    {% asset 'hdx_theme/v2-showcase-manage-page-scripts' %}
+  {% else %}
+    {% asset 'hdx_theme/v2-slug-preview-scripts' %}
+    {% asset 'hdx_theme/v2-select2-scripts' %}
+    {% asset 'hdx_theme/v2-showcase-form-page-scripts' %}
+  {% endif %}
 {% endblock %}
 
-{% block ckanext_showcase_edit_span %} col-9 create-org{% endblock %}
-{% block ckanext_showcase_edit_module_content_class %}col-6 mTB30{% endblock %}
+{% block breadcrumb_items %}
+  {% set crumbs = [{'label': _('Showcases'), 'href': h.url_for('showcase_blueprint.index')}] %}
+  {% if not is_new_page %}
+    {% set crumbs = crumbs + [{'label': pkg.title or pkg.name, 'href': h.url_for('showcase_blueprint.read', id=pkg.name)}] %}
+  {% endif %}
+  {% snippet 'v2/components/breadcrumb.html',
+      items=crumbs + [{'label': _('Manage datasets') if showcase_page == 'manage' else heading, 'href': ''}] %}
+{% endblock %}
 
-{% block content_action %}{% endblock %}
+{% block primary %}
+<div class="hdx-v2-signup-form-page">
+  <div class="hdx-v2-signup-form-page__card">
+    <h1 class="hdx-v2-signup-form-page__heading">{{ heading }}</h1>
 
-{% block page_header %}
-  <header class="page-header">
-    <ul class="nav nav-tabs">
-        {% block content_primary_nav %}
-            {{ h.bs5_build_nav_icon('showcase_blueprint.edit', _('Edit showcase'), id=pkg.name, class_='nav-link hdx-tab-button') }}
-            {{ h.bs5_build_nav_icon('showcase_blueprint.manage_datasets', _('Manage datasets'), id=pkg.name, class_='nav-link hdx-tab-button') }}
-            <li class="nav-item float-end">
-                {% link_for _('View showcase'), named_route='showcase_blueprint.read', id=pkg.name, class_='nav-link hdx-tab-button', icon='eye-open' %}
-            </li>
-        {% endblock %}
-    </ul>
-  </header>
+    {% if not is_new_page %}
+      {% snippet 'v2/components/tabs.html',
+          aria_label=_('Showcase sections'),
+          items=[
+            {'label': _('Edit showcase'), 'href': h.url_for('showcase_blueprint.edit', id=pkg.name), 'active': showcase_page == 'edit'},
+            {'label': _('Manage datasets'), 'href': h.url_for('showcase_blueprint.manage_datasets', id=pkg.name), 'active': showcase_page == 'manage'},
+            {'label': _('View showcase'), 'href': h.url_for('showcase_blueprint.read', id=pkg.name)}
+          ] %}
+    {% endif %}
+
+    {% block showcase_content %}{% endblock %}
+  </div>
+</div>
 {% endblock %}

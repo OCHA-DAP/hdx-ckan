@@ -427,6 +427,16 @@ Example page-specific template (light search):
 
 ---
 
+### Showcase add / edit / manage datasets (`/showcase/new`, `/showcase/edit/<id>`, `/showcase/manage_datasets/<id>`)
+
+- **Templates**: HDX `showcase/edit_base.html` is the v2 base (no `ckan_extends`): signup layout variables and shell, breadcrumb, H1 and, on Edit / Manage, `c-tabs`. `showcase/new.html`, `edit.html` and `manage_datasets.html` set `showcase_page` and fill `showcase_content`. The upstream `ckanext-showcase` views are unchanged.
+  - The form `showcase/new_package_form.html` branches on `action`: `c-slug-preview`, a tag Select2 (`tag_string` posts one value per tag), `c-image-upload` (upstream uploader trio), and the dataviz section for gallery-permission holders, revealed by `pages/showcase-form.js` (`hdxV2.wireReveal`). A save replaces the whole showcase, so the field set must stay complete (only `dataviz_label` is dropped on purpose).
+  - After a failed save `data` is the posted form (`tag_string` may be a list); the breadcrumb, tabs, Delete gate and drawer read `pkg_dict`.
+  - Manage: `c-dataset-card`s in two `v2/list-header.html` sections, each with its own Add / Remove POST form (`bulk_action.*` + `dataset_<id>`); the upstream redirect drops the search query.
+- **Core assets**: `hdx_theme/v2-signup-page-styles`; form: `v2-select2-styles`, `v2-slug-preview-scripts`, `v2-select2-scripts`, `v2-showcase-form-page-scripts`; Manage: `v2-search-page-styles`, `v2-showcase-manage-page-scripts`.
+
+---
+
 ### Signals page (`/signals`)
 
 - **Template**: `ckanext-hdx_theme/ckanext/hdx_theme/templates/landing_pages/signals.html`

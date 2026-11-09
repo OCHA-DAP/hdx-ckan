@@ -218,6 +218,39 @@
     if (errorEl) errorEl.textContent = message || '';
   };
 
+  // Shows `target` while `select`'s lower-cased value is in options.values.
+  // options: hiddenClass (else the hidden attribute), requiredInputs (required
+  // only while shown), clearOnHide (empties the target's inputs when hidden).
+  window.hdxV2.wireReveal = function wireReveal(select, target, options) {
+    if (!select || !target) return;
+    var requiredInputs = (options.requiredInputs || []).filter(Boolean);
+
+    var sync = function () {
+      var shown = options.values.indexOf((select.value || '').toLowerCase()) !== -1;
+
+      if (options.hiddenClass) {
+        target.classList.toggle(options.hiddenClass, !shown);
+      } else {
+        target.hidden = !shown;
+      }
+      requiredInputs.forEach(function (input) {
+        if (shown) {
+          input.setAttribute('required', 'required');
+        } else {
+          input.removeAttribute('required');
+        }
+      });
+      if (!shown && options.clearOnHide) {
+        target.querySelectorAll('input, textarea').forEach(function (input) {
+          input.value = '';
+        });
+      }
+    };
+
+    select.addEventListener('change', sync);
+    sync();
+  };
+
   // POSTs `body` to `url` with the CSRF header and resolves with the parsed JSON response.
   window.hdxV2.post = function post(url, body) {
     return fetch(url, {

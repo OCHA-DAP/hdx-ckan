@@ -522,6 +522,8 @@ Help text between a field's label and its control is the `description` param (`.
 
 JS field errors: `window.hdxV2.setFieldError(input, message, invalid)` (`utils.js`) sets a `text-field.html` or `checkbox.html` control's error text and toggles its `--error` modifier (on with a message, or with `invalid` true for a border without text) — no local copies.
 
+Fields revealed by a select value: `window.hdxV2.wireReveal(select, target, options)` (`utils.js`, elements in) shows `target` while the select's lower-cased value is in `options.values`, at load and on `change`; `hiddenClass` is toggled instead of the `hidden` attribute, `requiredInputs` are `required` only while shown, `clearOnHide` empties every input in `target` when hidden. Render the target hidden server-side to match.
+
 ---
 
 ## Component wrapper ownership

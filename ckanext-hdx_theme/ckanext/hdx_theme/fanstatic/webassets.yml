@@ -1960,3 +1960,15 @@ v2-user-profile-page-scripts:
   contents:
     - v2/qrious/qrious.min.js
     - v2/pages/user-profile.js
+
+v2-showcase-form-page-scripts:
+  <<: *common-js
+  output: ckanext-hdx_theme/%(version)s_v2-showcase-form-page-scripts.js
+  contents:
+    - v2/pages/showcase-form.js
+
+v2-showcase-manage-page-scripts:
+  <<: *common-js
+  output: ckanext-hdx_theme/%(version)s_v2-showcase-manage-page-scripts.js
+  contents:
+    - v2/url-nav.js

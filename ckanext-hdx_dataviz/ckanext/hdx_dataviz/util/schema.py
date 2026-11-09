@@ -1,13 +1,9 @@
-import six
-
 import ckan.plugins.toolkit as toolkit
 import ckanext.hdx_dataviz.helpers.helpers as h
 from ckan.lib.navl.validators import default, ignore_missing, ignore_empty
 from ckan.logic.validators import boolean_validator, url_validator, natural_number_validator
 
-missing = toolkit.missing
 get_converter = toolkit.get_converter
-get_validator = toolkit.get_validator
 Invalid = toolkit.Invalid
 StopOnError = toolkit.StopOnError
 unicode_safe = toolkit.get_validator('unicode_safe')
@@ -24,8 +20,8 @@ def showcase_update_schema_wrapper(original_schema):
                                    get_converter('convert_to_extras')],
             'in_carousel_section': [_has_dataviz_gallery_permission, default('false'), boolean_validator,
                                     get_converter('convert_to_extras')],
-            'dataviz_label': [_has_dataviz_gallery_permission, not_empty_if_in_dataviz_gallery, unicode_safe,
-                              get_validator('hdx_check_string_length_wrapper')(12), get_converter('convert_to_extras')],
+            'dataviz_label': [_has_dataviz_gallery_permission, ignore_missing, unicode_safe,
+                              get_converter('convert_to_extras')],
             'data_url': [_has_dataviz_gallery_permission, ignore_empty, _is_https_url, url_validator,
                          get_converter('convert_to_extras')],
             'priority': [_has_dataviz_gallery_permission, ignore_empty, natural_number_validator,
@@ -66,16 +62,3 @@ def _has_dataviz_gallery_permission(key, data, errors, context):
         return
     data.pop(key)
     raise StopOnError
-
-
-def not_empty_if_in_dataviz_gallery(key, data, errors, context):
-    value = data.get(key)
-    other_value = data.get(('in_dataviz_gallery',))
-
-    if other_value is missing or six.text_type(other_value).lower() != 'true':
-        # if this is not a dataviz showcase then we don't care about this key
-        raise StopOnError
-    elif not value:
-        # if this is a dataviz showcase then the value of this key can't be missing
-        errors[key].append(_('Missing value'))
-        raise StopOnError
