@@ -22,7 +22,7 @@
         activity_stream=activity_stream,
         id=id,
         object_type='user',
-        show_detail_links=h.check_access('activity_list', {'id': id, 'include_data': True, 'object_type': 'user'}),
+        show_detail_links=h.check_access('sysadmin'),
         actor_names={user_dict.id: user_dict.name},
         load_more_href=older_activities_url %}
   {% else %}

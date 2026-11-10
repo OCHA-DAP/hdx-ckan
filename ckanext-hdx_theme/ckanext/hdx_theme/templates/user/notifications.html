@@ -51,14 +51,17 @@
           {% set update_type = subscription.event_type %}
         {% endif %}
 
-        {% set title_action = {} %}
+        {% set unsubscribe_button = {} %}
         {% if is_myself and subscription.unsubscribe_token %}
           {% if object_type == 'dataset' %}
-            {% set confirmation_text = CONST_NOTIFICATION_PLATFORM.UNSUBSCRIBE_CONFIRMATION_MODAL_TEXT_DATASET %}
+            {% set confirmation_title = CONST_NOTIFICATION_PLATFORM.UNSUBSCRIBE_CONFIRMATION_MODAL_TITLE_DATASET %}
+            {% set confirmation_text = CONST_NOTIFICATION_PLATFORM.UNSUBSCRIBE_CONFIRMATION_MODAL_TEXT_DATASET.format(subscription.object_dict.title) %}
             {% set unsubscribed_text = CONST_NOTIFICATION_PLATFORM.UNSUBSCRIBED_MODAL_TEXT_DATASET %}
           {% else %}
             {% set ui_object_type = 'location' if object_type == 'group' else object_type %}
-            {% set confirmation_text = CONST_NOTIFICATION_PLATFORM.UNSUBSCRIBE_CONFIRMATION_MODAL_TEXT_SEARCH_RESULTS.format(ui_object_type) %}
+            {% set unsubscribe_type = 'organisation' if object_type == 'organization' else ui_object_type %}
+            {% set confirmation_title = CONST_NOTIFICATION_PLATFORM.UNSUBSCRIBE_CONFIRMATION_MODAL_TITLE_SEARCH_RESULTS.format(unsubscribe_type) %}
+            {% set confirmation_text = CONST_NOTIFICATION_PLATFORM.UNSUBSCRIBE_CONFIRMATION_MODAL_TEXT_SEARCH_RESULTS.format(subscription.object_dict.title) %}
             {% set unsubscribed_text = CONST_NOTIFICATION_PLATFORM.UNSUBSCRIBED_MODAL_TEXT_SEARCH_RESULTS.format(ui_object_type) %}
           {% endif %}
           {% set unsubscribe_data = h.dump_json({
@@ -67,12 +70,13 @@
             'object_id': subscription.object,
             'object_name': subscription.object_dict.name,
             'object_type': object_type,
+            'confirmation_title': confirmation_title,
             'confirmation_text': confirmation_text,
             'unsubscribed_text': unsubscribed_text,
           }) %}
-          {% set title_action = {
-            'style': 'tertiary',
-            'size': 's',
+          {% set unsubscribe_button = {
+            'style': 'secondary',
+            'size': 'm',
             'label': _('Unsubscribe'),
             'icon_src': 'v2/icons/delete.svg',
             'attrs': {
@@ -83,15 +87,20 @@
         {% endif %}
 
         <li>
-          {% snippet 'v2/components/dataset-card.html',
+          {% call h.snippet('v2/components/dataset-card.html',
               title=title,
               title_href=subscription.object_link,
-              title_action=title_action,
               meta_items=[
                 {'label': _('Update type:'), 'value': update_type},
                 {'label': _('Receive notifications:'), 'value': _('By Email')},
                 {'label': _('Update frequency:'), 'value': _('As soon as possible')},
-              ] %}
+              ]) %}
+            {% if unsubscribe_button %}
+              <div class="c-dataset-card__actions-group">
+                {{ h.snippet('v2/components/button.html', **unsubscribe_button) }}
+              </div>
+            {% endif %}
+          {% endcall %}
         </li>
       {% endfor %}
     </ul>

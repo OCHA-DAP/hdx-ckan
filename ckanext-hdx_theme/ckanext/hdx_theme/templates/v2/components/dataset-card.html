@@ -4,8 +4,8 @@
 
   Renders a .c-dataset-card component — organisation, title, description
   toggle, location labels, date range, file format badges, optional
-  top-row labels, title action, metadata columns and actions row, and a
-  footer "view others" link.
+  top-row labels, metadata columns and actions row, and a footer
+  "view others" link.
 
   Responsive: two-column row at MD+, stacked single-column at SM. The right
   column renders only when location, date_range or formats is set.
@@ -76,10 +76,6 @@
                              the row doesn't fit.
                              default: []
 
-  title_action     {dict}    c-button params (button.html), rendered right of
-                             the title; wraps under the title at SM.
-                             default: {}
-
   meta_items       {list}    Label/value columns below the title, as a <dl>:
                              equal columns at MD+, stacked at SM. Each item:
                                label   {string} column heading
@@ -92,7 +88,8 @@
                                                 default 'cyan' (optional)
                              default: []
 
-  caller()         block     Optional. Renders an actions row below the body.
+  caller()         block     Optional. Renders an actions row below the body;
+                             a blank block renders no row.
                              Wrap related controls in
                              <div class="c-dataset-card__actions-group">; the
                              groups sit at opposite ends and wrap, and a
@@ -134,14 +131,14 @@
     <div class="c-dataset-card__actions-group">…buttons…</div>
   {% endcall %}
 
-  Title action + metadata columns:
-  {% snippet 'v2/components/dataset-card.html',
+  Metadata columns + actions:
+  {% call h.snippet('v2/components/dataset-card.html',
       title='Dataset: Sudan Crisis Data 2024',
       title_href='/dataset/sudan-crisis',
-      title_action={'style': 'tertiary', 'size': 's', 'label': 'Unsubscribe',
-                    'icon_src': 'v2/icons/delete.svg'},
       meta_items=[{'label': 'Update type:', 'value': 'Dataset is updated'},
-                  {'label': 'Receive notifications:', 'value': 'By Email'}] %}
+                  {'label': 'Receive notifications:', 'value': 'By Email'}]) %}
+    <div class="c-dataset-card__actions-group">…Unsubscribe button…</div>
+  {% endcall %}
 #}
 
 {# ── Defaults ────────────────────────────────────────────── #}
@@ -160,7 +157,6 @@
 {% set extra_classes     = extra_classes     if extra_classes     is defined else '' %}
 {% set query             = query             if query             is defined else '' %}
 {% set labels            = labels            if labels            is defined else [] %}
-{% set title_action      = title_action      if title_action      is defined else {} %}
 {% set meta_items        = meta_items        if meta_items        is defined else [] %}
 
 {# ── BEM class list ──────────────────────────────────────── #}
@@ -197,12 +193,7 @@
       {% endif %}
 
       {% if title %}
-        {% if title_action %}<div class="c-dataset-card__title-row">{% endif %}
         <a class="c-dataset-card__title" href="{{ title_href }}"{% if query %} data-module="highlight" data-module-text="{{ query }}"{% endif %}>{{ title }}</a>
-        {% if title_action %}
-          {{ h.snippet('v2/components/button.html', **title_action) }}
-        </div>
-        {% endif %}
       {% endif %}
 
       {% if description %}
@@ -304,9 +295,12 @@
   </div>{# /.c-dataset-card__body #}
 
   {% if caller is defined %}
-    <div class="c-dataset-card__actions">
-      {{ caller() }}
-    </div>
+    {% set actions_html = caller() %}
+    {% if actions_html | trim %}
+      <div class="c-dataset-card__actions">
+        {{ actions_html }}
+      </div>
+    {% endif %}
   {% endif %}
 
   {% if show_others_label %}

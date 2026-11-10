@@ -247,7 +247,7 @@ Example page-specific template (light search):
 
 - **Template**: `ckanext-hdx_theme/ckanext/hdx_theme/templates/user/activity_stream.html` (HDX override of the core activity plugin's template; the `activity.user_activity` view is unchanged)
   - Extends `v2/user-dashboard-base.html` for every user's stream; other users' streams get the profile header, "Activity Stream" labels and a Home / All Users / {name} / Activity Stream breadcrumb.
-  - Timeline: `v2/activity-stream.html` with `object_type='user'`, `show_detail_links` (core's `activity_list` check) and `actor_names` (the owner's name for actor-less rows); "Load more" (`load_more_href`) links to `older_activities_url`.
+  - Timeline: `v2/activity-stream.html` with `object_type='user'`, `show_detail_links` (sysadmins only) and `actor_names` (the owner's name for actor-less rows); "Load more" (`load_more_href`) links to `older_activities_url`.
 - **Core assets**: as My Organisations.
 
 ---
@@ -273,7 +273,7 @@ Example page-specific template (light search):
 ### Notifications Settings (`/user/notifications/<id>`)
 
 - **Template**: `ckanext-hdx_theme/ckanext/hdx_theme/templates/user/notifications.html`
-  - Extends `v2/user-dashboard-base.html`; another user's page (sysadmins only) gets the profile header and a read-only list. One `c-dataset-card` per subscription in a `c-dataset-card-list` `<ul>`: "{Type}: {title}", `meta_items` (Update type / Receive notifications / Update frequency), and an Unsubscribe `title_action` on your own page when the subscription has an active token.
+  - Extends `v2/user-dashboard-base.html`; another user's page (sysadmins only) gets the profile header and a read-only list. One `c-dataset-card` per subscription in a `c-dataset-card-list` `<ul>`: "{Type}: {title}", `meta_items` (Update type / Receive notifications / Update frequency), and, on your own page when the subscription has an active token, a secondary Unsubscribe button in the card's `caller()` actions row.
   - Unsubscribe fills and opens the 051 drawers (`notification_platform/unsubscribe_drawers.html`, also included by `modals.html`); `onUnsubscribeSubmit` posts; closing the success drawer reloads the page.
   - The `hdx_user.notifications` view uses `_extra_template_variables()` and drops subscriptions whose object is gone or unreadable.
 - **Core assets**: as My Organisations, plus `notification-platform-util-scripts` and `v2-notifications-settings-page-scripts` on your own page when it has subscriptions.

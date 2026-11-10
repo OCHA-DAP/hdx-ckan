@@ -162,7 +162,7 @@ activity plugin, enabled in every ini).
 | Sort | None | None (D5) |
 | Item | FA icon + sentence + date | `c-activity-item` timeline |
 | Actor | Avatar + display name | Username; actor-less activities use the owner's name (D8) |
-| Detail links | Inline after the date, owner/sysadmin only | Own row between action and time (D2, D3) |
+| Detail links | Inline after the date, owner/sysadmin only | Own row between action and time, sysadmins only (D2, D3) |
 | Pagination | Newer / Older buttons | Forward-only "Load more" (D4) |
 | Empty | "No activity found for this type" | "No recent activity for this user." in the dashboard empty state (D9) |
 | Deleted user | "Deleted" label on the profile card | Red `c-label` in the profile header (D17) |
@@ -211,8 +211,7 @@ activity plugin, enabled in every ini).
     - new package: history
     - changed package: history + changes
     - changed organization / group: changes
-  - Gated by core's `check_access('activity_list', {'id': id, 'include_data': True,
-    'object_type': 'user'})`.
+  - Sysadmins only: `h.check_access('sysadmin')`.
   - The dataset and org pages stay without links unless they opt in.
 - **Pagination (D4):**
   - "Load more" links to `older_activities_url` (passed as `load_more_href`) and renders only
@@ -235,7 +234,7 @@ activity plugin, enabled in every ini).
 | A sysadmin edits the user's profile | `user_changed` stores the edited user as `user_id`, so the owner shows as the actor, as in v1 |
 | Legacy `follow user` row by another user | Actor and unresolved subject fall back to the UUID, as today (D8) |
 | Deleted dataset/org in an activity | Already guarded in the dispatcher (`_('unknown')`, no link) |
-| Detail link for a dataset the user can no longer edit | The link renders; opening it gives 403 (v1 parity) |
+| "Changes" whose previous same-object activity has no package data, or doesn't exist | Core's diff 404s; the links are sysadmin-only (D2) |
 | Exactly `limit` activities | `older_activities_url` is `None`, so no dead-end "Load more" |
 | Stale `before`/`after` past the end | Core behavior, unchanged |
 | Viewing another user's stream | v2 page with "Activity Stream" labels (D14); the menu is that user's, with Activity Stream active (D15) |
@@ -273,7 +272,7 @@ activity plugin, enabled in every ini).
 | # | Decision |
 |---|---|
 | D1 Scope | **v2 for every user's stream.** One HDX override, `THEME/templates/user/activity_stream.html`, extends `v2/user-dashboard-base.html`. No conditional `extends`, no view change. |
-| D2 Detail links | **Kept, on this page only.** `v2/activity-stream.html` gets an opt-in `show_detail_links` (default False, so the dataset and org pages are unchanged). This page passes core's `h.check_access('activity_list', {'id': id, 'include_data': True, 'object_type': 'user'})`. Types and endpoints as core: new package → View this version (`activity.package_history`); changed package → View this version + Changes (`activity.package_changes`); changed organization / group → Changes (`activity.organization_changes` / `activity.group_changes`). |
+| D2 Detail links | **Kept, on this page only.** `v2/activity-stream.html` gets an opt-in `show_detail_links` (default False, so the dataset and org pages are unchanged). This page passes `h.check_access('sysadmin')`: "Changes" 404s whenever core's diff finds no package data in the previous same-object activity (or none at all), and both links need edit rights on the object. Types and endpoints as core: new package → View this version (`activity.package_history`); changed package → View this version + Changes (`activity.package_changes`); changed organization / group → Changes (`activity.organization_changes` / `activity.group_changes`). |
 | D3 Link style | `c-activity-item` gets an optional `links` param (`[{label, href}]`). It renders a `__links` row between the action and the time: `c-text-link` secondary xs, `aria-hidden` "\|" separators, `space-13` gap, `.hdx-body-xs()`. Figma's `#2f3536` becomes `#101212`. |
 | D4 Pagination | **Forward-only "Load more"** (`c-text-link` secondary xs) linking to `older_activities_url`, rendered only when it is not `None`. No "Newer activities" link (057 D7). |
 | D5 Sort | Figma's "Sort by: Most Recent" is omitted, and so are the hidden count and page size. |
@@ -317,7 +316,7 @@ activity plugin, enabled in every ini).
 - Own stream:
   - "My Activity Stream" header and breadcrumb, menu item active
   - usernames, not UUIDs, on "signed up", "updated their profile" and org changes
-  - detail links on package / org changes
+  - detail links on package / org changes, for a sysadmin only
   - "Load more" only when older activity exists
   - the dashboard empty state when there is none
 - Another user's stream: "Activity Stream" + "A history of {name}'s actions", breadcrumb

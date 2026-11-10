@@ -214,3 +214,11 @@
   margin-top: var(--hdx-space-8);
   margin-bottom: var(--hdx-space-10);
 }
+.hdx-v2-search-empty {
+  font-family: var(--hdx-font-body);
+  font-size: var(--hdx-fs-m);
+  font-weight: var(--hdx-fw-regular);
+  line-height: var(--hdx-lh-normal);
+  color: var(--hdx-neutral-85);
+  margin: 0 0 var(--hdx-space-2);
+}

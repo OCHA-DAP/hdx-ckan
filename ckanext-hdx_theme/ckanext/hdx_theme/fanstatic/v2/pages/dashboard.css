@@ -10,8 +10,8 @@
 }
 .hdx-v2-dashboard-nav__label {
   font-family: var(--hdx-font-body);
-  font-size: var(--hdx-fs-xs);
-  font-weight: var(--hdx-fw-regular);
+  font-size: var(--hdx-fs-m);
+  font-weight: var(--hdx-fw-semibold);
   line-height: var(--hdx-lh-normal);
   color: var(--hdx-neutral-95);
   margin: 0;

@@ -12,6 +12,8 @@
 
   Parameters
   ─────────────────────────────────────────────────
+  confirmation_title {string}  Unsubscribe drawer title.
+                               default: UNSUBSCRIBE_CONFIRMATION_MODAL_TITLE
   confirmation_text  {string}  Unsubscribe drawer text.  default: ''
   unsubscribed_text  {string}  Unsubscribed drawer c-alert text.  default: ''
   submit_attrs       {dict}    c-button attrs of the Unsubscribe submit button
@@ -21,23 +23,25 @@
   Example
 
   {% snippet 'notification_platform/unsubscribe_drawers.html',
+      confirmation_title=confirmation_modal_title,
       confirmation_text=confirmation_modal_text,
       unsubscribed_text=unsubscribed_modal_text,
       submit_attrs=submit_btn_attrs %}
 #}
 
+{% set CONST_NOTIFICATION_PLATFORM = h.HDX_CONST('UI_CONSTANTS')['NOTIFICATION_PLATFORM'] %}
+
+{% set confirmation_title = confirmation_title if confirmation_title is defined else CONST_NOTIFICATION_PLATFORM.UNSUBSCRIBE_CONFIRMATION_MODAL_TITLE %}
 {% set confirmation_text = confirmation_text if confirmation_text is defined else '' %}
 {% set unsubscribed_text = unsubscribed_text if unsubscribed_text is defined else '' %}
 {% set submit_attrs      = submit_attrs      if submit_attrs      is defined else {'id': 'notificationsUnsubscribeButton'} %}
 
-{% set CONST_NOTIFICATION_PLATFORM = h.HDX_CONST('UI_CONSTANTS')['NOTIFICATION_PLATFORM'] %}
-
 {# ── Unsubscribe confirmation drawer ── #}
 {% call h.snippet('v2/components/drawer.html',
     drawer_id='notificationsUnsubscribeDrawer',
-    title=CONST_NOTIFICATION_PLATFORM.UNSUBSCRIBE_CONFIRMATION_MODAL_TITLE) %}
+    title=confirmation_title) %}
   <div class="c-drawer-form">
-    <p class="c-drawer-form__text">{{ confirmation_text|safe }}</p>
+    <p class="c-drawer-form__text">{{ confirmation_text }}</p>
     {% snippet 'v2/components/alert.html', hidden=True %}
     <div class="c-drawer-form__buttons">
       {{ h.snippet('v2/components/button.html',

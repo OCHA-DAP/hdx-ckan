@@ -149,7 +149,7 @@ HDX, "Member since" means the **org's** `created` date (`c-org-list-card`, `v2/o
 | Shell + layout | NEW base template `v2/user-dashboard-base.html` (D1) using the generic `hdx-v2-content-columns__*` classes (D3) plus the Search page's `hdx-v2-search-*` row/sidebar/content classes (D14) |
 | Menu items | **Extend** `c-nav-item` with `size='s'` (D2) |
 | Menu data | NEW helper `hdx_get_user_dashboard_nav_sections()` (D5), also feeding the header user menu (D6) |
-| Group labels, `<nav>`, lists | Base-template markup + page LESS (`hdx-v2-dashboard-nav__*`) |
+| Group labels, `<nav>`, lists | Base-template markup + page LESS (`hdx-v2-dashboard-nav__*`); labels use `.hdx-heading-h4()`, as the search "Filter by" heading, not Figma's 12px |
 | Breadcrumb | Reuse `c-breadcrumb` |
 | Header | Page LESS `hdx-v2-user-dashboard-header`, not `c-page-header` (hero padding, 16px semibold subtitle, size-m CTA below the text) (D9) |
 | Button | Reuse `c-button` (`style='primary'`, `size='s'`, `tag='a'`, `icon_src='v2/icons/mail.svg'`); an exact Figma match |

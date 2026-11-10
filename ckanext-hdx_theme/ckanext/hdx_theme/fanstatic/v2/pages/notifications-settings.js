@@ -20,6 +20,7 @@
     if (!drawer || !unsubscribedDrawer || !submit) return;
     current = JSON.parse(trigger.getAttribute('data-notifications-unsubscribe'));
 
+    drawer.querySelector('.c-drawer__title').textContent = current.confirmation_title;
     drawer.querySelector('.c-drawer-form__text').textContent = current.confirmation_text;
     drawer.querySelector('.c-alert').hidden = true;
     unsubscribedDrawer.querySelector('.c-alert__message').textContent = current.unsubscribed_text;

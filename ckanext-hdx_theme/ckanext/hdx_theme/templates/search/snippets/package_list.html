@@ -245,11 +245,13 @@ Example:
                     <input name="q" type="hidden" value="{{searchValue}}">
                 </form>
                 {% endif %}
-                <h2>Sorry no datasets found for current filter selection {# and {{src_msg}} #}</h2>
                 {% if v2 %}
+                  <p class="hdx-v2-search-empty">{{ _('Sorry no datasets found for current filter selection') }}</p>
                   {% snippet 'v2/components/text-link.html',
                       label=_('Clear filters'), style='primary', size='m',
                       attrs={'data-action': 'clear-filters', 'data-reveal-if-clearable': '', 'hidden': 'hidden'} %}
+                {% else %}
+                <h2>Sorry no datasets found for current filter selection {# and {{src_msg}} #}</h2>
                 {% endif %}
             </div>
         {% endif %}

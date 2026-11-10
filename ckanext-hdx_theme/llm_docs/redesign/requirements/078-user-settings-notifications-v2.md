@@ -7,12 +7,13 @@ dashboard shell, and Unsubscribe opens the 051 unsubscribe drawer on the same pa
 **Excluded:**
 - the bell-icon notifications (055, an unrelated feature);
 - the subscribe flow and the object-page drawers (051), except moving the two unsubscribe drawers into a
-  shared snippet;
+  shared snippet and the confirmation title and text (D3);
 - the subscription model, actions, auth rules, Novu sync and the unsubscribe endpoint;
 - frequency and channel settings (no backend exists);
 - the other settings pages.
 
-**Figma source:** `figma_exports/xl-user-settings-notifications.html` (XL only).
+**Figma source:** `figma_exports/xl-user-settings-notifications.html` (XL only); the Unsubscribe position
+follows `figma_exports/xl-user-settings-notifications-updated.html` and `sm-user-settings-notifications-updated.html`.
 
 `THEME` = `ckanext-hdx_theme/ckanext/hdx_theme`. `USERS` = `ckanext-hdx_users/ckanext/hdx_users`.
 
@@ -167,7 +168,7 @@ dashboard shell, and Unsubscribe opens the 051 unsubscribe drawer on the same pa
 | Breadcrumb | Users / {name} | Own: Home / Account and Settings / Notifications Settings. Others: Home / All Users / {name} / Notifications Settings |
 | Label | Tab "Notifications"; v2 menu "Notifications settings" | "Notifications Settings" (D6) |
 | Header | "User Settings" + "Subscriptions" | Title + subtitle (D7, D9) |
-| Item | Bootstrap row, red text link | `c-dataset-card` with `meta_items` and a title action (D4) |
+| Item | Bootstrap row, red text link | `c-dataset-card` with `meta_items` and an actions-row Unsubscribe (D4) |
 | Title | "{Type}: {title}" link | Same (D5, D21) |
 | Unsubscribe | Link to the object page | Same-page 051 drawer (D1–D3); none on another user's page (D8) |
 | Empty | v1 text with "Subscribe" | Dashboard empty state, "Get Notified" (D10) |
@@ -179,8 +180,8 @@ dashboard shell, and Unsubscribe opens the 051 unsubscribe drawer on the same pa
 | Shell, menu, breadcrumb, `<title>` | **Reuse** the base, `nav_active='notifications_settings'`, `page_label=_('Notifications Settings')` |
 | Profile header | **Reuse** the base's `user_profile_header` block |
 | Header | **Reuse** `.hdx-v2-user-dashboard-header` markup |
-| Card | **Extend** `c-dataset-card`: `meta_items` + a title-row action (D4) |
-| Unsubscribe button | **Reuse** `button.html` tertiary s, `delete.svg` |
+| Card | **Extend** `c-dataset-card`: `meta_items`; Unsubscribe in its `caller()` actions row (D4) |
+| Unsubscribe button | **Reuse** `button.html` secondary m, `delete.svg` |
 | Drawers | **Extract** 051's two unsubscribe drawers from `modals.html` into a shared snippet (D1) |
 | Submit + analytics | **Reuse** `util.js` `onUnsubscribeSubmit` unchanged (D1, D13) |
 | Hub behaviour | **New** `fanstatic/v2/pages/notifications-settings.js` (D1, D2) |
@@ -195,8 +196,8 @@ dashboard shell, and Unsubscribe opens the 051 unsubscribe drawer on the same pa
   `v2/user-dashboard-base.html`, as 076's `user/permission.html` and 077's `user/api_tokens.html` do,
   and keeps the `analytics_came_from` block. No shared v1 snippet changes, so no `{% if v2 %}` / `v2=true`.
 - `THEME/templates/notification_platform/unsubscribe_drawers.html` (new) holds the two drawers from
-  `modals.html`, with the confirmation text, the success text and the submit-button attrs as params.
-  `modals.html` includes it with the values it computes today, so object pages render the same markup.
+  `modals.html`, with the confirmation title and text, the success text and the submit-button attrs as params.
+  `modals.html` includes it with the values it computes, including the D3 title and text.
 - The hub renders the drawers snippet once (own page with subscriptions only). It never includes
   `modals.html` (no signup drawers, no `#notification_platform_data`, no reCAPTCHA) and never loads
   `unsubscribe.js`.
@@ -217,19 +218,19 @@ dashboard shell, and Unsubscribe opens the 051 unsubscribe drawer on the same pa
      subscription:
      - `title` = "{Type}: {object title}" (D5, D21), `title_href` = `object_link`;
      - `meta_items` = Update type / Receive notifications / Update frequency, with v1's values (D19);
-     - own page with an active token only (D20), the title action: Unsubscribe (tertiary s, `delete.svg` left) with a JSON
-       data attribute holding the token, object id, name, type, email and the two type-specific texts
-       (D3).
+     - own page with an active token only (D20), in the card's `caller()` actions row: Unsubscribe (secondary m,
+       `delete.svg` left) with a JSON data attribute holding the token, object id, name, type, email, the
+       confirmation title and the two texts (D3).
   4. Without subscriptions: `.hdx-v2-dashboard-empty` (D10).
   5. Own page with subscriptions: the drawers snippet.
-- **New `c-dataset-card` params** (D4):
+- **`c-dataset-card` changes** (D4):
   - `meta_items` {list}: `label`, `value`, optional `tooltip` {text, id, aria_label} and `chip`
     {text, color}, as in `c-page-header`. It renders a `<dl>` below the title, in the left column
     (D25, D26).
-  - `title_action` {dict}: `button.html` params, rendered right of the title.
+  - `caller()`: a blank block renders no actions row.
 - **Spacing (tokens):**
   - list: `c-dataset-card-list` as is (`gap: var(--hdx-space-4)`) plus a list reset (D23);
-  - title row → meta row: `var(--hdx-space-5)`;
+  - title → meta row: `var(--hdx-space-5)`;
   - meta columns: `gap: var(--hdx-space-5)`;
   - label → value: `var(--hdx-space-2)`;
   - meta text: `.hdx-body-s-semibold()` label / `.hdx-body-s()` value, neutral-85 (D12).
@@ -240,7 +241,7 @@ dashboard shell, and Unsubscribe opens the 051 unsubscribe drawer on the same pa
 
 - **Hub JS** (`notifications-settings.js`):
   - **Open:** a click on an Unsubscribe trigger keeps its data, sets the drawer's
-    `.c-drawer-form__text` and the Unsubscribed drawer's `c-alert` message, and hides a previous error.
+    title and `.c-drawer-form__text` and the Unsubscribed drawer's `c-alert` message, and hides a previous error.
     It then opens `notificationsUnsubscribeDrawer` and fires the `'show popup'` event (D13).
   - **Confirm:** a click on `#notificationsUnsubscribeButton` calls `onUnsubscribeSubmit` with the kept
     data and the button's `data-is-authenticated`.
@@ -255,7 +256,7 @@ dashboard shell, and Unsubscribe opens the 051 unsubscribe drawer on the same pa
   - the anonymous redirect, the list action, its auth and order;
   - the unsubscribe endpoint, the delete action and the Novu removal;
   - CSRF;
-  - the 051 drawer texts, buttons and error handling;
+  - the 051 drawer success text, buttons and error handling;
   - the object-page and email-link flows;
   - both analytics events and `cameFrom`.
 
@@ -270,7 +271,7 @@ dashboard shell, and Unsubscribe opens the 051 unsubscribe drawer on the same pa
 | Sysadmin on another user's page | Profile header, read-only list, no drawers or JS (D8) |
 | Deleted user | 404 for non-sysadmins; a sysadmin sees the profile header's "Deleted" label (D15) |
 | Several subscriptions | One pair of drawers; each trigger refills them before opening |
-| `modals.html` refactor | Same rendered output on dataset, org, location and crisis pages; verify by diffing the rendered drawers before/after |
+| `modals.html` refactor | Same rendered output on dataset, org, location and crisis pages apart from the D3 title and text; verify by diffing the rendered drawers before/after |
 | Long titles | Card title 2-line clamp (D4) |
 
 ---
@@ -278,9 +279,9 @@ dashboard shell, and Unsubscribe opens the 051 unsubscribe drawer on the same pa
 ## 7. Responsive Behavior & Accessibility
 
 - **XL (≥ 80rem):** sticky 25% menu on the left (072). Cards at full content width (D14). Meta in 3 equal
-  columns. Unsubscribe beside the title.
+  columns. Unsubscribe bottom right, below the meta.
 - **MD:** no menu (the header user menu navigates). Meta in 3 columns (D17).
-- **SM:** meta stacked (D17). Unsubscribe wraps under the title (D16).
+- **SM:** meta stacked (D17). Unsubscribe bottom right, below the meta (D16).
 - **Drawer:** `c-drawer` widths 100% SM / 80% MD / 50% XL, unchanged.
 - **Accessibility:**
   - One `<h1>`: the page title on your own page, the profile header's title on another user's.
@@ -298,8 +299,8 @@ dashboard shell, and Unsubscribe opens the 051 unsubscribe drawer on the same pa
 |---|---|
 | D1 Drawer flow | Same-page drawer, reversing 051 D7 for the hub. Reuse 051's Unsubscribe + Unsubscribed drawers via a shared `notification_platform/unsubscribe_drawers.html` (included by `modals.html`). A new `notifications-settings.js` fills and opens them; `onUnsubscribeSubmit` posts unchanged. |
 | D2 After success | The Unsubscribed drawer shows; closing it reloads the page. |
-| D3 Drawer content | 051 as-is: "Unsubscribe", the type-specific confirmation text, Cancel / Unsubscribe; no object-name line. The texts follow the clicked card's type, from the same constants as object pages. |
-| D4 Card | Extend `c-dataset-card` with `meta_items` (c-page-header item shape) and a title-row action. The title keeps the card's 16/18px 2-line clamp. |
+| D3 Drawer content | 051's drawer, Cancel / Unsubscribe. The title names the type, the text names the object: "Unsubscribe from this {dataset \| organisation \| location \| crisis}?" + "Please confirm that you want to unsubscribe from email notifications for updates to {title} on HDX." (dataset) or "…when datasets are added to {title} on HDX." The texts follow the clicked card, from the same constants as object pages, which pass `object_title` to `modals.html`. |
+| D4 Card | Extend `c-dataset-card` with `meta_items` (c-page-header item shape). Unsubscribe is a secondary m button in the card's `caller()` actions row, bottom right; a blank block renders no row. The title keeps the card's 16/18px 2-line clamp. |
 | D5 Title | v1's "{Type}: {title}" link; no type chip. |
 | D6 Label | "Notifications Settings" in `h.hdx_get_user_dashboard_nav_sections()`: both menus, breadcrumb, page title and `<title>`. |
 | D7 Subtitle | Figma's: "Set how often you receive email notifications, or unsubscribe entirely". |
@@ -311,13 +312,13 @@ dashboard shell, and Unsubscribe opens the 051 unsubscribe drawer on the same pa
 | D13 Analytics | Both events identical to the object pages': object id and `name`, popupSource `null`, hashed email on confirm. `analytics_came_from` kept. |
 | D14 Widths | The card list is 100% of the content column at every width. |
 | D15 View data | `notifications()` takes `user_dict` and `is_myself` from HDX `_extra_template_variables()` (bare `user_show`, deleted user 404 for non-sysadmins); `include_num_followers` is dropped. |
-| D16 SM action | At SM, Unsubscribe wraps under a full-width title. |
+| D16 SM action | At SM, as at MD+, Unsubscribe sits bottom right, below the stacked meta. |
 | D17 Meta layout | 3 equal columns at MD+, stacked at SM. |
 | D18 Button name | Each Unsubscribe has `aria-label` "Unsubscribe from {Type}: {title}". |
 | D19 Update type | v1's mapping. `dataset-updated` is one value with a line break between "New dataset is added" and "Any dataset is updated". |
 | D20 Missing token | A subscription without an active token gets no Unsubscribe; the card still renders. |
 | D21 Type label | "Organisation", the v2 spelling: an explicit type → label map (Dataset / Organisation / Location / Crisis) replaces `capitalize`. |
-| D22 Tests and demo | Extend `USERS/tests/test_notification_platform/test_notification_platform.py`: own GET 200 with the token, another user 403, a sysadmin on another user 200 without Unsubscribe, anonymous → login, a `NotAuthorized` object dropped. `components.html` gets a `c-dataset-card` demo with `meta_items` + a title action. |
+| D22 Tests and demo | Extend `USERS/tests/test_notification_platform/test_notification_platform.py`: own GET 200 with the token, another user 403, a sysadmin on another user 200 without Unsubscribe, anonymous → login, a `NotAuthorized` object dropped. `components.html` gets a `c-dataset-card` demo with `meta_items` + an actions-row button. |
 | D23 List | `<ul class="c-dataset-card-list">`, the component's own wrapper: 16px gap, as on My Datasets, not Figma's 24px. The wrapper gets `list-style: none` and zero margin and padding. |
 | D24 util.js | Loaded explicitly in the template before the page bundle, which declares no preload. |
 | D25 Meta markup | A `<dl>`: one `<div>` per item, with `<dt>` for the label (+ info-icon) and `<dd>` for the value (+ chip). |
@@ -330,11 +331,13 @@ dashboard shell, and Unsubscribe opens the 051 unsubscribe drawer on the same pa
 | File | Change |
 |---|---|
 | `THEME/templates/user/notifications.html` | Rewritten: dashboard base, profile header, header, card list, empty state, drawers (D1–D10) |
-| `THEME/templates/notification_platform/unsubscribe_drawers.html` | New: the two 051 unsubscribe drawers (D1) |
-| `THEME/templates/notification_platform/modals.html` | Includes the new snippet; output unchanged (D1) |
-| `THEME/templates/v2/components/dataset-card.html` | `meta_items` + title-row action params, header comment (D4) |
-| `THEME/templates/v2/components.html` | Card demo: `meta_items` + title action (D22) |
-| `THEME/hdx-styles/src/common/less/v2/components/dataset-card.less` | Title row and meta row (D4, D12, D16, D17, D26); list reset (D23) |
+| `THEME/templates/notification_platform/unsubscribe_drawers.html` | New: the two 051 unsubscribe drawers, `confirmation_title` param (D1, D3) |
+| `THEME/templates/notification_platform/modals.html` | Includes the new snippet; `object_title` param for the typed title and text (D1, D3) |
+| `modals.html` callers | Pass `object_title` (D3) |
+| `THEME/helpers/ui_constants/notification_platform/__init__.py` | Typed confirmation titles; confirmation texts take the object title (D3) |
+| `THEME/templates/v2/components/dataset-card.html` | `meta_items` param, no actions row for a blank `caller()`, header comment (D4) |
+| `THEME/templates/v2/components.html` | Card demo: `meta_items` + actions row (D22) |
+| `THEME/hdx-styles/src/common/less/v2/components/dataset-card.less` | Meta row (D4, D12, D17, D26); list reset (D23) |
 | `THEME/fanstatic/v2/pages/notifications-settings.js` | New: fill/open, confirm, reload (D1, D2, D13) |
 | `THEME/fanstatic/webassets.yml` | Page script bundle (D24) |
 | `USERS/views/user.py` | `notifications()`: `NotAuthorized` skip, `_extra_template_variables()`, own-page token lookup (D8, D11, D15) |

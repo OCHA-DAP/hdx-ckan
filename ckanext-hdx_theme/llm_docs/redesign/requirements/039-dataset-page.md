@@ -400,6 +400,7 @@ No "See more in your dashboard" link — dropped. `fanstatic/v2/pages/dataset.js
     object_type=object_type,
     object_id=object_id,
     object_name=object_name,
+    object_title=pkg.title,
     object_dict=pkg,
     update_frequency=h.hdx_get_frequency_by_value(pkg.data_update_frequency),
     unsubscribe_token=unsubscribe_token,

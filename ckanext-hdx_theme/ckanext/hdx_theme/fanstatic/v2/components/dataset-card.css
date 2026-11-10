@@ -57,8 +57,7 @@
   text-decoration: underline;
   color: var(--hdx-primary-5);
 }
-.c-dataset-card__top,
-.c-dataset-card__title-row {
+.c-dataset-card__top {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -69,16 +68,6 @@
 .c-dataset-card__top .c-dataset-card__org {
   width: auto;
   max-width: 100%;
-}
-.c-dataset-card__title-row .c-dataset-card__title {
-  flex: 1 1 100%;
-  align-self: auto;
-}
-@media (min-width: 48rem) {
-  .c-dataset-card__title-row .c-dataset-card__title {
-    flex: 1;
-    min-width: 0;
-  }
 }
 .c-dataset-card__labels {
   display: flex;
