@@ -9,7 +9,7 @@ Implement the main navigation bar (`hdx-v2-navbar`) in `v2/header.html` and CSS.
 | State | XL (≥80rem) | MD (48–80rem) | SM (<48rem) |
 |-------|-------------|---------------|------------|
 | **Logged Out** | logo + search + nav + login | logo + search + hamburger | logo + search-icon + hamburger |
-| **Logged In** | logo + search + nav + bell + avatar + add-data | logo + bell + add-data + hamburger (search hidden, avatar hidden) | logo + search-icon + bell + hamburger (avatar hidden, add-data hidden; to be replaced with icon) |
+| **Logged In** | logo + search + nav + bell + avatar + add-data | logo + bell + add-data + hamburger (search hidden, avatar hidden) | logo + search-icon + bell + add-data + hamburger (avatar hidden; below 20rem add-data moves to the offcanvas footer) |
 
 ## Key features
 
@@ -34,7 +34,7 @@ navbar__inner (flex, gap: 0, padding: 0 3rem / 0 1rem on SM)
     ├── [if logged in]
     │   ├── bell
     │   ├── avatar (hidden on MD/SM, XL only)
-    │   └── add-data button (no responsive hiding — shown at all sizes)
+    │   └── add-data button (hidden below 20rem — shown in the offcanvas footer instead)
     ├── [if logged out]
     │   └── login button (XL only)
     └── hamburger (hidden on XL, visible on MD/SM)

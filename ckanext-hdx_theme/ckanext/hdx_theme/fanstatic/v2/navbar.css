@@ -191,8 +191,16 @@
   outline-offset: 2px;
 }
 @media (max-width: 80rem) {
-  .hdx-v2-navbar__avatar-trigger {
+  .hdx-v2-navbar__avatar-wrap {
     display: none;
+  }
+}
+.hdx-v2-navbar__add-data {
+  display: none;
+}
+@media (min-width: 20rem) {
+  .hdx-v2-navbar__add-data {
+    display: inline-flex;
   }
 }
 .hdx-v2-navbar__hamburger {
@@ -541,6 +549,11 @@
   margin-top: auto;
   display: flex;
   align-items: flex-start;
+}
+@media (min-width: 20rem) {
+  .hdx-v2-offcanvas__add-data {
+    display: none;
+  }
 }
 .hdx-v2-offcanvas .c-button--secondary {
   border-color: var(--hdx-neutral-2);

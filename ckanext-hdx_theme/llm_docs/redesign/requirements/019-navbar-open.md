@@ -21,6 +21,7 @@ Implement the full-height sliding panel that appears when the hamburger is tappe
 - Products sub-items: `padding-left: 1rem`, `font-size: 0.875rem`, `color: #3f4748`
 - User row (logged in): avatar + display name at top, chevron-right; tapping enters second level
 - Login button (logged out): NOT full-width, `width: auto`, bottom of panel
+- Add data button (logged in, below 20rem only): same footer slot; tapping it also closes the panel (`data-hdx-v2-close="offcanvas"`)
 - Slide animation: `transform: translateY` from above viewport; `transition: 0.25s ease`
 
 ## What to create

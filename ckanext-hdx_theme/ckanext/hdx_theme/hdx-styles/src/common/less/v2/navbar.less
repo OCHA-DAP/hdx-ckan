@@ -19,6 +19,7 @@
 
 @hdx-top-bar-h: 2.125rem;
 @hdx-navbar-h:  4rem;
+@hdx-navbar-add-data-bp: 20rem;
 
 // ── Dropdown panel shared values ──────────────────────────────
 // Inlined where used; defined here as a reference comment.
@@ -224,8 +225,16 @@
         border-radius: 100px;
 
         &:focus-visible { .hdx-focus-ring-inverse(); }
+    }
 
-        @media (max-width: (@hdx-bp-xl)) { display: none; }  // MD/SM → offcanvas
+    &__avatar-wrap {
+        @media (max-width: (@hdx-bp-xl)) { display: none; }
+    }
+
+    &__add-data {
+        display: none;
+
+        @media (min-width: @hdx-navbar-add-data-bp) { display: inline-flex; }
     }
 
     // ── Hamburger ───────────────────────────────────────────
@@ -647,6 +656,10 @@
         margin-top:  auto;
         display:     flex;
         align-items: flex-start;
+    }
+
+    &__add-data {
+        @media (min-width: @hdx-navbar-add-data-bp) { display: none; }
     }
 
     // Override c-button--secondary and primary for dark background
