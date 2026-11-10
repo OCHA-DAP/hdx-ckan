@@ -123,3 +123,21 @@ class TestPasswordReset(hdx_test_base.HdxBaseTest):
         reset_page_url = url_for('hdx_user.perform_reset', id=user.id, key=expired_key)
         response = self.app.get(reset_page_url)
         assert 'has expired' in response.body
+
+    @mock.patch('ckanext.hdx_users.helpers.tokens.send_validation_email', return_value=True)
+    @mock.patch('ckanext.hdx_users.helpers.helpers.validate_captcha', return_value=True)
+    def test_request_reset_resends_validation_email_when_not_validated(self, mocked_validate_captcha,
+                                                                        mocked_send_validation_email):
+        email = 'reset_not_validated_user@hdx.hdxtest.org'
+        user_dict = factories.User(name='reset_not_validated_user', fullname='Reset Not Validated', email=email)
+        _get_action('token_create')({'model': model, 'session': model.Session, 'ignore_auth': True}, user_dict)
+
+        response = self.app.post(url_for('hdx_user.request_reset'),
+                                 data={'user': email, 'g-recaptcha-response': 'test-captcha'})
+
+        assert response.status_code == 200
+        assert '"success": true' in response.body
+        args = mocked_send_validation_email.call_args[0]
+        assert args[0]['fullname'] == 'Reset Not Validated'
+        assert args[3] == 'email/content/onboarding/email_confirmation.html'
+        assert '/signup/validate-account/' in args[4]
