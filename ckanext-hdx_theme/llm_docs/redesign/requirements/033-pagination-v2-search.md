@@ -108,7 +108,7 @@ search/search.html
 Parameters:
 | Param | Type | Default | Notes |
 |---|---|---|---|
-| `size` | string | `'md'` | `'md'` (38px) or `'sm'` (28px) |
+| `size` | string | `'md'` | `'md'` (min 38px) or `'sm'` (min 28px) |
 | `current_page` | int | 1 | From `my_c.page.page` |
 | `total_pages` | int | 1 | From `my_c.page.page_count` |
 | `base_url` | string | `'?'` | **Page number is appended directly.** Must include all other params. |
@@ -130,7 +130,7 @@ Parameters:
 |---|---|---|---|---|
 | Default page | `var(--hdx-neutral-0)` #fff | `1px solid var(--hdx-neutral-2)` #d8e0e1 | `var(--hdx-neutral-8)` #3f4748 | 400 |
 | Active page | `var(--hdx-neutral-0)` #fff | `1px solid var(--hdx-neutral-2)` #d8e0e1 | `var(--hdx-neutral-95)` #101212 | **500** |
-| Prev / Next | `var(--hdx-neutral-0)` #fff | `1px solid var(--hdx-neutral-2)` #d8e0e1 | `var(--hdx-neutral-95)` #101212 | 400 |
+| Prev / Next | `var(--hdx-neutral-0)` #fff | `1px solid var(--hdx-neutral-2)` #d8e0e1 | `var(--hdx-neutral-5)` #9db1b3 | 400 |
 | Ellipsis | `var(--hdx-neutral-0)` #fff | `1px solid var(--hdx-neutral-2)` #d8e0e1 | `var(--hdx-neutral-8)` #3f4748 | 400 |
 | Disabled (prev on p.1, next on last) | Same | Same | `var(--hdx-neutral-3)` #c4d0d1, `cursor: not-allowed` | 400 |
 
@@ -141,12 +141,12 @@ Transition: `background-color 0.15s ease, color 0.15s ease` on all items.
 Hover: CSS `:hover` pseudo-class only — no JS toggled state classes.
 
 Cell dimensions:
-- MD: 2.375rem × height-by-content (padding 4px 12px for pages; 4px 6px for prev/next)
-- SM: 1.75rem × height-by-content (padding 2px 12px / 2px 6px)
+- MD: min 2.375rem × height-by-content (padding 4px 12px for pages; 4px 6px for prev/next)
+- SM: min 1.75rem × height-by-content (padding 2px 12px / 2px 6px)
 
 ### Ellipsis logic
 
-Window = 2. Pages shown: always page 1, always last page, and the ±2 range around current. Ellipsis appears where there is a gap of ≥ 2 pages. Example for page 8 of 20:
+Window = 2. Pages shown: always page 1, always last page, and the ±2 range around current. Ellipsis takes the place of the first page outside the window on each side, so even one skipped page shows as `…`. Below `@hdx-bp-md` a fixed 5-slot set shows instead (`--md-up` / `--sm-only` modifiers): `1 2 3 … N` on pages 1–3, `1 … c … N` mid-range, `1 … N−2 N−1 N` on the last 3, the MD set when N ≤ 5. Example for page 8 of 20:
 
 ```
 [‹] [1] […] [6] [7] [8*] [9] [10] […] [20] [›]
@@ -167,7 +167,7 @@ Pagination is centered below the card list with a ~2rem (`var(--hdx-space-8)`, 3
 | Active | `<li class="page-item active">` | `.c-pagination__item--active` + darker text |
 | Prev/Next | `<li>` wrapping `<a>` with `«`/`»` text | `<a>` with embedded SVG chevron |
 | Ellipsis | `<li class="disabled"><a>...</a>` | `<span class="c-pagination__item--ellipsis" aria-hidden="true">…</span>` |
-| Disabled state | Bootstrap `disabled` class | `.is-disabled` + `aria-disabled="true"` + `tabindex="-1"` |
+| Disabled state | Bootstrap `disabled` class | `<span>` with `.is-disabled` + `aria-hidden="true"`, no `href` |
 | Styling | Bootstrap `pagination`, `page-item`, `page-link` | Design tokens only, no Bootstrap |
 
 ---
@@ -217,7 +217,7 @@ With:
 ```jinja2
 {% block page_pagination %}
   {% if v2 %}
-    {% set base_url = my_c.page._url_generator(page='') %}
+    {% set base_url = my_c.page._url_generator(page='').split('#')[0] %}
     <div class="hdx-v2-pagination-row">
       {% snippet 'v2/components/pagination.html',
           size='md',
@@ -231,11 +231,11 @@ With:
 {% endblock %}
 ```
 
-`my_c.page._url_generator` is the HDX `pager_url` closure from `SearchLogic._get_pager_function()`. Calling it with `page=''` invokes `_params_nopage()` (which reads all current request args, excluding `page` and `_show_filters`) and returns a URL ending in `page=`. The v2 component then appends each page number directly.
+`my_c.page._url_generator` is the HDX `pager_url` closure from `SearchLogic._get_pager_function()`. Calling it with `page=''` invokes `_params_nopage()` (which reads all current request args, excluding `page` and `_show_filters`) and returns a URL ending in `page=`; `.split('#')[0]` drops any `#fragment` (the org page's `#datasets-section`). The v2 component then appends each page number directly.
 
 The single-page suppression guard (`total_pages > 1`) lives inside `v2/components/pagination.html` — the component renders nothing when `total_pages <= 1`. This keeps the caller simple and makes the behavior consistent for all future uses of the component.
 
-### 3. LESS — pagination row wrapper
+### 2. LESS — pagination row wrapper
 
 **File:** `ckanext-hdx_theme/ckanext/hdx_theme/hdx-styles/src/common/less/v2/pages/search.less`
 
@@ -245,6 +245,7 @@ Add after the dataset list section:
     display:         flex;
     justify-content: center;
     margin-top:      var(--hdx-space-8);   // 32px — matches Figma ~2rem gap
+    margin-bottom:   var(--hdx-space-10);
 }
 ```
 

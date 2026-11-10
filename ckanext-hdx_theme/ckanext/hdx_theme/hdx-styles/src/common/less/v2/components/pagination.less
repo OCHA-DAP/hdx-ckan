@@ -65,11 +65,21 @@
             color:  var(--hdx-neutral-3);  // #c4d0d1
             cursor: not-allowed;
         }
+
+        &--md-up {
+            display: none;
+
+            @media (min-width: @hdx-bp-md) { display: flex; }
+        }
+
+        &--sm-only {
+            @media (min-width: @hdx-bp-md) { display: none; }
+        }
     }
 
     // ── Size: MD (38 px cells) ───────────────────────────────
     &--size-md &__item {
-        width:     2.375rem;  // 38 px — Figma spec, between space-8 (32px) and space-10 (40px)
+        min-width: 2.375rem;  // 38 px — Figma spec, between space-8 (32px) and space-10 (40px)
         font-size: var(--hdx-fs-s); // 14 px
 
         &--prev,
@@ -82,7 +92,7 @@
 
     // ── Size: SM (28 px cells) ───────────────────────────────
     &--size-sm &__item {
-        width:     1.75rem;   // 28 px — Figma spec, between space-6 (24px) and space-8 (32px)
+        min-width: 1.75rem;   // 28 px — Figma spec, between space-6 (24px) and space-8 (32px)
         font-size: var(--hdx-fs-xs); // 12 px
 
         &--prev,
@@ -94,6 +104,6 @@
     }
 
     // Chevron icon inside prev/next
-    &--size-md &__item img { width: var(--hdx-space-6); }   // 24 px
-    &--size-sm &__item img { width: var(--hdx-space-4); }   // 16 px
+    &--size-md &__item svg { .hdx-icon-size(var(--hdx-space-6)); }   // 24 px
+    &--size-sm &__item svg { .hdx-icon-size(var(--hdx-space-4)); }   // 16 px
 }

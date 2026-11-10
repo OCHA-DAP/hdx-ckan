@@ -299,8 +299,9 @@
   justify-content: center;
   cursor: pointer;
 }
-.c-dropdown-calendar__nav-btn img {
+.c-dropdown-calendar__nav-btn svg {
   width: 1.25rem;
+  height: 1.25rem;
 }
 .c-dropdown-calendar__nav-btn:hover {
   background-color: var(--hdx-neutral-01);

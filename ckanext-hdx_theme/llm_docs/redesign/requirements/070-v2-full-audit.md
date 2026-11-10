@@ -54,8 +54,8 @@ appears 4 times in `navbar` (×3) and `top-bar`.
 `--hdx-space-5`, `--hdx-space-6`, `1rem`, `1.25rem`, `1.5rem`, `0.9375rem`, `100%`), so this is a
 **shape** dedupe, not a value dedupe.
 
-**Proposed fix.** `.hdx-icon-size(@size)` emitting width/height/`display: block`, called with the
-existing per-site value. Note the by-product: it makes the divergent sizes visible in one grep,
+**Proposed fix.** `.hdx-icon-size(@w, @h: @w)` emitting width/height (each site keeps its own
+`display` / `flex-shrink` lines), called with the existing per-site value. Note the by-product: it makes the divergent sizes visible in one grep,
 which may be worth reviewing separately.
 
 ### A4 — `nav-controls.less` ships four times
@@ -305,7 +305,7 @@ remains `CONVENTIONS.md` plus `.claude/skills/hdx-v2-styles/references/conventio
 | Scope | Every code-level fix below (§1, §2, most of §3, §5) was decided in this pass and implemented in a follow-up pass. Documentation-only corrections (doc-accuracy fixes, catalog/convention additions) were applied directly in this pass. | Matches how prior docs (061, 065, 067) were finalized before implementation |
 | A1 | Apply the proposed fix: `.hdx-line-clamp(@lines)` / `.hdx-line-clamp-off()` in `mixins.less`, migrate all 11 sites. | Landed |
 | A2 | Apply the proposed fix: `.hdx-focus-ring()` / `.hdx-focus-ring-inverse()` in `mixins.less`. | Landed |
-| A3 | Apply the proposed fix: `.hdx-icon-size(@size)` mixin, called with each site's existing value. | Landed |
+| A3 | Apply the proposed fix: `.hdx-icon-size(@w, @h: @w)` mixin, called with each site's existing value. | Landed |
 | A4 | Apply the proposed fix: ship `nav-controls.css` once via `v2-page-styles`, drop the four page-bundle `@import`s. | Landed |
 | A5 | Route `organization/index.html` through `v2/search-nav-controls.html` instead of hand-rolled markup. | Landed |
 | A6 | Promote `FocusTrap` to `window.hdxV2.FocusTrap` in `utils.js`; replace the "copy the class" instruction in `conventions.md` and the skill. | Landed |

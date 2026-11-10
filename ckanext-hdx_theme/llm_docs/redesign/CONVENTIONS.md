@@ -315,7 +315,7 @@ Dropdowns (non-modal): move focus to first item on keyboard-triggered open; retu
 
 ### SVG icons
 
-`h.hdx_v2_icon` renders every icon with `aria-hidden="true" focusable="false"`. Icon-only interactive elements require an `aria-label` on the parent `<button>` or `<a>`.
+`h.hdx_v2_icon` renders every icon with `aria-hidden="true" focusable="false"`. Icon-only interactive elements require an `aria-label` on the parent `<button>` or `<a>`. The svg has no width/height, so every icon gets an explicit size in its component LESS (`svg { .hdx-icon-size(…) }`, `mixins.less`): WebKit (every iPhone browser) renders an unsized SVG inside a flex box at 0×0.
 
 ```html
 <!-- decorative icon inside labeled button -->
