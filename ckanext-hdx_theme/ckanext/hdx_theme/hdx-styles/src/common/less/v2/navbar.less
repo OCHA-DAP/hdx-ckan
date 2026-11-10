@@ -19,7 +19,6 @@
 
 @hdx-top-bar-h: 2.125rem;
 @hdx-navbar-h:  4rem;
-@hdx-navbar-add-data-bp: 20rem;
 
 // ── Dropdown panel shared values ──────────────────────────────
 // Inlined where used; defined here as a reference comment.
@@ -234,7 +233,7 @@
     &__add-data {
         display: none;
 
-        @media (min-width: @hdx-navbar-add-data-bp) { display: inline-flex; }
+        @media (min-width: @hdx-bp-sm) { display: inline-flex; }
     }
 
     // ── Hamburger ───────────────────────────────────────────
@@ -659,7 +658,7 @@
     }
 
     &__add-data {
-        @media (min-width: @hdx-navbar-add-data-bp) { display: none; }
+        @media (min-width: @hdx-bp-sm) { display: none; }
     }
 
     // Override c-button--secondary and primary for dark background

@@ -67,6 +67,6 @@ v2-page-styles:
 - Search icon button lives inside `__actions` (not between search and nav), so it is right-aligned with the bell and hamburger on SM
 - Search icon styled identically to bell: 2.125rem × 2.125rem, border-radius: 2px, transparent background, same hover/focus styles
 - Search icon hidden on MD and above via a custom LESS media query, not a Bootstrap utility
-- Avatar hidden on MD/SM (to be moved to hamburger dropdown in task 019)
+- Avatar hidden on MD/SM (its menu lives in the offcanvas)
 - Search form hidden on SM, search icon button shown instead
 

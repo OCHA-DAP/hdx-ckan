@@ -97,6 +97,7 @@ Defined **once** in `breakpoints.less`; pulled in automatically via `mixins.less
 
 | Variable | Value | px |
 |----------|-------|----|
+| `@hdx-bp-sm` | `20rem` | 320px |
 | `@hdx-bp-md` | `48rem` | 768px |
 | `@hdx-bp-xl` | `80rem` | 1280px |
 | `@hdx-bp-xxl` | `87.5rem` | 1400px |
