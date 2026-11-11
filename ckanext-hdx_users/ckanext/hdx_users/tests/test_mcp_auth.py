@@ -175,7 +175,11 @@ class TestMcpAuth:
             'sub': signed_in_user['id'],
             'email': USER_EMAIL,
             'name': USER_FULLNAME,
-            'custom_attributes': {'email': USER_EMAIL, 'email_hash': hashlib.md5(USER_EMAIL.encode()).hexdigest()},
+            'custom_attributes': {
+                'hdx_name': USER_FULLNAME,
+                'hdx_email': USER_EMAIL,
+                'hdx_email_hash': hashlib.md5(USER_EMAIL.encode()).hexdigest(),
+            },
         }
         assert token_kwargs['allow_redirects'] is False and user_kwargs['allow_redirects'] is False
 

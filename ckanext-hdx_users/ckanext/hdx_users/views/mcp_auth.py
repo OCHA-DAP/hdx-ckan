@@ -83,10 +83,15 @@ def confirm():
         'sub': user.id,
         'email': user.email,
         'name': user.display_name,
-        # mcp-hdx reads `email` and `email_hash` from the access token (logging, Mixpanel). The top-level
-        # `email` doesn't reach the token, so both go in as custom attributes. `email_hash` is CKAN's
-        # (md5 of the lower-cased email), the same value user_show returns.
-        'custom_attributes': {'email': user.email, 'email_hash': user.email_hash},
+        # mcp-hdx needs the user's details in the access token (logging, Mixpanel). Scalekit copies custom
+        # attributes into the token under `custom_claims`, but drops one named `email`, so they all use an
+        # `hdx_` prefix. `hdx_email_hash` is CKAN's (md5 of the lower-cased email), the same value
+        # user_show returns.
+        'custom_attributes': {
+            'hdx_name': user.display_name,
+            'hdx_email': user.email,
+            'hdx_email_hash': user.email_hash,
+        },
     }
     try:
         result = scalekit.submit_user(lri, payload)
