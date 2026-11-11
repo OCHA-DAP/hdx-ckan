@@ -1,0 +1,76 @@
+{#
+  MCP connect confirmation page (v2, pilot). Shown after the HDX login when an MCP client
+  (Claude, MCP Inspector...) asks to sign in through Scalekit. Same auth-card shell as
+  user/perform_reset.html. No Cancel button: closing the window cancels.
+  View: hdx_mcp_auth.confirm — ckanext-hdx_users/ckanext/hdx_users/views/mcp_auth.py
+#}
+{% extends "v2/page.html" %}
+
+{% set quick_links = [] %}
+
+{% block subtitle %}{{ _('Connect your AI assistant') }}{% endblock %}
+
+{% block styles %}
+  {{ super() }}
+  {% asset 'hdx_theme/v2-auth-page-styles' %}
+{% endblock %}
+
+{% block header %}
+  {% snippet 'v2/header.html', minimal=True %}
+{% endblock %}
+
+{% block toolbar %}{% endblock %}
+
+{% block main_content %}
+<div class="hdx-v2-auth-page">
+  <div class="hdx-v2-auth-card">
+
+    <div class="hdx-v2-auth-card__header">
+      <h1 class="hdx-v2-auth-card__title">{{ _('Connect HDX to your AI assistant') }}</h1>
+    </div>
+
+    <p class="hdx-v2-auth-card__body-text">
+      {{ _('Continue as') }} <strong>{{ user_display_name }}</strong>?
+    </p>
+    <p class="hdx-v2-auth-card__body-text">
+      {{ _('Your AI assistant will then ask you to approve the connection. To cancel, close this window.') }}
+    </p>
+
+    <form id="mcp-confirm-form" class="hdx-v2-auth-card__form" method="post"
+          action="{{ h.url_for('hdx_mcp_auth.confirm') }}">
+      {{ h.csrf_input() }}
+      <input type="hidden" name="login_request_id" value="{{ login_request_id }}">
+      <input type="hidden" name="state" value="{{ state }}">
+
+      <div class="hdx-v2-auth-card__submit-row">
+        {% snippet 'v2/components/button.html',
+            label=_('Continue'), style='primary', size='l',
+            button_type='submit', id='mcp-confirm-submit' %}
+      </div>
+    </form>
+    <script>
+      {# Submit once: Scalekit may reject a second POST for the same login request, and the browser would show that error #}
+      document.getElementById('mcp-confirm-form').addEventListener('submit', function (e) {
+        if (this.dataset.submitted) { e.preventDefault(); return; }
+        this.dataset.submitted = 'true';
+        document.getElementById('mcp-confirm-submit').disabled = true;
+      });
+    </script>
+
+    <div class="hdx-v2-auth-card__footer">
+      {{ _('Not you?') }}
+      {% snippet 'v2/components/text-link.html',
+          label=_('Log out'), href=h.url_for('user.logout'),
+          style='primary', size='s' %}
+      {{ _('and start again from your AI assistant.') }}
+    </div>
+
+  </div>
+</div>
+{% endblock %}
+
+{% block footer %}{% endblock %}
+
+{% block mixpanel_init %}{% endblock %}
+{% block google_analytics_init %}{% endblock %}
+{% block hotjar_init %}{% endblock %}

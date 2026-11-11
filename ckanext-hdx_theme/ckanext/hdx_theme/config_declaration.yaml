@@ -453,6 +453,30 @@ groups:
         example: "https://docs.google.com/spreadsheets/d/e/2PACX-123456/pub?gid=1&single=true&output=csv"
         description: "URL to a CSV file of approved tags. Must have one column: 'approved tags'"
 
+  - annotation: HDX MCP auth (Scalekit Bring Your Own Auth, pilot)
+    options:
+      - key: hdx.mcp_auth.enabled
+        type: bool
+        default: false
+        example: true
+        description: "Enables /user/mcp-login and /user/mcp-confirm, which let MCP clients sign in with an HDX account through Scalekit. When false, both routes return 404."
+      - key: hdx.mcp_auth.scalekit_env_url
+        default: https://hdx.scalekit.com
+        example: https://hdx.scalekit.com
+        description: "Scalekit environment URL."
+      - key: hdx.mcp_auth.scalekit_client_id
+        default:
+        example: skc_123456789
+        description: "Scalekit API client ID, used to get a client_credentials token."
+      - key: hdx.mcp_auth.scalekit_client_secret
+        default:
+        example: not-a-real-secret
+        description: "Scalekit API client secret. Set it from the environment's secrets; never commit it."
+      - key: hdx.mcp_auth.scalekit_connection_id
+        default:
+        example: conn_123456789
+        description: "Scalekit connection ID of the HDX MCP server (MCP Servers > HDX MCP > Configuration > Advanced Configuration)."
+
   - annotation: HDX Signals
     options:
       - key: hdx.signals.csv
