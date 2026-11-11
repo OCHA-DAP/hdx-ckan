@@ -10,6 +10,7 @@ CKAN exempts API-token requests from Flask-WTF's global CSRF check, but the conf
 token itself. So each POST first loads the confirm page with the same client (which keeps the session
 cookie) and sends back the CSRF token from the form.
 '''
+import hashlib
 import json
 import re
 from urllib.parse import parse_qs, urlparse
@@ -143,6 +144,10 @@ class TestMcpAuth:
         assert USER_FULLNAME in res.body
         assert f'name="login_request_id" value="{LRI}"' in res.body
         assert f'name="state" value="{STATE}"' in res.body
+        # The last referrer policy wins, and base.html sets "always": login_request_id and state
+        # must not leak to other sites (Google Fonts, analytics)
+        policies = re.findall(r'<meta name="referrer" content="([^"]+)"', res.body)
+        assert policies[-1] == 'same-origin'
 
     def test_continue_sends_user_to_scalekit_and_redirects_to_callback(self, app: CKANTestApp, signed_in_user):
         user_resp = _fake_response(200, {'auth_request_id': 'req_123'})
@@ -166,7 +171,12 @@ class TestMcpAuth:
         }
         assert user_url == f'{ENV_URL}/api/v1/connections/{CONNECTION_ID}/auth-requests/{LRI}/user'
         assert user_kwargs['headers'] == {'Authorization': 'Bearer m2m-token'}
-        assert user_kwargs['json'] == {'sub': signed_in_user['id'], 'email': USER_EMAIL, 'name': USER_FULLNAME}
+        assert user_kwargs['json'] == {
+            'sub': signed_in_user['id'],
+            'email': USER_EMAIL,
+            'name': USER_FULLNAME,
+            'custom_attributes': {'email': USER_EMAIL, 'email_hash': hashlib.md5(USER_EMAIL.encode()).hexdigest()},
+        }
         assert token_kwargs['allow_redirects'] is False and user_kwargs['allow_redirects'] is False
 
     def test_post_without_csrf_token_is_rejected(self, app: CKANTestApp, signed_in_user):
@@ -193,6 +203,7 @@ class TestMcpAuth:
         pytest.param([_token_response(), _fake_response(500)], id='user-details-error'),
         pytest.param([_token_response(), _fake_response(302)], id='user-details-redirect'),
         pytest.param([_token_response(), _fake_response(200, json_body=False)], id='user-details-not-json'),
+        pytest.param([_token_response(), _fake_response(200, {})], id='user-details-no-auth-request-id'),
     ])
     def test_scalekit_failure_shows_error_and_does_not_redirect(self, app: CKANTestApp, signed_in_user,
                                                                  scalekit_responses):

@@ -82,9 +82,9 @@ def submit_user(login_request_id: str, payload: dict[str, Any]) -> dict[str, Any
     )
     result = _post('user-details', url, json=payload, headers={'Authorization': f'Bearer {_m2m_token()}'})
     if not result.get('auth_request_id'):
-        # Scalekit docs say the response carries it. Pilot: only warn until a real
-        # response confirms that (plan L4), then treat a missing ID as a failure.
-        log.warning('Scalekit user-details response has no auth_request_id: lri=%s', login_request_id)
+        # A real success always carries it (confirmed in plan L4), so anything else is a failure
+        log.error('Scalekit user-details response has no auth_request_id: %s', str(result)[:LOG_BODY_CHARS])
+        raise ScalekitError('Scalekit user-details response has no auth_request_id')
     return result
 
 

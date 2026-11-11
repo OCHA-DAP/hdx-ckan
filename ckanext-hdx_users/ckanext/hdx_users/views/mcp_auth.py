@@ -79,7 +79,15 @@ def confirm():
     current_app.extensions['csrf'].protect()
     lri, state = _login_request_params(request.form)
 
-    payload = {'sub': user.id, 'email': user.email, 'name': user.display_name}
+    payload = {
+        'sub': user.id,
+        'email': user.email,
+        'name': user.display_name,
+        # mcp-hdx reads `email` and `email_hash` from the access token (logging, Mixpanel). The top-level
+        # `email` doesn't reach the token, so both go in as custom attributes. `email_hash` is CKAN's
+        # (md5 of the lower-cased email), the same value user_show returns.
+        'custom_attributes': {'email': user.email, 'email_hash': user.email_hash},
+    }
     try:
         result = scalekit.submit_user(lri, payload)
     except Exception:

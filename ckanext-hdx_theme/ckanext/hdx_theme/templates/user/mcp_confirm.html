@@ -6,6 +6,13 @@
 #}
 {% extends "v2/page.html" %}
 
+{% block meta %}
+  {{ super() }}
+  {# Overrides base.html's "always": keeps login_request_id and state away from Google Fonts
+     and analytics, and still sends the Referer the CSRF check needs #}
+  <meta name="referrer" content="same-origin">
+{% endblock %}
+
 {% set quick_links = [] %}
 
 {% block subtitle %}{{ _('Connect your AI assistant') }}{% endblock %}
