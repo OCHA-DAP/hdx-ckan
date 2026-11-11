@@ -16,10 +16,17 @@ import ckan.plugins.toolkit as tk
 log = logging.getLogger(__name__)
 
 TIMEOUT = 10
+# How much of a Scalekit error response goes into the log
+LOG_BODY_CHARS = 300
 
 
 class ScalekitError(Exception):
     pass
+
+
+def _body_for_log(resp: requests.Response) -> str:
+    '''The start of a response body on one line, e.g. Scalekit's "invalid login request Id" message.'''
+    return ' '.join((resp.text or '').split())[:LOG_BODY_CHARS]
 
 
 def _cfg(key: str) -> str:
@@ -40,14 +47,14 @@ def _post(name: str, url: str, **kwargs: Any) -> dict[str, Any]:
     '''
     resp = requests.post(url, timeout=TIMEOUT, allow_redirects=False, **kwargs)
     if not 200 <= resp.status_code < 300:
-        log.error('Scalekit %s request failed: %s', name, resp.status_code)
+        log.error('Scalekit %s request failed: %s %s', name, resp.status_code, _body_for_log(resp))
         raise ScalekitError(f'Scalekit {name} request failed: {resp.status_code}')
     try:
         body = resp.json()
     except ValueError:
         body = None
     if not isinstance(body, dict):
-        log.error('Scalekit %s request returned no JSON object', name)
+        log.error('Scalekit %s request returned no JSON object: %s', name, _body_for_log(resp))
         raise ScalekitError(f'Scalekit {name} request returned no JSON object')
     return body
 

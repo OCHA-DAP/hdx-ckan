@@ -461,8 +461,8 @@ groups:
         example: true
         description: "Enables /user/mcp-login and /user/mcp-confirm, which let MCP clients sign in with an HDX account through Scalekit. When false, both routes return 404."
       - key: hdx.mcp_auth.scalekit_env_url
-        default: https://hdx.scalekit.com
-        example: https://hdx.scalekit.com
+        default: https://hdx.scalekit.dev
+        example: https://hdx.scalekit.dev
         description: "Scalekit environment URL."
       - key: hdx.mcp_auth.scalekit_client_id
         default:

@@ -186,6 +186,13 @@ hdx.notifications.disabled_objects_csv = ${HDX_DISABLED_OBJECTS_CSV}
 # HDX approved tags
 hdx.approved_tags.csv = ${HDX_APPROVED_TAGS_CSV}
 
+# HDX MCP auth (Scalekit Bring Your Own Auth, pilot). Unset variables render empty,
+# and an empty hdx.mcp_auth.enabled means off (404 on /user/mcp-login and /user/mcp-confirm)
+hdx.mcp_auth.enabled = ${HDX_MCP_AUTH_ENABLED}
+hdx.mcp_auth.scalekit_client_id = ${HDX_MCP_AUTH_SCALEKIT_CLIENT_ID}
+hdx.mcp_auth.scalekit_client_secret = ${HDX_MCP_AUTH_SCALEKIT_CLIENT_SECRET}
+hdx.mcp_auth.scalekit_connection_id = ${HDX_MCP_AUTH_SCALEKIT_CONNECTION_ID}
+
 ## Logging configuration
 [loggers]
 keys = root, ckan, ckanext, ckanext.hdx_theme.util.timer

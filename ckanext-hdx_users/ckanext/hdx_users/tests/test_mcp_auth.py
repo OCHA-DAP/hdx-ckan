@@ -10,6 +10,7 @@ CKAN exempts API-token requests from Flask-WTF's global CSRF check, but the conf
 token itself. So each POST first loads the confirm page with the same client (which keeps the session
 cookie) and sends back the CSRF token from the form.
 '''
+import json
 import re
 from urllib.parse import parse_qs, urlparse
 
@@ -44,8 +45,10 @@ def _fake_response(status_code, payload=None, json_body=True):
     resp.status_code = status_code
     if json_body:
         resp.json.return_value = {} if payload is None else payload
+        resp.text = json.dumps(resp.json.return_value)
     else:
         resp.json.side_effect = ValueError('No JSON object could be decoded')
+        resp.text = '<html>\n  <body>Not JSON</body>\n</html>'
     return resp
 
 
@@ -198,6 +201,17 @@ class TestMcpAuth:
         assert res.status_code == 502
         assert 'Location' not in res.headers
         assert len(fake_post.call_args_list) == len(scalekit_responses)
+
+    def test_scalekit_error_message_is_logged(self, app: CKANTestApp, signed_in_user):
+        # The real response Scalekit sends for an unknown login request
+        user_resp = _fake_response(400, {'code': 3, 'message': 'invalid login request Id'})
+        with mock.patch('ckanext.hdx_users.helpers.scalekit.log') as fake_log:
+            res, _ = _continue(app, signed_in_user['headers'], [_token_response(), user_resp])
+
+        assert res.status_code == 502
+        logged = fake_log.error.call_args[0][0] % fake_log.error.call_args[0][1:]
+        assert logged.startswith('Scalekit user-details request failed: 400')
+        assert 'invalid login request Id' in logged
 
     def test_missing_config_shows_error_without_calling_scalekit(self, app: CKANTestApp, signed_in_user,
                                                                   ckan_config, monkeypatch):
