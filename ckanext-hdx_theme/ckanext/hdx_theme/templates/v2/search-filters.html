@@ -6,6 +6,8 @@
   filter dropdowns (Location, Organisation, Format, Topics, Advanced
   filters), plus (when wired) the archived "Show only" toggle. An "Update
   status" dropdown is prepended when facet_list has 'ext_update_status'.
+  A "Sysadmin filters" block (QA filters + Methodology) follows Advanced
+  filters when facet_list has 'qa_only' (SearchLogic sysadmin_filters).
 
   Parameters
   ──────────────────────────────────────────────────────────────────
@@ -134,6 +136,47 @@
       has_clear=adv_selected > 0,
       clear_facet='advanced' %}
 </div>
+
+{# ── Sysadmin filters (QA flags + methodology), only when the search logic returned them ── #}
+{% if 'qa_only' in facet_list %}
+  {% set sysadmin_defs = [
+    {'key': 'qa_only',     'label': 'QA filters',  'placeholder': 'All filters',       'clear_facet': 'qa'},
+    {'key': 'methodology', 'label': 'Methodology', 'placeholder': 'All methodologies', 'clear_facet': 'methodology'},
+  ] %}
+  <div class="hdx-v2-search-filters__sysadmin" role="group" aria-labelledby="hdx-sysadmin-filters-heading">
+    <span class="hdx-v2-search-filters__sysadmin-heading" id="hdx-sysadmin-filters-heading">
+      {{ h.hdx_v2_icon('v2/icons/lock.svg') }}
+      Sysadmin filters
+    </span>
+    {% for filter in sysadmin_defs %}
+      {% set items = facet_list.get(filter.key, {}).get('items', []) %}
+      {% set selected_count = items | selectattr('selected') | list | length %}
+      {% set selected_names = items | selectattr('selected') | map(attribute='display_name') | list %}
+      {% set trigger_text = selected_names | join(', ') if selected_names else filter.placeholder %}
+
+      {% set _ci = namespace(items=[]) %}
+      {% for item in items %}
+        {% if item.count or item.selected %}
+          {% set _attrs = {'data-filter-checkbox': '', 'data-facet': item.category_key, 'name': item.category_key} %}
+          {% set _ci.items = _ci.items + [{'value': item.name, 'label': item.display_name, 'count': '(' ~ item.count ~ ')' if item.count else '(0)', 'checked': item.selected, 'active': item.selected, 'attrs': _attrs}] %}
+        {% endif %}
+      {% endfor %}
+
+      {% snippet 'v2/components/dropdown.html',
+          size='m',
+          label=filter.label,
+          selected=trigger_text,
+          state='filter' if selected_count > 0 else 'enabled',
+          panel_id='hdx-filter-panel-' ~ filter.key,
+          attrs={'data-filter-key': filter.key},
+          items=_ci.items,
+          has_search=items | length > 8,
+          filter_search_key=filter.key,
+          has_clear=selected_count > 0,
+          clear_facet=filter.clear_facet %}
+    {% endfor %}
+  </div>
+{% endif %}
 
 {# ────────────────────────────────────────────────────────────────
    Prior implementation (task 065, D5) — always-expanded chip list,

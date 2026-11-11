@@ -23,6 +23,7 @@
                                 card, below a divider.  default: []
   contact_href        {string}  Link to contact page.  default: '#'
   download_count      {int}     Approx downloads.  default: 0
+  under_review        {bool}    Show "Under review" label, first in the labels row.  default: False
   archived            {bool}    Show "Archived" label.  default: False
   request_only        {bool}    Show "Request only data" label.  default: False
   cod_dataset         {bool}    Show "COD+" label.  default: False
@@ -87,6 +88,7 @@
 {% set header_stats        = header_stats        if header_stats        is defined else [] %}
 {% set contact_href        = contact_href        if contact_href        is defined else '#' %}
 {% set download_count      = download_count      if download_count      is defined else 0 %}
+{% set under_review        = under_review        if under_review        is defined else False %}
 {% set archived            = archived            if archived            is defined else False %}
 {% set request_only        = request_only        if request_only        is defined else False %}
 {% set cod_dataset         = cod_dataset         if cod_dataset         is defined else False %}
@@ -158,8 +160,14 @@
         {% endif %}
 
         {# Labels row #}
-        {% if archived or request_only or cod_dataset or links_list or page_list or (pkg_state and pkg_state.startswith('deleted')) %}
+        {% if under_review or archived or request_only or cod_dataset or links_list or page_list or (pkg_state and pkg_state.startswith('deleted')) %}
         <div class="c-page-header__labels">
+
+          {% if under_review %}
+            {% snippet 'v2/components/label.html',
+                text=_('Under review'), color='yellow', size='s',
+                icon=True, icon_src='v2/icons/eye.svg' %}
+          {% endif %}
 
           {% if pkg_state and pkg_state.startswith('deleted') %}
             {% snippet 'v2/components/label.html', text='Deleted', color='red', size='s' %}

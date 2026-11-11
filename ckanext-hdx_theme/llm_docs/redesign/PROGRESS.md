@@ -155,14 +155,14 @@ Each page below extends `page_light.html`, manually overrides `{% block styles %
 - [x] Text link
 - [x] Breadcrumb
 - [x] Checkbox
-- [x] List item
+- [x] List item — optional leading icon (`icon`/`icon_src`, `--has-icon`)
 - [x] Letter anchor
 - [x] Divider
 - [x] Search + autocomplete
 - [x] File type indicators
 - [x] Tooltips
 - [x] Dataset card (with shared clamped-text.js toggle; optional `labels` top row and `caller()` actions row)
-- [x] Resource card
+- [x] Resource card — optional `caller()` slot at the start of the actions row
 - [x] Showcase card
 - [x] Anchor links — extended with `heading`, `with_mobile_dropdown` params; mobile sticky dropdown (`c-anchor-links-mobile`) styles in `components/anchor-links.less`; wrapper always renders (no heading required for sticky); supports `external` flag for new-tab links with icon; `c-anchor-links--numbered` modifier (via `extra_classes`) prefixes the labels with "1.", "2." …
 - [x] Info icon — `info-icon.html` snippet encapsulating the `c-tooltip-anchor` + `c-info-icon` button + tooltip pattern; HTML-only (no dedicated LESS/CSS)
@@ -172,7 +172,7 @@ Each page below extends `page_light.html`, manually overrides `{% block styles %
 - [x] Signup tier — `signup-tier.html` / `signup-tier.css`; tier selection card for value-proposition page; default and primary (blue) variants; numbered feature badges or checkmark icons
 - [x] Content card — `content-card.html` / `content-card.less`; title + description + `c-text-link`
 - [x] Accordion — `accordion.html` / `accordion.less`; CSS-only `<details>`/`<summary>`; first item open by default via `open` attr
-- [x] Page header — `page-header.html` / `page-header.less`; hero section with logo, title (omitted when empty), optional `title_count` (count badge) or `title_actions` (XL-only text-button row) next to/under the title, optional `state_label_text`/`state_label_color` chip after the title, subtitle, description, optional `avatar` (user profile header), optional CTA button + icon; `__top--no-card` when there's no org card
+- [x] Page header — `page-header.html` / `page-header.less`; hero section with logo, title (omitted when empty), optional `title_count` (count badge) or `title_actions` (XL-only text-button row) next to/under the title, optional `state_label_text`/`state_label_color` chip after the title, optional `under_review` label, subtitle, description, optional `avatar` (user profile header), optional CTA button + icon; `__top--no-card` when there's no org card
 - [x] Signal card — `signal-card.html` / `signal-card.less`; featured signal with location label, date, type label, description/image, source + CTA buttons
 - [x] Notification item — `notification-item.html` / `notification-item.less`; title + optional sysadmin bracket tag + meta row (date + arrow link); `.c-notification-item--sysadmin` highlight modifier
 - [x] Stats card — `stats-card.html` / `stats-card.less`; KPI figure + label card
@@ -224,7 +224,7 @@ Bundle configuration:
 - `hdx_theme/v2-search-page-styles` — search page: adds `v2/pages/search.css`
 - `hdx_theme/v2-search-page-scripts` — search page: adds `jquery.highlight.js` + `highlight.js` + `v2/url-nav.js` + `v2/pages/search.js` (`url-nav.js` is a shared nav-param module)
 - `hdx_theme/v2-dataset-page-styles` — dataset page: adds `v2/pages/dataset.css`
-- `hdx_theme/v2-dataset-page-scripts` — dataset page: adds `v2/pages/dataset.js` (section accordion) + `v2/data-use-survey-drawer.js` (data use survey drawer)
+- `hdx_theme/v2-dataset-page-scripts` — dataset page: adds `v2/pages/dataset.js` (section accordion, sysadmin QA actions) + `v2/data-use-survey-drawer.js` (data use survey drawer)
 - `hdx_theme/v2-quick-edit-scripts` — dataset page: adds `v2/components/quick-edit.js`
 - `hdx_theme/v2-shape-view-scripts` — dataset page, loaded only when the dataset has shapes: preloads `charting-scripts`, adds `v2/pages/shape-view.js`
 - `hdx_theme/v2-resource-page-styles` — resource page: adds `v2/pages/resource.css`

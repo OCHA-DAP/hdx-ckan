@@ -116,6 +116,12 @@ Example:
       {% set _ns.pills = _ns.pills + [{'label': _fi.display_name, 'facet': _fi.get('category_key', 'featured'), 'value': _fi.name}] %}
     {% endif %}
   {% endfor %}
+  {% for _fk in ['qa_only', 'methodology'] %}
+    {% for _fsi in facet_list.get(_fk, {}).get('items', []) | selectattr('selected') %}
+      {% set _ns.total = _ns.total + 1 %}
+      {% set _ns.pills = _ns.pills + [{'label': _fsi.display_name, 'facet': _fsi.category_key, 'value': _fsi.name}] %}
+    {% endfor %}
+  {% endfor %}
   {% set total_selected = _ns.total %}
 
   {% set archived_url_helper = full_facet_info.get('archived_url_helper') %}

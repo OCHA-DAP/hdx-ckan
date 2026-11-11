@@ -33,6 +33,20 @@
 .c-list-item--type-list.is-disabled:hover {
   color: var(--hdx-neutral-5);
 }
+.c-list-item--has-icon {
+  display: flex;
+  align-items: center;
+  gap: var(--hdx-space-2);
+}
+.c-list-item__icon {
+  display: inline-flex;
+  flex-shrink: 0;
+}
+.c-list-item__icon svg {
+  width: var(--hdx-space-4);
+  height: var(--hdx-space-4);
+  display: block;
+}
 .c-list-item--type-checklist {
   display: flex;
   align-items: flex-start;

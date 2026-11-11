@@ -75,6 +75,9 @@
 .hdx-v2-dataset-section__body {
   padding-top: var(--hdx-space-8);
 }
+.hdx-v2-dataset-section__qa-error {
+  margin-bottom: var(--hdx-space-4);
+}
 .hdx-v2-dataset-section--collapsible .hdx-v2-dataset-section__header {
   cursor: pointer;
   user-select: none;

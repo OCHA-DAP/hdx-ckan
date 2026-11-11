@@ -77,6 +77,10 @@
   extra_classes    {string}  Additional CSS classes on the root element.
                              default: ''
 
+  caller()         block     Optional. Rendered at the start of
+                             .c-resource-card__actions, before "More
+                             information"; a blank block renders nothing.
+
   ──────────────────────────────────────────────────────
   Examples
 
@@ -199,6 +203,10 @@
     {% endif %}
 
     <div class="c-resource-card__actions">
+      {% if caller is defined %}
+        {% set leading_actions = caller() %}
+        {% if leading_actions | trim %}{{ leading_actions }}{% endif %}
+      {% endif %}
       {% if show_more_info %}
         {% snippet 'v2/components/button.html',
             style='tertiary', size='m', type='text',

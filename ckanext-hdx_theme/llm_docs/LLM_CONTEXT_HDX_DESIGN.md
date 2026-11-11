@@ -165,6 +165,7 @@ Example page-specific template (light search):
 - **Template**: `ckanext-hdx_theme/ckanext/hdx_theme/templates/search/search.html`
   - Extends `v2/page.html`. Uses `v2=true` gate to switch UI inside shared snippets.
   - Two-column layout: `hdx-v2-search-sidebar` (filter panel) + `hdx-v2-search-content` (results).
+  - Sysadmins: `generic_search` sets `SearchLogic(sysadmin_filters=True)` and includes private datasets; `v2/search-filters.html` adds a "Sysadmin filters" block (QA filters + Methodology checklists) after Advanced filters.
 - **Core assets**: `hdx_theme/v2-search-page-styles`, `hdx_theme/v2-search-page-scripts` (highlight.js + search-page.js). MiniSearch/feature-index libs auto-loaded via `v2-search-scripts` (preloaded by `v2-page-scripts`).
 
 #### Legacy desktop version
@@ -187,7 +188,8 @@ Example page-specific template (light search):
   - Extends `v2/page.html`.
   - Includes `notification_platform/modals.html` (renders subscribe/unsubscribe drawers) and `notification_platform/buttons.html` (via `page-header.html`).
   - Includes `v2/data-use-survey-drawer.html` when the organisation has a `user_survey_url`: a resource card Download click opens the "HDX Data Use Survey" drawer (intro + "Not now" / "Take the survey"; the latter loads the survey iframe) until the survey is completed; while pending it takes precedence over the download-triggered notifications drawer.
-- **Core assets**: `hdx_theme/v2-dataset-page-styles`, `hdx_theme/v2-dataset-page-scripts` (section accordion + `v2/data-use-survey-drawer.js`).
+  - QA: an "Under review" header label for everyone when a resource is under review. Sysadmins (not on HDX Connect or deleted datasets) also get the "Put all resources under review" / "Make all resources public" header action with a confirmation `c-drawer`, and a per-resource "QA actions" `c-dropdown--link` in the resource card's `caller()` slot; both call `hdx_mark_resource_in_quarantine`.
+- **Core assets**: `hdx_theme/v2-dataset-page-styles`, `hdx_theme/v2-dataset-page-scripts` (section accordion + QA actions + `v2/data-use-survey-drawer.js`).
 
 ---
 
