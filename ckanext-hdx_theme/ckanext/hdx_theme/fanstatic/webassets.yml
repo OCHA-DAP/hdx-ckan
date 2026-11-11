@@ -1777,6 +1777,12 @@ v2-perform-reset-page-scripts:
   contents:
     - v2/pages/perform-reset.js
 
+v2-mcp-confirm-page-scripts:
+  <<: *common-js
+  output: ckanext-hdx_theme/%(version)s_v2-mcp-confirm-page-scripts.js
+  contents:
+    - v2/pages/mcp-confirm.js
+
 v2-verify-email-page-scripts:
   <<: *common-js
   output: ckanext-hdx_theme/%(version)s_v2-verify-email-page-scripts.js

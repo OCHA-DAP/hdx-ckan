@@ -38,6 +38,17 @@ def _before_request():
         tk.abort(404)
 
 
+@hdx_mcp_auth.after_request
+def _after_request(response):
+    # One click on the confirm page binds the HDX account to an MCP login, so no site may frame it.
+    # HDX's own X-Frame-Options (hdx_theme http_headers) is skipped when '/view/' appears anywhere in
+    # the URL, query string included. It runs after this hook and may turn DENY into SAMEORIGIN,
+    # which is still safe, and browsers apply frame-ancestors first.
+    response.headers['X-Frame-Options'] = 'DENY'
+    response.headers['Content-Security-Policy'] = "frame-ancestors 'none'"
+    return response
+
+
 def _login_request_params(source: Mapping[str, str]) -> tuple[str, str]:
     lri = source.get('login_request_id', '')
     state = source.get('state', '')
@@ -95,9 +106,13 @@ def confirm():
     }
     try:
         result = scalekit.submit_user(lri, payload)
-    except Exception:
+    except Exception as e:
+        if isinstance(e, scalekit.ScalekitError):
+            # Expected (Scalekit unreachable or refusing): one line with the reason, no traceback
+            log.warning('MCP login failed: lri=%s user=%s: %s', lri, user.id, e)
+        else:
+            log.exception('MCP login failed: lri=%s user=%s', lri, user.id)
         # Scalekit docs: never redirect back to Scalekit when this call fails
-        log.exception('MCP login failed: lri=%s user=%s', lri, user.id)
         tk.abort(502, _('Could not complete the sign-in. Please start again from your AI assistant.'))
 
     # WARNING (like hdx_signin.login) so the line reaches the stage logs

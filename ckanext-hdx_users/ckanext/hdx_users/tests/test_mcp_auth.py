@@ -17,6 +17,7 @@ from urllib.parse import parse_qs, urlparse
 
 import mock
 import pytest
+import requests
 
 import ckan.plugins.toolkit as tk
 import ckan.tests.factories as factories
@@ -31,6 +32,7 @@ LRI = 'lri_86659065219908156'
 STATE = 'HntJ_ENB6y+a/b=c-d.e~f'
 
 SCALEKIT_REQUESTS = 'ckanext.hdx_users.helpers.scalekit.requests'
+VIEW_LOG = 'ckanext.hdx_users.views.mcp_auth.log'
 
 USER_NAME = 'mcp_auth_user'
 USER_EMAIL = 'mcp_auth_user@hdx.hdxtest.org'
@@ -144,10 +146,21 @@ class TestMcpAuth:
         assert USER_FULLNAME in res.body
         assert f'name="login_request_id" value="{LRI}"' in res.body
         assert f'name="state" value="{STATE}"' in res.body
+        assert re.search(r'<script[^>]+src="[^"]*mcp-confirm[^"]*"', res.body), 'the submit-once script must load'
         # The last referrer policy wins, and base.html sets "always": login_request_id and state
         # must not leak to other sites (Google Fonts, analytics)
         policies = re.findall(r'<meta name="referrer" content="([^"]+)"', res.body)
         assert policies[-1] == 'same-origin'
+
+    @pytest.mark.parametrize('extra', [{}, {'x': '/view/'}])
+    def test_confirm_page_cannot_be_framed(self, app: CKANTestApp, signed_in_user, extra):
+        # HDX's own X-Frame-Options is skipped when '/view/' appears anywhere in the URL
+        res = app.get('/user/mcp-confirm', query_string=dict(_login_request(), **extra),
+                      headers=signed_in_user['headers'])
+
+        assert res.status_code == 200
+        assert res.headers.get('Content-Security-Policy') == "frame-ancestors 'none'"
+        assert res.headers.get('X-Frame-Options') in ('DENY', 'SAMEORIGIN')
 
     def test_continue_sends_user_to_scalekit_and_redirects_to_callback(self, app: CKANTestApp, signed_in_user):
         user_resp = _fake_response(200, {'auth_request_id': 'req_123'})
@@ -208,14 +221,19 @@ class TestMcpAuth:
         pytest.param([_token_response(), _fake_response(302)], id='user-details-redirect'),
         pytest.param([_token_response(), _fake_response(200, json_body=False)], id='user-details-not-json'),
         pytest.param([_token_response(), _fake_response(200, {})], id='user-details-no-auth-request-id'),
+        pytest.param([requests.ConnectionError('connection refused')], id='token-connection-error'),
+        pytest.param([_token_response(), requests.Timeout('read timed out')], id='user-details-timeout'),
     ])
     def test_scalekit_failure_shows_error_and_does_not_redirect(self, app: CKANTestApp, signed_in_user,
                                                                  scalekit_responses):
-        res, fake_post = _continue(app, signed_in_user['headers'], scalekit_responses)
+        with mock.patch(VIEW_LOG) as view_log:
+            res, fake_post = _continue(app, signed_in_user['headers'], scalekit_responses)
 
         assert res.status_code == 502
         assert 'Location' not in res.headers
         assert len(fake_post.call_args_list) == len(scalekit_responses)
+        # An expected failure is one warning line, not an error with a traceback
+        assert view_log.warning.called and not view_log.exception.called
 
     def test_scalekit_error_message_is_logged(self, app: CKANTestApp, signed_in_user):
         # The real response Scalekit sends for an unknown login request

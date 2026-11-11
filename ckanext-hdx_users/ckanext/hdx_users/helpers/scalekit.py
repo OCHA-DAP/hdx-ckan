@@ -10,6 +10,7 @@ from typing import Any
 from urllib.parse import quote, urlencode
 
 import requests
+from requests import RequestException  # by name: tests mock `requests`
 
 import ckan.plugins.toolkit as tk
 
@@ -42,10 +43,15 @@ def _env_url() -> str:
 
 def _post(name: str, url: str, **kwargs: Any) -> dict[str, Any]:
     '''
-    POSTs to Scalekit and returns the JSON object it sends back. Raises ScalekitError on
-    anything else: a non-2xx status, a redirect (not followed) or a body that isn't a JSON object.
+    POSTs to Scalekit and returns the JSON object it sends back. Raises ScalekitError on anything
+    else: a connection error or timeout, a non-2xx status, a redirect (not followed) or a body that
+    isn't a JSON object.
     '''
-    resp = requests.post(url, timeout=TIMEOUT, allow_redirects=False, **kwargs)
+    try:
+        resp = requests.post(url, timeout=TIMEOUT, allow_redirects=False, **kwargs)
+    except RequestException as e:
+        log.error('Scalekit %s request failed: %s', name, e)
+        raise ScalekitError(f'Scalekit {name} request failed: {type(e).__name__}') from e
     if not 200 <= resp.status_code < 300:
         log.error('Scalekit %s request failed: %s %s', name, resp.status_code, _body_for_log(resp))
         raise ScalekitError(f'Scalekit {name} request failed: {resp.status_code}')
@@ -82,7 +88,8 @@ def submit_user(login_request_id: str, payload: dict[str, Any]) -> dict[str, Any
     )
     result = _post('user-details', url, json=payload, headers={'Authorization': f'Bearer {_m2m_token()}'})
     if not result.get('auth_request_id'):
-        # A real success always carries it (confirmed in plan L4), so anything else is a failure
+        # Scalekit's API docs and every real success so far return it ({"auth_request_id": "req_..."}),
+        # so a response without it is treated as a failure
         log.error('Scalekit user-details response has no auth_request_id: %s', str(result)[:LOG_BODY_CHARS])
         raise ScalekitError('Scalekit user-details response has no auth_request_id')
     return result

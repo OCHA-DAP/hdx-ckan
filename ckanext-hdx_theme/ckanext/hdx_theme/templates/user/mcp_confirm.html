@@ -22,6 +22,11 @@
   {% asset 'hdx_theme/v2-auth-page-styles' %}
 {% endblock %}
 
+{% block scripts %}
+  {{ super() }}
+  {% asset 'hdx_theme/v2-mcp-confirm-page-scripts' %}
+{% endblock %}
+
 {% block header %}
   {% snippet 'v2/header.html', minimal=True %}
 {% endblock %}
@@ -55,14 +60,6 @@
             button_type='submit', id='mcp-confirm-submit' %}
       </div>
     </form>
-    <script>
-      {# Submit once: Scalekit may reject a second POST for the same login request, and the browser would show that error #}
-      document.getElementById('mcp-confirm-form').addEventListener('submit', function (e) {
-        if (this.dataset.submitted) { e.preventDefault(); return; }
-        this.dataset.submitted = 'true';
-        document.getElementById('mcp-confirm-submit').disabled = true;
-      });
-    </script>
 
     <div class="hdx-v2-auth-card__footer">
       {{ _('Not you?') }}
