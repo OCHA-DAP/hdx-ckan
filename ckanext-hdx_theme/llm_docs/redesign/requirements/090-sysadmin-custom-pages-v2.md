@@ -500,7 +500,7 @@ DataTables on the listing table when it has rows (D16): no paging, search, info 
 
 | Element | Text |
 |---|---|
-| Listing title / subtitle | Custom Pages / Create and manage crisis pages (D11) |
+| Listing title / subtitle | Custom Pages / Create and manage custom pages (D11, D36) |
 | Create button | Create new page (D11) |
 | Table headers | Title, Slug, Type, Archived / Ongoing, Status, Actions |
 | Row actions | Edit, Delete |
@@ -593,7 +593,7 @@ DataTables on the listing table when it has rows (D16): no paging, search, info 
 
 ## 9. Decisions Taken
 
-D1–D19, D26 and D27–D35 were asked and confirmed with the user; D20–D25 were written into the approved plan as
+D1–D19, D26 and D27–D36 were asked and confirmed with the user; D20–D25 were written into the approved plan as
 defaults.
 
 | # | Question | Options considered | Recommendation | Decision |
@@ -633,6 +633,7 @@ defaults.
 | D33 | DataTables on a `table.html` table (double frame; focus on an empty `.dt-column-order`) | Shared `table.less` adapter / page-scoped `sysadmin.less` | Shared | **Shared adapter** (§6.6); the CSV preview gains the focus ring |
 | D34 | Edit row action style | `button.html` tertiary s (Figma's white, bordered spec) / `text-button.html` tertiary s | `button.html` | **`button.html` tertiary s** |
 | D35 | v1 `checked` data keys in `light_page.py` (dead after the v2 form; found in review) | Remove / keep | Keep | **Remove** (§6.1) |
+| D36 | Listing subtitle wording (Figma: "crisis pages"; the list also holds non-crisis pages) | Custom pages / crisis pages | Custom pages | **Custom pages** (§6.9) |
 
 ---
 

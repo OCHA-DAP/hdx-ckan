@@ -26,7 +26,7 @@ need (D2, D7, D8, D11).
 | | |
 |---|---|
 | Target | `THEME/templates/pages/edit_page.html` and its section snippet, as implemented by 090 |
-| Objective | Match the Figma structure and look: step links in the left column, a page header with intro and required note, two numbered groups ("Describe crisis page", "Build sections"), Figma field order and copy, reorderable section cards and Figma's action row. Keep the routes, POST contract, auth, redirects and Lunr rebuild |
+| Objective | Match the Figma structure and look: step links in the left column, a page header with intro and required note, two numbered groups ("Describe custom page", "Build sections"), Figma field order and copy, reorderable section cards and Figma's action row. Keep the routes, POST contract, auth, redirects and Lunr rebuild |
 | Strategy | In-place edit of the 090 form. For this form, 091 supersedes 090 D5 (the menu column), D6 (no reordering), D10 (no help text), D13 (heading), D29 (button visual order), D30 (chip look) and the §6.9 copy |
 | Shared work | A `c-anchor-links--numbered` modifier (D40); opt-in `c-config-item` options for move buttons, no collapse and a footer Delete (D2, D30); `description` on `radio.html`, `select.html`, `text-field.html` and `c-slug-preview` (D8, D11); c-label grey chips by default and a cyan `chip_color` on `select.html`, fed by c-label mixins (D7, D29, D37). Defaults keep every other caller's output unchanged (the demo's chips turn grey, D29) |
 
@@ -217,16 +217,16 @@ new params, 087–089 render and behave as today.
 
 ### 6.2 Template (`THEME/templates/pages/edit_page.html`)
 
-- `page_label` = "Edit crisis page" when `data.id`, else "Create crisis page" (D9). The crumb stays Home / Sysadmin /
+- `page_label` = "Edit custom page" when `data.id`, else "Create custom page" (D9, D45). The crumb stays Home / Sysadmin /
   Custom Pages / `page_label`.
-- `{% block secondary_content %}` overrides the menu with `anchor-links.html`: items "Describe crisis page" →
-  `#describe-crisis-page` (`active`), "Build sections" → `#build-sections`; `heading` "On this page",
+- `{% block secondary_content %}` overrides the menu with `anchor-links.html`: items "Describe custom page" →
+  `#describe-custom-page` (`active`), "Build sections" → `#build-sections`; `heading` "On this page",
   `extra_classes='c-anchor-links--numbered'`, `with_mobile_dropdown` false (D1, D24, D39, D40).
 - **Header:** `list-header` as today, with the intro as `list_subtitle` (D10, D18). Below it, a
   `<p class="hdx-v2-custom-page-form__note">` "Required sections and fields are marked with an asterisk (*)." (D23).
 - **Form** (ids, names, `enctype`, CSRF and the error alert as today):
-  1. `<section id="describe-crisis-page" class="hdx-v2-content-columns hdx-v2-content-columns--stack hdx-v2-custom-page-form__group">`:
-     - **Heading:** h2 `__sidebar __group-title` "Describe crisis page" + `<span class="c-form-field__required" aria-hidden="true"> *</span>`.
+  1. `<section id="describe-custom-page" class="hdx-v2-content-columns hdx-v2-content-columns--stack hdx-v2-custom-page-form__group">`:
+     - **Heading:** h2 `__sidebar __group-title` "Describe custom page" + `<span class="c-form-field__required" aria-hidden="true"> *</span>`.
      - **Fields** (in `__content __fields`, D17):
 
 | Field | Snippet / change |
@@ -308,11 +308,11 @@ the script renames each card's `field_section_<i>_` controls to its position (`0
 
 | Element | Text |
 |---|---|
-| h1 / crumb / `<title>` | Create crisis page · Edit crisis page |
+| h1 / crumb / `<title>` | Create custom page · Edit custom page |
 | Intro | You can use this form to create a custom page for different sections of the site (such as an event page). When you finish, save the page, or save it as a draft that only sysadmins can see. |
 | Note | Required sections and fields are marked with an asterisk (*). |
 | Step-links heading | On this page |
-| Step links / group headings | Describe crisis page · Build sections |
+| Step links / group headings | Describe custom page · Build sections |
 | Labels | Title of the page, Display page title, This page is located under, URL, Status, Location, Keywords, Tags |
 | Radio labels / descriptions | Event — URL: {event URL} · Dashboards — URL: {dashboards URL} · Ongoing · Archived |
 | Descriptions | URL: This is how the URL will appear on HDX. · Location: Describe the location(s) or country / countries that this page covers. |
@@ -347,7 +347,7 @@ the script renames each card's `field_section_<i>_` controls to its position (`0
 | Slug preview following Title and Type | Unchanged (D5) |
 | Location / Tags Select2, tag autocomplete, comma Keywords | Unchanged; chip colours (D7) |
 | Delete page from the form, drawer | Unchanged (D4) |
-| Redirects, Lunr, page view | Unchanged; `pageTitle` becomes "Create / Edit crisis page \| Sysadmin" |
+| Redirects, Lunr, page view | Unchanged; `pageTitle` becomes "Create / Edit custom page \| Sysadmin" |
 
 **Intentional differences:**
 - Step links replace the sysadmin menu on this page (D1).
@@ -393,8 +393,8 @@ the script renames each card's `field_section_<i>_` controls to its position (`0
 
 ## 9. Decisions Taken
 
-D17, D19–D22 and D24 are derived defaults written into the approved plan; the others were asked and confirmed on
-2026-11-04.
+D17, D19–D22 and D24 are derived defaults written into the approved plan; the others were asked and confirmed with
+the user.
 
 | # | Question | Options considered | Recommendation | Decision |
 |---|---|---|---|---|
@@ -442,6 +442,7 @@ D17, D19–D22 and D24 are derived defaults written into the approved plan; the 
 | D42 | `.hdx-chip*()` mixins (after D37, `selection.less` is their only consumer) | Inline into `selection.less` / keep | Inline | **Inline**: declarations in place, compiled CSS unchanged; the mixins go |
 | D43 | Empty section list on Create (its flex gap doubles the space under Add more sections) | Hide the empty `__items` in `config-item.less` / leave | Hide | **Hide** (`:not(:has(> li))`); also the 087–089 empty state |
 | D44 | Card params repeated in the loop and the `<template>` | One dict + `**` / both written out | One dict | **One `section_card` dict** (`v2/hdx-connect-request.html` `**params` precedent) |
+| D45 | Page wording (Figma: "crisis page"; the list also holds non-crisis pages) | Custom page / crisis page | Custom page | **Custom page**: h1, crumb, `<title>`, step link, group heading and `#describe-custom-page` (§6.2, §6.7) |
 
 ---
 

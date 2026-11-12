@@ -1,7 +1,7 @@
 {% extends "v2/sysadmin-base.html" %}
 
 {% set nav_active = 'custom_pages' %}
-{% set page_label = _('Edit crisis page') if data.id else _('Create crisis page') %}
+{% set page_label = _('Edit custom page') if data.id else _('Create custom page') %}
 {% set errors = errors or {} %}
 {% set page_type = data.type or 'event' %}
 {% set page_status = data.status or 'ongoing' %}
@@ -38,7 +38,7 @@
 {% block secondary_content %}
   {% snippet 'v2/components/anchor-links.html',
       items=[
-        {'label': _('Describe crisis page'), 'href': '#describe-crisis-page', 'active': True},
+        {'label': _('Describe custom page'), 'href': '#describe-custom-page', 'active': True},
         {'label': _('Build sections'), 'href': '#build-sections'}],
       heading=_('On this page'),
       extra_classes='c-anchor-links--numbered' %}
@@ -88,8 +88,8 @@
       {% snippet 'v2/components/alert.html', message=other_errors | join(' '), dismissible=False %}
     {% endif %}
 
-    <section id="describe-crisis-page" class="hdx-v2-content-columns hdx-v2-content-columns--stack hdx-v2-custom-page-form__group">
-      <h2 class="hdx-v2-content-columns__sidebar hdx-v2-custom-page-form__group-title">{{ _('Describe crisis page') }}<span class="c-form-field__required" aria-hidden="true"> *</span></h2>
+    <section id="describe-custom-page" class="hdx-v2-content-columns hdx-v2-content-columns--stack hdx-v2-custom-page-form__group">
+      <h2 class="hdx-v2-content-columns__sidebar hdx-v2-custom-page-form__group-title">{{ _('Describe custom page') }}<span class="c-form-field__required" aria-hidden="true"> *</span></h2>
 
       <div class="hdx-v2-content-columns__content hdx-v2-custom-page-form__fields">
         <div class="c-form-field">
