@@ -33,9 +33,9 @@
 {% endblock %}
 
 {% block breadcrumb_items %}
-  {% set crumbs = [{'label': _('Showcases'), 'href': h.url_for('showcase_blueprint.index')}] %}
+  {% set crumbs = [{'label': _('Showcases'), 'href': ''}] %}
   {% if not is_new_page %}
-    {% set crumbs = crumbs + [{'label': pkg.title or pkg.name, 'href': h.url_for('showcase_blueprint.read', id=pkg.name)}] %}
+    {% set crumbs = crumbs + [{'label': pkg.title or pkg.name, 'href': ''}] %}
   {% endif %}
   {% snippet 'v2/components/breadcrumb.html',
       items=crumbs + [{'label': _('Manage datasets') if showcase_page == 'manage' else heading, 'href': ''}] %}
@@ -51,8 +51,7 @@
           aria_label=_('Showcase sections'),
           items=[
             {'label': _('Edit showcase'), 'href': h.url_for('showcase_blueprint.edit', id=pkg.name), 'active': showcase_page == 'edit'},
-            {'label': _('Manage datasets'), 'href': h.url_for('showcase_blueprint.manage_datasets', id=pkg.name), 'active': showcase_page == 'manage'},
-            {'label': _('View showcase'), 'href': h.url_for('showcase_blueprint.read', id=pkg.name)}
+            {'label': _('Manage datasets'), 'href': h.url_for('showcase_blueprint.manage_datasets', id=pkg.name), 'active': showcase_page == 'manage'}
           ] %}
     {% endif %}
 
