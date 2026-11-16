@@ -19,6 +19,14 @@ def fix_show_schema_extras_id(schema: Schema) -> Schema:
 
     Used by the group and organization show schemas (hdx_org_group) and by the
     showcase show schema (hdx_dataviz).
+
+    The schema is returned unchanged when the extras have no 'id' validators (for
+    example a show-style {'__extras': [keep_extras]}, which doesn't have the problem),
+    or when ignore_missing is already first. The second case happens because the
+    hdx_dataviz showcase wrapper is applied again every time plugins are loaded.
     '''
-    schema['extras']['id'] = [tk.get_validator('ignore_missing'), *schema['extras']['id']]
+    ignore_missing = tk.get_validator('ignore_missing')
+    id_validators = schema.get('extras', {}).get('id')
+    if id_validators and id_validators[0] is not ignore_missing:
+        schema['extras']['id'] = [ignore_missing, *id_validators]
     return schema
