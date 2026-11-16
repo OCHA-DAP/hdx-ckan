@@ -1,5 +1,7 @@
 {% set object_supports_notifications = h.hdx_supports_notifications(object_type, object_id, object_dict) %}
 {% set ui_object_type = 'location' if object_type == 'group' else object_type %}
+{% set unsubscribe_type = 'organisation' if object_type == 'organization' else ui_object_type %}
+{% set object_title = object_title if object_title is defined and object_title else object_name %}
 
 {% asset 'hdx_theme/v2-components-scripts' %}
 {% asset 'hdx_theme/notification-platform-unsubscribe-scripts' %}
@@ -9,10 +11,12 @@
 {% set unsubscribe_token = unsubscribe_token or {} %}
 {% if object_type == 'dataset' %}
   {% set unsubscribed_modal_text = CONST_NOTIFICATION_PLATFORM.UNSUBSCRIBED_MODAL_TEXT_DATASET %}
-  {% set confirmation_modal_text = CONST_NOTIFICATION_PLATFORM.UNSUBSCRIBE_CONFIRMATION_MODAL_TEXT_DATASET %}
+  {% set confirmation_modal_title = CONST_NOTIFICATION_PLATFORM.UNSUBSCRIBE_CONFIRMATION_MODAL_TITLE_DATASET %}
+  {% set confirmation_modal_text = CONST_NOTIFICATION_PLATFORM.UNSUBSCRIBE_CONFIRMATION_MODAL_TEXT_DATASET.format(object_title) %}
 {% else %}
   {% set unsubscribed_modal_text = CONST_NOTIFICATION_PLATFORM.UNSUBSCRIBED_MODAL_TEXT_SEARCH_RESULTS.format(ui_object_type) %}
-  {% set confirmation_modal_text = CONST_NOTIFICATION_PLATFORM.UNSUBSCRIBE_CONFIRMATION_MODAL_TEXT_SEARCH_RESULTS.format(ui_object_type) %}
+  {% set confirmation_modal_title = CONST_NOTIFICATION_PLATFORM.UNSUBSCRIBE_CONFIRMATION_MODAL_TITLE_SEARCH_RESULTS.format(unsubscribe_type) %}
+  {% set confirmation_modal_text = CONST_NOTIFICATION_PLATFORM.UNSUBSCRIBE_CONFIRMATION_MODAL_TEXT_SEARCH_RESULTS.format(object_title) %}
 {% endif %}
 
 {% if object_supports_notifications %}
@@ -21,10 +25,8 @@
 
   {% if object_type == 'dataset' %}
     {% set submit_btn_title = CONST_NOTIFICATION_PLATFORM.SIGNUP_MODAL_TITLE_DATASET %}
-    {% set confirmation_modal_text = CONST_NOTIFICATION_PLATFORM.UNSUBSCRIBE_CONFIRMATION_MODAL_TEXT_DATASET %}
   {% else %}
     {% set submit_btn_title = CONST_NOTIFICATION_PLATFORM.SIGNUP_MODAL_TITLE_SEARCH_RESULTS.format(ui_object_type) %}
-    {% set confirmation_modal_text = CONST_NOTIFICATION_PLATFORM.UNSUBSCRIBE_CONFIRMATION_MODAL_TEXT_SEARCH_RESULTS.format(ui_object_type) %}
   {% endif %}
 
   {% if not logged_in %}
@@ -103,37 +105,9 @@
   "data-object-id": object_id, "data-object-type": object_type, "data-object-name": object_name
 } %}
 
-{# ── 3. Unsubscribe confirmation drawer ── #}
-{% call h.snippet('v2/components/drawer.html',
-    drawer_id='notificationsUnsubscribeDrawer',
-    title=CONST_NOTIFICATION_PLATFORM.UNSUBSCRIBE_CONFIRMATION_MODAL_TITLE) %}
-  <div class="c-drawer-form">
-    <p class="c-drawer-form__text">{{ confirmation_modal_text|safe }}</p>
-    {% snippet 'v2/components/alert.html', hidden=True %}
-    <div class="c-drawer-form__buttons">
-      {{ h.snippet('v2/components/button.html',
-          style='tertiary',
-          label=CONST_NOTIFICATION_PLATFORM.UNSUBSCRIBE_CONFIRMATION_MODAL_TEXT_CLOSE_BUTTON,
-          attrs={'data-drawer-close': ''}) }}
-      {{ h.snippet('v2/components/button.html',
-          style='primary',
-          label=CONST_NOTIFICATION_PLATFORM.UNSUBSCRIBE_CONFIRMATION_MODAL_TEXT_SUBMIT_BUTTON,
-          attrs=submit_btn_attrs) }}
-    </div>
-  </div>
-{% endcall %}
-
-{# ── 4. Unsubscribed success drawer ── #}
-{% call h.snippet('v2/components/drawer.html',
-    drawer_id='notificationsUnsubscribedDrawer',
-    title=CONST_NOTIFICATION_PLATFORM.UNSUBSCRIBED_MODAL_TITLE) %}
-  <div class="c-drawer-form">
-    {% snippet 'v2/components/alert.html', message=(unsubscribed_modal_text | safe), variant='success' %}
-    <div class="c-drawer-form__buttons">
-      {{ h.snippet('v2/components/button.html',
-          style='primary',
-          label=CONST_NOTIFICATION_PLATFORM.UNSUBSCRIBED_MODAL_TEXT_CLOSE_BUTTON,
-          attrs={'data-drawer-close': ''}) }}
-    </div>
-  </div>
-{% endcall %}
+{# ── 3–4. Unsubscribe confirmation + Unsubscribed success drawers ── #}
+{% snippet 'notification_platform/unsubscribe_drawers.html',
+    confirmation_title=confirmation_modal_title,
+    confirmation_text=confirmation_modal_text,
+    unsubscribed_text=unsubscribed_modal_text,
+    submit_attrs=submit_btn_attrs %}

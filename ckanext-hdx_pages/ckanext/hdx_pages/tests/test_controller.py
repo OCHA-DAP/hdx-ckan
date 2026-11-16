@@ -125,11 +125,42 @@ class TestHDXControllerPageNew(TestHDXControllerPage):
         # url = h.url_for('hdx_custom_page.new')
         page = self._get_url(app, url, self._get_token_for_user(SYSADMIN))
         assert '200' in page.status
-        assert 'Save This Page' in page.body
+        assert 'Save this page' in page.body
         assert 'field_title' in page.body
         assert 'hdx_event_type' in page.body
         assert 'hdx_page_ongoing' in page.body
         assert 'field_name' in page.body
+
+
+@pytest.mark.usefixtures('keep_db_tables_on_clean', 'hdx_clean_db', 'clean_index', 'setup_user_data')
+class TestHDXControllerPageList(TestHDXControllerPage):
+
+    def test_page_list(self, app):
+        from ckanext.hdx_users.helpers.permissions import Permissions
+
+        context_sysadmin = {'model': model, 'session': model.Session, 'user': SYSADMIN}
+        elnino = _get_action('page_create')(context_sysadmin, page_elnino)
+        eldashbo = _get_action('page_create')(context_sysadmin, page_dashbo)
+        factories.User(name='crisis_manager', email='crisis_manager@hdx.hdxtest.org')
+        Permissions('crisis_manager').set_permissions(context_sysadmin, [Permissions.PERMISSION_MANAGE_CRISIS])
+
+        url = h.url_for('hdx_custom_pages.index')
+        page_list = self._get_url(app, url, self._get_token_for_user(USER))
+        assert '404 Not Found'.lower() in page_list.status.lower()
+
+        page_list = self._get_url(app, url, self._get_token_for_user('crisis_manager'))
+        assert '200' in page_list.status
+        assert 'El Nino' in page_list.body
+
+        page_list = self._get_url(app, url, self._get_token_for_user(SYSADMIN))
+        assert '200' in page_list.status
+        assert 'href="{}"'.format(h.url_for('hdx_custom_page.new')) in page_list.body
+        assert 'href="{}"'.format(h.url_for('hdx_event.read_event', id=elnino.get('name'))) in page_list.body
+        assert 'href="{}"'.format(h.url_for('hdx_dashboard.read_dashboard', id=eldashbo.get('name'))) in page_list.body
+        assert 'data-module="hdx_click_stopper" data-module-link_type="main nav"' in page_list.body
+        assert 'href="{}"'.format(h.url_for('hdx_custom_page.edit', id=elnino.get('id'))) in page_list.body
+        assert 'id="delete-custom-page-{}"'.format(elnino.get('id')) in page_list.body
+        assert 'action="{}"'.format(h.url_for('hdx_custom_page.delete_page', id=elnino.get('id'))) in page_list.body
 
 
 @pytest.mark.usefixtures('keep_db_tables_on_clean', 'hdx_clean_db', 'clean_index', 'setup_user_data')
@@ -159,7 +190,7 @@ class TestHDXControllerPageEdit(TestHDXControllerPage):
         url = h.url_for(u'hdx_custom_page.edit', id=page_dict.get('id'))
         page = self._get_url(app, url, self._get_token_for_user(SYSADMIN))
         assert '200' in page.status
-        assert 'Save This Page' in page.body
+        assert 'Save this page' in page.body
         assert 'field_title' in page.body
         assert 'hdx_event_type' in page.body
         assert 'hdx_page_ongoing' in page.body

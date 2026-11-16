@@ -1,3 +1,5 @@
+{% set admin_view = admin_view if admin_view is defined else False %}
+
 {# ── org ──────────────────────────────────────────────────── #}
 {% if package.organization %}
   {% set org_name_val = package.organization.title or package.organization.name %}
@@ -17,85 +19,169 @@
 {# ── description ──────────────────────────────────────────── #}
 {% set desc_val = h.render_markdown(package.notes) if package.notes else '' %}
 
-{# ── location ─────────────────────────────────────────────── #}
-{% if package.groups and package.groups | length == 1 %}
-  {% set location_val = package.groups[0].title %}
-{% elif package.groups and package.groups | length > 1 %}
-  {% set location_val = 'Multiple locations' %}
+{% if admin_view %}
+
+  {# ── labels: status badges, update frequency, due date ───── #}
+  {% set labels_val = [] %}
+  {% if package.is_requestdata_type %}
+    {% set labels_val = labels_val + [{'color': 'dark', 'size': 'xs', 'icon_src': 'v2/icons/unlock.svg', 'icon_only': True, 'attrs': {'aria-label': _('Request access only')}}] %}
+  {% endif %}
+  {% if package.private %}
+    {% set labels_val = labels_val + [{'color': 'dark', 'size': 'xs', 'icon_src': 'v2/icons/lock.svg', 'icon_only': True, 'attrs': {'aria-label': _('Private dataset')}}] %}
+  {% endif %}
+  {% if package.archived %}
+    {% set labels_val = labels_val + [{'color': 'dark', 'size': 'xs', 'icon_src': 'v2/icons/archive.svg', 'icon_only': True, 'attrs': {'aria-label': _('Archived')}}] %}
+  {% endif %}
+  {% set frequency_val = h.hdx_get_frequency_by_value(package.data_update_frequency) %}
+  {% if frequency_val %}
+    {% set labels_val = labels_val + [{'text': _('Expected update frequency') ~ ': ' ~ frequency_val, 'color': 'light', 'size': 'xs'}] %}
+  {% endif %}
+  {% if not package.archived and package.get('update_status') != 'unknown' and not h.hdx_is_ongoing_dataset_date(package) %}
+    {% set due_date_val = h.hdx_get_due_overdue_date(package) %}
+    {% if due_date_val %}
+      {% set labels_val = labels_val + [{'text': _('Update by') ~ ' ' ~ due_date_val, 'color': 'light' if package.is_fresh else 'yellow', 'size': 'xs', 'icon': True, 'icon_src': 'v2/icons/time-clock.svg'}] %}
+    {% endif %}
+  {% endif %}
+
+  {% set can_manage = h.check_access('package_delete', {'id': package.id}) %}
+  {% set delete_drawer_id = 'delete-dataset-' ~ package.id %}
+
+  {% call h.snippet('v2/components/dataset-card.html',
+      org_name=org_name_val,
+      org_href=org_href_val,
+      title=title_val,
+      title_href=title_href_val,
+      description=desc_val,
+      labels=labels_val,
+      query=query if query is defined else '') %}
+    {% if can_manage %}
+      <div class="c-dataset-card__actions-group">
+        {% snippet 'v2/components/text-button.html',
+            style='tertiary', size='s', tag='button',
+            label=_('Delete'), icon_src='v2/icons/delete.svg',
+            attrs={'onclick': "window.hdxV2Drawer('" ~ delete_drawer_id ~ "').open()"} %}
+        {% snippet 'v2/components/text-button.html',
+            style='tertiary', size='s', tag='button',
+            label=_('Unarchive') if package.archived else _('Archive'),
+            attrs={'onclick': "contributeAddDetails('" ~ package.id ~ "', 'archive', '#field_archived')"} %}
+      </div>
+    {% endif %}
+    <div class="c-dataset-card__actions-group">
+      {% snippet 'v2/components/button.html',
+          style='tertiary', size='s', tag='a',
+          href=title_href_val ~ '#group-message',
+          icon_src='v2/icons/mail.svg',
+          label=_('Send a group message') %}
+      {% if can_manage %}
+        {% snippet 'v2/components/button.html',
+            style='primary', size='s',
+            label=_('Update'),
+            attrs={'onclick': "contributeAddDetails('" ~ package.id ~ "', 'dataset')"} %}
+      {% endif %}
+    </div>
+  {% endcall %}
+
+  {% if can_manage %}
+    {% call h.snippet('v2/components/drawer.html',
+        drawer_id=delete_drawer_id,
+        title=_('You are deleting a dataset')) %}
+      <form class="c-drawer-form" method="post"
+            action="{{ h.url_for('hdx_dataset.delete', id=package.id) }}">
+        {{ h.csrf_input() }}
+        <p class="c-drawer-form__text">{{ _('Are you sure you want to delete this dataset?') }}</p>
+        <div class="c-drawer-form__buttons">
+          {% snippet 'v2/components/button.html',
+              style='tertiary', label=_('Cancel'), attrs={'data-drawer-close': ''} %}
+          {% snippet 'v2/components/button.html',
+              style='primary', button_type='submit', label=_('Delete') %}
+        </div>
+      </form>
+    {% endcall %}
+  {% endif %}
+
 {% else %}
-  {% set location_val = '' %}
-{% endif %}
 
-{# ── subnational ──────────────────────────────────────────── #}
-{% set subnational_val = (package.subnational == '1') %}
+  {# ── location ─────────────────────────────────────────────── #}
+  {% if package.groups and package.groups | length == 1 %}
+    {% set location_val = package.groups[0].title %}
+  {% elif package.groups and package.groups | length > 1 %}
+    {% set location_val = 'Multiple locations' %}
+  {% else %}
+    {% set location_val = '' %}
+  {% endif %}
 
-{# ── date ─────────────────────────────────────────────────── #}
-{% set date_range_val = h.render_date_range_label(package.dataset_date) %}
+  {# ── subnational ──────────────────────────────────────────── #}
+  {% set subnational_val = (package.subnational == '1') %}
 
-{# ── formats: step 1 — package-level flag badges ─────────── #}
-{% set formats_val = [] %}
-{% if package.is_requestdata_type %}
-  {% set formats_val = formats_val + [{'type': 'requestdata', 'text': '', 'icon_src': 'v2/icons/unlock.svg'}] %}
-{% endif %}
-{% if package.private %}
-  {% set formats_val = formats_val + [{'type': 'private', 'text': '', 'icon_src': 'v2/icons/lock.svg'}] %}
-{% endif %}
-{% if package.archived %}
-  {% set formats_val = formats_val + [{'type': 'archived', 'text': '', 'icon_src': 'v2/icons/archive.svg'}] %}
-{% endif %}
-{% if package.cod_level == 'cod' %}
-  {% set formats_val = formats_val + [{'type': 'cod', 'text': 'COD', 'icon_src': ''}] %}
-{% elif package.cod_level == 'cod-enhanced' %}
-  {% set formats_val = formats_val + [{'type': 'cod_plus', 'text': 'COD+', 'icon_src': ''}] %}
-{% endif %}
+  {# ── date ─────────────────────────────────────────────────── #}
+  {% set date_range_val = h.render_date_range_label(package.dataset_date) %}
 
-{# ── formats: step 2 — resource extension badges ─────────── #}
-{% if package.resources and not hide_resources and not package.is_requestdata_type %}
-  {% set _category_icon = {
-    'tabular':  'v2/icons/tabular-format.svg',
-    'geo':      'v2/icons/geographic-format.svg',
-    'document': 'v2/icons/document-format.svg',
-    'web':      'v2/icons/markup-format.svg',
-    'neutral':  'v2/icons/other-format.svg'
-  } %}
-  {% set _ns = namespace(extras=[]) %}
-  {% for fmt_str in h.dict_list_reduce(package.resources, 'format') %}
-    {% set _cat = h.hdx_format_to_icon_category(fmt_str) %}
-    {% set _ns.extras = _ns.extras + [{'type': 'extension', 'text': fmt_str, 'icon_src': _category_icon[_cat]}] %}
-  {% endfor %}
-  {% set formats_val = formats_val + _ns.extras %}
-{% endif %}
+  {# ── formats: step 1 — package-level flag badges ─────────── #}
+  {% set formats_val = [] %}
+  {% if package.is_requestdata_type %}
+    {% set formats_val = formats_val + [{'type': 'requestdata', 'text': '', 'icon_src': 'v2/icons/unlock.svg'}] %}
+  {% endif %}
+  {% if package.private %}
+    {% set formats_val = formats_val + [{'type': 'private', 'text': '', 'icon_src': 'v2/icons/lock.svg'}] %}
+  {% endif %}
+  {% if package.archived %}
+    {% set formats_val = formats_val + [{'type': 'archived', 'text': '', 'icon_src': 'v2/icons/archive.svg'}] %}
+  {% endif %}
+  {% if package.cod_level == 'cod' %}
+    {% set formats_val = formats_val + [{'type': 'cod', 'text': 'COD', 'icon_src': ''}] %}
+  {% elif package.cod_level == 'cod-enhanced' %}
+    {% set formats_val = formats_val + [{'type': 'cod_plus', 'text': 'COD+', 'icon_src': ''}] %}
+  {% endif %}
 
-{# ── formats: step 3 — truncate to 3, compute overflow ───── #}
-{% set total_formats = formats_val | length %}
-{% if total_formats > 3 %}
-  {% set formats_overflow_val = total_formats - 3 %}
-  {% set formats_val = formats_val[:3] %}
-{% else %}
-  {% set formats_overflow_val = 0 %}
-{% endif %}
+  {# ── formats: step 2 — resource extension badges ─────────── #}
+  {% if package.resources and not hide_resources and not package.is_requestdata_type %}
+    {% set _category_icon = {
+      'tabular':  'v2/icons/tabular-format.svg',
+      'geo':      'v2/icons/geographic-format.svg',
+      'document': 'v2/icons/document-format.svg',
+      'web':      'v2/icons/markup-format.svg',
+      'neutral':  'v2/icons/other-format.svg'
+    } %}
+    {% set _ns = namespace(extras=[]) %}
+    {% for fmt_str in h.dict_list_reduce(package.resources, 'format') %}
+      {% set _cat = h.hdx_format_to_icon_category(fmt_str) %}
+      {% set _ns.extras = _ns.extras + [{'type': 'extension', 'text': fmt_str, 'icon_src': _category_icon[_cat]}] %}
+    {% endfor %}
+    {% set formats_val = formats_val + _ns.extras %}
+  {% endif %}
 
-{# ── batch / "show others" footer ─────────────────────────── #}
-{% if package.batch_length and package.batch_length > 0 and package.organization %}
-  {% set batch_org_name = package.organization.title or package.organization.name %}
-  {% set show_others_label_val = 'Show ' ~ h.hdx_show_singular_plural(package.batch_length, _('other recently updated dataset'), _('other recently updated datasets')) ~ ' from ' ~ batch_org_name %}
-  {% set show_others_href_val = package.batch_url if package.batch_url else '#' %}
-{% else %}
-  {% set show_others_label_val = '' %}
-  {% set show_others_href_val = '#' %}
-{% endif %}
+  {# ── formats: step 3 — truncate to 3, compute overflow ───── #}
+  {% set total_formats = formats_val | length %}
+  {% if total_formats > 3 %}
+    {% set formats_overflow_val = total_formats - 3 %}
+    {% set formats_val = formats_val[:3] %}
+  {% else %}
+    {% set formats_overflow_val = 0 %}
+  {% endif %}
 
-{% snippet 'v2/components/dataset-card.html',
-    org_name=org_name_val,
-    org_href=org_href_val,
-    title=title_val,
-    title_href=title_href_val,
-    description=desc_val,
-    location=location_val,
-    subnational=subnational_val,
-    date_range=date_range_val,
-    formats=formats_val,
-    formats_overflow=formats_overflow_val,
-    show_others_label=show_others_label_val,
-    show_others_href=show_others_href_val,
-    query=query if query is defined else '' %}
+  {# ── batch / "show others" footer ─────────────────────────── #}
+  {% if package.batch_length and package.batch_length > 0 and package.organization %}
+    {% set batch_org_name = package.organization.title or package.organization.name %}
+    {% set show_others_label_val = 'Show ' ~ h.hdx_show_singular_plural(package.batch_length, _('other recently updated dataset'), _('other recently updated datasets')) ~ ' from ' ~ batch_org_name %}
+    {% set show_others_href_val = package.batch_url if package.batch_url else '#' %}
+  {% else %}
+    {% set show_others_label_val = '' %}
+    {% set show_others_href_val = '#' %}
+  {% endif %}
+
+  {% snippet 'v2/components/dataset-card.html',
+      org_name=org_name_val,
+      org_href=org_href_val,
+      title=title_val,
+      title_href=title_href_val,
+      description=desc_val,
+      location=location_val,
+      subnational=subnational_val,
+      date_range=date_range_val,
+      formats=formats_val,
+      formats_overflow=formats_overflow_val,
+      show_others_label=show_others_label_val,
+      show_others_href=show_others_href_val,
+      query=query if query is defined else '' %}
+
+{% endif %}

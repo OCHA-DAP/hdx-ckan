@@ -13,8 +13,8 @@
   __sticky-top, which stays pinned below the drawer's own title bar while
   only the category/sub-category list scrolls, via fanstatic/v2/pages/location.js.
 
-  Only ever called from inside the same `{% if data.data_completeness %}`
-  guard as the rest of the Data Grid section — no internal guard here.
+  Must be called inside an `{% if data.data_completeness %}` guard — no
+  internal guard here.
 
   Parameters
   ──────────────────────────────────────────────────────

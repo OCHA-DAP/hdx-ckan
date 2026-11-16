@@ -1,0 +1,72 @@
+// ============================================================
+// Org join / create flow — page-level rules on top of signup.less
+// Figma: llm_docs/redesign/figma_exports/xl-request-new-confirm.html
+// ============================================================
+@import "../mixins.less";
+
+// ── Confirm organisation ────────────────────────────────────
+.hdx-v2-org-request-confirm {
+    display:        flex;
+    flex-direction: column;
+    align-items:    flex-start;
+    gap:            var(--hdx-space-5);
+
+    &__label {
+        .hdx-body-l-semibold();
+        color:  var(--hdx-neutral-85);
+        margin: 0;
+    }
+
+    &__org-name {
+        .hdx-body-m-medium();
+        color:  var(--hdx-neutral-85);
+        margin: 0;
+    }
+
+    &__logo {
+        .hdx-org-logo();
+    }
+
+    &__member-since {
+        .hdx-member-since();
+    }
+
+    &__desc {
+        .hdx-clamped-desc();
+    }
+
+    &__desc-text {
+        .hdx-clamped-desc-text();
+    }
+
+    &__actions {
+        display:        flex;
+        flex-direction: column;
+        align-items:    flex-end;
+        align-self:     stretch;
+        gap:            var(--hdx-space-5);
+    }
+
+    &__links {
+        .hdx-body-m();
+        color:      var(--hdx-neutral-8);
+        text-align: right;
+        margin:     0;
+    }
+}
+
+// ── Reason for request ──────────────────────────────────────
+.hdx-v2-org-request-indicate {
+    .hdx-body-m();
+    color: var(--hdx-neutral-8);
+
+    &__title {
+        .hdx-body-m-semibold();
+        margin: 0;
+    }
+
+    &__list {
+        margin:       0;
+        padding-left: var(--hdx-space-6);
+    }
+}

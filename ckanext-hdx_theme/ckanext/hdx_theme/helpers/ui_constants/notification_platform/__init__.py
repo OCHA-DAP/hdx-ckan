@@ -33,8 +33,10 @@ CONSTANTS = {
     'VERIFICATION_MODAL_TEXT_CLOSE_BUTTON': '''Close''',
 
     'UNSUBSCRIBE_CONFIRMATION_MODAL_TITLE': '''Unsubscribe''',
-    'UNSUBSCRIBE_CONFIRMATION_MODAL_TEXT_DATASET': '''Please confirm that you want to unsubscribe from email notifications for updates to this dataset on HDX.''',
-    'UNSUBSCRIBE_CONFIRMATION_MODAL_TEXT_SEARCH_RESULTS': '''Please confirm that you want to unsubscribe from email notifications when datasets are added to this {0} on HDX.''',
+    'UNSUBSCRIBE_CONFIRMATION_MODAL_TITLE_DATASET': '''Unsubscribe from this dataset?''',
+    'UNSUBSCRIBE_CONFIRMATION_MODAL_TITLE_SEARCH_RESULTS': '''Unsubscribe from this {0}?''',
+    'UNSUBSCRIBE_CONFIRMATION_MODAL_TEXT_DATASET': '''Please confirm that you want to unsubscribe from email notifications for updates to {0} on HDX.''',
+    'UNSUBSCRIBE_CONFIRMATION_MODAL_TEXT_SEARCH_RESULTS': '''Please confirm that you want to unsubscribe from email notifications when datasets are added to {0} on HDX.''',
     'UNSUBSCRIBE_CONFIRMATION_MODAL_TEXT_CLOSE_BUTTON': '''Cancel''',
     'UNSUBSCRIBE_CONFIRMATION_MODAL_TEXT_SUBMIT_BUTTON': '''Unsubscribe''',
 

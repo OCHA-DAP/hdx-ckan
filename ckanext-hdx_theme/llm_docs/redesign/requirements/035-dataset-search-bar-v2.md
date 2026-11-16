@@ -9,7 +9,7 @@
 
 The secondary search bar on the dataset search results page allows users to filter results by keyword. It is distinct from the global navigation search bar and must remain visible at **all breakpoints** (XL, MD, SM).
 
-This task adds a v2-styled version of the search bar inside the `{% if v2 %}` block of `package_list.html`. The existing v1 search bar (lines 33–77) is left untouched. Full functionality, query behavior, and analytics must be preserved without modification.
+This task adds a v2-styled version of the search bar inside the `{% if v2 %}` block of `package_list.html`. The existing v1 search bar is left untouched. Full functionality, query behavior, and analytics must be preserved without modification.
 
 ---
 
@@ -21,11 +21,11 @@ This task adds a v2-styled version of the search bar inside the `{% if v2 %}` bl
 
 The v1 search input lives in the unconditional header section:
 
-- **Line 29:** `{% set searchValue = h.hdx_get_request_param('q', '') %}` — reads current `q` param
-- **Line 33:** `<form id="dataset-filter-form" style="display: inline;">`
-- **Line 42:** `<input autocomplete="off" id="headerSearch" name="q" class="header-search" type="text" placeholder="Search all datasets ..." value="{{searchValue}}">`
+- `{% set searchValue = h.hdx_get_request_param('q', '') %}` — reads current `q` param
+- `<form id="dataset-filter-form" style="display: inline;">`
+- `<input autocomplete="off" id="headerSearch" name="q" class="header-search" type="text" placeholder="Search all datasets ..." value="{{searchValue}}">`
 
-The v2 block starts at **line 80** (`{% if v2 %}`). It currently renders the list header, filter overlay, and two-column layout — but **no search bar**.
+The v2 block starts at `{% if v2 %}`. It currently renders the list header, filter overlay, and two-column layout — but **no search bar**.
 
 ### 2.2 Form and query behavior
 
@@ -36,8 +36,8 @@ The v2 block starts at **line 80** (`{% if v2 %}`). It currently renders the lis
 | Action | Implicit — submits to current page (`/dataset`) |
 | Query param | `q` |
 | All other params | Preserved via `replaceParam()` in JS |
-| Page reset | YES — `replaceParam()` resets `page` to 1 (`order-by-dropdown.js:27–29`) |
-| Sort preservation | NO — `sort` excluded by `get_filtered_params_list()` (`helpers.py:170`) |
+| Page reset | YES — `replaceParam()` resets `page` to 1 (`order-by-dropdown.js`) |
+| Sort preservation | NO — `sort` excluded by `get_filtered_params_list()` (`helpers.py`) |
 | Submit trigger | Enter key only — no auto-submit on typing, no debounce |
 
 ### 2.3 JavaScript behavior
@@ -56,7 +56,7 @@ $("#headerSearch").on("keydown", function(event){
 
 Key behaviors:
 - Triggered by Enter key only (`keyCode == 13`)
-- Calls `replaceParam("q", value)` (`order-by-dropdown.js:21–35`) — builds new URL preserving all current params, resets `page` to 1
+- Calls `replaceParam("q", value)` (`order-by-dropdown.js`) — builds new URL preserving all current params, resets `page` to 1
 - Appends `#headerSearch` to anchor-scroll back to the input after reload
 - No `form.submit()` call — the `<input>` does not need a `<form>` parent for the JS to work
 - No debounce logic
@@ -91,7 +91,7 @@ Uses Bootstrap classes (`d-inline-block`, `float-end`, `text-uppercase`). No v2 
 
 ### 2.6 Asset loading
 
-`organizations.js` is bundled in `dataset-search-scripts` (`webassets.yml`), loaded unconditionally at `package_list.html:24`. The `#headerSearch` handler will apply to the v2 input as long as the `id` is preserved.
+`organizations.js` is bundled in `dataset-search-scripts` (`webassets.yml`), loaded unconditionally at `package_list.html`. The `#headerSearch` handler will apply to the v2 input as long as the `id` is preserved.
 
 ---
 
@@ -269,7 +269,7 @@ Inside the v2 block, render a `<form id="dataset-filter-form">` wrapping:
 - Right-aligned search icon included by default (`v2/icons/search.svg`).
 
 **Cons:**
-- The `dataset-filter-form` form must be re-declared in the v2 block (the v1 form at line 33 is in the non-v2 section). A separate `<form id="dataset-filter-form">` in the v2 block is safe since the analytics code only needs the form to be present in the DOM.
+- The `dataset-filter-form` form must be re-declared in the v2 block (the v1 form is in the non-v2 section). A separate `<form id="dataset-filter-form">` in the v2 block is safe since the analytics code only needs the form to be present in the DOM.
 
 **Why `<form>` is required:** The `organizations.js` handler does NOT call `form.submit()` — it uses `replaceParam()` and navigates directly. So the `<input>` technically does not need a form for the JS to work. **However**, `google-analytics.js` serializes `#dataset-filter-form` via `.serializeArray()` to extract the `q` value for the Mixpanel event. Without the form wrapper, the `q` field would not be captured and the analytics event might not fire.
 
@@ -293,9 +293,9 @@ Use `size='m'` to match the height of existing v2 header controls (dropdowns at 
 
 ## 7. Template Strategy
 
-- **Gate with `{% if v2 %}`**: Search bar markup lives inside the v2 block in `package_list.html` (after line 80)
-- **v1 untouched**: The v1 search bar (lines 33–77) remains unchanged; no `{% if not v2 %}` wrapper needed
-- **Placement within v2 block**: A new search row inserted after `hdx-v2-list-header` (line 105–129), before the filter overlay (line 131)
+- **Gate with `{% if v2 %}`**: Search bar markup lives inside the v2 block in `package_list.html`
+- **v1 untouched**: The v1 search bar remains unchanged; no `{% if not v2 %}` wrapper needed
+- **Placement within v2 block**: A new search row inserted after `hdx-v2-list-header`, before the filter overlay
 - **Form wrapper**: New `<form id="dataset-filter-form">` wraps the v2 search input (required for analytics serialization)
 - **CSS**: New class `hdx-v2-search-bar` (or similar) scoped to the v2 search row; breakpoint rules in `v2/pages/search.less`
 

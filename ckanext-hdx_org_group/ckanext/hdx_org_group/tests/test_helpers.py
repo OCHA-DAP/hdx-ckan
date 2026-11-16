@@ -56,3 +56,14 @@ class TestHelpers(object):
         org_dict = _get_action('organization_update')(sysadmin_context, org_dict)
         result = helper.get_viz_title_from_extras(org_dict)
         assert 'Test Visualization Title' == result
+
+    @pytest.mark.usefixtures('with_request_context')
+    def test_hdx_organization_logo_url(self, app):
+        assert helper.hdx_organization_logo_url('') is None
+        assert helper.hdx_organization_logo_url(None) is None
+        assert helper.hdx_organization_logo_url('https://example.org/logo.png') == 'https://example.org/logo.png'
+        assert helper.hdx_organization_logo_url('http://example.org/logo.png') == 'http://example.org/logo.png'
+        assert helper.hdx_organization_logo_url('test-logo.png') == '/image/test-logo.png'
+        qualified_url = helper.hdx_organization_logo_url('test-logo.png', qualified=True)
+        assert qualified_url.startswith('http')
+        assert qualified_url.endswith('/image/test-logo.png')

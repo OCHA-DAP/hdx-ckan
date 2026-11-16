@@ -25,18 +25,23 @@
   {% snippet 'v2/components/breadcrumb.html',
       items=[
         {'label': _('Organisations'), 'href': h.url_for('organizations_index')},
-        {'label': org_dict.display_name, 'href': ''}
+        {'label': org_dict.display_name, 'href': h.url_for('hdx_org.read', id=org_dict.name)},
+        {'label': _('Stats'), 'href': ''}
       ] %}
 {% endblock %}
 
 {# ── Hero: org header + tabs ───────────────────────────────── #}
 {% block pre_primary %}
+  {#
   {% snippet 'v2/org-hero.html',
       org_dict=org_dict, org_meta=org_meta, active_tab='stats',
       header_stats=[
         {'label': _('Datasets'), 'value': h.hdx_format_number_si(org_meta.datasets_num or 0)},
         {'label': _('Members'), 'value': h.hdx_format_number_si(org_meta.members_num or 0)}
       ] %}
+  #}
+  {% snippet 'v2/org-hero.html',
+      org_dict=org_dict, org_meta=org_meta, active_tab='stats' %}
 {% endblock %}
 
 {# ── Stats: KPI cards + charts ───────────────────────────────── #}

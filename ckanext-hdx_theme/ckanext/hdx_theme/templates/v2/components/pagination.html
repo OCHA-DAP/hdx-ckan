@@ -1,6 +1,6 @@
 {#
   Snippet: pagination.html
-  Path:    templates/snippets/components/navigation/pagination.html
+  Path:    templates/v2/components/pagination.html
 
   Parameters
   ─────────────────────────────────────────────────
@@ -15,7 +15,7 @@
   ─────────────────────────────────────────────────
   Example
 
-  {% snippet 'snippets/components/navigation/pagination.html',
+  {% snippet 'v2/components/pagination.html',
       size='md', current_page=3, total_pages=12,
       base_url=h.url_for('dataset.search') ~ '?page=' %}
 #}
@@ -51,11 +51,27 @@
 
   {# Pages — show up to 5, with ellipsis #}
   {% set window = 2 %}
+  {% if total_pages <= 5 %}
+    {% set sm_lo, sm_hi = current_page - window, current_page + window %}
+  {% elif current_page <= 3 %}
+    {% set sm_lo, sm_hi = 1, 3 %}
+  {% elif current_page >= total_pages - 2 %}
+    {% set sm_lo, sm_hi = total_pages - 2, total_pages %}
+  {% else %}
+    {% set sm_lo, sm_hi = current_page, current_page %}
+  {% endif %}
   {% for p in range(1, total_pages + 1) %}
+    {% set sm_shown = p == 1 or p == total_pages or (p >= sm_lo and p <= sm_hi) %}
+    {% set sm_gap   = not sm_shown and (p == sm_lo - 1 or p == sm_hi + 1) %}
     {% if p == 1 or p == total_pages
        or (p >= current_page - window and p <= current_page + window) %}
 
-      <a class="c-pagination__item c-pagination__item--page{{ ' c-pagination__item--active' if p == current_page }}"
+      {% if sm_gap %}
+      <span class="c-pagination__item c-pagination__item--ellipsis c-pagination__item--sm-only"
+            aria-hidden="true">…</span>
+      {% endif %}
+
+      <a class="c-pagination__item c-pagination__item--page{{ ' c-pagination__item--active' if p == current_page }}{{ ' c-pagination__item--md-up' if not sm_shown }}"
          href="{{ base_url }}{{ p }}"
          {% if p == current_page %}aria-current="page"{% endif %}
          aria-label="Page {{ p }}">
@@ -63,7 +79,7 @@
       </a>
 
     {% elif p == current_page - window - 1 or p == current_page + window + 1 %}
-      <span class="c-pagination__item c-pagination__item--ellipsis"
+      <span class="c-pagination__item c-pagination__item--ellipsis{{ ' c-pagination__item--md-up' if not sm_gap }}"
             aria-hidden="true">…</span>
     {% endif %}
   {% endfor %}

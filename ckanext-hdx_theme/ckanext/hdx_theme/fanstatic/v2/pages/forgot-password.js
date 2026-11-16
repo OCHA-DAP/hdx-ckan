@@ -13,22 +13,8 @@
     var submitButton  = document.getElementById('recover-submit');
     var recaptchaContainer = document.getElementById('recover-recaptcha');
 
-    function setButtonDisabled(btn, disabled) {
-      btn.disabled = disabled;
-      btn.classList.toggle('is-disabled', disabled);
-      btn.setAttribute('aria-disabled', disabled ? 'true' : 'false');
-    }
-
-    function setFieldError(input, message) {
-      var wrapper = input.closest('.c-search-input');
-      if (!wrapper) return;
-      var errorEl = wrapper.parentElement && wrapper.parentElement.querySelector('.c-search-input__error');
-      wrapper.classList.toggle('c-search-input--error', !!message);
-      if (errorEl) errorEl.textContent = message || '';
-    }
-
     function updateSubmitState() {
-      setButtonDisabled(submitButton, idField.value.trim() === '');
+      window.hdxV2.setDisabled(submitButton, idField.value.trim() === '');
     }
 
     idField.addEventListener('input', updateSubmitState);
@@ -61,7 +47,7 @@
     })(20);
 
     function submitRecoverForm(token) {
-      setFieldError(idField, '');
+      window.hdxV2.setFieldError(idField, '');
       var data = new URLSearchParams(new FormData(form));
       if (token) data.set('g-recaptcha-response', token);
       fetch(form.action, {
@@ -78,12 +64,12 @@
             successCard.setAttribute('tabindex', '-1');
             successCard.focus();
           } else {
-            setFieldError(idField, result.error && result.error.message);
+            window.hdxV2.setFieldError(idField, result.error && result.error.message);
             if (recaptchaWidgetId !== null) window.grecaptcha.reset(recaptchaWidgetId);
           }
         })
         .catch(function () {
-          setFieldError(idField, 'Something went wrong. Please try again.');
+          window.hdxV2.setFieldError(idField, 'Something went wrong. Please try again.');
           if (recaptchaWidgetId !== null) window.grecaptcha.reset(recaptchaWidgetId);
         });
     }

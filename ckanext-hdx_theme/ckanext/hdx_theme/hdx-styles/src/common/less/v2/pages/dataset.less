@@ -133,16 +133,7 @@
 
         .hdx-scroll-offset-header();
 
-        // Show-more button (Location/Methodology/Caveats/License/Source):
-        // hidden until JS confirms the value is actually clamped.
-        .c-text-button { display: none; }
-        &.is-clamped .c-text-button { display: inline-flex; }
-
-        &.is-open .c-text-button__icon {
-            transform:  rotate(180deg);
-            transition: transform 0.15s ease;
-            .hdx-motion();
-        }
+        .hdx-clamp-toggle();
     }
 
     &__label {

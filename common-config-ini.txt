@@ -81,6 +81,9 @@ ckan.group_and_organization_list_all_fields_max = 1000
 # ckanext.powerview.allow_user_create = true
 
 
+## User Settings
+ckan.user_reset_landing_page = hdx_signin.login
+
 ## Search Settings
 search.facets = groups res_format organization vocab_Topics
 

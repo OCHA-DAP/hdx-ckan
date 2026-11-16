@@ -21,6 +21,7 @@ Implement the full-height sliding panel that appears when the hamburger is tappe
 - Products sub-items: `padding-left: 1rem`, `font-size: 0.875rem`, `color: #3f4748`
 - User row (logged in): avatar + display name at top, chevron-right; tapping enters second level
 - Login button (logged out): NOT full-width, `width: auto`, bottom of panel
+- Add data button (logged in, below 20rem only): same footer slot; tapping it also closes the panel (`data-hdx-v2-close="offcanvas"`)
 - Slide animation: `transform: translateY` from above viewport; `transition: 0.25s ease`
 
 ## What to create
@@ -45,7 +46,7 @@ Markup lives inline at the end of `header.html`, outside `<nav class="hdx-v2-nav
                 data-hdx-v2-offcanvas-level="user-detail">
           {% snippet 'v2/components/avatar.html',
               size='sm',
-              initials=c.userobj.display_name[0] | upper,
+              initials=h.hdx_initials(c.userobj.display_name),
               badge=notif.count > 0 %}
           <span class="hdx-v2-offcanvas__user-name">{{ c.userobj.display_name }}</span>
           <span class="hdx-v2-offcanvas__user-chevron">{{ h.hdx_v2_icon('v2/icons/chevron-right.svg') }}</span>
@@ -320,7 +321,7 @@ The spec suggested reusing `navbar-user-menu.html` (the desktop panel snippet) i
 Instead, the second level renders the user menu sections using the same expandable pattern as Products in the primary level:
 
 ```jinja2
-{% for section in h.hdx_get_user_menu_sections() %}
+{% for section in user_menu_sections %}
   <button class="hdx-v2-offcanvas__nav-item hdx-v2-offcanvas__nav-item--expandable"
           type="button" aria-expanded="true"
           aria-controls="offcanvas-user-{{ section.id }}">
@@ -338,7 +339,7 @@ Instead, the second level renders the user menu sections using the same expandab
 </div>
 ```
 
-The data comes from `h.hdx_get_user_menu_sections()` — see task 018 implementation notes for the helper details. The existing `hdx-v2-offcanvas__nav-item--expandable` JS handler in `navbar.js` covers these buttons automatically (no new JS needed).
+The data comes from `h.hdx_get_user_menu_sections()`, called once at the top of `header.html` as `user_menu_sections` — see task 018 implementation notes for the helper details. The existing `hdx-v2-offcanvas__nav-item--expandable` JS handler in `navbar.js` covers these buttons automatically (no new JS needed).
 
 ### LESS cleanup
 

@@ -112,7 +112,8 @@
       {% for org in page.items %}
         {% snippet 'v2/components/org-list-card.html',
             org=org,
-            member_count=h.get_group_members(org.id) %}
+            member_count=h.get_group_members(org.id),
+            member_since=org.created %}
       {% endfor %}
 
       {% if not page.items %}

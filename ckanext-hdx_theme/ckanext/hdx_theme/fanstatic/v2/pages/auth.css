@@ -83,6 +83,14 @@
   margin: 0;
   color: var(--hdx-neutral-85);
 }
+.hdx-v2-auth-card__messages {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hdx-space-4);
+}
+.hdx-v2-auth-card__messages .hdx-v2-flash {
+  margin: 0;
+}
 .hdx-v2-auth-card__form {
   display: flex;
   flex-direction: column;

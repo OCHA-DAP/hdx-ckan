@@ -2,6 +2,16 @@
   display: flex;
   align-items: flex-start;
   width: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.c-step-pager__item {
+  display: flex;
+  align-items: flex-start;
+}
+.c-step-pager__item:not(:first-child) {
+  flex: 1 1 auto;
 }
 .c-step-pager__step {
   display: flex;

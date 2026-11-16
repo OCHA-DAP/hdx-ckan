@@ -80,10 +80,10 @@
 .c-org-list-card__description.is-clamped .c-text-button {
   display: inline-flex;
 }
-.c-org-list-card__description .c-text-button__icon {
+.c-org-list-card__description .c-text-button .c-text-button__icon {
   transition: transform 0.15s ease;
 }
-.c-org-list-card__description.is-open .c-text-button__icon {
+.c-org-list-card__description.is-open .c-text-button .c-text-button__icon {
   transform: rotate(180deg);
 }
 .c-org-list-card__desc-text {

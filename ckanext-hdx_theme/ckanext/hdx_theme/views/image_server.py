@@ -1,10 +1,11 @@
 import flask
 import logging
 import mimetypes
+import os
 
 import ckan.plugins.toolkit as tk
 
-from ckanext.hdx_theme.helpers.uploader import GlobalUpload, get_base_path
+from ckanext.hdx_theme.helpers.uploader import GlobalUpload, get_base_path, ALLOWED_IMAGE_EXTENSIONS
 
 abort = tk.abort
 _ = tk._
@@ -21,12 +22,13 @@ def global_file_download(filename):
         'upload': None
     })
     filepath = upload.get_path()
-    return _download_file(filepath, filename)
+    as_attachment = os.path.splitext(filename)[1].lower() not in ALLOWED_IMAGE_EXTENSIONS
+    return _download_file(filepath, filename, as_attachment)
 
 
-def _download_file(filepath, filename):
+def _download_file(filepath, filename, as_attachment=False):
     try:
-        resp = flask.send_file(filepath)
+        resp = flask.send_file(filepath, as_attachment=as_attachment)
         content_type, content_enc = mimetypes.guess_type(filename)
         if content_type:
             resp.headers[u'Content-Type'] = content_type

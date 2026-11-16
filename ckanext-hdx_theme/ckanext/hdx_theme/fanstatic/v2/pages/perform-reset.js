@@ -7,18 +7,12 @@
 
     var submitButton = document.getElementById('perform-reset-submit');
 
-    function setButtonDisabled(btn, disabled) {
-      btn.disabled = disabled;
-      btn.classList.toggle('is-disabled', disabled);
-      btn.setAttribute('aria-disabled', disabled ? 'true' : 'false');
-    }
-
     function updateSubmitState() {
       var valid = true;
       form.querySelectorAll('[required]').forEach(function (el) {
         if (!el.value) valid = false;
       });
-      setButtonDisabled(submitButton, !valid);
+      window.hdxV2.setDisabled(submitButton, !valid);
     }
 
     form.querySelectorAll('[required]').forEach(function (el) {

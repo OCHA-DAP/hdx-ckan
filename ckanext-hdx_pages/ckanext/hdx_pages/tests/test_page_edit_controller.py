@@ -127,3 +127,14 @@ class TestHDXControllerPage(object):
                                 headers={"Authorization": self._get_token_for_user(SYSADMIN)}, follow_redirects=False)
         except Exception as ex:
             assert True
+
+    def test_page_edit_preselects_locations(self, app):
+        context_sysadmin = {'model': model, 'session': model.Session, 'user': SYSADMIN}
+        page_dict = _get_action('page_create')(context_sysadmin, page_elnino)
+        location = model.Group.get(LOCATION)
+        assert location.id != location.name
+        _get_action('invalidate_cache_for_groups')({'ignore_auth': True}, {})
+
+        res = self._get_url(app, url_for(u'hdx_custom_page.edit', id=page_dict.get('id')),
+                            self._get_token_for_user(SYSADMIN))
+        assert '<option value="{}" selected'.format(LOCATION) in res.body

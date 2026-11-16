@@ -2,10 +2,10 @@
   Snippet: search-filters.html
   Path:    templates/v2/search-filters.html
 
-  Shared filter panel — renders the "Filter by" heading and five
+  Filter panel — renders the "Filter by" heading and five
   filter dropdowns (Location, Organisation, Format, Topics, Advanced
-  filters), plus (when wired) the archived "Show only" toggle. Included in
-  both the LG inline sidebar and the MD/SM overlay body.
+  filters), plus (when wired) the archived "Show only" toggle. An "Update
+  status" dropdown is prepended when facet_list has 'ext_update_status'.
 
   Parameters
   ──────────────────────────────────────────────────────────────────
@@ -15,7 +15,7 @@
                              count, selected}.
   archived_url_helper {ArchivedUrlHelper}  full_facet_info.get('archived_url_helper').
                              Optional — when omitted, no "Show only" archived
-                             toggle is rendered (e.g. no page type has wired it).
+                             toggle is rendered.
                              default: None
   ──────────────────────────────────────────────────────────────────
 #}
@@ -28,6 +28,9 @@
   {'key': 'res_format',   'label': 'Format',        'placeholder': 'All formats'},
   {'key': 'vocab_Topics', 'label': 'Topics',        'placeholder': 'All topics'},
 ] %}
+{% if 'ext_update_status' in facet_list %}
+  {% set filter_defs = [{'key': 'ext_update_status', 'label': 'Update status', 'placeholder': 'All statuses'}] + filter_defs %}
+{% endif %}
 
 <span class="hdx-v2-search-filters__heading">Filter by</span>
 
