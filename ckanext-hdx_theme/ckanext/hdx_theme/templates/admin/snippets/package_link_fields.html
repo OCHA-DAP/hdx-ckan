@@ -1,0 +1,59 @@
+{#
+  Snippet: package_link_fields.html
+  Path:    templates/admin/snippets/package_link_fields.html
+
+  The fields of one Package Links item (caller() of a c-config-item on
+  admin/package_links.html): Title, URL, Open in a new tab, Text to be
+  displayed, Datasets to highlight, and the stored buttonText as a hidden
+  input when set. Field ids are <prefix>-<name>.
+
+  Parameters
+  ─────────────────────────────────────────────────
+  item          {dict}    Stored item; {} for a new one.  default: {}
+  prefix        {string}  Unique id prefix.  Required.
+  ─────────────────────────────────────────────────
+  Example
+
+  {% snippet 'admin/snippets/package_link_fields.html',
+      item=item, prefix='package-link-1' %}
+#}
+
+{% set item   = item   if item   is defined else {} %}
+{% set prefix = prefix if prefix is defined else '' %}
+
+<div class="c-form-field">
+  {% snippet 'v2/components/text-field.html',
+      size='l', label=_('Title'), required=True,
+      name='title', id=prefix ~ '-title', value=item.title or '',
+      placeholder=_('Title'),
+      input_attrs={'data-required-message': _('Title is required')} %}
+</div>
+<div class="c-form-field">
+  {% snippet 'v2/components/text-field.html',
+      size='l', label=_('URL'), required=True,
+      name='url', id=prefix ~ '-url', value=item.url or '',
+      placeholder=_('eg. https://...'),
+      input_attrs={'data-required-message': _('URL is required')} %}
+</div>
+<div class="c-form-field">
+  {% snippet 'v2/components/select.html',
+      size='m', label=_('Open in a new tab'), required=True,
+      name='newTab', id=prefix ~ '-newTab',
+      options={'true': _('Yes'), 'false': _('No')},
+      selected='true' if item.newTab in [true, 'true'] else 'false' %}
+</div>
+<div class="c-form-field">
+  {% snippet 'v2/components/text-field.html',
+      size='l', label=_('Text to be displayed'),
+      name='label', id=prefix ~ '-label', value=item.label or '',
+      placeholder=_('eg. This dataset can be viewed in the') %}
+</div>
+<div class="c-form-field">
+  {% snippet 'v2/components/text-field.html',
+      size='l', multiline=True, label=_('Datasets to highlight'),
+      name='package_list', id=prefix ~ '-package_list', value=item.package_list or '',
+      placeholder=_('dataset1,dataset2,...') %}
+</div>
+{% if item.buttonText %}
+  <input type="hidden" name="buttonText" value="{{ item.buttonText }}">
+{% endif %}

@@ -9,6 +9,7 @@ import ckan.plugins.toolkit as tk
 from ckan.common import current_user
 from ckan.types import Context
 from ckanext.hdx_org_group.controller_logic.organization_join_logic import OrgJoinLogic
+from ckanext.hdx_org_group.helpers.organization_helper import hdx_organization_logo_url
 
 log = logging.getLogger(__name__)
 
@@ -72,8 +73,7 @@ def set_custom_rect_logo_url(org_dict):
     if 'customization' in org_dict and org_dict.get('customization'):
         customization = json.loads(org_dict.get('customization'))
         if customization and customization.get('image_rect', None):
-            org_dict['custom_rect_logo_url'] = url_for('hdx_local_image_server.org_file',
-                                                       filename=customization.get('image_rect'), qualified=True)
+            org_dict['custom_rect_logo_url'] = hdx_organization_logo_url(customization.get('image_rect'), qualified=True)
 def confirm_organisation() -> str:
     context = _prepare_and_check_access()
 

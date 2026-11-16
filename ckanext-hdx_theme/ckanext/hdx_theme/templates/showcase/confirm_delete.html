@@ -19,7 +19,7 @@
   <p class="form-actions">
   <form action="{{ h.url_for(showcase_delete_route, id=c.pkg_dict.name) }}" method="post">
     {{ h.csrf_input() }}
-    <button class="btn" type="submit" name="cancel" >{{ _('Cancel') }}</button>
+    <a class="btn" href="{{ h.url_for('showcase_blueprint.edit', id=c.pkg_dict.name) }}">{{ _('Cancel') }}</a>
     <button class="btn btn-danger" type="submit" name="delete" >{{ _('Confirm Delete') }}</button>
   </form>
   </p>

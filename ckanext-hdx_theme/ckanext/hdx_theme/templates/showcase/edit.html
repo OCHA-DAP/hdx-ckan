@@ -1,3 +1,7 @@
-{% ckan_extends %}
+{% extends "showcase/edit_base.html" %}
 
-{% block ckanext_showcase_edit_span %} mTop30{% endblock %}
+{% set showcase_page = 'edit' %}
+
+{% block showcase_content %}
+  {{- h.snippet(form_snippet, c=c, pkg_dict=pkg_dict, **form_vars) -}}
+{% endblock %}

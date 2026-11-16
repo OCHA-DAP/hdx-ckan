@@ -136,3 +136,10 @@ class TestGroupsCaching(hdx_test_base.HdxBaseTest):
         )
         assert num_invalidate_group_caches == 1, \
             'on group_create cache invalidation should have been called'
+
+        tk.get_action('group_delete')(
+            {'user': 'testsysadmin', 'model': model, 'session': model.Session},
+            {'id': 'group_test'}
+        )
+        assert num_invalidate_group_caches == 2, \
+            'on group_delete cache invalidation should have been called'

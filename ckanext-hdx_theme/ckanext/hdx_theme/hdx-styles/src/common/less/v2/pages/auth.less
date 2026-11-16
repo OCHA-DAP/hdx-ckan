@@ -3,6 +3,7 @@
 // v2/header.html is loaded with minimal=True (logo-only navbar,
 // already styled by navbar.less — no override needed here).
 // Figma: xl-login-filled-with-error.html, sm-login.html,
+//        xl-login-password-reset.html,
 //        xl-forgot-password.html, sm-forgot-password.html,
 //        xl-forgot-password-confirmation.html, sm-forgot-password-confirmation.html
 // Compiled output: fanstatic/v2/auth-page.css
@@ -82,6 +83,14 @@
         .hdx-body-m();
         margin: 0;
         color:  var(--hdx-neutral-85);
+    }
+
+    &__messages {
+        display:        flex;
+        flex-direction: column;
+        gap:            var(--hdx-space-4);
+
+        .hdx-v2-flash { margin: 0; }
     }
 
     &__form {

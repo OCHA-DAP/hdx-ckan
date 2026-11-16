@@ -9,7 +9,6 @@ import ckan.plugins.toolkit as tk
 import ckan.model as model
 
 from ckan.types import Context
-from ckanext.hdx_theme.helpers.uploader import GlobalUpload
 
 abort = tk.abort
 _ = tk._
@@ -35,9 +34,7 @@ def show():
     action_context: Context = {'model': model, 'session': model.Session, 'user': g.user}
     setting_value = get_action('hdx_quick_links_settings_show')(action_context, {})
     template_data = {
-        'data': {
-            'hdx.quick_links.config': json.dumps(setting_value)
-        }
+        'items': setting_value
     }
 
     return render('admin/quick_links.html', extra_vars=template_data)
@@ -83,7 +80,10 @@ def update():
             existing_setting_list.append(item)
         else:
             existing_index, existing_element = _find_quick_links_item_by_id(existing_setting_list, item.get('id'))
-            existing_setting_list[existing_index] = item
+            if existing_index >= 0:
+                existing_setting_list[existing_index] = item
+            else:
+                existing_setting_list.append(item)
 
         data_dict = {
             'hdx.quick_links.config': _sort_quick_links_items(existing_setting_list)
@@ -93,7 +93,7 @@ def update():
     else:
         ret = json.dumps({
             'message': _('Badly formatted data')
-        })
+        }), 400
 
     return ret
 
@@ -113,18 +113,6 @@ def _find_quick_links_item_by_id(quick_links_items, id):
     return index, element
 
 
-def _remove_file_by_path(path):
-    '''
-    :param path: something like /global/[uuid].png
-    '''
-    if path:
-        existing_upload = GlobalUpload({
-            'filename': path,
-            'upload': None
-        })
-        existing_upload.delete()
-
-
 def _process_request():
     '''
     :return: processes the request and returns a quick_links item
@@ -132,16 +120,20 @@ def _process_request():
     '''
 
     title = request.form.get('title')
-    if not title:
+    if not title or not request.form.get('url'):
         return None
     else:
+        try:
+            order = int(request.form.get('order', -1))
+        except ValueError:
+            return None
         item = {
             'title': title,
             # 'description': request.form.get('description'),
             # 'graphic': request.form.get('graphic'),
             # 'graphic_upload': request.form.get('graphic_upload'),
             'url': request.form.get('url'),
-            'order': int(request.form.get('order', -1)),
+            'order': order,
             'newTab': True if request.form.get('newTab') == 'true' else False,
             'archived': True if request.form.get('archived') == 'true' else False,
             # 'embed': True if request.form.get('embed') == 'true' else False,

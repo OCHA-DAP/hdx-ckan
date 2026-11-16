@@ -22,3 +22,18 @@ def test_dataviz_page_load(app):
     response2 = app.get(url, headers={'Authorization': sysadmin_token})
 
     assert 'Edit' in response2.body
+
+
+@pytest.mark.usefixtures('keep_db_tables_on_clean', 'hdx_clean_db', 'clean_index', 'setup_user_data')
+def test_showcase_management_pages_load(app):
+    sysadmin_token = factories.APIToken(user=SYSADMIN, expires_in=2, unit=60 * 60)['token']
+    showcase = generate_test_showcase(SYSADMIN, 'showcase-pages', False)
+    pages = [
+        (_url_for('showcase_blueprint.new'), 'Add showcase'),
+        (_url_for('showcase_blueprint.edit', id=showcase['name']), 'Edit showcase'),
+        (_url_for('showcase_blueprint.manage_datasets', id=showcase['name']), 'Edit showcase'),
+    ]
+    for url, heading in pages:
+        response = app.get(url, headers={'Authorization': sysadmin_token})
+        assert response.status_code == 200
+        assert '<h1 class="hdx-v2-signup-form-page__heading">{}</h1>'.format(heading) in response.body

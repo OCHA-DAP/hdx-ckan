@@ -1,0 +1,66 @@
+{#
+  Snippet: homepage_highlight_fields.html
+  Path:    templates/admin/snippets/homepage_highlight_fields.html
+
+  The fields of one Homepage Highlights item (caller() of a c-config-item on
+  admin/carousel.html): Upload new thumbnail (c-image-upload with a large
+  preview; PNG, GIF or JPEG files up to 50KB and 550px wide unless the page
+  URL has overrideImage=true), Title, URL, Open in a new tab, and the stored
+  description, embed and buttonText as hidden inputs when set. Field ids are
+  <prefix>-<name>.
+
+  Parameters
+  ─────────────────────────────────────────────────
+  item          {dict}    Stored item; {} for a new one.  default: {}
+  prefix        {string}  Unique id prefix.  Required.
+  ─────────────────────────────────────────────────
+  Example
+
+  {% snippet 'admin/snippets/homepage_highlight_fields.html',
+      item=item, prefix='homepage-highlight-1' %}
+#}
+
+{% set item   = item   if item   is defined else {} %}
+{% set prefix = prefix if prefix is defined else '' %}
+{% set check  = request.args.get('overrideImage') != 'true' %}
+
+{% snippet 'v2/components/image-upload.html',
+    field_url='graphic', field_upload='graphic_upload',
+    value=item.graphic or '', preview_url=item.graphic or '',
+    label=_('Upload new thumbnail'), id=prefix ~ '-graphic',
+    link_enabled=False, remove_enabled=False,
+    upload_label=_('Upload file'), preview='l',
+    accept='image/png,image/gif,image/jpeg',
+    max_bytes=50000 if check else none,
+    image_width=550 if check else none,
+    check_message=_('Please keep files under 50KB and 550px wide.') %}
+<div class="c-form-field">
+  {% snippet 'v2/components/text-field.html',
+      size='l', label=_('Title'), required=True,
+      name='title', id=prefix ~ '-title', value=item.title or '',
+      placeholder=_('Title'),
+      input_attrs={'data-required-message': _('Title is required')} %}
+</div>
+<div class="c-form-field">
+  {% snippet 'v2/components/text-field.html',
+      size='l', label=_('URL'), required=True,
+      name='url', id=prefix ~ '-url', value=item.url or '',
+      placeholder=_('eg. https://...'),
+      input_attrs={'data-required-message': _('URL is required')} %}
+</div>
+<div class="c-form-field">
+  {% snippet 'v2/components/select.html',
+      size='m', label=_('Open in a new tab'), required=True,
+      name='newTab', id=prefix ~ '-newTab',
+      options={'true': _('Yes'), 'false': _('No')},
+      selected='true' if item.newTab in [true, 'true'] else 'false' %}
+</div>
+{% if item.description %}
+  <input type="hidden" name="description" value="{{ item.description }}">
+{% endif %}
+{% if item.embed in [true, 'true'] %}
+  <input type="hidden" name="embed" value="true">
+{% endif %}
+{% if item.buttonText %}
+  <input type="hidden" name="buttonText" value="{{ item.buttonText }}">
+{% endif %}

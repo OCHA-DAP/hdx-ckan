@@ -43,38 +43,38 @@ name-sorted list is kept** (Figma's flat, paginated, "Last added"-sorted list is
 
 | Rule | View | Notes |
 |---|---|---|
-| `GET /organization/members/<id>` | `members(id)` (line 42) | Page render; **login required** (`if not g.user: raise NotAuthorized`, lines 55–56) |
-| `POST /organization/member_delete/<id>` | `member_delete(id)` (line 153) | Remove member / leave org |
-| `POST /organization/member_new/<id>` | `member_new(id)` (line 215) | Single add / **change role** (modal posts here) |
-| `POST /organization/bulk_member_new/<id>` | `bulk_member_new(id)` (line 299) | The visible "Add / invite" box posts here |
+| `GET /organization/members/<id>` | `members(id)` | Page render; **login required** (`if not g.user: raise NotAuthorized`) |
+| `POST /organization/member_delete/<id>` | `member_delete(id)` | Remove member / leave org |
+| `POST /organization/member_new/<id>` | `member_new(id)` | Single add / **change role** (modal posts here) |
+| `POST /organization/bulk_member_new/<id>` | `bulk_member_new(id)` | The visible "Add / invite" box posts here |
 
-`members()` template context (lines 92–104): `q`, `sort_by_selected`, `members`,
+`members()` template context: `q`, `sort_by_selected`, `members`,
 `member_groups` (OrderedDict `role → [(user_id, user, translated_role, role, user_name,
 sysadmin), …]`), `allow_view_right_side` (sysadmin OR has any role), `allow_approve` (sysadmin OR
 role == `'admin'`), `current_user` (`h.hdx_get_user_info` dict + injected `role`), `org_meta`,
 `group_dict`, `request_list` (pending join requests), `non_sysadmin_admins` (last-admin guard).
 
-Template selection still branches (lines 112–115): `custom_members.html` when `org_meta.is_custom`
+Template selection still branches: `custom_members.html` when `org_meta.is_custom`
 else `members.html` — the same branch 056/057 removed for `read()`/`activity_offset()` (→ D1).
 
 ### 1.2 Data source
 
-`member_list` is **HDX-overridden** in `ckanext-hdx_theme/ckanext/hdx_theme/helpers/actions.py:39`:
+`member_list` is **HDX-overridden** in `ckanext-hdx_theme/ckanext/hdx_theme/helpers/actions.py`:
 queries `Member` ⋈ `User` (active members), filters `q` server-side
 (`User.fullname ILIKE %q% OR User.name ILIKE %q%`), returns tuples — **no membership timestamp**.
 The core `member` table has **no created/modified column at all**
-(`ckan/model/group.py:29–35`: id, table_name, table_id, capacity, group_id, state), so "date
+(`member_table` in `ckan/model/group.py`: id, table_name, table_id, capacity, group_id, state), so "date
 added to org" does not exist anywhere in the data model (→ D3).
 
 Per-row enrichment: `member_item.html` calls `h.hdx_get_org_member_info(id, group_name)`
-(`helpers/helpers.py:259`) **once per member** — user info + datasets/orgs/countries counts +
+(`helpers/helpers.py`) **once per member** — user info + datasets/orgs/countries counts +
 maintainer-package list. N+1-shaped; relevant for large orgs (§10, §11).
 
 ### 1.3 Templates (today)
 
 ```
 organization/read_v1_base.html                 v1 shell (Bootstrap header/tab-bar)
-  └─ organization/members.html                  STANDARD org Members page (272 lines)
+  └─ organization/members.html                  STANDARD org Members page
        └─ organization/custom_members.html      CUSTOM org override (header/branding only)
 
 organization/snippets/member_item.html          member row (avatar, links, role line, counters, actions)
@@ -84,15 +84,15 @@ organization/snippets/add_member.html           legacy add-member modal — appe
 snippets/search_form_new.html                   shared v1 search + order-by dropdown (type='members')
 ```
 
-`members.html` structure: GA blocks `analytics_org_name`/`analytics_org_id` (lines 5–6) →
+`members.html` structure: GA blocks `analytics_org_name`/`analytics_org_id` →
 breadcrumb (Organisations / org / Members) → left column (`col-8`, or `col-12` when
-`allow_view_right_side` is false): search/sort snippet (line 41, `count=members|length`,
-default sort `'title asc'`), then **per-role sections** (lines 43–70): uppercase header
+`allow_view_right_side` is false): search/sort snippet (`count=members|length`,
+default sort `'title asc'`), then **per-role sections**: uppercase header
 `"{{role_name}}s [{{count}}]"`, optional **"Group message to all {role}s"** link (select2 +
 reCAPTCHA popup, gated by `org_meta.group_message_info.display_group_message`), then a `<ul>` of
 `member_item.html` rows → right column (`col-4`, gated `allow_view_right_side`): "Your role"
 header + current-user card + "Pending approval" list + "Add / invite" form.
-`page_pagination` block is **empty** (lines 251–252) — the full member list renders on one page.
+`page_pagination` block is **empty** — the full member list renders on one page.
 
 ### 1.4 Member row rendering (`member_item.html`)
 
@@ -119,7 +119,7 @@ Roles come from `h.hdx_member_roles_list()` → `[Admin/admin, Editor/editor, Me
 - **Search: server-side.** GET form, param `q`, full page reload; ILIKE filter inside the
   `member_list` action (§1.2). No autocomplete, no client-side filtering.
 - **Sort: server-side, name only.** Param `sort`; the view sorts in Python on display-name
-  lowercase, `reverse` only when `sort == 'title desc'` (members.py:58–59, 74). The shared v1
+  lowercase, `reverse` only when `sort == 'title desc'` (`members()` in members.py). The shared v1
   order-by dropdown renders more options, but **only `title asc` / `title desc` have any
   effect** on members.
 - **Pagination: none.** Entire list rendered; no `page`/`limit` params, no results-per-page.
@@ -134,7 +134,7 @@ Gated by `allow_view_right_side`; contains:
    *change-role modal* (`#edit-member-div-…`), not the profile editor (→ D8) — `|`
    **"Leave this organization"** (self-delete confirmation modal; self-removal is authorized by
    the HDX `member_delete` auth override,
-   `ckanext-hdx_org_group/.../actions/authorize.py:17–28`). Blocked with *"Please add another
+   `ckanext-hdx_org_group/.../actions/authorize.py`). Blocked with *"Please add another
    admin…"* when the current user is the last non-sysadmin admin.
 3. **"Pending approval [N]"** (only `allow_approve` and `request_list` non-empty): per request —
    avatar, user links, `Requested {date}`, **Approve** (role dropdown) / **Decline** buttons →
@@ -164,7 +164,7 @@ loaded by the v2 page (v1-assets-untouched rule).
   `add method: 'by invitation'`, fired per address in `bulk_member_new`). Mixpanel + GA meta
   (org name/id). **These fire in the POST views and survive the template migration untouched.**
 - **Client-side**: `members.js` → `hdxUtil.analytics.sendMemberAddRejectEvent('by request',
-  approved)` on Approve/Decline (`google-analytics.js:602` — Mixpanel `member add` /
+  approved)` on Approve/Decline (`google-analytics.js` — Mixpanel `member add` /
   `member rejected` + GA dataLayer push). Depends on the `analytics_org_name`/`analytics_org_id`
   template blocks. Whatever replaces the approve/decline UI must keep firing these (§10).
 
@@ -347,7 +347,7 @@ New component pair, following the established convention:
   `member` table stores no timestamp (§1.2) and backend changes are excluded. Ship exactly
   **Name Ascending** (default, = existing `title asc`) and **Name Descending** (`title desc`),
   matching the existing v2 nav-controls labels; "Last added" is dropped.
-- Sorting continues to be applied in the existing view (`members.py:74`) — no logic change, the
+- Sorting continues to be applied in the existing view (`members()` in `members.py`) — no logic change, the
   new UI just submits the same `sort` values (`title asc` / `title desc`).
 
 ---
@@ -525,7 +525,7 @@ task and are folded into §§2–11 (D-numbers are kept as reference ids used th
 
 | # | Decision |
 |---|---|
-| **D1** | Unify — remove the `is_custom` branch in `members()` (`views/members.py:112-115`); `custom_members.html` left orphaned like `custom_activity_stream.html` (057 D9) |
+| **D1** | Unify — remove the `is_custom` branch in `members()` (`views/members.py`); `custom_members.html` left orphaned like `custom_activity_stream.html` (057 D9) |
 | **D2** | **No pagination** — v1 parity, deliberate Figma deviation; no "Results per page" dropdown, no view/template slicing, no new GET params |
 | **D3** | Sort ships **Name Ascending / Descending only** (existing `title asc`/`title desc`), default ascending; "Last added" dropped (no timestamp in the data model) |
 | **D4** | **Generalize `v2/search-nav-controls.html`** — caller-provided option lists / param names, per-page dropdown optional; regression-check the search page + org datasets tab |

@@ -43,6 +43,8 @@ ckan.auth.create_unowned_dataset=true
 # @pytest.mark.ckan_config(u"ckan.auth.public_user_details", False)
 # ckan.auth.public_user_details=false
 
+ckan.user_reset_landing_page = hdx_signin.login
+
 ckan.cache_validation_enabled = True
 ckan.cache_enabled = False
 ckan.tests.functional.test_cache.expires = 1800

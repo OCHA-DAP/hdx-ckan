@@ -9,8 +9,21 @@
   ─────────────────────────────────────────────────
   size          {string}  'm' | 's'  default: 'm'
   label         {string}  Label text above the select.  default: '' (hidden)
-  placeholder   {string}  Text shown for the disabled empty option.  default: 'Dropdown'
-  selected      {string}  Current selected value (if any).  default: ''
+  placeholder   {string}  Text of a disabled empty first option, selected while
+                          `selected` is empty (with `multiple`: Select2's
+                          data-placeholder, no option). Omit for none.  default: ''
+  selected      {string}  Current selected value (if any); a list with
+                          `multiple`.  default: '' ([] with `multiple`)
+  multiple      {bool}    Multi-select: the <select> gets `multiple` and posts
+                          one value per selected option; with `searchable`,
+                          Select2 shows them as chips (c-label grey, size S).
+                          default: False
+  chip_color    {string}  Chip colour with `multiple`: '' (grey) | 'cyan'
+                          (c-dropdown--chips-cyan).  default: ''
+  description   {string}  Help text between the label and the select
+                          (.c-form-field__description), id <id>-description,
+                          referenced by the select's aria-describedby
+                          (select.js copies it to Select2).  default: ''
   state         {string}  'enabled' | 'disabled'  default: 'enabled'
   chevron_src   {string}  Chevron icon path.  default: 'v2/icons/chevron-down.svg'
   extra_classes {string}  Additional classes on the wrapper div.  default: ''
@@ -24,7 +37,22 @@
   errors        {list|string}  Error message(s). Adds the c-dropdown--error modifier
                           and renders .c-dropdown__error below the wrapper.
                           default: None
-  required      {bool}    Appends a red asterisk inside the label.  default: False
+  required      {bool}    Red asterisk in the label + native `required` on the
+                          <select>.  default: False
+  select_attrs  {dict}    Extra HTML attrs on the <select> itself
+                          (e.g. aria-labelledby).  default: {}
+  searchable    {bool}    Turns the select into a Select2 field with a search box in
+                          its panel (components/select.js, `hdx-v2` theme in
+                          dropdown.less); with a placeholder it also gets a clear (×)
+                          button. Select2 fires `change` through jQuery only. The
+                          caller loads the `v2-select2-styles` and
+                          `v2-select2-scripts` bundles. A `data-source` URL in
+                          select_attrs loads the options from a user autocomplete
+                          endpoint as the user types (at least one character):
+                          value = name, text = "fullname (name)" or the name.
+                          With data-source-type="tag" as well, the endpoint is
+                          the tag autocomplete: value = text = the tag name.
+                          default: False
   ─────────────────────────────────────────────────
 
   Example
@@ -32,12 +60,28 @@
   {% snippet 'v2/components/select.html',
       label='Country', placeholder='Select a country',
       name='country', options={'sd': 'Sudan', 'td': 'Chad'} %}
+
+  {% snippet 'v2/components/select.html',
+      label='Country', placeholder='Select a country',
+      name='country', options=countries, searchable=True %}
+
+  {% snippet 'v2/components/select.html',
+      label='User', placeholder='Username', name='username', id='username',
+      select_attrs={'data-source': '/api/2/util/user/autocomplete'},
+      searchable=True %}
+
+  {% snippet 'v2/components/select.html',
+      label='Location', name='groups', id='field-groups',
+      description='The countries this page covers.',
+      options=locations, selected=['sdn', 'tcd'], multiple=True, searchable=True,
+      chip_color='cyan' %}
 #}
 
 {% set size             = size             if size             is defined else 'm' %}
 {% set label            = label            if label            is defined else '' %}
-{% set placeholder      = placeholder      if placeholder      is defined else 'Dropdown' %}
-{% set selected         = selected         if selected         is defined else '' %}
+{% set placeholder      = placeholder      if placeholder      is defined else '' %}
+{% set multiple         = multiple         if multiple         is defined else false %}
+{% set selected         = selected         if selected         is defined else ([] if multiple else '') %}
 {% set state            = state            if state            is defined else 'enabled' %}
 {% set chevron_src      = chevron_src      if chevron_src      is defined else 'v2/icons/chevron-down.svg' %}
 {% set extra_classes    = extra_classes    if extra_classes    is defined else '' %}
@@ -48,18 +92,29 @@
 {% set option_attrs     = option_attrs     if option_attrs     is defined else {} %}
 {% set errors           = errors           if errors           is defined else None %}
 {% set required         = required         if required         is defined else false %}
+{% set select_attrs     = select_attrs     if select_attrs     is defined else {} %}
+{% set searchable       = searchable       if searchable       is defined else false %}
+{% set chip_color       = chip_color       if chip_color       is defined else '' %}
+{% set description      = description      if description      is defined else '' %}
+{% if description %}
+  {% set select_attrs = dict(select_attrs, **{'aria-describedby': (id ~ '-description ' ~ select_attrs.get('aria-describedby', '')) | trim}) %}
+{% endif %}
 
 {% set is_disabled = (state == 'disabled') %}
 
 {% set classes = ['c-dropdown', 'c-dropdown--size-' ~ size, 'c-dropdown--native'] %}
 {% if is_disabled %}{% set classes = classes + ['c-dropdown--disabled'] %}{% endif %}
 {% if errors      %}{% set classes = classes + ['c-dropdown--error']    %}{% endif %}
+{% if chip_color  %}{% set classes = classes + ['c-dropdown--chips-' ~ chip_color] %}{% endif %}
 {% if extra_classes %}{% set classes = classes + [extra_classes] %}{% endif %}
 
 {% if label %}
 <label class="c-form-field__label"{% if id %} for="{{ id }}"{% endif %}>
   {{ label }}{% if required %}<span class="c-form-field__required" aria-hidden="true"> *</span>{% endif %}
 </label>
+{% endif %}
+{% if description %}
+<span class="c-form-field__description" id="{{ id }}-description">{{ description }}</span>
 {% endif %}
 <div class="{{ classes | join(' ') }}"
      {% for key, val in attrs.items() %}{{ key }}="{{ val }}" {% endfor %}>
@@ -68,10 +123,15 @@
           name="{{ name }}"
           {% if id %}id="{{ id }}"{% endif %}
           {% if required %}required{% endif %}
-          {% if is_disabled %}disabled aria-disabled="true"{% endif %}>
-    <option value="" disabled {% if not selected %}selected{% endif %}>{{ placeholder }}</option>
+          {% if is_disabled %}disabled aria-disabled="true"{% endif %}
+          {% if searchable %}data-searchable{% endif %}
+          {% if multiple %}multiple{% if placeholder %} data-placeholder="{{ placeholder }}"{% endif %}{% endif %}
+          {% for key, val in select_attrs.items() %} {{ key }}="{{ val }}"{% endfor %}>
+    {% if placeholder and not multiple %}
+      <option value="" disabled {% if not selected %}selected{% endif %}>{{ placeholder }}</option>
+    {% endif %}
     {% for value, opt_label in options.items() %}
-      <option value="{{ value }}" {% if selected == value %}selected{% endif %}
+      <option value="{{ value }}" {% if ((value in selected) if multiple else (selected == value)) %}selected{% endif %}
         {% if option_attrs.get(value) %}{% for attr_key, attr_val in option_attrs[value].items() %}{{ attr_key }}="{{ attr_val }}" {% endfor %}{% endif %}>{{ opt_label }}</option>
     {% endfor %}
   </select>

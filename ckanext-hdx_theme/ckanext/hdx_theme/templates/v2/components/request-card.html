@@ -1,0 +1,55 @@
+{#
+  Snippet: request-card.html
+  Path:    templates/v2/components/request-card.html
+
+  HDX Connect dataset group card: dataset title + optional
+  "Maintained by" line, then one or more c-request-item rows from the
+  caller() body. Wrap several cards in .c-request-card-list.
+
+  Parameters
+  ─────────────────────────────────────────────────
+  title            {string}  Dataset title.  default: ''
+  title_href       {string}  Dataset URL; the title is plain text without it.
+                             default: ''
+  title_tag        {string}  Title element, e.g. 'h4'.  default: 'h3'
+  maintainer_label {string}  Maintainer name; the "Maintained by" line renders
+                             only when set.  default: ''
+  maintainer_href  {string}  Maintainer profile URL.  default: '#'
+  extra_classes    {string}  default: ''
+  caller()         block     The c-request-item rows.
+  ─────────────────────────────────────────────────
+  Example
+
+  {% call h.snippet('v2/components/request-card.html',
+      title='Example dataset', title_href='/dataset/example') %}
+    {% snippet 'v2/components/request-item.html', name='Jane Doe', ... %}
+  {% endcall %}
+#}
+
+{% set title            = title            if title            is defined else '' %}
+{% set title_href       = title_href       if title_href       is defined else '' %}
+{% set title_tag        = title_tag        if title_tag        is defined else 'h3' %}
+{% set maintainer_label = maintainer_label if maintainer_label is defined else '' %}
+{% set maintainer_href  = maintainer_href  if maintainer_href  is defined else '#' %}
+{% set extra_classes    = extra_classes    if extra_classes    is defined else '' %}
+
+<div class="c-request-card{{ ' ' ~ extra_classes if extra_classes else '' }}">
+  <div class="c-request-card__header">
+    <{{ title_tag }} class="c-request-card__title">
+      {%- if title_href -%}
+        <a class="c-request-card__title-link" href="{{ title_href }}">{{ title }}</a>
+      {%- else -%}
+        {{ title }}
+      {%- endif -%}
+    </{{ title_tag }}>
+    {% if maintainer_label %}
+      <p class="c-request-card__maintainer">
+        {{ _('Maintained by') }}
+        {% snippet 'v2/components/text-link.html',
+            label=maintainer_label, href=maintainer_href,
+            style='secondary', size='s' %}
+      </p>
+    {% endif %}
+  </div>
+  {% if caller is defined %}{{ caller() }}{% endif %}
+</div>

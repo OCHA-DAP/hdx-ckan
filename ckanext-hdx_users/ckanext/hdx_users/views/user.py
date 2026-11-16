@@ -6,19 +6,23 @@ from ckan.types import Context
 from flask import Blueprint, url_for
 
 import ckan.authz as new_authz
+import ckan.lib.navl.dictization_functions as dictization_functions
+import ckan.logic as logic
 import ckan.model as model
 import ckanext.hdx_package.helpers.analytics as analytics
 import ckanext.hdx_users.helpers.helpers as usr_h
 import ckanext.hdx_users.helpers.mailer as hdx_mailer
 import ckanext.hdx_users.helpers.tokens as tokens
 
-from ckan.views.user import PerformResetView, RequestResetView
+from ckan.views.user import ApiTokenView, PerformResetView, RequestResetView
 from ckan.views.user import (
     follow as _follow, followers as _followers, unfollow as _unfollow, logout as _logout
 )
 # from ckan.views.user import generate_apikey as _generate_apikey
 # from ckan.views.user import logged_out as _logged_out
+from ckanext.hdx_users.controller_logic.dashboard_dataset_logic import DashboardDatasetLogic
 from ckanext.hdx_users.general_token_model import ObjectType, get_by_type_and_user_id_and_object, TokenType
+from ckanext.hdx_users.views.dashboard import _redirect_keeping_query
 from ckanext.hdx_users.views.notification_platform import _generate_url_for
 from ckanext.hdx_users.views.user_edit_view import HDXEditView, HDXTwoStep
 from ckanext.hdx_users.views.user_view_helper import *
@@ -162,33 +166,54 @@ class HDXPerformResetView(PerformResetView):
 
 def read(id=None):
     """
-    Identical to user.py:read, but needs to be here to receive requests
-    and direct them to the correct _setup_template_variables method
+    The user's Datasets page: datasets the viewed user maintains
     """
     context = {u'model': model, u'session': model.Session,
                u'user': g.user, u'auth_user_obj': g.userobj,
                u'for_view': True}
     data_dict = {u'id': id,
-                 u'user_obj': g.userobj,
-                 u'include_datasets': True,
-                 u'include_num_followers': True}
+                 u'user_obj': g.userobj}
 
     try:
         check_access(u'user_show', context, data_dict)
     except NotAuthorized:
         abort(403, _(u'Not authorized to see this page'))
 
-    context[u'with_related'] = True
-
     extra_vars = _extra_template_variables(context, data_dict)
 
-    # The legacy templates have the user's activity stream on the user
-    # profile page, new templates do not.
-    # if tk.asbool(config.get(u'ckan.legacy_templates', False)):
-    #     g.user_activity_stream = get_action(u'user_activity_list_html')(
-    #         context, {u'id': g.user_dict[u'id']})
+    dashboard_dataset_logic = DashboardDatasetLogic(extra_vars[u'user_dict'], extra_vars[u'is_myself']).read()
+    if dashboard_dataset_logic.redirect_result:
+        return dashboard_dataset_logic.redirect_result
+    extra_vars[u'search_data'] = dashboard_dataset_logic.search_data
 
     return render(u'user/read.html', extra_vars=extra_vars)
+
+
+def read_organizations(id=None):
+    """
+    "My Organisations" tab: only the user's own organisations
+    """
+    if not g.user:
+        h.flash_error(_(u'Not authorized to see this page'))
+        return h.redirect_to(u'user.login')
+
+    context = {u'model': model, u'session': model.Session,
+               u'user': g.user, u'auth_user_obj': g.userobj,
+               u'for_view': True}
+    data_dict = {u'id': id, u'user_obj': g.userobj}
+
+    extra_vars = _extra_template_variables(context, data_dict)
+    if not extra_vars[u'is_myself']:
+        abort(403, _(u'Not authorized to see this page'))
+
+    return render(u'user/read_organizations.html', extra_vars=extra_vars)
+
+
+def read_organizations_moved(id):
+    """
+    Moved to /user/organizations/<id>
+    """
+    return _redirect_keeping_query(h.url_for(u'hdx_user.read_organizations', id=id), code=301)
 
 
 def _extra_template_variables(context, data_dict):
@@ -209,15 +234,58 @@ def _extra_template_variables(context, data_dict):
     if user_dict[u'state'] == u'deleted' and not is_sysadmin:
         abort(404, _(u'User not found'))
     is_myself = user_dict[u'name'] == g.user
-    about_formatted = h.render_markdown(user_dict[u'about'])
 
     extra = {
         u'is_sysadmin': is_sysadmin,
         u'user_dict': user_dict,
-        u'is_myself': is_myself,
-        u'about_formatted': about_formatted
+        u'is_myself': is_myself
     }
     return extra
+
+
+class HDXApiTokenView(ApiTokenView):
+    """
+    "API Tokens" settings page: list and create (the new token is shown once, in a flash)
+    """
+
+    def get(self, id, data=None, errors=None):
+        context = {
+            u'user': current_user.name,
+            u'auth_user_obj': current_user,
+            u'for_view': True,
+            u'include_plugin_extras': True
+        }
+        try:
+            tokens = get_action(u'api_token_list')(context, {u'user': id})
+        except NotAuthorized:
+            abort(403, _(u'Unauthorized to view API tokens.'))
+        except NotFound:
+            abort(404, _(u'User not found'))
+
+        extra_vars = _extra_template_variables(context, {u'id': id})
+        extra_vars.update({
+            u'tokens': tokens,
+            u'data': data,
+            u'errors': errors
+        })
+        return render(u'user/api_tokens.html', extra_vars=extra_vars)
+
+    def post(self, id):
+        data_dict = logic.clean_dict(
+            dictization_functions.unflatten(
+                logic.tuplize_dict(logic.parse_params(request.form))))
+        data_dict[u'user'] = id
+        try:
+            token = get_action(u'api_token_create')({}, data_dict)[u'token']
+        except NotAuthorized:
+            abort(403, _(u'Unauthorized to create API tokens.'))
+        except NotFound:
+            abort(404, _(u'User not found'))
+        except ValidationError as e:
+            return self.get(id, data_dict, e.error_dict)
+
+        h.flash_success(h.snippet(u'user/snippets/api_token_created.html', token=token), allow_html=True)
+        return h.redirect_to(u'user.api_tokens', id=id)
 
 
 def logged_out_page():
@@ -226,21 +294,18 @@ def logged_out_page():
 
 def notifications(id=None):
     """
-    "Notifications" tab
+    "Notifications Settings" page: the user's email-notification subscriptions
     """
 
     if not current_user.is_authenticated:
         return h.redirect_to('user.login', came_from=h.url_for('hdx_user.notifications', id=id))
 
-    context: Context = {'model': model, 'session': model.Session, 'user': current_user.name}
+    context: Context = {'model': model, 'session': model.Session, 'user': current_user.name,
+                        'auth_user_obj': current_user, 'for_view': True}
 
-    data_dict = {'id': id, 'include_num_followers': True}
-    try:
-        user_dict = get_action('user_show')(context, data_dict)
-    except NotFound:
-        abort(404, _(u'User not found'))
-    except NotAuthorized:
-        abort(403, _(u'Not authorized to see this page'))
+    extra_vars = _extra_template_variables(context, {'id': id})
+    user_dict = extra_vars['user_dict']
+    is_myself = extra_vars['is_myself']
 
     try:
         subscriptions = tk.get_action('hdx_notifications_subscription_list')(context, {'user_id': id})
@@ -249,15 +314,14 @@ def notifications(id=None):
             object_id = subscription.get('object')
 
             try:
-                object_dict = _get_object_dict(object_type, object_id)
-                unsubscribe_token = get_by_type_and_user_id_and_object(TokenType.UNSUBSCRIBE_FOR_NOTIFICATION, current_user.id, object_type, object_id)
-                subscription['object_dict'] = object_dict
+                subscription['object_dict'] = _get_object_dict(object_type, object_id)
                 subscription['object_link'] = _generate_url_for(object_type, object_id, True)
-                subscription['unsubscribe_token'] = unsubscribe_token
-                subscription['unsubscribe_email'] = user_dict.get('email')
-            except tk.ObjectNotFound:
+                if is_myself:
+                    subscription['unsubscribe_token'] = get_by_type_and_user_id_and_object(TokenType.UNSUBSCRIBE_FOR_NOTIFICATION, current_user.id, object_type, object_id)
+                    subscription['unsubscribe_email'] = user_dict.get('email')
+            except (tk.ObjectNotFound, NotAuthorized):
                 subscription['object_dict'] = None
-                log.warning(f'{object_type.value} {object_id} does not exist for user {id}. Skipping subscription.')
+                log.warning(f'{object_type.value} {object_id} does not exist or is not accessible for user {id}. Skipping subscription.')
                 # raise tk.ValidationError(f'{object_type.value} {object_id} does not exist')
             except Exception as e:
                 log.error(f'Error retrieving target or user: {e}')
@@ -265,16 +329,16 @@ def notifications(id=None):
     except NotAuthorized:
         abort(403, _(u'Not authorized to see this page'))
 
-    # remove any subscriptiohns with problems (like missing object)
+    # remove any subscriptions with problems (like missing object)
     subscriptions = [s for s in subscriptions if s.get('object_dict')]
 
-    return render('user/notifications.html', extra_vars={
+    extra_vars.update({
         'subscriptions': subscriptions,
-        'user_dict':  user_dict,
         'analytics': {
             'analytics_came_from': analytics.came_from(request.args),
         }
     })
+    return render('user/notifications.html', extra_vars=extra_vars)
 
 
 def _get_object_dict(object_type, object_id):
@@ -316,6 +380,9 @@ user.add_url_rule(u'/followers/<id>', view_func=_followers)
 
 # user.add_url_rule(u'/generate_key', view_func=_generate_apikey, methods=(u'POST',))
 
+user.add_url_rule(u'/organizations/<id>', view_func=read_organizations)
+user.add_url_rule(u'/<id>/organizations', view_func=read_organizations_moved)
+user.add_url_rule(u'/<id>/api-tokens', view_func=HDXApiTokenView.as_view(str(u'api_tokens')))
 user.add_url_rule(u'/<id>', view_func=read)
 
 user.add_url_rule('/configure_mfa/<id>', view_func=HDXTwoStep.configure_mfa, methods=['POST'])

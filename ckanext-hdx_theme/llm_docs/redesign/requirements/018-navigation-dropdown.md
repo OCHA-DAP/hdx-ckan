@@ -40,62 +40,11 @@ Rendered inside `header.html` after the avatar button. Hidden by default; shown 
     </button>
   </div>
 
-  {# Sysadmin dashboard — sysadmin only #}
-  {% if c.userobj.sysadmin %}
-  <div class="hdx-v2-user-menu__section">
-    <button class="hdx-v2-user-menu__section-toggle" type="button"
-            aria-expanded="true" aria-controls="menu-sysadmin">
-      {{ _('Sysadmin dashboard') }}
-      <span class="hdx-v2-user-menu__chevron">{{ h.hdx_v2_icon('v2/icons/chevron-down.svg') }}</span>
-    </button>
-    <ul class="hdx-v2-user-menu__section-items" id="menu-sysadmin">
-      <li><a href="{{ h.url_for('admin.index') }}">{{ _('All sysadmins') }}</a></li>
-      <li><a href="{{ h.url_for('user.index') }}">{{ _('All users') }}</a></li>
-      <li><a href="#">{{ _('Carousel') }}</a></li>
-      <li><a href="#">{{ _('HDX Connect Dashboard') }}</a></li>
-      <li><a href="#">{{ _('Custom/Event Pages') }}</a></li>
-      <li><a href="#">{{ _('Quick Links') }}</a></li>
-      <li><a href="#">{{ _('Package Links') }}</a></li>
-      <li><a href="#">{{ _('Email') }}</a></li>
-      <li><a href="{{ h.url_for('admin.config') }}">{{ _('Config') }}</a></li>
-    </ul>
-  </div>
-  {% endif %}
+  {# Sysadmin (items the user may open) — section and items come from
+     h.hdx_get_sysadmin_nav_sections() #}
 
-  {# User dashboard #}
-  <div class="hdx-v2-user-menu__section">
-    <button class="hdx-v2-user-menu__section-toggle" type="button"
-            aria-expanded="true" aria-controls="menu-dashboard">
-      {{ _('User dashboard') }}
-      <span class="hdx-v2-user-menu__chevron">{{ h.hdx_v2_icon('v2/icons/chevron-down.svg') }}</span>
-    </button>
-    <ul class="hdx-v2-user-menu__section-items" id="menu-dashboard">
-      <li><a href="{{ h.url_for('activity.dashboard') }}">{{ _('Newsfeed') }}</a></li>
-      <li><a href="{{ h.url_for('hdx_user_dashboard.datasets') }}">{{ _('My datasets') }}</a></li>
-      <li><a href="{{ h.url_for('dashboard.organizations') }}">{{ _('My organisations') }}</a></li>
-      <li><a href="{{ h.url_for('dashboard.groups') }}">{{ _('My locations') }}</a></li>
-      <li><a href="{{ h.url_for('requestdata.my_requested_data') }}">{{ _('HDX Connect Requests') }}</a></li>
-    </ul>
-  </div>
-
-  {# User settings #}
-  <div class="hdx-v2-user-menu__section">
-    <button class="hdx-v2-user-menu__section-toggle" type="button"
-            aria-expanded="true" aria-controls="menu-settings">
-      {{ _('User settings') }}
-      <span class="hdx-v2-user-menu__chevron">{{ h.hdx_v2_icon('v2/icons/chevron-down.svg') }}</span>
-    </button>
-    <ul class="hdx-v2-user-menu__section-items" id="menu-settings">
-      <li><a href="{{ h.url_for('user.read', id=c.user) }}">{{ _('Datasets') }}</a></li>
-      <li><a href="{{ h.url_for('activity.user_activity', id=c.user) }}">{{ _('Activity stream') }}</a></li>
-      {% if c.userobj.sysadmin %}
-      <li><a href="#">{{ _('User permission') }}</a></li>
-      {% endif %}
-      <li><a href="{{ h.url_for('user.api_tokens', id=c.user) }}">{{ _('API tokens') }}</a></li>
-      <li><a href="{{ h.url_for('hdx_user.notifications') }}">{{ _('Notifications') }}</a></li>
-      <li><a href="{{ h.url_for('user.edit', id=c.user) }}">{{ _('Profile and password') }}</a></li>
-    </ul>
-  </div>
+  {# Activity and Content / Account and Settings — sections and items come from
+     h.hdx_get_user_dashboard_nav_sections() #}
 
   {# Logout #}
   {% snippet 'v2/components/button.html',
@@ -368,10 +317,10 @@ The spec above left Products on Bootstrap (`data-bs-toggle="dropdown"`). The act
 
 The spec called for `navbar-user-menu-body.html` as a shared snippet included by both the desktop panel and the mobile offcanvas second level. This was replaced with:
 
-- **`h.hdx_get_user_menu_sections()`** helper in `ckanext-hdx_theme/helpers/helpers.py` — returns a list of `{id, label, items: [{label, href}]}` dicts with all URLs resolved and sysadmin-only entries filtered based on `c.userobj.sysadmin`
+- **`h.hdx_get_user_menu_sections()`** helper in `ckanext-hdx_theme/helpers/helpers.py` — returns a list of `{id, label, items: [{id, label, href}]}` dicts with all URLs resolved; the "Sysadmin" section comes from `h.hdx_get_sysadmin_nav_sections()`, the dashboard/settings sections from `h.hdx_get_user_dashboard_nav_sections()`
 - Registered in `plugin.py` under `get_helpers()`
-- `navbar-user-menu.html` loops over the helper with `hdx-v2-user-menu__*` markup (desktop panel)
-- `header.html` (offcanvas) second level loops over the helper with `hdx-v2-offcanvas__nav-item--expandable` + `hdx-v2-offcanvas__subnav` markup (see task 019 notes)
+- `header.html` calls the helper once; `navbar-user-menu.html` loops over its `sections` param with `hdx-v2-user-menu__*` markup (desktop panel)
+- `header.html` (offcanvas) second level loops over the same sections with `hdx-v2-offcanvas__nav-item--expandable` + `hdx-v2-offcanvas__subnav` markup (see task 019 notes)
 - `navbar-user-menu-body.html` deleted
 
 ### LESS: unified shared panel block

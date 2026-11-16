@@ -48,6 +48,7 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
         return {
             'hdx_organization_type_dict': hdx_org_h.hdx_organization_type_dict,
             'hdx_organization_type_get_value': hdx_org_h.hdx_organization_type_get_value,
+            'hdx_organization_logo_url': hdx_org_h.hdx_organization_logo_url,
             'hdx_datagrid_org_get_display_text': hdx_country_h.hdx_datagrid_org_get_display_text
         }
 
@@ -346,6 +347,9 @@ class HDXGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultGroupForm):
 
     def edit(self, country):
         # invalidate caches
+        tk.get_action('invalidate_cache_for_groups')({'ignore_auth': True}, {})
+
+    def delete(self, country):
         tk.get_action('invalidate_cache_for_groups')({'ignore_auth': True}, {})
 
     # IBlueprint

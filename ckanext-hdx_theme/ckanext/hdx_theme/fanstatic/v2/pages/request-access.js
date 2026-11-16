@@ -33,35 +33,15 @@
     var otherValues = ['other', 'hdx-other'];
 
     function wireOtherReveal(selectId, otherFieldSelector, requiredWhenShown) {
-      var select = form.querySelector('#' + selectId);
       var otherField = form.querySelector(otherFieldSelector);
+      var input = otherField && otherField.querySelector('input, textarea');
 
-      if (!select || !otherField) {
-        return;
-      }
-
-      var input = otherField.querySelector('input, textarea');
-
-      var sync = function () {
-        var value = (select.value || '').toLowerCase();
-        var isOther = otherValues.indexOf(value) !== -1;
-
-        if (isOther) {
-          otherField.classList.remove('hdx-v2-request-access-other--hidden');
-          if (requiredWhenShown && input) {
-            input.setAttribute('required', 'required');
-          }
-        } else {
-          otherField.classList.add('hdx-v2-request-access-other--hidden');
-          if (input) {
-            input.removeAttribute('required');
-            input.value = '';
-          }
-        }
-      };
-
-      select.addEventListener('change', sync);
-      sync();
+      window.hdxV2.wireReveal(form.querySelector('#' + selectId), otherField, {
+        values: otherValues,
+        hiddenClass: 'hdx-v2-request-access-other--hidden',
+        requiredInputs: requiredWhenShown ? [input] : [],
+        clearOnHide: true
+      });
     }
 
     wireOtherReveal('request-sender-organization-id', '[data-other-field-for="sender_organization_id"]', false);

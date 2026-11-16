@@ -1,49 +1,62 @@
-{% extends "user/read_base.html" %}
+{% extends "v2/user-dashboard-base.html" %}
 
-{% import 'macros/form.html' as form %}
+{% set nav_active      = 'api_tokens' %}
+{% set page_label      = _('API Tokens') %}
 
-{% set unit_options = [
-  {'value': 3600*24, 'text': _('Day')},
-  {'value': 3600, 'text': _('Hour')},
-  {'value': 60, 'text': _('Minute')},
-  ] %}
-
-{% block primary_content_inner %}
-  <div class="paddingLeftHack">
-    <div class="row mTop35 mBottom35">
-      <div class="col-8">
-        {% if h.check_access('api_token_create', {'user': user['name']}) %}
-          <form method="POST" class="form">
-            {{ h.csrf_input() }}
-            <legend>{{ _('Manage API Tokens') }}</legend>
-            {% block errors %}{{ form.errors(error_summary) }}{% endblock %}
-
-            {% block base_fields %}
-              <div class="form-group ">
-                  {{ form.input('name', label='Name', is_required=True, value=data.name, error=errors.name) }}
-              </div>
-            {% endblock base_fields %}
-            <div class="form-group ">
-              {{ form.input('expires_in', label=_('Expires in'), is_required=true, type='number', value=data.expires_in or h.expire_api_token_default_token_lifetime(), error=errors.expires_in) }}
-              {{ form.select('unit', label=_('Units'), options=unit_options, selected=data.unit, error=errors.unit) }}
-            </div>
-            {% block form_actions %}
-              <button class="btn btn-primary my-3" type="submit" value="create">
-                {{ _('Create API Token') }}
-              </button>
-            {% endblock form_actions %}
-          </form>
-        {% endif %}
-        {% block token_list %}
-          {% if tokens %}
-            {% snippet 'user/snippets/api_token_list.html', tokens=tokens, user=user %}
-          {% else %}
-            <p class="empty">
-              {{ _('You haven\'t created any API Tokens.') }}
-            </p>
-          {% endif %}
-        {% endblock token_list %}
-      </div>
+{% block primary %}
+  {% if not is_myself %}
+    {{ self.user_profile_header() }}
+  {% endif %}
+  {% set title_tag      = 'h1' if is_myself else 'h2' %}
+  {% set list_title_tag = 'h2' if is_myself else 'h3' %}
+  <div class="hdx-v2-user-dashboard-header">
+    <div class="hdx-v2-user-dashboard-header__text">
+      <{{ title_tag }} class="hdx-v2-user-dashboard-header__title">{{ page_label }}</{{ title_tag }}>
+      <p class="hdx-v2-user-dashboard-header__subtitle">
+        {{ _('Create and manage API tokens for accessing HDX data programmatically') if is_myself else _("Create and manage {name}'s API tokens for accessing HDX data programmatically").format(name=user_dict.display_name) }}
+      </p>
     </div>
   </div>
-{% endblock primary_content_inner %}
+
+  <div class="hdx-v2-api-tokens">
+    <form method="POST" class="hdx-v2-api-tokens__form">
+      {{ h.csrf_input() }}
+      <div class="c-form-field">
+        {% snippet 'v2/components/text-field.html',
+            size='m', name='name', id='name',
+            label=_('Name'), required=True, placeholder=_('app/token name'),
+            value=data.name, errors=errors.name %}
+      </div>
+      <div class="c-form-field">
+        {% snippet 'v2/components/text-field.html',
+            size='m', type='number', name='expires_in', id='expires_in',
+            label=_('Expires in'), required=True,
+            value=data.expires_in or h.expire_api_token_default_token_lifetime(),
+            errors=errors.expires_in %}
+      </div>
+      <div class="c-form-field">
+        {% snippet 'v2/components/select.html',
+            name='unit', id='unit', label=_('Units'),
+            options={'86400': _('Day'), '3600': _('Hour'), '60': _('Minute')},
+            selected=data.unit|string if data.unit else '86400',
+            errors=errors.unit %}
+      </div>
+      <div class="hdx-v2-user-dashboard-actions">
+        {% snippet 'v2/components/button.html',
+            style='primary', size='m', button_type='submit',
+            label=_('Create API Token') %}
+      </div>
+    </form>
+
+    <{{ list_title_tag }} class="hdx-v2-api-tokens__title">{{ _('All API Tokens') }}</{{ list_title_tag }}>
+    {% if tokens %}
+      {% snippet 'user/snippets/api_token_list.html', tokens=tokens, user_dict=user_dict %}
+    {% else %}
+      <div class="hdx-v2-dashboard-empty">
+        <p class="hdx-v2-dashboard-empty__text">
+          {{ _("You haven't created any API Tokens.") if is_myself else _("{name} hasn't created any API Tokens.").format(name=user_dict.display_name) }}
+        </p>
+      </div>
+    {% endif %}
+  </div>
+{% endblock %}

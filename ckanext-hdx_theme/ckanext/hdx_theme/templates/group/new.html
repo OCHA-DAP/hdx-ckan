@@ -1,0 +1,31 @@
+{% extends "v2/page.html" %}
+
+{% set outer_row_class      = 'hdx-v2-signup-outer-row' %}
+{% set breadcrumb_row_class = 'hdx-v2-breadcrumb-row--white' %}
+{% set content_class        = 'hdx-v2-content-columns__content' %}
+
+{% block subtitle %}{{ _('Create Location') }}{% endblock %}
+
+{% block styles %}
+  {{ super() }}
+  {% asset 'hdx_theme/v2-signup-page-styles' %}
+{% endblock %}
+
+{% block scripts %}
+  {{ super() }}
+  {% asset 'hdx_theme/v2-slug-preview-scripts' %}
+{% endblock %}
+
+{% block breadcrumb_items %}
+  {% snippet 'v2/components/breadcrumb.html',
+      items=[
+        {'label': _('Locations'), 'href': h.url_for('hdx_group.index')},
+        {'label': _('Create location'), 'href': ''}
+      ] %}
+{% endblock %}
+
+{% block primary %}
+<div class="hdx-v2-signup-form-page">
+  {{ form | safe }}
+</div>
+{% endblock %}

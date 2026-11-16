@@ -82,8 +82,17 @@ class TestJoinOrg(object):
         assert result.status_code == 200
         assert CONST_JOIN_ORG['PAGE_TITLE'] in result.body
         assert CONST_JOIN_ORG['BODY_INFO_1ST_PARAGRAPH'] in result.body
+        assert 'id="find-organisation-form"' in result.body
+        assert 'data-searchable' in result.body
 
         org_dict = _get_action('organization_show')(_user_context(), {'id': ORG_NAME})
+
+        # preselected organisation
+        result = app.get(h.url_for('hdx_org_join.find_organisation', selected=org_dict.get('id')), headers=auth_user)
+        assert result.status_code == 200
+        assert '<option value="{}" selected'.format(org_dict.get('id')) in result.body
+
+        not_found_text = CONST_CONFIRM_ORG['BODY_ORG_NOT_FOUND'].format(h.url_for('hdx_org_join.find_organisation'))
         url = h.url_for('hdx_org_join.confirm_organisation')
 
         # no user
@@ -100,6 +109,13 @@ class TestJoinOrg(object):
         assert org_dict.get('description') in result.body
         assert org_dict.get('title') in result.body
         assert CONST_CONFIRM_ORG['PAGE_TITLE'] in result.body
+        assert 'id="confirm-organisation-form"' in result.body
+
+        # unknown organisation
+        result = app.post(url, data={'org_id': 'not-an-organisation'}, headers=auth_user)
+        assert result.status_code == 200
+        assert not_found_text in result.body
+        assert 'id="confirm-organisation-form"' not in result.body
 
         url = h.url_for('hdx_org_join.reason_request')
         # no user
@@ -115,6 +131,14 @@ class TestJoinOrg(object):
         assert result.status_code == 200
         assert CONST_REASON_REQUEST_ORG['PAGE_TITLE'] in result.body
         assert CONST_REASON_REQUEST_ORG['BODY_MAIN_TEXT'] in result.body
+        assert 'id="reason-request-form"' in result.body
+        assert '0 characters' in result.body
+
+        # unknown organisation
+        result = app.post(url, data={'org_id': 'not-an-organisation'}, headers=auth_user)
+        assert result.status_code == 200
+        assert not_found_text in result.body
+        assert 'id="reason-request-form"' not in result.body
 
 
         url = h.url_for('hdx_org_join.completed_request')
@@ -131,6 +155,7 @@ class TestJoinOrg(object):
         assert result.status_code == 200
         assert CONST_COMPLETED_ORG_REQUEST['PAGE_TITLE'] in result.body
         assert CONST_COMPLETED_ORG_REQUEST['BODY_MAIN_TEXT'] in result.body
+        assert result.body.count('c-step-pager__step--completed') == 2
 
         member_list = _get_action('member_request_list')(_sysadmin_context(), {})
         member_dict = member_list[0]

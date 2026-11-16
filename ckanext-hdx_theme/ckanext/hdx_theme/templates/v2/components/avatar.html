@@ -1,6 +1,6 @@
 {#
   Snippet: avatar.html
-  Path:    templates/snippets/components/avatar/avatar.html
+  Path:    templates/v2/components/avatar.html
 
   Parameters
   ─────────────────────────────────────────────────
@@ -20,7 +20,10 @@
   badge       {bool}    Whether to show the status dot badge.
                         default: False
 
-  aria_label  {string}  Accessible label, e.g. "Jane Doe's avatar".
+  aria_label  {string}  Accessible label, e.g. "Jane Doe's avatar"
+                        (role="img"). Without it the avatar is hidden
+                        from assistive tech (aria-hidden), e.g. next to
+                        the visible name.
                         default: ''
 
   extra_classes {string}  Additional classes.
@@ -29,10 +32,10 @@
   ─────────────────────────────────────────────────
   Examples
 
-  {% snippet 'snippets/components/avatar/avatar.html',
+  {% snippet 'v2/components/avatar.html',
       size='md', initials='JD' %}
 
-  {% snippet 'snippets/components/avatar/avatar.html',
+  {% snippet 'v2/components/avatar.html',
       size='l', image_src='images/users/jane.jpg',
       badge=True, aria_label="Jane's avatar" %}
 #}
@@ -50,8 +53,7 @@
 {% if extra_classes %}{% set classes = classes + [extra_classes] %}{% endif %}
 
 <div class="{{ classes | join(' ') }}"
-     role="img"
-     {% if aria_label %}aria-label="{{ aria_label }}"{% endif %}>
+     {% if aria_label %}role="img" aria-label="{{ aria_label }}"{% else %}aria-hidden="true"{% endif %}>
 
   {% if image_src %}
     <img class="c-avatar__image"

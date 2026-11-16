@@ -76,7 +76,7 @@ requirements drafting).
 ### 1.1 Route and view logic
 
 - Route `/archive`, blueprint `hdx_archived_quick_links`, registered in
-  `ckanext-hdx_theme/ckanext/hdx_theme/plugin.py:412`.
+  `get_blueprint()` in `ckanext-hdx_theme/ckanext/hdx_theme/plugin.py`.
 - `ckanext-hdx_theme/ckanext/hdx_theme/views/archived_quick_links_custom_settings.py::show()`
   builds `archived_items_list` from two sources, concatenated:
   - `_prepare_archived_viz_list(viz_list)` — Quick Links settings entries (action
@@ -209,7 +209,7 @@ expand/collapse behavior (§1.3).
 - **Title + count** → rendered via `v2/components/page-header.html` (`title` + `title_count` params).
   `__title` delegates to `.hdx-page-title-scale()`; `__title-count` uses `.hdx-list-header-count()` +
   `.hdx-page-title-font-size()` to track it — the same page-title-scale sizing the search page's
-  `hdx-v2-list-header__title`/`__count` only reach via their `--page-title` (`emphasize_title`)
+  `hdx-v2-list-header__title`/`__count` only reach via their `--page` (`title_size='page'`)
   modifier; the search page's *default* title/count are smaller (`.hdx-section-title()` /
   `.hdx-section-title-count()`, 18→20px). Count is computed server-side as `len(archived_items_list)`
   — same data, simply now rendered (v1 shows no count today).

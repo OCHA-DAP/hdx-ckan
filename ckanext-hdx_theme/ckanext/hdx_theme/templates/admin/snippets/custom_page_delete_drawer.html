@@ -1,0 +1,34 @@
+{#
+  Snippet: custom_page_delete_drawer.html
+  Path:    templates/admin/snippets/custom_page_delete_drawer.html
+
+  The delete confirmation of one custom page: a c-drawer with a POST form to
+  hdx_custom_page.delete_page (Cancel / Confirm). Open it with
+  window.hdxV2Drawer(drawer_id).open().
+
+  Parameters
+  ─────────────────────────────────────────────────
+  page          {dict}    The page (its id is posted).  Required.
+  drawer_id     {string}  Drawer id.  Required.
+  ─────────────────────────────────────────────────
+  Example
+
+  {% snippet 'admin/snippets/custom_page_delete_drawer.html',
+      page=page, drawer_id='delete-custom-page-' ~ page.id %}
+#}
+
+{% call h.snippet('v2/components/drawer.html',
+    drawer_id=drawer_id,
+    title=_('Confirm')) %}
+  <form class="c-drawer-form" method="post"
+        action="{{ h.url_for('hdx_custom_page.delete_page', id=page.id) }}">
+    {{ h.csrf_input() }}
+    <p class="c-drawer-form__text">{{ _('Are you sure you want to delete this page?') }}</p>
+    <div class="c-drawer-form__buttons">
+      {% snippet 'v2/components/button.html',
+          style='tertiary', label=_('Cancel'), attrs={'data-drawer-close': ''} %}
+      {% snippet 'v2/components/button.html',
+          style='primary', button_type='submit', label=_('Confirm') %}
+    </div>
+  </form>
+{% endcall %}

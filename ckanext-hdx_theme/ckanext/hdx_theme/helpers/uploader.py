@@ -2,6 +2,7 @@ import os
 import cgi
 import logging
 
+import magic
 from werkzeug.datastructures import FileStorage as FlaskFileStorage
 
 import ckan.lib.uploader as uploader
@@ -15,6 +16,8 @@ config = tk.config
 asint = tk.asint
 
 ALLOWED_UPLOAD_TYPES = (cgi.FieldStorage, FlaskFileStorage)
+ALLOWED_IMAGE_EXTENSIONS = ('.png', '.gif', '.jpg', '.jpeg')
+ALLOWED_IMAGE_MIMETYPES = ('image/png', 'image/gif', 'image/jpeg')
 
 
 def get_base_path():
@@ -85,6 +88,7 @@ class GlobalUpload(object):
         # exists). This way the uploaded file will always be stored
         # in the same location
         if self.filename:
+            self._verify_type()
             try:
                 os.makedirs(directory)
             except OSError as e:
@@ -108,6 +112,13 @@ class GlobalUpload(object):
             output_file.close()
             os.rename(tmp_filepath, filepath)
             return
+
+    def _verify_type(self):
+        self.upload_file.seek(0)
+        mimetype = magic.from_buffer(self.upload_file.read(2048), mime=True)
+        if os.path.splitext(self.filename)[1] not in ALLOWED_IMAGE_EXTENSIONS \
+                or mimetype not in ALLOWED_IMAGE_MIMETYPES:
+            raise GlobalUploadException('Unsupported upload type')
 
     def delete(self):
         try:

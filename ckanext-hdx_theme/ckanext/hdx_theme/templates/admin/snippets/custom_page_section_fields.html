@@ -1,0 +1,57 @@
+{#
+  Snippet: custom_page_section_fields.html
+  Path:    templates/admin/snippets/custom_page_section_fields.html
+
+  The fields of one custom page section (caller() of a c-config-item on
+  pages/edit_page.html): the Section type select and its six fields. A field
+  the section's type doesn't use renders hidden with its control disabled, so
+  it doesn't post; pages/custom-page-form.js switches them when the type
+  changes. Names and ids are field_section_<index>_<field>.
+
+  Parameters
+  ─────────────────────────────────────────────────
+  section       {dict}    Stored section; {} for a new one.  default: {}
+  index         {int|string}  Section index, or '__index__' in the template.
+                          Required.
+  fields        {dict}    Section type → list of the fields it uses.  Required.
+  type_options  {dict}    {value: label} of the section types.  Required.
+  ─────────────────────────────────────────────────
+  Example
+
+  {% snippet 'admin/snippets/custom_page_section_fields.html',
+      section=section, index=loop.index0,
+      fields=section_fields, type_options=type_options %}
+#}
+
+{% set section = section if section is defined else {} %}
+{% set prefix  = 'field_section_' ~ index ~ '_' %}
+{% set used    = fields.get(section.type or 'empty', []) %}
+{% set markdown_link = ('<a href="https://daringfireball.net/projects/markdown/syntax" target="_blank" rel="noopener noreferrer">' | safe) ~ _('Markdown formatting') ~ ('</a>' | safe) %}
+
+<div class="c-form-field">
+  {% snippet 'v2/components/select.html',
+      label=_('Section'),
+      name=prefix ~ 'type', id=prefix ~ 'type',
+      options=type_options,
+      selected=section.type or 'empty',
+      select_attrs={'data-section-type': ''} %}
+</div>
+
+{% for field, label, placeholder, value in [
+    ('data_url', _('Data URL'), _('Enter URL'), section.data_url),
+    ('section_title', _('Title of the section'), _('Title of Section (optional)'), section.section_title),
+    ('section_description', _('Description'), _('eg. Description of the section'), section.description),
+    ('section_long_description', _('Long description'), _('eg. Long Description of the section'), section.long_description),
+    ('max_height', _('Max height'), _('400px recommended'), section.max_height),
+    ('m_max_height', _('Mobile max height'), _('400px recommended'), section.m_max_height)] %}
+  {% set long = field == 'section_long_description' %}
+  <div class="c-form-field" data-section-field="{{ field }}"{% if field not in used %} hidden{% endif %}>
+    {% snippet 'v2/components/text-field.html',
+        size='m', label=label,
+        name=prefix ~ field, id=prefix ~ field,
+        value=value or '', placeholder=placeholder,
+        multiline=long, rows=5,
+        hint=_('You can use {link} here').format(link=markdown_link) if long else '',
+        input_attrs={} if field in used else {'disabled': 'disabled'} %}
+  </div>
+{% endfor %}

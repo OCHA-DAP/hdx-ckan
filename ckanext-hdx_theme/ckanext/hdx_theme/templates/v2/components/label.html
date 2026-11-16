@@ -1,13 +1,13 @@
 {#
   Snippet: label.html
-  Path:    templates/snippets/components/label/label.html
+  Path:    templates/v2/components/label.html
 
   Renders a c-label inline chip/tag.
 
   Parameters
   ─────────────────────────────────────────────────
   text          {string}  Label text.  default: 'Label'
-  color         {string}  'light' | 'grey' | 'dark' | 'cyan' | 'yellow' | 'blue'
+  color         {string}  'light' | 'grey' | 'dark' | 'cyan' | 'yellow' | 'blue' | 'red'
                           default: 'light'
   size          {string}  'm' | 's' | 'xs'   default: 'm'
   icon          {bool}    Show leading icon.  default: False
@@ -20,10 +20,10 @@
   ─────────────────────────────────────────────────
   Examples
 
-  {% snippet 'snippets/components/label/label.html',
+  {% snippet 'v2/components/label.html',
       text='HDX', color='cyan', size='m', icon=True %}
 
-  {% snippet 'snippets/components/label/label.html',
+  {% snippet 'v2/components/label.html',
       color='blue', size='s', icon=True, icon_only=True %}
 #}
 

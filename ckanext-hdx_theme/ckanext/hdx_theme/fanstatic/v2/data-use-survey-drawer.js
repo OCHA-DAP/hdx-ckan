@@ -1,7 +1,7 @@
 // ============================================================
 // data-use-survey-drawer.js — "HDX Data Use Survey" c-drawer
-// Renders from templates/v2/data-use-survey-drawer.html (dataset page,
-// only when the organisation has a user_survey_url). v2 port of the
+// Renders from templates/v2/data-use-survey-drawer.html (only when the
+// organisation has a user_survey_url). v2 port of the
 // survey popup in resource-list.js: a v2 resource card Download click
 // opens the drawer with an intro; "Take the survey" loads the survey in
 // an iframe ("Not now" closes via data-drawer-close). Shown until the user
