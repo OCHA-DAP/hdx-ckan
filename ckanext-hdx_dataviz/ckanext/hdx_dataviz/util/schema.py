@@ -2,6 +2,7 @@ import ckan.plugins.toolkit as toolkit
 import ckanext.hdx_dataviz.helpers.helpers as h
 from ckan.lib.navl.validators import default, ignore_missing, ignore_empty
 from ckan.logic.validators import boolean_validator, url_validator, natural_number_validator
+from ckanext.hdx_theme.util.schema import fix_show_schema_extras_id
 
 get_converter = toolkit.get_converter
 Invalid = toolkit.Invalid
@@ -43,14 +44,9 @@ def showcase_show_schema_wrapper(original_schema):
             'priority': [get_converter('convert_from_extras'), ignore_empty, natural_number_validator],
 
         })
-        # The showcase show schema keeps core's default_extras_schema(). Since CKAN 2.11.7
-        # its 'id' is [ignore_not_sysadmin, ignore_missing, uuid_validator], and
-        # ignore_not_sysadmin raises KeyError: ('extras', N, 'id') when there is no sysadmin
-        # user (the search index validates with no user) and convert_from_extras has
-        # already removed that extras entry. Putting ignore_missing in front stops an
-        # already removed key cleanly. When the id is present, core's rules apply.
-        schema['extras']['id'] = [ignore_missing] + schema['extras']['id']
-        return schema
+        # the showcase show schema keeps core's default_extras_schema(), and the search
+        # index validates it with no user, see fix_show_schema_extras_id
+        return fix_show_schema_extras_id(schema)
     return schema_function
 
 

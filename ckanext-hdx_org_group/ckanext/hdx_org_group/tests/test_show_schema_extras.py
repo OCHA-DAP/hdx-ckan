@@ -6,7 +6,7 @@ ignore_not_sysadmin first. Our show schemas keep that extras schema and also use
 convert_from_extras, which removes the extras entry before its 'id' is checked,
 so calls by non-sysadmins crashed with KeyError: ('extras', 0, 'id').
 That hid the home page bar chart and returned a 500 on /group.
-See _fix_show_schema_extras_id in ckanext/hdx_org_group/plugin.py.
+See fix_show_schema_extras_id in ckanext-hdx_theme/ckanext/hdx_theme/util/schema.py.
 """
 
 import pytest

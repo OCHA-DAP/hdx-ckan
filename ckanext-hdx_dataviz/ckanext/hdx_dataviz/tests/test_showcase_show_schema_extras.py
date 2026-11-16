@@ -9,7 +9,7 @@ crashed with KeyError: ('extras', 0, 'id').
 The search index validates with no user, so showcases were silently not indexed
 (core logs and swallows the error), and package_show without the index cache
 returned a 500 for non-sysadmins.
-See showcase_show_schema_wrapper in ckanext/hdx_dataviz/util/schema.py.
+See fix_show_schema_extras_id in ckanext-hdx_theme/ckanext/hdx_theme/util/schema.py.
 """
 
 import json
