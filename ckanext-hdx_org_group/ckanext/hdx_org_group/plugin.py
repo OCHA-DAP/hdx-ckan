@@ -19,6 +19,21 @@ from ckanext.hdx_org_group.helpers.analytics import OrganizationCreateAnalyticsS
 
 log = logging.getLogger(__name__)
 
+
+def _fix_show_schema_extras_id(schema: Schema) -> Schema:
+    '''
+    Our show schemas are built from update_group_schema(), so they keep core's
+    default_extras_schema(). Since CKAN 2.11.7 its 'id' is
+    [ignore_not_sysadmin, ignore_missing, uuid_validator], and ignore_not_sysadmin
+    raises KeyError: ('extras', N, 'id') for non-sysadmins when convert_from_extras
+    has already removed that extras entry.
+    We keep core's validators unchanged and only put ignore_missing in front, so an
+    already removed key stops cleanly. When the id is present, core's rules apply.
+    '''
+    schema['extras']['id'] = [tk.get_validator('ignore_missing')] + schema['extras']['id']
+    return schema
+
+
 @tk.blanket.config_declarations
 class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganizationForm):
     plugins.implements(plugins.IAuthFunctions)
@@ -186,7 +201,7 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
 
             }
             schema.update(new_org_schema)
-            return schema
+            return _fix_show_schema_extras_id(schema)
         except TypeError as e:
             log.warning('Exception in db_to_form_schema: {}'.format(str(e)))
 
@@ -311,7 +326,7 @@ class HDXGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultGroupForm):
             'state': [],
 
         })
-        return schema
+        return _fix_show_schema_extras_id(schema)
 
 
     # IGroupForm
