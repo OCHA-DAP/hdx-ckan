@@ -9,6 +9,181 @@ Changelog
 
 .. towncrier release notes start
 
+v.2.11.7 2026-10-28
+===================
+
+Migration notes
+---------------
+
+- This version requires a requirements upgrade on source installations.
+  The packages ``nh3`` and  ``pglast`` have been added as requirements,
+  and ``sqlparse`` has been dropped.
+- Resource Views can no longer be previewed in the resource view form unless they
+  don't provide their own iframe in the view template. This only applies to views with
+  the ``iframed: True`` setting.
+
+
+Minor changes
+-------------
+
+- HTML cleaning is done with ``nh3`` instead of ``bleach`` from now on.
+  More tags and attributes are allowed by default and ``clean_html`` now strips
+  unknown tags instead of escaping HTML-entities.
+  ``render_markdown`` with ``allow_html=False`` now strips ``script`` and
+  ``style`` tags alongside with  their content; previously, only the tag was
+  removed, while content was kept. (`#9472
+  <https://github.com/ckan/ckan/pull/9472>`_)
+- Use pglast instead of sqlparse to sanitize datastore_search_sql input (`#9475
+  <https://github.com/ckan/ckan/pull/9475>`_)
+
+Bugfixes
+--------
+
+- `GHSA-wg5m-39wv-h9q4 (CVE pending) <https://github.com/ckan/ckan/security/advisories/GHSA-wg5m-39wv-h9q4>_`: Stored XSS vector via field name in DataTables view
+- `GHSA-gc3w-w5vv-w2vc (CVE pending) <https://github.com/ckan/ckan/security/advisories/GHSA-gc3w-w5vv-w2vc>_`: member_list discloses IDs of private datasets to unauthenticated user
+- `GHSA-xj2r-hpg6-375c (CVE pending) <https://github.com/ckan/ckan/security/advisories/GHSA-xj2r-hpg6-375c>_`: Exposure of private dataset identifiers via Solr parameters
+- `GHSA-hr6p-cwrr-4gg2 (CVE pending) <https://github.com/ckan/ckan/security/advisories/GHSA-hr6p-cwrr-4gg2>_`: resource_view_update permission check bypass
+- `GHSA-3h7g-fpc6-9vc9 (CVE pending) <https://github.com/ckan/ckan/security/advisories/GHSA-3h7g-fpc6-9vc9>_`: Forgeable user/login
+- `GHSA-34rr-qrr4-397f (CVE pending) <https://github.com/ckan/ckan/security/advisories/GHSA-34rr-qrr4-397f>_`: Unauthenticated SQL injection in `datastore_search`
+- `CVE-2026-115579  <https://github.com/ckan/ckan/security/advisories/GHSA-5f35-225m-5mg7>`_: Unauthenticated reflected XSS via `webpage_view`
+- Resource view activities have the same permission labels as the corresponding dataset. (`#9611
+  <https://github.com/ckan/ckan/pull/9611>`_)
+- Skip the Data Explorer view when there are field errors, instead of breaking
+  the whole resource view page (`#9529
+  <https://github.com/ckan/ckan/pull/9529>`_)
+- Add an index on ``tracking_summary`` (``package_id``, ``tracking_date``)
+  (`#9538 <https://github.com/ckan/ckan/pull/9538>`_)
+- Fix ``dataset_purge`` failing with an ``IntegrityError`` for datasets that
+  have collaborators. (`#9576 <https://github.com/ckan/ckan/pull/9576>`_)
+- Fix datastore_upsert method=insert (and datastore_create) records_row error
+  value.
+  Used to always report last row regardless of which record contained the
+  error. (`#9587 <https://github.com/ckan/ckan/pull/9587>`_)
+
+
+
+
+v.2.11.6 2026-08-26
+===================
+
+Minor changes
+-------------
+
+- Removed setuptools upper limit requirement
+- Restore ALLOWED_UPLOAD_TYPES variable from `uploader` module
+
+
+Bugfixes
+--------
+- `GHSA-8frv-ccr7-4m2p (CVE pending) <https://github.com/ckan/ckan/security/advisories/GHSA-8frv-ccr7-4m2p>`_: Stored XSS via resource fields in Text view
+- `CVE-2026-115577 <https://github.com/ckan/ckan/security/advisories/GHSA-5r6j-4c43-7mx6>`_: Unauthenticated nested Solr QParser allowlist bypass in ``package_search``
+- `CVE-2026-104771 <https://github.com/ckan/ckan/security/advisories/GHSA-73fv-x47v-f4j5>`_: Authenticated stacked SQL injection in ``datastore_create``
+- `CVE-2026-104770 <https://github.com/ckan/ckan/security/advisories/GHSA-8hw7-23gj-5599>`_: datastore_search_sql Authorization Bypass
+- `CVE-2026-104772 <https://github.com/ckan/ckan/security/advisories/GHSA-3g5q-3wf6-p8rc>`_: ``markdown_extract()`` Stored XSS on Dataset Listings
+- `CVE-2026-104773 (CVE pending) <https://github.com/ckan/ckan/security/advisories/GHSA-6499-jgj4-2wpf>`_: Session Fixation in Registration View
+- `CVE-2026-84986 <https://github.com/ckan/ckan/security/advisories/GHSA-jgwg-vp4m-5xw5>`_: Exposure of private metadata via follow API actions
+- `CVE-2026-84985 <https://github.com/ckan/ckan/security/advisories/GHSA-p5rh-49m9-56vx>`_: Stored XSS vector via resource name in DataTables view
+- Fix organization patch on orgs with extras (`#9386
+  <https://github.com/ckan/ckan/pull/9386>`_)
+- Add an accessible name to the resource actions dropdown button (the icon-only
+  "wrench" toggle in the resource list) so it has discernible text for screen
+  readers, fixing a WCAG 4.1.2 button-name issue. (`#7188
+  <https://github.com/ckan/ckan/pull/7188>`_)
+- Add a ``lang`` attribute to each option in the language selector so assistive
+  technologies announce each language name using that language's pronunciation
+  (WCAG 3.1.2 Language of Parts). (`#7198
+  <https://github.com/ckan/ckan/pull/7198>`_)
+- Fix language code in `html` tag `lang` attribute to use BCP-47
+  with a new `unix_locale_to_bcp47` template helper function. (`#8698
+  <https://github.com/ckan/ckan/pull/8698>`_)
+- Remove unnecessary declare_namespace in ckanext/stats/__init__.py
+  to resolve compatibility with setuptools>=82 (`#9246
+  <https://github.com/ckan/ckan/pull/9246>`_)
+- Fix performance regression in ``PluginImplementations`` on CKAN 2.11 (`#9367
+  <https://github.com/ckan/ckan/pull/9367>`_)
+- Organization admins are allowed to invite new users again, even when public
+  registration is closed. (`#9369 <https://github.com/ckan/ckan/pull/9369>`_)
+- Return a 404 response instead of a 500 error when opening a resource edit
+  page for a dataset that does not exist. (`#9375
+  <https://github.com/ckan/ckan/pull/9375>`_)
+- Reindex datasets after ``member_create`` and ``member_delete`` change package
+  group memberships, ensuring group pages show the correct datasets. (`#9381
+  <https://github.com/ckan/ckan/pull/9381>`_)
+- Restore declare_namespace in ckanext/stats/__init__.py with except block
+  to resolve compatibility with setuptools<82 (`#9414
+  <https://github.com/ckan/ckan/pull/9414>`_)
+- Always return dataset with the current site_id when searching by dataset id
+  (`#9422 <https://github.com/ckan/ckan/pull/9422>`_)
+- Add accessible names to the icon-only user-search submit button and the
+  API-token "copy to clipboard" button so screen readers announce them with
+  discernible text (WCAG 4.1.2). (`#9471
+  <https://github.com/ckan/ckan/pull/9471>`_)
+- Fix JS translations failing for BCP 47 locale codes (`#9473
+  <https://github.com/ckan/ckan/pull/9473>`_)
+
+
+
+
+
+
+
+v.2.11.5 2026-04-29
+===================
+
+Migration notes
+---------------
+
+- This version requires a requirements upgrade on source installations
+- Added support for Python 3.13 and 3.14. Dropped support for Python 3.9.
+
+Minor changes
+-------------
+
+- Replace usage of pkg_resources.iter_entry_points, update exception message
+  (`#8992 <https://github.com/ckan/ckan/pull/8992>`_)
+- non-zero exit codes when search-index CLI fails (`#9011
+  <https://github.com/ckan/ckan/pull/9011>`_)
+- Pass about_formatted to snippet to display this value in the sidebar. (`#9148
+  <https://github.com/ckan/ckan/pull/9148>`_)
+- Add missing import. (`#9161 <https://github.com/ckan/ckan/pull/9161>`_)
+- Added string translation for `Searching...` in the Select2 JS autocomplete
+  module. (`#9184 <https://github.com/ckan/ckan/pull/9184>`_)
+- Do not respond with a 500 error to external requests (`#9201
+  <https://github.com/ckan/ckan/pull/9201>`_)
+- The ``follow_*`` and ``unfollow_*`` actions now call their respective authentication
+  methods:
+
+  - ``follow_group``
+  - ``follow_dataset``
+  - ``follow_user``
+  - ``unfollow_group``
+  - ``unfollow_dataset``
+  - ``unfollow_user`` (`#9229 <https://github.com/ckan/ckan/pull/9229>`_)
+
+
+Bugfixes
+--------
+
+- `CVE-2026-41132 <https://github.com/ckan/ckan/security/advisories/GHSA-mpfm-fpgx-647q>`_: No certificate validation on SMTP connection
+- `CVE-2026-41255 <https://github.com/ckan/ckan/security/advisories/GHSA-mcvf-jxcw-vj73>`_: CSRF exemption primed by anonymous requests
+- `CVE-2026-42031 <https://github.com/ckan/ckan/security/advisories/GHSA-h7j7-3rx6-xvcg>`_: Unauthenticated SQL Injection in ``datastore_search_sql``
+- `CVE-2026-42032 <https://github.com/ckan/ckan/security/advisories/GHSA-cg4x-64p3-x59h>`_: Unauthenticated Authorization Bypass in ``datastore_search_sql``
+- Fix Preview for resource view create/update pages (`#9128
+  <https://github.com/ckan/ckan/pull/9128>`_)
+- fix for issue with datastore dump startup time affecting large tables (`#9144
+  <https://github.com/ckan/ckan/pull/9144>`_)
+- fix for markdown_extract tag removal bug introduced in 112afff (`#9162
+  <https://github.com/ckan/ckan/pull/9162>`_)
+- Fix SMTP TLS error with embedded port (`#9186
+  <https://github.com/ckan/ckan/pull/9186>`_)
+- Restores body_extras block on base.html, it was removed by accident. (`#9295
+  <https://github.com/ckan/ckan/pull/9295>`_)
+- Fixed duplicated root_path in webassets when assets directory is public
+  directory
+  and debug mode is used or cssrewrite is present in filters. (`#9300
+  <https://github.com/ckan/ckan/pull/9300>`_)
+
+
 v.2.11.4 2025-10-29
 ===================
 
@@ -40,9 +215,10 @@ Minor changes
 Bugfixes
 --------
 
-- `CVE-2025-XXXX <https://github.com/ckan/ckan/security/advisories/GHSA-2hvh-cw5c-8q8q>`_: Rotate
+- `CVE-2025-64100 <https://github.com/ckan/ckan/security/advisories/GHSA-2hvh-cw5c-8q8q>`_: Rotate
   session identifiers to prevent Session Cookie Fixation .
 - `CVE-2025-54384 <https://github.com/ckan/ckan/security/advisories/GHSA-2r4h-8jxv-w2j8>`_: Stored
+  XSS vector in Markdown description fields
 - Add handling for ``ObjectNotFound`` to Datapusher ``delete-datastore`` route
   (`#9130 <https://github.com/ckan/ckan/pull/9130>`_)
 - Fix auth check for ``resource_view_reorder`` (`#9131 <https://github.com/ckan/ckan/pull/9131>`_)

@@ -623,9 +623,13 @@ this.ckan.module('datatables_view', function (jQuery) {
 
           // add resourceinfo in footer, very useful if this view is embedded
           const resourceInfo = document.getElementById('dtv-resource-info').innerText
-          $('div.resourceinfo').html('<a href="' + resourceurl + '">' +
-            packagename + '&mdash;' + resourcename +
-            '</a> <i class="fa fa-info-circle" title="' + resourceInfo + '"</i>')
+          const resourceLink = $('<a>')
+            .attr('href', resourceurl)
+            .text(packagename + '—' + resourcename)
+          const resourceIcon = $('<i>')
+            .attr('class', 'fa fa-info-circle')
+            .attr('title', resourceInfo)
+          $('div.resourceinfo').empty().append(resourceLink, ' ', resourceIcon)
 
           // if in list/responsive mode, hide search inputs for hidden columns
           if (gcurrentView === 'list') {
@@ -887,16 +891,24 @@ this.ckan.module('datatables_view', function (jQuery) {
         if (!sortOrder.length) {
           return
         }
-        gsortInfo = '<b> ' + that._('Sort') + '</b> <i id="sortinfoicon" class="fa fa-info-circle" title="' +
-            that._('Press SHIFT key while clicking on\nsort control for multi-column sort') + '"></i> : '
+        const sortInfo = $('div.sortinfo').empty()
+        const sortLabel = $('<b>').text(' ' + that._('Sort'))
+        const sortIcon = $('<i>')
+          .attr('id', 'sortinfoicon')
+          .attr('class', 'fa fa-info-circle')
+          .attr('title', that._('Press SHIFT key while clicking on\nsort control for multi-column sort'))
+        sortInfo.append(sortLabel, ' ', sortIcon, ' : ')
         sortOrder.forEach((sortcol, idx) => {
           const colText = datatable.column(sortcol[0]).name()
-          gsortInfo = gsortInfo + colText +
-                      (sortcol[1] === 'asc'
-                        ? ' <span class="fa fa-sort-amount-asc"></span> '
-                        : ' <span class="fa fa-sort-amount-desc"></span> ')
+          const sortDirIcon = $('<span>')
+            .attr('class', sortcol[1] === 'asc' ? 'fa fa-sort-amount-asc' : 'fa fa-sort-amount-desc')
+          sortInfo.append(document.createTextNode(colText), ' ', sortDirIcon, ' ')
         })
-        $('div.sortinfo').html(gsortInfo)
+        $('div.sortinfo').append(sortInfo)
+        gsortInfo = sortInfo.html()
+
+        //adjust column widths after sorting
+        fitColText();
       })
     }
   }

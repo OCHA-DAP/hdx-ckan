@@ -2854,6 +2854,41 @@ class TestMembersList(object):
 
         assert len(org_members) == 0
 
+    def test_package_members_hide_private_datasets_from_unauthorized_users(self):
+        org = factories.Organization()
+        public_dataset = factories.Dataset(owner_org=org["id"], private=False)
+        private_dataset = factories.Dataset(owner_org=org["id"], private=True)
+
+        # Anonymous callers must only see the public dataset, not the private one
+        org_members = helpers.call_action(
+            "member_list", {"user": None}, id=org["id"], object_type="package"
+        )
+
+        member_ids = [m[0] for m in org_members]
+        assert public_dataset["id"] in member_ids
+        assert private_dataset["id"] not in member_ids
+
+        # Organization members can see the private dataset, so they get both.
+        member_user = factories.User()
+        helpers.call_action(
+            "organization_member_create",
+            {"user": None, "ignore_auth": True},
+            username=member_user["id"],
+            id=org["id"],
+            role="editor",
+        )
+
+        org_members = helpers.call_action(
+            "member_list",
+            {"user": member_user["name"]},
+            id=org["id"],
+            object_type="package",
+        )
+
+        member_ids = [m[0] for m in org_members]
+        assert public_dataset["id"] in member_ids
+        assert private_dataset["id"] in member_ids
+
     def test_user_list_excludes_deleted_users_not_marked_membership_of_org_as_deleted(self):
         sysadmin = factories.Sysadmin()
         org = factories.Organization()
@@ -2939,6 +2974,36 @@ class TestFollow(object):
 
         assert len(followee_list) == 1
         assert followee_list[0]["display_name"] == "Environment"
+
+    def test_followee_list_excludes_datasets_user_cannot_read(self):
+        owner = factories.User()
+        org = factories.Organization(user=owner)
+        dataset = factories.Dataset(
+            user=owner,
+            owner_org=org["id"],
+            private=False,
+        )
+        follower = factories.User()
+        follow_context = {"user": follower["name"], "ignore_auth": False}
+
+        # Follow it while it is still public.
+        helpers.call_action("follow_dataset", follow_context, id=dataset["id"])
+        followees = helpers.call_action(
+            "followee_list", follow_context, id=follower["name"]
+        )
+        assert followees[0]["dict"]["id"] == dataset["id"]
+
+        helpers.call_action(
+            "package_patch",
+            {"user": owner["name"], "ignore_auth": False},
+            id=dataset["id"],
+            private=True,
+        )
+
+        followees = helpers.call_action(
+            "followee_list", follow_context, id=follower["name"]
+        )
+        assert len(followees) == 0
 
     def test_followee_count_for_org_or_group(self):
         group = factories.Group(title="Finance")

@@ -28,7 +28,7 @@ from typing import (
 
 import dominate.tags as dom_tags
 from markdown import markdown
-from bleach import clean as bleach_clean, ALLOWED_TAGS, ALLOWED_ATTRIBUTES
+from nh3 import clean as nh3_clean, ALLOWED_TAGS, ALLOWED_ATTRIBUTES
 from ckan.common import asbool, config, current_user
 from flask import flash, has_request_context
 from flask import get_flashed_messages as _flask_get_flashed_messages
@@ -67,14 +67,11 @@ Helper = TypeVar("Helper", bound=Callable[..., Any])
 
 log = logging.getLogger(__name__)
 
-MARKDOWN_TAGS = set([
-    'del', 'dd', 'dl', 'dt', 'h1', 'h2',
-    'h3', 'img', 'kbd', 'p', 'pre', 's',
-    'sup', 'sub', 'strike', 'br', 'hr'
-]).union(ALLOWED_TAGS)
+MARKDOWN_TAGS = copy.copy(ALLOWED_TAGS)
 
 MARKDOWN_ATTRIBUTES = copy.deepcopy(ALLOWED_ATTRIBUTES)
-MARKDOWN_ATTRIBUTES.setdefault('img', []).extend(['src', 'alt', 'title'])
+MARKDOWN_ATTRIBUTES['img'].add('title')
+MARKDOWN_ATTRIBUTES['a'].add('title')
 
 LEGACY_ROUTE_NAMES = {
     'home': 'home.index',
@@ -907,9 +904,9 @@ def map_pylons_to_flask_route_name(menu_item: str):
             LEGACY_ROUTE_NAMES.update(mappings)
 
     if menu_item in LEGACY_ROUTE_NAMES:
-        log.info('Route name "{}" is deprecated and will be removed. '
-                 'Please update calls to use "{}" instead'
-                 .format(menu_item, LEGACY_ROUTE_NAMES[menu_item]))
+        log.info('Route name "%s" is deprecated and will be removed. '
+                 'Please update calls to use "%s" instead',
+                 menu_item, LEGACY_ROUTE_NAMES[menu_item])
     return LEGACY_ROUTE_NAMES.get(menu_item, menu_item)
 
 
@@ -1325,18 +1322,10 @@ def markdown_extract(text: str,
     will not be truncated.'''
     if not text:
         return ''
-    plain = bleach_clean(markdown(text), strip=True)
+    plain = nh3_clean(markdown(text), tags=set())
     if not extract_length or len(plain) < extract_length:
-        return literal(plain)
-    return literal(
-        str(
-            shorten(
-                plain,
-                width=extract_length,
-                placeholder='...'
-            )
-        )
-    )
+        return plain
+    return shorten(plain, width=extract_length, placeholder='...')
 
 
 @core_helper
@@ -2186,8 +2175,8 @@ def render_markdown(data: str,
     if allow_html:
         data = markdown(data.strip())
     else:
-        data = bleach_clean(
-            markdown(data), strip=True,
+        data = nh3_clean(
+            markdown(data),
             tags=MARKDOWN_TAGS,
             attributes=MARKDOWN_ATTRIBUTES)
     # tags can be added by tag:... or tag:"...." and a link will be made
@@ -2319,7 +2308,7 @@ def resource_view_get_fields(resource: dict[str, Any]) -> list["str"]:
     }
     try:
         result = logic.get_action('datastore_search')({}, data)
-    except logic.NotFound:
+    except (logic.NotFound, logic.ValidationError):
         return []
 
     fields = [field['id'] for field in result.get('fields', [])]
@@ -2651,7 +2640,7 @@ def mail_to(email_address: str, name: str) -> Markup:
 
 @core_helper
 def clean_html(html: Any) -> str:
-    return bleach_clean(str(html))
+    return nh3_clean(str(html))
 
 
 core_helper(flash, name='flash')
@@ -2844,3 +2833,23 @@ def csrf_input():
     '''
     import ckan.lib.base as base
     return literal(base.render('snippets/csrf_input.html'))
+
+
+@core_helper
+def unix_locale_to_bcp47(locale_str: str) -> str:
+    '''
+    Convert a Unix/POSIX locale string from the configurations
+    ckan.locale_default or ckan.locales_available to a BCP-47
+    language tag for use in rendered <html lang="…"> tags.
+
+    Only simple cases are handled, override this helper if language
+    modifier, region or variant handling is required for your site.
+
+    POSIX form:  language[_territory]
+    BCP-47 form: language[-Script]
+
+    Examples:
+        en -> en
+        fr_FR -> fr-FR
+    '''
+    return locale_str.replace('_', '-')

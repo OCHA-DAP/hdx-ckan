@@ -57,7 +57,7 @@ testpaths = ["ckan", "ckanext"]
 addopts = "--strict-markers --pdbcls=IPython.terminal.debugger:TerminalPdb --ckan-ini=test-core.ini"
 
 [tool.pyright]
-pythonVersion = "3.9"
+pythonVersion = "3.10"
 include = ["ckan", "ckanext"]
 exclude = [
     "**/test*",
@@ -169,11 +169,53 @@ select = [
     "F",
     "Q",
     "INP001", # Checks for packages that are missing an __init__.py file.
+    "W",
+    "C901",
+    "G",
+    "PLW0602"
 ]
 extend-ignore = [
     "Q003", # avoidable-escaped-quote
     "E712", # true-false-comparison (interferes with sqlAlchemy queries)
 ]
+
+[tool.ruff.lint.per-file-ignores]
+# These should be fixed
+# E731 is lambda assignment
+# PLW0602 is global variable without assignment, F824 in flake8
+"test_*.py" = ["E501"]
+"ckan/lib/helpers.py" = ["PLW0602", "E731", "C901"]
+"ckan/lib/jobs.py" = ["PLW0602"]
+"ckan/lib/dictization/__init__.py" = ["E731"]
+
+# Files that are too complex
+"ckanext/tabledesigner/views.py" = ["C901"]
+"ckanext/resourceproxy/blueprint.py" = ["C901"]
+"ckanext/datatablesview/blueprint.py" = ["C901"]
+"ckanext/datastore/plugin.py" = ["C901"]
+"ckanext/datastore/blueprint.py" = ["C901"]
+"ckanext/datastore/backend/postgres.py" = ["C901", "E731"]
+"ckanext/datapusher/logic/action.py" = ["C901"]
+"ckanext/activity/views.py" = ["C901"]
+"ckanext/activity/changes.py" = ["C901"]
+"ckan/views/resource.py" = ["C901"]
+"ckan/views/dataset.py" = ["C901"]
+"ckan/views/api.py" = ["C901"]
+"ckan/views/__init__.py" = ["C901"]
+"ckan/model/base.py" = ["C901", "E731"]
+"ckan/logic/action/create.py" = ["C901"]
+"ckan/logic/__init__.py" = ["C901"]
+"ckan/lib/navl/dictization_functions.py" = ["C901"]
+"ckan/lib/mailer.py" = ["C901"]
+"ckan/lib/config_tool.py" = ["C901"]
+"ckan/config/middleware/flask_app.py" = ["C901"]
+"ckan/config/environment.py" = ["C901"]
+"ckan/config/declaration/serialize.py" = ["C901"]
+"ckan/config/declaration/load.py" = ["C901"]
+"ckan/cli/views.py" = ["C901"]
+"ckan/cli/plugin_info.py" = ["C901"]
+"ckan/migration/migrate_package_activity.py" = ["C901"]
+"ckan/migration/revision_legacy_code.py" = ["C901"]
 
 [tool.ruff.lint.flake8-quotes]
 inline-quotes = "single"

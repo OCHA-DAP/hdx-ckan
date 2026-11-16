@@ -3,7 +3,7 @@
 
 {# Allows custom attributes to be added to the <html> tag #}
 {%- block htmltag -%}
-{% set lang = h.lang() %}
+{% set lang = h.unix_locale_to_bcp47(h.lang()) %}
 <!--[if IE 9]> <html lang="{{ lang }}" class="ie9"> <![endif]-->
 <!--[if gt IE 8]><!--> <html lang="{{ lang }}" {% if h.is_rtl_language()  %} dir="rtl" {% endif %} > <!--<![endif]-->
 {%- endblock -%}
@@ -113,6 +113,9 @@
     #}
     {%- block scripts %}
     {% endblock -%}
+
+    {% block body_extras -%}
+    {%- endblock %}
 
     {# render all assets included in scripts block and everywhere else #}
     {# make sure there are no calls to `asset` tag after this point #}

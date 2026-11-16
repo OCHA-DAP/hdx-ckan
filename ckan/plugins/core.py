@@ -7,7 +7,7 @@ import logging
 from contextlib import contextmanager
 from typing import Generic, Iterator, TypeVar
 from typing_extensions import TypeGuard
-from pkg_resources import iter_entry_points
+from importlib.metadata import entry_points
 
 
 from ckan.common import config, aslist
@@ -29,6 +29,10 @@ __all__ = [
     'use_plugin', 'plugin_loaded',
     'unload_non_system_plugins',
 ]
+
+# System plugins references. Do not use this directly, use
+# ``find_system_plugins()`` instead.
+_system_plugins = []
 
 TInterface = TypeVar('TInterface', bound="Interface")
 
@@ -240,12 +244,28 @@ def find_system_plugins() -> list[str]:
     These are essential for operation and therefore cannot be
     enabled/disabled through the configuration file.
     '''
+    global _system_plugins
+    ep_names = []
 
-    eps = []
-    for ep in iter_entry_points(group=SYSTEM_PLUGINS_ENTRY_POINT_GROUP):
+    if _system_plugins:
+        for ep in _system_plugins:
+            ep.load()
+            ep_names.append(ep.name)
+        return ep_names
+
+    try:
+        eps = [ep for ep in entry_points(group=SYSTEM_PLUGINS_ENTRY_POINT_GROUP)]
+    except TypeError:
+        # Python 3.9
+        eps = [ep for ep in entry_points().get(SYSTEM_PLUGINS_ENTRY_POINT_GROUP)]    # type: ignore
+
+    _system_plugins = []
+    for ep in eps:
+        _system_plugins.append(ep)
         ep.load()
-        eps.append(ep.name)
-    return eps
+        ep_names.append(ep.name)
+
+    return ep_names
 
 
 def unload_non_system_plugins():
@@ -275,13 +295,21 @@ def _get_service(plugin_name: str) -> Plugin:
     >>> assert isinstance(plugin, ActivityPlugin)
     """
     for group in GROUPS:
-        iterator = iter_entry_points(
-            group=group,
-            name=plugin_name
-        )
-        plugin = next(iterator, None)
-        if plugin:
-            return plugin.load()(name=plugin_name)
+        try:
+            eps = list(entry_points(group=group, name=plugin_name))
+            ep = eps[0] if eps else None
+        except TypeError:
+            # Python 3.9
+            eps = entry_points().get(group, [])
+            ep = None
+            for item in eps:
+                if item.name == plugin_name:
+                    ep = item
+                    break
+
+        if ep:
+            return ep.load()(name=plugin_name)
+
     raise PluginNotFoundException(plugin_name)
 
 

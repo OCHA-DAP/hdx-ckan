@@ -1,10 +1,10 @@
 # encoding: utf-8
 from __future__ import annotations
 
-import cgi
-import json
 import logging
 from typing import Any, Optional, Union
+
+from werkzeug.datastructures import FileStorage as FlaskFileStorage
 
 from werkzeug.wrappers.response import Response as WerkzeugResponse
 import flask
@@ -202,7 +202,7 @@ class CreateView(MethodView):
         data_provided = False
         for key, value in data.items():
             if (
-                    (value or isinstance(value, cgi.FieldStorage))
+                    (value or isinstance(value, FlaskFileStorage))
                     and key != u'resource_type'):
                 data_provided = True
                 break
@@ -346,6 +346,8 @@ class EditView(MethodView):
                 403,
                 _(u'User %r not authorized to edit %s') % (user, id)
             )
+        except NotFound:
+            return base.abort(404, _(u'Dataset not found'))
         return context
 
     def post(self, package_type: str, id: str,
@@ -389,7 +391,10 @@ class EditView(MethodView):
             errors: Optional[dict[str, Any]] = None,
             error_summary: Optional[dict[str, Any]] = None) -> str:
         context = self._prepare(id)
-        pkg_dict = get_action(u'package_show')(context, {u'id': id})
+        try:
+            pkg_dict = get_action(u'package_show')(context, {u'id': id})
+        except NotFound:
+            return base.abort(404, _(u'Dataset not found'))
 
         try:
             resource_dict = get_action(u'resource_show')(
@@ -588,12 +593,7 @@ def view(package_type: str,
         return base.abort(404, _(u'Resource not found'))
 
     view = None
-    if request.args.get(u'resource_view', u''):
-        try:
-            view = json.loads(request.args.get(u'resource_view', u''))
-        except ValueError:
-            return base.abort(409, _(u'Bad resource view data'))
-    elif view_id:
+    if view_id:
         try:
             view = get_action(u'resource_view_show')(context, {u'id': view_id})
         except (NotFound, NotAuthorized):
@@ -671,13 +671,12 @@ class EditResourceViewView(MethodView):
             )
         )
         data.pop(u'save', None)
-
         to_preview = data.pop(u'preview', False)
         if to_preview:
             context[u'preview'] = True
         to_delete = data.pop(u'delete', None)
         data[u'resource_id'] = resource_id
-        data[u'view_type'] = request.args.get(u'view_type')
+        data[u'view_type'] = view_type = request.form.get(u'view_type')
 
         try:
             if to_delete:
@@ -703,6 +702,8 @@ class EditResourceViewView(MethodView):
                     u'{}_resource.views'.format(package_type),
                     id=id, resource_id=resource_id
                 )
+
+        data[u'view_type'] = view_type
         extra_vars[u'data'] = data
         extra_vars[u'to_preview'] = to_preview
         return self.get(package_type, id, resource_id, view_id, extra_vars)
@@ -713,8 +714,9 @@ class EditResourceViewView(MethodView):
             resource_id: str,
             view_id: Optional[str] = None,
             post_extra: Optional[dict[str, Any]] = None) -> str:
+        to_preview = post_extra["to_preview"] if post_extra else False
         context, extra_vars = self._prepare(id, resource_id)
-        to_preview = extra_vars[u'to_preview']
+
         if post_extra:
             extra_vars.update(post_extra)
 
