@@ -4,6 +4,7 @@ from werkzeug.test import TestResponse
 
 import ckan.plugins.toolkit as tk
 from ckan.tests.helpers import CKANTestApp
+from ckanext.hdx_theme.tests.hdx_test_util import post_with_csrf
 
 _get_action = tk.get_action
 h = tk.h
@@ -27,7 +28,7 @@ def _apply_for_user_account(app: CKANTestApp, additional_params: Dict = None) ->
     }
     if additional_params:
         post_dict.update(additional_params)
-    user_detail_result = app.post(user_detail_url, data=post_dict)
+    user_detail_result = post_with_csrf(app, user_detail_url, data=post_dict)
     return user_detail_result
 
 def _validate_account(app: CKANTestApp, token: str) -> TestResponse:
@@ -41,5 +42,5 @@ def _attempt_login(app: CKANTestApp, follow_redirects=True):
         'password': PASSWORD,
         'mfa': ''
     }
-    login_response = app.post(login_url, data=post_dict, follow_redirects=follow_redirects)
+    login_response = post_with_csrf(app, login_url, data=post_dict, follow_redirects=follow_redirects)
     return login_response

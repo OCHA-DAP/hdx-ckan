@@ -5,6 +5,7 @@ import ckan.plugins.toolkit as tk
 import ckan.tests.factories as factories
 from collections import OrderedDict
 import ckanext.hdx_user_extra.helpers.helpers as ue_h
+from ckanext.hdx_theme.tests.hdx_test_util import post_with_csrf
 
 _get_action = tk.get_action
 h = tk.h
@@ -66,7 +67,7 @@ class TestOnboardingChangeEmail(object):
             'email': USER_NEW_EMAIL,
             'email2': USER_NEW_EMAIL,
         }
-        app.post(url, data=data_dict)
+        post_with_csrf(app, url, data=data_dict)
 
         context = {
             'model': model,
@@ -90,7 +91,7 @@ class TestOnboardingChangeEmail(object):
             'email': USER_NEW_EMAIL,
             'email2': USER_EMAIL,
         }
-        response = app.post(url, data=data_dict)
+        response = post_with_csrf(app, url, data=data_dict)
         assert 'The emails you entered do not match' in response.body, 'User should see an error message when emails do not match'
 
 
@@ -114,7 +115,7 @@ class TestOnboardingChangeEmail(object):
             'email': USER_NEW_EMAIL,
             'email2': USER_NEW_EMAIL,
         }
-        app.post(url, data=data_dict)
+        post_with_csrf(app, url, data=data_dict)
 
         url = h.url_for('hdx_user_onboarding.change_email')
         response = app.get(url)
@@ -138,7 +139,7 @@ class TestOnboardingChangeEmail(object):
             'email': USER_EMAIL,
             'email2': USER_EMAIL,
         }
-        app.post(url, data=data_dict)
+        post_with_csrf(app, url, data=data_dict)
 
         url = h.url_for('hdx_user_onboarding.change_email')
         response = app.get(url)

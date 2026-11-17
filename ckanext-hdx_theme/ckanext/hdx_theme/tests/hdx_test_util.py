@@ -5,6 +5,35 @@ Created on Nov 12, 2014
 '''
 import re
 
+import ckan.plugins.toolkit as tk
+
+
+def get_csrf_form_field(client, page_url=None):
+    '''
+    Loads a page that renders ``h.csrf_input()`` (the login page by default) and returns
+    ``{field_name: token}``, ready to merge into the POST data.
+
+    The token belongs to the client's session, so POST with the same ``client``.
+    ``CKANTestApp.post()`` opens a new client, without cookies, on every call.
+    '''
+    field_name = tk.config.get('WTF_CSRF_FIELD_NAME')
+    response = client.get(page_url or tk.h.url_for('hdx_signin.login'))
+    match = re.search(rf'name="{re.escape(field_name)}" value="([^"]+)"', response.body)
+    assert match, 'CSRF field not found on the page'
+    return {field_name: match.group(1)}
+
+
+def post_with_csrf(app, url, data=None, **kwargs):
+    '''
+    Like ``CKANTestApp.post()``, but adds a valid CSRF token to ``data``.
+    The token is fetched anonymously, so ``kwargs`` (e.g. ``headers``) only apply to the POST.
+    '''
+    client = app.test_client()
+    post_data = dict(data or {})
+    post_data.update(get_csrf_form_field(client))
+    return client.post(url, data=post_data, **kwargs)
+
+
 def _normalize_whitespace(text):
     return re.sub(r'\s+', ' ', text).strip()
 

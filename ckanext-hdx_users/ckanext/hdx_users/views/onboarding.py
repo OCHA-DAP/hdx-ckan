@@ -26,7 +26,7 @@ from ckanext.hdx_users.helpers.constants import (
     ONBOARDING_MAILCHIMP_OPTIN_KEY,
     ONBOARDING_USER_EMAIL_UPDATED_KEY,
 )
-from ckanext.hdx_users.views.user_view_helper import CaptchaNotValid, OnbCaptchaErr, error_message
+from ckanext.hdx_users.views.user_view_helper import CaptchaNotValid, OnbCaptchaErr, error_message, enforce_csrf
 from ckanext.hdx_users.logic.schema import onboarding_user_new_form_schema, onboarding_user_change_email_form_schema
 
 log = logging.getLogger(__name__)
@@ -108,6 +108,7 @@ def _user_can_change_email():
 
 class UserOnboardingView(MethodView):
 
+    @enforce_csrf
     def post(self) -> Union[Response, str]:
         context = _prepare()
         try:
@@ -252,6 +253,7 @@ def verify_email(user_id: str) -> str:
 
 
 
+@enforce_csrf
 def change_email() -> str:
     user_id = _user_can_change_email()
     if user_id and not ue_h.is_user_extra_email_updated(user_id):

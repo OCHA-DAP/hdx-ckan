@@ -11,6 +11,7 @@ from mock.mock import MagicMock
 
 from ckanext.security.model import SecurityTOTP
 from ckan.tests.helpers import CKANTestApp, CKANResponse
+from ckanext.hdx_theme.tests.hdx_test_util import post_with_csrf
 
 _THROTTLE_MAP = {}
 
@@ -124,7 +125,7 @@ def _attempt_login(username: str, password: str, mfa: str, success_string: str,
         'password': password,
         'mfa': mfa,
     }
-    login_response = app.post(login_url, data=post_dict, follow_redirects=follow_redirects)
+    login_response = post_with_csrf(app, login_url, data=post_dict, follow_redirects=follow_redirects)
     if 'Login failed' in login_response:
         return False
     elif success_string in login_response:

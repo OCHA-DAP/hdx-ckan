@@ -5,6 +5,7 @@ import ckan.model as model
 import ckan.plugins.toolkit as tk
 import ckan.tests.factories as factories
 import ckan.tests.helpers as helpers
+from ckanext.hdx_theme.tests.hdx_test_util import post_with_csrf
 from ckanext.hdx_users.helpers.constants import ONBOARDING_CAME_FROM_EXTRAS_KEY, ONBOARDING_CAME_FROM_STATE_EXTRAS_KEY, \
     ONBOARDING_MAILCHIMP_OPTIN_KEY
 
@@ -110,7 +111,7 @@ class TestOnboarding(object):
         data_dict = build_data_dict()
 
         url = h.url_for('hdx_user_onboarding.user-info')
-        result = app.post(url, data=data_dict)
+        result = post_with_csrf(app, url, data=data_dict)
         assert result.status_code == 200
         assert NEW_USER_EMAIL in result.body
         assert '<div class="c-step-pager__label" aria-hidden="true">Personal details</div>' in result.body
@@ -166,7 +167,7 @@ class TestOnboarding(object):
         # no captcha response submitted at all
         _validate_captcha.return_value = False
         with helpers.changed_config('hdx.captcha', True):
-            result = app.post(url, data=data_dict)
+            result = post_with_csrf(app, url, data=data_dict)
         assert result.status_code == 200
         assert 'Captcha is not valid' in result.body
         assert _validate_captcha.called
@@ -177,7 +178,7 @@ class TestOnboarding(object):
         # a captcha response is submitted but fails verification
         data_dict['g-recaptcha-response'] = 'invalid-token'
         with helpers.changed_config('hdx.captcha', True):
-            result = app.post(url, data=data_dict)
+            result = post_with_csrf(app, url, data=data_dict)
         assert result.status_code == 200
         assert 'Captcha is not valid' in result.body
         assert _validate_captcha.called
@@ -188,7 +189,7 @@ class TestOnboarding(object):
         # a valid captcha response allows account creation to proceed
         _validate_captcha.return_value = True
         with helpers.changed_config('hdx.captcha', True):
-            result = app.post(url, data=data_dict)
+            result = post_with_csrf(app, url, data=data_dict)
         assert result.status_code == 200
         assert NEW_USER_EMAIL in result.body
 
@@ -201,7 +202,7 @@ class TestOnboarding(object):
 
         data_dict = {}
         url = h.url_for('hdx_user_onboarding.user-info')
-        result = app.post(url, data=data_dict)
+        result = post_with_csrf(app, url, data=data_dict)
         assert result.status_code == 200
         # assert 'The passwords you entered do not match' in result.body
         assert 'Missing value' in result.body
@@ -209,28 +210,28 @@ class TestOnboarding(object):
         data_dict = build_data_dict()
         data_dict['email2'] = USER_EMAIL
 
-        result = app.post(url, data=data_dict)
+        result = post_with_csrf(app, url, data=data_dict)
         assert result.status_code == 200
         assert 'The emails you entered do not match' in result.body
 
         data_dict = build_data_dict()
         data_dict['password2'] = 'asdASD123!@#1'
 
-        result = app.post(url, data=data_dict)
+        result = post_with_csrf(app, url, data=data_dict)
         assert result.status_code == 200
         assert 'The passwords you entered do not match' in result.body
 
         data_dict = build_data_dict()
         data_dict['name'] = USER
 
-        result = app.post(url, data=data_dict)
+        result = post_with_csrf(app, url, data=data_dict)
         assert result.status_code == 200
         assert 'Username is already being used by another HDX account.' in result.body
 
         data_dict = build_data_dict()
 
         auth = {'Authorization': testuser_token}
-        result = app.post(url, data=data_dict, headers=auth)
+        result = post_with_csrf(app, url, data=data_dict, headers=auth)
         assert result.status_code == 403
         assert 'Sorry, you don\'t have permission to access this page' in result.body
 
@@ -239,7 +240,7 @@ class TestOnboarding(object):
 
         data_dict = build_data_dict()
         url = h.url_for('hdx_user_onboarding.user-info')
-        result = app.post(url, data=data_dict)
+        result = post_with_csrf(app, url, data=data_dict)
         assert result.status_code == 200
         assert NEW_USER_EMAIL in result.body
 
@@ -249,7 +250,7 @@ class TestOnboarding(object):
         assert 'pending' == user_dict.get('state')
 
         data_dict['name'] = NEW_USER_2
-        result = app.post(url, data=data_dict)
+        result = post_with_csrf(app, url, data=data_dict)
         assert result.status_code == 200
         assert NEW_USER_EMAIL in result.body
 
@@ -269,7 +270,7 @@ class TestOnboarding(object):
 
         data_dict = build_data_dict()
         url = h.url_for('hdx_user_onboarding.user-info')
-        result = app.post(url, data=data_dict)
+        result = post_with_csrf(app, url, data=data_dict)
         assert result.status_code == 200
         assert NEW_USER_EMAIL in result.body
 

@@ -6,8 +6,9 @@ from urllib.parse import urlparse, urljoin
 
 from ckan.common import session
 from ckan.types import Context
-from ckan.views.user import logout as _logout, rotate_token, next_page_or_default
+from ckan.views.user import logout as _logout, rotate_token, next_page_or_default, regenerate_session
 from ckanext.hdx_users.logic.first_login import FirstLoginLogic
+from ckanext.hdx_users.views.user_view_helper import enforce_csrf
 
 import json
 import ckan.plugins.toolkit as tk
@@ -70,6 +71,7 @@ def _remember_user_for_next_signin(res: Response, user_obj: model.User):
     max_age = int(14 * 24 * 3600)
     res.set_cookie('hdx_login', quote(json.dumps(login_dict)), max_age=max_age, secure=True)
 
+@enforce_csrf
 def login() -> Union[Response, str]:
     '''
     This is based on ckan.views.user.login() but with the following changes:
@@ -78,6 +80,7 @@ def login() -> Union[Response, str]:
     - we skip ckan.lib.authenticator.ckan_authenticator() as we want to fail if the user is not authenticated by
       ckanext.security
     - after a successful login, we check that the user validated their email
+    - the CSRF check is enforced by @enforce_csrf, as core only enforces it for its own user.login endpoint
     '''
 
     came_from = request.args.get('came_from', '')
@@ -121,6 +124,7 @@ def login() -> Union[Response, str]:
             first_login_logic = FirstLoginLogic(first_login_context, user_obj.id)
             first_login_url = first_login_logic.determine_initial_redirect()
             next = first_login_url or request.args.get('next', request.args.get('came_from'))
+            regenerate_session()
             if _remember:
                 from datetime import timedelta
                 duration_time = timedelta(milliseconds=int(_remember))
