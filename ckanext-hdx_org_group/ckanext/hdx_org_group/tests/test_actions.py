@@ -45,6 +45,27 @@ class TestActions(object):
         org_dict = _get_action('hdx_datasets_for_group')(context, {'id': 'some_location'})
         assert 'dataset111-category1' in  org_dict.get('results')[0].get('name')
 
+    def test_member_create_package_reindexes_dataset(self, app):
+        sysadmin_context: Context = {'model': model, 'session': model.Session, 'user': 'testsysadmin'}
+        token = factories.APIToken(user='testsysadmin', expires_in=2, unit=60 * 60)['token']
+        factories.Group(name='other_location')
+
+        def _indexed_groups():
+            result = _get_action('package_search')(sysadmin_context, {'fq': 'name:dataset111-category1'})
+            return sorted(g['name'] for g in result['results'][0]['groups'])
+
+        assert _indexed_groups() == [LOCATION]
+
+        res = app.post('/api/action/member_create', headers={'Authorization': token}, json={
+            'id': 'other_location',
+            'object': 'dataset111-category1',
+            'object_type': 'package',
+            'capacity': 'public',
+        })
+
+        assert res.status_code == 200, res.get_data(as_text=True)[:300]
+        assert _indexed_groups() == sorted([LOCATION, 'other_location'])
+
     def test_org_not_existing(self, app):
 
         orgadmin = 'orgadmin'

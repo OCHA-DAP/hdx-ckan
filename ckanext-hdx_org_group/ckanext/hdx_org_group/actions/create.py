@@ -8,6 +8,7 @@ import ckan.logic.action.create as core_create
 import ckan.logic.schema as core_schema
 import ckan.model as core_model
 import ckan.plugins.toolkit as tk
+from ckan.lib.search import rebuild
 import ckanext.hdx_users.helpers.mailer as hdx_mailer
 import ckanext.hdx_users.helpers.reset_password as reset_password
 
@@ -219,5 +220,7 @@ def hdx_member_create(context, data_dict=None):
         member.state = 'active'
     model.Session.add(member)
     model.repo.commit()
+    if isinstance(obj, model.Package):
+        rebuild(obj.id)
 
     return model_dictize.member_dictize(member, context)

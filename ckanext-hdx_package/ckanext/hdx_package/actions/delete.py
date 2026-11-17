@@ -65,6 +65,9 @@ def dataset_purge(context, data_dict):
         for m in members.all():
             m.purge()
 
+    model.Session.query(model.PackageMember).filter(
+        model.PackageMember.package_id == pkg.id).delete()
+
     for r in model.Session.query(model.PackageRelationship).filter(
         or_(model.PackageRelationship.subject_package_id == pkg.id,
             model.PackageRelationship.object_package_id == pkg.id)).all():
@@ -74,10 +77,7 @@ def dataset_purge(context, data_dict):
     # no new_revision() needed since there are no object_revisions created
     # during purge
     pkg.purge()
-    try:
-        model.repo.commit_and_remove()
-    except Exception as ex:
-        log.error(ex)
+    model.repo.commit_and_remove()
 
     # if is_requested_data_type:
     #     toolkit.get_action("requestdata_request_delete_by_package_id")(context, {'package_id': id})
