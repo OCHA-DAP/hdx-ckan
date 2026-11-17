@@ -18,7 +18,7 @@ import pytest
 import ckan.lib.search as search
 import ckan.model as model
 import ckanext.hdx_theme.tests.hdx_test_with_inds_and_orgs as hdx_test_with_inds_and_orgs
-from ckan.lib.search.common import SearchError
+from ckan.lib.search.common import SearchError, SearchQueryError
 from ckanext.hdx_package.helpers.freshness_calculator import UPDATE_STATUS_URL_FILTER
 from ckanext.hdx_search.helpers.solr_local_params import HDXPackageSearchQuery
 from ckanext.hdx_search.helpers.constants import (
@@ -34,6 +34,9 @@ PUBLIC_ORG_DATASETS = ('test_dataset_1', 'test_indicator_1', 'test_indicator_2')
 # matches only the private dataset; the public datasets are in the same organization
 PRIVATE_MATCH = 'name:test_private*'
 JOIN_ON_PRIVATE = '{!join from=organization to=organization}' + PRIVATE_MATCH
+# Solr reads _ as '_' in a field name and \{ as '{' in quoted text: the join above in the _query_
+# magic field, without a literal '_query_' or '{!'
+ESCAPED_JOIN_ON_PRIVATE = '+\\u005fquery\\u005f:"\\' + JOIN_ON_PRIVATE + '"'
 
 # Same format as the batch collapse filter in search_logic.py, which gets the sort from the URL.
 # The search page also sends that sort as Solr's sort, which core checks, so a quote in it is only
@@ -67,6 +70,9 @@ REJECTED_CASES = [
     pytest.param('fq_list', '{${zz:!}join from=organization to=organization}' + PRIVATE_MATCH, id='fq_list-macro'),
     pytest.param('facet.field', '{${zz:!}facet.mincount=0 facet.prefix=test_private key=leak}name',
                  id='facet.field-macro'),
+    pytest.param('fq', ESCAPED_JOIN_ON_PRIVATE, id='fq-unicode-escape'),
+    pytest.param('fq_list', ESCAPED_JOIN_ON_PRIVATE, id='fq_list-unicode-escape'),
+    pytest.param('facet.query', ESCAPED_JOIN_ON_PRIVATE, id='facet.query-unicode-escape'),
 ]
 
 # Searches that get around a check that only looks at text values or at '{!'
@@ -81,6 +87,10 @@ REJECTED_SEARCHES = [
     pytest.param({'fq': '{!tag=leak}*:*', 'include_private': True}, id='fq-tag-include-private'),
     # a field facet with mincount 0 lists the values of every dataset in the index
     pytest.param({'facet.field': ['due_date'], 'f.due_date.facet.mincount': '0'}, id='facet.field-mincount-0'),
+    pytest.param({'facet.field': ['due_date'], 'f.due_date.facet.mincount': 'abc'},
+                 id='facet.field-mincount-not-a-number'),
+    # core checks q itself, but its magic field check doesn't see unicode escapes
+    pytest.param({'q': ESCAPED_JOIN_ON_PRIVATE}, id='q-unicode-escape'),
 ]
 
 # Local params that HDX builds itself. These searches must keep working.
@@ -182,6 +192,15 @@ class TestSolrLocalParams(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
         with pytest.raises(SearchError, match='not supported in param'):
             query.run({'q': '*:*', 'fq_list': [JOIN_ON_PRIVATE]}, permission_labels=['public'])
 
+    def test_leaves_unknown_params_to_core(self):
+        # core rejects params it doesn't accept with a 400, before anything reaches Solr
+        res = self._anonymous_search({'foo': '${x}', 'bar': {'a': 1}})
+
+        assert res.status_code == 400, _summary(res)
+        assert 'Invalid search parameters' in res.json['error']['message'], _summary(res)
+        with pytest.raises(SearchQueryError, match='Invalid search parameters'):
+            search.query_for(model.Package).run({1: 'x'})
+
     @pytest.mark.parametrize('data_dict', ACCEPTED_CASES)
     def test_accepts_local_params_hdx_builds(self, data_dict):
         res = self._anonymous_search(data_dict)
@@ -204,6 +223,9 @@ class TestSolrLocalParams(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
         # lists the public datasets of the private dataset's organization only when the private
         # dataset matches. With it, the page shows its search error state, with no datasets.
         assert not self._search_page_lists_org_datasets({'fq': JOIN_ON_PRIVATE})
+
+    def test_search_page_fq_cannot_use_unicode_escapes(self):
+        assert not self._search_page_lists_org_datasets({'fq': ESCAPED_JOIN_ON_PRIVATE})
 
     def test_search_page_shows_search_error_instead_of_500(self):
         # core's check rejects local params in sort; the page used to fail building its pagination

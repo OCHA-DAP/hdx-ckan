@@ -166,6 +166,7 @@ class SearchLogic(object):
         self.template_data.other_links = {'current_page_url': self._current_url()}
 
         search_extras = {}
+        pager_url = self._get_pager_function(package_type)
         try:
             self.template_data.fields = []
             # c.fields_grouped will contain a dict of params containing
@@ -245,7 +246,7 @@ class SearchLogic(object):
             #adding site_id to facets to facilitate totals counts in case of batch/collapse
             facet_keys = ['{!ex=batch}site_id'] + list(facets)
             self._performing_search(q, fq, facet_keys, limit, page, sort_by, search_extras,
-                                    self._get_pager_function(package_type), context,
+                                    pager_url, context,
                                     fq_list=fq_list, expand=solr_expand)
 
         except SearchError as se:
@@ -254,7 +255,7 @@ class SearchLogic(object):
             self.template_data.query_error = True
             self.template_data.search_facets = {}
             # the search templates build the pagination links from the pager url
-            self.template_data.page = h.Page(collection=[], url=self._get_pager_function(package_type))
+            self.template_data.page = h.Page(collection=[], url=pager_url)
         self.template_data.search_facets_limits = {}
         for facet in self.template_data.search_facets.keys():
             limit = 1000
