@@ -1,6 +1,7 @@
 import csv
 import json
 import datetime
+import html
 import logging
 import re
 import requests
@@ -315,6 +316,19 @@ def _get_packages_for_maintainer(context, id, org_name):
         'rows': 100,
     })
     return result['results']
+
+
+@tk.chained_helper
+def markdown_extract(next_helper, text, extract_length=190):
+    '''
+    HDX-11758: since CKAN 2.11.6 markdown_extract() returns HTML-escaped text as a plain str
+    (it used to return a literal), so Jinja escapes it a second time and "&" shows as "&amp;".
+    Unescape it here so Jinja escapes it exactly once.
+
+    Don't wrap the result in literal(): nh3 leaves quotes unescaped, so the text isn't safe
+    inside attributes, and upstream stopped returning a literal when fixing CVE-2026-104772.
+    '''
+    return html.unescape(next_helper(text, extract_length))
 
 
 def markdown_extract_strip(text, extract_length=190):
