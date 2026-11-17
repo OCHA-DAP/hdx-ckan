@@ -14,7 +14,7 @@ import sqlalchemy
 from botocore.exceptions import ClientError
 from ckan.types import ActionResult, Context, DataDict
 from six import text_type
-from typing import Any, cast, Dict, Tuple
+from typing import Any, cast, Dict, List, Tuple
 
 import ckan.authz as authz
 import ckan.lib.helpers as h
@@ -1234,6 +1234,15 @@ def datastore_search(up_func, context: Context, data_dict: DataDict) -> Dict[str
     return result
 
 
+def _resource_ids_from_datastore_table_names(table_names) -> List[str]:
+    """
+    Turns the table names that the HDX patch to core `search_sql` stores in `datastore_table_names`
+    into resource ids. Since CKAN 2.11.7 (pglast sanitiser) they are `(schema, name)` tuples;
+    plain strings are accepted too.
+    """
+    return sorted({t[1] if isinstance(t, tuple) else t for t in table_names or ()})
+
+
 @tk.side_effect_free
 @tk.chained_action
 def datastore_search_sql(up_func, context: Context, data_dict: DataDict) -> Dict[str, Any]:
@@ -1243,13 +1252,15 @@ def datastore_search_sql(up_func, context: Context, data_dict: DataDict) -> Dict
     """
     result = up_func(context, data_dict)
     action_name = 'datastore_search_sql'
+    # Pop before the analytics code so the key never reaches the API response
+    table_names = result.pop('datastore_table_names', None)
 
     try:
         username, api_token_str = _get_information_needed_for_analytics(context)
 
-        resource_ids = result.pop('datastore_table_names', None)
+        resource_ids = _resource_ids_from_datastore_table_names(table_names)
         if resource_ids:
-            DatastoreApiCallAnalyticsSender(username ,resource_ids, api_token_str, action_name).send_to_queue()
+            DatastoreApiCallAnalyticsSender(username, resource_ids, api_token_str, action_name).send_to_queue()
         else:
             log.error(f'No resource_ids found for {action_name} analytics')
 
