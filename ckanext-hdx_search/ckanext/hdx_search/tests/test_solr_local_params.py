@@ -13,6 +13,8 @@ All searches run as an anonymous user, through the action API (a 409 for a Searc
 as core's check) or the search page.
 """
 
+from unittest import mock
+
 import pytest
 
 import ckan.lib.search as search
@@ -20,7 +22,12 @@ import ckan.model as model
 import ckanext.hdx_theme.tests.hdx_test_with_inds_and_orgs as hdx_test_with_inds_and_orgs
 from ckan.lib.search.common import SearchError, SearchQueryError
 from ckanext.hdx_package.helpers.freshness_calculator import UPDATE_STATUS_URL_FILTER
-from ckanext.hdx_search.helpers.solr_local_params import HDXPackageSearchQuery
+import ckanext.hdx_search.controller_logic.search_logic as search_logic
+from ckanext.hdx_search.helpers.solr_local_params import (
+    HDXPackageSearchQuery,
+    UnsupportedSearchParamError,
+    check_hdx_local_params,
+)
 from ckanext.hdx_search.helpers.constants import (
     ARCHIVED_DATASETS_FACET_NAME,
     DEFAULT_SORTING,
@@ -89,6 +96,12 @@ REJECTED_SEARCHES = [
     pytest.param({'facet.field': ['due_date'], 'f.due_date.facet.mincount': '0'}, id='facet.field-mincount-0'),
     pytest.param({'facet.field': ['due_date'], 'f.due_date.facet.mincount': 'abc'},
                  id='facet.field-mincount-not-a-number'),
+    # int() reads these as 1 or 10, but Solr doesn't
+    pytest.param({'facet.field': ['due_date'], 'f.due_date.facet.mincount': 1.5}, id='facet.field-mincount-float'),
+    pytest.param({'facet.field': ['due_date'], 'f.due_date.facet.mincount': True}, id='facet.field-mincount-bool'),
+    pytest.param({'facet.field': ['due_date'], 'f.due_date.facet.mincount': '1_0'},
+                 id='facet.field-mincount-underscore'),
+    pytest.param({'facet.field': ['due_date'], 'f.due_date.facet.mincount': ['0']}, id='facet.field-mincount-list'),
     # core checks q itself, but its magic field check doesn't see unicode escapes
     pytest.param({'q': ESCAPED_JOIN_ON_PRIVATE}, id='q-unicode-escape'),
 ]
@@ -189,7 +202,7 @@ class TestSolrLocalParams(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
         query = search.query_for(model.Package)
 
         assert isinstance(query, HDXPackageSearchQuery)
-        with pytest.raises(SearchError, match='not supported in param'):
+        with pytest.raises(UnsupportedSearchParamError, match='not supported in param'):
             query.run({'q': '*:*', 'fq_list': [JOIN_ON_PRIVATE]}, permission_labels=['public'])
 
     def test_leaves_unknown_params_to_core(self):
@@ -200,6 +213,11 @@ class TestSolrLocalParams(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
         assert 'Invalid search parameters' in res.json['error']['message'], _summary(res)
         with pytest.raises(SearchQueryError, match='Invalid search parameters'):
             search.query_for(model.Package).run({1: 'x'})
+
+    @pytest.mark.parametrize('mincount', [1, '2', '+3', ['4']])
+    def test_accepts_whole_number_mincount_of_1_or_more(self, mincount):
+        # only the check: Solr can't facet on due_date, the only field core takes a mincount for
+        check_hdx_local_params({'facet.field': ['due_date'], 'f.due_date.facet.mincount': mincount})
 
     @pytest.mark.parametrize('data_dict', ACCEPTED_CASES)
     def test_accepts_local_params_hdx_builds(self, data_dict):
@@ -230,3 +248,26 @@ class TestSolrLocalParams(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
     def test_search_page_shows_search_error_instead_of_500(self):
         # core's check rejects local params in sort; the page used to fail building its pagination
         assert not self._search_page_lists_org_datasets({'sort': INJECTED_SORT})
+
+    def _search_page_log_levels(self, monkeypatch, params):
+        # the module's logger, not caplog: the test ini's logging config disables loggers created before it
+        log = mock.Mock()
+        monkeypatch.setattr(search_logic, 'log', log)
+        assert not self._search_page_lists_org_datasets(params)
+        return [name for name, args, _ in log.method_calls if args and str(args[0]).startswith('Dataset search')]
+
+    @pytest.mark.parametrize('params', [
+        pytest.param({'fq': JOIN_ON_PRIVATE}, id='hdx-check'),
+        # Solr can't parse a sort without a direction; core raises a SearchQueryError for that
+        pytest.param({'sort': 'metadata_modified'}, id='core-invalid-sort'),
+    ])
+    def test_search_page_logs_rejected_searches_as_warnings(self, monkeypatch, params):
+        # bots crawl the search page: searches that the request breaks don't go to the error log
+        assert self._search_page_log_levels(monkeypatch, params) == ['warning']
+
+    def test_search_page_logs_solr_errors_as_errors(self, monkeypatch):
+        def _solr_error(*args, **kwargs):
+            raise SearchError('SOLR returned an error running query')
+        monkeypatch.setattr(search_logic.SearchLogic, '_performing_search', _solr_error)
+
+        assert self._search_page_log_levels(monkeypatch, {}) == ['error']

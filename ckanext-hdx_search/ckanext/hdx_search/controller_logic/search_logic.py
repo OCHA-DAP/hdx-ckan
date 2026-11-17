@@ -133,7 +133,8 @@ class SearchLogic(object):
                 default_sort_by=DEFAULT_SORTING, num_of_items=DEFAULT_NUMBER_OF_ITEMS_PER_PAGE,
                 ignore_capacity_check=False, use_solr_collapse=False, hide_archived=True):
 
-        from ckan.lib.search import SearchError
+        from ckan.lib.search import SearchError, SearchQueryError
+        from ckanext.hdx_search.helpers.solr_local_params import UnsupportedSearchParamError
 
         # unicode format (decoded from utf8)
         q = self.template_data.q = request.args.get('q', u'')
@@ -250,7 +251,11 @@ class SearchLogic(object):
                                     fq_list=fq_list, expand=solr_expand)
 
         except SearchError as se:
-            log.error('Dataset search error: %r', se.args)
+            if isinstance(se, (SearchQueryError, UnsupportedSearchParamError)):
+                # caused by the request (the page is crawled by bots), not by Solr
+                log.warning('Dataset search rejected: %r', se.args)
+            else:
+                log.error('Dataset search error: %r', se.args)
             facets = {}
             self.template_data.query_error = True
             self.template_data.search_facets = {}
