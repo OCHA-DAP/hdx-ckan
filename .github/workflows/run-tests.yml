@@ -7,10 +7,42 @@ on:
     # The branches below must be a subset of the branches above
     branches: [ dev ]
 
+# A newer push to a branch or PR cancels the run that is still going for the previous one.
+# dev and prod get a group per run, so every commit there is tested to the end, as before.
+concurrency:
+  group: ${{ github.workflow }}-${{ (github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/prod') && github.run_id || github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 jobs:
 
-  test:
+  check_pr:
+    uses: ./.github/workflows/check-pr-status.yml
+    with:
+      # the pull_request run below tests PRs to dev, so the push run is skipped only for those
+      base: dev
+
+  tests:
+    name: tests (${{ matrix.group }})
+    needs: check_pr
+    if: needs.check_pr.outputs.proceed == 'true'
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # Each job has its own docker compose stack. Within a job the suites run in the same
+        # order as when everything ran in one job, because later suites can rely on tables that
+        # earlier ones migrated (e.g. hdx_search and hdx_user_extra after hdx_theme).
+        # Approximate times: hdx_package 5m, theme + search + user_extra 4m15s,
+        # users + org_group 4m45s, the rest 1m35s.
+        include:
+          - group: hdx_package
+            plugins: [ hdx_package ]
+          - group: hdx_theme-search-user_extra
+            plugins: [ hdx_theme, hdx_search, hdx_user_extra ]
+          - group: hdx_users-org_group
+            plugins: [ hdx_users, hdx_org_group ]
+          - group: others
+            plugins: [ hdx_service_checker, ytp_request, hdx_dataviz, hdx_pages, hdx_smtp_assumerole ]
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -40,32 +72,86 @@ jobs:
       - name: Building UI search index
         run: |
           docker compose exec -T ckan bash -c "INI_FILE=/srv/ckan/hdx-test-core.ini hdxckantool feature"
+      - name: Creating database tables
+        # Every job starts with an empty database. When all suites ran in one job, the first suites
+        # created the tables and applied the plugin migrations for the later ones.
+        run: docker compose exec -T ckan ckan -c /srv/ckan/hdx-test-core.ini db init
       - name: PY3/Testing hdx_service_checker
+        if: contains(matrix.plugins, 'hdx_service_checker')
         run: docker compose exec -T ckan sh -c "./run_pytest_with_coverage.sh hdx_service_checker"
       - name: PY3/Testing ytp_request
+        if: contains(matrix.plugins, 'ytp_request')
         run: |
           docker compose exec -T ckan sh -c "ln -s /srv/ckan/ckanext-ytp-request/ckanext/ytp/request /srv/ckan/ckanext-ytp-request/ckanext/ytp-request"
           docker compose exec -T ckan sh -c "./run_pytest_with_coverage.sh ytp-request"
       - name: PY3/Testing hdx_dataviz
+        if: contains(matrix.plugins, 'hdx_dataviz')
         run: docker compose exec -T ckan sh -c "./run_pytest_with_coverage.sh hdx_dataviz"
       - name: PY3/Testing hdx_pages
+        if: contains(matrix.plugins, 'hdx_pages')
         run: docker compose exec -T ckan sh -c "./run_pytest_with_coverage.sh hdx_pages"
       - name: PY3/Testing hdx_theme
+        if: contains(matrix.plugins, 'hdx_theme')
         run: docker compose exec -T ckan sh -c "./run_pytest_with_coverage.sh hdx_theme"
       - name: PY3/Testing hdx_package
+        if: contains(matrix.plugins, 'hdx_package')
         run: docker compose exec -T ckan sh -c "./run_pytest_with_coverage.sh hdx_package"
       - name: PY3/Testing hdx_search
+        if: contains(matrix.plugins, 'hdx_search')
         run: docker compose exec -T ckan sh -c "./run_pytest_with_coverage.sh hdx_search"
       - name: PY3/Testing hdx_users
+        if: contains(matrix.plugins, 'hdx_users')
         run: docker compose exec -T ckan sh -c "./run_pytest_with_coverage.sh hdx_users"
       - name: PY3/Testing hdx_user_extra
+        if: contains(matrix.plugins, 'hdx_user_extra')
         run: docker compose exec -T ckan sh -c "./run_pytest_with_coverage.sh hdx_user_extra"
       - name: PY3/Testing hdx_org_group
+        if: contains(matrix.plugins, 'hdx_org_group')
         run: docker compose exec -T ckan sh -c "./run_pytest_with_coverage.sh hdx_org_group"
       - name: PY3/Testing hdx_smtp_assumerole
+        if: contains(matrix.plugins, 'hdx_smtp_assumerole')
         run: docker compose exec -T ckan sh -c "./run_pytest_with_coverage.sh hdx_smtp_assumerole"
       - name: Publish in Coveralls
         if: success()
+        # Parallel build: each job sends its part with the same build number, and the
+        # coveralls job below closes the build when all jobs have passed.
         run: |
           docker compose exec -T ckan sh -c "git config --global --add safe.directory /srv/ckan"
-          docker compose exec -T ckan sh -c "coveralls"
+          docker compose exec -T \
+            -e COVERALLS_PARALLEL=true \
+            -e COVERALLS_FLAG_NAME=${{ matrix.group }} \
+            -e COVERALLS_SERVICE_NUMBER=${{ github.run_id }}-${{ github.run_attempt }} \
+            ckan sh -c "coveralls"
+
+  coveralls:
+    name: coveralls (finish)
+    needs: tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Close the Coveralls parallel build
+        env:
+          COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
+          COVERALLS_SERVICE_NUMBER: ${{ github.run_id }}-${{ github.run_attempt }}
+        run: |
+          pip install coveralls==3.3.1
+          # The jobs send coverage from inside the containers, where the GitHub variables aren't
+          # set. Unset them here too, so this call identifies the build the same way.
+          env -u GITHUB_ACTIONS -u GITHUB_REPOSITORY coveralls --finish
+
+  # Branch protection on prod requires a check named "test". This job keeps that name and
+  # passes only when every test job passed. It also runs when check_pr failed, so a broken
+  # check can't turn into a passing "test".
+  test:
+    needs: [ check_pr, tests ]
+    if: ${{ !cancelled() && needs.check_pr.outputs.proceed != 'false' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check that all test jobs passed
+        env:
+          TESTS_RESULT: ${{ needs.tests.result }}
+        run: |
+          echo "Test jobs result: $TESTS_RESULT"
+          [ "$TESTS_RESULT" = "success" ]
