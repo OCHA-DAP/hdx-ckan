@@ -53,7 +53,12 @@ RUN apt-get -qq -y update && \
     # prepare files and folders
     mkdir -p /var/log/ckan /srv/filestore /srv/webassets /etc/services.d/unit /etc/ckan && \
     cd /srv/ckan && \
-    pip install pip-tools==7.3.0 && \
+    # setuptools must be upgraded before pip-sync so the "-e git+..." extensions
+    # (requestdata, showcase, ...) get PEP 660 editable installs like the HDX
+    # plugins. With the base image's old setuptools they become egg-link installs
+    # that are only importable after pkg_resources is imported, which CKAN 2.11.7
+    # no longer does. Keep the range in sync with install_requires in setup.cfg.
+    pip install pip-tools==7.3.0 "setuptools>=80.9.0,<82.0.0" && \
     pip-sync requirements.txt requirements-hdxckantool.txt  && \
     pip install \
       elastic-apm[flask] && \
