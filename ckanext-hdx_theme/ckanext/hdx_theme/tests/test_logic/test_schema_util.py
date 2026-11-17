@@ -38,3 +38,11 @@ def test_show_style_extras_without_id_unchanged():
 
 def test_schema_without_extras_unchanged():
     assert fix_show_schema_extras_id({'name': []}) == {'name': []}
+
+
+def test_list_style_extras_unchanged():
+    # e.g. core's search schema uses 'extras': [ignore_missing]
+    ignore_missing = tk.get_validator('ignore_missing')
+    schema = fix_show_schema_extras_id({'extras': [ignore_missing]})
+
+    assert schema == {'extras': [ignore_missing]}

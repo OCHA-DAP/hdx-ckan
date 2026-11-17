@@ -1,7 +1,7 @@
 """
 Regression tests for group_show / organization_show called by non-sysadmin users.
 
-CKAN 2.11.7 changed default_extras_schema so that the extras 'id' runs
+CKAN 2.11.6 changed default_extras_schema so that the extras 'id' runs
 ignore_not_sysadmin first. Our show schemas keep that extras schema and also use
 convert_from_extras, which removes the extras entry before its 'id' is checked,
 so calls by non-sysadmins crashed with KeyError: ('extras', 0, 'id').

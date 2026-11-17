@@ -1,7 +1,7 @@
 """
 Regression tests for showcase indexing and showcase show by non-sysadmin users.
 
-CKAN 2.11.7 changed default_extras_schema so that the extras 'id' runs
+CKAN 2.11.6 changed default_extras_schema so that the extras 'id' runs
 ignore_not_sysadmin first. The showcase show schema keeps that extras schema and
 also uses convert_from_extras (image_url and the dataviz fields), which removes the
 extras entry before its 'id' is checked, so validation without a sysadmin user
