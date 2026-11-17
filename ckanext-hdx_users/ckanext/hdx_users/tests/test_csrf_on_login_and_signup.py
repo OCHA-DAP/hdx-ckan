@@ -93,6 +93,15 @@ class TestCsrfOnLoginAndSignup(object):
         assert response.status_code == 302, 'A successful login redirects'
         assert _remember_cookie_set(response) == bool(remember)
 
+    # Flask-WTF's protect() ignores WTF_CSRF_ENABLED, so @enforce_csrf has to check it
+    @pytest.mark.ckan_config('WTF_CSRF_ENABLED', False)
+    @pytest.mark.ckan_config('ckanext.security.brute_force_key', 'user_name')
+    @mock.patch('ckanext.security.authenticator.LoginThrottle')
+    def test_login_without_csrf_token_works_when_csrf_is_disabled(self, MockLoginThrottle, app: CKANTestApp):
+        MockLoginThrottle.return_value.is_locked.return_value = False
+        response = app.post('/user/login', data=_login_data(), follow_redirects=False)
+        assert response.status_code == 302, 'A successful login redirects'
+
     @mock.patch('ckanext.hdx_users.helpers.tokens.send_validation_email')
     def test_signup_without_csrf_token_is_rejected(self, mock_send_validation_email, app: CKANTestApp):
         url = h.url_for('hdx_user_onboarding.user-info')
