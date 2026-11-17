@@ -18,6 +18,8 @@
   value         {string}  Checkbox value attr  default: ''
   count         {string}  Badge text like "(309)"  default: ''
   href          {string}  Optional link URL (type='list' only)  default: ''
+  icon          {bool}    Show leading icon (type='list' only)  default: False
+  icon_src      {string}  Leading icon path  default: 'v2/icons/placeholder.svg'
   attrs         {dict}    Extra attrs on the checkbox <input>  default: {}
   extra_classes {string}  Additional classes  default: ''
   ─────────────────────────────────────────────────────────────
@@ -43,6 +45,8 @@
 {% set value         = value         if value         is defined else '' %}
 {% set count         = count         if count         is defined else '' %}
 {% set href          = href          if href          is defined else '' %}
+{% set icon          = icon          if icon          is defined else False %}
+{% set icon_src      = icon_src      if icon_src      is defined else 'v2/icons/placeholder.svg' %}
 {% set attrs         = attrs         if attrs         is defined else {} %}
 {% set extra_classes = extra_classes if extra_classes is defined else '' %}
 {% set tooltip       = tooltip       if tooltip       is defined else '' %}
@@ -51,16 +55,17 @@
   {# Text-only list item #}
   {% set classes = ['c-list-item', 'c-list-item--type-list', 'c-list-item--size-' ~ size] %}
   {% if state == 'active' %}{% set classes = classes + ['is-active'] %}{% endif %}
+  {% if icon %}{% set classes = classes + ['c-list-item--has-icon'] %}{% endif %}
   {% if extra_classes %}{% set classes = classes + [extra_classes] %}{% endif %}
 
   {% if href %}
     <a class="{{ classes | join(' ') }}" href="{{ href }}"
        {% for key, val in attrs.items() %}{{ key }}="{{ val }}" {% endfor %}
-       {% if tooltip %}title="{{ tooltip }}"{% endif %}>{{ label }}</a>
+       {% if tooltip %}title="{{ tooltip }}"{% endif %}>{% if icon %}<span class="c-list-item__icon">{{ h.hdx_v2_icon(icon_src) }}</span>{% endif %}{{ label }}</a>
   {% else %}
     <div class="{{ classes | join(' ') }}"
          {% for key, val in attrs.items() %}{{ key }}="{{ val }}" {% endfor %}
-         {% if tooltip %}title="{{ tooltip }}"{% endif %}>{{ label }}</div>
+         {% if tooltip %}title="{{ tooltip }}"{% endif %}>{% if icon %}<span class="c-list-item__icon">{{ h.hdx_v2_icon(icon_src) }}</span>{% endif %}{{ label }}</div>
   {% endif %}
 
 {% elif type == 'checklist' %}

@@ -1167,6 +1167,20 @@
           ] %}
     </div>
 
+    <h2 class="demo-subsection__heading">Link trigger (--link) with leading icon — icon=True, icon_src</h2>
+    <div class="demo-row demo-row--flex-start">
+      {% snippet 'v2/components/dropdown.html',
+          extra_classes='c-dropdown--link',
+          placeholder='QA actions',
+          icon=True, icon_src='v2/icons/lock.svg',
+          panel_id='demo-panel-link-icon',
+          navigate=True,
+          items=[
+            {'label': 'Make public', 'icon_src': 'v2/icons/eye.svg', 'attrs': {'data-demo-qa': 'false'}},
+            {'label': 'Download for review (7.0M)', 'href': '#', 'icon_src': 'v2/icons/download.svg', 'attrs': {'target': '_blank'}},
+          ] %}
+    </div>
+
     <h2 class="demo-subsection__heading">Select — native &lt;select&gt; (v2/components/select.html)</h2>
     <div class="demo-row demo-row--flex-start">
       {% snippet 'v2/components/select.html',
@@ -1872,6 +1886,15 @@
     </div>
 
     <div class="demo-row">
+      <span class="demo-row__label">With leading icon (icon=True)</span>
+      <div class="demo-row__items">
+        {% snippet 'v2/components/list-item.html',
+            type='list', label='Download for review', size='md',
+            icon=True, icon_src='v2/icons/download.svg' %}
+      </div>
+    </div>
+
+    <div class="demo-row">
       <span class="demo-row__label">Disabled (is-disabled)</span>
       <div class="demo-row__items">
         {% snippet 'v2/components/list-item.html',
@@ -2383,6 +2406,28 @@
           api_available=True,
           download_url='#',
           download_size='14.2K' %}
+    </div>
+
+    {# ── Under review + caller() slot — sysadmin QA actions menu ── #}
+    <h2 class="demo-subsection__heading">Under review — in_review=True, caller() slot before More information</h2>
+    <div class="demo-row demo-row--flex-start">
+      {% call h.snippet('v2/components/resource-card.html',
+          title='CERF Allocations.json',
+          title_href='#',
+          format_text='JSON',
+          format_category='neutral',
+          in_review=True) %}
+        {% snippet 'v2/components/dropdown.html',
+            extra_classes='c-dropdown--link',
+            placeholder='QA actions',
+            icon=True, icon_src='v2/icons/lock.svg',
+            panel_id='demo-panel-resource-qa',
+            navigate=True,
+            items=[
+              {'label': 'Make public', 'icon_src': 'v2/icons/eye.svg', 'attrs': {'data-demo-qa': 'false'}},
+              {'label': 'Download for review (7.0M)', 'href': '#', 'icon_src': 'v2/icons/download.svg', 'attrs': {'target': '_blank'}},
+            ] %}
+      {% endcall %}
     </div>
 
   </section>

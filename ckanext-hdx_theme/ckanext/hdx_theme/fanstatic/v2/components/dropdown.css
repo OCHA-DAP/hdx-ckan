@@ -41,6 +41,11 @@
   flex-shrink: 0;
   line-height: 0;
 }
+.c-dropdown__trigger-icon svg {
+  width: var(--hdx-space-4);
+  height: var(--hdx-space-4);
+  display: block;
+}
 .c-dropdown__trigger-value {
   flex: 1;
   font-family: var(--hdx-font-body);

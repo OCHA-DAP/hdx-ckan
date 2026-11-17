@@ -10,10 +10,13 @@
   panel_id          {string}  id on the panel div.  default: ''
   items             {list}    Panel items.
                               Navigate format: {value, label, active, tooltip?,
-                              attrs?, extra_classes?}. `attrs` merge into the
+                              attrs?, extra_classes?, href?, icon_src?}. `attrs` merge into the
                               item's attributes; `data-nav-value` is emitted only
                               when `value` is set — omit it for action items
                               handled by custom JS (e.g. data-role-value).
+                              `href` renders the item as a real link (e.g. with
+                              attrs {'target': '_blank'}); omit `value` with it.
+                              `icon_src` renders a leading icon.
                               Checklist format: {value, label, count, checked, active,
                               attrs, extra_classes, children?}.
                               default: []
@@ -77,6 +80,9 @@
               state='active' if item.active else 'default',
               extra_classes=item.get('extra_classes', ''),
               attrs=_item_attrs,
+              href=item.get('href', ''),
+              icon=item.get('icon_src', '') != '',
+              icon_src=item.get('icon_src', ''),
               tooltip=item.get('tooltip', '') %}
         {% endfor %}
       </div>

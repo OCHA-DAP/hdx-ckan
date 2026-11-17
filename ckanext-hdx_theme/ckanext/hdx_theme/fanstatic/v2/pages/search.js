@@ -3,7 +3,14 @@
 
   var BP_XL = '(min-width: 80rem)';
 
-  var FILTER_PARAMS = ['ext_update_status', 'groups', 'organization', 'res_format', 'vocab_Topics', 'filter_by_maintainers', 'filter_by_organizations'];
+  var FILTER_PARAMS = ['ext_update_status', 'groups', 'organization', 'res_format', 'vocab_Topics', 'filter_by_maintainers', 'filter_by_organizations', 'methodology'];
+
+  var QA_FILTER_PARAMS = [
+    'ext_private_datasets', 'ext_requestdata', 'ext_showcases',
+    'ext_in_quarantine', 'ext_broken_link'
+  ];
+
+  var SINGLE_VALUE_PARAMS = ['ext_private_datasets'];
 
   // vocab_Topics is included here too (as well as in FILTER_PARAMS) because
   // nested HPC advanced-filter items share the vocab_Topics facet key.
@@ -23,7 +30,9 @@
     var values = url.searchParams.getAll(facet);
 
     if (checked) {
-      if (values.indexOf(value) === -1) {
+      if (SINGLE_VALUE_PARAMS.indexOf(facet) !== -1) {
+        url.searchParams.set(facet, value);
+      } else if (values.indexOf(value) === -1) {
         url.searchParams.append(facet, value);
       }
     } else {
@@ -36,24 +45,24 @@
     window.location.href = url.toString();
   }
 
-  function clearAdvancedFilters() {
+  function clearParams(paramList) {
     var url = new URL(window.location.href);
-    ADVANCED_FILTER_PARAMS.forEach(function (param) { url.searchParams.delete(param); });
+    paramList.forEach(function (param) { url.searchParams.delete(param); });
     url.searchParams.delete('page');
     window.location.href = url.toString();
   }
 
+  function clearAdvancedFilters() {
+    clearParams(ADVANCED_FILTER_PARAMS);
+  }
+
   function clearAllFilters() {
-    var url = new URL(window.location.href);
-    FILTER_PARAMS.forEach(function (param) { url.searchParams.delete(param); });
-    ADVANCED_FILTER_PARAMS.forEach(function (param) { url.searchParams.delete(param); });
-    url.searchParams.delete('page');
-    window.location.href = url.toString();
+    clearParams(FILTER_PARAMS.concat(ADVANCED_FILTER_PARAMS, QA_FILTER_PARAMS));
   }
 
   function hasClearableFilters() {
     var params = new URL(window.location.href).searchParams;
-    return FILTER_PARAMS.concat(ADVANCED_FILTER_PARAMS).some(function (param) { return params.has(param); });
+    return FILTER_PARAMS.concat(ADVANCED_FILTER_PARAMS, QA_FILTER_PARAMS).some(function (param) { return params.has(param); });
   }
 
   // Dropdown open/close is handled by v2/components/dropdown.js (globally).
@@ -144,6 +153,8 @@
         var facet = clearBtn.getAttribute('data-facet');
         if (facet === 'advanced') {
           clearAdvancedFilters();
+        } else if (facet === 'qa') {
+          clearParams(QA_FILTER_PARAMS);
         } else {
           setNavParam(facet, null);
         }

@@ -64,6 +64,13 @@
 {% block analytics_supports_tabular_data_endpoints %}{{ analytics_supports_tabular_data_endpoints }}{% endblock %}
 {% set edit_mode = h.check_access('package_update', {'id':pkg.id })  %}
 
+{% set qa_resource_count  = pkg.resources | length %}
+{% set qa_in_review_count = pkg.resources | selectattr('in_quarantine') | list | length %}
+{% set qa_all_in_review   = qa_resource_count > 0 and qa_in_review_count == qa_resource_count %}
+{% set qa_cta_label       = _('Make all resources public') if qa_all_in_review else _('Put all resources under review') %}
+{% set show_qa_controls   = qa_resource_count > 0 and h.check_access('sysadmin')
+                            and not pkg.is_requestdata_type and not (pkg.state or '').startswith('deleted') %}
+
 {% set object_id = pkg.id %}
 {% set object_name = pkg.name %}
 {% set object_type = 'dataset' %}
@@ -149,6 +156,7 @@
         logo_href=h.url_for(controller='organization', action='read', id=pkg.owner_org),
         contact_href=contact_href,
         download_count=pkg.approx_total_downloads,
+        under_review=qa_in_review_count > 0,
         archived=pkg.archived,
         request_only=pkg.is_requestdata_type,
         cod_dataset=(analytics_is_cod == 'true'),
@@ -164,7 +172,13 @@
         pkg_state=pkg.state,
         membership=membership,
         hide_membership=False,
-        org_id=pkg.owner_org
+        org_id=pkg.owner_org,
+        header_actions=[{
+          'label': qa_cta_label,
+          'href': '#',
+          'icon_src': 'v2/icons/eye.svg' if qa_all_in_review else 'v2/icons/eye-off.svg',
+          'attrs': {'onclick': "event.preventDefault(); window.hdxV2Drawer('qa-bulk-drawer').open()"},
+          'show': show_qa_controls}]
     %}
   {% endblock %}
     </div>
@@ -224,6 +238,12 @@
       </div>
     </div>
     <div class="hdx-v2-dataset-section__body">
+      {% if show_qa_controls %}
+        {% snippet 'v2/components/alert.html',
+            hidden=True,
+            extra_classes='hdx-v2-dataset-section__qa-error',
+            extra_attrs='data-qa-error' %}
+      {% endif %}
       {% snippet "package/snippets/resources_list.html",
           pkg=pkg,
           resources=pkg.resources,
@@ -596,6 +616,36 @@
 
   {% if pkg.user_survey_url and pkg.user_survey_url != 'None' %}
     {% snippet 'v2/data-use-survey-drawer.html', pkg=pkg %}
+  {% endif %}
+
+  {# ── QA bulk confirmation — sysadmins; opened by the header CTA ── #}
+  {% if show_qa_controls %}
+    {% if qa_all_in_review %}
+      {% set qa_bulk_text = ungettext('The only resource of this dataset will be made public.',
+                                      'All {num} resources of this dataset will be made public.',
+                                      qa_resource_count).format(num=qa_resource_count) %}
+      {% set qa_bulk_ids = pkg.resources | selectattr('in_quarantine') | map(attribute='id') | list %}
+    {% else %}
+      {% set qa_bulk_text = ungettext('The only resource of this dataset will be put under review.',
+                                      'All {num} resources of this dataset will be put under review.',
+                                      qa_resource_count).format(num=qa_resource_count) %}
+      {% set qa_bulk_ids = pkg.resources | rejectattr('in_quarantine') | map(attribute='id') | list %}
+    {% endif %}
+    {% call h.snippet('v2/components/drawer.html', drawer_id='qa-bulk-drawer', title=qa_cta_label) %}
+      <div class="c-drawer-form"
+           data-qa-bulk
+           data-qa-quarantine="{{ 'false' if qa_all_in_review else 'true' }}"
+           data-resource-ids="{{ qa_bulk_ids | join(' ') }}">
+        <p class="c-drawer-form__text">{{ qa_bulk_text }}</p>
+        {% snippet 'v2/components/alert.html', hidden=True, extra_attrs='data-qa-error' %}
+        <div class="c-drawer-form__buttons">
+          {% snippet 'v2/components/button.html',
+              style='tertiary', label=_('Cancel'), attrs={'data-drawer-close': ''} %}
+          {% snippet 'v2/components/button.html',
+              style='primary', label=_('Confirm'), attrs={'data-qa-bulk-confirm': ''} %}
+        </div>
+      </div>
+    {% endcall %}
   {% endif %}
 
 {% endblock %}

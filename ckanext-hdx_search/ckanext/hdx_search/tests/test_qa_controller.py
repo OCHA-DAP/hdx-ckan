@@ -66,3 +66,24 @@ class TestHDXSearch(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
         config['hdx.qadashboard.enabled'] = True
         result = self._get_url(url, token)
         assert result.status_code == 200
+
+    def test_dataset_search_sysadmin_filters(self):
+        url = h.url_for('hdx_dataset.search')
+
+        for token in (None, factories.APIToken(user='tester', expires_in=2, unit=60 * 60)['token']):
+            body = self._get_url(url, token).body
+            assert 'hdx-v2-search-filters__sysadmin' not in body
+            assert 'Private datasets' not in body
+            assert '/dataset/test_private_dataset_1"' not in body
+
+        token = factories.APIToken(user='testsysadmin', expires_in=2, unit=60 * 60)['token']
+        body = self._get_url(url, token).body
+        assert 'hdx-v2-search-filters__sysadmin' in body
+        assert body.index('Public datasets') < body.index('Private datasets')
+        assert 'name="methodology"' in body
+        assert '/dataset/test_private_dataset_1"' in body
+
+        body = self._get_url(url + '?ext_private_datasets=1', token).body
+        assert '/dataset/test_private_dataset_1"' in body
+        assert '/dataset/test_dataset_1"' not in body
+        assert 'data-action="remove-pill" data-facet="ext_private_datasets" data-value="1"' in body

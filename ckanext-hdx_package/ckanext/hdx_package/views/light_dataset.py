@@ -90,10 +90,11 @@ def search():
 
 
 def generic_search(html_template):
-    search_logic = SearchLogic()
+    is_sysadmin = bool(g.userobj and g.userobj.sysadmin)
+    search_logic = SearchLogic(sysadmin_filters=is_sysadmin)
 
     try:
-        search_logic._search(use_solr_collapse=True)
+        search_logic._search(use_solr_collapse=True, ignore_capacity_check=is_sysadmin)
     except NotFound as ex:
         abort(404, _('Page not found'))
 

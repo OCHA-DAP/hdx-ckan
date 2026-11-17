@@ -24,7 +24,7 @@ from ckanext.hdx_search.helpers.constants import \
     REQUESTDATA_DATASETS_FACET_NAME, SHOWCASE_DATASETS_FACET_NAME, ARCHIVED_DATASETS_FACET_NAME, \
     P_CODED_DATASET_FACET_NAME, HDX_HAPI_DATA_FACET_NAME, HDX_HAPI_DATA_FACET_QUERY, \
     HPC_DATASETS_FACET_NAME, HPC_DATASETS_FACET_QUERY, TABULAR_DATA_DATASETS_FACET_NAME, \
-    TABULAR_DATA_DATASETS_FACET_QUERY
+    TABULAR_DATA_DATASETS_FACET_QUERY, PRIVATE_DATASETS_FACET_NAME
 from ckanext.hdx_package.helpers.util import find_approx_download
 from ckanext.hdx_package.helpers.analytics import generate_analytics_data
 from ckanext.hdx_package.helpers.p_code_filters_helper import are_new_p_code_filters_enabled
@@ -39,6 +39,7 @@ FEATURED_FACETS = [
     P_CODED_DATASET_FACET_NAME, HDX_HAPI_DATA_FACET_NAME, TABULAR_DATA_DATASETS_FACET_NAME
 ]
 FEATURED_FACET_PARAMS = ['ext_' + item for item in FEATURED_FACETS]
+QA_FILTER_PARAMS = ['ext_' + item for item in (PRIVATE_DATASETS_FACET_NAME, 'in_quarantine', 'broken_link')]
 NON_FILTER_EXTRAS = ('ext_page_size', 'ext_search_source')
 
 _validate = dict_fns.validate
@@ -96,9 +97,10 @@ def get_url_param_iterator():
 
 class SearchLogic(object):
 
-    def __init__(self, package_type='dataset'):
+    def __init__(self, package_type='dataset', sysadmin_filters=False):
         super(SearchLogic, self).__init__()
         self.package_type = package_type
+        self.sysadmin_filters = sysadmin_filters
         self.template_data = DictProxy()
 
     def add_archived_url_helper(self):
@@ -192,7 +194,7 @@ class SearchLogic(object):
                     elif param == UPDATE_STATUS_URL_FILTER:
                         self._append_selected_facet_to_group(self.template_data.fields_grouped, param, value)
                     else:
-                        if param in FEATURED_FACET_PARAMS:
+                        if param in FEATURED_FACET_PARAMS or param in QA_FILTER_PARAMS:
                             featured_filters_set = True
                         if param == 'ext_archived' and value == '1':
                             hide_archived = False
@@ -386,7 +388,12 @@ class SearchLogic(object):
 
     def _add_additional_faceting_queries(self, search_data_dict):
         # to be overridden in sub classes that need to add more complex faceting queries
-        pass
+        if self.sysadmin_filters:
+            search_data_dict['facet.query'].append(
+                '{{!key={} ex=batch}} capacity:private'.format(PRIVATE_DATASETS_FACET_NAME))
+            search_data_dict['facet.field'].append('{!ex=methodology,batch}methodology')
+            search_data_dict['facet.field'].append('{!ex=batch}res_extras_broken_link')
+            search_data_dict['facet.field'].append('{!ex=batch}res_extras_in_quarantine')
 
     def _search_url(self, params, package_type=None):
         """
@@ -757,7 +764,48 @@ class SearchLogic(object):
     def _process_complex_facet_data(self, existing_facets, title_translations, result_facets, search_extras):
         # to be overridden in sub-classes that need to process the results of the solr query in order to
         # do more complex preparation of the data that needs to be shown in the filter/facets
-        pass
+        if self.sysadmin_filters and existing_facets:
+            item_list = []
+            result_facets['qa_only'] = {
+                'name': 'qa_only',
+                'display_name': _('QA only'),
+                'items': item_list,
+                'show_everything': True
+            }
+
+            self.__process_private_dataset_facet(existing_facets, item_list, search_extras)
+
+            self.__process_true_count_facet(existing_facets, 'extras_is_requestdata_type',
+                                            REQUESTDATA_DATASETS_FACET_NAME, _('HDX Connect'), search_extras,
+                                            item_list)
+
+            self.__process_true_count_facet(existing_facets, 'has_showcases', SHOWCASE_DATASETS_FACET_NAME,
+                                            _('Datasets with Showcase'), search_extras, item_list)
+
+            self.__process_true_count_facet(existing_facets, 'res_extras_in_quarantine', 'in_quarantine',
+                                            _('Under review'), search_extras, item_list)
+
+            self.__process_true_count_facet(existing_facets, 'res_extras_broken_link', 'broken_link',
+                                            _('Broken links'), search_extras, item_list)
+
+            title_translations['{!ex=methodology,batch}methodology'] = _('Methodology')
+
+    def __process_private_dataset_facet(self, existing_facets, qa_only_item_list, search_extras):
+        private_facet_item = self._add_facet_query_item_to_list([], PRIVATE_DATASETS_FACET_NAME,
+                                                                _('Private datasets'), existing_facets, search_extras)
+
+        non_private_facet_item_count = self.template_data.batch_total_items - private_facet_item.get('count', 0)
+        non_private_facet_item_selected = search_extras.get('ext_' + PRIVATE_DATASETS_FACET_NAME) == '0'
+        qa_only_item_list.append(
+            self._create_facet_item(PRIVATE_DATASETS_FACET_NAME, _('Public datasets'), non_private_facet_item_count,
+                                    force_selected=non_private_facet_item_selected, value='0'))
+        if private_facet_item:
+            qa_only_item_list.append(private_facet_item)
+
+    def __process_true_count_facet(self, existing_facets, solr_field, item_name, display_name, search_extras,
+                                   qa_only_item_list):
+        count = self._get_facet_item_count_from_list(existing_facets.get(solr_field, {}).get('items', []), 'true')
+        self._add_facet_item_to_list(qa_only_item_list, item_name, display_name, count, search_extras)
 
     def _process_found_package_list(self, package_list):
         # to be overridden in sub-classes that need to process the results of the solr query in order to

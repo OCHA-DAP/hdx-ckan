@@ -16,6 +16,11 @@
   click-tracking (hdx_click_stopper) and, for anonymous users, onboarding-flow
   priming (hdx-onboarding-flow) that v1 had on the "Request data" CTA.
 
+  Sysadmins get a "QA actions" menu in the card's caller() slot (not on
+  HDX Connect or deleted datasets): "Put under review", or "Make public" +
+  "Download for review" for a resource under review. "Download for review"
+  carries no download-tracking classes. Behaviour: fanstatic/v2/pages/dataset.js.
+
   Parameters (supplied by resources_list.html)
   ─────────────────────────────────────────────
   pkg                    {dict}  Package dict.
@@ -31,6 +36,8 @@
 {% set hdx_connect      = pkg.is_requestdata_type %}
 {% set show_download    = h.check_access('hdx_resource_download', res) and not in_review and not hdx_connect %}
 {% set resource_grouping = h.hdx_munge_title(res.x_grouping) if pkg.x_show_grouping else '' %}
+{% set show_qa_actions  = current_user.is_authenticated and current_user.sysadmin
+                           and not hdx_connect and not (pkg.state or '').startswith('deleted') %}
 
 {% if hdx_connect %}
   {% set request_data_modules = ['hdx_click_stopper'] %}
@@ -54,7 +61,7 @@
      data-grouping-id="{{ resource_grouping }}"
      style="{{ 'display:none' if pkg.x_show_grouping else '' }}">
 
-  {% snippet 'v2/components/resource-card.html',
+  {% call h.snippet('v2/components/resource-card.html',
       title=h.resource_display_name(res),
       title_href=faq_review_url if in_review else url,
       format_text=res.format,
@@ -79,7 +86,29 @@
         'data-dataset-supports-notifications': supports_notifications | lower,
         'data-is-authenticated':               current_user.is_authenticated,
         'tracking-type':                       res.url_type or ''
-      }
-  %}
+      }) %}
+    {% if show_qa_actions %}
+      {% if in_review %}
+        {% set review_size = h.filesize_format(res.Size) if res.Size else '' %}
+        {% set qa_items = [{'label': _('Make public'), 'icon_src': 'v2/icons/eye.svg',
+                            'attrs': {'data-qa-quarantine': 'false', 'data-resource-id': res.id}},
+                           {'label': _('Download for review') ~ (' (' ~ review_size ~ ')' if review_size else ''),
+                            'href': res.hdx_rel_url,
+                            'icon_src': 'v2/icons/download.svg',
+                            'attrs': {'target': '_blank'}}] %}
+      {% else %}
+        {% set qa_items = [{'label': _('Put under review'), 'icon_src': 'v2/icons/eye-off.svg',
+                            'attrs': {'data-qa-quarantine': 'true', 'data-resource-id': res.id}}] %}
+      {% endif %}
+      {% snippet 'v2/components/dropdown.html',
+          extra_classes='c-dropdown--link',
+          placeholder=_('QA actions'),
+          icon=True, icon_src='v2/icons/lock.svg',
+          panel_id='qa-actions-panel-' ~ res.id,
+          navigate=True,
+          button_attrs={'aria-label': _('QA actions for {name}').format(name=h.resource_display_name(res))},
+          items=qa_items %}
+    {% endif %}
+  {% endcall %}
 
 </div>

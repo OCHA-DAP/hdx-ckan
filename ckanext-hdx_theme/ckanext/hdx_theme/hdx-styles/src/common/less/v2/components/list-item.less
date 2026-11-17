@@ -64,6 +64,22 @@
         }
     }
 
+    &--has-icon {
+        display:     flex;
+        align-items: center;
+        gap:         var(--hdx-space-2);
+    }
+
+    &__icon {
+        display:     inline-flex;
+        flex-shrink: 0;
+
+        svg {
+            .hdx-icon-size(var(--hdx-space-4));
+            display: block;
+        }
+    }
+
     // Checklist item (with checkbox)
     &--type-checklist {
         display: flex;
