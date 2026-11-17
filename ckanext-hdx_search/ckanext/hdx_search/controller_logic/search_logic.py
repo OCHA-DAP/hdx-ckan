@@ -253,7 +253,8 @@ class SearchLogic(object):
             facets = {}
             self.template_data.query_error = True
             self.template_data.search_facets = {}
-            self.template_data.page = h.Page(collection=[])
+            # the search templates build the pagination links from the pager url
+            self.template_data.page = h.Page(collection=[], url=self._get_pager_function(package_type))
         self.template_data.search_facets_limits = {}
         for facet in self.template_data.search_facets.keys():
             limit = 1000

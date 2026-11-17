@@ -25,6 +25,7 @@ from ckanext.hdx_search.helpers.constants import NEW_DATASETS_FACET_NAME, UPDATE
     SUBNATIONAL_DATASETS_FACET_NAME, GEODATA_DATASETS_FACET_NAME, \
     REQUESTDATA_DATASETS_FACET_NAME, SHOWCASE_DATASETS_FACET_NAME, HDX_HAPI_DATA_FACET_NAME, HDX_HAPI_DATA_FACET_QUERY, \
     TABULAR_DATA_DATASETS_FACET_NAME, TABULAR_DATA_DATASETS_FACET_QUERY
+from ckanext.hdx_search.helpers.solr_local_params import register_hdx_package_search_query
 from ckanext.hdx_search.helpers.solr_query_helper import generate_datetime_period_query
 from ckanext.hdx_search.views.qa import hdx_qa
 from ckanext.hdx_search.cli.click_feature_search_command import hdx_feature_search
@@ -58,6 +59,8 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
     def configure(self, config):
         search_model.setup()
         search_model.create_table()
+        # HDX-11754: check the Solr local params in every package search, not only in package_search
+        register_hdx_package_search_query()
 
     def update_config(self, config):
         tk.add_template_directory(config, 'templates')
