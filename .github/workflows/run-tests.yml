@@ -29,18 +29,36 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # Each job has its own docker compose stack. Within a job the suites run in the same
-        # order as when everything ran in one job, because later suites can rely on tables that
-        # earlier ones migrated (e.g. hdx_search and hdx_user_extra after hdx_theme).
-        # Approximate times: hdx_package 5m, theme + search + user_extra 4m15s,
-        # users + org_group 4m45s, the rest 1m35s.
+        # Each job has its own docker compose stack and database, created by `ckan db init` with
+        # every enabled plugin's migrations, and each pytest run drops all tables on its first
+        # clean_db. So a suite doesn't need the suites that ran before it in the single-job workflow.
+        # Approximate test times (2026-11-17): hdx_package 5m (split in two), hdx_theme 3m,
+        # hdx_users 2m40s, hdx_org_group 2m10s, hdx_search + hdx_user_extra 2m, the rest 1m35s.
         include:
-          - group: hdx_package
+          # The two hdx_package halves take about the same time (local run, 2026-11-18: 160s and 156s)
+          - group: hdx_package-actions-aws-helpers
             plugins: [ hdx_package ]
-          - group: hdx_theme-search-user_extra
-            plugins: [ hdx_theme, hdx_search, hdx_user_extra ]
-          - group: hdx_users-org_group
-            plugins: [ hdx_users, hdx_org_group ]
+            # pytest_args: test paths for run_pytest_with_coverage.sh (default: the plugin's tests folder)
+            pytest_args: >-
+              ckanext-hdx_package/ckanext/hdx_package/tests/test_actions
+              ckanext-hdx_package/ckanext/hdx_package/tests/test_aws
+              ckanext-hdx_package/ckanext/hdx_package/tests/test_helpers
+          - group: hdx_package-rest
+            plugins: [ hdx_package ]
+            # everything but the folders above, so a new test folder runs here
+            pytest_args: >-
+              ckanext-hdx_package/ckanext/hdx_package/tests
+              --ignore=ckanext-hdx_package/ckanext/hdx_package/tests/test_actions
+              --ignore=ckanext-hdx_package/ckanext/hdx_package/tests/test_aws
+              --ignore=ckanext-hdx_package/ckanext/hdx_package/tests/test_helpers
+          - group: hdx_theme
+            plugins: [ hdx_theme ]
+          - group: hdx_search-user_extra
+            plugins: [ hdx_search, hdx_user_extra ]
+          - group: hdx_users
+            plugins: [ hdx_users ]
+          - group: hdx_org_group
+            plugins: [ hdx_org_group ]
           - group: others
             plugins: [ hdx_service_checker, ytp_request, hdx_dataviz, hdx_pages, hdx_smtp_assumerole ]
     steps:
@@ -95,7 +113,7 @@ jobs:
         run: docker compose exec -T ckan sh -c "./run_pytest_with_coverage.sh hdx_theme"
       - name: PY3/Testing hdx_package
         if: contains(matrix.plugins, 'hdx_package')
-        run: docker compose exec -T ckan sh -c "./run_pytest_with_coverage.sh hdx_package"
+        run: docker compose exec -T ckan sh -c "./run_pytest_with_coverage.sh hdx_package ${{ matrix.pytest_args }}"
       - name: PY3/Testing hdx_search
         if: contains(matrix.plugins, 'hdx_search')
         run: docker compose exec -T ckan sh -c "./run_pytest_with_coverage.sh hdx_search"
