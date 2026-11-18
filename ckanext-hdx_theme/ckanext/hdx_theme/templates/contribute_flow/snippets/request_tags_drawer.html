@@ -1,0 +1,65 @@
+{#
+  Snippet: request_tags_drawer.html
+  Path:    templates/contribute_flow/snippets/request_tags_drawer.html
+
+  The "Suggest a new tag" c-drawer of the dataset form: a form posted by
+  fanstatic/v2/pages/dataset-form.js to hdx_request_tags.request_tags. Server field
+  errors show inline, other errors in the error alert, success in the success alert.
+  Open it with window.hdxV2Drawer(drawer_id).open().
+
+  Parameters
+  ─────────────────────────────────────────────────
+  drawer_id  {string}  Drawer id.  Required.
+  ─────────────────────────────────────────────────
+  Example
+
+  {% snippet 'contribute_flow/snippets/request_tags_drawer.html', drawer_id='request-tags-drawer' %}
+#}
+
+{% call h.snippet('v2/components/drawer.html', drawer_id=drawer_id, title=_("Didn't see a tag?")) %}
+  <form class="c-drawer-form" novalidate data-request-tags-form
+        action="{{ h.url_for('hdx_request_tags.request_tags') }}"
+        data-error-message="{{ _("Can't send your request: {message}") }}"
+        data-network-error="{{ _("Can't send your request!") }}">
+    {% snippet 'v2/components/alert.html', hidden=True, dismissible=False, extra_attrs='data-request-tags-error' %}
+    {% snippet 'v2/components/alert.html',
+        variant='success', hidden=True, dismissible=False,
+        message=_("We've received your request! Thank you"),
+        extra_attrs='data-request-tags-success' %}
+    <p class="c-drawer-form__text">{{ _('We are here to help! Please send us your suggestions or <a href="{url}" target="_blank">see the full list of approved tags</a>.').format(url='https://data.humdata.org/rdr/spreadsheets/approved-tags') }}</p>
+    <div class="c-form-field">
+      {% snippet 'v2/components/text-field.html',
+          size='m', name='fullname', id=drawer_id ~ '-fullname',
+          label=_('Your name'), required=True,
+          value=c.userobj.fullname or '' %}
+    </div>
+    <div class="c-form-field">
+      {% snippet 'v2/components/text-field.html',
+          size='m', type='email', name='email', id=drawer_id ~ '-email',
+          label=_('Your email address'), required=True,
+          value=c.userobj.email or '' %}
+    </div>
+    <div class="c-form-field">
+      {% snippet 'v2/components/text-field.html',
+          size='m', name='suggested_tags', id=drawer_id ~ '-suggested_tags',
+          label=_('Tag(s) you’d like to request'), required=True %}
+    </div>
+    <div class="c-form-field">
+      {% snippet 'v2/components/text-field.html',
+          size='m', name='datatype', id=drawer_id ~ '-datatype',
+          label=_('Type of data you are trying to share'), required=True %}
+    </div>
+    <div class="c-form-field">
+      {% snippet 'v2/components/text-field.html',
+          size='m', name='comment', id=drawer_id ~ '-comment',
+          label=_('Your comment'), required=True,
+          multiline=True, rows=4 %}
+    </div>
+    <div class="c-drawer-form__buttons">
+      {% snippet 'v2/components/button.html',
+          style='tertiary', label=_('Cancel'), attrs={'data-drawer-close': ''} %}
+      {% snippet 'v2/components/button.html',
+          style='primary', button_type='submit', label=_('Submit') %}
+    </div>
+  </form>
+{% endcall %}

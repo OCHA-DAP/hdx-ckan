@@ -145,33 +145,24 @@ body.contribute-mode {
     overflow: hidden;
 }
 // ── Contribute popup (Add/Edit Data modal) ─────────────────────
-// Sizes the iframe-in-popup shell rendered from widget/contribute/details.html.
-// Mirrors the v1 rules in widget/contribute/details.less — same shared template/classes.
-.popup.popup-contribute {
-    z-index:  90000;
-    overflow: auto;
+// Full-screen iframe shell rendered from v2/contribute-popup.html.
+.hdx-v2-contribute-popup {
+    position:         fixed;
+    inset:            0;
+    z-index:          90000;
+    background-color: var(--hdx-neutral-0);
 
-    .content {
+    &[hidden] { display: none; }
+
+    &__content {
+        height: 100%;
+    }
+
+    &__frame {
+        display: block;
+        width:   100%;
         height:  100%;
-        padding: 0;
-
-        position:     static;
-        left:         auto;
-        top:          auto;
-        margin-left:  auto;
-        margin-right: auto;
-        transform:    none;
-        overflow:     hidden;
-
-        .details-content {
-            height: 100%;
-
-            iframe {
-                border: none;
-                height: 100%;
-                width:  100%;
-            }
-        }
+        border:  none;
     }
 }
 

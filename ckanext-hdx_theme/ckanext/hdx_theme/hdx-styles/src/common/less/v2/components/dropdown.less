@@ -24,6 +24,9 @@
 @c-dropdown-m-h:    2.125rem;           // 34 px — Figma size spec
 @c-dropdown-m-pad:  var(--hdx-space-2) var(--hdx-space-2) var(--hdx-space-2) var(--hdx-space-14); // 8 8 8 10
 
+// Size L (native + Select2)
+@c-dropdown-l-h:    2.5rem;             // 40 px — c-search-input L
+
 // Size S
 @c-dropdown-s-fs:   var(--hdx-fs-xs);   // 12 px
 
@@ -247,6 +250,19 @@
                 display: block;
             }
         }
+
+        &.c-dropdown--size-l {
+            .c-dropdown__select {
+                height:       @c-dropdown-l-h;
+                padding-left: var(--hdx-space-4);
+                .hdx-body-m-medium();
+                line-height:  1;
+            }
+
+            .c-dropdown__chevron {
+                top: calc(@c-dropdown-l-h / 2);
+            }
+        }
     }
 
     &--error &__select,
@@ -414,6 +430,15 @@
         svg { .hdx-icon-size(1.25rem); }
 
         &:hover { background-color: var(--hdx-neutral-01); }
+
+        &:focus-visible { .hdx-focus-ring(); }
+
+        &:disabled,
+        &:disabled:hover {
+            background-color: transparent;
+            color:            var(--hdx-neutral-4);
+            cursor:           not-allowed;
+        }
     }
 
     &__grid {
@@ -451,6 +476,17 @@
             background-color: var(--hdx-primary-5);
             border-color:     var(--hdx-primary-5);
             color:            var(--hdx-neutral-0);
+        }
+
+        &:focus-visible { .hdx-focus-ring(); }
+
+        &:disabled,
+        &:disabled:hover {
+            background-color: var(--hdx-neutral-01);
+            border-color:     var(--hdx-neutral-1);
+            box-shadow:       none;
+            color:            var(--hdx-neutral-4);
+            cursor:           not-allowed;
         }
     }
 }
@@ -654,6 +690,21 @@
 
         .select2-results__message {
             color: var(--hdx-neutral-7);
+        }
+    }
+
+    &.c-dropdown--size-l .select2-container--hdx-v2 {
+        .select2-selection--single {
+            height: @c-dropdown-l-h;
+        }
+
+        .select2-selection--multiple {
+            min-height:   @c-dropdown-l-h;
+            padding-left: var(--hdx-space-14);
+
+            .select2-search__field {
+                font-size: var(--hdx-fs-m);
+            }
         }
     }
 

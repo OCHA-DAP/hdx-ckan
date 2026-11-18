@@ -87,6 +87,81 @@
     gap:            var(--hdx-space-4);
 }
 
+// ── Form groups ─────────────────────────────────────────────────
+
+.hdx-form-groups(@counter) {
+    display:        flex;
+    flex-direction: column;
+    gap:            var(--hdx-space-12);
+    counter-reset:  @counter;
+}
+
+.hdx-form-note() {
+    .hdx-body-m-semibold();
+    margin: 0 0 var(--hdx-space-12);
+    color:  var(--hdx-error-5);
+}
+
+.hdx-form-group(@counter) {
+    padding:           var(--hdx-space-6) 0;
+    border-top:        1px solid var(--hdx-neutral-3);
+    counter-increment: @counter;
+}
+
+.hdx-form-group-title(@counter) {
+    .hdx-heading-h3();
+    margin: 0;
+    color:  var(--hdx-neutral-95);
+
+    &::before {
+        content: counter(@counter) ". ";
+    }
+}
+
+.hdx-form-group-fields() {
+    display:        flex;
+    flex-direction: column;
+    gap:            var(--hdx-space-8);
+}
+
+.hdx-form-fieldset() {
+    min-width: 0;
+    margin:    0;
+    padding:   0;
+    border:    none;
+
+    legend {
+        margin-bottom: var(--hdx-space-2);
+        padding:       0;
+    }
+}
+
+.hdx-form-options() {
+    display:        flex;
+    flex-direction: column;
+    align-items:    flex-start;
+    gap:            var(--hdx-space-2);
+}
+
+.-hdx-form-row() {
+    display:     flex;
+    flex-wrap:   wrap;
+    align-items: center;
+    gap:         var(--hdx-space-4);
+}
+
+.hdx-form-actions() {
+    .-hdx-form-row();
+    padding:     var(--hdx-space-6) 0;
+    border-top:  1px solid var(--hdx-neutral-3);
+}
+
+.hdx-form-save() {
+    .-hdx-form-row();
+    flex-direction: row-reverse;
+    margin-left:    auto;
+}
+
 
 // ── Typography — private parametric cores ─────────────────────
 // Prefixed with - to signal "internal — do not call directly".

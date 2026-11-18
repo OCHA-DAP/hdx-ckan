@@ -161,6 +161,7 @@ Use `is-*` classes only for persistent states set by the server or JavaScript.
 | Unavailable | `is-disabled` class (server or JS); JS: `window.hdxV2.setDisabled(el, disabled)` |
 | Expanded | `is-open` class (JS only) |
 | Being dragged (sortable list) | `is-dragging` class (Sortable's `ghostClass`, JS only) |
+| File dragged over a drop zone | `is-dragover` class (JS only) |
 | Scroll lock (body) while an overlay is open | `is-<component>-open` class on `<body>` (JS only), e.g. `is-drawer-open` |
 
 Do **not** add `is-hovered`, `--hovered`, `is-focus`, or similar classes to templates or JavaScript. If a JS controller must replicate hover visuals (e.g. keyboard navigation), use a clearly named parent-class such as `c-component--keyboard-active` and add a comment in the LESS file explaining why the class exists.
@@ -509,21 +510,24 @@ Each component gets its own file in `components/`. Do not group unrelated compon
 
 ## Form-field components — which one to use
 
-Five distinct components cover form fields; pick by field type, don't extend the wrong one:
+Six distinct components cover form fields; pick by field type, don't extend the wrong one:
 
 - `search-input.html` — search boxes only (`type='search'`).
-- `text-field.html` — generic text/email/password/textarea fields (password-toggle, multiline, `hint`).
+- `text-field.html` — generic text/email/password/textarea fields (password-toggle, multiline, `hint`, a `leading` slot inside the field box).
 - `select.html` — native `<select>`-backed fields; `searchable=True` for long option lists (Select2); `multiple=True` for several values (chips with `searchable`).
 - `slug-preview.html` — URL slug fields with a "URL: prefix/slug [Edit]" preview (wraps `text-field.html`).
-- `image-upload.html` — image fields that take an upload or a linked URL (CKAN url/upload/clear fields).
+- `image-upload.html` — image fields that take an upload or a linked URL (CKAN url/upload/clear fields); with `dropzone`, any file dropped or browsed.
+- `date-picker.html` — date fields: a select-like button, a calendar panel and a hidden `yyyy-mm-dd` input.
 
 Help text between a field's label and its control is the `description` param (`.c-form-field__description`) on `text-field.html`, `select.html` and `slug-preview.html`; `radio.html`'s `description` is a second line under its label.
 
 `search-input.html` used to cover the generic-field role too; it split into `text-field.html` once form pages (contact contributor, request access, auth) needed password toggles and textareas.
 
-JS field errors: `window.hdxV2.setFieldError(input, message, invalid)` (`utils.js`) sets a `text-field.html` or `checkbox.html` control's error text and toggles its `--error` modifier (on with a message, or with `invalid` true for a border without text) — no local copies.
+JS field errors: `window.hdxV2.setFieldError(input, message, invalid)` (`utils.js`) sets the error text of a `text-field.html`, `checkbox.html`, `select.html` (Select2 too), `date-picker.html`, `image-upload.html` file input or `radio.html` group (its `error_slot` radio) and toggles the `--error` modifier (on with a message, or with `invalid` true for a border without text). It keeps `aria-invalid` / `aria-describedby` in step and reveals a `slug-preview.html` field — no local copies.
 
 Fields revealed by a select value: `window.hdxV2.wireReveal(select, target, options)` (`utils.js`, elements in) shows `target` while the select's lower-cased value is in `options.values`, at load and on `change`; `hiddenClass` is toggled instead of the `hidden` attribute, `requiredInputs` are `required` only while shown, `clearOnHide` empties every input in `target` when hidden. Render the target hidden server-side to match.
+
+Numbered form groups (heading column beside the fields, top border, CSS-counter numbers) call the `.hdx-form-*()` mixins in `mixins.less` from the page's own BEM classes: `.hdx-form-groups(@counter)` on the form, `.hdx-form-group(@counter)`, `.hdx-form-group-title(@counter)`, `.hdx-form-group-fields()`, `.hdx-form-fieldset()`, `.hdx-form-options()`, `.hdx-form-note()`, `.hdx-form-actions()` and `.hdx-form-save()`.
 
 ---
 
@@ -557,13 +561,13 @@ Page LESS keeps only page-rhythm concerns around the wrapper (e.g.
 
 If a utility class or function has exactly one consumer and no realistic reuse case, inline it into the consumer rather than maintaining a separate component file. Promote it to a shared module (`utils.js`) the moment a second consumer needs the same logic — never copy it. (`FocusTrap` started inlined into `navbar.js` from `focus-trap.js`; once `components/drawer.js` needed the same Tab-trap logic, it moved to `window.hdxV2.FocusTrap` in `utils.js`.)
 
-CSRF headers for `fetch` POSTs: `window.hdxV2.post(url, body)` (`utils.js`) for a POST that returns JSON; otherwise call `window.hdxUtil.net.getCsrfTokenAsObject()` directly (`base/hdx-util-lib.js`, in the `hdx_theme/ckan` bundle that `base.html` loads on every page) — no local wrapper functions.
+CSRF headers for `fetch` POSTs: `window.hdxV2.post(url, body)` (`utils.js`) for a POST that returns JSON (a plain-object `body` is sent as JSON); otherwise call `window.hdxUtil.net.getCsrfTokenAsObject()` directly (`base/hdx-util-lib.js`, in the `hdx_theme/ckan` bundle that `base.html` loads on every page) — no local wrapper functions.
 
 ---
 
 ## Components inserted after page load
 
-Component scripts initialise on `DOMContentLoaded`. Markup inserted later announces itself with a bubbling `<component>:add` event on the new element (`config-item:add` from `components/config-item.js` after New Item); a component that can sit inside it listens on `document` and initialises the matches inside `event.target` (`image-upload.js` does this for `[data-image-upload]`).
+Component scripts initialise on `DOMContentLoaded`. Markup inserted later announces itself with a bubbling `<component>:add` event on the new element (`config-item:add` from `components/config-item.js` after New Item); a component that can sit inside it listens on `document` and initialises the matches inside `event.target` (`image-upload.js` does this for `[data-image-upload]`, `select.js` for `select[data-searchable]`). Page JS that builds items itself calls `window.hdxV2ConfigItem(listEl).add({position, focus, prepare})`; `prepare(item)` fills the item before that event.
 
 ---
 

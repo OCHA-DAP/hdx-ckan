@@ -1499,15 +1499,10 @@ def hdx_initials(name):
 
 
 def hdx_format_to_icon_category(format_str):
-    tabular  = {'csv', 'xlsx', 'xls', 'ods', 'tsv'}
-    geo      = {'shp', 'geojson', 'kml', 'kmz', 'geopackage', 'gpkg', 'geotiff', 'geodatabase', 'gdb'}
-    document = {'pdf', 'doc', 'docx'}
-    web      = {'html', 'htm', 'xml'}
     fmt = (format_str or '').lower()
-    if fmt in tabular:  return 'tabular'
-    if fmt in geo:      return 'geo'
-    if fmt in document: return 'document'
-    if fmt in web:      return 'web'
+    for category, formats in const('FORMAT_ICON_CATEGORIES').items():
+        if fmt in formats:
+            return category
     return 'neutral'
 
 

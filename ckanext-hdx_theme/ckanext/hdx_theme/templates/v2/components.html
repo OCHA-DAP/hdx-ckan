@@ -932,6 +932,18 @@
       </div>
     </div>
 
+    <hr class="demo-divider">
+    <h2 class="demo-subsection__heading">No underline (underline=False)</h2>
+
+    <div class="demo-row">
+      <div class="demo-row__items">
+        {% snippet 'v2/components/text-button.html',
+            style='tertiary', size='m', tag='button', label='Dropbox', underline=False %}
+        {% snippet 'v2/components/text-button.html',
+            style='tertiary', size='m', tag='button', label='Google Drive', underline=False %}
+      </div>
+    </div>
+
     {# ── Row list with divider (outbound links) ──────── #}
     <hr class="demo-divider">
     <h2 class="demo-subsection__heading">Row list with divider (outbound links)</h2>
@@ -1227,6 +1239,52 @@
             selected=['sd', 'ml'], multiple=True, searchable=True, chip_color='cyan' %}
       </div>
     </div>
+
+    <h2 class="demo-subsection__heading">Select — size L (size='l'; native, searchable, multiple)</h2>
+    <div class="demo-row--column demo-max-width-l">
+      <div class="c-form-field">
+        {% snippet 'v2/components/select.html',
+            size='l', label='Country', placeholder='Select a country',
+            name='demo-select-l', options={'sd': 'Sudan', 'td': 'Chad', 'ml': 'Mali'} %}
+      </div>
+      <div class="c-form-field">
+        {% snippet 'v2/components/select.html',
+            size='l', label='Country', placeholder='Select a country', id='demo-select-l-searchable',
+            name='demo-select-l-searchable', options={'sd': 'Sudan', 'td': 'Chad', 'ml': 'Mali'},
+            searchable=True %}
+      </div>
+      <div class="c-form-field">
+        {% snippet 'v2/components/select.html',
+            size='l', label='Locations', placeholder='Select locations', id='demo-select-l-multiple',
+            name='demo-select-l-multiple', options={'sd': 'Sudan', 'td': 'Chad', 'ml': 'Mali', 'ne': 'Niger'},
+            selected=['sd', 'ml'], multiple=True, searchable=True, chip_color='cyan' %}
+      </div>
+    </div>
+
+    <h2 class="demo-subsection__heading">Date picker (v2/components/date-picker.html)</h2>
+    <div class="demo-row demo-max-width-l">
+      {% snippet 'v2/components/date-picker.html',
+          id='demo-date-empty', name='demo_date_empty', label='Start date', placeholder='Start date' %}
+      {% snippet 'v2/components/date-picker.html',
+          id='demo-date-filled', name='demo_date_filled', value='2026-11-16', min='2026-01-01', max='2026-12-31',
+          label='End date', placeholder='End date' %}
+    </div>
+    <div class="demo-row demo-max-width-l">
+      {% snippet 'v2/components/date-picker.html',
+          id='demo-date-disabled', name='demo_date_disabled', label='End date', placeholder='End date', disabled=True %}
+      <div>
+        {% snippet 'v2/components/date-picker.html',
+            id='demo-date-error', name='demo_date_error', label='Start date', placeholder='Start date',
+            errors=['Please specify the time period covered by your data.'] %}
+      </div>
+    </div>
+
+    <h2 class="demo-subsection__heading">Date picker — size L (size='l')</h2>
+    <div class="demo-row demo-max-width-l">
+      {% snippet 'v2/components/date-picker.html',
+          size='l', id='demo-date-l', name='demo_date_l', value='2026-11-16',
+          label='Start date', placeholder='Start date' %}
+    </div>
   </section>
 
   <br><br><br><br><br>
@@ -1349,6 +1407,16 @@
       </div>
     </div>
 
+    <h2 class="demo-subsection__heading">Text field — with a leading tile (leading)</h2>
+    <div class="demo-row--column demo-max-width-l">
+      <div class="c-form-field">
+        {% set demo_leading %}{% snippet 'v2/components/file-type-icon.html', format='tabular', size='xs' %}{% endset %}
+        {% snippet 'v2/components/text-field.html',
+            size='l', id='demo-leading-input', name='demo-leading-input',
+            label='File name', value='population-2026.xlsx', leading=demo_leading %}
+      </div>
+    </div>
+
     <h2 class="demo-subsection__heading">Autocomplete — with chips (panel open, static preview)</h2>
     <div class="demo-max-width-xl">
       {% snippet 'v2/components/autocomplete.html',
@@ -1417,6 +1485,13 @@
           name='demo-slug-error', id='demo-slug-error', required=True, value='example-organisation',
           prefix='example.org/organization/', errors=['Group name already exists in database'] %}
     </div>
+
+    <h2 class="demo-subsection__heading">Size L (size='l', with an error so the field shows)</h2>
+    <div class="demo-row--column demo-max-width-l">
+      {% snippet 'v2/components/slug-preview.html',
+          name='demo-slug-l', id='demo-slug-l', required=True, value='example-dataset', size='l',
+          prefix='example.org/dataset/', errors=['That URL is already in use.'] %}
+    </div>
   </section>
 
   <hr class="demo-divider">
@@ -1464,6 +1539,19 @@
       {% snippet 'v2/components/image-upload.html',
           field_url='demo_image_error', field_upload='demo_image_error_upload', field_clear='clear_demo_image_error',
           id='demo-image-error', label='Logo', errors=['Unsupported upload type: image/svg+xml'] %}
+    </div>
+
+    <h2 class="demo-subsection__heading">Drop zone (dropzone, upload only; blank and attached)</h2>
+    <div class="demo-row--column demo-max-width-l">
+      {% snippet 'v2/components/image-upload.html',
+          field_url='', field_upload='', id='demo-file-blank', label='File', label_hidden=True,
+          link_enabled=False, remove_enabled=False, upload_label='Browse',
+          dropzone=True, accept='' %}
+      {% snippet 'v2/components/image-upload.html',
+          field_url='', field_upload='', id='demo-file-attached', label='File', label_hidden=True,
+          value='https://example.com/download/population-2026.csv',
+          link_enabled=False, remove_enabled=False, upload_label='Browse',
+          dropzone=True, accept='' %}
     </div>
   </section>
 
@@ -1804,6 +1892,24 @@
       {% snippet 'v2/components/radio.html',
           name='demo-description', value='b', label='Dashboards',
           description='URL: https://example.org/dashboards/page_id' %}
+    </div>
+
+    <h2 class="demo-subsection__heading">Radio inputs — size M with description (size='m')</h2>
+    <div class="demo-row--column">
+      {% snippet 'v2/components/radio.html',
+          name='demo-size-m', value='a', label='Publish openly', size='m',
+          description='Files will be accessible to anyone.', checked=True %}
+      {% snippet 'v2/components/radio.html',
+          name='demo-size-m', value='b', label='Share privately', size='m',
+          description='Only members of your organisation will see the dataset.' %}
+    </div>
+
+    <h2 class="demo-subsection__heading">Radio inputs — with an error (errors, error_slot on the last radio)</h2>
+    <div class="demo-row--column">
+      {% snippet 'v2/components/radio.html',
+          name='demo-error', value='a', label='Option A', errors=['Please choose an option.'] %}
+      {% snippet 'v2/components/radio.html',
+          name='demo-error', value='b', label='Option B', errors=['Please choose an option.'], error_slot=True %}
     </div>
 
     <h2 class="demo-subsection__heading">Toggles</h2>
@@ -2722,6 +2828,27 @@
       </div>
     </div>
 
+    <h2 class="demo-subsection__heading">Sort buttons, footer Delete with the icon after (move_buttons, delete_position='footer', delete_icon_position='right')</h2>
+    <div class="demo-max-width-xl">
+      <div class="c-config-item-list">
+        <ol class="c-config-item-list__items">
+          <li>
+            {% call h.snippet('v2/components/config-item.html',
+                title='File 1', id='demo-config-item-3', title_tag='h3',
+                move_buttons=True, collapsible=False,
+                delete_position='footer', delete_label='Delete this file',
+                delete_icon_position='right') %}
+              <div class="c-form-field">
+                {% snippet 'v2/components/text-field.html',
+                    size='m', label='File name', required=True,
+                    name='demo-file-name', id='demo-config-item-3-name', value='population-2026.csv' %}
+              </div>
+            {% endcall %}
+          </li>
+        </ol>
+      </div>
+    </div>
+
   </section>
 
 
@@ -3079,6 +3206,12 @@
                       'Second paragraph of placeholder information text.'] %}
       {% snippet 'v2/components/info-box.html',
           paragraphs=['Single paragraph of placeholder information text.'] %}
+    </div>
+
+    <h2 class="demo-subsection__heading">Compact (compact=True) — helper text under a field</h2>
+    <div class="demo-row demo-row--column demo-max-width-l">
+      {% snippet 'v2/components/info-box.html', compact=True,
+          paragraphs=['Placeholder helper text that explains what to enter in the field above.'] %}
     </div>
   </section>
 

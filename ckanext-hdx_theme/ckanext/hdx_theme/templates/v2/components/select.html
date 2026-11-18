@@ -7,7 +7,8 @@
 
   Parameters
   ─────────────────────────────────────────────────
-  size          {string}  'm' | 's'  default: 'm'
+  size          {string}  'l' | 'm' | 's'  default: 'm'. 'l': 40px, 16px
+                          medium (native and Select2), as text-field L.
   label         {string}  Label text above the select.  default: '' (hidden)
   placeholder   {string}  Text of a disabled empty first option, selected while
                           `selected` is empty (with `multiple`: Select2's
@@ -51,7 +52,14 @@
                           endpoint as the user types (at least one character):
                           value = name, text = "fullname (name)" or the name.
                           With data-source-type="tag" as well, the endpoint is
-                          the tag autocomplete: value = text = the tag name.
+                          the tag autocomplete: value = text = the tag name;
+                          with data-source-type="format", the resource format
+                          autocomplete: value = text = the format. Each
+                          data-source-param-<key>="<selector>" adds <key> =
+                          that field's current value to the query. data-tags
+                          lets the user add values that aren't in the list.
+                          Selects inserted later initialise on a bubbling
+                          `config-item:add` event from their container.
                           default: False
   ─────────────────────────────────────────────────
 

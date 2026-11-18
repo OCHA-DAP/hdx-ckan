@@ -1,0 +1,95 @@
+{#
+  Snippet: date-picker.html
+  Path:    templates/v2/components/date-picker.html
+
+  Renders a c-date-picker — a select-like button that opens a calendar panel
+  (built on the c-dropdown-calendar panel styles) and posts the chosen date
+  as yyyy-mm-dd in a hidden input. The button shows the date as
+  "November 16, 2026". The panel shows a month's day grid with previous /
+  next month; its title switches to a 12-month grid with previous / next
+  year. Keyboard: arrows move by day / week, Home / End to the week's start /
+  end, Page Up / Down by month (Shift: by year), Enter / Space choose,
+  Escape closes. Days outside min / max are disabled. JS
+  components/date-picker.js; control it with
+  window.hdxV2DatePicker(rootEl).setValue(iso) / .setMin(iso) / .setMax(iso) /
+  .setDisabled(bool). Choosing a date dispatches a bubbling
+  `date-picker:change` event (detail.value = yyyy-mm-dd).
+
+  Parameters
+  ─────────────────────────────────────────────────
+  id            {string}  Button id (also prefixes the panel ids).  Required.
+  name          {string}  Hidden input name.  default: ''
+  value         {string}  Date as yyyy-mm-dd.  default: ''
+  label         {string}  Accessible name, visually hidden (e.g. 'Start date').
+                          default: ''
+  placeholder   {string}  Button text while no date is set.  default: 'Select'
+  min           {string}  Earliest date, yyyy-mm-dd.  default: ''
+  max           {string}  Latest date, yyyy-mm-dd.  default: ''
+  disabled      {bool}    default: False
+  size          {string}  'l' | 'm', as select.html.  default: 'm'
+  errors        {list|string}  Error message(s) below the field
+                          (c-dropdown--error).  default: None
+  extra_classes {string}  default: ''
+  ─────────────────────────────────────────────────
+  Example
+
+  {% snippet 'v2/components/date-picker.html',
+      id='ui_date_range1', name='date_range1', value='2026-11-16',
+      label='Start date', placeholder='Start date' %}
+#}
+
+{% set id            = id            if id            is defined else 'date-picker' %}
+{% set name          = name          if name          is defined else '' %}
+{% set value         = value         if value         is defined else '' %}
+{% set label         = label         if label         is defined else '' %}
+{% set placeholder   = placeholder   if placeholder   is defined else _('Select') %}
+{% set min           = min           if min           is defined else '' %}
+{% set max           = max           if max           is defined else '' %}
+{% set disabled      = disabled      if disabled      is defined else False %}
+{% set size          = size          if size          is defined else 'm' %}
+{% set errors        = errors        if errors        is defined else None %}
+{% set extra_classes = extra_classes if extra_classes is defined else '' %}
+
+{% set classes = ['c-dropdown', 'c-dropdown--size-' ~ size, 'c-dropdown--native', 'c-date-picker'] %}
+{% if errors %}{% set classes = classes + ['c-dropdown--error'] %}{% endif %}
+{% if extra_classes %}{% set classes = classes + [extra_classes] %}{% endif %}
+
+<div class="{{ classes | join(' ') }}" data-date-picker
+     data-date-picker-min="{{ min }}" data-date-picker-max="{{ max }}"
+     data-date-picker-placeholder="{{ placeholder }}">
+  {% if label %}<span class="sr-only" id="{{ id }}-label">{{ label }}</span>{% endif %}
+  <button type="button" class="c-dropdown__select c-date-picker__trigger{{ ' is-disabled' if disabled else '' }}" id="{{ id }}"
+          aria-haspopup="dialog" aria-expanded="false" aria-controls="{{ id }}-panel"
+          {% if label %}aria-labelledby="{{ id }}-label {{ id }}"{% endif %}
+          {% if errors %}aria-invalid="true" aria-describedby="{{ id }}-error"{% endif %}
+          {% if disabled %}disabled aria-disabled="true"{% endif %}
+          data-date-picker-trigger>
+    <span class="c-date-picker__value" data-date-picker-display>{{ placeholder }}</span>
+  </button>
+  <span class="c-dropdown__chevron" aria-hidden="true">{{ h.hdx_v2_icon('v2/icons/calendar.svg') }}</span>
+  <input type="hidden" name="{{ name }}" value="{{ value }}" data-date-picker-input>
+
+  <div class="c-dropdown-calendar c-date-picker__panel" id="{{ id }}-panel" role="dialog"
+       aria-label="{{ label or placeholder }}" hidden data-date-picker-panel>
+    <div class="c-dropdown-calendar__header">
+      <button type="button" class="c-dropdown-calendar__nav-btn" data-date-picker-prev
+              aria-label="{{ _('Previous month') }}"
+              data-label-day="{{ _('Previous month') }}" data-label-month="{{ _('Previous year') }}">
+        {{ h.hdx_v2_icon('v2/icons/chevron-left.svg') }}
+      </button>
+      <button type="button" class="c-dropdown-calendar__year c-date-picker__title" data-date-picker-title
+              aria-live="polite" data-label-day="{{ _('Choose month and year') }}"
+              data-label-month="{{ _('Back to days') }}"></button>
+      <button type="button" class="c-dropdown-calendar__nav-btn" data-date-picker-next
+              aria-label="{{ _('Next month') }}"
+              data-label-day="{{ _('Next month') }}" data-label-month="{{ _('Next year') }}">
+        {{ h.hdx_v2_icon('v2/icons/chevron-right.svg') }}
+      </button>
+    </div>
+    <table class="c-date-picker__days" role="grid" data-date-picker-days></table>
+    <div class="c-dropdown-calendar__grid c-date-picker__months" data-date-picker-months hidden></div>
+  </div>
+</div>
+{% if errors %}
+  <span class="c-dropdown__error" id="{{ id }}-error">{{ errors | join(', ') if errors is iterable and errors is not string else errors }}</span>
+{% endif %}

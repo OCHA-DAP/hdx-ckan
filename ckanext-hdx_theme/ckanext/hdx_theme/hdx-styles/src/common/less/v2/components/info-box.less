@@ -35,4 +35,16 @@
         color:  var(--hdx-neutral-95);
         margin: 0;
     }
+
+    &--compact {
+        padding: var(--hdx-space-3) var(--hdx-space-4);
+    }
+
+    &--compact &__body {
+        gap: var(--hdx-space-2);
+    }
+
+    &--compact &__text {
+        .hdx-body-s();
+    }
 }

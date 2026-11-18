@@ -37,9 +37,9 @@
       file.value = '';
       accepted = null;
       clear.value = 'true';
-      name.textContent = '';
+      if (name) name.textContent = '';
       status.textContent = '';
-      thumb.hidden = true;
+      if (thumb) thumb.hidden = true;
       setState('blank');
       choose.focus();
     }
@@ -48,9 +48,12 @@
       if (objectUrl) URL.revokeObjectURL(objectUrl);
       objectUrl = chosenUrl;
       accepted = chosen;
-      thumb.src = objectUrl;
-      thumb.hidden = false;
-      name.textContent = chosen.name;
+      if (thumb) {
+        thumb.src = objectUrl;
+        thumb.hidden = false;
+      }
+      if (error) error.textContent = '';
+      if (name) name.textContent = chosen.name;
       status.textContent = chosen.name;
       if (clear) clear.value = '';
       setState('attached');
@@ -76,8 +79,10 @@
     if (remove) remove.hidden = false;
     if (reset) reset.hidden = false;
 
-    thumb.addEventListener('error', function () { thumb.hidden = true; });
-    if (thumb.hasAttribute('src') && thumb.complete && !thumb.naturalWidth) thumb.hidden = true;
+    if (thumb) {
+      thumb.addEventListener('error', function () { thumb.hidden = true; });
+      if (thumb.hasAttribute('src') && thumb.complete && !thumb.naturalWidth) thumb.hidden = true;
+    }
 
     [choose, replace].forEach(function (button) {
       if (button) button.addEventListener('click', function () { file.click(); });
@@ -96,11 +101,11 @@
     file.addEventListener('change', function () {
       var chosen = file.files && file.files[0];
       if (!chosen) return;
-      var chosenUrl = URL.createObjectURL(chosen);
       if (!maxBytes && !width) {
-        show(chosen, chosenUrl);
+        show(chosen, thumb ? URL.createObjectURL(chosen) : null);
         return;
       }
+      var chosenUrl = URL.createObjectURL(chosen);
       error.textContent = '';
       status.textContent = '';
       var probe = new Image();
@@ -118,6 +123,34 @@
     url.addEventListener('change', function () {
       if (url.value.trim()) notify();
     });
+
+    if (root.hasAttribute('data-image-upload-dropzone')) {
+      var hasFiles = function (e) {
+        return !!e.dataTransfer && Array.prototype.indexOf.call(e.dataTransfer.types, 'Files') !== -1;
+      };
+      root.addEventListener('dragover', function (e) {
+        if (!hasFiles(e)) return;
+        e.preventDefault();
+        root.classList.add('is-dragover');
+      });
+      root.addEventListener('dragleave', function (e) {
+        if (!root.contains(e.relatedTarget)) root.classList.remove('is-dragover');
+      });
+      root.addEventListener('drop', function (e) {
+        if (!hasFiles(e)) return;
+        e.preventDefault();
+        root.classList.remove('is-dragover');
+        if (e.dataTransfer.files.length !== 1) {
+          error.textContent = root.dataset.imageUploadDropMessage;
+          status.textContent = root.dataset.imageUploadDropMessage;
+          return;
+        }
+        var dropped = new DataTransfer();
+        dropped.items.add(e.dataTransfer.files[0]);
+        file.files = dropped.files;
+        file.dispatchEvent(new Event('change'));
+      });
+    }
 
     setState(root.getAttribute('data-image-upload-state'));
   }

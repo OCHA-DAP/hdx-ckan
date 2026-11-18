@@ -114,28 +114,23 @@ body.hdx-v2 {
 body.contribute-mode {
   overflow: hidden;
 }
-.popup.popup-contribute {
+.hdx-v2-contribute-popup {
+  position: fixed;
+  inset: 0;
   z-index: 90000;
-  overflow: auto;
+  background-color: var(--hdx-neutral-0);
 }
-.popup.popup-contribute .content {
-  height: 100%;
-  padding: 0;
-  position: static;
-  left: auto;
-  top: auto;
-  margin-left: auto;
-  margin-right: auto;
-  transform: none;
-  overflow: hidden;
+.hdx-v2-contribute-popup[hidden] {
+  display: none;
 }
-.popup.popup-contribute .content .details-content {
+.hdx-v2-contribute-popup__content {
   height: 100%;
 }
-.popup.popup-contribute .content .details-content iframe {
-  border: none;
-  height: 100%;
+.hdx-v2-contribute-popup__frame {
+  display: block;
   width: 100%;
+  height: 100%;
+  border: none;
 }
 .js-hide {
   display: none !important;

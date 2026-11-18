@@ -40,37 +40,22 @@
 
 // ── Custom Pages: create / edit form ──────────────────────────
 .hdx-v2-custom-page-form {
-    display:        flex;
-    flex-direction: column;
-    gap:            var(--hdx-space-12);
-    counter-reset:  custom-page-group;
+    .hdx-form-groups(custom-page-group);
 
     &__note {
-        .hdx-body-m-semibold();
-        margin: 0 0 var(--hdx-space-12);
-        color:  var(--hdx-error-5);
+        .hdx-form-note();
     }
 
     &__group {
-        padding:           var(--hdx-space-6) 0;
-        border-top:        1px solid var(--hdx-neutral-3);
-        counter-increment: custom-page-group;
+        .hdx-form-group(custom-page-group);
     }
 
     &__group-title {
-        .hdx-heading-h3();
-        margin: 0;
-        color:  var(--hdx-neutral-95);
-
-        &::before {
-            content: counter(custom-page-group) ". ";
-        }
+        .hdx-form-group-title(custom-page-group);
     }
 
     &__fields {
-        display:        flex;
-        flex-direction: column;
-        gap:            var(--hdx-space-8);
+        .hdx-form-group-fields();
     }
 
     &__checkbox {
@@ -78,39 +63,18 @@
     }
 
     &__fieldset {
-        min-width: 0;
-        margin:    0;
-        padding:   0;
-        border:    none;
-
-        legend {
-            margin-bottom: var(--hdx-space-2);
-            padding:       0;
-        }
+        .hdx-form-fieldset();
     }
 
     &__options {
-        display:        flex;
-        flex-direction: column;
-        align-items:    flex-start;
-        gap:            var(--hdx-space-2);
-    }
-
-    &__actions,
-    &__save {
-        display:     flex;
-        flex-wrap:   wrap;
-        align-items: center;
-        gap:         var(--hdx-space-4);
+        .hdx-form-options();
     }
 
     &__actions {
-        padding:    var(--hdx-space-6) 0;
-        border-top: 1px solid var(--hdx-neutral-3);
+        .hdx-form-actions();
     }
 
     &__save {
-        flex-direction: row-reverse;
-        margin-left:    auto;
+        .hdx-form-save();
     }
 }

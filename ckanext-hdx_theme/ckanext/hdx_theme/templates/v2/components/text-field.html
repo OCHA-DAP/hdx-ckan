@@ -40,6 +40,10 @@
   description   {string}  Help text between the label and the field
                           (.c-form-field__description), id <id>-description,
                           referenced by the control's aria-describedby.  default: ''
+  leading       {string}  Markup inside the field box before the control (e.g. a
+                          c-file-type tile), in a [data-text-field-leading] span
+                          page JS may hide; the box keeps its size's height, so
+                          pass markup that fits (a size 'xs' tile at L).  default: ''
   ─────────────────────────────────────────────────
   Examples
 
@@ -70,6 +74,7 @@
 {% set character_count = character_count if character_count is defined else False %}
 {% set hint          = hint          if hint          is defined else '' %}
 {% set description   = description   if description   is defined else '' %}
+{% set leading       = leading       if leading       is defined else '' %}
 {% if hint %}
   {% set input_attrs = dict(input_attrs, **{'aria-describedby': (id ~ '-hint ' ~ input_attrs.get('aria-describedby', '')) | trim}) %}
 {% endif %}
@@ -95,6 +100,10 @@
 <div class="{{ classes | join(' ') }}"
      {% if character_count %}data-character-count{% endif %}
      {% for key, val in attrs.items() %} {{ key }}="{{ val }}"{% endfor %}>
+
+  {% if leading %}
+    <span class="c-search-input__leading" data-text-field-leading>{{ leading }}</span>
+  {% endif %}
 
   {% if multiline %}
     <textarea name="{{ name }}"

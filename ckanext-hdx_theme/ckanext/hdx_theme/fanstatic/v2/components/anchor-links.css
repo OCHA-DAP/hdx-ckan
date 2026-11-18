@@ -9,6 +9,9 @@
   cursor: pointer;
   text-decoration: none;
 }
+.c-anchor-links__item[hidden] {
+  display: none;
+}
 .c-anchor-links__border {
   align-self: stretch;
   width: var(--hdx-space-1);

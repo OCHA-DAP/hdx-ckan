@@ -1,0 +1,19 @@
+{#
+  Snippet: contribute-popup.html
+  Path:    templates/v2/contribute-popup.html
+
+  The full-screen Add / Edit data dialog. fanstatic/v2/contribute.js
+  (contributeAddDetails) loads /contribute/new or /contribute/edit/<id> in an
+  iframe inside it, moves focus into the iframe and makes the page behind it
+  inert. It has no close control: the form's Cancel and its links navigate
+  the top window.
+
+  Example
+
+  {% snippet 'v2/contribute-popup.html' %}
+#}
+
+<div id="addDataPopup" class="hdx-v2-contribute-popup" role="dialog" aria-modal="true"
+     data-label-new="{{ _('Share data') }}" data-label-edit="{{ _('Edit data') }}" hidden>
+  <div class="hdx-v2-contribute-popup__content" data-contribute-popup-content></div>
+</div>

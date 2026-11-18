@@ -127,14 +127,7 @@ CSS custom property equivalents (`--hdx-*`) are defined in `v2/foundation.css` (
 | Products Menu (sysadmin) | `admin/quick_links.html` | Extends `admin/config-item-base.html`, as Package Links; the same editor (`c-config-item-list`, `components/config-item.js`) on the kept v1 quick-links endpoints, fields from `admin/snippets/quick_link_fields.html` (Title, URL, Open in a new tab, Archived); the stored list feeds the header / footer Products menus and `/crisis-pages`; see `requirements/088-sysadmin-products-menu-v2.md` |
 | Homepage Highlights (sysadmin) | `admin/carousel.html` | Extends `admin/config-item-base.html` with `list_layout='grid'` (two columns from MD); the same editor on the kept v1 carousel endpoints, fields from `admin/snippets/homepage_highlight_fields.html` (thumbnail `c-image-upload` with a large preview and the 50KB / 550px check, Title, URL, Open in a new tab; stored description / embed / buttonText as hidden inputs); the chosen file posts with its card's update; see `requirements/089-sysadmin-homepage-highlights-v2.md` |
 | Custom Pages (sysadmin) | `admin/pages.html`, `pages/edit_page.html` | Both extend `v2/sysadmin-base.html`. Listing: `v2/list-header.html` with a Create button, `table.html` with links, Edit and a per-row delete `c-drawer` (`admin/snippets/custom_page_delete_drawer.html`), DataTables sort (`pages/custom-pages.js`). Form: numbered step links instead of the menu, two numbered groups, v1 fields and POST contract, Location / Tags Select2 multi-selects, sections as reorderable `c-config-item` cards in form mode, renumbered on submit (`admin/snippets/custom_page_section_fields.html`, `pages/custom-page-form.js`); see `requirements/090-sysadmin-custom-pages-v2.md`, `requirements/091-crisis-page-edit-form-v2.md` |
-
-### Pages in holding state (on `page_light.html`)
-
-Each page below extends `page_light.html`, manually overrides `{% block styles %}` to load `hdx_theme/page-extra-light-styles` and `hdx_theme/bem-blocks-styles`, loads `hdx_theme/bem-blocks-scripts` in `{% block scripts %}`, and overrides `{% block header_core %}` to include `header-mobile.html`. Ready to migrate to `v2/page.html`.
-
-| Page | Template(s) | Notes |
-|------|-------------|-------|
-| Create/edit dataset | `contribute_flow/create_edit.html` | Also loads `hdx_theme/contribute-flow-styles` |
+| Add / Edit dataset (contribute flow) | `contribute_flow/create_edit.html` | Extends `v2/page.html`; still opened in the full-screen iframe popup (`v2/contribute-popup.html`, `v2/contribute.js`), with "Add data" hidden in its header (`show_add_data=False`); numbered step links and groups (`.hdx-form-*()` mixins); file cards as `c-config-item`s built by JS (`contribute_flow/snippets/resource_fields.html`, drop zone `c-image-upload`); `c-date-picker` dates; `c-drawer`s for private-dataset info, Suggest a new tag and Delete; the v1 save pipeline ported to `v2/pages/dataset-form.js`; see `requirements/096-add-edit-dataset-form-v2.md` |
 
 ---
 
@@ -178,21 +171,22 @@ Each page below extends `page_light.html`, manually overrides `{% block styles %
 - [x] Stats card — `stats-card.html` / `stats-card.less`; KPI figure + label card
 - [x] Member list card — `member-list-card.html` / `member-list-card.less`; avatar + profile links + role/registered line + counters, `caller()` actions body, `--stacked` variant
 - [x] User item — `user-item.html` / `user-item.less`; compact user row: xs avatar (`h.hdx_initials`), name link + optional meta on one line (ellipsis), `caller()` actions at the right end; own `c-user-item-grid` grid (one column, two from MD)
-- [x] Config item — `config-item.html` / `config-item.less` + `config-item.js`; editable item of a sysadmin settings editor: drag handle (`draggable`), `<h2>` title (`title_tag`), Move up / down (`move_buttons`, announced in the list's live region), collapse toggle (`expanded`, `collapsible`), Delete in the header or a footer row (`delete_position`, `delete_label`), `caller()` fields; own `c-config-item-list` (page markup: items `<ol>`, New Item `<template>`, error `c-alert`, actions row; `--grid` wraps into two columns from MD), whose data attributes drive the JS (`data-config-item-form`: form mode, posted by the page form); file inputs post their chosen file; a New Item card dispatches a bubbling `config-item:add`
+- [x] Config item — `config-item.html` / `config-item.less` + `config-item.js`; editable item of a sysadmin settings editor: drag handle (`draggable`), `<h2>` title (`title_tag`), Move up / down (`move_buttons`, announced in the list's live region), collapse toggle (`expanded`, `collapsible`), Delete in the header or a footer row (`delete_position`, `delete_label`), `caller()` fields; own `c-config-item-list` (page markup: items `<ol>`, New Item `<template>`, error `c-alert`, actions row; `--grid` wraps into two columns from MD), whose data attributes drive the JS (`data-config-item-form`: form mode, posted by the page form); file inputs post their chosen file; a New Item card dispatches a bubbling `config-item:add`; `data-config-item-sortable` (drag in form mode), `data-config-item-add-position="start"`, `window.hdxV2ConfigItem(list).add({position, focus, prepare})`, bubbling `config-item:sort` / `config-item:remove`, `delete_icon_position`
 - [x] Request card / item / archive — `request-card.html`, `request-item.html`, `request-archive.html` + `request-archive-row.html` / `request-card.less`, `request-item.less`, `request-archive.less`; HDX Connect dataset group card, one request (avatar, chips with tooltip, clamped message quote, footer bar with `caller()` actions or archived status), and the Archive `<details>` grid
 - [x] Data grid status — `data-grid-status.html` / `data-grid-status.less`; presentational availability swatch (not a real checkbox)
 - [x] Dataviz card — `dataviz-card.html` / `dataviz-card.less`; thumbnail + title + clamped description + date/DATA-link footer + gated Edit link; own `c-dataviz-card-grid` wrapper
 - [x] Alert — `alert.html` / `alert.less`; 4 variants (success/warning/info/error), dismissible by default
-- [x] Info box — `info-box.html` / `info-box.less`; light-blue panel with an info icon and paragraphs (static, no live region)
+- [x] Info box — `info-box.html` / `info-box.less`; light-blue panel with an info icon and paragraphs (static, no live region); `compact` drops the icon for helper text under a field
 - [x] Activity card — `activity-card.html` / `activity-card.less`
 - [x] Tabs — `tabs.html` / `tabs.less`
 - [x] Table — `table.html` / `table.less`
 - [x] Toggle — `toggle.html`; styles in `selection.less` alongside Radio/Graph point
 - [x] Copy button — `copy-button.html` / `copy-button.less`
 - [x] Graph point — `graph-point.html`; styles in `selection.less`; chart data-point dot with focus ring
-- [x] Radio — `radio.html`; styles in `selection.less`
-- [x] Slug preview — `slug-preview.html` / `slug-preview.less` / `slug-preview.js` (page-loaded `v2-slug-preview-scripts`); slug field + "URL: prefix/slug [Edit]" preview (prefix in `[data-slug-preview-prefix]`), follows a target field (core `$.url.slugify`)
-- [x] Image upload — `image-upload.html` / `image-upload.less` / `image-upload.js`; uploaded file or linked URL (blank / attached / web states, CKAN url/upload/clear fields), `image-upload:change` event; optional `link_enabled` / `remove_enabled` / `upload_label`, `preview='l'` (full-width preview box) and a `max_bytes` / `image_width` file check with `check_message`; also initialises inside `config-item:add` targets
+- [x] Radio — `radio.html`; styles in `selection.less`; `errors` (red ring) and `error_slot` (the group's error element on its last radio); `size='m'` (16px medium label, 16px description)
+- [x] Slug preview — `slug-preview.html` / `slug-preview.less` / `slug-preview.js` (page-loaded `v2-slug-preview-scripts`); slug field + "URL: prefix/slug [Edit]" preview (prefix in `[data-slug-preview-prefix]`), follows a target field (core `$.url.slugify`); `size` passed to the field
+- [x] Image upload — `image-upload.html` / `image-upload.less` / `image-upload.js`; uploaded file or linked URL (blank / attached / web states, CKAN url/upload/clear fields), `image-upload:change` event; optional `link_enabled` / `remove_enabled` / `upload_label`, `preview='l'` (full-width preview box) and a `max_bytes` / `image_width` file check with `check_message`; `dropzone` (blank and attached drop zones, `drop_replace_label`, drops on the whole field, `is-dragover`) and `label_hidden`; also initialises inside `config-item:add` targets
+- [x] Date picker — `date-picker.html` / `date-picker.less` / `date-picker.js`; select-like button + calendar panel on the `c-dropdown-calendar` styles (day grid, month grid), hidden `yyyy-mm-dd` input, `min` / `max`, `date-picker:change`, `window.hdxV2DatePicker(root)` API
 
 Each component file should have:
 1. **HTML template** (`templates/v2/components/component-name.html`) — reusable snippet with BEM markup
@@ -209,7 +203,7 @@ Exception: `info-icon.html` has no dedicated LESS/CSS — it composes existing `
 
 Bundle configuration:
 - `hdx_theme/v2-components-styles` — standalone design system bundle (tokens + components), no Bootstrap
-  - Contents: `v2/foundation.css`, `v2/overlay.css`, then component CSS files: `accordion`, `activity-card`, `activity-item`, `alert`, `anchor-links`, `avatar-badge`, `breadcrumb`, `buttons`, `checkbox`, `config-item`, `content-card`, `copy-button`, `data-grid-status`, `dataset-card`, `dataviz-card`, `divider`, `drawer`, `dropdown`, `form-field`, `highlight-card`, `image-upload`, `info-box`, `input-field`, `label`, `letter-anchor`, `list-item`, `member-list-card`, `nav-item`, `notification-item`, `org-list-card`, `page-header`, `pagination`, `request-archive`, `request-card`, `request-item`, `resource-card`, `selection`, `showcase-card`, `signup-tier`, `slug-preview`, `spinner`, `stats-card`, `step-pager`, `table`, `tabs`, `signal-card`, `text-link`, `user-item`
+  - Contents: `v2/foundation.css`, `v2/overlay.css`, then component CSS files: `accordion`, `activity-card`, `activity-item`, `alert`, `anchor-links`, `avatar-badge`, `breadcrumb`, `buttons`, `checkbox`, `config-item`, `content-card`, `copy-button`, `data-grid-status`, `dataset-card`, `dataviz-card`, `date-picker`, `divider`, `drawer`, `dropdown`, `form-field`, `highlight-card`, `image-upload`, `info-box`, `input-field`, `label`, `letter-anchor`, `list-item`, `member-list-card`, `nav-item`, `notification-item`, `org-list-card`, `page-header`, `pagination`, `request-archive`, `request-card`, `request-item`, `resource-card`, `selection`, `showcase-card`, `signup-tier`, `slug-preview`, `spinner`, `stats-card`, `step-pager`, `table`, `tabs`, `signal-card`, `text-link`, `user-item`
   - Kept separate for non-page contexts (component previews, embedded widgets)
 - `hdx_theme/v2-page-styles` ✅ Full page bundle: preloads `v2-components-styles`, then adds:
   - `vendor/bootstrap5/css/bootstrap.css`
@@ -218,7 +212,7 @@ Bundle configuration:
   - `v2/nav-controls.css` — shared sort + results-per-page dropdown pair
   - `v2/navbar.css` — main navbar styles (logo, search, nav items, actions, offcanvas)
   - `v2/top-bar.css` — top-bar styles (OCHA services dropdown, documentation link)
-- `hdx_theme/v2-components-scripts` ✅ Contains: `v2/utils.js` (shared `window.hdxV2.*` helpers incl. `FocusTrap`, `setDisabled`, `showAlert`, `setFieldError`, `wireReveal`, `post`, loaded first), then `alert.js`, `anchor-links.js` (smooth scroll + mobile dropdown + active tracking), `clamped-text.js` (show-more/less), `copy-button.js`, `drawer.js`, `dropdown.js`, `image-upload.js`, `input-field.js` (password toggle, character counter), `page-header.js`, `tooltip.js`, `toggle.js`
+- `hdx_theme/v2-components-scripts` ✅ Contains: `v2/utils.js` (shared `window.hdxV2.*` helpers incl. `FocusTrap`, `setDisabled`, `showAlert`, `setFieldError`, `wireReveal`, `post`, loaded first), then `alert.js`, `anchor-links.js` (smooth scroll + mobile dropdown + active tracking), `clamped-text.js` (show-more/less), `copy-button.js`, `date-picker.js`, `drawer.js`, `dropdown.js`, `image-upload.js`, `input-field.js` (password toggle, character counter), `page-header.js`, `tooltip.js`, `toggle.js`
 - `hdx_theme/v2-page-scripts` ✅ Contains `v2/contribute.js` + `v2/group-message-drawer.js` + `v2/navbar.js` (navbar + offcanvas, uses `window.hdxV2.FocusTrap`) + `v2/search-autocomplete.js`; preloads `v2-components-scripts` and `v2-search-scripts` (MiniSearch/feature-index)
 - `hdx_theme/v2-search-scripts` — global lib bundle: MiniSearch, normalize.js, feature-index; auto-loaded via `v2-page-scripts` preload
 - `hdx_theme/v2-search-page-styles` — search page: adds `v2/pages/search.css`
@@ -245,6 +239,7 @@ Bundle configuration:
 - `hdx_theme/v2-user-dashboard-page-styles` — User dashboard/settings pages (via `v2/user-dashboard-base.html`): adds `v2/pages/user-dashboard.css`
 - `hdx_theme/v2-sysadmin-page-styles` — Sysadmin pages (via `v2/sysadmin-base.html`): adds `v2/pages/sysadmin.css`
 - `hdx_theme/v2-custom-page-form-page-scripts` — Custom page form: adds `v2/pages/custom-page-form.js` (section type → fields, URL prefix by type, on submit sections renumbered to the card order and `hdx_counter`)
+- `hdx_theme/v2-dataset-form-page-styles` / `-scripts` — Add / Edit dataset form: adds `v2/pages/dataset-form.css` / the unchanged `contribute_flow/hdx-google-picker.js` + `v2/pages/dataset-form.js` (share modes, file cards, validate + save pipeline, drawers, tag suggestions); loaded after `v2-select2-scripts`, `v2-slug-preview-scripts` and `v2-config-item-scripts`
 - `hdx_theme/v2-custom-pages-page-scripts` — Custom Pages listing: adds `v2/pages/custom-pages.js` (DataTables sort; loaded after `v2-datatable-scripts`)
 - `hdx_theme/v2-hdx-connect-page-styles` / `-scripts` — HDX Connect requests: adds `v2/pages/hdx-connect.css` / `v2/url-nav.js` + `v2/pages/hdx-connect.js` (sort, drawers, Reply / Decline / Yes / No, Maintainer and Organisation filters)
 - `hdx_theme/v2-hdx-connect-scripts` — `v2/pages/hdx-connect.js` only (no `url-nav.js`)
@@ -329,7 +324,7 @@ Bundle configuration:
 - [x] Org join / create flow pages
 - [x] Edit / create organisation page
 
-Deferred to next cycle: create/edit dataset page, an HDX-side guard against the `ckanext-requestdata` org view's 500s (task 080 D19), Signals Mailchimp form's Bootstrap-to-v2 CSS cleanup (task 070 B4), `resource_view.html` error-div class cleanup (task 047 Decision 10).
+Deferred to next cycle: an HDX-side guard against the `ckanext-requestdata` org view's 500s (task 080 D19), Signals Mailchimp form's Bootstrap-to-v2 CSS cleanup (task 070 B4), `resource_view.html` error-div class cleanup (task 047 Decision 10).
 
 ### Phase 4: Cleanup — Next cycle
 - [ ] Delete old layout templates (`page.html`, `page_light.html`)
@@ -342,8 +337,7 @@ Deferred to next cycle: create/edit dataset page, an HDX-side guard against the 
 
 ## Next Steps
 
-1. **Migrate remaining holding-state pages** from `page_light.html` — create/edit dataset.
-2. **Build page-specific components** as needed during individual page migrations.
+1. **Build page-specific components** as needed during individual page migrations.
 
 ---
 

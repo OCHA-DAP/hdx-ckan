@@ -223,6 +223,9 @@
   text-decoration: underline;
   white-space: nowrap;
 }
+.c-text-button--no-underline .c-text-button__label {
+  text-decoration: none;
+}
 .c-text-button--size-l {
   gap: var(--hdx-space-2);
   font-size: var(--hdx-fs-m);

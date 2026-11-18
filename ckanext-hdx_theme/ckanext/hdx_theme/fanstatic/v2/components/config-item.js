@@ -1,6 +1,8 @@
 (function () {
   'use strict';
 
+  var controllers = [];
+
   function init(list) {
     var items      = list.querySelector('.c-config-item-list__items');
     var template   = list.querySelector('[data-config-item-template]');
@@ -9,6 +11,8 @@
     var saveButton = list.querySelector('[data-config-item-save]');
     var statusEl   = list.querySelector('[data-config-item-status]');
     var formMode   = list.hasAttribute('data-config-item-form');
+    var sortable   = !formMode || list.hasAttribute('data-config-item-sortable');
+    var addAtStart = list.getAttribute('data-config-item-add-position') === 'start';
     var counter    = items.children.length;
     var deletedIds = [];
     var knownIds   = cards().map(function (card) { return card.dataset.configItemId; }).filter(Boolean);
@@ -34,6 +38,10 @@
       });
     }
 
+    function announce(type, detail) {
+      list.dispatchEvent(new CustomEvent('config-item:' + type, { bubbles: true, detail: detail || {} }));
+    }
+
     function move(button) {
       var card    = button.closest('[data-config-item]');
       var row     = card.parentElement;
@@ -51,6 +59,7 @@
       statusEl.textContent = list.dataset.moveMessage
         .replace('{n}', all.indexOf(card) + 1)
         .replace('{total}', all.length);
+      announce('sort');
     }
 
     function setExpanded(card, expanded) {
@@ -127,12 +136,16 @@
         });
     }
 
-    if (!formMode) {
+    if (sortable) {
       Sortable.create(items, {
         handle: '.c-config-item__header',
         animation: window.hdxV2.prefersReducedMotion() ? 0 : 250,
         ghostClass: 'is-dragging',
-        onUpdate: renumber
+        onUpdate: function () {
+          renumber();
+          refreshMove();
+          announce('sort');
+        }
       });
     }
 
@@ -157,27 +170,43 @@
       renumber();
       refreshMove();
       (next ? next.querySelector('[data-config-item-toggle]') || next.querySelector('[data-config-item-title]') : addButton).focus();
+      announce('remove', { item: card });
     });
 
     items.addEventListener('input', function (e) {
       window.hdxV2.setFieldError(e.target, '');
     });
 
-    addButton.addEventListener('click', function () {
+    function add(options) {
+      options = options || {};
+      var atStart = options.position ? options.position === 'start' : addAtStart;
       counter += 1;
-      items.insertAdjacentHTML('beforeend', template.innerHTML.replace(/__index__/g, counter));
+      items.insertAdjacentHTML(atStart ? 'afterbegin' : 'beforeend', template.innerHTML.replace(/__index__/g, counter));
+      var row  = atStart ? items.firstElementChild : items.lastElementChild;
+      var card = row.querySelector('[data-config-item]');
       renumber();
       refreshMove();
-      items.lastElementChild.querySelector('[data-config-item]')
-        .dispatchEvent(new CustomEvent('config-item:add', { bubbles: true }));
-      items.lastElementChild.querySelector(formMode
-        ? '.c-config-item__body :is(input:not([type="hidden"]), select, textarea):not(:disabled)'
-        : '.c-search-input input, .c-search-input textarea').focus();
-    });
+      if (options.prepare) options.prepare(card);
+      card.dispatchEvent(new CustomEvent('config-item:add', { bubbles: true }));
+      if (options.focus !== false) {
+        row.querySelector(formMode
+          ? '.c-config-item__body :is(input:not([type="hidden"]), select, textarea):not(:disabled)'
+          : '.c-search-input input, .c-search-input textarea').focus();
+      }
+      return card;
+    }
+
+    addButton.addEventListener('click', function () { add(); });
 
     if (!formMode) saveButton.addEventListener('click', save);
     refreshMove();
+    controllers.push({ list: list, api: { add: add } });
   }
+
+  window.hdxV2ConfigItem = function (list) {
+    var match = controllers.filter(function (controller) { return controller.list === list; })[0];
+    return match ? match.api : null;
+  };
 
   document.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll('[data-config-item-list]').forEach(init);

@@ -1,0 +1,111 @@
+// ============================================================
+// c-date-picker — select-like date field with a calendar panel
+// ============================================================
+@import "../mixins.less";
+
+.c-date-picker {
+    &__trigger {
+        display:     flex;
+        align-items: center;
+        text-align:  left;
+
+        &:disabled,
+        &:disabled:hover {
+            cursor:           not-allowed;
+            background-color: var(--hdx-neutral-01);
+            border-color:     var(--hdx-neutral-1);
+            box-shadow:       none;
+            color:            var(--hdx-neutral-5);
+        }
+
+        &:focus-visible {
+            .hdx-focus-ring();
+        }
+    }
+
+    &__value {
+        min-width:     0;
+        overflow:      hidden;
+        text-overflow: ellipsis;
+        white-space:   nowrap;
+        color:         var(--hdx-neutral-6);
+    }
+
+    &--filled &__value {
+        color: inherit;
+    }
+
+    &__panel {
+        position: absolute;
+        top:      calc(100% + var(--hdx-space-1));
+        left:     0;
+        z-index:  20;
+        width:    max-content;
+
+        &[hidden] { display: none; }
+    }
+
+    &__title {
+        padding:       var(--hdx-space-1) var(--hdx-space-2);
+        border:        none;
+        border-radius: var(--hdx-radius-sm);
+        background:    transparent;
+        color:         var(--hdx-neutral-95);
+        cursor:        pointer;
+
+        &:hover { background-color: var(--hdx-neutral-01); }
+
+        &:focus-visible { .hdx-focus-ring(); }
+    }
+
+    &__days {
+        border-collapse: collapse;
+
+        th {
+            .hdx-body-xs-medium();
+            padding:    0 0 var(--hdx-space-1);
+            text-align: center;
+            color:      var(--hdx-neutral-7);
+        }
+
+        td {
+            padding:    var(--hdx-space-15);
+            text-align: center;
+        }
+    }
+
+    &__day {
+        width:         var(--hdx-space-8);
+        height:        var(--hdx-space-8);
+        padding:       0;
+        border:        none;
+        border-radius: var(--hdx-radius-sm);
+        background:    transparent;
+        .hdx-body-s();
+        color:         var(--hdx-neutral-8);
+        cursor:        pointer;
+        transition:    background-color 0.15s ease;
+        .hdx-motion();
+
+        &:hover { background-color: var(--hdx-neutral-01); }
+
+        &:focus-visible { .hdx-focus-ring(); }
+
+        &[aria-current="date"] { .hdx-body-s-semibold(); }
+
+        &.is-active,
+        &.is-active:hover {
+            background-color: var(--hdx-primary-5);
+            color:            var(--hdx-neutral-0);
+        }
+
+        &:disabled,
+        &:disabled:hover {
+            background-color: transparent;
+            color:            var(--hdx-neutral-4);
+            cursor:           not-allowed;
+        }
+    }
+
+    &__months[hidden] { display: none; }
+}
