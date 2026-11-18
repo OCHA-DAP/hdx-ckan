@@ -26,62 +26,22 @@ def hdx_dataset_purge(context, data_dict):
 
     _get_action('package_delete')(context, {'id': id})
 
-    if pkg and pkg.resources:
-        for r in pkg.resources:
-            file_remove(r.id, r.url, r.url_type)
-            try:
-                _get_action('datastore_delete')(context, {'resource_id': r.id, 'force': True})
-            except NotFound:
-                log.info('Resource {} not found in datastore while datastore_delete.'.format(r.id))
+    # Files and datastore tables can't be restored, so remove them only after the purge is committed
+    resources = [(r.id, r.url, r.url_type) for r in pkg.resources] if pkg else []
 
-    return dataset_purge(context, data_dict)
+    # package_delete was checked above; core's dataset_purge auth is sysadmin-only
+    core_delete.dataset_purge(dict(context, ignore_auth=True), data_dict)
+    log.info('Dataset was purged, id was ' + id)
 
-
-# needed to overwrite to check access "package_delete"
-def dataset_purge(context, data_dict):
-    '''
-    This runs the 'dataset_purge' action from core ckan's delete.py
-    It allows us to do some minor changes and wrap it.
-    '''
-    model = context['model']
-    id = _get_or_bust(data_dict, 'id')
-    pkg = model.Package.get(id)
-    # is_requested_data_type = _is_requested_data_type(pkg)
-
-    # core_delete.dataset_purge(context, data_dict)
-
-    from sqlalchemy import or_
-
-    context['package'] = pkg
-    if pkg is None:
-        raise NotFound('Dataset was not found')
-
-    _check_access('package_delete', context, data_dict)
-
-    members = model.Session.query(model.Member) \
-        .filter(model.Member.table_id == pkg.id) \
-        .filter(model.Member.table_name == 'package')
-    if members.count() > 0:
-        for m in members.all():
-            m.purge()
-
-    model.Session.query(model.PackageMember).filter(
-        model.PackageMember.package_id == pkg.id).delete()
-
-    for r in model.Session.query(model.PackageRelationship).filter(
-        or_(model.PackageRelationship.subject_package_id == pkg.id,
-            model.PackageRelationship.object_package_id == pkg.id)).all():
-        r.purge()
-
-    pkg = model.Package.get(id)
-    # no new_revision() needed since there are no object_revisions created
-    # during purge
-    pkg.purge()
-    model.repo.commit_and_remove()
-
-    # if is_requested_data_type:
-    #     toolkit.get_action("requestdata_request_delete_by_package_id")(context, {'package_id': id})
-    log.info('Dataset was purged, id was ' + data_dict.get('id'))
+    for resource_id, resource_url, resource_url_type in resources:
+        file_remove(resource_id, resource_url, resource_url_type)
+        try:
+            # The resource is purged, so datastore_delete's resource_update auth check can't find it
+            _get_action('datastore_delete')(
+                {'model': model, 'session': model.Session, 'user': context.get('user'), 'ignore_auth': True},
+                {'resource_id': resource_id, 'force': True})
+        except NotFound:
+            log.info('Resource {} not found in datastore while datastore_delete.'.format(resource_id))
 
 
 def resource_delete(context, data_dict):

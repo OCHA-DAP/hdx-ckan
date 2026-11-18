@@ -324,8 +324,9 @@ def delete(id):
     """
     Delete package, HDX changed the redirection point
     """
-    if 'cancel' in request.args:
-        h.redirect_to(controller='package', action='edit', id=id)
+    # The confirm page posts the Cancel button as a form field
+    if 'cancel' in request.form:
+        return h.redirect_to('hdx_contribute.edit', id=id)
 
     context = {'model': model, 'session': model.Session,
                'user': g.user or g.author, 'auth_user_obj': g.userobj}
