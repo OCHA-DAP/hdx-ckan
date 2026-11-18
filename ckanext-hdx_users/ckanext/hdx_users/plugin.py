@@ -18,6 +18,7 @@ import ckanext.hdx_users.views.requestdata_user_view as rduv
 import ckanext.hdx_users.views.onboarding as onboarding
 import ckanext.hdx_users.views.signin as signin
 import ckanext.hdx_users.views.notification_platform as notification_platform
+import ckanext.hdx_users.views.mcp_auth as mcp_auth
 
 import ckanext.security.validators as security_validators
 
@@ -144,4 +145,5 @@ class HDXUsersPlugin(plugins.SingletonPlugin):
             onboarding.hdx_user_onboarding,
             signin.hdx_signin,
             notification_platform.hdx_notifications,
+            mcp_auth.hdx_mcp_auth,
         ]
