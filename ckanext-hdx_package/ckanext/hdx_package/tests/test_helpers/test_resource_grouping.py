@@ -1,5 +1,4 @@
 import pytest
-from unittest.mock import patch
 
 from ckanext.hdx_package.helpers.resource_grouping import (
     set_show_groupings_flag,
@@ -9,13 +8,11 @@ from ckanext.hdx_package.helpers.resource_grouping import (
 
 
 class TestSetShowGroupingsFlag:
-    @patch('ckanext.hdx_package.helpers.resource_grouping.COD_VALUES_MAP')
-    def test_set_show_groupings_flag_with_cod_and_grouping(self, mock_cod_map):
+    @pytest.mark.parametrize('cod_level', ['cod-ab', 'cod-ps'])
+    def test_set_show_groupings_flag_with_cod_and_grouping(self, cod_level):
         """Test flag is set when COD level indicates COD and grouping exists"""
-        mock_cod_map.get.return_value = {'is_cod': True}
-
         dataset_dict = {
-            'cod_level': 'cod-standard',
+            'cod_level': cod_level,
             'x_resource_grouping': ['Group A', 'Group B'],
         }
 
@@ -24,15 +21,11 @@ class TestSetShowGroupingsFlag:
         # The function sets x_show_grouping to the grouping list itself when conditions are met
         assert 'x_show_grouping' in dataset_dict
         assert dataset_dict['x_show_grouping'] == ['Group A', 'Group B']
-        mock_cod_map.get.assert_called_once_with('cod-standard')
 
-    @patch('ckanext.hdx_package.helpers.resource_grouping.COD_VALUES_MAP')
-    def test_set_show_groupings_flag_with_cod_but_no_grouping(self, mock_cod_map):
+    def test_set_show_groupings_flag_with_cod_but_no_grouping(self):
         """Test flag is set to None when COD level indicates COD but no grouping"""
-        mock_cod_map.get.return_value = {'is_cod': True}
-
         dataset_dict = {
-            'cod_level': 'cod-standard',
+            'cod_level': 'cod-ab',
             'x_resource_grouping': None,
         }
 
@@ -40,13 +33,10 @@ class TestSetShowGroupingsFlag:
 
         assert dataset_dict['x_show_grouping'] is None
 
-    @patch('ckanext.hdx_package.helpers.resource_grouping.COD_VALUES_MAP')
-    def test_set_show_groupings_flag_with_non_cod(self, mock_cod_map):
+    def test_set_show_groupings_flag_with_non_cod(self):
         """Test flag is set to False when COD level indicates non-COD"""
-        mock_cod_map.get.return_value = {'is_cod': False}
-
         dataset_dict = {
-            'cod_level': 'non-cod',
+            'cod_level': 'not-cod',
             'x_resource_grouping': ['Group A'],
         }
 
@@ -54,8 +44,7 @@ class TestSetShowGroupingsFlag:
 
         assert dataset_dict['x_show_grouping'] is False
 
-    @patch('ckanext.hdx_package.helpers.resource_grouping.COD_VALUES_MAP')
-    def test_set_show_groupings_flag_without_cod_level(self, mock_cod_map):
+    def test_set_show_groupings_flag_without_cod_level(self):
         """Test flag is not set when no COD level"""
         dataset_dict = {
             'x_resource_grouping': ['Group A'],
@@ -64,15 +53,11 @@ class TestSetShowGroupingsFlag:
         set_show_groupings_flag(dataset_dict)
 
         assert 'x_show_grouping' not in dataset_dict
-        mock_cod_map.get.assert_not_called()
 
-    @patch('ckanext.hdx_package.helpers.resource_grouping.COD_VALUES_MAP')
-    def test_set_show_groupings_flag_with_empty_grouping_list(self, mock_cod_map):
+    def test_set_show_groupings_flag_with_empty_grouping_list(self):
         """Test flag is set to empty list when grouping list is empty"""
-        mock_cod_map.get.return_value = {'is_cod': True}
-
         dataset_dict = {
-            'cod_level': 'cod-standard',
+            'cod_level': 'cod-ps',
             'x_resource_grouping': [],
         }
 
@@ -80,42 +65,23 @@ class TestSetShowGroupingsFlag:
 
         assert dataset_dict['x_show_grouping'] == []
 
-    @patch('ckanext.hdx_package.helpers.resource_grouping.COD_VALUES_MAP')
-    def test_set_show_groupings_flag_cod_map_returns_none(self, mock_cod_map):
-        """Test raises AttributeError when COD_VALUES_MAP returns None"""
-        mock_cod_map.get.return_value = None
-
+    @pytest.mark.parametrize('cod_level', ['unknown-level', 'cod-standard', 'cod-enhanced', 'cod-candidate'])
+    def test_set_show_groupings_flag_unknown_cod_level(self, cod_level):
+        """Test a value that is not an allowed COD level (e.g. an old one) is treated as non-COD, without raising"""
         dataset_dict = {
-            'cod_level': 'unknown-level',
+            'cod_level': cod_level,
             'x_resource_grouping': ['Group A'],
         }
 
-        with pytest.raises(AttributeError, match="'NoneType' object has no attribute 'get'"):
-            set_show_groupings_flag(dataset_dict)
-
-    @patch('ckanext.hdx_package.helpers.resource_grouping.COD_VALUES_MAP')
-    def test_set_show_groupings_flag_cod_map_missing_is_cod_key(self, mock_cod_map):
-        """Test sets flag to None when COD map entry doesn't have is_cod key"""
-        mock_cod_map.get.return_value = {'some_other_key': 'value'}
-
-        dataset_dict = {
-            'cod_level': 'cod-standard',
-            'x_resource_grouping': ['Group A'],
-        }
-
-        # .get('is_cod') returns None, and None evaluates to None in 'and' expression
         set_show_groupings_flag(dataset_dict)
 
-        assert dataset_dict['x_show_grouping'] is None
+        assert dataset_dict['x_show_grouping'] is False
 
-    @patch('ckanext.hdx_package.helpers.resource_grouping.COD_VALUES_MAP')
-    def test_set_show_groupings_flag_preserves_grouping_list(self, mock_cod_map):
+    def test_set_show_groupings_flag_preserves_grouping_list(self):
         """Test that the original grouping list is set as x_show_grouping"""
-        mock_cod_map.get.return_value = {'is_cod': True}
-
         grouping_list = ['health', 'education', 'infrastructure']
         dataset_dict = {
-            'cod_level': 'cod-standard',
+            'cod_level': 'cod-ab',
             'x_resource_grouping': grouping_list,
         }
 

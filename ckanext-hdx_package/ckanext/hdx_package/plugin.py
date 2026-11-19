@@ -451,6 +451,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'hdx_compute_analytics': hdx_helpers.hdx_compute_analytics,
             'hdx_end_of_dataset_date': hdx_helpers.end_of_dataset_date,
             'hdx_is_ongoing_dataset_date': hdx_helpers.hdx_is_ongoing_dataset_date,
+            'hdx_is_cod': hdx_helpers.hdx_is_cod,
         }
 
     def get_actions(self):

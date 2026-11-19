@@ -25,7 +25,7 @@
   download_count      {int}     Approx downloads.  default: 0
   archived            {bool}    Show "Archived" label.  default: False
   request_only        {bool}    Show "Request only data" label.  default: False
-  cod_dataset         {bool}    Show "COD+" label.  default: False
+  cod_dataset         {bool}    Show "COD" label.  default: False
   links_list          {list}    {label, title, url, newTab} dicts.  default: []
   page_list           {list}    {title, href} dicts - ongoing crisis/event pages this
                                 dataset belongs to (rendered as "Part of {title}" +
@@ -178,7 +178,7 @@
           {% endif %}
 
           {% if cod_dataset %}
-            {% snippet 'v2/components/label.html', text='COD+', color='grey', size='s' %}
+            {% snippet 'v2/components/label.html', text='COD', color='grey', size='s' %}
           {% endif %}
 
           {% for link in links_list %}
