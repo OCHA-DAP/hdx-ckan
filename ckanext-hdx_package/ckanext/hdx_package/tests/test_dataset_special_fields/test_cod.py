@@ -2,12 +2,13 @@ import pytest
 import six
 
 import ckan.model as model
+import ckan.logic as logic
 
 from ckan.tests import factories
 
 import ckanext.hdx_theme.tests.hdx_test_with_inds_and_orgs as hdx_test_with_inds_and_orgs
 
-from ckanext.hdx_package.helpers.constants import COD_ENHANCED, COD_STANDARD, COD_CANDIDATE, COD_NOT
+from ckanext.hdx_package.helpers.constants import COD_AB, COD_PS, COD_NOT
 from ckanext.hdx_users.helpers.permissions import Permissions
 
 
@@ -41,20 +42,31 @@ class TestCod(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
         context_sysadmin = {'model': model, 'session': model.Session, 'user': 'testsysadmin'}
         context_cod_user = {'model': model, 'session': model.Session, 'user': 'cod_user'}
 
-        dataset_dict = self.__change_cod_field(context_sysadmin, COD_CANDIDATE)
-        assert dataset_dict.get('cod_level') == COD_CANDIDATE
+        dataset_dict = self.__change_cod_field(context_sysadmin, COD_AB)
+        assert dataset_dict.get('cod_level') == COD_AB
 
-        dataset_dict = self.__change_cod_field(context_sysadmin, COD_STANDARD)
-        assert dataset_dict.get('cod_level') == COD_STANDARD
-
-        dataset_dict = self.__change_cod_field(context_sysadmin, COD_ENHANCED)
-        assert dataset_dict.get('cod_level') == COD_ENHANCED
+        dataset_dict = self.__change_cod_field(context_sysadmin, COD_PS)
+        assert dataset_dict.get('cod_level') == COD_PS
 
         dataset_dict = self.__change_cod_field(context, COD_NOT)
-        assert dataset_dict.get('cod_level') == COD_ENHANCED, 'Normal editors shouldn\'t be allowed to change COD'
+        assert dataset_dict.get('cod_level') == COD_PS, 'Normal editors shouldn\'t be allowed to change COD'
 
-        dataset_dict = self.__change_cod_field(context_cod_user, COD_CANDIDATE)
-        assert dataset_dict.get('cod_level') == COD_CANDIDATE
+        dataset_dict = self.__change_cod_field(context_cod_user, COD_AB)
+        assert dataset_dict.get('cod_level') == COD_AB
+
+        dataset_dict = self.__change_cod_field(context_cod_user, COD_NOT)
+        assert dataset_dict.get('cod_level') == COD_NOT
+
+    @pytest.mark.parametrize('old_cod_value', ['cod-standard', 'cod-enhanced', 'cod-candidate'])
+    def test_old_cod_values_rejected(self, old_cod_value):
+        '''
+        Tests that the COD levels that were replaced by cod-ab / cod-ps are not accepted anymore
+        '''
+        context_sysadmin = {'model': model, 'session': model.Session, 'user': 'testsysadmin'}
+
+        with pytest.raises(logic.ValidationError) as exc_info:
+            self.__change_cod_field(context_sysadmin, old_cod_value)
+        assert 'cod_level' in exc_info.value.error_dict
 
     def __change_cod_field(self, context, cod_value):
         return self._get_action('package_patch')(context,

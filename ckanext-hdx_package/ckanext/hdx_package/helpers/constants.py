@@ -22,13 +22,13 @@ DOCUMENTATION_LINKS = {
     'RESOURCES_FOR_DEVELOPERS': 'https://docs.humdata.org/build',
     'DATA_LICENSES': 'https://docs.humdata.org/about/data-licenses',
     'NOTIFICATIONS': 'https://docs.humdata.org/find/staying-up-to-date-with-hdx',
+    'COD': 'https://docs.humdata.org/about/cod',
 }
 
 TABULAR_DATA_EXPLANATION_LINK = DOCUMENTATION_LINKS['TABULAR_DATA_ENDPOINTS']
 
-COD_ENHANCED = 'cod-enhanced'
-COD_STANDARD = 'cod-standard'
-COD_CANDIDATE = 'cod-candidate'
+COD_AB = 'cod-ab'
+COD_PS = 'cod-ps'
 COD_NOT = 'not-cod'
 
 COD_VALUES_MAP = OrderedDict((
@@ -38,30 +38,16 @@ COD_VALUES_MAP = OrderedDict((
          'is_cod': False,
      }
      ),
-    (COD_CANDIDATE,
+    (COD_AB,
      {
-         'title': 'Candidate COD',
+         'title': 'COD Admin Boundaries',
          'is_cod': True,
-         'explanation': 'A dataset that is considered a starting point for the COD process and is generally '
-                        'considered to be the best-available dataset for the given location. '
-                        'Available as downloadable files.',
      }
      ),
-    (COD_STANDARD,
+    (COD_PS,
      {
-         'title': 'Standard COD',
+         'title': 'COD Population Stats',
          'is_cod': True,
-         'explanation': 'A COD that has been accepted for use by the humanitarian community, but has not yet gone '
-                        'through the standardization process to become an enhanced COD. '
-                        'Available as downloadable files.',
-     }
-     ),
-    (COD_ENHANCED,
-     {
-         'title': 'Enhanced COD',
-         'is_cod': True,
-         'explanation': 'A COD that has been standardized. Available in a range of formats and '
-                        'machine-readable services.'
      }
      ),
 ))
@@ -69,7 +55,17 @@ COD_VALUES_MAP = OrderedDict((
 for i, cod_value in enumerate(COD_VALUES_MAP.values()):
     cod_value['index'] = i
 
-COD_GROUP_EXPLANATION_LINK = 'https://storymaps.arcgis.com/stories/dcf6135fc0e943a9b77823bb069e2578'
+
+def is_cod_level(cod_level):
+    '''
+    :param cod_level: a dataset's ``cod_level`` value (may be missing or not an allowed value)
+    :return: True if the value is an allowed COD level that marks the dataset as a COD
+    :rtype: bool
+    '''
+    return bool(COD_VALUES_MAP.get(cod_level, {}).get('is_cod'))
+
+
+COD_GROUP_EXPLANATION_LINK = DOCUMENTATION_LINKS['COD']
 
 UPDATE_FREQ_LIVE = '0'
 

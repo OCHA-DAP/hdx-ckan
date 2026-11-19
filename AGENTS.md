@@ -20,7 +20,7 @@ These files contain essential context about the project's architecture, design s
 2. Apply the conventions described there when generating or modifying code.
 3. When new architectural decisions are made, update the relevant file in [`ckanext-hdx_theme/llm_docs/`](ckanext-hdx_theme/llm_docs/) so the context stays accurate.
 4. When a task is marked `implemented`, update the requirement file: replace the **Open questions** section with a **Decisions Taken** table (one row per question, recording the actual resolution), and **remove** the Verification section — it has served its purpose.
-5. When creating or updating a requirement file, follow the lifecycle rules in [`ckanext-hdx_theme/llm_docs/redesign/requirements/prompt-template.md`](ckanext-hdx_theme/llm_docs/redesign/requirements/prompt-template.md). Key rule: never add a `**Status**` field to a requirement file — status lives only in `STATUS.md`.
+5. When creating or updating a requirement file (in any category: `redesign/requirements/`, `metadata-fields/requirements/`), follow the lifecycle rules in [`ckanext-hdx_theme/llm_docs/redesign/requirements/prompt-template.md`](ckanext-hdx_theme/llm_docs/redesign/requirements/prompt-template.md). Key rule: never add a `**Status**` field to a requirement file — status lives only in that category's `STATUS.md`.
 
 ## Local stack (Docker)
 - A file that is replaced rather than written in place can stay stale inside the container. Many edit tools and git checkout/pull do this: they write a temp file and rename it over the original. After changing files, rewrite them in place, and compare checksums on the host and in the container when in doubt.

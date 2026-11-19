@@ -11,11 +11,14 @@ Possible values:
 ====================   =========================
 value name             display name
 ====================   =========================
-not-cod                ---
-cod-candidate          Candidate COD
-cod-standard           Standard COD
-cod-enhanced           Enhanced COD
+not-cod                Not COD
+cod-ab                 COD Admin Boundaries
+cod-ps                 COD Population Stats
 ====================   =========================
+
+Any other value is rejected with a validation error. The former values *cod-candidate*, *cod-standard* and
+*cod-enhanced* are no longer accepted. Only users with the COD update permission can change this field; for other
+users the submitted value is ignored and the previous value is kept.
 
 Resource-level Data Time Period
 +++++++++++++++++++++++++++++++

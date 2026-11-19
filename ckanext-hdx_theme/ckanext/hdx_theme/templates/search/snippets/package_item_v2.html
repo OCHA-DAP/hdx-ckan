@@ -127,10 +127,8 @@
   {% if package.archived %}
     {% set formats_val = formats_val + [{'type': 'archived', 'text': '', 'icon_src': 'v2/icons/archive.svg'}] %}
   {% endif %}
-  {% if package.cod_level == 'cod' %}
+  {% if h.hdx_is_cod(package) %}
     {% set formats_val = formats_val + [{'type': 'cod', 'text': 'COD', 'icon_src': ''}] %}
-  {% elif package.cod_level == 'cod-enhanced' %}
-    {% set formats_val = formats_val + [{'type': 'cod_plus', 'text': 'COD+', 'icon_src': ''}] %}
   {% endif %}
 
   {# ── formats: step 2 — resource extension badges ─────────── #}
