@@ -136,7 +136,9 @@ Advanced filters                      Dataset card            Dataset page heade
      removes the `'cod'` / `'cod-enhanced'` comparisons.
    - `page-header.html`: label text `COD+` → `COD`. The `cod_dataset` param and `hdx_read.html` stay
      as they are.
-   - `package_icons_cod.html` (v1): unchanged — its `+` suffix check simply stops matching.
+   - `package_icons_cod.html` (v1 card, still used by the showcase page, the QA dashboard and the v1
+     search list): shown via `h.hdx_is_cod` instead of any non-empty `cod_level` (so `not-cod` and old
+     values get no badge), text always `COD` (the `cod-enhanced` → `+` suffix is removed).
 6. **`page_group_list`** (`ckanext-hdx_pages/actions/get.py`), same pattern as `page_show` in that
    file: missing `id` → `logic.ValidationError({'id': _('Missing value')})` (409); `Page.get_by_id()`
    returns `None` → `NotFound` (404); otherwise pass `page.id` to `get_group_ids_for_page()`. Return
@@ -145,6 +147,9 @@ Advanced filters                      Dataset card            Dataset page heade
    `test_resource_grouping.py`; add tests for the COD facet category (names, order, counts); in
    `ckanext-hdx_pages/tests/test_api.py`, `page_group_list` with a missing `id`
    (ValidationError) and an unknown page (NotFound).
+8. **Field reference** `ckanext-hdx_theme/docs/special_fields/index.rst`: the `cod_level` table lists
+   `not-cod`, `cod-ab`, `cod-ps` with their display names; it notes that the old values are rejected and
+   that changes from users without the COD permission are ignored.
 
 ### 3.2 Release sequence
 
@@ -221,6 +226,8 @@ gitignored). Python + `requests` against the CKAN action API.
 | `ckanext-hdx_package/.../helpers/helpers.py`, `plugin.py` | New template helper `hdx_is_cod` |
 | `ckanext-hdx_theme/.../templates/search/snippets/package_item_v2.html` | `COD` badge for any COD level via `h.hdx_is_cod` |
 | `ckanext-hdx_theme/.../templates/v2/components/page-header.html` | Label text `COD+` → `COD` (+ param doc) |
+| `ckanext-hdx_theme/.../templates/search/snippets/package_icons_cod.html` | v1 badge: shown via `h.hdx_is_cod`, text always `COD` |
+| `ckanext-hdx_theme/docs/special_fields/index.rst` | `cod_level` values table: `not-cod`, `cod-ab`, `cod-ps`; old values rejected |
 | `ckanext-hdx_pages/.../actions/get.py` | `page_group_list`: 409 missing `id`, 404 unknown page |
 | `ckanext-hdx_package/.../tests/test_dataset_special_fields/test_cod.py` | New values, permission rule, old values rejected |
 | `ckanext-hdx_package/.../tests/test_helpers/test_resource_grouping.py` | Real values instead of mocking `COD_VALUES_MAP`; unknown/old value → no grouping, no exception |
