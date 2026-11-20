@@ -132,6 +132,30 @@
         text-transform: uppercase;
     }
 
+    &--has-info {
+        .c-list-item__label {
+            flex: 0 1 auto;
+        }
+
+        .c-list-item__count {
+            margin-left: auto;
+        }
+    }
+
+    &__info {
+        &.c-info-icon {
+            color: var(--hdx-primary-5);
+        }
+
+        &:hover {
+            color: var(--hdx-neutral-95);
+        }
+
+        &:focus-visible {
+            .hdx-focus-ring();
+        }
+    }
+
     // Parent "select all" row — medium weight label
     &--parent {
         .c-list-item__label {

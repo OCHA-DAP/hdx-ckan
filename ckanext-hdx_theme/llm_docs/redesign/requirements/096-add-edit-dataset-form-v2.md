@@ -739,6 +739,7 @@ No shared v1/v2 snippet is involved, so no `v2=true` branching is needed.
 | D51 | Page fetch wrappers (CONVENTIONS: no local wrappers) | `hdxV2.post` + JSON bodies / form posts only / keep | `hdxV2.post` + JSON | **Every POST goes through `hdxV2.post`**, which sends a plain-object body as JSON; the API replies are checked for `success` |
 | D52 | Unused v1 ids; unreferenced Time Period hint | drop + wire / drop / wire / keep | Drop + wire | **v1 ids nothing reads are dropped** (the 12 quick-edit ids stay); the Time Period fieldset is `aria-describedby` its hint |
 | D53 | jQuery in page JS (vanilla rule) | vanilla reads + doc / doc only / `select.js` native events | Vanilla reads + doc | **jQuery only to listen to or set a Select2 field** (Select2 fires `change` through jQuery only); value reads are vanilla |
+| D54 | Section 3 "this support page" link (the old Centre metadata page) | `DOCUMENTATION_LINKS` key / inline URL | `DOCUMENTATION_LINKS` key | **`DOCUMENTATION_LINKS['METADATA']`** (docs.humdata.org/about/hdx-metadata); the link title is "HDX Metadata" |
 
 ---
 
@@ -754,6 +755,7 @@ No shared v1/v2 snippet is involved, so no `v2=true` branching is needed.
 | `THEME/fanstatic/v2/contribute.js`, `THEME/templates/v2/page.html` (block `contribute_widget`), `THEME/templates/v2/contribute-popup.html` (new), `LESS/layout.less`, `THEME/templates/v2/header.html` | Iframe link capture for the v2 header and footer, `#addDataPopup` null check, dialog semantics (D1, D31); `show_add_data` (D37) |
 | `THEME/templates/v2/components/{radio,info-box,image-upload,config-item,select,slug-preview,text-field,text-button,file-type-icon}.html`, `THEME/fanstatic/v2/components/{select,config-item,image-upload}.js`, `THEME/fanstatic/v2/utils.js`, matching `LESS/components/*.less` (`input-field.less` for the text-field, `buttons.less` for the text-button, `label.less` for `c-file-type`), `LESS/components/anchor-links.less` | Component options (D12, D19, D20, D23, D25, D43, D44, D48, D49, D50); config-item `delete_icon_position` (C11); anchor-links `[hidden]` steps; `hdxV2.post` JSON bodies (D51) |
 | `THEME/helpers/constants.py`, `THEME/helpers/helpers.py` | `FORMAT_ICON_CATEGORIES`, read by `hdx_format_to_icon_category` (D49) |
+| `PKG/helpers/constants.py` | `DOCUMENTATION_LINKS['METADATA']` (D54) |
 | `THEME/templates/v2/components/date-picker.html`, `LESS/components/date-picker.less`, `THEME/fanstatic/v2/components/date-picker.js` (new), `LESS/components/dropdown.less` | D17, D32, D44 |
 | `THEME/templates/v2/components.html` | Demo entries for visual component changes |
 | `PKG/tests/test_pages/test_dataset.py` | D30 |

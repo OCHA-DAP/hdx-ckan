@@ -148,7 +148,7 @@ CSS custom property equivalents (`--hdx-*`) are defined in `v2/foundation.css` (
 - [x] Text link
 - [x] Breadcrumb
 - [x] Checkbox
-- [x] List item — optional leading icon (`icon`/`icon_src`, `--has-icon`)
+- [x] List item — optional leading icon (`icon`/`icon_src`, `--has-icon`); checklist "Learn more" info-icon link (`info_href`, `--has-info`)
 - [x] Letter anchor
 - [x] Divider
 - [x] Search + autocomplete

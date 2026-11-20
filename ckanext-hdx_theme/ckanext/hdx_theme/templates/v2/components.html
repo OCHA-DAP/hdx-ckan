@@ -1155,7 +1155,7 @@
             panel_id='demo-panel',
             items=[
               {'value': 'af', 'label': 'Afghanistan', 'count': '(309)', 'checked': True,  'active': True,  'attrs': {}},
-              {'value': 'al', 'label': 'Albania',     'count': '(97)',  'checked': False, 'active': False, 'attrs': {}},
+              {'value': 'al', 'label': 'Albania',     'count': '(97)',  'checked': False, 'active': False, 'attrs': {}, 'info_href': '#'},
               {'value': 'dz', 'label': 'Algeria',     'count': '(21)',  'checked': False, 'active': False, 'attrs': {}},
               {'value': 'ao', 'label': 'Angola',      'count': '(57)',  'checked': True,  'active': True,  'attrs': {}},
             ],
@@ -2026,6 +2026,15 @@
       <div class="demo-row__items">
         {% snippet 'v2/components/list-item.html',
             type='checklist', label='Afghanistan', count='(309)', checked=true, state='active' %}
+      </div>
+    </div>
+
+    <div class="demo-row">
+      <span class="demo-row__label">With "Learn more" link (info_href)</span>
+      <div class="demo-row__items">
+        {% snippet 'v2/components/list-item.html',
+            type='checklist', label='Afghanistan', count='(309)', checked=false, state='default',
+            info_href='#' %}
       </div>
     </div>
   </section>

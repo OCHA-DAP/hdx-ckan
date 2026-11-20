@@ -186,7 +186,7 @@ On button click → full-page overlay:
 ### Component API notes
 
 - **`checkbox.html`**: params `id`, `checked`, `disabled`, `name`, `value`, `attrs`, `extra_classes`. No `wrapper_tag` — always renders `<span>`.
-- **`list-item.html`**: params `type`, `label`, `size`, `state`, `checked`, `value`, `count`, `href`, `attrs`, `extra_classes`. No `tag` — checklist always renders `<label>`.
+- **`list-item.html`**: params `type`, `label`, `size`, `state`, `checked`, `value`, `count`, `href`, `info_href`, `attrs`, `extra_classes`. No `tag` — checklist always renders `<label>`. Checklist `info_href` adds an info-icon link right after the label (new tab, hover "Learn more"; blue, dark on hover, unlike the grey tooltip info icons); the count stays right-aligned.
 - **`dropdown.html`**: full-wrapper component. States: `'enabled'` | `'active'` (open) | `'disabled'` | `'filter'`. Trigger params: `size`, `label`, `placeholder`, `selected`, `count`, `state`, `icon`, `icon_src`, `chevron_src`, `extra_classes`, `attrs`, `panel_id`, `button_attrs`. Panel params: `items` (unified list), `navigate` (bool), `has_search`, `filter_search_key`, `has_clear`, `clear_facet`. Panel rendering is delegated to `dropdown-panel.html`.
 - **`list-item.html`**: `type='list'` supports `attrs` (rendered on outer `<div>`/`<a>`), `state='active'` (adds `is-active`), and `tooltip` (renders as `title` attribute). `type='checklist'` always renders `<label>`; `attrs` applied to inner `<input>`.
 
@@ -243,6 +243,8 @@ Each item in that list is one of:
 - **Category item** (HPC): `{category_key: 'vocab_Topics', name: 'ALL', display_name: 'HPC', items: [...]}`
 
 Template renders hierarchy — parent "select all" row + indented children for category items.
+
+Any filter item (basic, advanced or sysadmin) with an `explanation_link` passes it as `info_href`, so v1's "Learn more" link returns as an info icon. Today the search logic sets it on Tabular Data Endpoints, CODs and HPC.
 
 "Clear selection" in the Advanced filters panel:
 - Clears: all `ADVANCED_FILTER_PARAMS` (`ext_subnational`, `ext_geodata`, `ext_p_coded`, `ext_tabular_data`, `ext_hdx_hapi`, `cod_level`)
