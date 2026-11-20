@@ -1,11 +1,4 @@
-{% extends "page_light.html" %}
-{% import 'macros/form.html' as form %}
-
-{% block styles %}
-  {% asset 'hdx_theme/page-extra-light-styles' %}
-  {% asset 'hdx_theme/bem-blocks-styles' %}
-  {% asset 'hdx_theme/contribute-flow-styles' %}
-{% endblock %}
+{% extends "v2/page.html" %}
 
 {# The line below is for google analytics #}
 {% block analytics_org_name %}{{ analytics.organizationName }}{% endblock %}
@@ -24,1041 +17,532 @@
 {% block subtitle %}{{ page_title }}{% endblock %}
 
 {% set data = data if data else h.generate_mandatory_fields() %}
-{% set errors = {} %}
 
 {% set user_is_sysadmin = h.check_access('sysadmin') %}
+{% set is_requestdata = data.private == 'requestdata' or data.is_requestdata_type == True %}
+{% set share_mode = 'requestdata' if is_requestdata else ('public' if data.private == False and data.is_requestdata_type == False else 'private') %}
+{% set is_overdue = data.id and not data.get('update_status') == 'unknown' and not data.is_fresh %}
+
+{% set outer_row_class = 'hdx-v2-dataset-form-row' %}
+{% set columns_class   = 'hdx-v2-content-columns--gap-xl' %}
+{% set sidebar_class   = 'hdx-v2-content-columns__sidebar hdx-v2-content-columns__sidebar--xl-only hdx-v2-dataset-form-sidebar' %}
+{% set content_class   = 'hdx-v2-content-columns__content hdx-v2-dataset-form-content' %}
 
 {% block contribute_widget %}{% endblock %}
 
-{% block breadcrumb_content %}
-  {% snippet "snippets/active_breadcrumb_item.html", title=page_title, position=2 %}
-{% endblock %}
-
 {% block header_core %}
-  {% snippet 'header-mobile.html', page_has_desktop_version=False, page_has_mobile_version=False %}
+  {% snippet 'v2/header.html', quick_links=quick_links, show_add_data=False %}
 {% endblock %}
 
-{% block content %}
+{% block breadcrumb_items %}
+  {% snippet 'v2/components/breadcrumb.html', items=[{'label': page_title, 'href': ''}] %}
+{% endblock %}
 
-  {{ h.snippet('widget/contribute/user_waiting.html', id="userWaitingPopup", initial_text=_('Please wait ...'), show_widget=True) }}
+{% block styles %}
+  {{ super() }}
+  {% asset 'hdx_theme/v2-select2-styles' %}
+  {% asset 'hdx_theme/v2-dataset-form-page-styles' %}
+{% endblock %}
 
-  {% if data.resources %}
-    {# Embed up to 20 resources inline; larger datasets are fetched lazily via AJAX
-       by the Backbone collection (package_show_edit endpoint). #}
-    {% if data.resources | length <= 20 %}
-      <script id="resource-list-json" type="application/json">{{ h.escaped_dump_json(data.resources)|safe }}</script>
+{% block secondary_content %}
+  {% set steps = [
+      {'label': _('Choose how to share'), 'href': '#choose-how-to-share', 'active': True},
+      {'label': _('Describe dataset'), 'href': '#describe-dataset'},
+      {'label': _('Additional information'), 'href': '#additional-information'},
+      {'label': _('Upload files'), 'href': '#upload-files'},
+      {'label': _('Add automatic data previews'), 'href': '#data-previews'},
+      {'label': _('Add data visualisations'), 'href': '#data-visualisations'}] %}
+  {% if edit_mode %}
+    {% set steps = steps + [{'label': _('Archive dataset'), 'href': '#archive-dataset'}] %}
+  {% endif %}
+  {% snippet 'v2/components/anchor-links.html',
+      items=steps, heading=page_title,
+      extra_classes='c-anchor-links--numbered' %}
+{% endblock %}
+
+{% block primary %}
+  {% set doc_links = h.HDX_CONST('DOCUMENTATION_LINKS') %}
+  {% set markdown_url = 'https://daringfireball.net/projects/markdown/syntax' %}
+  {% set slug_prefix = h.url_for('dataset.read', id='', qualified=true) | replace('http://', '') | replace('https://', '') %}
+  {% set date_parts = (data.dataset_date or '').split('TO') %}
+  {% set date_start = date_parts[0] if date_parts | length > 1 else '' %}
+  {% set date_end = date_parts[1] if date_parts | length > 1 else '' %}
+
+  {% set organisation_options = {} %}
+  {% for option in h.hdx_organisation_list() %}{% do organisation_options.update({option.value: option.text}) %}{% endfor %}
+  {% set frequency_options = {} %}
+  {% for option in h.hdx_frequency_list(user_is_sysadmin, data.data_update_frequency) %}{% do frequency_options.update({option.value: option.text}) %}{% endfor %}
+  {% set location_options = {} %}
+  {% for option in h.hdx_location_list() %}{% do location_options.update({option.value: option.text}) %}{% endfor %}
+  {% set license_options = {} %}
+  {% for option in h.hdx_license_list() %}{% do license_options.update({option.value: option.text}) %}{% endfor %}
+  {% set methodology_options = {} %}
+  {% for option in h.hdx_methodology_list() %}{% do methodology_options.update({option.value: option.text}) %}{% endfor %}
+  {% set tag_options = {} %}
+  {% for option in h.hdx_get_allowed_tags_list() %}{% do tag_options.update({option.value: option.text}) %}{% endfor %}
+  {% set preview_options = {} %}
+  {% for option in h.hdx_dataset_preview_values_list() %}{% do preview_options.update({option.value: option.text}) %}{% endfor %}
+  {% set selected_tags = data.tag_string.split(', ') if data.tag_string else [] %}
+  {% set field_names = data.field_names.split(',') if data.field_names else [] %}
+  {% set file_types = data.file_types.split(',') if data.file_types else [] %}
+  {% set field_name_options = {} %}
+  {% for value in field_names %}{% do field_name_options.update({value: value}) %}{% endfor %}
+  {% set file_type_options = {} %}
+  {% for value in file_types %}{% do file_type_options.update({value: value}) %}{% endfor %}
+  {% set custom_viz_urls = (data.customviz or []) | map(attribute='url') | list or [''] %}
+  {% set required_mark %}<span class="c-form-field__required" aria-hidden="true"> *</span>{% endset %}
+
+  <header class="hdx-v2-dataset-form__header">
+    <h1 class="hdx-v2-dataset-form__title">{{ page_title }}</h1>
+    <p class="hdx-v2-dataset-form__intro">{{ _('This form will guide you through the process of describing your dataset and uploading files (where necessary).') }}</p>
+    <p class="hdx-v2-dataset-form__note">{{ _('Required sections and fields are marked with an asterisk (*).') }}</p>
+    {% if is_overdue %}
+      {% set due_date = h.hdx_get_due_overdue_date(data, format='%B %-d, %Y') %}
+      {% snippet 'v2/components/alert.html',
+          variant='warning', dismissible=False,
+          message=_("This dataset's update date was <strong>{date}</strong>. Please check or update the Resources or Expected Update Frequency.").format(date=due_date | default('N/A', True)) %}
     {% endif %}
+  </header>
+
+  {% if data.resources and data.resources | length <= 20 %}
+    <script id="resource-list-json" type="application/json">{{ h.escaped_dump_json(data.resources) | safe }}</script>
   {% endif %}
 
-  {{ h.snippet('widget/contribute/private-dataset-info.html', id="privateDatasetInfoPopup") }}
-  {{ h.snippet('widget/contribute/contribute-dataset-review.html', id="contributeDatasetReviewPopup") }}
-  {{ h.snippet('widget/tags/request-tags.html', id="requestTagsPopup") }}
-  {{ h.snippet('widget/tags/request-tags-confirmation.html', id="requestTagsConfirmationPopup") }}
+  <form id="create_dataset_form" class="hdx-v2-dataset-form" method="post" enctype="multipart/form-data" novalidate
+        data-dataset-form
+        data-dataset-id="{{ data.id or '' }}"
+        data-dataset-requestdata="{{ 'true' if data.is_requestdata_type == True else 'false' }}"
+        data-search-url="{{ h.url_for('hdx_dataset.search') }}"
+        data-format-categories="{{ h.dump_json(h.HDX_CONST('FORMAT_ICON_CATEGORIES')) }}"
+        data-messages="{{ h.dump_json({
+          'validating': _('Validating…'),
+          'savingDataset': _('Saving dataset…'),
+          'savingFile': _('Saving file {n} of {total}'),
+          'savingFileProgress': _('Saving file {n} of {total}: {percent}%%'),
+          'almostDone': _('Almost done…'),
+          'wait': _('Please wait…'),
+          'atLeastOneFile': _('Please add at least 1 resource to the dataset'),
+          'serverError': _('A connection or server error occurred. Please try again in a few moments or contact HDX support.'),
+          'fileSaveError': _('File {n} could not be saved. The dataset was saved without it. Please check the file and submit again.'),
+          'missingValue': _('Missing value'),
+          'archiveFormat': _('Please indicate the primary format of the data files inside your compressed file.'),
+          'previewDefault': _('Default (first resource with preview)'),
+          'resourceName': _('Resource {n}')}) }}">
+    {{ h.csrf_input() }}
 
-  <div class="new-contribute-main" data-module="contribute_flow_main" {% if data.id %}
-       data-module-dataset_id="{{ data.id }}" {% endif %}>
-    <div id="create-dataset-app">
-      <div class="hdx-contribute-form container create-step2 {{ 'edit-mode' if edit_mode else '' }}">
-        <div class="row">
-          <form id="create_dataset_form" class="col-10 mt-5 mx-auto" method="post" enctype="multipart/form-data"
-                data-module="basic-form" novalidate>
-            {{ h.csrf_input() }}
-            {% if data.is_requestdata_type %}
-              <input type="hidden" name="_is_requestdata_type" value="true" id="_is_requestdata_type"/>
-            {% endif %}
-            <div>
-              {{ h.snippet('bem.blocks/heading.html',
-                                    title=page_title,
-                                    heading_type=1,
-                                    spacing_class="mb-3") }}
-              {{ h.snippet('bem.blocks/paragraph.html',
-                                    text='This form will guide you through the process of describing your dataset and uploading files (where necessary).',
-                                    paragraph_classes=["paragraph__text_font-size-medium"]) }}
+    {% snippet 'v2/components/alert.html', hidden=True, dismissible=False, extra_attrs='data-dataset-form-error tabindex="-1"' %}
 
-              {{ h.snippet('bem.blocks/form_info.html', message='Required sections and fields are marked with an asterisk (*).', spacing_class="mb-3") }}
-
-
-              {% if data.id and not data.get('update_status') == 'unknown' and not data.is_fresh %}
-                {% set due_date = h.hdx_get_due_overdue_date(data) %}
-                <div class="alert alert-danger">
-                  <p class="mb-0">This dataset's update date was <strong>{{ due_date | default("N/A", True) }}</strong>.
-                    Please check or update the Resources or Expected Update Frequency.</p>
-                </div>
-              {% endif %}
-
-              <div id="hdx_error" class="error-explanation alert alert-danger d-none"
-                   data-module="hdx_error_block_manager"
-                   data-module-default_error_message="{{ _('The form contains invalid entries. These are highlighted below. Please scroll down and correct them.') }}">
-                <p class="mb-0"></p>
-              </div>
-
-              {{ h.snippet('bem.blocks/hr.html', color='black', spacing_class="my-4") }}
-
-              <div class="form-section form-privacy-section contribute-form-container-items">
-                <div class="row">
-                  <div class="col-4">
-                    {{ h.snippet('bem.blocks/heading.html',
-                                        title='1. Choose how to share',
-                                        heading_type=6,
-                                        required=True,
-                                        spacing_class="mb-3") }}
-                    {{ h.snippet('bem.blocks/paragraph.html',
-                                        text='Choose how you want to share your data on HDX.') }}
-                  </div>
-                  <div class="col-8">
-                    {{ h.snippet('bem.blocks/radio_field.html',
-                                          name='private',
-                                          id='radio_private_public',
-                                          value='public',
-                                          checked=data.private == False and data.is_requestdata_type == False,
-                                          label='Upload data to HDX and publish it openly (Recommended)',
-                                          label_guideline_title='Share your organisation\'s data with the HDX community. Files will be accessible to anyone and must not include Personally Identifiable Information (PII).',
-                                          spacing_class="mb-3") }}
-                    <div id="dataset-is-public-description" class="ms-4 mb-3"
-                         style="{% if not (data.private == False and data.is_requestdata_type == False) %}display: none;{% endif %}">
-                      The HDX team manually reviews every dataset uploaded to the platform as part of a standard
-                      quality assurance (QA) process. This includes basic checks on the quality and sensitivity of
-                      every resource. This helps ensure a high standard for all data shared on HDX. Learn more about the
-                      <a href="{{ h.HDX_CONST('DOCUMENTATION_LINKS')['QA_PROCESS'] }}" target="_blank">HDX QA process</a>.
-                    </div>
-                    {{ h.snippet('bem.blocks/radio_field.html',
-                                          name='private',
-                                          value='requestdata',
-                                          id='radio_private_requestdata',
-                                          checked=data.private == 'requestdata' or data.is_requestdata_type == True,
-                                          label='List dataset on HDX without uploading files (HDX Connect)',
-                                          label_guideline_title='List sensitive data without uploading files. Decide on access requests via HDX Connect and provide files directly if approved.',
-                                          spacing_class="mb-3") }}
-                    <div id="requestdata_type_notification"
-                         class="error-explanation alert alert-danger d-none ms-4 mb-3">
-                      <p class="mb-0">You are switching your dataset's privacy setting to "By request - <a
-                        href="https://data.humdata.org/faq#auto-faq-Sharing_and_Using_Data-How_do_I_share_data_on_HDX_-a"
-                        title="HDX Connect" target="_blank">HDX Connect</a>". <u>All existing resources will be
-                        deleted</u> when you submit this change.</p>
-                    </div>
-                    {{ h.snippet('bem.blocks/radio_field.html',
-                                          name='private',
-                                          value='private',
-                                          id='radio_private_private',
-                                          checked=data.private == '' or data.private == True,
-                                          label='Share data privately within your organisation',
-                                          label_guideline_title='Only members of your organisation will be able to search, view, edit, or download the dataset.') }}
-                  </div>
-                </div>
-              </div>
-
-              {{ h.snippet('bem.blocks/hr.html', color='black', spacing_class="my-4") }}
-
-              <section class="contribute-form-container-items">
-                {% if data.resource_grouping %}
-                  <input id="field_resource_grouping" type="hidden" name="resource_grouping"
-                         value="{{ data.resource_grouping }}"/>
-                {% endif %}
-                <div class="form-section">
-                  <div class="row">
-                    <div class="col-4">
-                      {{ h.snippet('bem.blocks/heading.html',
-                                              title='2. Describe dataset',
-                                              heading_type=6,
-                                              required=True,
-                                              spacing_class="mb-3") }}
-                      {{ h.snippet('bem.blocks/paragraph.html',
-                                              text='Provide a clear and concise Title and Description for your dataset to help others find, understand and use it effectively.') }}
-                    </div>
-                    <div class="col-8">
-                      <div data-module="hdx_form_element_manager_bem" data-module-element_name="title"
-                           data-module-required="private,public,requestdata" data-module-broadcast_change="true">
-                        {{ h.snippet('bem.blocks/input_field.html',
-                                                  type="text",
-                                                  name="title",
-                                                  id="field_title",
-                                                  label='Title',
-                                                  placeholder='Example: Thailand: Rainfall Indicators at Subnational Level',
-                                                  dynamic_required=True,
-                                                  value=data.title,
-                                                  errors=errors.title,
-                                                  label_guideline_title='The text you provide here will appear at the top of the dataset page.',
-                                                  data_attributes={'module': 'slug-preview-target'},
-                                                  spacing_class="mb-2") }}
-                        {{ h.snippet('bem.blocks/info_box.html',
-                                                    compact=True,
-                                                    rounded=True,
-                                                    icon=False,
-                                                    paragraph_classes=['paragraph__text_font_size-small'],
-                                                    paragraphs=['Tip: Use clear, specific titles like [Country] - [Topic/Theme], avoiding abbreviations, dates, or terms like “current” or “latest.” Include dates in the additional information or file description. Example: "Haiti - Operational Presence", “Palestine - Conflict Events”. All titles should be written in <a href="{0}" title="Title case" target="_blank">Title case</a> i.e. all words should be capitalised except for minor words.'.format('https://en.wikipedia.org/wiki/Title_case')],
-                                                    spacing_class="mb-4") }}
-                      </div>
-
-                      {% set domain = h.url_for('dataset.read', id='', qualified=true) %}
-                      {% set domain = domain|replace("http://", "")|replace("https://", "") %}
-
-                      <div data-module="hdx_form_element_manager_bem" data-module-element_name="name"
-                           data-module-required="private,public,requestdata">
-                        {% set slug_locale = h.dump_json({'URL': 'This is how the URL will appear on HDX, you can change this through the ‘Edit’ button:'}) %}
-                        {{ h.snippet('bem.blocks/input_field.html',
-                                                  type="text",
-                                                  name="name",
-                                                  id="field_name",
-                                                  label='URL/Slug',
-                                                  prepend=config.get('ckan.site_url')|replace('https://', '') ~ '/dataset/',
-                                                  placeholder='this-is-auto-generated-based-on-the-title-above',
-                                                  required=True,
-                                                  value=data.name,
-                                                  errors=errors.name,
-                                                  label_guideline_title='This is how the URL will appear on HDX.',
-                                                  data_attributes={'module': 'slug-preview-slug', 'module-prefix': domain, 'module-i18n': slug_locale},
-                                                  spacing_class="mb-3") }}
-                        <!-- .mb-3 spacing class is mandatory here! -->
-                      </div>
-
-                      <div data-module="hdx_form_element_manager_bem" data-module-element_name="notes"
-                           data-module-required="public,requestdata">
-                        {{ h.snippet('bem.blocks/textarea_field.html',
-                                                    name='notes',
-                                                    id='field_notes',
-                                                    label='Description',
-                                                    rows=6,
-                                                    dynamic_required=True,
-                                                    value=data.notes,
-                                                    errors=errors.notes,
-                                                    label_guideline_title='Explain what is in the dataset and how it might be useful.',
-                                                    spacing_class="mb-2") }}
-                        {{ h.snippet('bem.blocks/info_box.html',
-                                                    compact=True,
-                                                    rounded=True,
-                                                    icon=False,
-                                                    paragraph_classes=['paragraph__text_font_size-small'],
-                                                    paragraphs=['Tip: Provide specific details about the dataset, including its purpose, context, potential use. Use <a href="{0}" title="markdown formatting" target="_blank">Markdown formatting</a> to add links to other resources.'.format('https://daringfireball.net/projects/markdown/syntax')]) }}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {{ h.snippet('bem.blocks/hr.html', color='black', spacing_class="my-4") }}
-
-                <div class="form-horizontal form-section">
-                  <div class="row">
-                    <div class="col-4">
-                      {{ h.snippet('bem.blocks/heading.html',
-                                              title='3. Add additional information',
-                                              heading_type=6,
-                                              required=True,
-                                              spacing_class="mb-3") }}
-                      {{ h.snippet('bem.blocks/paragraph.html',
-                                              text='Provide additional information about the dataset to help users of HDX understand the origins and limitations of your data. For more information about this metadata field, see <a href="{0}" title="Providing Metadata for your Datasets on HDX" target="_blank">this support page</a>.'.format('https://centre.humdata.org/providing-metadata-for-your-datasets-on-hdx/')) }}
-                    </div>
-                    <div class="col-8">
-                      <div data-module="hdx_form_element_manager_bem" data-module-element_name="dataset_source"
-                           data-module-required="private,public,requestdata">
-                        {{ h.snippet('bem.blocks/input_field.html',
-                                                  type="text",
-                                                  name="dataset_source",
-                                                  id="field_dataset_source",
-                                                  label='Source',
-                                                  dynamic_required=True,
-                                                  value=data.dataset_source,
-                                                  errors=errors.dataset_source,
-                                                  placeholder='',
-                                                  label_guideline_title='The source of the data is the entity that collected or created it.',
-                                                  spacing_class="mb-4") }}
-                      </div>
-
-                      {% set organisations = h.hdx_organisation_list() %}
-                      <div data-module="hdx_form_element_manager_bem" data-module-element_name="owner_org"
-                           data-module-required="private,public,requestdata" data-module-broadcast_change="true">
-                        {{ h.snippet('bem.blocks/select2_field.html',
-                                                  select_classes=['select2-field__select_size_large'],
-                                                  name="owner_org",
-                                                  id="field_owner_org",
-                                                  label='Organisation',
-                                                  dynamic_required=True,
-                                                  data=organisations,
-                                                  selected=data.owner_org_name,
-                                                  errors=errors.owner_org,
-                                                  data_attributes={"placeholder": 'Which organisation is contributing data?', 'allow-clear': 'false'},
-                                                  label_guideline_title='The organisation responsible for sharing this dataset on HDX.',
-                                                  spacing_class="mb-4") }}
-                      </div>
-
-                      <div data-module="hdx_form_element_manager_bem" data-module-element_name="maintainer"
-                           data-module-required="private,public,requestdata">
-                        {{ h.snippet('bem.blocks/select2_field.html',
-                                                  name="maintainer",
-                                                  id="field_maintainer",
-                                                  label='Maintainer',
-                                                  dynamic_required=True,
-                                                  label_guideline_title='Individual who is responsible for maintaining this dataset on HDX.',
-                                                  data={data.maintainer: data.maintainer},
-                                                  selected=data.maintainer,
-                                                  errors=errors.maintainer,
-                                                  select_classes=['select2-field__select_size_large'],
-                                                  data_attributes={"placeholder": 'Maintainer username  or name', 'ajax-url': '/util/user/hdx_autocomplete', 'ajax-extra-params': '[{"key": "org", "selector": "#field_owner_org"}]', 'ajax-response-params': '[{"key": "id", "value": "id"}, {"key": "text", "value": "fullname"}]'},
-                                                  spacing_class="mb-4") }}
-                      </div>
-
-                      <div data-module="hdx_form_element_manager_bem" data-module-element_name="dataset_date" data-module-required="public,requestdata">
-                        <div class="input-field">
-                          <label class="input-field__label" for="ui_date_range1">
-                            Time Period
-                            <span class="input-field__required d-none">*</span>
-                          </label>
-                          <div class="input-field__label-guideline">
-                            The time period covered by the dataset or the data collection period.
-                          </div>
-                          <div class="row g-1">
-                            <div class="col-6">
-                              <input type="text" name="ui_date_range1" id="ui_date_range1" autocomplete="off"
-                                 onkeydown="return false;"
-                                 data-module="hdx_datepicker" data-module-group="2"
-                                 data-module-type="start-period" data-module-topic="date-field-clicked"
-                                 data-module-alt_field_id="date_range1"
-                                 data-module-original_value="{{ data.dataset_date }}"
-                                 placeholder="Start date" value=""
-                                 class="form-field form-control input-field__input">
-                              <input type="hidden" name='date_range1' id='date_range1'>
-                              <div class="input-field__feedback-message input-field__feedback-message_state_invalid invalid-feedback"></div>
-                            </div>
-                            <div class="col-6">
-                              <input type="text" name="ui_date_range2" id="ui_date_range2" autocomplete="off"
-                                     onkeydown="return false;"
-                                     data-module="hdx_datepicker" data-module-group="2" data-module-type="end-period"
-                                     data-module-topic="date-field-clicked"
-                                     data-module-alt_field_id="date_range2"
-                                     data-module-original_value="{{ data.dataset_date }}"
-                                     placeholder="End date" value=""
-                                     class="form-field form-control input-field__input"
-                                     >
-                              <input type="hidden" name="date_range2" id="date_range2">
-                            </div>
-                          </div>
-                        </div>
-                        {{ h.snippet('bem.blocks/checkbox_field.html',
-                          label='Ongoing',
-                          label_tooltip='The end date will always be today’s date.',
-                          name="ui_date_ongoing",
-                          value='1',
-                          id='ui_date_ongoing',
-                          checked=data.ui_date_ongoing,
-                          data_attributes={"module": 'hdx_datepicker', 'module-group': '2', 'module-type': "date_ongoing", 'module-topic': 'date-field-clicked', 'module-alt_field_id': 'date_ongoing', 'module-original_value': data.ui_date_ongoing},
-                          spacing_class="my-2") }}
-                        {{ h.snippet('bem.blocks/info_box.html',
-                          compact=True,
-                          rounded=True,
-                          icon=False,
-                          paragraph_classes=['paragraph__text_font_size-small'],
-                          paragraphs=['Tip: This time period should cover all files in the dataset, spanning from the earliest start date to the latest end date.'],
-                          spacing_class="mb-4") }}
-                      </div>
-
-                      {% set frequencies = h.hdx_frequency_list(user_is_sysadmin, data.data_update_frequency) %}
-                      <div id="data_update_frequency" data-module="hdx_form_element_manager_bem"
-                           data-module-element_name="data_update_frequency" data-module-required="public">
-                        <div
-                          class="{% if data.id and not data.get('update_status') == 'unknown' and not data.is_fresh %} dataset-status overdue margin-fix {% endif %}">
-                          {% if data.id and not data.get('update_status') == 'unknown' and not data.is_fresh %}
-                            <div class="overdue-title">Please check if the following field is up to date:
-                            </div>{% endif %}
-                          {{ h.snippet('bem.blocks/select2_field.html',
-                                                    name="data_update_frequency",
-                                                    id="field_data_update_frequency",
-                                                    select_classes=['select2-field__select_size_large', 'update-frequency-select'],
-                                                    label='Update Frequency',
-                                                    dynamic_required=True,
-                                                    data=frequencies,
-                                                    selected=data.data_update_frequency,
-                                                    errors=errors.data_update_frequency,
-                                                    data_attributes={"placeholder": 'Select'},
-                                                    label_guideline_title='Choose how often this dataset is expected to be updated on HDX.',
-                                                    spacing_class="mb-4") }}
-                        </div>
-                      </div>
-
-                      {% set location_list = h.hdx_location_list() %}
-                      <div data-module="hdx_form_element_manager_bem" data-module-element_name="groups_list"
-                           data-module-required="public,requestdata">
-                        {{ h.snippet('bem.blocks/select2_field.html',
-                                                  name="locations",
-                                                  id="field_locations",
-                                                  label='Location',
-                                                  dynamic_required=True,
-                                                  label_guideline_title='Describe the location(s) or country / countries that this dataset covers.',
-                                                  data=location_list,
-                                                  selected=data.locations,
-                                                  errors=errors.locations,
-                                                  data_attributes={"multiple": "true", "placeholder": 'Select', 'allow-clear': 'false'},
-                                                  select_classes=['select2-field__select_size_large']) }}
-                      </div>
-
-                      <div data-module="hdx_form_element_manager_bem" data-module-element_name="subnational"
-                           data-module-required="public">
-                        {{ h.snippet('bem.blocks/checkbox_field.html',
-                                                    label='This dataset includes sub-national data',
-                                                    name="subnational",
-                                                    value='1',
-                                                    id='field_subnational',
-                                                    checked=data.subnational and data.subnational != '0',
-                                                    data_attributes={"validation-error": errors.subnational},
-                                                    spacing_class="my-2") }}
-                        {{ h.snippet('bem.blocks/info_box.html',
-                                                    compact=True,
-                                                    rounded=True,
-                                                    icon=False,
-                                                    paragraph_classes=['paragraph__text_font_size-small'],
-                                                    paragraphs=['Tip: Sub-national means the data covers areas such as regions, districts, or cities.'],
-                                                    spacing_class="mb-4") }}
-                      </div>
-
-                      {% set licenses = h.hdx_license_list() %}
-                      <div class="special-license" data-module="hdx_form_element_manager_bem"
-                           data-module-element_name="license" data-module-required="private,public"
-                           data-module-broadcast_change="true">
-                        {{ h.snippet('bem.blocks/select2_field.html',
-                                                  select_classes=['select2-field__select_size_large'],
-                                                  name="license_id",
-                                                  id="field_license_id",
-                                                  label='License',
-                                                  data=licenses,
-                                                  dynamic_required=True,
-                                                  selected=data.license_id,
-                                                  errors=errors.license_id,
-                                                  label_guideline_title='Choose the license under which the data can be used and re-used.',
-                                                  other_option=True,
-                                                  other_option_type='textarea',
-                                                  other_option_id='field_license_other',
-                                                  other_option_name='license_other',
-                                                  other_option_value=data.license_other,
-                                                  other_option_error=errors.license_other,
-                                                  other_option_container_id='license-other-define',
-                                                  other_option_container_data_attributes={'module': 'hdx_form_element_manager_bem', 'module-element_name': 'license_other'},
-                                                  data_attributes={"placeholder": 'Select', 'allow-clear': 'false'},
-                                                  spacing_class="mb-2") }}
-                        {{ h.snippet('bem.blocks/info_box.html',
-                                                    compact=True,
-                                                    rounded=True,
-                                                    icon=False,
-                                                    paragraph_classes=['paragraph__text_font_size-small'],
-                                                    paragraphs=['Tip: In general CC BY-IGO or CC-BY are our recommended licenses for data on HDX as they allow others to use data freely as long as they credit your organisation. If you are unsure, please consult with your organisation’s data policy or legal team. <a href="{0}" target="_blank" title="licenses">Read more about licenses</a>.'.format(h.HDX_CONST('DOCUMENTATION_LINKS')['DATA_LICENSES'])],
-                                                    spacing_class="mb-4") }}
-                      </div>
-
-                      <div data-module="hdx_form_element_manager_bem" data-module-element_name="field_names"
-                           data-module-required="requestdata">
-                        {{ h.snippet('bem.blocks/select2_field.html',
-                                                  name="field_names",
-                                                  id="field_names",
-                                                  label='Field names',
-                                                  dynamic_required=True,
-                                                  label_guideline_title='What are the most important fields in the dataset?',
-                                                  data=data.field_names.split(',') if data.field_names else None,
-                                                  selected=data.field_names.split(',') if data.field_names else None,
-                                                  errors=errors.field_names,
-                                                  data_attributes={'multiple': 'true', 'tags': 'true'},
-                                                  select_classes=['select2-field__select_size_large', "field-names-select"],
-                                                  spacing_class="mb-4") }}
-                      </div>
-
-                      <div data-module="hdx_form_element_manager_bem" data-module-element_name="file_types"
-                           data-module-required="requestdata">
-                        {{ h.snippet('bem.blocks/select2_field.html',
-                                                  name="file_types",
-                                                  id="file_types",
-                                                  label='File types',
-                                                  dynamic_required=True,
-                                                  label_guideline_title='What file types does your dataset contain?',
-                                                  data=data.file_types.split(',') if data.file_types else None,
-                                                  selected=data.file_types.split(',') if data.file_types else None,
-                                                  errors=errors.file_types,
-                                                  data_attributes={'multiple': 'true', 'tags': 'true'},
-                                                  select_classes=['select2-field__select_size_large', "file-types-select"],
-                                                  spacing_class="mb-4") }}
-                      </div>
-
-                      <div data-module="hdx_form_element_manager_bem" data-module-element_name="num_of_rows">
-                        {{ h.snippet('bem.blocks/input_field.html',
-                                                  type="text",
-                                                  name="num_of_rows",
-                                                  id="num_of_rows",
-                                                  label='Number of rows',
-                                                  dynamic_required=True,
-                                                  value=data.num_of_rows,
-                                                  errors=errors.num_of_rows,
-                                                  container_classes=['num-of-rows-select'],
-                                                  spacing_class="mb-4") }}
-                      </div>
-
-                      {% set methodologies = h.hdx_methodology_list() %}
-                      <div data-module="hdx_form_element_manager_bem" data-module-element_name="methodology"
-                           data-module-required="public" data-module-broadcast_change="true">
-                        {{ h.snippet('bem.blocks/select2_field.html',
-                                                  name="methodology",
-                                                  id="field_methodology",
-                                                  label='Methodology',
-                                                  data=methodologies,
-                                                  dynamic_required=True,
-                                                  selected=data.methodology,
-                                                  errors=errors.methodology,
-                                                  select_classes=['select2-field__select_size_large', 'methodology-select'],
-                                                  label_guideline_title='Choose how this data was collected or generated.',
-                                                  other_option=True,
-                                                  other_option_type='textarea',
-                                                  other_option_name='methodology_other',
-                                                  other_option_id='field_method_other',
-                                                  other_option_label='Define methodology',
-                                                  other_option_value=data.methodology_other,
-                                                  other_option_error=errors.methodology_other,
-                                                  other_option_container_id='methodology-other-define',
-                                                  other_option_container_data_attributes={'module': 'hdx_form_element_manager_bem', 'module-element_name': 'methodology_other'},
-                                                  data_attributes={"placeholder": 'Select'},
-                                                  spacing_class="mb-4") }}
-                      </div>
-
-                      <div data-module="hdx_form_element_manager_bem" data-module-element_name="caveats">
-                        {{ h.snippet('bem.blocks/textarea_field.html',
-                                                    name='caveats',
-                                                    id='field_caveats',
-                                                    label='Caveats / Comments',
-                                                    rows=3,
-                                                    dynamic_required=True,
-                                                    value=data.caveats,
-                                                    errors=errors.caveats,
-                                                    label_guideline_title='Note any limitations or special considerations that relate to this data.',
-                                                    spacing_class="mb-2") }}
-                        {{ h.snippet('bem.blocks/info_box.html',
-                                                    compact=True,
-                                                    rounded=True,
-                                                    icon=False,
-                                                    paragraph_classes=['paragraph__text_font_size-small'],
-                                                    paragraphs=['Tip: Highlight issues with data quality or any limitations with the data. For example, issues such as estimated data for inaccessible locations, missing data, or derived data. Use <a href="{0}" target="_blank" title="Markdown formatting">Markdown formatting</a> to add links to other resources.'.format('https://daringfireball.net/projects/markdown/syntax')],
-                                                    spacing_class="mb-4") }}
-                      </div>
-
-                      {% set allowed_tags = h.hdx_get_allowed_tags_list() %}
-                      {% set selected_tags = data.tag_string.split(', ') if data.tag_string else '' %}
-                      <div data-module="hdx_form_element_manager_bem" data-module-element_name="tag_string"
-                           data-module-broadcast_change="true" data-module-required="requestdata">
-                        {{ h.snippet('bem.blocks/select2_field.html',
-                                                  name="tag_string",
-                                                  id="field_tag_string",
-                                                  label='Tags',
-                                                  dynamic_required=True,
-                                                  label_guideline_title='Add tags to help others find your dataset.',
-                                                  data=allowed_tags,
-                                                  selected=selected_tags,
-                                                  errors=errors.tag_string,
-                                                  data_attributes={"multiple": "true", "placeholder": 'Select', 'allow-clear': 'false'},
-                                                  select_classes=['select2-field__select_size_large', 'tags-select'],
-                                                  field_class='select2-field_color-orange',
-                                                  spacing_class="mb-2") }}
-
-                        <div data-module="hdx_tag_recommender" data-module-tag_input_selector="#field_tag_string"
-                             data-module-recommended_tag_wrapper_selector="#recommended-tags-wrapper" class="mb-1">
-                          <div id="recommended-tags-wrapper" class="recommended-tags-wrapper" style="display: none;">
-                            Suggested tags: <span></span>
-                          </div>
-                        </div>
-                      </div>
-                      {{ h.snippet('bem.blocks/info_box.html',
-                                                  compact=True,
-                                                  rounded=True,
-                                                  icon=False,
-                                                  paragraph_classes=['paragraph__text_font_size-small'],
-                                                  paragraphs=['Tip: Tags are auto-generated from an approved list based on content provided in this form. Suggestions will appear as you type. Click here to <a href="{0}" target="_blank" title="HDX tags">see all tags</a> or here to <a href="#" id="suggest-new-tag">suggest a new tag</a>.'.format('https://data.humdata.org/rdr/spreadsheets/approved-tags')],
-                                                  spacing_class="mb-4") }}
-
-                      {% if user_is_sysadmin %}
-                        <div data-module="hdx_form_element_manager_bem" data-module-element_name="quality">
-                          {{ h.snippet('bem.blocks/checkbox_field.html',
-                                                        label='The quality of this dataset has been confirmed.',
-                                                        name="quality",
-                                                        value='1',
-                                                        id='field_quality',
-                                                        checked=data.quality,
-                                                        data_attributes={"validation-error": errors.quality},
-                                                        spacing_class="mb-3") }}
-                        </div>
-                      {% endif %}
-                    </div>
-                  </div>
-                </div>
-              </section>
-
-              {{ h.snippet('bem.blocks/hr.html', color='black', spacing_class="my-4") }}
-
-              <div class="form-section form-resources-section">
-                <div class="row">
-                  <div class="col-4 form-explanation">
-                    {{ h.snippet('bem.blocks/heading.html',
-                                              title='4. Upload files',
-                                              heading_type=6,
-                                              spacing_class="mb-3") }}
-                    {{ h.snippet('bem.blocks/paragraph.html',
-                                              text='The files you add here will be published in a list in the order you arrange them. You can upload multiple files by clicking the ‘Add More Files’ button and re-order them.') }}
-                    {{ h.snippet('bem.blocks/paragraph.html',
-                                              text='Use a consistent file naming convention so that users can reliably find your file. We recommend making sure the name is a clear indication of the file’s content as well as the dates of the data it contains.') }}
-                    {{ h.snippet('bem.blocks/paragraph.html',
-                                              text='We accept all machine readable data formats but only offer preview features for: CSV, TXT, XLS, JSON, zipped shape files, KML, and GeoJSON. <a href="{0}" title="formats" target="_blank">Learn more about formats</a>.'.format('/faq#auto-faq-Sharing_and_Using_Data-What_are_the_recommended_data_formats_-a')) }}
-                    {{ h.snippet('bem.blocks/paragraph.html',
-                                              text='Personally Identifiable Information (PII) includes data that could identify individuals, such as names, email addresses, phone numbers, or ID numbers.') }}
-                    {{ h.snippet('bem.blocks/paragraph.html',
-                                              text='Microdata includes information such as detailed survey responses or disaggregated needs assessment data.') }}
-                  </div>
-
-                  <div class="col-8" id="resource-widget">
-
-                    <script type="text/template" id="resource-item-tmpl">
-                      <div class="p-3">
-                        <div class="row">
-                          <div class="col-9">
-                                                            <span class="drag-handle">
-                                                              <i class="fa fa-arrows-v grey"></i>
-                                                              <i class="fa fa fa-align-justify grey mx-2"></i>
-                                                            </span>
-                            <span class="resource-position">
-                                                              <% if (position === 'new') {
-                                                                  print('New File');
-                                                              }else{
-                                                                  print('File '); print(template_position + 1);
-                                                              } %>
-                                                            </span>
-                          </div>
-                          <div class="col-3 text-end">
-                                                          <span class="resource-sort">
-                                                            Sort:
-                                                            <i class="move-up fa-solid fa-square-caret-up ms-1 grey"></i>
-                                                            <i class="move-down fa-solid fa-square-caret-down ms-1 grey"></i>
-                                                          </span>
-                          </div>
-                          <div  class="col-12">
-                            <p class="mt-2 mb-0">Choose how to upload your file</p>
-                          </div>
-                          <div class="col-12">
-                            <ul class="list-group list-group-horizontal resource-upload-type mt-2">
-                              <li class="list-group-item border-0 p-0">
-                                {{ h.snippet('bem.blocks/radio_field.html',
-                                                                      name='resource<%= position %>-upload_type'|safe,
-                                                                      id='resource<%= position %>-upload_type_file'|safe,
-                                                                      value='file',
-                                                                      checked=True,
-                                                                      input_classes=['resource-source'],
-                                                                      label='Upload file') }}
-                              </li>
-                              <li class="list-group-item border-0 p-0 mx-3"> |</li>
-                              <li class="list-group-item border-0 p-0">
-                                {{ h.snippet('bem.blocks/radio_field.html',
-                                                                      name='resource<%= position %>-upload_type'|safe,
-                                                                      id='resource<%= position %>-upload_type_url'|safe,
-                                                                      value='url',
-                                                                      input_classes=['resource-source'],
-                                                                      label='Import from URL') }}
-                              </li>
-                              <li class="list-group-item border-0 p-0 mx-3"> |</li>
-                              <li class="list-group-item border-0 p-0 dropbox">
-                                <a data-module="bs_tooltip" data-module-placement="top"
-                                   data-bs-original-title="{{ _('By adding files via Dropbox, file sharing setting turns on automatically and becomes viewable by anyone with the link') }}"
-                                   data-bs-toggle="tooltip" href="#">
-                                  Dropbox <img class="ms-2 cloud-img" src="/images/icons/dropbox.png" alt="Dropbox">
-                                </a>
-                              </li>
-                              <li class="list-group-item border-0 p-0 mx-3"> |</li>
-                              <li class="list-group-item border-0 p-0 googledrive">
-                                <a data-module="bs_tooltip" data-module-placement="top"
-                                   data-bs-original-title="{{ _('In order to add files via Google Drive, sharing settings has to be on') }}"
-                                   data-bs-toggle="tooltip" href="#">
-                                  Google Drive <img class="ms-2 cloud-img" src="/images/icons/drive.png"
-                                                    alt="Google Drive">
-                                </a>
-                              </li>
-                            </ul>
-                          </div>
-                          <div class="source-file-upload">
-                            <div class="drag-drop-area">
-                              <div class="drop-here-mask" style="display: none;"></div>
-                              <div class="drag-drop-content">
-                                <span class="drag-text1">Drop file <span
-                                  class="overwrite-text">to overwrite</span> or</span>
-                                <span class="drag-text2">Incoming file</span>
-                                <label class="browse-button">
-                                                                          <span>
-                                                                              Browse
-                                                                          </span>
-                                  <input type="file" name="upload" style="" value=""
-                                         class="resource_file_field form-control"/>
-                                </label>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="col-12 source-file-fields">
-                            <div class="row url-field">
-                              <div class="col-12">
-                                {{ h.snippet('bem.blocks/input_field.html',
-                                                                    type="text",
-                                                                    name="url",
-                                                                    label='Remote file location',
-                                                                    placeholder='eg. https://example.com/population-jan-2011.json *',
-                                                                    value='<%= url %>"'|safe,
-                                                                    input_classes=['resource_url_field'],
-                                                                    spacing_class="my-2") }}
-                              </div>
-                            </div>
-                            <div class="row">
-                              <div class="col-8">
-                                <div data-format="<%= lower_case_format %>" class="format-label"
-                                     property="dc:format"></div>
-                                {{ h.snippet('bem.blocks/input_field.html',
-                                                                    type="text",
-                                                                    name="name",
-                                                                    label='File name',
-                                                                    required=True,
-                                                                    placeholder='File name',
-                                                                    value='<%= name %>'|safe,
-                                                                    input_classes=['resource_name_field'],
-                                                                    spacing_class="mb-2") }}
-                              </div>
-                              <div class="col-4">
-                                {% set template_position = '<%= template_position %>' %}
-                                {% set resource_field_id = 'resource_format_' ~ template_position %}
-                                {{ h.snippet('bem.blocks/select2_field.html',
-                                  name="format",
-                                  label='File format',
-                                  id=resource_field_id|safe,
-                                  selected='<%= format %>'|safe,
-                                  required=True,
-                                  data={'<%= format %>'|safe: '<%= format %>'|safe},
-                                  select_classes=['select2-field__select_size_large', 'resource_format_field'],
-                                  data_attributes={'allow-clear': 'false', "placeholder": 'File type', 'ajax-url': '/api/2/util/resource/format_autocomplete', 'ajax-extra-params': '[{"key": "incomplete"}]', 'ajax-response-params': '[{"key": "id", "value": "Format"}, {"key": "text", "value": "Format"}]'},
-                                  spacing_class="mb-2") }}
-                              </div>
-                              <div class="col-12">
-                                {{ h.snippet('bem.blocks/textarea_field.html',
-                                                                      name="description",
-                                                                      label='Notes about this file',
-                                                                      placeholder='Add a note about this resource',
-                                                                      rows=3,
-                                                                      value='<%= description %>'|safe,
-                                                                      spacing_class="mb-2") }}
-                                <div class="mb-2">
-                                  <div class="controls">
-                                    <div class="checkbox-field form-check">
-                                      <div>
-                                        <input
-                                          class="checkbox-field__input form-check-input"
-                                          type="checkbox"
-                                          name="pii"
-                                          id="resource<%= position %>-pii"
-                                        <% if (pii === true || pii === 'true') { print('checked'); } %>
-                                        >
-                                        <label class="checkbox-field__label form-check-label ms-2"
-                                               for="resource<%= position %>-pii">
-                                          contains Personally Identifiable Information (PII)
-                                        </label>
-                                      </div>
-                                    </div>
-                                    <div class="item-description alert alert-danger mt-2" <% if (!pii || pii === 'false') { print('style="display:none;"'); } %>>
-                                      <p>HDX does not allow data that includes personally identifiable information (PII) to
-                                        be shared publicly through the site. Please delete the resource(s) containing PII.
-                                        If you wish to share this resource, take steps to ensure that it is properly
-                                        anonymised (with all the direct identifiers removed) and upload it again.</p>
-                                      <p>You can learn more in the <a
-                                        href="{{ h.HDX_CONST('DOCUMENTATION_LINKS')['TERMS_OF_SERVICE'] }}" target="_blank"
-                                        title="HDX Terms of Service">HDX Terms of Service</a>.</p>
-                                    </div>
-                                  </div>
-                                </div>
-                                <div class="controls mb-2">
-                                  <div class="checkbox-field form-check">
-                                    <div>
-                                      <input
-                                        class="checkbox-field__input form-check-input"
-                                        type="checkbox"
-                                        name="microdata"
-                                        id="resource<%= position %>-microdata"
-                                      <% if (microdata) { print('checked'); } %>
-                                      >
-                                      <label class="checkbox-field__label form-check-label ms-2"
-                                             for="resource<%= position %>-microdata">
-                                        contains Microdata
-                                      </label>
-                                    </div>
-                                  </div>
-                                  <div class="item-description alert alert-danger mt-2" <% if (!microdata) { print('style="display:none;"'); } %>>
-                                    <p>HDX allows microdata to be shared publicly through the site. However, to protect
-                                      individuals and vulnerable groups, our team runs a disclosure risk assessment on any
-                                      resource containing microdata. We do this because it may still be possible to
-                                      re-identify individuals or expose confidential information even after direct
-                                      identifiers have been removed from microdata.</p>
-                                    <p>We will notify you within 24 hours if our team detects any disclosure risk. During
-                                      this time, the resource will appear on your dataset page but be marked as under
-                                      review.</p>
-                                    <p>Learn more about the <a href="{{ h.HDX_CONST('DOCUMENTATION_LINKS')['QA_PROCESS'] }}" title="HDX QA process"
-                                                               target="_blank">HDX QA process</a>.</p>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="text-end">
-                            <button type="button" class="delete_resource">Delete this file <i class="fa fa-trash ms-1"></i>
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    </script>
-
-                    <div id="resource-list" data-module="hdx_form_element_manager_bem"
-                         data-module-element_name="resource-list">
-                      <div>
-                        <p class="mb-0 fw-bold resources_total"><span>0 files</span> (drag and drop to sort)</p>
-                      </div>
-                      <div class="{% if data.id and not data.get('update_status') == 'unknown' %} dataset-status {% if data.get('update_status') == 'needs_update' %} overdue {% endif %} {% endif %}">
-{#                        {% if data.id and not data.get('update_status') == 'unknown' %}#}
-{#                          <div id="confirm-resource-freshness" class="{% if data.get('update_status') == 'needs_update' %}alert alert-danger {% endif %}my-2">#}
-{#                            <input type="hidden" name='review_date' value='{{ data.review_date }}'>#}
-{#                            {{ h.snippet('bem.blocks/checkbox_field.html',#}
-{#                                                          label='I confirm that to the best of my knowledge these resources are up-to-date.',#}
-{#                                                          value='on',#}
-{#                                                          name="dataset_confirm_freshness") }}#}
-{#                          </div>#}
-{#                        {% endif %}#}
-                        <div>
-                          {{ h.snippet('bem.blocks/form_button.html',
-                                                          type="button",
-                                                          title='Add more files',
-                                                          button_classes=["btn-primary", "text-uppercase", "add_new_resource"],
-                                                          container_classes=["mt-3"]) }}
-                        </div>
-                        <div id="resource-create"></div>
-                        <div class="resources"></div>
-                      </div>
-                    </div>
-
-                  </div>
-                </div>
-              </div>
-
-              <section class="contribute-form-container-items">
-
-                {{ h.snippet('bem.blocks/hr.html', color='black', spacing_class="my-4") }}
-
-{#                {% if user_is_sysadmin %}#}
-                  <div id="_dataset_preview">
-                    <div class="form-section">
-                      <div class="row">
-                          <div class="col-4">
-                            {{ h.snippet('bem.blocks/heading.html',
-                              title='5. Add automatic Data Previews (Optional)',
-                              heading_type=6,
-                              spacing_class="mb-3") }}
-                            {{ h.snippet('bem.blocks/paragraph.html',
-                              text='Enable data previews to help others quickly understand the insights in your data. The following previews are generated automatically from your data if it is formatted appropriately:') }}
-                            <ul class="mb-0">
-                              <li>Maps (if your data includes geo-data)</li>
-                              <!-- <li>Quick Charts that show graphs and key figures (for data with HXL tags).</li> -->
-                            </ul>
-                          </div>
-                          <div class="col-8">
-                              <div data-module="hdx_form_element_manager_bem"
-                                   data-module-element_name="dataset_preview_check"
-                                   data-module-broadcast_change="true">
-                                {{ h.snippet('bem.blocks/checkbox_field.html',
-                                    label='Enable Data Preview',
-                                    name="dataset_preview_check",
-                                    value='1',
-                                    id='field_dataset_preview_check',
-                                    checked=data.dataset_preview_check,
-                                    data_attributes={"validation-error": errors.dataset_preview_check},
-                                    spacing_class="mb-3") }}
-                              </div>
-                              <div data-module="hdx_form_element_manager_bem"
-                                   data-module-element_name="dataset_preview_check_other"
-                                   id="dataset-preview-check-other-define"
-                                {% if data.dataset_preview_check != '1' %}
-                                   style="display:none;" {% endif %}>
-                                {% set dataset_preview_values_list = h.hdx_dataset_preview_values_list() %}
-                                {{ h.snippet('bem.blocks/select2_field.html',
-                                  select_classes=['select2-field__select_size_large'],
-                                  name="dataset_preview_value",
-                                  id="field_dataset_preview_value",
-                                  label='Select which file to preview',
-                                  data=dataset_preview_values_list,
-                                  selected=data.dataset_preview_value,
-                                  errors=errors.dataset_preview_value,
-                                  data_attributes={"placeholder": 'Select'},
-                                  spacing_class="mb-4") }}
-                              </div>
-                          </div>
-                      </div>
-                    </div>
-
-                    {{ h.snippet('bem.blocks/hr.html', color='black', spacing_class="my-4") }}
-                  </div>
-{#                {% endif %}#}
-
-                <div class="form-section">
-                  <div class="row">
-                    <div class="col-4">
-                      {{ h.snippet('bem.blocks/heading.html',
-                                          title='6. Add other data visualisations (Optional)',
-                                          heading_type=6,
-                                          spacing_class="mb-3") }}
-                      {{ h.snippet('bem.blocks/paragraph.html',
-                                          text='If you have published visualisations of this data elsewhere, these can be embedded on the HDX dataset page, e.g., from a public PowerBI dashboard.') }}
-                    </div>
-                    <div class="col-8">
-                      <div class="custom-viz-list" data-module="hdx_custom_dataviz_manager"
-                           data-module-custom_viz_urls="{{ data.customviz_list }}">
-                        <div class="custom-viz-item">
-                          {#                                            <label class="label-title-style mBottom10">${index} DATA VIZ</label>#}
-                          {#                                            <div class="drag-drop-component">#}
-                          {{ h.snippet('bem.blocks/input_field.html',
-                                                type="text",
-                                                name="custom_viz_url",
-                                                label='Link to vizualization',
-                                                value='${url}',
-                                                placeholder='eg. https://example.com/dataviz',
-                                                input_classes=['custom-viz-url'],
-                                                spacing_class="mb-4") }}
-                          {#                                              <div class="row">#}
-                          {#                                                <div class="col-12">#}
-                          {#                                                  <span style="cursor: move; cursor: grab; cursor: -webkit-grab; cursor: -moz-grab;" class="drag-handle">#}
-                          {#                                                                <i class="fa fa-arrows-v grey"></i>#}
-                          {#                                                                <i class="fa fa-align-justify grey ms-1"></i>#}
-                          {#                                                  </span>#}
-                          {#                                                  <label class="control-label">Data Viz ${index}</label>#}
-                          {#                                                  <label class="control-label">Link to vizualization</label>#}
-                          {#                                                  <span class="float-end">#}
-                          {#                                                    <a href="javascript:void(0)" class="delete_custom_viz">#}
-                          {#                                                      <i class="fa fa-trash grey"></i>#}
-                          {#                                                    </a>#}
-                          {#                                                  </span>#}
-                          {#                                                </div>#}
-                          {#                                              </div>#}
-                          {#                                              <div class="row">#}
-                          {#                                                <div class="col-12">#}
-                          {#                                                  <div class="mb-3">#}
-                          {#                                                    <div class="controls ">#}
-                          {#                                                      <input name="custom_viz_url" value="${url}"#}
-                          {#                                                             placeholder="eg. https://example.com/dataviz *"#}
-                          {#                                                             class="form-control custom-viz-url" type="text">#}
-                          {#                                                      <span class="error-block"></span>#}
-                          {#                                                    </div>#}
-                          {#                                                  </div>#}
-                          {#                                                </div>#}
-                          {#                                              </div>#}
-                          {#                                            </div>#}
-                        </div>
-                      </div>
-                      <div>
-                        {#                                          <input class="add_custom_viz btn btn-primary btn-lg"#}
-                        {#                                                 value="Add more data viz" type="button">#}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {{ h.snippet('bem.blocks/hr.html', color='black', spacing_class="my-4") }}
-
-                {% if data.id %}
-                  <div class="form-horizontal form-section">
-                    <div class="row">
-                      <div class="col-4">
-                        {{ h.snippet('bem.blocks/heading.html',
-                                          title='6.a Archive dataset',
-                                          heading_type=6,
-                                          spacing_class="mb-3") }}
-                        {{ h.snippet('bem.blocks/paragraph.html',
-                                          text='Archive a dataset when it is no longer needed for operational purposes and will not be updated, but can remain available for historical reference. Ensure that archived datasets are still visible in search results by applying the "Archived" filter.') }}
-                      </div>
-                      <div class="col-8">
-                        {% set archive_values = {False: 'No', True: 'Yes'} %}
-                        {{ h.snippet('bem.blocks/select2_field.html',
-                                            select_classes=['select2-field__select_size_large'],
-                                            name="archived",
-                                            id="field_archived",
-                                            label='Archive this dataset',
-                                            data=archive_values,
-                                            selected=[data.archived],
-                                            errors=errors.archived,
-                                            data_attributes={"placeholder": 'Select'},
-                                            spacing_class="mb-4") }}
-                      </div>
-                    </div>
-                  </div>
-                  {{ h.snippet('bem.blocks/hr.html', color='black', spacing_class="my-4") }}
-                {% endif %}
-              </section>
-
-              <div class="row">
-                <div class="col-4">
-                        {{ h.snippet('bem.blocks/heading.html',
-                                          title='7. Confirm and submit',
-                                          required=True,
-                                          heading_type=6,
-                                          spacing_class="mb-3") }}
-                </div>
-                <div class="col-8">
-                  <div>
-                    <div>
-                      <div class="checkbox-field form-check mb-3">
-                        <div>
-                          <input
-                            class="checkbox-field__input form-check-input"
-                            type="checkbox"
-                            id="checkbox-hdx-terms"
-                          >
-                          <label id="terms-of-service-label" data-module="hdx_terms_checkbox"
-                                 data-module-button="create-form-submit"
-                                 class="checkbox-field__label form-check-label ms-2" for="checkbox-hdx-terms">
-                            I confirm this dataset does not contain Personally Identifiable Data (PII) or otherwise violate the <a target="_blank"
-                                                     href="{{ h.HDX_CONST('DOCUMENTATION_LINKS')['TERMS_OF_SERVICE'] }}"
-                                                     title="HDX Terms of Service">HDX Terms of Service</a>.
-                          </label>
-                        </div>
-                      </div>
-
-                      <p>Need help? <a href="{{ h.HDX_CONST('DOCUMENTATION_LINKS')['MAIN'] }}" title="FAQ" target="_blank">Visit our FAQ</a> or <a href="{{ h.HDX_CONST('DOCUMENTATION_LINKS')['MAIN'] }}#need-support" title="Contact" target="_blank">Contact support</a>.</p>
-
-                      {{ h.snippet('bem.blocks/form_button.html',
-                                        type="submit",
-                                        title='Submit Dataset',
-                                        button_id="create-form-submit",
-                                        button_classes=["form-button__btn_font-size_big", "disabled", "btn-primary", "btn-lg", "d-block", "w-100"],
-                                        container_classes=["mt-3"]) }}
-
-                      {% if data.id %}
-                        {% set locale = h.dump_json({'content': _('Are you sure you want to delete this dataset ? '), 'heading': _('You are deleting a dataset'), 'delete': _('Delete')}) %}
-
-                        {{ h.snippet('bem.blocks/form_button.html',
-                                        type="href",
-                                        url='/api/action/hdx_dataset_purge?',
-                                        title='Delete',
-                                        button_classes=["form-button__btn_font-size_big", "btn-danger", "btn-lg", "d-block", "w-100"],
-                                        data_attributes={
-                                          "module-success_url": h.url_for('hdx_dataset.search'),
-                                          "module-post_data": h.dump_json({'id': data.id}),
-                                          "module-is_json": 'true',
-                                          "module": 'hdx_confirm-action',
-                                          "module-i18n": locale
-                                        },
-                                        container_classes=["mt-3"]) }}
-                      {% endif %}
-
-                      <div class="text-center mb-3">
-                        {{ h.snippet('bem.blocks/form_button.html',
-                                          type="href",
-                                          url=h.url_for('dataset.read', id=data.id),
-                                          title='Cancel',
-                                          button_classes=["form-button__btn_font-size_medium", "btn-link", "close-iframe"]) }}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+    <section id="choose-how-to-share" class="hdx-v2-content-columns hdx-v2-content-columns--stack hdx-v2-dataset-form__group" data-dataset-form-fields>
+      <div class="hdx-v2-content-columns__sidebar hdx-v2-dataset-form__group-head">
+        <h2 class="hdx-v2-dataset-form__group-title">{{ _('Choose how to share') }}{{ required_mark }}</h2>
+        <p class="hdx-v2-dataset-form__group-text">{{ _('Choose how you want to share your data on HDX.') }}</p>
+      </div>
+      <div class="hdx-v2-content-columns__content hdx-v2-dataset-form__fields">
+        <fieldset class="hdx-v2-dataset-form__fieldset">
+          <legend class="sr-only">{{ _('Choose how to share') }}</legend>
+          <div class="hdx-v2-dataset-form__options">
+            {% snippet 'v2/components/radio.html',
+                name='private', value='public', id='radio_private_public', size='m',
+                label=_('Upload data to HDX and publish it openly (Recommended)'),
+                description=_("Share your organisation's data with the HDX community. Files will be accessible to anyone and must not include Personally Identifiable Information (PII)."),
+                checked=share_mode == 'public' %}
+            <div class="hdx-v2-dataset-form__option-notice" data-share-notice="public"{% if share_mode != 'public' %} hidden{% endif %}>
+              {% snippet 'v2/components/info-box.html', compact=True,
+                  paragraphs=[_('The HDX team manually reviews every dataset uploaded to the platform as part of a standard quality assurance (QA) process. This includes basic checks on the quality and sensitivity of every resource. This helps ensure a high standard for all data shared on HDX. Learn more about the <a href="{url}" target="_blank">HDX QA process</a>.').format(url=doc_links['QA_PROCESS'])] %}
             </div>
-          </form>
+            {% snippet 'v2/components/radio.html',
+                name='private', value='requestdata', id='radio_private_requestdata', size='m',
+                label=_('List dataset on HDX without uploading files (HDX Connect)'),
+                description=_('List sensitive data without uploading files. Decide on access requests via HDX Connect and provide files directly if approved.'),
+                checked=share_mode == 'requestdata' %}
+            <div class="hdx-v2-dataset-form__option-notice" data-share-notice="requestdata" hidden>
+              {% snippet 'v2/components/alert.html',
+                  variant='warning', dismissible=False,
+                  message=_('You are switching your dataset\'s privacy setting to "By request - <a href="{url}" title="HDX Connect" target="_blank">HDX Connect</a>". <u>All existing resources will be deleted</u> when you submit this change.').format(url='https://data.humdata.org/faq#auto-faq-Sharing_and_Using_Data-How_do_I_share_data_on_HDX_-a') %}
+            </div>
+            {% snippet 'v2/components/radio.html',
+                name='private', value='private', id='radio_private_private', size='m',
+                label=_('Share data privately within your organisation'),
+                description=_('Only members of your organisation will be able to search, view, edit, or download the dataset.'),
+                checked=share_mode == 'private', error_slot=True %}
+          </div>
+        </fieldset>
+      </div>
+    </section>
+
+    <section id="describe-dataset" class="hdx-v2-content-columns hdx-v2-content-columns--stack hdx-v2-dataset-form__group" data-dataset-form-fields>
+      <div class="hdx-v2-content-columns__sidebar hdx-v2-dataset-form__group-head">
+        <h2 class="hdx-v2-dataset-form__group-title">{{ _('Describe dataset') }}{{ required_mark }}</h2>
+        <p class="hdx-v2-dataset-form__group-text">{{ _('Provide a clear and concise Title and Description for your dataset to help others find, understand and use it effectively.') }}</p>
+      </div>
+      <div class="hdx-v2-content-columns__content hdx-v2-dataset-form__fields">
+        {% if data.resource_grouping %}
+          <input type="hidden" name="resource_grouping" value="{{ data.resource_grouping }}">
+        {% endif %}
+
+        <div class="c-form-field" data-required-modes="private,public,requestdata">
+          {% snippet 'v2/components/text-field.html',
+              size='l', name='title', id='field_title',
+              label=_('Title'), required=True,
+              description=_('The text you provide here will appear at the top of the dataset page.'),
+              placeholder=_('ie. Humanitarian Needs Assessment in Afghanistan, Jan-Dec 2026'),
+              value=data.title or '' %}
+          {% snippet 'v2/components/info-box.html', compact=True,
+              paragraphs=[_('Use clear, specific titles like [Country] - [Topic/Theme], avoiding abbreviations, dates, or terms like “current” or “latest.” Include dates in the additional information or file description. Example: "Haiti - Operational Presence", “Palestine - Conflict Events”. All titles should be written in <a href="{url}" title="Title case" target="_blank">Title case</a> i.e. all words should be capitalised except for minor words.').format(url='https://en.wikipedia.org/wiki/Title_case')] %}
+        </div>
+
+        <div class="c-form-field" data-required-modes="private,public,requestdata">
+          {% snippet 'v2/components/slug-preview.html',
+              name='name', id='field_name', label=_('URL/Slug'), required=True, size='l',
+              value=data.name or '', placeholder=_('this-is-auto-generated-based-on-the-title-above'),
+              description=_('This is how the URL will appear on HDX, you can change this below.'),
+              prefix=slug_prefix, target_id='field_title' %}
+        </div>
+
+        <div class="c-form-field" data-required-modes="public,requestdata">
+          {% snippet 'v2/components/text-field.html',
+              size='l', name='notes', id='field_notes',
+              label=_('Description'), required=share_mode in ['public', 'requestdata'],
+              description=_('Explain what is in the dataset and how it might be useful.'),
+              multiline=True, rows=6, value=data.notes or '' %}
+          {% snippet 'v2/components/info-box.html', compact=True,
+              paragraphs=[_('Provide specific details about the dataset, including its purpose, context, potential use. Use <a href="{url}" title="markdown formatting" target="_blank">Markdown formatting</a> to add links to other resources.').format(url=markdown_url)] %}
         </div>
       </div>
+    </section>
+
+    <section id="additional-information" class="hdx-v2-content-columns hdx-v2-content-columns--stack hdx-v2-dataset-form__group" data-dataset-form-fields>
+      <div class="hdx-v2-content-columns__sidebar hdx-v2-dataset-form__group-head">
+        <h2 class="hdx-v2-dataset-form__group-title">{{ _('Additional information') }}{{ required_mark }}</h2>
+        <p class="hdx-v2-dataset-form__group-text">{{ _('Provide additional information about the dataset to help users of HDX understand the origins and limitations of your data.') }}</p>
+        <p class="hdx-v2-dataset-form__group-text">{{ _('For more information about this metadata field, see <a href="{url}" title="HDX Metadata" target="_blank">this support page</a>.').format(url=doc_links['METADATA']) }}</p>
+      </div>
+      <div class="hdx-v2-content-columns__content hdx-v2-dataset-form__fields">
+        <div class="c-form-field" data-required-modes="private,public,requestdata">
+          {% snippet 'v2/components/text-field.html',
+              size='l', name='dataset_source', id='field_dataset_source',
+              label=_('Source'), required=True, value=data.dataset_source or '' %}
+        </div>
+
+        <div class="c-form-field" data-required-modes="private,public,requestdata">
+          {% snippet 'v2/components/select.html',
+              size='l', label=_('Organisation'), name='owner_org', id='field_owner_org', required=True,
+              description=_('The organisation responsible for sharing this dataset on HDX.'),
+              options=organisation_options, selected=data.owner_org_name or '', searchable=True %}
+        </div>
+
+        <div class="c-form-field" data-required-modes="private,public,requestdata">
+          {% snippet 'v2/components/select.html',
+              size='l', label=_('Maintainer'), name='maintainer', id='field_maintainer', required=True,
+              description=_('Individual who is responsible for maintaining this dataset on HDX.'),
+              placeholder=_('Maintainer username or name'),
+              options={data.maintainer: data.maintainer} if data.maintainer else {},
+              selected=data.maintainer or '', searchable=True,
+              select_attrs={'data-source': '/util/user/hdx_autocomplete', 'data-source-param-org': '#field_owner_org'} %}
+        </div>
+
+        <fieldset class="hdx-v2-dataset-form__fieldset c-form-field" data-required-modes="public,requestdata" aria-describedby="dataset-date-description">
+          <legend class="c-form-field__label">{{ _('Time Period') }}{% if share_mode in ['public', 'requestdata'] %}{{ required_mark }}{% endif %}</legend>
+          <span class="c-form-field__description" id="dataset-date-description">{{ _('The time period covered by the dataset or the data collection period.') }}</span>
+          <div class="hdx-v2-dataset-form__dates">
+            {% snippet 'v2/components/date-picker.html',
+                size='l', id='ui_date_range1', name='date_range1', value=date_start, max=date_end,
+                label=_('Start date'), placeholder=_('Start date') %}
+            {% snippet 'v2/components/date-picker.html',
+                size='l', id='ui_date_range2', name='date_range2', value='' if data.ui_date_ongoing else date_end, min=date_start,
+                label=_('End date'), placeholder=_('End date'), disabled=data.ui_date_ongoing %}
+          </div>
+          <div class="hdx-v2-dataset-form__ongoing">
+            {% snippet 'v2/components/checkbox.html',
+                id='ui_date_ongoing', name='ui_date_ongoing', value='1',
+                checked=data.ui_date_ongoing, label=_('Ongoing'), error_slot=false %}
+            {% snippet 'v2/components/info-icon.html',
+                aria_label=_('More information about Ongoing'),
+                tooltip_text=_('The end date will always be today’s date.'),
+                tooltip_id='ui_date_ongoing-tooltip' %}
+          </div>
+          {% snippet 'v2/components/info-box.html', compact=True,
+              paragraphs=[_('This time period should cover all files in the dataset, spanning from the earliest start date to the latest end date.')] %}
+        </fieldset>
+
+        {% if is_overdue %}
+          {% snippet 'v2/components/alert.html',
+              variant='warning', dismissible=False,
+              message=_('Please check if the following field is up to date:') %}
+        {% endif %}
+        <div class="c-form-field" data-required-modes="public">
+          {% snippet 'v2/components/select.html',
+              size='l', label=_('Update Frequency'), name='data_update_frequency', id='field_data_update_frequency',
+              required=share_mode == 'public',
+              description=_('Choose how often this dataset is expected to be updated on HDX.'),
+              options=frequency_options, selected=data.data_update_frequency or '' %}
+        </div>
+
+        <div class="c-form-field" data-required-modes="public,requestdata">
+          {% snippet 'v2/components/select.html',
+              size='l', label=_('Location'), name='locations', id='field_locations',
+              required=share_mode in ['public', 'requestdata'],
+              description=_('Describe the location(s) or country / countries that this dataset covers.'),
+              placeholder=_('Select'), options=location_options, selected=data.locations or [],
+              multiple=True, searchable=True, chip_color='cyan' %}
+          <div class="hdx-v2-dataset-form__checkbox">
+            {% snippet 'v2/components/checkbox.html',
+                id='field_subnational', name='subnational', value='1',
+                checked=data.subnational and data.subnational != '0',
+                label=_('This dataset includes sub-national data'), error_slot=false %}
+          </div>
+          {% snippet 'v2/components/info-box.html', compact=True,
+              paragraphs=[_('Sub-national means the data covers areas such as regions, districts, or cities.')] %}
+        </div>
+
+        <div class="c-form-field" data-required-modes="private,public" data-share-hide="requestdata">
+          {% snippet 'v2/components/select.html',
+              size='l', label=_('License'), name='license_id', id='field_license_id',
+              required=share_mode in ['private', 'public'],
+              description=_('Choose the license under which the data can be used and re-used.'),
+              options=license_options, selected=data.license_id or '' %}
+          <div class="c-form-field" data-other-for="field_license_id" data-other-values="other,hdx-other"{% if (data.license_id or '') | lower not in ['other', 'hdx-other'] %} hidden{% endif %}>
+            {% snippet 'v2/components/text-field.html',
+                size='l', name='license_other', id='field_license_other',
+                label=_('License'), placeholder=_('License'),
+                multiline=True, rows=3, value=data.license_other or '' %}
+          </div>
+          {% snippet 'v2/components/info-box.html', compact=True,
+              paragraphs=[_('In general "CC BY-IGO" or "CC BY" are our recommended licenses for data on HDX as they allow others to use your data freely as long as they credit your organisation. If you are unsure, please consult with your organisation\'s data policy or legal team. <a href="{url}" target="_blank" title="licenses">Read more about licenses</a>.').format(url=doc_links['DATA_LICENSES'])] %}
+        </div>
+
+        <div class="c-form-field" data-required-modes="requestdata" data-share-show="requestdata"{% if not is_requestdata %} hidden{% endif %}>
+          {% snippet 'v2/components/select.html',
+              size='l', label=_('Field names'), name='field_names', id='field_names',
+              required=is_requestdata,
+              description=_('What are the most important fields in the dataset?'),
+              options=field_name_options, selected=field_names,
+              multiple=True, searchable=True, select_attrs={'data-tags': ''} %}
+        </div>
+
+        <div class="c-form-field" data-required-modes="requestdata" data-share-show="requestdata"{% if not is_requestdata %} hidden{% endif %}>
+          {% snippet 'v2/components/select.html',
+              size='l', label=_('File types'), name='file_types', id='file_types',
+              required=is_requestdata,
+              description=_('What file types does your dataset contain?'),
+              options=file_type_options, selected=file_types,
+              multiple=True, searchable=True, select_attrs={'data-tags': ''} %}
+        </div>
+
+        <div class="c-form-field" data-share-show="requestdata"{% if not is_requestdata %} hidden{% endif %}>
+          {% snippet 'v2/components/text-field.html',
+              size='l', name='num_of_rows', id='num_of_rows',
+              label=_('Number of rows'), value=data.num_of_rows or '' %}
+        </div>
+
+        <div class="c-form-field" data-required-modes="public">
+          {% snippet 'v2/components/select.html',
+              size='l', label=_('Methodology'), name='methodology', id='field_methodology',
+              required=share_mode == 'public',
+              description=_('Choose how this data was collected or generated.'),
+              options=methodology_options, selected=data.methodology or '' %}
+          <div class="c-form-field" data-other-for="field_methodology" data-other-values="other"{% if (data.methodology or '') | lower != 'other' %} hidden{% endif %}>
+            {% snippet 'v2/components/text-field.html',
+                size='l', name='methodology_other', id='field_method_other',
+                label=_('Define methodology'), placeholder=_('Methodology'),
+                multiline=True, rows=3, value=data.methodology_other or '' %}
+          </div>
+        </div>
+
+        <div class="c-form-field">
+          {% snippet 'v2/components/text-field.html',
+              size='l', name='caveats', id='field_caveats',
+              label=_('Caveats / Comments'),
+              description=_('Note any limitations or special considerations that relate to this data.'),
+              multiline=True, rows=3, value=data.caveats or '' %}
+          {% snippet 'v2/components/info-box.html', compact=True,
+              paragraphs=[_('Highlight issues with data quality or any limitations with the data. For example, issues such as estimated data for inaccessible locations, missing data, or derived data. Use <a href="{url}" target="_blank" title="Markdown formatting">Markdown formatting</a> to add links to other resources.').format(url=markdown_url)] %}
+        </div>
+
+        <div class="c-form-field" data-required-modes="requestdata">
+          {% snippet 'v2/components/select.html',
+              size='l', label=_('Tags'), name='tag_string', id='field_tag_string',
+              required=is_requestdata,
+              description=_('Add tags to help others find your dataset.'),
+              placeholder=_('Select'), options=tag_options, selected=selected_tags,
+              multiple=True, searchable=True %}
+          <p class="hdx-v2-dataset-form__suggested" data-tag-suggestions hidden>
+            {{ _('Suggested tags:') }} <span data-tag-suggestions-list></span>
+          </p>
+          {% snippet 'v2/components/info-box.html', compact=True,
+              paragraphs=[_('Tags are auto-generated from an approved list based on content provided in this form. Suggestions will appear as you type. Click here to <a href="{url}" target="_blank" title="HDX tags">see all tags</a> or here to <a href="#request-tags-drawer" data-dataset-form-suggest-tag>suggest a new tag</a>.').format(url='https://data.humdata.org/rdr/spreadsheets/approved-tags')] %}
+        </div>
+
+        {% if user_is_sysadmin %}
+          <div class="hdx-v2-dataset-form__checkbox">
+            {% snippet 'v2/components/checkbox.html',
+                id='field_quality', name='quality', value='1', checked=data.quality,
+                label=_('The quality of this dataset has been confirmed.'), error_slot=false %}
+          </div>
+        {% endif %}
+      </div>
+    </section>
+
+    <section id="upload-files" class="hdx-v2-content-columns hdx-v2-content-columns--stack hdx-v2-dataset-form__group" data-share-hide="requestdata"{% if is_requestdata %} hidden{% endif %}>
+      <div class="hdx-v2-content-columns__sidebar hdx-v2-dataset-form__group-head">
+        <h2 class="hdx-v2-dataset-form__group-title">{{ _('Upload files') }}</h2>
+        <p class="hdx-v2-dataset-form__group-text">{{ _('The files you add here will be published in a list in the order you arrange them. You can upload multiple files if you need to by clicking the ‘Add More Files’ button and re-order them if you need to.') }}</p>
+        <p class="hdx-v2-dataset-form__group-text">{{ _('Use a consistent file naming convention so that users can reliably find your file. <a href="{url}" target="_blank">Learn more about file naming conventions</a>.').format(url=doc_links['QA_PROCESS']) }}</p>
+        <p class="hdx-v2-dataset-form__group-text">{{ _('We accept all machine readable data formats but only offer preview features for: CSV, TXT, XLS, JSON, zipped shape files, KML, and GeoJSON. <a href="{url}" title="formats" target="_blank">Learn more about formats</a>.').format(url='/faq#auto-faq-Sharing_and_Using_Data-What_are_the_recommended_data_formats_-a') }}</p>
+        <p class="hdx-v2-dataset-form__group-text">{{ _('Personally Identifiable Information (PII) includes data that could identify individuals, such as names, email addresses, phone numbers, or ID numbers.') }}</p>
+        <p class="hdx-v2-dataset-form__group-text">{{ _('Microdata includes information such as detailed survey responses or disaggregated needs assessment data.') }}</p>
+      </div>
+      <div class="hdx-v2-content-columns__content hdx-v2-dataset-form__fields">
+        <div class="c-config-item-list" id="resource-list" data-config-item-list data-config-item-form data-config-item-sortable
+             data-config-item-add-position="start"
+             data-title-format="{{ _('File {n}') }}"
+             data-move-message="{{ _('Moved to position {n} of {total}') }}">
+          <div class="c-config-item-list__actions">
+            {% snippet 'v2/components/button.html',
+                style='primary', label=_('Add more files'),
+                icon_src='v2/icons/file-plus.svg',
+                attrs={'data-config-item-add': ''} %}
+          </div>
+          <ol class="c-config-item-list__items"></ol>
+          <template data-config-item-template>
+            <li>
+              {% call h.snippet('v2/components/config-item.html',
+                  title=_('File {n}').format(n='__index__'),
+                  id='resource-__index__', title_tag='h3',
+                  move_buttons=True, collapsible=False,
+                  delete_position='footer', delete_label=_('Delete this file'),
+                  delete_icon_position='right') %}
+                {% snippet 'contribute_flow/snippets/resource_fields.html', index='__index__' %}
+              {% endcall %}
+            </li>
+          </template>
+          <span class="sr-only" aria-live="polite" data-config-item-status></span>
+        </div>
+      </div>
+    </section>
+
+    <section id="data-previews" class="hdx-v2-content-columns hdx-v2-content-columns--stack hdx-v2-dataset-form__group" data-dataset-form-fields data-share-hide="requestdata"{% if is_requestdata %} hidden{% endif %}>
+      <div class="hdx-v2-content-columns__sidebar hdx-v2-dataset-form__group-head">
+        <h2 class="hdx-v2-dataset-form__group-title">{{ _('Add automatic data previews (Optional)') }}</h2>
+        <p class="hdx-v2-dataset-form__group-text">{{ _('Enable data previews to help others quickly understand the insights in your dataset. The following previews are generated automatically from your data if it is formatted appropriately:') }}</p>
+        <ul class="hdx-v2-dataset-form__group-list">
+          <li>{{ _('Maps (if your data includes geo-data)') }}</li>
+        </ul>
+      </div>
+      <div class="hdx-v2-content-columns__content hdx-v2-dataset-form__fields">
+        <div class="hdx-v2-dataset-form__checkbox">
+          {% snippet 'v2/components/checkbox.html',
+              id='field_dataset_preview_check', name='dataset_preview_check', value='1',
+              checked=data.dataset_preview_check == '1',
+              label=_('Enable data preview'), error_slot=false %}
+        </div>
+        <div class="c-form-field" id="dataset-preview-check-other-define"{% if data.dataset_preview_check != '1' %} hidden{% endif %}>
+          {% snippet 'v2/components/select.html',
+              size='l', label=_('Select which file to preview'), name='dataset_preview_value', id='field_dataset_preview_value',
+              options=preview_options, selected=data.dataset_preview_value or '' %}
+        </div>
+      </div>
+    </section>
+
+    <section id="data-visualisations" class="hdx-v2-content-columns hdx-v2-content-columns--stack hdx-v2-dataset-form__group" data-dataset-form-fields data-share-hide="requestdata"{% if is_requestdata %} hidden{% endif %}>
+      <div class="hdx-v2-content-columns__sidebar hdx-v2-dataset-form__group-head">
+        <h2 class="hdx-v2-dataset-form__group-title">{{ _('Add data visualisations (Optional)') }}</h2>
+        <p class="hdx-v2-dataset-form__group-text">{{ _('If you have published visualisations of this data elsewhere, these can be embedded on the HDX dataset page, e.g., from a public PowerBI dashboard.') }}</p>
+      </div>
+      <div class="hdx-v2-content-columns__content hdx-v2-dataset-form__fields">
+        {% for url in custom_viz_urls %}
+          <div class="c-form-field">
+            {% snippet 'v2/components/text-field.html',
+                size='l', name='', id='field_custom_viz_url' ~ ('' if loop.first else '_' ~ loop.index0),
+                label=_('Link to visualisation'), placeholder=_('eg. https://example.com/dataviz'),
+                value=url or '', input_attrs={'data-custom-viz': ''} %}
+          </div>
+        {% endfor %}
+      </div>
+    </section>
+
+    {% if edit_mode %}
+      <section id="archive-dataset" class="hdx-v2-content-columns hdx-v2-content-columns--stack hdx-v2-dataset-form__group" data-dataset-form-fields>
+        <div class="hdx-v2-content-columns__sidebar hdx-v2-dataset-form__group-head">
+          <h2 class="hdx-v2-dataset-form__group-title">{{ _('Archive dataset') }}</h2>
+          <p class="hdx-v2-dataset-form__group-text">{{ _('Archive a dataset when it is no longer needed for operational purposes and will not be updated, but can remain available for historical reference. Ensure that archived datasets are still visible in search results by applying the "Archived" filter.') }}</p>
+        </div>
+        <div class="hdx-v2-content-columns__content hdx-v2-dataset-form__fields">
+          <div class="c-form-field">
+            {% snippet 'v2/components/select.html',
+                size='l', label=_('Archive this dataset'), name='archived', id='field_archived',
+                options={'False': _('No'), 'True': _('Yes')},
+                selected='True' if data.archived == True else 'False' %}
+          </div>
+        </div>
+      </section>
+    {% endif %}
+
+    <div class="hdx-v2-dataset-form__actions">
+      <div class="hdx-v2-dataset-form__checkbox hdx-v2-dataset-form__terms">
+        {% snippet 'v2/components/checkbox.html',
+            id='checkbox-hdx-terms',
+            label=_('I confirm this dataset does not contain Personally Identifiable Data (PII) or otherwise violate the <a target="_blank" href="{url}" title="HDX Terms of Service">HDX Terms of Service</a>.').format(url=doc_links['TERMS_OF_SERVICE']),
+            error_slot=false %}
+      </div>
+      {% if edit_mode %}
+        {% snippet 'v2/components/button.html',
+            style='tertiary', label=_('Delete'),
+            attrs={'data-dataset-form-delete': ''} %}
+      {% endif %}
+      <div class="hdx-v2-dataset-form__save">
+        {% snippet 'v2/components/button.html',
+            style='primary', button_type='submit', label=_('Submit'), state='disabled',
+            attrs={'id': 'create-form-submit'} %}
+        {% snippet 'v2/components/button.html',
+            style='tertiary', tag='a', label=_('Cancel'),
+            href=h.url_for('dataset.read', id=data.id),
+            extra_classes='close-iframe' %}
+      </div>
+    </div>
+  </form>
+
+  <div class="hdx-v2-dataset-form-overlay" data-dataset-form-overlay hidden>
+    <div class="hdx-v2-dataset-form-overlay__box">
+      {% snippet 'v2/components/spinner.html', size='l', attrs={'aria-hidden': 'true'} %}
+      <p class="hdx-v2-dataset-form-overlay__message" aria-live="polite" data-dataset-form-overlay-message></p>
     </div>
   </div>
+
+  {% call h.snippet('v2/components/drawer.html', drawer_id='private-dataset-info', title=_('Regarding private datasets')) %}
+    <div class="c-drawer-form">
+      <p class="c-drawer-form__text">{{ _("Private datasets will be listed on your organisation page and will not be included in search results or the data list page. Please make sure you are logged in to see them. Please also be aware that any member in your organisation on HDX can view the organisation's private datasets.") }}</p>
+      <div class="c-drawer-form__checkbox-row">
+        {% snippet 'v2/components/checkbox.html',
+            id='private-dataset-info-hide', name='hide-message',
+            label=_('Do not display this message next time'), error_slot=false %}
+      </div>
+      <div class="c-drawer-form__buttons">
+        {% snippet 'v2/components/button.html',
+            style='primary', label=_('Close'), attrs={'data-drawer-close': ''} %}
+      </div>
+    </div>
+  {% endcall %}
+
+  {% snippet 'contribute_flow/snippets/request_tags_drawer.html', drawer_id='request-tags-drawer' %}
+
+  {% if edit_mode %}
+    {% call h.snippet('v2/components/drawer.html', drawer_id='delete-dataset-drawer', title=_('You are deleting a dataset')) %}
+      <form class="c-drawer-form" data-dataset-form-delete-form
+            data-url="/api/action/hdx_dataset_purge"
+            data-dataset-id="{{ data.id }}"
+            data-error-message="{{ _('The dataset could not be deleted: {message}') }}">
+        {% snippet 'v2/components/alert.html', hidden=True, dismissible=False, extra_attrs='data-dataset-form-delete-error' %}
+        <p class="c-drawer-form__text">{{ _('Are you sure you want to delete this dataset?') }}</p>
+        <div class="c-drawer-form__buttons">
+          {% snippet 'v2/components/button.html',
+              style='tertiary', label=_('Cancel'), attrs={'data-drawer-close': ''} %}
+          {% snippet 'v2/components/button.html',
+              style='primary', button_type='submit', label=_('Delete') %}
+        </div>
+      </form>
+    {% endcall %}
+  {% endif %}
 {% endblock %}
 
 {% block scripts %}
@@ -1066,6 +550,8 @@
           data-app-key="2ixptqvj5hknpzs"></script>
   <script async defer src="https://accounts.google.com/gsi/client"></script>
   {{ super() }}
-  {% asset 'hdx_theme/contribute-flow-scripts' %}
-  {% asset 'hdx_theme/bem-blocks-scripts' %}
+  {% asset 'hdx_theme/v2-select2-scripts' %}
+  {% asset 'hdx_theme/v2-slug-preview-scripts' %}
+  {% asset 'hdx_theme/v2-config-item-scripts' %}
+  {% asset 'hdx_theme/v2-dataset-form-page-scripts' %}
 {% endblock %}

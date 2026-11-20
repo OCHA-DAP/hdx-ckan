@@ -169,6 +169,20 @@
 .c-radio--has-description .c-radio__body {
   flex-wrap: wrap;
 }
+.c-radio--size-m .c-radio__label {
+  font-family: var(--hdx-font-body);
+  font-size: var(--hdx-fs-m);
+  font-weight: var(--hdx-fw-medium);
+  line-height: var(--hdx-lh-normal);
+  color: var(--hdx-neutral-95);
+}
+.c-radio--size-m .c-radio__description {
+  font-family: var(--hdx-font-body);
+  font-size: var(--hdx-fs-m);
+  font-weight: var(--hdx-fw-regular);
+  line-height: var(--hdx-lh-normal);
+  color: var(--hdx-neutral-85);
+}
 input:checked ~ .c-radio__input .c-radio__ring {
   border: 1px solid var(--hdx-primary-5);
   background: transparent;
@@ -194,6 +208,22 @@ input:focus-visible ~ .c-radio__input .c-radio__ring {
 }
 .c-radio--disabled .c-tooltip-anchor {
   pointer-events: auto;
+}
+.c-radio--error .c-radio__ring,
+.c-radio--error input:checked ~ .c-radio__input .c-radio__ring {
+  border-color: var(--hdx-error-5);
+}
+.c-radio__error {
+  font-family: var(--hdx-font-body);
+  font-size: var(--hdx-fs-s);
+  font-weight: var(--hdx-fw-regular);
+  line-height: var(--hdx-lh-normal);
+  display: none;
+  margin-top: var(--hdx-space-1);
+  color: var(--hdx-error-6);
+}
+.c-radio--error ~ .c-radio__error {
+  display: block;
 }
 .c-toggle {
   display: inline-block;

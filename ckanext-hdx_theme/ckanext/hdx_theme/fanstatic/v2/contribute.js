@@ -6,8 +6,16 @@
  */
 function contributeAddDetails(datasetId, typeOfCall, anchor){
   let popup = document.getElementById('addDataPopup');
-  popup.style.display = 'block';
+  if (!popup) {
+    return false;
+  }
+  popup.hidden = false;
   document.body.classList.add('contribute-mode');
+  Array.from(document.body.children).forEach(function (el) {
+    if (el !== popup) {
+      el.inert = true;
+    }
+  });
 
 
   let linkType = (typeOfCall ? typeOfCall + ' ' : '') + (datasetId ? 'edit data' : 'add data');
@@ -22,12 +30,17 @@ function contributeAddDetails(datasetId, typeOfCall, anchor){
   if (anchor) {
     document.getElementById('addDataPopupFrame').src = _getContributeURL(datasetId, anchor);
   }
+  popup.setAttribute('aria-label', popup.getAttribute(datasetId && datasetId !== 'null' ? 'data-label-edit' : 'data-label-new'));
+  document.getElementById('addDataPopupFrame').focus();
 
   return false;
 }
 
 function prepareContributePopup(datasetId, anchor) {
   let popup = document.getElementById('addDataPopup');
+  if (!popup) {
+    return;
+  }
   popup.setAttribute('dataset-id', String(datasetId));
   let url = _getContributeURL(datasetId, anchor);
   _generateContributeFrame(url);
@@ -35,20 +48,24 @@ function prepareContributePopup(datasetId, anchor) {
 
 function _generateContributeFrame(url) {
   let popup = document.getElementById('addDataPopup');
-  popup.querySelector('.details-content').innerHTML = "<iframe id='addDataPopupFrame' src='" + url + "'></iframe>";
+  popup.querySelector('[data-contribute-popup-content]').innerHTML = "<iframe id='addDataPopupFrame' class='hdx-v2-contribute-popup__frame' src='" + url + "'></iframe>";
 
   let iframe = document.getElementById('addDataPopupFrame');
   iframe.addEventListener('load', function () {
     const iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
 
+    iframeDocument.querySelectorAll('.hdx-v2-header form').forEach(function (form) {
+      form.target = '_top';
+    });
+
     iframeDocument.addEventListener('click', function (event) {
-      const link = event.target.closest('.close-iframe, .new-header a, .breadcrumb a, .hdx-v2-breadcrumb-row a, .hdx-footer a');
+      const link = event.target.closest('.close-iframe, .new-header a, .breadcrumb a, .hdx-v2-breadcrumb-row a, .hdx-footer a, .hdx-v2-header a, .hdx-v2-footer a');
       if (!link) {
         return;
       }
       const url = link.getAttribute('href');
       const target = link.getAttribute('target');
-      if (url !== '#' && target !== '_blank') {
+      if (url && url !== '#' && target !== '_blank') {
         event.preventDefault();
         window.location.href = url;
       }
@@ -74,6 +91,11 @@ function _getContributeURL(datasetId, anchor) {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
+  let popup = document.getElementById('addDataPopup');
+  if (!popup) {
+    return;
+  }
+  document.body.appendChild(popup);
   let links = document.querySelectorAll('.contribute-popup-init');
   if (!links.length) {
     return;

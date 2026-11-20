@@ -22,6 +22,12 @@
   image; a failing file is dropped and check_message shows in the error element
   and is announced. Fields inserted later initialise on a bubbling
   `config-item:add` event from their container (components/config-item.js).
+  dropzone turns the blank state into a drop zone ("Drop file or" + the upload
+  button, an L secondary text button) and the attached state into one too
+  ("Drop file to overwrite or" + the same button, no thumbnail or file name); a
+  file dropped anywhere on the field is chosen (more than one shows drop_message).
+  JS-built fields set the URL input's value and data-image-upload-state
+  before their `config-item:add` event.
 
   Parameters
   ─────────────────────────────────────────────────
@@ -46,11 +52,21 @@
   preview        {string}  's' — thumbnail in the attached state;
                            'l' — full-width preview box above the label.
                            default: 's'
+  dropzone       {bool}    Drop zone in the blank and attached states, drops
+                           accepted on the whole field.  default: False
+  drop_label     {string}  Drop zone text before the upload button.
+                           default: 'Drop file or'
+  drop_replace_label {string}  Attached drop zone text before the upload
+                           button.  default: 'Drop file to overwrite or'
+  drop_message   {string}  Error text when more than one file is dropped.
+                           default: 'Please choose only one file!'
+  label_hidden   {bool}    Visually hidden label.  default: False
   max_bytes      {int}     Largest accepted file size in bytes.  default: none
   image_width    {int}     Required image width in px.  default: none
   check_message  {string}  Error text when a chosen file fails the
                            max_bytes / image_width check.  default: ''
-  accept         {string}  File input accept attr.  default: 'image/*'
+  accept         {string}  File input accept attr ('' = any file).
+                           default: 'image/*'
   errors         {list|string}  Error message(s) below the field.  default: None
   extra_classes  {string}  default: ''
   ─────────────────────────────────────────────────
@@ -89,6 +105,11 @@
 {% set image_width    = image_width    if image_width    is defined else none %}
 {% set check_message  = check_message  if check_message  is defined else '' %}
 {% set accept         = accept         if accept         is defined else 'image/*' %}
+{% set dropzone       = dropzone       if dropzone       is defined else false %}
+{% set drop_label     = drop_label     if drop_label     is defined else _('Drop file or') %}
+{% set drop_replace_label = drop_replace_label if drop_replace_label is defined else _('Drop file to overwrite or') %}
+{% set drop_message   = drop_message   if drop_message   is defined else _('Please choose only one file!') %}
+{% set label_hidden   = label_hidden   if label_hidden   is defined else false %}
 {% set errors         = errors         if errors         is defined else None %}
 {% set extra_classes  = extra_classes  if extra_classes  is defined else '' %}
 
@@ -98,30 +119,41 @@
 {% set label_id = id ~ '-label' %}
 {% set file_id  = id ~ '-file' %}
 {% set checked  = upload_enabled and (max_bytes or image_width) %}
+{% set dropzone = upload_enabled and dropzone %}
 
-<div class="c-form-field c-image-upload{{ ' ' ~ extra_classes if extra_classes else '' }}"
-     {% if upload_enabled %}role="group" aria-labelledby="{{ label_id }}" data-image-upload data-image-upload-state="{{ state }}"{% endif %}{% if checked %} data-image-upload-max-bytes="{{ max_bytes or '' }}" data-image-upload-width="{{ image_width or '' }}" data-image-upload-check-message="{{ check_message }}"{% endif %}>
+<div class="c-form-field c-image-upload{{ ' c-image-upload--dropzone' if dropzone else '' }}{{ ' ' ~ extra_classes if extra_classes else '' }}"
+     {% if upload_enabled %}role="group" aria-labelledby="{{ label_id }}" data-image-upload data-image-upload-state="{{ state }}"{% endif %}{% if checked %} data-image-upload-max-bytes="{{ max_bytes or '' }}" data-image-upload-width="{{ image_width or '' }}" data-image-upload-check-message="{{ check_message }}"{% endif %}{% if dropzone %} data-image-upload-dropzone data-image-upload-drop-message="{{ drop_message }}"{% endif %}>
   {% if upload_enabled and preview == 'l' %}
     <div class="c-image-upload__preview">
       <img class="c-image-upload__preview-image" alt="" data-image-upload-thumb{% if state == 'attached' and preview_url %} src="{{ preview_url }}"{% else %} hidden{% endif %}>
     </div>
   {% endif %}
-  <label class="c-form-field__label" id="{{ label_id }}" for="{{ file_id if upload_enabled else id }}">{{ label }}</label>
+  <label class="{{ 'sr-only' if label_hidden else 'c-form-field__label' }}" id="{{ label_id }}" for="{{ file_id if upload_enabled else id }}">{{ label }}</label>
 
   {% if upload_enabled %}
-    <div class="c-image-upload__attached" data-image-upload-attached{% if state != 'attached' %} hidden{% endif %}>
-      {% if preview != 'l' %}
-        <img class="c-image-upload__thumb" alt="" data-image-upload-thumb{% if state == 'attached' and preview_url %} src="{{ preview_url }}"{% else %} hidden{% endif %}>
-      {% endif %}
-      {% if not remove_enabled %}
-        {% snippet 'v2/components/button.html',
-            style='tertiary',
-            size='m',
+    <div class="c-image-upload__attached{{ ' c-image-upload__drop' if dropzone else '' }}" data-image-upload-attached{% if state != 'attached' %} hidden{% endif %}>
+      {% if dropzone %}
+        <span class="c-image-upload__drop-text">{{ drop_replace_label }}</span>
+        {% snippet 'v2/components/text-button.html',
+            style='secondary',
+            size='l',
+            tag='button',
             label=upload_label,
-            icon_src='v2/icons/upload.svg',
             attrs={'data-image-upload-choose': ''} %}
+      {% else %}
+        {% if preview != 'l' %}
+          <img class="c-image-upload__thumb" alt="" data-image-upload-thumb{% if state == 'attached' and preview_url %} src="{{ preview_url }}"{% else %} hidden{% endif %}>
+        {% endif %}
+        {% if not remove_enabled %}
+          {% snippet 'v2/components/button.html',
+              style='tertiary',
+              size='m',
+              label=upload_label,
+              icon_src='v2/icons/upload.svg',
+              attrs={'data-image-upload-choose': ''} %}
+        {% endif %}
+        <span class="c-image-upload__name" data-image-upload-name></span>
       {% endif %}
-      <span class="c-image-upload__name" data-image-upload-name></span>
       {% if remove_enabled %}
         {% snippet 'v2/components/button.html',
             style='tertiary',
@@ -160,13 +192,23 @@
   {% endif %}
 
   {% if upload_enabled %}
-    <div class="c-image-upload__blank" data-image-upload-blank hidden>
-      {% snippet 'v2/components/button.html',
-          style='tertiary',
-          size='m',
-          label=upload_label,
-          icon_src='v2/icons/upload.svg',
-          attrs={'data-image-upload-choose': ''} %}
+    <div class="c-image-upload__blank{{ ' c-image-upload__drop' if dropzone else '' }}" data-image-upload-blank hidden>
+      {% if dropzone %}
+        <span class="c-image-upload__drop-text">{{ drop_label }}</span>
+        {% snippet 'v2/components/text-button.html',
+            style='secondary',
+            size='l',
+            tag='button',
+            label=upload_label,
+            attrs={'data-image-upload-choose': ''} %}
+      {% else %}
+        {% snippet 'v2/components/button.html',
+            style='tertiary',
+            size='m',
+            label=upload_label,
+            icon_src='v2/icons/upload.svg',
+            attrs={'data-image-upload-choose': ''} %}
+      {% endif %}
       {% if link_enabled %}
         {% snippet 'v2/components/button.html',
             style='tertiary',
@@ -183,7 +225,7 @@
     <span class="sr-only" aria-live="polite" data-image-upload-status></span>
   {% endif %}
 
-  {% if errors or checked %}
-    <span class="c-image-upload__error"{% if checked %} data-image-upload-error{% endif %}>{% if errors %}{{ errors | join(', ') if errors is iterable and errors is not string else errors }}{% endif %}</span>
+  {% if errors or checked or dropzone %}
+    <span class="c-image-upload__error"{% if checked or dropzone %} data-image-upload-error{% endif %}>{% if errors %}{{ errors | join(', ') if errors is iterable and errors is not string else errors }}{% endif %}</span>
   {% endif %}
 </div>

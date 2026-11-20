@@ -28,6 +28,7 @@
   description         {string}  Help text under the field label (text-field.html
                                 `description`), repeated above the preview row.
                                 default: ''
+  size                {string}  text-field.html size, 'l' | 'm'.  default: 'm'
   extra_classes       {string}  default: ''
   ─────────────────────────────────────────────────
   Example
@@ -49,6 +50,7 @@
 {% set preview_placeholder = preview_placeholder if preview_placeholder is defined else '<slug>' %}
 {% set target_id           = target_id           if target_id           is defined else '' %}
 {% set description         = description         if description         is defined else '' %}
+{% set size                = size                if size                is defined else 'm' %}
 {% set extra_classes       = extra_classes       if extra_classes       is defined else '' %}
 {% set field_id = id ~ '-field' %}
 
@@ -58,7 +60,7 @@
      {% if errors %}data-slug-preview-error{% endif %}>
   <div class="c-form-field c-slug-preview__field" id="{{ field_id }}" data-slug-preview-field>
     {% snippet 'v2/components/text-field.html',
-        size='m',
+        size=size,
         name=name,
         id=id,
         label=label,

@@ -1,0 +1,110 @@
+.c-date-picker__trigger {
+  display: flex;
+  align-items: center;
+  text-align: left;
+}
+.c-date-picker__trigger:disabled,
+.c-date-picker__trigger:disabled:hover {
+  cursor: not-allowed;
+  background-color: var(--hdx-neutral-01);
+  border-color: var(--hdx-neutral-1);
+  box-shadow: none;
+  color: var(--hdx-neutral-5);
+}
+.c-date-picker__trigger:focus-visible {
+  outline: 2px solid var(--hdx-primary-5);
+  outline-offset: 2px;
+}
+.c-date-picker__value {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--hdx-neutral-6);
+}
+.c-date-picker--filled .c-date-picker__value {
+  color: inherit;
+}
+.c-date-picker__panel {
+  position: absolute;
+  top: calc(100% + var(--hdx-space-1));
+  left: 0;
+  z-index: 20;
+  width: max-content;
+}
+.c-date-picker__panel[hidden] {
+  display: none;
+}
+.c-date-picker__title {
+  padding: var(--hdx-space-1) var(--hdx-space-2);
+  border: none;
+  border-radius: var(--hdx-radius-sm);
+  background: transparent;
+  color: var(--hdx-neutral-95);
+  cursor: pointer;
+}
+.c-date-picker__title:hover {
+  background-color: var(--hdx-neutral-01);
+}
+.c-date-picker__title:focus-visible {
+  outline: 2px solid var(--hdx-primary-5);
+  outline-offset: 2px;
+}
+.c-date-picker__days {
+  border-collapse: collapse;
+}
+.c-date-picker__days th {
+  font-family: var(--hdx-font-body);
+  font-size: var(--hdx-fs-xs);
+  font-weight: var(--hdx-fw-medium);
+  line-height: var(--hdx-lh-normal);
+  padding: 0 0 var(--hdx-space-1);
+  text-align: center;
+  color: var(--hdx-neutral-7);
+}
+.c-date-picker__days td {
+  padding: var(--hdx-space-15);
+  text-align: center;
+}
+.c-date-picker__day {
+  width: var(--hdx-space-8);
+  height: var(--hdx-space-8);
+  padding: 0;
+  border: none;
+  border-radius: var(--hdx-radius-sm);
+  background: transparent;
+  font-family: var(--hdx-font-body);
+  font-size: var(--hdx-fs-s);
+  font-weight: var(--hdx-fw-regular);
+  line-height: var(--hdx-lh-normal);
+  color: var(--hdx-neutral-8);
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+.c-date-picker__day:hover {
+  background-color: var(--hdx-neutral-01);
+}
+.c-date-picker__day:focus-visible {
+  outline: 2px solid var(--hdx-primary-5);
+  outline-offset: 2px;
+}
+.c-date-picker__day[aria-current="date"] {
+  font-family: var(--hdx-font-body);
+  font-size: var(--hdx-fs-s);
+  font-weight: var(--hdx-fw-semibold);
+  line-height: var(--hdx-lh-normal);
+}
+.c-date-picker__day.is-active,
+.c-date-picker__day.is-active:hover {
+  background-color: var(--hdx-primary-5);
+  color: var(--hdx-neutral-0);
+}
+.c-date-picker__day:disabled,
+.c-date-picker__day:disabled:hover {
+  background-color: transparent;
+  color: var(--hdx-neutral-4);
+  cursor: not-allowed;
+}
+.c-date-picker__months[hidden] {
+  display: none;
+}

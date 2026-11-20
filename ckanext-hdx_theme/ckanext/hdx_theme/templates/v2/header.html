@@ -18,9 +18,12 @@
   quick_links {list}  Products menu items. default: [] when minimal,
                       else h.hdx_get_quick_links_list(archived=False,
                       exclude_crisis=True)
+  show_add_data {bool}  "Add data" in the navbar and the offcanvas footer
+                        (logged-in users). default: True
 #}
 
 {% set minimal = minimal if minimal is defined else False %}
+{% set show_add_data = show_add_data if show_add_data is defined else True %}
 {% set quick_links = quick_links if quick_links is defined else ([] if minimal else h.hdx_get_quick_links_list(archived=False, exclude_crisis=True)) %}
 {% set nav_state = {} if minimal else h.hdx_v2_main_nav_state(quick_links) %}
 {% set user_menu_sections = [] if minimal else h.hdx_get_user_menu_sections() %}
@@ -244,6 +247,7 @@
             {% snippet 'v2/navbar-user-menu.html', sections=user_menu_sections %}
           </div>
 
+          {% if show_add_data %}
           {% set add_data_obj = h.hdx_check_add_data() %}
           {% snippet 'v2/components/button.html',
               style='secondary', size='m', label=_('Add data'),
@@ -253,6 +257,7 @@
                      'data-module': add_data_obj.data_module,
                      'data-module-link_type': add_data_obj.data_module_link_type,
                      'dataset-id': 'null' if h.check_access('package_create') else 'DO_IGNORE'} %}
+          {% endif %}
         {% else %}
           {% snippet 'v2/components/button.html',
               style='secondary', size='m', label=_('Log in'),
@@ -352,6 +357,7 @@
         {# Footer actions — pushed to bottom of panel #}
         <div class="hdx-v2-offcanvas__footer">
           {% if c.userobj %}
+            {% if show_add_data %}
             {% snippet 'v2/components/button.html',
                 style='secondary', size='l', label=_('Add data'),
                 tag='a', href=add_data_obj.href,
@@ -360,6 +366,7 @@
                        'data-module': add_data_obj.data_module,
                        'data-module-link_type': add_data_obj.data_module_link_type,
                        'data-hdx-v2-close': 'offcanvas'} %}
+            {% endif %}
           {% else %}
             {% snippet 'v2/components/button.html',
                 style='secondary', size='l', label=_('Log in'),

@@ -97,6 +97,9 @@
   flex-shrink: 0;
   box-sizing: border-box;
 }
+.c-file-type[hidden] {
+  display: none;
+}
 .c-file-type__icon {
   line-height: 0;
   display: block;

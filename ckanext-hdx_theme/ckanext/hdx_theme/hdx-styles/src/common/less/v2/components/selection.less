@@ -225,6 +225,16 @@
         flex-wrap: wrap;
     }
 
+    &--size-m &__label {
+        .hdx-body-m-medium();
+        color: var(--hdx-neutral-95);
+    }
+
+    &--size-m &__description {
+        .hdx-body-m();
+        color: var(--hdx-neutral-85);
+    }
+
     // ── States ──────────────────────────────────────────────
 
     input:checked ~ &__input &__ring {
@@ -259,6 +269,20 @@
     &--disabled .c-tooltip-anchor {
         pointer-events: auto;
     }
+
+    &--error &__ring,
+    &--error input:checked ~ &__input &__ring {
+        border-color: var(--hdx-error-5);
+    }
+
+    &__error {
+        .hdx-body-s();
+        display:    none;
+        margin-top: var(--hdx-space-1);
+        color:      var(--hdx-error-6);
+    }
+
+    &--error ~ &__error { display: block; }
 }
 
 

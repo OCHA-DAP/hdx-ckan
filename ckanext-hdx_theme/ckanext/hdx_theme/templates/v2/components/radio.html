@@ -12,6 +12,9 @@
   label         {string}  Visible label text.  default: ''
   checked       {bool}    Whether checked.  default: False
   state         {string}  'enabled' | 'disabled'  default: 'enabled'
+  size          {string}  's' — 14px label and description;
+                          'm' — 16px medium label, 16px description.
+                          default: 's'
   hint          {bool}    Show an info-circle icon to the right of the label.
                           default: False
   hint_text     {string}  Tooltip text shown on icon hover/focus. When empty,
@@ -22,6 +25,13 @@
                           default: ''
   id            {string}  Input id (generated from name+value if omitted).
                           default: ''
+  errors        {list|string}  Error message(s); adds c-radio--error (red
+                          ring). For a group, pass them to every radio.
+                          default: None
+  error_slot    {bool}    Render the .c-radio__error element after the label
+                          (with `errors`, or empty for
+                          window.hdxV2.setFieldError). For a group, set it on
+                          the last radio only.  default: False
   extra_classes {string}  default: ''
   attrs         {dict}    Extra attrs on the <input>.  default: {}
   ─────────────────────────────────────────────────
@@ -47,21 +57,32 @@
 {% set label         = label         if label         is defined else '' %}
 {% set checked       = checked       if checked       is defined else False %}
 {% set state         = state         if state         is defined else 'enabled' %}
+{% set size          = size          if size          is defined else 's' %}
 {% set hint          = hint          if hint          is defined else False %}
 {% set hint_text     = hint_text     if hint_text     is defined else '' %}
 {% set description   = description   if description   is defined else '' %}
 {% set id            = id            if id            is defined else (name ~ '-' ~ value) %}
+{% set errors        = errors        if errors        is defined else None %}
+{% set error_slot    = error_slot    if error_slot    is defined else False %}
 {% set extra_classes = extra_classes if extra_classes is defined else '' %}
 {% set attrs         = attrs         if attrs         is defined else {} %}
 {% if description %}
   {% set attrs = dict(attrs, **{'aria-describedby': (id ~ '-description ' ~ attrs.get('aria-describedby', '')) | trim}) %}
+{% endif %}
+{% if errors %}
+  {% set attrs = dict(attrs, **{'aria-invalid': 'true'}) %}
+  {% if error_slot %}
+    {% set attrs = dict(attrs, **{'aria-describedby': (attrs.get('aria-describedby', '') ~ ' ' ~ id ~ '-error') | trim}) %}
+  {% endif %}
 {% endif %}
 
 {% set is_disabled = (state == 'disabled') %}
 
 {% set classes = ['c-radio'] %}
 {% if is_disabled %}{% set classes = classes + ['c-radio--disabled'] %}{% endif %}
+{% if size == 'm' %}{% set classes = classes + ['c-radio--size-m'] %}{% endif %}
 {% if description %}{% set classes = classes + ['c-radio--has-description'] %}{% endif %}
+{% if errors %}{% set classes = classes + ['c-radio--error'] %}{% endif %}
 {% if extra_classes %}{% set classes = classes + [extra_classes]     %}{% endif %}
 
 <label class="{{ classes | join(' ') }}" for="{{ id }}">
@@ -103,3 +124,4 @@
   {% endif %}
 
 </label>
+{% if error_slot %}<span class="c-radio__error" id="{{ id }}-error">{% if errors %}{{ errors | join(', ') if errors is iterable and errors is not string else errors }}{% endif %}</span>{% endif %}

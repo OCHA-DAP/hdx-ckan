@@ -1,0 +1,229 @@
+// ============================================================
+// pages/dataset-form.less
+// Add / Edit dataset form (contribute_flow/create_edit.html)
+// Figma: llm_docs/redesign/figma_exports/xl-add-dataset-form.html,
+//        xl-add-dataset-form-errors.html, xl-add-edit-dataset-form-errors.html
+// ============================================================
+
+@import "../mixins.less";
+
+.hdx-v2-dataset-form-row {
+    background-color: var(--hdx-neutral-0);
+}
+
+.hdx-v2-dataset-form-sidebar {
+    @media (min-width: @hdx-bp-xl) {
+        padding-top: var(--hdx-space-10);
+    }
+}
+
+.hdx-v2-dataset-form-content {
+    padding: var(--hdx-space-6) 0 var(--hdx-space-12);
+
+    @media (min-width: @hdx-bp-md) {
+        padding: var(--hdx-space-8) 0 var(--hdx-space-12);
+    }
+
+    @media (min-width: @hdx-bp-xl) {
+        padding: var(--hdx-space-10) 0 var(--hdx-space-20);
+    }
+}
+
+.hdx-v2-dataset-form {
+    .hdx-form-groups(dataset-form-group);
+
+    &__header {
+        display:        flex;
+        flex-direction: column;
+        gap:            var(--hdx-space-4);
+        margin-bottom:  var(--hdx-space-12);
+    }
+
+    &__title {
+        .hdx-page-title-scale();
+        margin: 0;
+        color:  var(--hdx-neutral-95);
+    }
+
+    &__intro {
+        .hdx-body-m-semibold();
+        margin: 0;
+        color:  var(--hdx-neutral-85);
+    }
+
+    &__note {
+        .hdx-form-note();
+        margin: 0;
+    }
+
+    &__group {
+        .hdx-form-group(dataset-form-group);
+
+        &[hidden] { display: none; }
+    }
+
+    &__group-head {
+        display:        flex;
+        flex-direction: column;
+        gap:            var(--hdx-space-4);
+    }
+
+    &__group-title {
+        .hdx-form-group-title(dataset-form-group);
+    }
+
+    &__group-text,
+    &__group-list {
+        .hdx-body-m();
+        margin: 0;
+        color:  var(--hdx-neutral-85);
+    }
+
+    &__group-list {
+        padding-left: var(--hdx-space-6);
+    }
+
+    &__fields {
+        .hdx-form-group-fields();
+    }
+
+    &__fieldset {
+        .hdx-form-fieldset();
+    }
+
+    &__options {
+        .hdx-form-options();
+        gap: var(--hdx-space-4);
+    }
+
+    &__option-notice {
+        align-self:   stretch;
+        padding-left: var(--hdx-space-6);
+
+        &[hidden] { display: none; }
+    }
+
+    &__checkbox {
+        .v2-checkbox-row();
+    }
+
+    &__ongoing {
+        display:     flex;
+        align-items: center;
+        gap:         var(--hdx-space-2);
+    }
+
+    &__dates {
+        display:               grid;
+        grid-template-columns: 1fr;
+        gap:                   var(--hdx-space-2);
+
+        @media (min-width: @hdx-bp-md) {
+            grid-template-columns: 1fr 1fr;
+        }
+    }
+
+    &__suggested {
+        .hdx-body-s();
+        margin: 0;
+        color:  var(--hdx-neutral-85);
+
+        &[hidden] { display: none; }
+    }
+
+    &__suggested-tag {
+        padding:         0;
+        border:          none;
+        background:      transparent;
+        .hdx-body-s-medium();
+        color:           inherit;
+        text-decoration: underline;
+        cursor:          pointer;
+
+        &:focus-visible { .hdx-focus-ring(); }
+    }
+
+    &__source {
+        display:     flex;
+        flex-wrap:   wrap;
+        align-items: center;
+        gap:         var(--hdx-space-2) var(--hdx-space-3);
+    }
+
+    &__source-separator {
+        color: var(--hdx-neutral-3);
+    }
+
+    &__cloud-logo {
+        display:        inline-block;
+        .hdx-icon-size(var(--hdx-space-4));
+        vertical-align: middle;
+    }
+
+    &__resource-fields {
+        display:        flex;
+        flex-direction: column;
+        gap:            var(--hdx-space-6);
+
+        &[hidden] { display: none; }
+    }
+
+    &__resource-row {
+        display:               grid;
+        grid-template-columns: 1fr;
+        gap:                   var(--hdx-space-6);
+
+        @media (min-width: @hdx-bp-md) {
+            grid-template-columns: 2fr 1fr;
+        }
+    }
+
+    &__checks {
+        display:        flex;
+        flex-direction: column;
+        gap:            var(--hdx-space-2);
+    }
+
+    &__actions {
+        .hdx-form-actions();
+    }
+
+    &__terms {
+        flex-basis: 100%;
+    }
+
+    &__save {
+        .hdx-form-save();
+    }
+}
+
+.hdx-v2-dataset-form-overlay {
+    position:         fixed;
+    inset:            0;
+    z-index:          1000;
+    display:          flex;
+    align-items:      center;
+    justify-content:  center;
+    padding:          var(--hdx-space-4);
+    background-color: var(--hdx-overlay-white-90);
+
+    &[hidden] { display: none; }
+
+    &__box {
+        display:          flex;
+        flex-direction:   column;
+        align-items:      center;
+        gap:              var(--hdx-space-4);
+        padding:          var(--hdx-space-8);
+        border-radius:    var(--hdx-radius-md);
+        background-color: var(--hdx-neutral-0);
+        box-shadow:       var(--hdx-shadow-md);
+    }
+
+    &__message {
+        .hdx-body-m-medium();
+        margin:     0;
+        text-align: center;
+        color:      var(--hdx-neutral-95);
+    }
+}

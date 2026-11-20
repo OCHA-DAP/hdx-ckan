@@ -18,7 +18,8 @@
                               attrs {'target': '_blank'}); omit `value` with it.
                               `icon_src` renders a leading icon.
                               Checklist format: {value, label, count, checked, active,
-                              attrs, extra_classes, children?}.
+                              attrs, extra_classes, children?, info_href?}.
+                              `info_href` renders an info-icon "Learn more" link.
                               default: []
   navigate          {bool}    True → navigate-on-select list (sort, results-per-page).
                               False → multi-select checklist.  default: False
@@ -123,7 +124,8 @@
               count=row.get('count', ''),
               state='active' if row.get('active') else 'default',
               extra_classes=row.get('extra_classes', ''),
-              attrs=row.get('attrs', {}) %}
+              attrs=row.get('attrs', {}),
+              info_href=row.get('info_href', '') %}
         {% endfor %}
       </div>
     </div>

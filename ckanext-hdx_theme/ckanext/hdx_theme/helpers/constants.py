@@ -33,6 +33,12 @@ CONSTANTS = {
         ('products', None, ('/dataviz-gallery', '/signals', '/crisis-pages', '/event', '/dashboards')),
         ('home', '/', ('/',)),
     ),
+    'FORMAT_ICON_CATEGORIES': {
+        'tabular': ['csv', 'xlsx', 'xls', 'ods', 'tsv'],
+        'geo': ['shp', 'geojson', 'kml', 'kmz', 'geopackage', 'gpkg', 'geotiff', 'geodatabase', 'gdb'],
+        'document': ['pdf', 'doc', 'docx'],
+        'web': ['html', 'htm', 'xml'],
+    },
 }
 
 

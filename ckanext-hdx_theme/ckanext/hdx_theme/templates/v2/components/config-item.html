@@ -10,7 +10,13 @@
   (v2-config-item-scripts bundle): drag reordering, Move up / down, collapse,
   New Item, Delete and Save. With data-config-item-form on the list (form
   mode) the items are posted by the surrounding page form: no drag
-  reordering, no Save, no AJAX.
+  reordering (unless the list also has data-config-item-sortable), no Save,
+  no AJAX. data-config-item-add-position="start" inserts new items at the
+  top. Page JS adds an item with window.hdxV2ConfigItem(listEl).add({position:
+  'start' | 'end', focus: bool, prepare: function (item)}), which returns the
+  new item; prepare fills it before its `config-item:add` event. The list
+  dispatches bubbling `config-item:sort` (after a drag or Move) and
+  `config-item:remove` (detail.item = the removed item) events.
 
   Parameters
   ─────────────────────────────────────────────────
@@ -33,6 +39,8 @@
   delete_position {string}  'header' | 'footer' (a row after the fields).
                           default: 'header'
   delete_label  {string}  Delete button text.  default: 'Delete'
+  delete_icon_position {string}  'left' | 'right' — the Delete icon before or
+                          after the text.  default: 'left'
   caller()      block     The item's fields.
   ─────────────────────────────────────────────────
   Example
@@ -74,12 +82,14 @@
 {% set move_buttons    = move_buttons    if move_buttons    is defined else False %}
 {% set delete_position = delete_position if delete_position is defined else 'header' %}
 {% set delete_label    = delete_label    if delete_label    is defined else _('Delete') %}
+{% set delete_icon_position = delete_icon_position if delete_icon_position is defined else 'left' %}
 {% set expanded = expanded or not collapsible %}
 
 {% set delete_button %}
       {% snippet 'v2/components/text-button.html',
           style='tertiary', size='s', label=delete_label,
           icon_src='v2/icons/delete.svg',
+          icon_position=delete_icon_position,
           tag='button',
           attrs={
             'id': id ~ '-delete',

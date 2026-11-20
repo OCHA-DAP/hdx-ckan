@@ -160,7 +160,7 @@ Uses the shared `c-info-icon` / `c-tooltip-anchor` pattern. Hover/focus visibili
 |---------|--------|
 | Divider | `<hr class="c-divider">` |
 | Org logo | `<img>` sized by `.hdx-org-logo()` (max 8rem × min(100%, 17rem), natural ratio, no upscaling); wrapped in `<a class="c-page-header__logo-link">` when `logo_href` is passed (dataset page only — see Decisions) |
-| Dataset title | `<h1>` — Merriweather bold, responsive font-size, `word-break: break-word; overflow-wrap: anywhere;` (so an unbreakable long title wraps instead of overflowing behind the org logo); gets `data-module="hdx-quick-edit"` attrs when `edit_mode=True` |
+| Dataset title | `<h1>` — Merriweather bold, responsive font-size, `word-break: break-word; overflow-wrap: anywhere;` (so an unbreakable long title wraps instead of overflowing behind the org logo); gets `data-module="hdx-quick-edit"` attrs when `edit_mode=True`, plus right padding that keeps the hover Edit link clear of the text |
 | Description container | `<div data-module="clamped-text">` + `<p class="...__desc-text" data-clamped-content>` + show-more button (updated task 038) |
 | Download count | `<div>` with an SVG icon + `<span>` |
 
@@ -307,7 +307,7 @@ Each item: `{label (optional), title, url, newTab}`. Rendered as a flex `__link-
 
 ### 5.5 edit_mode
 
-When `edit_mode=True`, the h1 title receives `data-module="hdx-quick-edit" data-module-anchor="field_title" data-module-dataset="{{ pkg_id }}"`. The description `<p>` (not the outer `clamped-text` div) receives `data-module="hdx-quick-edit" data-module-anchor="field_notes" data-module-dataset="{{ pkg_id }}"`, mirroring the title pattern.
+When `edit_mode=True`, the h1 title receives `data-module="hdx-quick-edit" data-module-anchor="field_title" data-module-dataset="{{ pkg_id }}"`. The outer `clamped-text` div of the description receives `data-module="clamped-text hdx-quick-edit" data-module-anchor="field_notes" data-module-dataset="{{ pkg_id }}"`, mirroring the title pattern, right padding included.
 
 ---
 

@@ -97,3 +97,4 @@
 | 093 | [password-reset-confirmation](093-password-reset-confirmation.md)                                               | implemented | |
 | 094 | [showcase-add-edit-manage-datasets-v2](094-showcase-add-edit-manage-datasets-v2.md)                             | implemented | |
 | 095 | [sysadmin-qa-dashboard-enhancements](095-sysadmin-qa-dashboard-enhancements.md)                                 | implemented | |
+| 096 | [add-edit-dataset-form-v2](096-add-edit-dataset-form-v2.md)                                                     | implemented | |

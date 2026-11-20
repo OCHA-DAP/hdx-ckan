@@ -63,4 +63,30 @@
 
         &:empty { display: none; }
     }
+
+    &__drop {
+        justify-content:  center;
+        gap:              var(--hdx-space-1);
+        min-height:       6.25rem; // Figma spec
+        padding:          var(--hdx-space-4);
+        border:           1px dashed var(--hdx-neutral-3);
+        border-radius:    var(--hdx-radius-sm);
+        background-color: var(--hdx-neutral-01);
+        transition:       border-color 0.15s ease, background-color 0.15s ease;
+        .hdx-motion();
+    }
+
+    &__drop-text {
+        .hdx-body-m();
+        color: var(--hdx-neutral-8);
+    }
+
+    &--dropzone.is-dragover &__drop {
+        border-color:     var(--hdx-primary-5);
+        background-color: var(--hdx-primary-05);
+    }
+
+    &--error &__drop {
+        border-color: var(--hdx-error-5);
+    }
 }

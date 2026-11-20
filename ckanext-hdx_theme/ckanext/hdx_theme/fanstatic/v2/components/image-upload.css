@@ -62,3 +62,27 @@
 .c-image-upload__error:empty {
   display: none;
 }
+.c-image-upload__drop {
+  justify-content: center;
+  gap: var(--hdx-space-1);
+  min-height: 6.25rem;
+  padding: var(--hdx-space-4);
+  border: 1px dashed var(--hdx-neutral-3);
+  border-radius: var(--hdx-radius-sm);
+  background-color: var(--hdx-neutral-01);
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+.c-image-upload__drop-text {
+  font-family: var(--hdx-font-body);
+  font-size: var(--hdx-fs-m);
+  font-weight: var(--hdx-fw-regular);
+  line-height: var(--hdx-lh-normal);
+  color: var(--hdx-neutral-8);
+}
+.c-image-upload--dropzone.is-dragover .c-image-upload__drop {
+  border-color: var(--hdx-primary-5);
+  background-color: var(--hdx-primary-05);
+}
+.c-image-upload--error .c-image-upload__drop {
+  border-color: var(--hdx-error-5);
+}

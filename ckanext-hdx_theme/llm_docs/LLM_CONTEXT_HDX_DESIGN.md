@@ -89,7 +89,7 @@ There are three active layout base templates. The goal is to maintain exactly th
 - `ckanext-hdx_theme/ckanext/hdx_theme/templates/v2/header.html` — top-bar + responsive navbar (fully implemented)
 - `ckanext-hdx_theme/ckanext/hdx_theme/templates/v2/footer.html` — dark-teal footer panel (fully implemented)
 
-Pages in holding state on `page_light.html` (create/edit dataset) manually override `{% block header_core %}` to include the legacy `header-mobile.html`. See [**redesign/PROGRESS.md**](redesign/PROGRESS.md) for the full holding-state and migrated-pages lists.
+See [**redesign/PROGRESS.md**](redesign/PROGRESS.md) for the migrated-pages list.
 
 ## BEM components (HDX custom UI blocks)
 
@@ -439,6 +439,15 @@ Example page-specific template (light search):
 
 ---
 
+### Add / Edit dataset form (`/contribute/new`, `/contribute/edit/<id>`)
+
+- **Templates**: `contribute_flow/create_edit.html` on `v2/page.html`, loaded in the `#addDataPopup` iframe (`v2/contribute-popup.html`, `contributeAddDetails` in `v2/contribute.js`); its header passes `show_add_data=False` and `contribute_widget` is empty. File card fields: `contribute_flow/snippets/resource_fields.html`; Suggest a new tag drawer: `contribute_flow/snippets/request_tags_drawer.html`. The `/contribute/*` views and their JSON contract are unchanged.
+  - The form has `novalidate`: `pages/dataset-form.js` posts `/contribute/validate`, then the metadata (the named fields of the `[data-dataset-form-fields]` sections, empty values dropped), then each changed file through `resource_create` / `resource_update` (the full resource dict), queued deletions and `package_resource_reorder`, then sends the top window to the dataset.
+  - Share modes toggle asterisks / `required` (`data-required-modes`) and sections (`data-share-hide` / `data-share-show`); the 12 quick-edit anchor ids (`hdx-quick-edit`) stay on the form fields.
+- **Core assets**: `hdx_theme/v2-select2-styles`, `v2-dataset-form-page-styles`; `v2-select2-scripts`, `v2-slug-preview-scripts`, `v2-config-item-scripts`, `v2-dataset-form-page-scripts`; Dropbox `dropins.js` and Google `gsi/client` script tags.
+
+---
+
 ### Signals page (`/signals`)
 
 - **Template**: `ckanext-hdx_theme/ckanext/hdx_theme/templates/landing_pages/signals.html`
@@ -499,7 +508,7 @@ Example page-specific template (light search):
 
 ## V2 JavaScript Patterns
 
-New v2 JavaScript is vanilla — no jQuery; the exceptions are the Select2 API calls in `fanstatic/v2/components/select.js` and core's slug plugins (`$.url.slugify`, `$.fn.slug`) in `fanstatic/v2/components/slug-preview.js` (jQuery is already loaded by `hdx_theme/ckan`). Follow these patterns consistently.
+New v2 JavaScript is vanilla — no jQuery; the exceptions are the Select2 API calls in `fanstatic/v2/components/select.js` (and page JS that listens to or sets a Select2 field: Select2 fires `change` through jQuery only) and core's slug plugins (`$.url.slugify`, `$.fn.slug`) in `fanstatic/v2/components/slug-preview.js` (jQuery is already loaded by `hdx_theme/ckan`). Follow these patterns consistently.
 
 ### No jQuery
 
