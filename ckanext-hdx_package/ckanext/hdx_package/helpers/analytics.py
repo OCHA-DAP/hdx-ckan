@@ -4,7 +4,7 @@ import six.moves.urllib.parse as urlparse
 import datetime
 
 from ckan.types import Context
-from ckanext.hdx_package.helpers.constants import COD_ENHANCED, COD_STANDARD
+from ckanext.hdx_package.helpers.constants import is_cod_level
 from ckanext.hdx_theme.helpers.helpers import hdx_supports_notifications
 from ckanext.hdx_theme.util.analytics import AbstractAnalyticsSender
 from ckanext.hdx_users.general_token_model import ObjectType
@@ -36,8 +36,7 @@ def is_indicator(pkg_dict):
 
 
 def is_cod(pkg_dict):
-    cod_level = pkg_dict.get('cod_level')
-    if cod_level == COD_ENHANCED or cod_level == COD_STANDARD:
+    if is_cod_level(pkg_dict.get('cod_level')):
         return 'true'
     return 'false'
 

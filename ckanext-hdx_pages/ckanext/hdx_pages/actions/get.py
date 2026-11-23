@@ -49,8 +49,15 @@ def page_group_list(context, data_dict):
 
     # logic.check_access('ckanext_page_group_list', context, data_dict)
 
+    id = data_dict.get('id')
+    if not id:
+        raise logic.ValidationError({'id': _('Missing value')})
+    page = pages_model.Page.get_by_id(id=id)
+    if page is None:
+        raise NotFound
+
     # get a list of group ids associated with the page id
-    group_id_list = PageGroupAssociation.get_group_ids_for_page(data_dict['id'])
+    group_id_list = PageGroupAssociation.get_group_ids_for_page(page.id)
 
     # group_list = []
     # if group_id_list is not None:
