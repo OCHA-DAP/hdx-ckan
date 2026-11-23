@@ -1,4 +1,4 @@
-from ckanext.hdx_package.helpers.constants import COD_VALUES_MAP
+from ckanext.hdx_package.helpers.constants import is_cod_level
 from ckanext.hdx_package.helpers.date_helper import DaterangeParser
 
 
@@ -8,8 +8,7 @@ OTHER_MENU_LABEL = 'Unspecified'
 def set_show_groupings_flag(dataset_dict):
     cod_level = dataset_dict.get('cod_level')
     if cod_level:
-        dataset_dict['x_show_grouping'] = COD_VALUES_MAP.get(cod_level).get('is_cod') \
-                                          and dataset_dict.get('x_resource_grouping')
+        dataset_dict['x_show_grouping'] = is_cod_level(cod_level) and dataset_dict.get('x_resource_grouping')
 
 
 def add_other_grouping_if_needed(dataset_dict):

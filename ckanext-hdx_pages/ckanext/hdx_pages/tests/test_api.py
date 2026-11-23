@@ -196,6 +196,18 @@ class TestHDXPageWithGroups(object):
         page_group_list = _get_action('page_group_list')(context_sysadmin, {'id': page_dict.get('id')})
         assert page_group_list
 
+        page_group_list_by_name = _get_action('page_group_list')(context_sysadmin, {'id': page_dict.get('name')})
+        assert page_group_list_by_name == page_group_list
+
+        with pytest.raises(logic.ValidationError):
+            _get_action('page_group_list')(context_sysadmin, {})
+
+        with pytest.raises(logic.ValidationError):
+            _get_action('page_group_list')(context_sysadmin, {'name': page_dict.get('name')})
+
+        with pytest.raises(logic.NotFound):
+            _get_action('page_group_list')(context_sysadmin, {'id': 'page-that-does-not-exist'})
+
         page_list = _get_action('admin_page_list')(context_sysadmin, {})
         assert page_list
 

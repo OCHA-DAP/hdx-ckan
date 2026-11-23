@@ -11,7 +11,7 @@ import ckanext.hdx_package.helpers.analytics as analytics
 
 from ckanext.hdx_package.exceptions import NoOrganization
 from ckanext.hdx_package.helpers.caching import cached_group_iso_to_title
-from ckanext.hdx_package.helpers.constants import UPDATE_FREQ_LIVE
+from ckanext.hdx_package.helpers.constants import UPDATE_FREQ_LIVE, is_cod_level
 from ckanext.hdx_package.helpers.freshness_calculator import FreshnessCalculator
 
 
@@ -527,6 +527,14 @@ def hdx_render_resource_updated_date(resource_dict, package_dict):
         return 'Live'
     else:
         return h.render_datetime(resource_dict.get('last_modified'))
+
+
+def hdx_is_cod(package_dict):
+    '''
+    :return: True if the dataset's ``cod_level`` marks it as a COD (any COD level)
+    :rtype: bool
+    '''
+    return is_cod_level(package_dict.get('cod_level'))
 
 
 def hdx_compute_analytics(package_dict):
