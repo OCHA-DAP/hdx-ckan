@@ -264,6 +264,18 @@ class TestRequestMembershipMembersController(org_group_base.OrgGroupBaseWithInds
         assert len(member_requests) == 1, 'Exactly one member request should exist for this org'
         assert member_requests[0].get('user_name') == test_username
 
+    def test_request_membership_special_chars_in_user_fullname(self, app, hdx_ses_mailer):
+        factories.User(name='toma', email='toma@hdx.hdxtest.org', fullname='Tôma')
+        toma_token = factories.APIToken(user='toma', expires_in=2, unit=60 * 60)['token']
+
+        url = h.url_for('ytp_request.new')
+        app.post(url, params={'organization': 'hdx-test-org', 'role': 'member', 'save': 'save',
+                              'message': 'add me to your organization'},
+                 headers={'Authorization': toma_token})
+
+        assert len(hdx_ses_mailer) == 2, 'Org admins and requester emails should be sent'
+        assert hdx_ses_mailer[1]['To'].endswith(' <toma@hdx.hdxtest.org>')
+
 
 class TestMembersDuplicateController(org_group_base.OrgGroupBaseWithIndsAndOrgsTest):
 

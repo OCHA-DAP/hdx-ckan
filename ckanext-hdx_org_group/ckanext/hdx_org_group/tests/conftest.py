@@ -1,7 +1,7 @@
 import pytest
 import datetime
 from ckanext.hdx_theme.tests.conftest import keep_db_tables_on_clean, hdx_with_plugins, hdx_clean_db, \
-    dataset_with_uploaded_resource, migrate_hdx_users
+    dataset_with_uploaded_resource, migrate_hdx_users, hdx_ses_mailer
 import ckan.plugins.toolkit as tk
 import ckan.tests.factories as factories
 

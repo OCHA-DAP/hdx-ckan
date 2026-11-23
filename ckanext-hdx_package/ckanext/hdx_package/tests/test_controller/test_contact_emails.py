@@ -45,3 +45,33 @@ class TestContactEmails(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
         assert kw_args.get('sender_name') == post_params['fullname']
         assert kw_args.get('sender_email') == post_params['email']
         assert 'email/content/group_message.html' == kw_args.get('snippet')
+
+    def test_contact_members_special_chars_in_name(self, hdx_ses_mailer):
+        member = model.User.by_name('tester')
+        member.email = 'tester@test.com'
+
+        sysadmin = model.User.by_name('testsysadmin')
+        sysadmin.email = 'testsysadmin@test.com'
+        sysadmin_token = factories.APIToken(user='testsysadmin', expires_in=2, unit=60 * 60)
+        auth = {'Authorization': sysadmin_token['token']}
+
+        post_params = {
+            'source_type': 'dataset',
+            'title': 'Test page title',
+            'org_id': 'hdx-test-org',
+            'pkg_id': 'test_dataset_1',
+            'topic': 'all',
+            'fullname': 'Tôma',
+            'email': 'sender_email@test.com',
+            'msg': 'This is a test message'
+        }
+
+        url = url_for('hdx_contact.contact_members')
+
+        res = self.app.post(url, params=post_params,
+                            headers=auth)
+
+        assert '{"success": true}' in res.body
+        assert len(hdx_ses_mailer) == 1, 'Group message should be sent to org members'
+        assert hdx_ses_mailer[0]['From'].endswith(' <hdx@humdata.org>')
+        assert hdx_ses_mailer[0]['Reply-To'].endswith(' <sender_email@test.com>')

@@ -128,6 +128,57 @@ class TestContactContributorView(object):
         assert ('<input type="hidden" id="message_subject" value="{0}">'.format(data_dict.get('topic')) in
                 response.body), 'The hidden input indicates analytics tracking message subject for request submission'
 
+    def test_contact_contributor_special_chars_in_name(self, app, hdx_ses_mailer):
+        user_token = factories.APIToken(user=USER_NAME, expires_in=2, unit=60 * 60)['token']
+        auth_headers = {'Authorization': user_token}
+
+        package = {
+            'package_creator': 'test function',
+            'private': False,
+            'dataset_date': '01/01/1960-12/31/2012',
+            'caveats': 'These are the caveats',
+            'license_other': 'TEST OTHER LICENSE',
+            'methodology': 'This is a test methodology',
+            'dataset_source': 'Test data',
+            'license_id': 'hdx-other',
+            'name': PUBLIC_DATASET_NAME,
+            'notes': 'This is a public test dataset',
+            'title': 'Public Test Dataset',
+            'groups': [{'name': LOCATION_NAME}],
+            'owner_org': ORGANIZATION_NAME,
+            'maintainer': SYSADMIN_NAME,
+            'data_update_frequency': '-1',
+            'resources': [
+                {
+                    'url': config.get('ckan.site_url', '') + '/storage/f/test_folder/test.csv',
+                    'resource_type': 'file.upload',
+                    'format': 'CSV',
+                    'name': 'test.csv'
+                }
+            ]
+        }
+        pkg_dict = get_action('package_create')(get_sysadmin_context(), package)
+
+        contact_contributor_url = h.url_for('hdx_dataset.contact_contributor', id=pkg_dict.get('name') or pkg_dict.get('id'))
+
+        data_dict = {
+            'topic': 'suggested edits',
+            'fullname': 'Tôma',
+            'email': 'hdx.feedback@gmail.com',
+            'msg': 'my message',
+            'pkg_id': pkg_dict.get('id'),
+            'pkg_owner_org': pkg_dict.get('owner_org'),
+            'pkg_title': pkg_dict.get('title'),
+        }
+        response = app.post(contact_contributor_url, data=data_dict, headers=auth_headers)
+        assert response.status_code == 200
+        assert '<input type="hidden" id="message_sent" value="True">' in response.body, \
+            'The hidden input indicates analytics tracking for request submission'
+        assert len(hdx_ses_mailer) == 2, 'Contributor and requester emails should be sent'
+        assert hdx_ses_mailer[0]['From'].endswith(' <hdx@humdata.org>')
+        assert hdx_ses_mailer[0]['Reply-To'].endswith(' <hdx.feedback@gmail.com>')
+        assert hdx_ses_mailer[1]['To'].endswith(' <hdx.feedback@gmail.com>')
+
     def test_contact_contributor_request_data_dataset(self, app):
         user_token = factories.APIToken(user=USER_NAME, expires_in=2, unit=60 * 60)['token']
         auth_headers = {'Authorization': user_token}

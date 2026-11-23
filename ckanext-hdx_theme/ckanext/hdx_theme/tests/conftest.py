@@ -1,3 +1,6 @@
+import email
+
+import mock
 import pytest
 
 import ckan.plugins
@@ -9,6 +12,7 @@ from typing import cast, Dict
 from collections import namedtuple
 from ckan.types import Context
 
+import ckanext.hdx_smtp_assumerole.helpers.hdx_users_mailer_patches as hdx_users_mailer_patches
 from ckanext.hdx_org_group.helpers.static_lists import ORGANIZATION_TYPE_LIST
 
 
@@ -96,3 +100,18 @@ def hdx_clean_db(hdx_with_plugins, clean_db, migrate_db_for) -> None:
 @pytest.fixture(autouse=True)
 def migrate_hdx_users(migrate_db_for):
     migrate_db_for('hdx_users')
+
+
+@pytest.fixture()
+def hdx_ses_mailer():
+    sent_messages = []
+
+    def _capture_ses_message(**kwargs):
+        sent_messages.append(email.message_from_string(kwargs['mime_message'].as_string()))
+
+    ses_credentials = {'access_key': 'test', 'secret_key': 'test', 'session_token': 'test', 'region': 'us-east-1'}
+    with mock.patch.object(hdx_users_mailer_patches, 'get_cached_ses_credentials', return_value=ses_credentials), \
+            mock.patch.object(hdx_users_mailer_patches, 'send_email_via_ses', side_effect=_capture_ses_message):
+        hdx_users_mailer_patches.patch_hdx_users_mailer()
+        yield sent_messages
+        hdx_users_mailer_patches.unpatch_hdx_users_mailer()
