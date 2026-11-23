@@ -41,10 +41,6 @@
       options.allowClear  = false;
     }
 
-    if (select.hasAttribute('data-tags')) {
-      options.tags = true;
-    }
-
     if (source) {
       var extraParams = sourceParams(select);
       var termKey     = sourceType === 'tag' || sourceType === 'format' ? 'incomplete' : 'q';

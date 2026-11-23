@@ -56,11 +56,12 @@
                           with data-source-type="format", the resource format
                           autocomplete: value = text = the format. Each
                           data-source-param-<key>="<selector>" adds <key> =
-                          that field's current value to the query. data-tags
-                          lets the user add values that aren't in the list.
+                          that field's current value to the query.
                           Selects inserted later initialise on a bubbling
                           `config-item:add` event from their container.
                           default: False
+  tags          {bool}    With `searchable`: the user can add values that aren't
+                          in the list (data-tags="true").  default: False
   ─────────────────────────────────────────────────
 
   Example
@@ -102,6 +103,7 @@
 {% set required         = required         if required         is defined else false %}
 {% set select_attrs     = select_attrs     if select_attrs     is defined else {} %}
 {% set searchable       = searchable       if searchable       is defined else false %}
+{% set tags             = tags             if tags             is defined else false %}
 {% set chip_color       = chip_color       if chip_color       is defined else '' %}
 {% set description      = description      if description      is defined else '' %}
 {% if description %}
@@ -133,6 +135,7 @@
           {% if required %}required{% endif %}
           {% if is_disabled %}disabled aria-disabled="true"{% endif %}
           {% if searchable %}data-searchable{% endif %}
+          {% if tags %}data-tags="true"{% endif %}
           {% if multiple %}multiple{% if placeholder %} data-placeholder="{{ placeholder }}"{% endif %}{% endif %}
           {% for key, val in select_attrs.items() %} {{ key }}="{{ val }}"{% endfor %}>
     {% if placeholder and not multiple %}

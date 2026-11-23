@@ -185,6 +185,8 @@
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 3;
   overflow: hidden;
+  word-break: break-word;
+  overflow-wrap: anywhere;
 }
 .c-page-header__desc-text a {
   color: inherit;

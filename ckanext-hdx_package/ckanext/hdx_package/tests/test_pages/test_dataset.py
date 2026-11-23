@@ -32,6 +32,7 @@ class TestDataset(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
         for field_id in QUICK_EDIT_IDS:
             assert 'id="{}"'.format(field_id) in body
         assert 'id="field_archived"' not in body
+        assert body.count('data-tags="true"') == 2
 
     def test_edit_dataset_page(self):
         url = h.url_for('hdx_contribute.edit', id='test_dataset_1')

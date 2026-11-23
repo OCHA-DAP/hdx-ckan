@@ -514,7 +514,7 @@ Six distinct components cover form fields; pick by field type, don't extend the 
 
 - `search-input.html` — search boxes only (`type='search'`).
 - `text-field.html` — generic text/email/password/textarea fields (password-toggle, multiline, `hint`, a `leading` slot inside the field box).
-- `select.html` — native `<select>`-backed fields; `searchable=True` for long option lists (Select2); `multiple=True` for several values (chips with `searchable`).
+- `select.html` — native `<select>`-backed fields; `searchable=True` for long option lists (Select2); `multiple=True` for several values (chips with `searchable`); `tags=True` for values not in the list.
 - `slug-preview.html` — URL slug fields with a "URL: prefix/slug [Edit]" preview (wraps `text-field.html`).
 - `image-upload.html` — image fields that take an upload or a linked URL (CKAN url/upload/clear fields); with `dropzone`, any file dropped or browsed.
 - `date-picker.html` — date fields: a select-like button, a calendar panel and a hidden `yyyy-mm-dd` input.

@@ -161,7 +161,7 @@ Uses the shared `c-info-icon` / `c-tooltip-anchor` pattern. Hover/focus visibili
 | Divider | `<hr class="c-divider">` |
 | Org logo | `<img>` sized by `.hdx-org-logo()` (max 8rem × min(100%, 17rem), natural ratio, no upscaling); wrapped in `<a class="c-page-header__logo-link">` when `logo_href` is passed (dataset page only — see Decisions) |
 | Dataset title | `<h1>` — Merriweather bold, responsive font-size, `word-break: break-word; overflow-wrap: anywhere;` (so an unbreakable long title wraps instead of overflowing behind the org logo); gets `data-module="hdx-quick-edit"` attrs when `edit_mode=True`, plus right padding that keeps the hover Edit link clear of the text |
-| Description container | `<div data-module="clamped-text">` + `<p class="...__desc-text" data-clamped-content>` + show-more button (updated task 038) |
+| Description container | `<div data-module="clamped-text">` + `<p class="...__desc-text" data-clamped-content>` + show-more button (updated task 038); the text wraps like the title (`word-break: break-word; overflow-wrap: anywhere;`) |
 | Download count | `<div>` with an SVG icon + `<span>` |
 
 ---

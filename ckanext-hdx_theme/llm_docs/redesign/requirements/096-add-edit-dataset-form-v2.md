@@ -524,7 +524,7 @@ Off-token values: `#4b5563` hint, `#333`, `#ebf2fe`, `#007ce1` links, `#d1d5db`,
 | Text / textarea | `text-field.html` (`size='l'` (D44), `label`, `required`, `description` above, `hint` below, `multiline`, `rows`, `errors`, `input_attrs`) | `leading` slot for the File name tile (D49) |
 | Native select (frequency, license, methodology) | `select.html` (`options`, `placeholder`, `selected`, `description`, `errors`) + `hdxV2.wireReveal` for "Other" | `size='l'`, native and Select2 (D44) |
 | Searchable select (organisation, maintainer, format) | `select.html searchable=True` (`components/select.js`, `v2-select2-*` bundles), `select_attrs={'data-source': …}` | Maintainer needs an extra `org` param read from another field; format needs the format-autocomplete source (D25) |
-| Locations / tags chips | `select.html multiple=True searchable=True` (`chip_color='cyan'` for locations; grey default for tags) | Free-text entry for HDX Connect `field_names` / `file_types` (D25) |
+| Locations / tags chips | `select.html multiple=True searchable=True` (`chip_color='cyan'` for locations; grey default for tags) | Free-text entry for HDX Connect `field_names` / `file_types` (`tags=True`, D55) |
 | Suggested tags | None (v1 `tag_recommender.js`; 094 D7 dropped it for showcases) | Page JS on `hdx_recommend_tags` |
 | Slug | `slug-preview.html` (`prefix`, `target_id`, `description`, `errors`; `v2-slug-preview-scripts`) | `size` param (D16, D44) |
 | Dates + Ongoing | None for dates (only the LESS-only `c-dropdown-calendar` month panel). `checkbox.html` for Ongoing, `info-icon.html` for its tooltip | New date-picker component (D17, D32), `size` param (D44) |
@@ -710,7 +710,7 @@ No shared v1/v2 snippet is involved, so no `v2=true` branching is needed.
 | D22 | Notice boxes | PII error, microdata info, overdue warning / all error / overdue error | First | **`c-alert`, not dismissible:** PII `error`, microdata `info`, the edit overdue notice `warning` |
 | D23 | Client-side errors | extend `setFieldError` + radio errors / page-local | Extend | **Extend `hdxV2.setFieldError`** to select (Select2), radio group, file and slug, with `aria-invalid` / `aria-describedby`; `radio.html` gets an `errors` param |
 | D24 | Dialogs and saving progress | drawers + overlay / drawers for all | Drawers + overlay | **`c-drawer`** for private-dataset info (same localStorage key), suggest a tag (`/request_tags/suggest`) and the Delete confirm. **Saving progress:** a full-page overlay with `c-spinner` and an `aria-live` "Saving file N of M" message |
-| D25 | `select.js` | extend / page-local | Extend | **Extend `select.js` / `select.html`** with optional data attributes: an extra query param read from another field (maintainer `org`), the format-autocomplete source, free-text entry (`field_names`, `file_types`). Existing selects are unchanged |
+| D25 | `select.js` | extend / page-local | Extend | **Extend `select.js` / `select.html`** with optional data attributes: an extra query param read from another field (maintainer `org`), the format-autocomplete source; free-text entry (`field_names`, `file_types`) is the `tags` param (D55). Existing selects are unchanged |
 | D26 | Copy | per row (§4.5) | C1–C2, C8–C10 Figma; C3–C7, C12 current | **§4.5 Decision column.** Figma wording throughout. C7's link goes to `QA_PROCESS`. C12 keeps v1's two licenses in Figma's sentence. C13 uses "February 1, 2023" |
 | D27 | New error copy | Title message + no share-mode / v1 messages | First | **v1 messages.** An empty title never errors (core copies the URL slug into it), so the Title message would never show. No share-mode message, because the radio always has a value |
 | D28 | Figma artefacts (§3.8) | ignore / review individually | Ignore | **Ignored.** Where Figma has an artefact, the current text stays (e.g. the Time Period tip says "all files") |
@@ -740,6 +740,7 @@ No shared v1/v2 snippet is involved, so no `v2=true` branching is needed.
 | D52 | Unused v1 ids; unreferenced Time Period hint | drop + wire / drop / wire / keep | Drop + wire | **v1 ids nothing reads are dropped** (the 12 quick-edit ids stay); the Time Period fieldset is `aria-describedby` its hint |
 | D53 | jQuery in page JS (vanilla rule) | vanilla reads + doc / doc only / `select.js` native events | Vanilla reads + doc | **jQuery only to listen to or set a Select2 field** (Select2 fires `change` through jQuery only); value reads are vanilla |
 | D54 | Section 3 "this support page" link (the old Centre metadata page) | `DOCUMENTATION_LINKS` key / inline URL | `DOCUMENTATION_LINKS` key | **`DOCUMENTATION_LINKS['METADATA']`** (docs.humdata.org/about/hdx-metadata); the link title is "HDX Metadata" |
+| D55 | Free-text entry on Field names / File types (Select2 reads `data-*` attributes over the JS options, so `data-tags=""` turned tag mode off) | `data-tags="true"` / `select.js` ignores the value / `select.html` param | `data-tags="true"` | **`select.html` `tags=True`** renders `data-tags="true"`; both HDX Connect selects use it; `test_new_dataset_page` counts both |
 
 ---
 

@@ -317,7 +317,7 @@
               required=is_requestdata,
               description=_('What are the most important fields in the dataset?'),
               options=field_name_options, selected=field_names,
-              multiple=True, searchable=True, select_attrs={'data-tags': ''} %}
+              multiple=True, searchable=True, tags=True %}
         </div>
 
         <div class="c-form-field" data-required-modes="requestdata" data-share-show="requestdata"{% if not is_requestdata %} hidden{% endif %}>
@@ -326,7 +326,7 @@
               required=is_requestdata,
               description=_('What file types does your dataset contain?'),
               options=file_type_options, selected=file_types,
-              multiple=True, searchable=True, select_attrs={'data-tags': ''} %}
+              multiple=True, searchable=True, tags=True %}
         </div>
 
         <div class="c-form-field" data-share-show="requestdata"{% if not is_requestdata %} hidden{% endif %}>
