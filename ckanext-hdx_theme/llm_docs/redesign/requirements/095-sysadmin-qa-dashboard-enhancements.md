@@ -315,7 +315,8 @@ Flow:
 
 There are no MD or SM exports. Same controls at every breakpoint (D14):
 - **Dataset header and cards.** The label, CTA and QA menu render at every breakpoint. The right card already stacks
-  below the description at SM. The QA dropdown wraps with the existing `.c-resource-card__actions` row.
+  below the description at SM. Below MD the QA dropdown takes its own right-aligned row above the CTAs
+  (`.c-resource-card__leading-actions`), with its panel right-anchored.
 - **Search.** The Sysadmin filters block sits inside `#search-page-filters-form`, so it moves into the filter overlay
   below XL with no extra work.
 

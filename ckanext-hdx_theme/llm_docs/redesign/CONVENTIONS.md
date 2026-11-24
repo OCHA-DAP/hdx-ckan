@@ -567,7 +567,7 @@ CSRF headers for `fetch` POSTs: `window.hdxV2.post(url, body)` (`utils.js`) for 
 
 ## Components inserted after page load
 
-Component scripts initialise on `DOMContentLoaded`. Markup inserted later announces itself with a bubbling `<component>:add` event on the new element (`config-item:add` from `components/config-item.js` after New Item); a component that can sit inside it listens on `document` and initialises the matches inside `event.target` (`image-upload.js` does this for `[data-image-upload]`, `select.js` for `select[data-searchable]`). Page JS that builds items itself calls `window.hdxV2ConfigItem(listEl).add({position, focus, prepare})`; `prepare(item)` fills the item before that event.
+Component scripts initialise on `DOMContentLoaded`, and check vendor globals such as `window.Popper` there, not at load: `{% asset %}` order can run a component bundle before the vendor scripts (`notification_platform/modals.html` does). Markup inserted later announces itself with a bubbling `<component>:add` event on the new element (`config-item:add` from `components/config-item.js` after New Item); a component that can sit inside it listens on `document` and initialises the matches inside `event.target` (`image-upload.js` does this for `[data-image-upload]`, `select.js` for `select[data-searchable]`). Page JS that builds items itself calls `window.hdxV2ConfigItem(listEl).add({position, focus, prepare})`; `prepare(item)` fills the item before that event.
 
 ---
 

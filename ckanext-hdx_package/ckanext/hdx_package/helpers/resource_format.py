@@ -21,7 +21,7 @@ def resource_format_autocomplete(query, limit):
     allowed_resource_formats = allowed_formats()
 
     result_generator = (value for key, value in allowed_resource_formats.items() if query.lower() in key)
-    result_generator = itertools.islice(result_generator, 7)
+    result_generator = itertools.islice(dict.fromkeys(result_generator), limit)
     result = list(result_generator)
     result.sort()
     return result
