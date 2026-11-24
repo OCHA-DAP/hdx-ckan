@@ -141,6 +141,18 @@
   height: var(--hdx-space-4);
   display: block;
 }
+.c-dropdown--native.c-dropdown--size-l .c-dropdown__select {
+  height: 2.5rem;
+  padding-left: var(--hdx-space-4);
+  font-family: var(--hdx-font-body);
+  font-size: var(--hdx-fs-m);
+  font-weight: var(--hdx-fw-medium);
+  line-height: var(--hdx-lh-normal);
+  line-height: 1;
+}
+.c-dropdown--native.c-dropdown--size-l .c-dropdown__chevron {
+  top: calc(2.5rem / 2);
+}
 .c-dropdown--error .c-dropdown__select,
 .c-dropdown--error .c-dropdown__select:hover {
   border-color: var(--hdx-error-5);
@@ -311,6 +323,16 @@
 .c-dropdown-calendar__nav-btn:hover {
   background-color: var(--hdx-neutral-01);
 }
+.c-dropdown-calendar__nav-btn:focus-visible {
+  outline: 2px solid var(--hdx-primary-5);
+  outline-offset: 2px;
+}
+.c-dropdown-calendar__nav-btn:disabled,
+.c-dropdown-calendar__nav-btn:disabled:hover {
+  background-color: transparent;
+  color: var(--hdx-neutral-4);
+  cursor: not-allowed;
+}
 .c-dropdown-calendar__grid {
   align-self: stretch;
   display: grid;
@@ -346,6 +368,18 @@
   background-color: var(--hdx-primary-5);
   border-color: var(--hdx-primary-5);
   color: var(--hdx-neutral-0);
+}
+.c-dropdown-calendar__month-btn:focus-visible {
+  outline: 2px solid var(--hdx-primary-5);
+  outline-offset: 2px;
+}
+.c-dropdown-calendar__month-btn:disabled,
+.c-dropdown-calendar__month-btn:disabled:hover {
+  background-color: var(--hdx-neutral-01);
+  border-color: var(--hdx-neutral-1);
+  box-shadow: none;
+  color: var(--hdx-neutral-4);
+  cursor: not-allowed;
 }
 .c-dropdown--inline {
   width: auto;
@@ -559,6 +593,16 @@
 }
 .c-dropdown--native .select2-container--hdx-v2 .select2-results__message {
   color: var(--hdx-neutral-7);
+}
+.c-dropdown--native.c-dropdown--size-l .select2-container--hdx-v2 .select2-selection--single {
+  height: 2.5rem;
+}
+.c-dropdown--native.c-dropdown--size-l .select2-container--hdx-v2 .select2-selection--multiple {
+  min-height: 2.5rem;
+  padding-left: var(--hdx-space-14);
+}
+.c-dropdown--native.c-dropdown--size-l .select2-container--hdx-v2 .select2-selection--multiple .select2-search__field {
+  font-size: var(--hdx-fs-m);
 }
 .c-dropdown--native.c-dropdown--chips-cyan .select2-container--hdx-v2 .select2-selection--multiple .select2-selection__choice {
   background-color: var(--hdx-brand-1);

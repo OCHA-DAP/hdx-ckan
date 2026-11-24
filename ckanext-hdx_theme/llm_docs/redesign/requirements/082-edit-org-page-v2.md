@@ -362,7 +362,8 @@ Removed from these pages:
 - **Files:** `templates/v2/components/slug-preview.html`, `less/v2/components/slug-preview.less`,
   `fanstatic/v2/components/slug-preview.js`.
 - **Params:** `name`, `id`, `value`, `label`, `required`, `errors`, `placeholder` (input, 'my-organisation'),
-  `prefix` (domain + path), `preview_placeholder` (`<organization>`), `target_id` (the title input to follow).
+  `prefix` (domain + path), `preview_placeholder` (`<organization>`), `target_id` (the title input to follow),
+  `description` (091 §6.4), `size` (`'l'` | `'m'`, default `'m'`, passed to its text-field; 096 D44).
 - **Server render:**
   - the `text-field` (label 'URL', `required`) inside a wrapper, with no prefix;
   - a `hidden` preview row "**URL:** {prefix}{slug} [Edit]", Edit being a `c-text-button`; the prefix sits in a
@@ -385,16 +386,19 @@ Removed from these pages:
   `fanstatic/v2/components/image-upload.js`.
 - **Params:** `field_url`, `field_upload`, `field_clear`, `value` (stored value), `preview_url` (resolved, D7),
   `clear_value` (re-rendered clear flag), `label`, `url_label`, `remove_label`, `placeholder`, `id`,
-  `upload_enabled` (`h.uploads_enabled()`), `errors`, `accept` (default `image/*`; the form passes
+  `upload_enabled` (`h.uploads_enabled()`), `errors`, `accept` (default `image/*`, `''` = any file; the form passes
   `image/png,image/gif,image/jpeg`, the `ckan.upload.group.mimetypes` default), and the optional `link_enabled`,
-  `remove_enabled`, `upload_label`, `preview`, `max_bytes`, `image_width`, `check_message` (089 §6.4; their
-  defaults keep this form unchanged).
+  `remove_enabled`, `upload_label`, `preview`, `max_bytes`, `image_width`, `check_message` (089 §6.4), `dropzone`,
+  `drop_label`, `drop_replace_label`, `drop_message`, `label_hidden` (096 D19, D48); their defaults keep this form
+  unchanged.
 - **States (parity with `hdx-image-upload`):**
   - **Blank:** Upload (Figma) + Link buttons.
   - **Attached:** thumbnail + Remove. A stored upload shows no file name (stored names carry a timestamp
     prefix); a newly chosen file adds its name and an object-URL thumbnail. A missing stored file hides the
     thumbnail.
   - **Web:** URL input (Figma's hidden 486px field) + × reset.
+  - With `dropzone`, blank and attached are drop zones ("Drop file or" / "Drop file to overwrite or" + the upload
+    button, no thumbnail or file name; 096 D48).
 - **Transitions:**
   - Remove and × reset to blank, empty the URL and the file input and set `field_clear='true'`.
   - Choosing a file shows it and resets `field_clear` (v1 parity).

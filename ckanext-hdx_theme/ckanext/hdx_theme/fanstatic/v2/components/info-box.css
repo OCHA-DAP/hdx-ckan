@@ -30,3 +30,15 @@
   color: var(--hdx-neutral-95);
   margin: 0;
 }
+.c-info-box--compact {
+  padding: var(--hdx-space-3) var(--hdx-space-4);
+}
+.c-info-box--compact .c-info-box__body {
+  gap: var(--hdx-space-2);
+}
+.c-info-box--compact .c-info-box__text {
+  font-family: var(--hdx-font-body);
+  font-size: var(--hdx-fs-s);
+  font-weight: var(--hdx-fw-regular);
+  line-height: var(--hdx-lh-normal);
+}

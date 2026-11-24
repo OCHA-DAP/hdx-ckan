@@ -49,7 +49,7 @@
   {% for item in items %}
     {% if item.count or item.selected %}
       {% set _attrs = {'data-filter-checkbox': '', 'data-facet': filter.key, 'name': filter.key} %}
-      {% set _ci.items = _ci.items + [{'value': item.name, 'label': item.display_name, 'count': '(' ~ item.count ~ ')' if item.count else '(0)', 'checked': item.selected, 'active': item.selected, 'attrs': _attrs}] %}
+      {% set _ci.items = _ci.items + [{'value': item.name, 'label': item.display_name, 'count': '(' ~ item.count ~ ')' if item.count else '(0)', 'checked': item.selected, 'active': item.selected, 'attrs': _attrs, 'info_href': item.get('explanation_link', '')}] %}
     {% endif %}
   {% endfor %}
 
@@ -102,7 +102,7 @@
         {% set _cns.count = _cns.count + (si.count | default(0) | int) %}
         {% if si.selected %}{% set _cns.sel = _cns.sel + 1 %}{% endif %}
         {% set _cattrs = {'data-filter-checkbox': '', 'data-facet': si.category_key, 'name': si.category_key} %}
-        {% set _cns.children = _cns.children + [{'value': si.name, 'label': si.display_name, 'count': '(' ~ si.count ~ ')' if si.count else '(0)', 'checked': si.selected, 'active': si.selected, 'extra_classes': 'c-list-item--child', 'attrs': _cattrs}] %}
+        {% set _cns.children = _cns.children + [{'value': si.name, 'label': si.display_name, 'count': '(' ~ si.count ~ ')' if si.count else '(0)', 'checked': si.selected, 'active': si.selected, 'extra_classes': 'c-list-item--child', 'attrs': _cattrs, 'info_href': si.get('explanation_link', '')}] %}
       {% endif %}
     {% endfor %}
     {% if _cns.children %}
@@ -113,13 +113,13 @@
       {% else %}
         {% set _pattrs = {'data-group-toggle': '', 'data-group': ai.category_key} %}
       {% endif %}
-      {% set _adv_ci.items = _adv_ci.items + [{'label': ai.display_name, 'count': '(' ~ _cns.count ~ ')' if _cns.count > 0 else '(0)', 'checked': _parent_all, 'active': _parent_all, 'extra_classes': 'c-list-item--parent', 'attrs': _pattrs, 'children': _cns.children}] %}
+      {% set _adv_ci.items = _adv_ci.items + [{'label': ai.display_name, 'count': '(' ~ _cns.count ~ ')' if _cns.count > 0 else '(0)', 'checked': _parent_all, 'active': _parent_all, 'extra_classes': 'c-list-item--parent', 'attrs': _pattrs, 'children': _cns.children, 'info_href': ai.get('explanation_link', '')}] %}
     {% endif %}
   {% else %}
     {# Flat ext_* flag #}
     {% if ai.count or ai.selected %}
       {% set _fattrs = {'data-filter-checkbox': '', 'data-facet': ai.get('category_key', 'featured'), 'name': ai.get('category_key', 'featured')} %}
-      {% set _adv_ci.items = _adv_ci.items + [{'value': ai.name, 'label': ai.display_name, 'count': '(' ~ ai.count ~ ')' if ai.count else '(0)', 'checked': ai.selected, 'active': ai.selected, 'attrs': _fattrs}] %}
+      {% set _adv_ci.items = _adv_ci.items + [{'value': ai.name, 'label': ai.display_name, 'count': '(' ~ ai.count ~ ')' if ai.count else '(0)', 'checked': ai.selected, 'active': ai.selected, 'attrs': _fattrs, 'info_href': ai.get('explanation_link', '')}] %}
     {% endif %}
   {% endif %}
 {% endfor %}
@@ -158,7 +158,7 @@
       {% for item in items %}
         {% if item.count or item.selected %}
           {% set _attrs = {'data-filter-checkbox': '', 'data-facet': item.category_key, 'name': item.category_key} %}
-          {% set _ci.items = _ci.items + [{'value': item.name, 'label': item.display_name, 'count': '(' ~ item.count ~ ')' if item.count else '(0)', 'checked': item.selected, 'active': item.selected, 'attrs': _attrs}] %}
+          {% set _ci.items = _ci.items + [{'value': item.name, 'label': item.display_name, 'count': '(' ~ item.count ~ ')' if item.count else '(0)', 'checked': item.selected, 'active': item.selected, 'attrs': _attrs, 'info_href': item.get('explanation_link', '')}] %}
         {% endif %}
       {% endfor %}
 

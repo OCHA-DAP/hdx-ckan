@@ -38,6 +38,10 @@
                           Only used when tag='button'.
                           default: 'button'
 
+  underline     {bool}    False drops the label underline
+                          (c-text-button--no-underline).
+                          default: true
+
   extra_classes {string}  Additional CSS classes.
                           default: ''
 
@@ -69,6 +73,7 @@
 {% set tag           = tag           if tag           is defined else 'a' %}
 {% set href          = href          if href          is defined else '#' %}
 {% set button_type   = button_type   if button_type   is defined else 'button' %}
+{% set underline     = underline     if underline     is defined else true %}
 {% set extra_classes = extra_classes if extra_classes is defined else '' %}
 {% set attrs         = attrs         if attrs         is defined else {} %}
 
@@ -83,6 +88,9 @@
 ] %}
 {% if is_disabled %}
   {% set classes = classes + ['is-disabled'] %}
+{% endif %}
+{% if not underline %}
+  {% set classes = classes + ['c-text-button--no-underline'] %}
 {% endif %}
 {% if extra_classes %}
   {% set classes = classes + [extra_classes] %}

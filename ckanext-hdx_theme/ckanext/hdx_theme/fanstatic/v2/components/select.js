@@ -10,10 +10,22 @@
     return ids.concat((select.getAttribute('aria-labelledby') || '').split(' ').filter(Boolean));
   }
 
+  var SOURCE_PARAM = 'data-source-param-';
+
+  function sourceParams(select) {
+    return Array.prototype.filter.call(select.attributes, function (attr) {
+      return attr.name.indexOf(SOURCE_PARAM) === 0;
+    }).map(function (attr) {
+      return { key: attr.name.slice(SOURCE_PARAM.length), selector: attr.value };
+    });
+  }
+
   function init(select) {
+    if (select.classList.contains('select2-hidden-accessible')) return;
     var wrapper     = select.closest('.c-dropdown');
     var placeholder = select.querySelector('option[value=""]');
     var source      = select.getAttribute('data-source');
+    var sourceType  = select.getAttribute('data-source-type');
     var $select     = jQuery(select);
     var options     = {
       theme:             'hdx-v2',
@@ -30,12 +42,22 @@
     }
 
     if (source) {
+      var extraParams = sourceParams(select);
+      var termKey     = sourceType === 'tag' || sourceType === 'format' ? 'incomplete' : 'q';
       options.minimumInputLength = 1;
       options.ajax = {
         url:      source,
         dataType: 'json',
         delay:    300,
-        data:     function (params) { return { q: params.term }; },
+        data:     function (params) {
+          var data = {};
+          data[termKey] = params.term;
+          extraParams.forEach(function (param) {
+            var field = document.querySelector(param.selector);
+            if (field && field.value) data[param.key] = field.value;
+          });
+          return data;
+        },
         processResults: function (users) {
           return {
             results: users.map(function (user) {
@@ -44,12 +66,19 @@
           };
         }
       };
-      if (select.getAttribute('data-source-type') === 'tag') {
-        options.ajax.data = function (params) { return { incomplete: params.term }; };
+      if (sourceType === 'tag') {
         options.ajax.processResults = function (reply) {
           return {
             results: reply.ResultSet.Result.map(function (tag) {
               return { id: tag.Name, text: tag.Name };
+            })
+          };
+        };
+      } else if (sourceType === 'format') {
+        options.ajax.processResults = function (reply) {
+          return {
+            results: reply.ResultSet.Result.map(function (format) {
+              return { id: format.Format, text: format.Format };
             })
           };
         };
@@ -82,5 +111,9 @@
 
   document.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll('select[data-searchable]').forEach(init);
+  });
+
+  document.addEventListener('config-item:add', function (e) {
+    e.target.querySelectorAll('select[data-searchable]').forEach(init);
   });
 })();

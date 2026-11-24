@@ -195,6 +195,7 @@
         display:       flex;
         align-items:   center;
         flex-wrap:     wrap;
+        justify-content: flex-end;
         gap:           var(--hdx-space-2);
         margin-left:   auto;            // push actions to the right
 
@@ -204,6 +205,27 @@
             .c-button__label {
                 flex-shrink: 1;
                 min-width:   0;
+            }
+        }
+    }
+
+    // ── __leading-actions ────────────────────────────────────
+    &__leading-actions {
+        display:         flex;
+        flex-basis:      100%;
+        justify-content: flex-end;
+
+        .c-dropdown__panel {
+            left:  auto;
+            right: 0;
+        }
+
+        @media (min-width: @hdx-bp-md) {
+            flex-basis: auto;
+
+            .c-dropdown__panel {
+                left:  0;
+                right: auto;
             }
         }
     }

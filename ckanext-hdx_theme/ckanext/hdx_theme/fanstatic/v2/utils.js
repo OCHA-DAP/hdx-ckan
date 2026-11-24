@@ -207,15 +207,92 @@
     alertEl.hidden = false;
   };
 
-  // Sets the error text of a text-field.html or checkbox.html control and
-  // toggles its --error modifier, on when there is a message or `invalid` is true.
+  var FIELD_BLOCKS = ['c-search-input', 'c-checkbox', 'c-dropdown', 'c-image-upload'];
+
+  function linkError(controls, errorEl, on) {
+    controls.forEach(function (control) {
+      var ids = (control.getAttribute('aria-describedby') || '').split(' ').filter(Boolean);
+      if (errorEl) {
+        ids = ids.filter(function (id) { return id !== errorEl.id; });
+        if (on && errorEl.textContent) ids.push(errorEl.id);
+      }
+      if (ids.length) {
+        control.setAttribute('aria-describedby', ids.join(' '));
+      } else {
+        control.removeAttribute('aria-describedby');
+      }
+      if (on) {
+        control.setAttribute('aria-invalid', 'true');
+      } else {
+        control.removeAttribute('aria-invalid');
+      }
+    });
+  }
+
+  function errorSlot(block, wrapper, input, create) {
+    var errorEl;
+    if (block === 'c-dropdown') {
+      errorEl = wrapper.nextElementSibling;
+      if (!errorEl || !errorEl.classList.contains('c-dropdown__error')) errorEl = null;
+    } else if (block === 'c-image-upload') {
+      errorEl = wrapper.querySelector('.c-image-upload__error');
+    } else {
+      errorEl = wrapper.parentElement && wrapper.parentElement.querySelector('.' + block + '__error');
+    }
+    if (!errorEl && create && (block === 'c-dropdown' || block === 'c-image-upload')) {
+      errorEl = document.createElement('span');
+      errorEl.className = block + '__error';
+      if (block === 'c-dropdown') {
+        wrapper.insertAdjacentElement('afterend', errorEl);
+      } else {
+        wrapper.appendChild(errorEl);
+      }
+    }
+    if (errorEl && !errorEl.id && input.id) errorEl.id = input.id + '-error';
+    return errorEl;
+  }
+
+  function setRadioGroupError(input, message, on) {
+    var scope  = input.form || document;
+    var radios = Array.from(scope.querySelectorAll('input[type="radio"]')).filter(function (radio) {
+      return radio.name === input.name;
+    });
+    var errorEl = null;
+    radios.forEach(function (radio) {
+      var label = radio.closest('.c-radio');
+      if (!label) return;
+      label.classList.toggle('c-radio--error', on);
+      var next = label.nextElementSibling;
+      if (next && next.classList.contains('c-radio__error')) errorEl = next;
+    });
+    if (errorEl) {
+      if (!errorEl.id && input.id) errorEl.id = input.id + '-error';
+      errorEl.textContent = message || '';
+    }
+    linkError(radios, errorEl, on);
+  }
+
+  // Sets the error text of a text-field.html, checkbox.html, select.html,
+  // radio.html group or image-upload.html control, toggles its --error
+  // modifier (on when there is a message or `invalid` is true) and syncs
+  // aria-invalid / aria-describedby. A slug-preview.html field is revealed.
   window.hdxV2.setFieldError = function setFieldError(input, message, invalid) {
-    var wrapper = input.closest('.c-search-input, .c-checkbox');
+    var on = !!(message || invalid);
+    if (input.type === 'radio') {
+      setRadioGroupError(input, message, on);
+      return;
+    }
+    var wrapper = input.closest('.c-search-input, .c-checkbox, .c-dropdown, .c-image-upload');
     if (!wrapper) return;
-    var block = wrapper.classList.contains('c-checkbox') ? 'c-checkbox' : 'c-search-input';
-    var errorEl = wrapper.parentElement && wrapper.parentElement.querySelector('.' + block + '__error');
-    wrapper.classList.toggle(block + '--error', !!(message || invalid));
+    var block = FIELD_BLOCKS.filter(function (name) { return wrapper.classList.contains(name); })[0];
+    var errorEl = errorSlot(block, wrapper, input, !!message);
+    wrapper.classList.toggle(block + '--error', on);
     if (errorEl) errorEl.textContent = message || '';
+    var controls = [input];
+    var selection = block === 'c-dropdown' && wrapper.querySelector('.select2-selection');
+    if (selection) controls.push(selection);
+    linkError(controls, errorEl, on);
+    if (on && input.closest('[data-slug-preview]')) input.dispatchEvent(new Event('invalid'));
   };
 
   // Shows `target` while `select`'s lower-cased value is in options.values.
@@ -252,10 +329,16 @@
   };
 
   // POSTs `body` to `url` with the CSRF header and resolves with the parsed JSON response.
+  // A plain-object `body` is sent as JSON.
   window.hdxV2.post = function post(url, body) {
+    var headers = window.hdxUtil.net.getCsrfTokenAsObject();
+    if (Object.prototype.toString.call(body) === '[object Object]') {
+      headers['Content-Type'] = 'application/json';
+      body = JSON.stringify(body);
+    }
     return fetch(url, {
       method: 'POST',
-      headers: window.hdxUtil.net.getCsrfTokenAsObject(),
+      headers: headers,
       body: body
     }).then(function (r) { return r.json(); });
   };

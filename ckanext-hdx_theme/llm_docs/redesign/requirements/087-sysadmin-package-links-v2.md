@@ -229,6 +229,11 @@ the same Afghanistan dataset list; "Datasets to higlight" (typo).
 | `expanded` | bool | `True` | `False` renders `aria-expanded="false"` and the body `hidden` (D20) |
 | `draggable` | bool | `True` | `False` drops the handle and adds `c-config-item--static` (090 §6.6) |
 | `title_tag` | string | `'h2'` | Title element (090 §6.6) |
+| `collapsible` | bool | `True` | `False` drops the toggle; the body stays open and the title gets `tabindex="-1"` (091 §6.4) |
+| `move_buttons` | bool | `False` | "Sort:" Move up / Move down in the header (091 §6.4) |
+| `delete_position` | string | `'header'` | `'footer'`: Delete in a row after the fields (091 §6.4) |
+| `delete_label` | string | `'Delete'` | Delete button text (091 §6.4) |
+| `delete_icon_position` | string | `'left'` | `'right'`: the Delete icon after the text (096 C11) |
 | `caller()` | block | — | The fields |
 
 Markup:
@@ -272,7 +277,7 @@ text. `aria-labelledby` overrides the `aria-label` that `button.html` sets from 
 | File | Change |
 |---|---|
 | `v2/list-header.html` | `count` optional: `{% set count = count if count is defined else none %}`; the count span renders only when `count is not none`. Header comment: "Number shown beside the title; omit for none". Every current caller passes a count, so their HTML is unchanged |
-| `fanstatic/v2/utils.js` | `window.hdxV2.setFieldError(input, message, invalid)`: sets the error text of a `text-field.html` or `checkbox.html` control and toggles its `--error` modifier, on with a message or with `invalid` true (D27) |
+| `fanstatic/v2/utils.js` | `window.hdxV2.setFieldError(input, message, invalid)`: sets the error text of a `text-field.html` or `checkbox.html` control and toggles its `--error` modifier, on with a message or with `invalid` true (D27); 096 D23 adds `select.html` (Select2 too), radio groups, `image-upload.html` file inputs and the date picker, with `aria-invalid` / `aria-describedby` |
 | `fanstatic/v2/pages/login.js`, `forgot-password.js` | Local `setFieldError` removed; calls use `window.hdxV2.setFieldError` |
 | `fanstatic/v2/form-validator.js` | `displayError` / `removeErrorMessages` removed; calls use `window.hdxV2.setFieldError` (`invalid` true keeps the border on fields without `data-validation-error`) |
 | `fanstatic/webassets.yml` | `v2-config-item-scripts`: `vendor/sortable/Sortable.js`, `v2/components/config-item.js`. `v2/components/config-item.css` added to `v2-components-styles` |
@@ -319,17 +324,22 @@ text. `aria-labelledby` overrides the `aria-label` that `button.html` sets from 
 On `DOMContentLoaded`, for each `[data-config-item-list]`:
 
 - **Reorder:** `Sortable.create(items, {handle: '.c-config-item__header', animation:
-  hdxV2.prefersReducedMotion() ? 0 : 250, ghostClass: 'is-dragging', onUpdate: renumber})`.
+  hdxV2.prefersReducedMotion() ? 0 : 250, ghostClass: 'is-dragging', onUpdate})`; `onUpdate` renumbers, refreshes
+  the Move buttons and dispatches a bubbling `config-item:sort`, as Move does (096 D12).
 - **Renumber:** after add, delete and reorder, each card's title text = `data-title-format` with `{n}` = its
   1-based position.
 - **Collapse:** the toggle flips `aria-expanded` and the body's `hidden`. Cards start as `expanded` sets them (the
   page keeps the default, so all open); the state is not stored.
 - **New Item:** the template's HTML with `__index__` replaced by a counter that starts above the rendered count is
-  appended, renumbered, announced with a bubbling `config-item:add` (089 §6.5), and its first text field focused.
-- **Delete:** a card with `data-config-item-id` queues that id; the `<li>` is removed and the list renumbered;
+  appended (prepended with `data-config-item-add-position="start"`), renumbered, announced with a bubbling
+  `config-item:add` (089 §6.5), and its first text field focused. Page JS adds one with
+  `window.hdxV2ConfigItem(list).add({position, focus, prepare})` (096 D12).
+- **Delete:** a card with `data-config-item-id` queues that id; the `<li>` is removed, the list renumbered and a
+  bubbling `config-item:remove` (`detail.item`) dispatched (096 D12);
   focus moves to the next card's toggle, or to New Item when no card follows. No confirmation; nothing is sent
   until Save.
-- **Form mode** (`data-config-item-form` on the list): no Reorder and no Save; New Item focuses the card's first
+- **Form mode** (`data-config-item-form` on the list): no Reorder unless the list also has
+  `data-config-item-sortable` (096 D12), and no Save; New Item focuses the card's first
   enabled control; the surrounding page form posts the fields (090 §6.6).
 - **Save:**
   1. Clear the field errors and hide the alert. For each `[required]` control with an empty trimmed value:

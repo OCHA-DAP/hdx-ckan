@@ -46,3 +46,10 @@ class TestHDXUpdateResourceFormat(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgs
         assert 'c-resource-card' in result.body
         assert 'Download' in result.body
         assert 'resource_create_test2.geojson' in result.body
+
+    def test_format_autocomplete_unique(self):
+        context = {'model': model, 'session': model.Session, 'user': 'testsysadmin'}
+
+        assert self._get_action('format_autocomplete')(context, {'q': 'csv'}) == ['CSV']
+        assert self._get_action('format_autocomplete')(context, {'q': 'xls'}) == ['XLS', 'XLSX']
+        assert len(self._get_action('format_autocomplete')(context, {'q': 'geo'})) == 5

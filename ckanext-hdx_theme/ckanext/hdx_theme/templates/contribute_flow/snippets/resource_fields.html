@@ -1,0 +1,121 @@
+{#
+  Snippet: resource_fields.html
+  Path:    templates/contribute_flow/snippets/resource_fields.html
+
+  The fields of one file card in the dataset form (contribute_flow/create_edit.html):
+  the upload source (Upload file / Import from URL radios, Dropbox, Google Drive), the
+  drop zone (c-image-upload), the URL, name (with one hidden c-file-type tile per
+  format category), format and notes fields and the PII / microdata checkboxes with
+  their notices. Rendered once inside the c-config-item
+  <template>; fanstatic/v2/pages/dataset-form.js fills a copy per file. The fields
+  have no name: the page builds the resource from their data-resource-field hooks.
+
+  Parameters
+  ─────────────────────────────────────────────────
+  index  {string}  Card index; ids start with resource-<index>-.  Required.
+  ─────────────────────────────────────────────────
+  Example
+
+  {% snippet 'contribute_flow/snippets/resource_fields.html', index='__index__' %}
+#}
+
+{% set prefix = 'resource-' ~ index %}
+{% set doc_links = h.HDX_CONST('DOCUMENTATION_LINKS') %}
+
+<fieldset class="hdx-v2-dataset-form__fieldset">
+  <legend class="c-form-field__label">{{ _('Choose how to upload your file') }}</legend>
+  <div class="hdx-v2-dataset-form__source">
+    {% snippet 'v2/components/radio.html',
+        name=prefix ~ '-upload_type', value='file', id=prefix ~ '-upload_type_file',
+        label=_('Upload file'), checked=True, attrs={'data-resource-source': ''} %}
+    <span class="hdx-v2-dataset-form__source-separator" aria-hidden="true">|</span>
+    {% snippet 'v2/components/radio.html',
+        name=prefix ~ '-upload_type', value='url', id=prefix ~ '-upload_type_url',
+        label=_('Import from URL'), attrs={'data-resource-source': ''} %}
+    <span class="hdx-v2-dataset-form__source-separator" aria-hidden="true">|</span>
+    {% snippet 'v2/components/text-button.html',
+        style='tertiary', size='m', tag='button', underline=False,
+        label=('<img class="hdx-v2-dataset-form__cloud-logo" src="/images/icons/dropbox.png" alt=""> ' | safe) ~ _('Dropbox'),
+        attrs={'title': _('By adding files via Dropbox, file sharing setting turns on automatically and becomes viewable by anyone with the link'),
+               'data-resource-dropbox': ''} %}
+    <span class="hdx-v2-dataset-form__source-separator" aria-hidden="true">|</span>
+    {% snippet 'v2/components/text-button.html',
+        style='tertiary', size='m', tag='button', underline=False,
+        label=('<img class="hdx-v2-dataset-form__cloud-logo" src="/images/icons/drive.png" alt=""> ' | safe) ~ _('Google Drive'),
+        attrs={'title': _('In order to add files via Google Drive, sharing settings has to be on'),
+               'data-resource-drive': ''} %}
+  </div>
+</fieldset>
+
+<div data-resource-upload>
+  {% snippet 'v2/components/image-upload.html',
+      field_url='', field_upload='', id=prefix ~ '-upload',
+      label=_('File'), label_hidden=True,
+      link_enabled=False, remove_enabled=False, upload_label=_('Browse'),
+      dropzone=True, accept='' %}
+</div>
+
+<div class="hdx-v2-dataset-form__resource-fields" data-resource-fields hidden>
+  <div class="c-form-field" data-resource-url-field>
+    {% snippet 'v2/components/text-field.html',
+        size='l', name='', id=prefix ~ '-url',
+        label=_('Remote file location'), required=True,
+        placeholder=_('eg. https://example.com/population-jan-2011.json'),
+        input_attrs={'data-resource-field': 'url'} %}
+  </div>
+
+  <div class="hdx-v2-dataset-form__resource-row">
+    <div class="c-form-field">
+      {% set file_tiles %}
+        {% for category in ['neutral'] + (h.HDX_CONST('FORMAT_ICON_CATEGORIES') | list) %}
+          {% snippet 'v2/components/file-type-icon.html',
+              format=category, size='xs',
+              attrs={'data-resource-file-type': category, 'hidden': ''} %}
+        {% endfor %}
+      {% endset %}
+      {% snippet 'v2/components/text-field.html',
+          size='l', name='', id=prefix ~ '-name',
+          label=_('File name'), required=True, placeholder=_('File name'),
+          leading=file_tiles,
+          input_attrs={'data-resource-field': 'name'} %}
+    </div>
+    <div class="c-form-field">
+      {% snippet 'v2/components/select.html',
+          size='l', label=_('File format'), id=prefix ~ '-format', required=True,
+          placeholder=_('File type'), searchable=True,
+          select_attrs={'data-source': '/api/2/util/resource/format_autocomplete',
+                        'data-source-type': 'format', 'data-resource-field': 'format'} %}
+    </div>
+  </div>
+
+  <div class="c-form-field">
+    {% snippet 'v2/components/text-field.html',
+        size='l', name='', id=prefix ~ '-description',
+        label=_('Notes about this file'), placeholder=_('Add a note about this resource'),
+        multiline=True, rows=3, input_attrs={'data-resource-field': 'description'} %}
+  </div>
+
+  <div class="hdx-v2-dataset-form__checks">
+    <div class="hdx-v2-dataset-form__checkbox">
+      {% snippet 'v2/components/checkbox.html',
+          id=prefix ~ '-pii',
+          label=_('contains Personally Identifiable Information (PII)'),
+          attrs={'data-resource-field': 'pii'}, error_slot=false %}
+    </div>
+    {% snippet 'v2/components/alert.html',
+        variant='error', dismissible=False, hidden=True,
+        extra_attrs='data-resource-notice="pii"',
+        message=_('HDX does not allow data that includes personally identifiable information (PII) to be shared publicly through the site. Please delete the resource(s) containing PII. If you wish to share this resource, take steps to ensure that it is properly anonymised (with all the direct identifiers removed) and upload it again.') ~ ('<br><br>' | safe) ~ _('You can learn more in the <a href="{url}" target="_blank" title="HDX Terms of Service">HDX Terms of Service</a>.').format(url=doc_links['TERMS_OF_SERVICE']) %}
+
+    <div class="hdx-v2-dataset-form__checkbox">
+      {% snippet 'v2/components/checkbox.html',
+          id=prefix ~ '-microdata',
+          label=_('contains Microdata'),
+          attrs={'data-resource-field': 'microdata'}, error_slot=false %}
+    </div>
+    {% snippet 'v2/components/alert.html',
+        variant='info', dismissible=False, hidden=True,
+        extra_attrs='data-resource-notice="microdata"',
+        message=_('HDX allows microdata to be shared publicly through the site. However, to protect individuals and vulnerable groups, our team runs a disclosure risk assessment on any resource containing microdata. We do this because it may still be possible to re-identify individuals or expose confidential information even after direct identifiers have been removed from microdata.') ~ ('<br><br>' | safe) ~ _('We will notify you within 24 hours if our team detects any disclosure risk. During this time, the resource will appear on your dataset page but be marked as under review.') ~ ('<br><br>' | safe) ~ _('Learn more about the <a href="{url}" title="HDX QA process" target="_blank">HDX QA process</a>.').format(url=doc_links['QA_PROCESS']) %}
+  </div>
+</div>

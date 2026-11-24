@@ -15,8 +15,24 @@ import ckan.lib.helpers as h
 
 log = logging.getLogger(__name__)
 
+QUICK_EDIT_IDS = ['field_title', 'field_notes', 'ui_date_range1', 'field_data_update_frequency',
+                  'field_owner_org', 'field_dataset_source', 'field_locations', 'field_methodology',
+                  'field_caveats', 'field_license_id', 'field_tag_string']
+
 
 class TestDataset(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
+
+    def test_new_dataset_page(self):
+        url = h.url_for('hdx_contribute.new')
+        result = self.app.get(url, headers={'Authorization': self.testsysadmin_token})
+        body = result.body
+
+        assert 200 == result.status_code
+        assert '<h1 class="hdx-v2-dataset-form__title">Share data</h1>' in body
+        for field_id in QUICK_EDIT_IDS:
+            assert 'id="{}"'.format(field_id) in body
+        assert 'id="field_archived"' not in body
+        assert body.count('data-tags="true"') == 2
 
     def test_edit_dataset_page(self):
         url = h.url_for('hdx_contribute.edit', id='test_dataset_1')
@@ -24,6 +40,11 @@ class TestDataset(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
         result = self.app.get(url, headers={'Authorization': self.testsysadmin_token})
 
         assert 200 == result.status_code
+
+        body = result.body
+        assert '<h1 class="hdx-v2-dataset-form__title">Edit data</h1>' in body
+        for field_id in QUICK_EDIT_IDS + ['field_archived']:
+            assert 'id="{}"'.format(field_id) in body
 
     def test_edit_dataset_location_order(self):
         factories.Group(name='world')

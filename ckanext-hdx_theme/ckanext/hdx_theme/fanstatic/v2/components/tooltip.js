@@ -19,9 +19,8 @@
 (function (window, document) {
     'use strict';
 
-    if (!window.Popper) return;
-
     document.addEventListener('DOMContentLoaded', function () {
+        if (!window.Popper) return;
         var anchorEls = document.querySelectorAll('.c-tooltip-anchor');
         if (!anchorEls.length) return;
 

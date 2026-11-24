@@ -303,6 +303,10 @@
 .quick-edit {
   position: relative;
 }
+.quick-edit.c-page-header__title,
+.quick-edit.c-page-header__desc {
+  padding-right: var(--hdx-space-8);
+}
 .quick-edit .quick-link {
   position: absolute;
   top: 0;

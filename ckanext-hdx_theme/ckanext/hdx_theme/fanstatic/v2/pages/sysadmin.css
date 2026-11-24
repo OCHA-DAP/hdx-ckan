@@ -88,18 +88,19 @@
   align-items: flex-start;
   gap: var(--hdx-space-2);
 }
-.hdx-v2-custom-page-form__actions,
+.hdx-v2-custom-page-form__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--hdx-space-4);
+  padding: var(--hdx-space-6) 0;
+  border-top: 1px solid var(--hdx-neutral-3);
+}
 .hdx-v2-custom-page-form__save {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: var(--hdx-space-4);
-}
-.hdx-v2-custom-page-form__actions {
-  padding: var(--hdx-space-6) 0;
-  border-top: 1px solid var(--hdx-neutral-3);
-}
-.hdx-v2-custom-page-form__save {
   flex-direction: row-reverse;
   margin-left: auto;
 }

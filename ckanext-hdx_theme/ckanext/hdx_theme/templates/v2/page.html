@@ -48,7 +48,7 @@
     {% endif %}
     {% if c.userobj %}
       {% block contribute_widget %}
-        {{ h.snippet('widget/contribute/details.html', id="addDataPopup") }}
+        {% snippet 'v2/contribute-popup.html' %}
       {% endblock %}
     {% else %}
       {{ h.snippet('widget/onboarding/logout.html', id="logoutPopup") }}

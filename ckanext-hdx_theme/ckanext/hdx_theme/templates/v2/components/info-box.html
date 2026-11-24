@@ -3,11 +3,14 @@
   Path:    templates/v2/components/info-box.html
 
   Renders a c-info-box — a light-blue panel with an info icon and one or
-  more paragraphs of static text (no live-region role).
+  more paragraphs of static text (no live-region role). compact drops the
+  icon and uses smaller padding and text (c-info-box--compact), for helper
+  text under a form field.
 
   Parameters
   ─────────────────────────────────────────────────
   paragraphs    {list}    Paragraph strings.  default: []
+  compact       {bool}    No icon, smaller padding and text.  default: False
   extra_classes {string}  Additional classes on the wrapper.  default: ''
   ─────────────────────────────────────────────────
 
@@ -15,13 +18,19 @@
 
   {% snippet 'v2/components/info-box.html',
       paragraphs=['First paragraph.', 'Second paragraph.'] %}
+
+  {% snippet 'v2/components/info-box.html',
+      paragraphs=['Helper text under a field.'], compact=True %}
 #}
 
 {% set paragraphs    = paragraphs    if paragraphs    is defined else [] %}
+{% set compact       = compact       if compact       is defined else False %}
 {% set extra_classes = extra_classes if extra_classes is defined else '' %}
 
-<div class="c-info-box{{ ' ' ~ extra_classes if extra_classes else '' }}">
+<div class="c-info-box{{ ' c-info-box--compact' if compact else '' }}{{ ' ' ~ extra_classes if extra_classes else '' }}">
+  {% if not compact %}
   <span class="c-info-box__icon">{{ h.hdx_v2_icon('v2/icons/info-fill.svg') }}</span>
+  {% endif %}
   <div class="c-info-box__body">
     {% for paragraph in paragraphs %}
       <p class="c-info-box__text">{{ paragraph }}</p>

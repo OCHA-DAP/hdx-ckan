@@ -25,6 +25,7 @@
 | `request_attrs` | dict | `{}` | Extra HTML attributes on the "Request data" link. |
 | `show_more_info` | bool | `true` | Render the "More information" button. Set `false` when no meaningful `title_href` exists. |
 | `extra_classes` | string | `''` | Extra CSS classes on the root element. |
+| `caller()` | block | — | Optional actions rendered in `.c-resource-card__leading-actions` at the start of `__actions`; a blank body renders nothing. |
 
 ---
 
@@ -46,6 +47,7 @@
   .c-resource-card__footer
     c-text-button "Show more"           ← if description (hidden by CSS; JS shows when clamped)
     .c-resource-card__actions
+      .c-resource-card__leading-actions  ← caller() body, if non-blank
       c-button (secondary) "More information" [href=title_href]  ← if show_more_info (default true)
       c-button (primary)   "Download (size)"  [href=download_url]
 ```
@@ -112,7 +114,7 @@ Used to simplify the inline format-mapping logic in `package_item_v2.html`.
 
 - **Hover**: CSS `:hover` only. No `is-hovered`, `state-hovered`, or `--hovered` classes.
 - **JS**: no jQuery; plain vanilla JS via IIFE.
-- **Responsive**: breakpoint `@hdx-bp-md` (48rem). File-type icon shrinks from 32px to 24px at SM via CSS override.
+- **Responsive**: breakpoint `@hdx-bp-md` (48rem). File-type icon shrinks from 32px to 24px at SM via CSS override. Below MD a `caller()` body takes its own right-aligned row above the buttons, with its dropdown panel right-anchored; wrapped action rows right-align.
 - **No hardcoded colors/spacing**: all via `var(--hdx-*)` tokens.
 
 ---

@@ -38,6 +38,13 @@
   width: 1rem;
   flex-shrink: 0;
 }
+.c-search-input__leading {
+  display: flex;
+  flex-shrink: 0;
+}
+.c-search-input__leading[hidden] {
+  display: none;
+}
 .c-search-input__toggle {
   display: flex;
   align-items: center;
