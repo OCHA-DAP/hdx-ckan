@@ -5,7 +5,7 @@ import cgi
 
 from typing import Dict, List, Optional, Tuple, Any
 from email import utils
-from email.header import Header
+from email.header import Header, decode_header as email_decode_header
 from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -186,7 +186,7 @@ def _get_decoded_str(display_name: Optional[str]) -> str:
     if display_name:
         try:
             decoded = ''
-            for text, charset in Header(display_name).decode_header():
+            for text, charset in email_decode_header(display_name):
                 if charset:
                     decoded += text.decode(charset)
                 elif isinstance(text, bytes):
