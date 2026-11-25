@@ -135,6 +135,53 @@ class TestRequestAccessView(object):
         assert 'id="request-access-form"' not in response.body, ('The request access form should not be visible for '
                                                                  'pending requests')
 
+    def test_request_access_special_chars_in_name(self, app, hdx_ses_mailer):
+        user_token = factories.APIToken(user=USER_NAME, expires_in=2, unit=60 * 60)['token']
+        auth_headers = {'Authorization': user_token}
+
+        package = {
+            'package_creator': 'test function',
+            'private': False,
+            'dataset_date': '[1960-01-01 TO 2012-12-31]',
+            'indicator': '0',
+            'caveats': 'These are the caveats',
+            'license_other': 'TEST OTHER LICENSE',
+            'methodology': 'This is a test methodology',
+            'dataset_source': 'Test data',
+            'license_id': 'hdx-other',
+            'name': REQUEST_ACCESS_DATASET_NAME,
+            'notes': 'This is a request access test',
+            'title': 'Request Access Test Dataset',
+            'groups': [{'name': LOCATION_NAME}],
+            'owner_org': ORGANIZATION_NAME,
+            'maintainer': SYSADMIN_NAME,
+            'is_requestdata_type': True,
+            'file_types': ['csv'],
+            'field_names': ['field1', 'field2']
+        }
+        pkg_dict = get_action('package_create')(get_sysadmin_context(), package)
+
+        request_access_url = h.url_for('hdx_dataset.request_access', id=pkg_dict.get('name') or pkg_dict.get('id'))
+
+        data_dict = {
+            'package_id': pkg_dict.get('id'),
+            'sender_name': 'Tôma',
+            'message_content': 'I want to access additional data.',
+            'organization': 'test_organization',
+            'email_address': 'test@test.com',
+            'sender_country': 'Sweden',
+            'sender_organization_id': 'test_organization',
+            'sender_organization_type': 'NGO',
+            'sender_intend': 'other',
+            'sender_intend_other': 'Testing Purposes',
+        }
+        response = app.post(request_access_url, data=data_dict, headers=auth_headers)
+        assert response.status_code == 200
+        assert '<input type="hidden" id="request_sent" value="True">' in response.body, \
+            'The hidden input indicates analytics tracking for request submission'
+        assert len(hdx_ses_mailer) == 2, 'Maintainer and requester emails should be sent'
+        assert hdx_ses_mailer[1]['To'].endswith(' <test@test.com>')
+
     def test_request_access_public_dataset(self, app):
         user_token = factories.APIToken(user=USER_NAME, expires_in=2, unit=60 * 60)['token']
         auth_headers = {'Authorization': user_token}

@@ -75,6 +75,33 @@ class TestRequestTags(object):
         assert result.json.get('success')
         assert mock_mail_recipient.call_count == 1
 
+    def test_request_tags_special_chars_in_name(self, app, hdx_ses_mailer):
+        factories.User(
+            name=SYSADMIN,
+            email='testsysadmin@hdx.hdxtest.org',
+            sysadmin=True,
+            fullname='Test Sysadmin',
+            about='Just another Test Sysadmin test user.',
+        )
+        test_sysadmin_token = factories.APIToken(user='testsysadmin', expires_in=2, unit=60 * 60)['token']
+        headers = {'Authorization': test_sysadmin_token}
+
+        url = h.url_for('hdx_request_tags.request_tags')
+
+        data = {
+            'fullname': 'Tôma',
+            'email': 'testsysadmin@hdx.hdxtest.org',
+            'suggested_tags': 'new_tag',
+            'datatype': 'Geospatial',
+            'comment': 'This is a tag for testing',
+        }
+        result = app.post(url, headers=headers, data=data)
+        assert result.status_code == 200
+        assert result.json.get('success')
+        assert len(hdx_ses_mailer) == 1, 'Tag request email should be sent to HDX'
+        assert hdx_ses_mailer[0]['From'].endswith(' <hdx@humdata.org>')
+        assert hdx_ses_mailer[0]['Reply-To'].endswith(' <testsysadmin@hdx.hdxtest.org>')
+
     def test_dataset_old_links(self, app):
 
         url = h.url_for('hdx_dataset_old_links.new_notification_page')

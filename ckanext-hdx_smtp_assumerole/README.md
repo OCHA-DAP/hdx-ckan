@@ -284,7 +284,7 @@ When CKAN sends an email:
 3. **Auto-Refresh**: If expiring soon, automatically calls AssumeRole for fresh credentials
 4. **Build Message**: Constructs MIME email message
 5. **Send via SES API**: Calls `boto3.client('ses').send_raw_email()` with temporary credentials
-6. **Fallback**: If SES API fails, falls back to original SMTP mailer
+6. **Errors**: If SES API fails, the error is logged and re-raised (no SMTP fallback)
 
 ### Automatic Refresh (No Restart Needed!)
 

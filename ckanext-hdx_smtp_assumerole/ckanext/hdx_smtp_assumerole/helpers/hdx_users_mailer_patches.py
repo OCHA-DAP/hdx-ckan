@@ -5,7 +5,7 @@ import cgi
 
 from typing import Dict, List, Optional, Tuple, Any
 from email import utils
-from email.header import Header
+from email.header import Header, decode_header as email_decode_header
 from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -109,7 +109,7 @@ def patched_mail_recipient_html(
 
         subject_header = Header(subject.encode(CHARSET), CHARSET)
         msg['Subject'] = subject_header
-        msg['From'] = f'"{sender_name}" <{mail_from}>'
+        msg['From'] = utils.formataddr((sender_name, mail_from))
 
         recipient_email_list = []
         recipients = None
@@ -121,7 +121,7 @@ def patched_mail_recipient_html(
                 display_name = r.get('display_name')
                 if display_name:
                     decoded_name = _get_decoded_str(display_name)
-                    recipient = f'"{decoded_name}" <{email}>'
+                    recipient = utils.formataddr((decoded_name, email or ''))
                 else:
                     recipient = email
                 recipients = u', '.join([recipients, recipient]) if recipients else recipient
@@ -138,7 +138,7 @@ def patched_mail_recipient_html(
                 recipient_email_list.append(r.get('email'))
                 cc_display_name = _get_decoded_str(r.get('display_name'))
                 cc_email = r.get('email')
-                cc_recipient = f'"{cc_display_name}" <{cc_email}>'
+                cc_recipient = utils.formataddr((cc_display_name, cc_email or ''))
                 cc_recipients = u', '.join([cc_recipients, cc_recipient]) if cc_recipients else cc_recipient
             if cc_recipients:
                 msg['Cc'] = cc_recipients if PY3 else Header(cc_recipients, CHARSET)
@@ -149,7 +149,7 @@ def patched_mail_recipient_html(
         msg['X-Mailer'] = "CKAN %s" % ckan.__version__
 
         reply_to_name = _get_decoded_str(sender_name)
-        reply_to = f'"{reply_to_name}" <{sender_email}>'
+        reply_to = utils.formataddr((reply_to_name, sender_email))
         msg['Reply-To'] = reply_to if PY3 else Header(reply_to, CHARSET)
 
         part = MIMEText(body_html, 'html', CHARSET)
@@ -186,7 +186,7 @@ def _get_decoded_str(display_name: Optional[str]) -> str:
     if display_name:
         try:
             decoded = ''
-            for text, charset in Header(display_name).decode_header():
+            for text, charset in email_decode_header(display_name):
                 if charset:
                     decoded += text.decode(charset)
                 elif isinstance(text, bytes):

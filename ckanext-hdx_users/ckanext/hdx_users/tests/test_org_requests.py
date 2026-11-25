@@ -119,3 +119,26 @@ class TestHDXReqsOrgController(object):
 
         assert 'email/content/new_org_request_hdx_team_notification.html' in kw_args0.get('snippet')
         assert 'email/content/new_org_request_confirmation_to_user.html' in kw_args1.get('snippet')
+
+    def test_new_org_req_special_chars_in_user_fullname(self, app, hdx_ses_mailer):
+        factories.User(name='toma', email='toma@test.com', sysadmin=False, fullname='Tôma')
+        user_token = factories.APIToken(user='toma', expires_in=2, unit=60 * 60)['token']
+        auth = {'Authorization': user_token}
+        postparams = {
+            'save': '',
+            'name': 'Test org',
+            'website': 'https://test.com',
+            'description': 'Test description',
+            'data_type': 'Test description data',
+            'data_already_available': 'yes',
+            'data_already_available_link': 'https://data.com',
+            'role': 'test role',
+        }
+
+        offset = h.url_for('hdx_org_request.new')
+        app.post(offset, params=postparams, headers=auth)
+
+        assert len(hdx_ses_mailer) == 2, 'HDX team notification and user confirmation should be sent'
+        assert hdx_ses_mailer[0]['From'].endswith(' <hdx@humdata.org>')
+        assert hdx_ses_mailer[0]['Reply-To'].endswith(' <toma@test.com>')
+        assert hdx_ses_mailer[1]['To'].endswith(' <toma@test.com>')

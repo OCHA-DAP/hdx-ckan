@@ -2,7 +2,8 @@
 
 import pytest
 import mock
-from email.header import Header
+from email import message_from_string
+from email.header import Header, decode_header, make_header
 import ckanext.hdx_smtp_assumerole.helpers.hdx_users_mailer_patches as patches_module
 from ckanext.hdx_smtp_assumerole.helpers.hdx_users_mailer_patches import (
     _get_decoded_str,
@@ -45,16 +46,16 @@ class TestGetDecodedStr:
         assert 'Test' in result
 
     def test_decode_bytes_without_charset(self):
-        """Test decoding when Header.decode_header returns bytes with no charset."""
-        with mock.patch('ckanext.hdx_smtp_assumerole.helpers.hdx_users_mailer_patches.Header') as mock_header_cls:
-            mock_header_cls.return_value.decode_header.return_value = [(b'raw bytes', None)]
+        """Test decoding when email_decode_header returns bytes with no charset."""
+        with mock.patch('ckanext.hdx_smtp_assumerole.helpers.hdx_users_mailer_patches.email_decode_header') as mock_decode:
+            mock_decode.return_value = [(b'raw bytes', None)]
             result = _get_decoded_str('anything')
         assert result == 'raw bytes'
 
     def test_decode_exception_returns_original(self):
         """Test that a decode error returns the original display_name unchanged."""
-        with mock.patch('ckanext.hdx_smtp_assumerole.helpers.hdx_users_mailer_patches.Header') as mock_header_cls:
-            mock_header_cls.side_effect = Exception('decode error')
+        with mock.patch('ckanext.hdx_smtp_assumerole.helpers.hdx_users_mailer_patches.email_decode_header') as mock_decode:
+            mock_decode.side_effect = Exception('decode error')
             result = _get_decoded_str('fallback name')
         assert result == 'fallback name'
 
@@ -300,3 +301,37 @@ class TestPatchedMailRecipientHtml:
         call_args = mock_send.call_args[1]
         msg = call_args['mime_message']
         assert msg['X-Custom'] == 'custom-value'
+
+    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.hdx_users_mailer_patches.send_email_via_ses')
+    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.hdx_users_mailer_patches.tk')
+    @mock.patch('ckanext.hdx_smtp_assumerole.helpers.hdx_users_mailer_patches.get_cached_ses_credentials')
+    def test_special_chars_in_names(self, mock_get_creds, mock_tk, mock_send):
+        """Test that names with special characters keep the email address outside the encoded name"""
+        mock_get_creds.return_value = {
+            'access_key': 'AKIATEST',
+            'secret_key': 'test-secret',
+            'session_token': 'test-token',
+            'region': 'us-east-1'
+        }
+        mock_tk.config = {'smtp.mail_from': 'hdx@example.com', 'ckan.site_url': 'https://data.example.com'}
+        mock_tk.render.return_value = '<html><body>Email</body></html>'
+
+        patched_mail_recipient_html(
+            sender_name='Tôma',
+            sender_email='sender@example.com',
+            recipients_list=[{'email': 'user@example.com', 'display_name': '王小明'}],
+            subject='Special Chars',
+            content_dict={'message': 'Hello'},
+            cc_recipients_list=[{'email': 'cc@example.com', 'display_name': 'Ann "Q" Lee'}]
+        )
+
+        mock_send.assert_called_once()
+        msg = message_from_string(mock_send.call_args[1]['mime_message'].as_string())
+        assert msg['From'].endswith(' <hdx@example.com>')
+        assert msg['To'].endswith(' <user@example.com>')
+        assert msg['Cc'].endswith(' <cc@example.com>')
+        assert msg['Reply-To'].endswith(' <sender@example.com>')
+        assert str(make_header(decode_header(msg['From']))) == 'Tôma <hdx@example.com>'
+        assert str(make_header(decode_header(msg['To']))) == '王小明 <user@example.com>'
+        assert str(make_header(decode_header(msg['Cc']))) == '"Ann \\"Q\\" Lee" <cc@example.com>'
+        assert str(make_header(decode_header(msg['Reply-To']))) == 'Tôma <sender@example.com>'
