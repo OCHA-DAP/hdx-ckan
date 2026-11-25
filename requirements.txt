@@ -8,7 +8,7 @@
     # via -r requirements.in
 -e git+https://github.com/OCHA-DAP/ckanext-s3filestore.git@0.8.3#egg=ckanext-s3filestore
     # via -r requirements.in
--e git+https://github.com/OCHA-DAP/ckanext-security.git@1.71.1#egg=ckanext-security
+-e git+https://github.com/OCHA-DAP/ckanext-security.git@1.71.2#egg=ckanext-security
     # via -r requirements.in
 -e git+https://github.com/OCHA-DAP/ckanext-showcase.git@1.5.5#egg=ckanext-showcase
     # via -r requirements.in
