@@ -3,6 +3,7 @@ import ckan.plugins.toolkit as toolkit
 
 import ckanext.hdx_service_checker.actions.get as actions
 import ckanext.hdx_service_checker.actions.authorize as authorize
+import ckanext.hdx_service_checker.cli as cli
 import ckanext.hdx_service_checker.views.run_checks as run_checks
 
 @toolkit.blanket.config_declarations
@@ -11,6 +12,7 @@ class HdxServiceCheckerPlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.IActions)
     plugins.implements(plugins.IAuthFunctions)
     plugins.implements(plugins.IBlueprint)
+    plugins.implements(plugins.IClick)
 
     # IConfigurer
     def update_config(self, config_):
@@ -34,3 +36,7 @@ class HdxServiceCheckerPlugin(plugins.SingletonPlugin):
     # IBlueprint
     def get_blueprint(self):
         return run_checks.hdx_run_checks
+
+    # IClick
+    def get_commands(self):
+        return [cli.hdx_checks]
