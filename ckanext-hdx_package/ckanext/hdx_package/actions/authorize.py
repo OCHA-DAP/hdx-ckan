@@ -44,6 +44,17 @@ def package_update(context, data_dict=None):
     return retvalue
 
 
+def dataset_purge(context: Context, data_dict: DataDict) -> AuthResult:
+    '''
+    HDX-11760: whoever can delete a dataset (organization editors and admins) can also purge it, as with
+    HDX's own copy of the dataset_purge action before CKAN 2.11.7. Core's auth is sysadmin-only.
+
+    The action is core's, so a direct dataset_purge call doesn't remove the files or the datastore
+    tables; hdx_dataset_purge (the website delete) does.
+    '''
+    return new_authz.is_authorized('package_delete', context, data_dict)
+
+
 def hdx_resource_id_list(context, data_dict=None):
     '''
     Only sysadmins are allowed to call this action

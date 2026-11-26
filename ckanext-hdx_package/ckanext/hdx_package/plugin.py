@@ -586,6 +586,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         return {
             'package_create': authorize.package_create,
             'package_update': authorize.package_update,
+            'dataset_purge': authorize.dataset_purge,
             'hdx_resource_id_list': authorize.hdx_resource_id_list,
             'hdx_send_mail_contributor': authorize.hdx_send_mail_contributor,
             'hdx_send_mail_members': authorize.hdx_send_mail_members,

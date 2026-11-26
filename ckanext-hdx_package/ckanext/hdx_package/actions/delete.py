@@ -29,7 +29,7 @@ def hdx_dataset_purge(context, data_dict):
     # Files and datastore tables can't be restored, so remove them only after the purge is committed
     resources = [(r.id, r.url, r.url_type) for r in pkg.resources] if pkg else []
 
-    # package_delete was checked above; core's dataset_purge auth is sysadmin-only
+    # package_delete was checked above, the same check as HDX's dataset_purge auth function
     core_delete.dataset_purge(dict(context, ignore_auth=True), data_dict)
     log.info('Dataset was purged, id was ' + id)
 

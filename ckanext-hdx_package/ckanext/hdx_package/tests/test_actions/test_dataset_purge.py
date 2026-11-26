@@ -6,6 +6,7 @@ from sqlalchemy.exc import SQLAlchemyError
 
 import ckan.model as model
 import ckan.plugins.toolkit as tk
+import ckan.tests.factories as factories
 from ckan.types import Context
 from ckanext.datastore.backend import DatastoreBackend
 
@@ -13,14 +14,20 @@ from ckanext.hdx_theme.tests.conftest import STANDARD_USER, SYSADMIN_USER, UserT
 
 _get_action = tk.get_action
 
+NON_MEMBER_USER = 'test_hdx_non_member_user'
+
+
+def _context(user: str) -> Context:
+    return cast(Context, {'model': model, 'session': model.Session, 'user': user})
+
 
 def _sysadmin_context() -> Context:
-    return cast(Context, {'model': model, 'session': model.Session, 'user': SYSADMIN_USER})
+    return _context(SYSADMIN_USER)
 
 
 def _editor_context() -> Context:
     """STANDARD_USER is an editor of the dataset's organization"""
-    return cast(Context, {'model': model, 'session': model.Session, 'user': STANDARD_USER})
+    return _context(STANDARD_USER)
 
 
 def _failing_purge_commit():
@@ -54,13 +61,35 @@ class TestDatasetPurge:
         assert model.Package.get(dataset_id) is None
         assert model.Session.query(model.PackageMember).filter_by(package_id=dataset_id).count() == 0
 
-    def test_dataset_purge_is_sysadmin_only(self, dataset_with_uploaded_resource: Dict):
+    def test_editor_can_dataset_purge(self, dataset_with_uploaded_resource: Dict):
+        """HDX's dataset_purge auth lets whoever can delete the dataset purge it; core's is sysadmin-only."""
         dataset_id = dataset_with_uploaded_resource['id']
 
+        _get_action('dataset_purge')(_editor_context(), {'id': dataset_id})
+
+        assert model.Package.get(dataset_id) is None
+
+    @pytest.mark.parametrize('user', [NON_MEMBER_USER, ''], ids=['non_member', 'anonymous'])
+    def test_dataset_purge_is_denied_to_users_who_cannot_delete_the_dataset(
+            self, dataset_with_uploaded_resource: Dict, user: str):
+        dataset_id = dataset_with_uploaded_resource['id']
+        factories.User(name=NON_MEMBER_USER, email='test_hdx_non_member_user@hdx.hdxtest.org')
+
         with pytest.raises(tk.NotAuthorized):
-            _get_action('dataset_purge')(_editor_context(), {'id': dataset_id})
+            _get_action('dataset_purge')(_context(user), {'id': dataset_id})
 
         assert model.Package.get(dataset_id).state == 'active'
+
+    def test_editor_can_dataset_purge_through_the_api(self, app, dataset_with_uploaded_resource: Dict):
+        dataset_id = dataset_with_uploaded_resource['id']
+        editor_token = factories.APIToken(user=STANDARD_USER, expires_in=2, unit=60 * 60)['token']
+
+        res = app.post('/api/action/dataset_purge', json={'id': dataset_id},
+                       headers={'Authorization': editor_token})
+
+        assert res.status_code == 200
+        assert res.json['success'] is True
+        assert model.Package.get(dataset_id) is None
 
     def test_editor_purge_removes_files_and_datastore_after_purge_is_committed(
             self, dataset_with_uploaded_resource: Dict):
